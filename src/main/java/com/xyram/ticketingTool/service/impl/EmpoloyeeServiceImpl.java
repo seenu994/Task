@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.transaction.Transactional;
 
@@ -16,17 +18,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
 import com.xyram.ticketingTool.Repository.UserRepository;
 import com.xyram.ticketingTool.admin.model.User;
+import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.Ticket;
 import com.xyram.ticketingTool.enumType.UserRole;
 import com.xyram.ticketingTool.enumType.UserStatus;
 import com.xyram.ticketingTool.exception.ResourceNotFoundException;
 import com.xyram.ticketingTool.service.EmployeeService;
-import com.xyram.ticketingTool.service.UserService;
+import com.xyram.ticketingTool.util.ResponseMessages;
 
 /**
  * 
@@ -43,30 +47,61 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 	@Autowired
 	UserRepository userRepository;
-	
-	@Autowired
-	UserService userService;
-	
-	private static Map<String, com.xyram.ticketingTool.admin.model.User> userCache = new HashMap<>();
 
 	@Override
-	public Employee addemployee(Employee employee) {
+	public ApiResponse addemployee(Employee employee) {
 
-		User user = new User();
-		user.setUsername(employee.getEmail());
-		String encodedPassword = new BCryptPasswordEncoder().encode(employee.getPassword());
-		user.setPassword(encodedPassword);
-       user.setStatus(UserStatus.ACTIVE);
-		if (employee.getRole() != null && employee.getRole().getId() == 2) {
-			user.setUserRole(UserRole.INFRA);
-		} else if (employee.getRole() != null && employee.getRole().getId() == 3) {
-			user.setUserRole(UserRole.DEVELOPER);
-		} else {
-			throw new ResourceNotFoundException("invalid user role ");
+		ApiResponse response = validateEmployee(employee);
+		if (response.isSuccess()) {
+			User user = new User();
+			user.setUsername(employee.getEmail());
+			String encodedPassword = new BCryptPasswordEncoder().encode(employee.getPassword());
+			user.setPassword(encodedPassword);
+			// Employee employeere=new Employee();
+			if (employee.getRole() != null && employee.getRole().getId() == 2) {
+				// if(user.getUserRole().equals("INFRA")) {
+				user.setUserRole(UserRole.INFRA);
+			} else if (employee.getRole() != null && employee.getRole().getId() == 3) {
+				user.setUserRole(UserRole.DEVELOPER);
+			} else {
+				throw new ResourceNotFoundException("invalid user role ");
+			}
+			userRepository.save(user);
+			Employee employeeNew = employeeRepository.save(employee);
+			response.setSuccess(true);
+			response.setMessage(ResponseMessages.EMPLOYEE_ADDED);
+			Map content = new HashMap();
+			content.put("employeeId",employeeNew.geteId());
+			response.setContent(content);
+			return response;
+
 		}
-		employee.setUserCredientials(userRepository.save(user));
 
-		return employeeRepository.save(employee);
+		
+		return response;
+	}
+
+	private ApiResponse validateEmployee(Employee employee) {
+		ApiResponse response = new ApiResponse(false);
+		if (!emailValidation(employee.getEmail())) {
+			response.setMessage(ResponseMessages.EMAIL_INVALID);;
+			response.setSuccess(false);
+		}
+
+		else if (employee.getMobileNumber().length() != 10) {
+			response.setMessage(ResponseMessages.MOBILE_INVALID);;
+			response.setSuccess(false);
+		}
+
+		return response;
+	}
+
+	private boolean emailValidation(String email) {
+		Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$",
+				Pattern.CASE_INSENSITIVE);
+
+		Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(email);
+		return matcher.find();
 	}
 
 	@Override
@@ -79,13 +114,9 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	public String updateEmployeeStatus(int employeeID, UserStatus userstatus) {
 		return employeeRepository.findById(employeeID).map(employee -> {
 			employee.setStatus(userstatus);
-			User user = employee.getUserCredientials();
-			User userDetails = userService.getUserByUsername(user.getUsername());
-			 user.setStatus(userstatus);
-			 userRepository.save(user);
 			return "{\"response\":\"Success\"}";
 
-		}).orElseThrow(() -> new ResourceNotFoundException("ticket not foung with id: " + employeeID));
+		}).orElseThrow(() -> new ResourceNotFoundException("employee not foung with id: " + employeeID));
 
 //		/return employeeDao.updateEmployeeStatus(employeeID, userstatus);
 	}
@@ -105,6 +136,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			employee.setMobileNumber(employeeRequest.getMobileNumber());
 			employee.setPassword(employeeRequest.getPassword());
 			employee.setRole(employee.getRole());
+			employee.setStatus(employeeRequest.getStatus());
 			employee.setUpdatedBy(employeeRequest.getUpdatedBy());
 			return employeeRepository.save(employee);
 		}).orElseThrow(() -> new ResourceNotFoundException("healthDevice  not found with id: "));

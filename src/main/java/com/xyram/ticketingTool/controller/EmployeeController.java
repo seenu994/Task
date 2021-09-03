@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.xyram.ticketingTool.Repository.UserRepository;
 import com.xyram.ticketingTool.admin.model.User;
+import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.enumType.UserRole;
 import com.xyram.ticketingTool.enumType.UserStatus;
@@ -48,7 +49,7 @@ class EmployeeController {
 	UserRepository userRepository;
 	
 	@PostMapping(value= {AuthConstants.ADMIN_BASEPATH +  "/createEmployee"})
-	public Employee addemployee(@RequestBody Employee employee) {
+	public ApiResponse addemployee(@RequestBody Employee employee) {
 		logger.info("Received request to add Employee");
 		return employeeService.addemployee(employee);
 	}
