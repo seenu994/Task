@@ -5,6 +5,7 @@ public interface ResponseMessages {
 	
 	String TICKET_NOT_EXIST = "Ticket Id is not exist";
 	String TICKET_REOPENED = "Ticket re-opened Sucessfully";
+	String TICKET_NOT_RESOLVED = "Ticket is not resolved.";
 	
 	String EMPLOYEE_ADDED = "Employee Added Successfully";
 	

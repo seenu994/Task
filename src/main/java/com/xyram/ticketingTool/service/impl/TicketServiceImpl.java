@@ -107,13 +107,20 @@ public class TicketServiceImpl implements TicketService {
 		ApiResponse response = new ApiResponse(false);
 		Ticket ticketObj = ticketrepository.getById(ticketId);
 		if(ticketObj != null) {
-			ticketObj.setStatus(TicketStatus.REOPEN);
-			ticketObj.setUpdatedBy(null);
-			ticketObj.setLastUpdatedAt(new Date());
-			ticketrepository.save(ticketObj);
-			response.setSuccess(true);
-			response.setMessage(ResponseMessages.TICKET_REOPENED);
-			response.setContent(null);
+			if(ticketObj.getStatus().equals(TicketStatus.COMPLETED)) {
+				ticketObj.setStatus(TicketStatus.REOPEN);
+				ticketObj.setUpdatedBy(null);
+				ticketObj.setLastUpdatedAt(new Date());
+				ticketrepository.save(ticketObj);
+				response.setSuccess(true);
+				response.setMessage(ResponseMessages.TICKET_REOPENED);
+				response.setContent(null);
+			}else {
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.TICKET_NOT_RESOLVED);
+				response.setContent(null);
+			}
+			
 			return response;
 		}else {
 			response.setSuccess(false);
