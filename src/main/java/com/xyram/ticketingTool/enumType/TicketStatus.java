@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 public enum TicketStatus {
-	INITIATED("INDEVELOPMENT"),
+	INITIATED("INITIATED"),
 
 	ONREVIEW("INPRODUCTION"),
 	ONHOLD("ONHOLD"),
