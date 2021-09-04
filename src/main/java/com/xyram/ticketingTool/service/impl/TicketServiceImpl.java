@@ -263,5 +263,117 @@ public class TicketServiceImpl implements TicketService {
 			return response;
 		}
 	}
+	
+	@Override
+	public ApiResponse addComment(Comments commentObj) {
+
+		ApiResponse response = new ApiResponse(false);
+		Ticket ticketObj = ticketrepository.getById(commentObj.getTicketId());
+		if (ticketObj != null) {
+			if (!ticketObj.getStatus().equals(TicketStatus.COMPLETED)) {
+
+				if (commentObj.getTicketCommentDescription() == null
+						|| commentObj.getTicketCommentDescription().length() == 0) {
+					response.setSuccess(false);
+					response.setMessage(ResponseMessages.TICKET_COMMENTS_NOT_EXIST);
+					response.setContent(null);
+				} else {
+					commentRepository.save(commentObj);
+					response.setSuccess(true);
+					response.setMessage(ResponseMessages.TICKET_COMMENTS_ADDED);
+					response.setContent(null);
+				}
+
+			} else {
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.TICKET_ALREADY_RESOLVED);
+				response.setContent(null);
+			}
+
+			return response;
+		} else {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.TICKET_NOT_EXIST);
+			response.setContent(null);
+			return response;
+		}
+	}
+	
+	@Override
+	public ApiResponse editComment(Comments commentObj) {
+
+		ApiResponse response = new ApiResponse(false);
+		Ticket ticketObj = ticketrepository.getById(commentObj.getTicketId());
+		if (ticketObj != null) {
+			if (!ticketObj.getStatus().equals(TicketStatus.COMPLETED)) {
+				
+				Comments comment = commentRepository.getById(commentObj.getId());
+				if(comment != null) {
+					if (commentObj.getTicketCommentDescription() == null
+							|| commentObj.getTicketCommentDescription().length() == 0) {
+						response.setSuccess(false);
+						response.setMessage(ResponseMessages.TICKET_COMMENTS_NOT_EXIST);
+						response.setContent(null);
+					} else {
+						commentRepository.save(commentObj);
+						response.setSuccess(true);
+						response.setMessage(ResponseMessages.TICKET_COMMENTS_EDITED);
+						response.setContent(null);
+					}
+				}else {
+					response.setSuccess(false);
+					response.setMessage(ResponseMessages.TICKET_COMMENTS_RECORD_NOTEXIST);
+					response.setContent(null);
+				}
+			} else {
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.TICKET_ALREADY_RESOLVED);
+				response.setContent(null);
+			}
+
+			return response;
+		} else {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.TICKET_NOT_EXIST);
+			response.setContent(null);
+			return response;
+		}
+	}
+	
+	@Override
+	public ApiResponse deleteComment(Comments commentObj) { 
+
+		ApiResponse response = new ApiResponse(false);
+		Ticket ticketObj = ticketrepository.getById(commentObj.getTicketId());
+		if (ticketObj != null) {
+			if (!ticketObj.getStatus().equals(TicketStatus.COMPLETED)) {
+				
+				Comments comment = commentRepository.getById(commentObj.getId());
+				if(comment != null) {
+					
+					commentRepository.delete(commentObj);
+					response.setSuccess(true);
+					response.setMessage(ResponseMessages.TICKET_COMMENTS_DELETED);
+					response.setContent(null);
+					
+				}else {
+					response.setSuccess(false);
+					response.setMessage(ResponseMessages.TICKET_COMMENTS_RECORD_NOTEXIST);
+					response.setContent(null);
+				}
+			} else {
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.TICKET_ALREADY_RESOLVED);
+				response.setContent(null);
+			}
+
+			return response;
+		} else {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.TICKET_NOT_EXIST);
+			response.setContent(null);
+			return response;
+		}
+	}
 
 }

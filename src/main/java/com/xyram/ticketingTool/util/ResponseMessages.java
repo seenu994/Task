@@ -10,6 +10,10 @@ public interface ResponseMessages {
 	String TICKET_REOPENED = "Ticket re-opened Sucessfully";
 	String TICKET_EDITED = "Ticket edited Sucessfully";
 	String TICKET_CANCELLED = "Ticket cancelled Sucessfully";
+	String TICKET_COMMENTS_ADDED = "Ticket comments added Sucessfully";
+	String TICKET_COMMENTS_EDITED = "Ticket comments edited Sucessfully";
+	String TICKET_COMMENTS_DELETED = "Ticket comments deleted Sucessfully";
+	String TICKET_COMMENTS_RECORD_NOTEXIST = "Ticket comments not exist";
 	String TICKET_RESOLVED = "Ticket resolved Sucessfully";
 	String TICKET_NOT_RESOLVED = "Ticket is not resolved state. Can't Re-open.";
 	String TICKET_COMMENTS_NOT_EXIST = "Comments are missing.";

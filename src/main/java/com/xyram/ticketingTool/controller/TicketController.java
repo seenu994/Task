@@ -66,7 +66,7 @@ class TicketController {
 	}
 	
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/resolveTicket",
-			AuthConstants.DEVELOPER_BASEPATH + "/cancelTicket", AuthConstants.INFRA_USER_BASEPATH + "/cancelTicket" })
+			AuthConstants.DEVELOPER_BASEPATH + "/resolveTicket", AuthConstants.INFRA_USER_BASEPATH + "/resolveTicket" })
 	public ApiResponse resolveTicket(@RequestBody Ticket ticketRequest) {
 		logger.info("Received request to update ticket for ticketId: " + ticketRequest.getId());
 		return ticketService.resolveTicket(ticketRequest);
@@ -92,6 +92,27 @@ class TicketController {
 //		logger.info("Recive request to reopened ticket by id:" + ticketRequest.getId());
 		commentObj.setCreatedAt(new Date());
 		return ticketService.reopenTicket(ticketId, commentObj); 
+	}
+	
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/addComment}",
+			AuthConstants.DEVELOPER_BASEPATH + "/addComment" })
+	public ApiResponse addComment(@RequestBody Comments commentObj) {
+		commentObj.setCreatedAt(new Date());
+		return ticketService.addComment(commentObj); 
+	}
+	
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editComment",
+			AuthConstants.DEVELOPER_BASEPATH + "/editComment" })
+	public ApiResponse editComment(@RequestBody Comments commentObj) {
+		commentObj.setCreatedAt(new Date());
+		return ticketService.editComment(commentObj); 
+	}
+	
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/deleteComment",
+			AuthConstants.DEVELOPER_BASEPATH + "/deleteComment" })
+	public ApiResponse deleteComment(@RequestBody Comments commentObj) {
+		commentObj.setCreatedAt(new Date());
+		return ticketService.deleteComment(commentObj); 
 	}
 
 	/*
