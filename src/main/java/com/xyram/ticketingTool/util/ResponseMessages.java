@@ -7,6 +7,7 @@ public interface ResponseMessages {
 	String TICKET_REOPENED = "Ticket re-opened Sucessfully";
 	String TICKET_NOT_RESOLVED = "Ticket is not resolved.";
 	String TICKET_COMMENTS_NOT_EXIST = "Comments are missing.";
+	String TICKET_ALREADY_REOPEND = "Comments are missing.";
 	
 	String EMPLOYEE_ADDED = "Employee Added Successfully";
 	

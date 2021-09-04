@@ -120,7 +120,12 @@ public class TicketServiceImpl implements TicketService {
 		ApiResponse response = new ApiResponse(false);
 		Ticket ticketObj = ticketrepository.getById(ticketId);
 		if(ticketObj != null) {
-			if(ticketObj.getStatus().equals(TicketStatus.COMPLETED)) {
+			if(ticketObj.getStatus().equals(TicketStatus.REOPEN)) {
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.TICKET_ALREADY_REOPEND);
+				response.setContent(null);
+			}
+			else if(ticketObj.getStatus().equals(TicketStatus.COMPLETED)) {
 				
 				if(comments.getTicketCommentDescription().length() == 0) {
 					response.setSuccess(false);
