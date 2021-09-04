@@ -1,5 +1,6 @@
 package com.xyram.ticketingTool.controller;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
+import com.xyram.ticketingTool.entity.Comments;
 import com.xyram.ticketingTool.entity.Designation;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.ProjectMembers;
@@ -79,9 +81,10 @@ class TicketController {
 	
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/reopenTicket/{ticketId}",
 			AuthConstants.DEVELOPER_BASEPATH + "/reopenTicket/{ticketId}" })
-	public ApiResponse reopenTicket(@PathVariable Integer ticketId, @RequestBody TicketComments ticketComments) {
+	public ApiResponse reopenTicket(@PathVariable Integer ticketId, @RequestBody Comments commentObj) {
 //		logger.info("Recive request to reopened ticket by id:" + ticketRequest.getId());
-		return ticketService.reopenTicket(ticketId, ticketComments); 
+		commentObj.setCreatedAt(new Date());
+		return ticketService.reopenTicket(ticketId, commentObj); 
 	}
 
 	/*

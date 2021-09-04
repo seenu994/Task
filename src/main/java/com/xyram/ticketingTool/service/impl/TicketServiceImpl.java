@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.xyram.ticketingTool.Repository.CommentRepository;
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
 import com.xyram.ticketingTool.Repository.ProjectMemberRepository;
 import com.xyram.ticketingTool.Repository.ProjectRepository;
@@ -30,6 +31,7 @@ import com.xyram.ticketingTool.Repository.TicketRepository;
 import com.xyram.ticketingTool.Repository.UserRepository;
 import com.xyram.ticketingTool.admin.model.User;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
+import com.xyram.ticketingTool.entity.Comments;
 import com.xyram.ticketingTool.entity.ProjectMembers;
 import com.xyram.ticketingTool.entity.Projects;
 import com.xyram.ticketingTool.entity.Ticket;
@@ -55,7 +57,7 @@ public class TicketServiceImpl implements TicketService {
 	TicketRepository ticketrepository;
 	
 	@Autowired
-	TicketCommentRepository ticketcommentRepository;
+	CommentRepository commentRepository;
 	
 	@Autowired
 	UserRepository userrepository;
@@ -65,6 +67,11 @@ public class TicketServiceImpl implements TicketService {
 
 	@Autowired
 	TicketAttachmentService attachmentService;
+	
+	@Autowired
+	TicketCommentServiceImpl commentService;
+	
+
 
 	@Override
 	public Ticket createTickets(Ticket ticketRequest) {
@@ -115,7 +122,7 @@ public class TicketServiceImpl implements TicketService {
 		}).orElseThrow(() -> new ResourceNotFoundException("ticket   not found with id: "));
 	}
 	@Override
-	public ApiResponse reopenTicket(Integer ticketId, TicketComments comments) {
+	public ApiResponse reopenTicket(Integer ticketId, Comments commentObj) {
 		
 		ApiResponse response = new ApiResponse(false);
 		Ticket ticketObj = ticketrepository.getById(ticketId);
@@ -127,7 +134,7 @@ public class TicketServiceImpl implements TicketService {
 			}
 			else if(ticketObj.getStatus().equals(TicketStatus.COMPLETED)) {
 				
-				if(comments.getTicketCommentDescription().length() == 0) {
+				if( commentObj.getTicketCommentDescription() == null || commentObj.getTicketCommentDescription().length() == 0) {
 					response.setSuccess(false);
 					response.setMessage(ResponseMessages.TICKET_COMMENTS_NOT_EXIST);
 					response.setContent(null);
@@ -137,13 +144,13 @@ public class TicketServiceImpl implements TicketService {
 //					String username = auth.getPrincipal().toString();
 					
 //					User user = userrepository.get
+					commentRepository.save(commentObj);
 					
 					ticketObj.setUpdatedBy(null);
 					ticketObj.setLastUpdatedAt(new Date());
 					ticketrepository.save(ticketObj);
 					
-					ticketcommentRepository.save(comments);
-					
+				    					
 					response.setSuccess(true);
 					response.setMessage(ResponseMessages.TICKET_REOPENED);
 					response.setContent(null);
