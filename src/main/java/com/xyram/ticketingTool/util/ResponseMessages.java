@@ -39,4 +39,10 @@ public interface ResponseMessages {
 
 	String STATUS_UPDATE = "Status Updated Successfully";
 
+	String CLIENT_CREATED = "Client Created Successfully";
+
+	String CLIENT_UPDATED = "Client Updated Successfully";
+
+	String CLIENT_INVALID = "Invalid Client Id";
+
 }

@@ -18,8 +18,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Client;
+import com.xyram.ticketingTool.entity.Employee;
+import com.xyram.ticketingTool.enumType.ClientStatus;
+import com.xyram.ticketingTool.enumType.UserStatus;
 import com.xyram.ticketingTool.service.ClientService;
+import com.xyram.ticketingTool.util.AuthConstants;
 
 
 
@@ -32,9 +37,22 @@ public class ClientControll {
 	@Autowired
 	private ClientService clientService;
 
-	@PostMapping( "/addClient")
-	public Client addClient(@RequestBody Client clientRequest) {
-		logger.info("Received request to add client: " + clientRequest.getCreatedBy());
+	@PostMapping("/addClient")
+	public ApiResponse addClient(@RequestBody Client clientRequest) {
+		
 		return clientService.addClient(clientRequest);
+	}
+	
+	@PutMapping("/editClient/{clientId}")
+	public ApiResponse editClient(@RequestBody Client clientRequest,@PathVariable Integer clientId ) {
+	
+		return clientService.editClient(clientId,clientRequest);
+	}
+	
+	
+	@PutMapping("/{clientId}/status/{userstatus}")
+	public ApiResponse updateClientStatus(@PathVariable int clientId, @PathVariable ClientStatus userstatus) {
+	
+		return clientService.updateClientStatus(clientId, userstatus);
 	}
 }

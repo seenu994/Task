@@ -9,18 +9,30 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.context.annotation.RequestScope;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+
+
 
 @SpringBootApplication(exclude = HibernateJpaAutoConfiguration.class)
 //@ComponentScan(basePackages = { "com.xyram.ticketingTool" })
 @EnableJpaRepositories
 @EnableAutoConfiguration
+@Configuration
 public class TicketToolApplication extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {
 		SpringApplication.run(TicketToolApplication.class, args);
+		
+	}
+	
+	@Bean
+	@RequestScope
+	public com.xyram.ticketingTool.request.CurrentUser requestedUserInfo() {
+		return new com.xyram.ticketingTool.request.CurrentUser();
 	}
 
 }
