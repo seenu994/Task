@@ -15,6 +15,9 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -23,6 +26,8 @@ import com.xyram.ticketingTool.Repository.EmployeeRepository;
 import com.xyram.ticketingTool.Repository.ProjectMemberRepository;
 import com.xyram.ticketingTool.Repository.ProjectRepository;
 import com.xyram.ticketingTool.Repository.TicketRepository;
+import com.xyram.ticketingTool.Repository.UserRepository;
+import com.xyram.ticketingTool.admin.model.User;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.ProjectMembers;
 import com.xyram.ticketingTool.entity.Projects;
@@ -46,6 +51,9 @@ public class TicketServiceImpl implements TicketService {
 
 	@Autowired
 	TicketRepository ticketrepository;
+	
+	@Autowired
+	UserRepository userrepository;
 
 	@Autowired
 	TicketService ticketService;
@@ -109,7 +117,12 @@ public class TicketServiceImpl implements TicketService {
 		if(ticketObj != null) {
 			if(ticketObj.getStatus().equals(TicketStatus.COMPLETED)) {
 				ticketObj.setStatus(TicketStatus.REOPEN);
-				ticketObj.setUpdatedBy(null);
+				Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+				String username = auth.getPrincipal().toString();
+				
+//				User user = userrepository.get
+				
+				ticketObj.setUpdatedBy(username);
 				ticketObj.setLastUpdatedAt(new Date());
 				ticketrepository.save(ticketObj);
 				response.setSuccess(true);
