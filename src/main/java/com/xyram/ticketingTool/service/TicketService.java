@@ -21,7 +21,7 @@ public interface TicketService {
 
 	Ticket editTicket(Integer ticketId, Ticket ticket);
 	
-	ApiResponse reopenTicket(Integer ticketId, Ticket ticket);
+	ApiResponse reopenTicket(Integer ticketId);
 }
 		
 

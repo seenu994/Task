@@ -110,7 +110,7 @@ public class TicketServiceImpl implements TicketService {
 		}).orElseThrow(() -> new ResourceNotFoundException("ticket   not found with id: "));
 	}
 	@Override
-	public ApiResponse reopenTicket(Integer ticketId, Ticket ticketRequest) {
+	public ApiResponse reopenTicket(Integer ticketId) {
 		
 		ApiResponse response = new ApiResponse(false);
 		Ticket ticketObj = ticketrepository.getById(ticketId);
