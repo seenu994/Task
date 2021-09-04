@@ -38,15 +38,15 @@ public class Ticket extends AuditModel {
 	@Column(name="ticket_description")
 	private String ticketDescription;
 	
-	@ManyToOne(cascade = { CascadeType.ALL })
+//	@ManyToOne(cascade = { CascadeType.ALL })
 	@JoinColumn(name = "project_id")
-	private Projects projects;
+	private Integer projectId;
 	
 	
 	
-	@OneToOne(cascade = { CascadeType.MERGE})
+//	@OneToOne(cascade = { CascadeType.MERGE})
 	@JoinColumn(name = "priority_id")
-	private Priority priority;
+	private Integer priorityId;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "ticketStatus")
@@ -68,22 +68,22 @@ public class Ticket extends AuditModel {
 		this.ticketDescription = ticketDescription;
 	}
 
-	public Projects getProjects() {
-		return projects;
+	public Integer getProjects() {
+		return projectId;
 	}
 
-	public void setProjects(Projects projects) {
-		this.projects = projects;
+	public void setProjects(Integer projects) {
+		this.projectId = projects;
 	}
 
 	
 
-	public Priority getPriority() {
-		return priority;
+	public Integer getPriority() {
+		return priorityId;
 	}
 
-	public void setPriority(Priority priority) {
-		this.priority = priority;
+	public void setPriority(Integer priority) {
+		this.priorityId = priority;
 	}
 
 	public TicketStatus getStatus() {

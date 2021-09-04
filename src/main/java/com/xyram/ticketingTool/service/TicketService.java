@@ -13,15 +13,17 @@ import com.xyram.ticketingTool.entity.TicketComments;
 public interface TicketService {
 
 	 
-	Ticket createTickets(Ticket ticketRequest);
+	ApiResponse createTickets(Ticket ticketRequest);
 
 	//Ticket ticket(Integer employeeId);
 
-	Ticket cancelTicket(Ticket ticketRequest);
+	ApiResponse cancelTicket(Ticket ticketRequest); 
+	
+	ApiResponse resolveTicket(Ticket ticketRequest);
 
 	Ticket onHoldTicket(Ticket ticketRequest);
 
-	Ticket editTicket(Integer ticketId, Ticket ticket);
+	ApiResponse editTicket(Integer ticketId, Ticket ticket);
 	
 	ApiResponse reopenTicket(Integer ticketId,Comments commentObj);
 }

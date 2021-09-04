@@ -53,16 +53,23 @@ class TicketController {
 
 	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/createTickets",
 			AuthConstants.DEVELOPER_BASEPATH + "/createTickets", AuthConstants.INFRA_USER_BASEPATH + "/createTickets" })
-	public Ticket createTickets(@RequestBody Ticket ticketRequest) {
+	public ApiResponse createTickets(@RequestBody Ticket ticketRequest) {
 		logger.info("Received request to add tickets");
 		return ticketService.createTickets(ticketRequest);
 	}
 
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/cancelTicket",
 			AuthConstants.DEVELOPER_BASEPATH + "/cancelTicket", AuthConstants.INFRA_USER_BASEPATH + "/cancelTicket" })
-	public Ticket cancelTicket(@RequestBody Ticket ticketRequest) {
+	public ApiResponse cancelTicket(@RequestBody Ticket ticketRequest) {
 		logger.info("Received request to update ticket for ticketId: " + ticketRequest.getId());
 		return ticketService.cancelTicket(ticketRequest);
+	}
+	
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/resolveTicket",
+			AuthConstants.DEVELOPER_BASEPATH + "/cancelTicket", AuthConstants.INFRA_USER_BASEPATH + "/cancelTicket" })
+	public ApiResponse resolveTicket(@RequestBody Ticket ticketRequest) {
+		logger.info("Received request to update ticket for ticketId: " + ticketRequest.getId());
+		return ticketService.resolveTicket(ticketRequest);
 	}
 
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/onHoldTicket",
@@ -74,7 +81,7 @@ class TicketController {
 
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editTicket/{ticketId}",
 			AuthConstants.DEVELOPER_BASEPATH + "/editTicket/{ticketId}" })
-	public Ticket editTicket(@PathVariable Integer ticketId, @RequestBody Ticket ticketRequest) {
+	public ApiResponse editTicket(@PathVariable Integer ticketId, @RequestBody Ticket ticketRequest) {
 		logger.info("Recive request to edit ticket by id:" + ticketRequest.getId());
 		return ticketService.editTicket(ticketId, ticketRequest);
 	}

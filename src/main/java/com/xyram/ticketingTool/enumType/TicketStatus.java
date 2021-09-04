@@ -6,7 +6,7 @@ import java.util.Optional;
 public enum TicketStatus {
 	INITIATED("INITIATED"),
 
-	ONREVIEW("INPRODUCTION"),
+	ONREVIEW("INPROGRESS"),
 	ONHOLD("ONHOLD"),
 	COMPLETED("COMPLETED"),
 	REOPEN("REOPEN"),
