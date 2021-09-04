@@ -25,7 +25,13 @@ public interface TicketService {
 
 	ApiResponse editTicket(Integer ticketId, Ticket ticket);
 	
-	ApiResponse reopenTicket(Integer ticketId,Comments commentObj);
+	ApiResponse reopenTicket(Integer ticketId,Comments commentObj); 
+	
+	ApiResponse addComment(Comments commentObj); 
+	
+	ApiResponse editComment(Comments commentObj); 
+	
+	ApiResponse deleteComment(Comments commentObj);
 }
 		
 

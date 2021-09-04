@@ -93,6 +93,27 @@ class TicketController {
 		commentObj.setCreatedAt(new Date());
 		return ticketService.reopenTicket(ticketId, commentObj); 
 	}
+	
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/reopenTicket/{ticketId}",
+			AuthConstants.DEVELOPER_BASEPATH + "/reopenTicket/{ticketId}" })
+	public ApiResponse addComment(@RequestBody Comments commentObj) {
+		commentObj.setCreatedAt(new Date());
+		return ticketService.addComment(commentObj); 
+	}
+	
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/reopenTicket/{ticketId}",
+			AuthConstants.DEVELOPER_BASEPATH + "/reopenTicket/{ticketId}" })
+	public ApiResponse editComment(@RequestBody Comments commentObj) {
+		commentObj.setCreatedAt(new Date());
+		return ticketService.editComment(commentObj); 
+	}
+	
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/reopenTicket/{ticketId}",
+			AuthConstants.DEVELOPER_BASEPATH + "/reopenTicket/{ticketId}" })
+	public ApiResponse deleteComment(@RequestBody Comments commentObj) {
+		commentObj.setCreatedAt(new Date());
+		return ticketService.deleteComment(commentObj); 
+	}
 
 	/*
 	 * @GetMapping(value = { AuthConstants.ADMIN_BASEPATH +"/getAllTicket") public
