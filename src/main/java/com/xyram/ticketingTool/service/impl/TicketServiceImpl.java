@@ -341,7 +341,7 @@ public class TicketServiceImpl implements TicketService {
 	}
 	
 	@Override
-	public ApiResponse deleteComment(Comments commentObj) {
+	public ApiResponse deleteComment(Comments commentObj) { 
 
 		ApiResponse response = new ApiResponse(false);
 		Ticket ticketObj = ticketrepository.getById(commentObj.getTicketId());
