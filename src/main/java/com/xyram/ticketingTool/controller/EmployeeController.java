@@ -56,30 +56,21 @@ class EmployeeController {
 
 	
 	@GetMapping(value= {AuthConstants.ADMIN_BASEPATH +"/getAllEmployee"})
-	public Page<Employee> getAllEmployee(Pageable pageable) {
+	public ApiResponse getAllEmployee(Pageable pageable) {
 		logger.info("indide CatagoryController :: getAllCatagory");
 		return employeeService.getAllEmployee(pageable);
 	}
 
 	
 	@PutMapping(value= {AuthConstants.ADMIN_BASEPATH + "/editEmployee/{employeeId}",AuthConstants.DEVELOPER_BASEPATH+"/editEmployee/{employeeId}"})
-	public Employee editEmployee(@RequestBody Employee employeeRequest,@PathVariable Integer employeeId ) {
+	public ApiResponse editEmployee(@RequestBody Employee employeeRequest,@PathVariable Integer employeeId ) {
 		logger.info("indide ProductController :: getAllemployee");
 		return employeeService.editEmployee(employeeId,employeeRequest);
 	}
-	/*
-	 * @PutMapping(AuthConstants.DOCTOR_BASEPATH + "/comments/{commentId}") public
-	 * Comment updateComment(@Valid @RequestBody Comment
-	 * commentRequest, @PathVariable String commentId) {
-	 * logger.info("Received request to update comment: " +
-	 * commentRequest.getText()); return commentsService.updateComment(commentId,
-	 * commentRequest);
-	 * 
-	 * }
-	 */
+	
 	
 	@PutMapping(value= {AuthConstants.ADMIN_BASEPATH + "/updateEmployeeStatus/{employeeID}/status/{userstatus}"})
-	public String updateEmployeeStatus(@PathVariable int employeeID, @PathVariable UserStatus userstatus) {
+	public ApiResponse updateEmployeeStatus(@PathVariable int employeeID, @PathVariable UserStatus userstatus) {
 		logger.info("Received request to change category status to: " + userstatus + "for employeeId: " + employeeID);
 		return employeeService.updateEmployeeStatus(employeeID, userstatus);
 	}

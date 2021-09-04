@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,10 +22,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
+import com.xyram.ticketingTool.Repository.RoleRepository;
 import com.xyram.ticketingTool.Repository.UserRepository;
 import com.xyram.ticketingTool.admin.model.User;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Employee;
+import com.xyram.ticketingTool.entity.Role;
 import com.xyram.ticketingTool.entity.Ticket;
 import com.xyram.ticketingTool.enumType.UserRole;
 import com.xyram.ticketingTool.enumType.UserStatus;
@@ -47,6 +50,9 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 	@Autowired
 	UserRepository userRepository;
+
+	@Autowired
+	RoleRepository roleRepository;
 
 	@Override
 	public ApiResponse addemployee(Employee employee) {
@@ -71,26 +77,42 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			response.setSuccess(true);
 			response.setMessage(ResponseMessages.EMPLOYEE_ADDED);
 			Map content = new HashMap();
-			content.put("employeeId",employeeNew.geteId());
+			content.put("employeeId", employeeNew.geteId());
 			response.setContent(content);
 			return response;
 
 		}
 
-		
 		return response;
 	}
 
 	private ApiResponse validateEmployee(Employee employee) {
 		ApiResponse response = new ApiResponse(false);
 		if (!emailValidation(employee.getEmail())) {
-			response.setMessage(ResponseMessages.EMAIL_INVALID);;
+			response.setMessage(ResponseMessages.EMAIL_INVALID);
+			;
 			response.setSuccess(false);
 		}
 
 		else if (employee.getMobileNumber().length() != 10) {
-			response.setMessage(ResponseMessages.MOBILE_INVALID);;
+			response.setMessage(ResponseMessages.MOBILE_INVALID);
+			;
 			response.setSuccess(false);
+		}
+
+		else if (employee.getRole() != null && employee.getRole().getId() != null) {
+			Optional<Role> role = roleRepository.findById(employee.getRole().getId());
+			if (role == null) {
+				response.setMessage(ResponseMessages.ROLE_INVALID);
+				response.setSuccess(false);
+			}
+
+		}
+
+		else {
+			response.setMessage(ResponseMessages.EMPLOYEE_ADDED);
+			response.setSuccess(true);
+			response.setContent(null);
 		}
 
 		return response;
@@ -105,41 +127,81 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public Page<Employee> getAllEmployee(Pageable pageable) {
-
-		return employeeRepository.findAll(pageable);
+	public ApiResponse getAllEmployee(Pageable pageable) {
+       Page<Map> employeeList =   employeeRepository.getAllEmployeeList(pageable);
+       ApiResponse response = new ApiResponse(true);
+       response.setSuccess(true);
+       response.setContent((Map)employeeList);
+       return  response;
 	}
 
 	@Override
-	public String updateEmployeeStatus(int employeeID, UserStatus userstatus) {
-		return employeeRepository.findById(employeeID).map(employee -> {
-			employee.setStatus(userstatus);
-			return "{\"response\":\"Success\"}";
+	public ApiResponse updateEmployeeStatus(int employeeID, UserStatus userstatus) {
+		ApiResponse response = validateStatus(userstatus);
+		if (response.isSuccess()) {
+			Employee employee = employeeRepository.getById(employeeID);
+			if (employee != null) {
+				employee.setStatus(userstatus);
+				employeeRepository.save(employee);
+				// Employee employeere=new Employee();
 
-		}).orElseThrow(() -> new ResourceNotFoundException("employee not foung with id: " + employeeID));
+				response.setSuccess(true);
+				response.setMessage(ResponseMessages.STATUS_UPDATE);
+				response.setContent(null);
+			}
 
-//		/return employeeDao.updateEmployeeStatus(employeeID, userstatus);
+			else {
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.EMPLOYEE_INVALID);
+				response.setContent(null);
+			}
+
+		}
+		return response;
+	}
+
+	private ApiResponse validateStatus(UserStatus userstatus) {
+		ApiResponse response = new ApiResponse(false);
+		if (userstatus != UserStatus.ACTIVE || userstatus != UserStatus.INACTIVE) {
+			response.setMessage(ResponseMessages.USERSTATUS_INVALID);
+			response.setSuccess(false);
+		}
+
+		else {
+			response.setMessage(ResponseMessages.STATUS_UPDATE);
+			response.setSuccess(true);
+		}
+
+		return response;
 	}
 
 	@Override
-	public Employee editEmployee(Integer employeeId, Employee employeeRequest) {
-		// logger.info("Received request to update healthDevice for healthDeviceId: " +
-		// healthDeviceId.toString());
-		return employeeRepository.findById(employeeId).map(employee -> {
-			// if(employeEditEmployee!=null) {
-			// employee.setDesignation(employee.getDesignation());
-			employee.setEmail(employeeRequest.getEmail());
-			employee.setFirstName(employeeRequest.getFirstName());
-			employee.setLastName(employeeRequest.getLastName());
-			employee.setLastUpdatedAt(new Date());
-			employee.setMiddleName(employeeRequest.getMiddleName());
-			employee.setMobileNumber(employeeRequest.getMobileNumber());
-			employee.setPassword(employeeRequest.getPassword());
-			employee.setRole(employee.getRole());
-			employee.setStatus(employeeRequest.getStatus());
-			employee.setUpdatedBy(employeeRequest.getUpdatedBy());
-			return employeeRepository.save(employee);
-		}).orElseThrow(() -> new ResourceNotFoundException("healthDevice  not found with id: "));
+	public ApiResponse editEmployee(Integer employeeId, Employee employeeRequest) {
+		ApiResponse response = validateEmployee(employeeRequest);
+		if (response.isSuccess()) {
+			Employee employee = employeeRepository.getById(employeeId);
+			if (employee != null) {
+				employee.setFirstName(employeeRequest.getFirstName());
+				employee.setLastName(employeeRequest.getLastName());
+				employee.setLastUpdatedAt(new Date());
+				employee.setMiddleName(employeeRequest.getMiddleName());
+				employee.setMobileNumber(employeeRequest.getMobileNumber());
+				employeeRepository.save(employee);
+
+				response.setSuccess(true);
+				response.setMessage(ResponseMessages.EMPLOYEE_UPDATION);
+				response.setContent(null);
+			}
+
+			else {
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.EMPLOYEE_INVALID);
+				response.setContent(null);
+			}
+
+		}
+
+		return response;
 	}
 
 }

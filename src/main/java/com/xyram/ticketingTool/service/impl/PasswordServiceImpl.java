@@ -68,29 +68,3 @@ public class PasswordServiceImpl implements PasswordService {
 
 	}
 }
-/*
- * @Override public Map forgotPassword(String userName) { User user =
- * userService.getUserByUsername(userName.toLowerCase()); if (userName != null
- * && userName.equals(user.getUsername())) {
- * user.setPassword(PasswordUtil.generateRandomPassword());
- * getSession().save(user); HashMap mailDetails = new HashMap();
- * mailDetails.put("toEmail", user.getUsername()); mailDetails.put("subject",
- * user.getUsername()+", "+ "Here's your new PASSWORD");
- * mailDetails.put("message","Hi " + user.getUsername() +
- * ", \n\n We received a request to reset the password for your Account. \n\n Here's your new PASSWORD: \n "
- * + user.getPassword() +
- * "\n\n Thanks for helping us keep your account secure.,\n Xyram Software Solutions Pvt Ltd."
- * ); emailService.sendMail(mailDetails); if (userCache.isPresent("USER",
- * userName.toLowerCase())) userCache.remove("USER", userName.toLowerCase());
- * 
- * 
- * HashMap message = new HashMap(); message.put("Message",
- * "Mail Sent Successfully to " + user.getUsername()); return message;
- * 
- * 
- * }
- * 
- * else { throw new ResponseStatusException(HttpStatus.NOT_FOUND,
- * "Invalid Username  : " + user.getUsername()); } } }
- * 
- */
