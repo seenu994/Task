@@ -2,6 +2,10 @@ package com.xyram.ticketingTool.util;
 
 public interface ResponseMessages {
 	
+	
+	String TICKET_NOT_EXIST = "Ticket Id is not exist";
+	String TICKET_REOPENED = "Ticket re-opened Sucessfully";
+	
 	String EMPLOYEE_ADDED = "Employee Added Successfully";
 	
 	String EMAIL_INVALID = "Email is Incorrect";

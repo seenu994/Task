@@ -23,6 +23,7 @@ import com.xyram.ticketingTool.Repository.EmployeeRepository;
 import com.xyram.ticketingTool.Repository.ProjectMemberRepository;
 import com.xyram.ticketingTool.Repository.ProjectRepository;
 import com.xyram.ticketingTool.Repository.TicketRepository;
+import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.ProjectMembers;
 import com.xyram.ticketingTool.entity.Projects;
 import com.xyram.ticketingTool.entity.Ticket;
@@ -32,6 +33,7 @@ import com.xyram.ticketingTool.exception.ResourceNotFoundException;
 import com.xyram.ticketingTool.service.ProjectMemberService;
 import com.xyram.ticketingTool.service.TicketAttachmentService;
 import com.xyram.ticketingTool.service.TicketService;
+import com.xyram.ticketingTool.util.ResponseMessages;
 
 /**
  * 
@@ -47,7 +49,7 @@ public class TicketServiceImpl implements TicketService {
 
 	@Autowired
 	TicketService ticketService;
-	
+
 	@Autowired
 	TicketAttachmentService attachmentService;
 
@@ -58,7 +60,7 @@ public class TicketServiceImpl implements TicketService {
 		ticketRequest.setStatus(TicketStatus.INITIATED);
 		ticketRequest.setCreatedBy(ticketRequest.getCreatedBy());
 		Ticket tickets = ticketrepository.save(ticketRequest);
-		//attachmentService.storeImage(tickets);
+		// attachmentService.storeImage(tickets);
 		return tickets;
 	}
 
@@ -75,31 +77,50 @@ public class TicketServiceImpl implements TicketService {
 
 	@Override
 	public Ticket onHoldTicket(Ticket ticketRequest) {
-		return ticketrepository.findById(ticketRequest.getId()).map(ticket-> {
+		return ticketrepository.findById(ticketRequest.getId()).map(ticket -> {
 			ticket.setStatus(TicketStatus.ONHOLD);
 			ticket.setUpdatedBy(ticketRequest.getUpdatedBy());
 			ticket.setLastUpdatedAt(new Date());
 			return ticketrepository.save(ticket);
-		}).orElseThrow(() -> new ResourceNotFoundException("ticket not found with id:" +ticketRequest.getId() ));
-			
-			
+		}).orElseThrow(() -> new ResourceNotFoundException("ticket not found with id:" + ticketRequest.getId()));
+
 	}
 
 	@Override
 	public Ticket editTicket(Integer ticketId, Ticket ticketRequest) {
-        return ticketrepository.findById(ticketId).map(ticket->{
-                
-       
-        	ticket.setTicketDescription(ticketRequest.getTicketDescription());
-        	ticket.setCreatedBy(ticketRequest.getCreatedBy());
-        	ticket.setLastUpdatedAt(new Date());
-        	ticket.setPriority(ticketRequest.getPriority());
-        	ticket.setProjects(ticketRequest.getProjects());
-        	ticket.setStatus(ticketRequest.getStatus());
-        	ticket.setUpdatedBy(ticketRequest.getUpdatedBy());
-        	return ticketrepository.save(ticket);
-        	
-		 }).orElseThrow(() -> new ResourceNotFoundException("ticket   not found with id: " ));
-}
+		return ticketrepository.findById(ticketId).map(ticket -> {
 
+			ticket.setTicketDescription(ticketRequest.getTicketDescription());
+			ticket.setCreatedBy(ticketRequest.getCreatedBy());
+			ticket.setLastUpdatedAt(new Date());
+			ticket.setPriority(ticketRequest.getPriority());
+			ticket.setProjects(ticketRequest.getProjects());
+			ticket.setStatus(ticketRequest.getStatus());
+			ticket.setUpdatedBy(ticketRequest.getUpdatedBy());
+			return ticketrepository.save(ticket);
+
+		}).orElseThrow(() -> new ResourceNotFoundException("ticket   not found with id: "));
 	}
+	@Override
+	public ApiResponse reopenTicket(Integer ticketId, Ticket ticketRequest) {
+		
+		ApiResponse response = new ApiResponse(false);
+		Ticket ticketObj = ticketrepository.getById(ticketId);
+		if(ticketObj != null) {
+			ticketObj.setStatus(TicketStatus.REOPEN);
+			ticketObj.setUpdatedBy(null);
+			ticketObj.setLastUpdatedAt(new Date());
+			ticketrepository.save(ticketObj);
+			response.setSuccess(true);
+			response.setMessage(ResponseMessages.TICKET_REOPENED);
+			response.setContent(null);
+			return response;
+		}else {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.TICKET_NOT_EXIST);
+			response.setContent(null);
+			return response;
+		}		
+	}
+
+}

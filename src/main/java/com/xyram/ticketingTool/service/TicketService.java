@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.ProjectMembers;
 import com.xyram.ticketingTool.entity.Ticket;
 
@@ -18,7 +19,9 @@ public interface TicketService {
 
 	Ticket onHoldTicket(Ticket ticketRequest);
 
-	Ticket editTicket(Integer ticketId, Ticket ticket); 
+	Ticket editTicket(Integer ticketId, Ticket ticket);
+	
+	ApiResponse reopenTicket(Integer ticketId, Ticket ticket);
 }
 		
 

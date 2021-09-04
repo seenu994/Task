@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Designation;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.ProjectMembers;
@@ -73,6 +74,13 @@ class TicketController {
 	public Ticket editTicket(@PathVariable Integer ticketId, @RequestBody Ticket ticketRequest) {
 		logger.info("Recive request to edit ticket by id:" + ticketRequest.getId());
 		return ticketService.editTicket(ticketId, ticketRequest);
+	}
+	
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/reopenTicket/{ticketId}",
+			AuthConstants.DEVELOPER_BASEPATH + "/reopenTicket/{ticketId}" })
+	public ApiResponse reopenTicket(@PathVariable Integer ticketId, @RequestBody Ticket ticketRequest) {
+		logger.info("Recive request to edit ticket by id:" + ticketRequest.getId());
+		return ticketService.reopenTicket(ticketId, ticketRequest); 
 	}
 
 	/*
