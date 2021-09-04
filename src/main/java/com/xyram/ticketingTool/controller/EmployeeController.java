@@ -38,7 +38,6 @@ import ch.qos.logback.core.pattern.color.ANSIConstants;
  */
 @RestController
 @CrossOrigin
-//@RequestMapping("/api/employee")
 class EmployeeController {
 	private final Logger logger = LoggerFactory.getLogger(EmployeeController.class);
 

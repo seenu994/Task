@@ -1,6 +1,7 @@
 package com.xyram.ticketingTool.apiresponses;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ApiResponse {
@@ -50,6 +51,9 @@ public class ApiResponse {
 	public void setContent(Map content) {
 		this.content = content;
 	}
+
+
+	
 	
 	
 

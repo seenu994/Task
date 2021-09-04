@@ -3,6 +3,7 @@ package com.xyram.ticketingTool.service.impl;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -32,6 +33,7 @@ import com.xyram.ticketingTool.entity.Ticket;
 import com.xyram.ticketingTool.enumType.UserRole;
 import com.xyram.ticketingTool.enumType.UserStatus;
 import com.xyram.ticketingTool.exception.ResourceNotFoundException;
+import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.EmployeeService;
 import com.xyram.ticketingTool.util.ResponseMessages;
 
@@ -53,6 +55,9 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 	@Autowired
 	RoleRepository roleRepository;
+	
+	@Autowired
+	CurrentUser currentUser;
 
 	@Override
 	public ApiResponse addemployee(Employee employee) {
@@ -73,6 +78,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				throw new ResourceNotFoundException("invalid user role ");
 			}
 			userRepository.save(user);
+			employee.setCreatedBy(currentUser.getUserId());
 			Employee employeeNew = employeeRepository.save(employee);
 			response.setSuccess(true);
 			response.setMessage(ResponseMessages.EMPLOYEE_ADDED);
@@ -106,15 +112,17 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				response.setMessage(ResponseMessages.ROLE_INVALID);
 				response.setSuccess(false);
 			}
+			else {
+				response.setMessage(ResponseMessages.EMPLOYEE_ADDED);
+				response.setSuccess(true);
+				response.setContent(null);
+			}
+
+			
 
 		}
 
-		else {
-			response.setMessage(ResponseMessages.EMPLOYEE_ADDED);
-			response.setSuccess(true);
-			response.setContent(null);
-		}
-
+		
 		return response;
 	}
 
@@ -129,9 +137,11 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	@Override
 	public ApiResponse getAllEmployee(Pageable pageable) {
        Page<Map> employeeList =   employeeRepository.getAllEmployeeList(pageable);
+       Map content = new HashMap();
+       content.put("employeeList", employeeList);
        ApiResponse response = new ApiResponse(true);
        response.setSuccess(true);
-       response.setContent((Map)employeeList);
+       response.setContent(content);
        return  response;
 	}
 

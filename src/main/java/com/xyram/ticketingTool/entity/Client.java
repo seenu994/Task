@@ -30,7 +30,7 @@ private Integer Id;
 
 @Enumerated(EnumType.STRING)
 @Column(name = "clientstatus")
-private ClientStatus status = ClientStatus.INACTIVE;
+private ClientStatus status = ClientStatus.ACTIVE;
 
 public Integer getId() {
 	return Id;
