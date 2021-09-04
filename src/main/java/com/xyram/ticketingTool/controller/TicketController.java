@@ -25,6 +25,7 @@ import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.ProjectMembers;
 import com.xyram.ticketingTool.entity.Projects;
 import com.xyram.ticketingTool.entity.Ticket;
+import com.xyram.ticketingTool.entity.TicketComments;
 import com.xyram.ticketingTool.enumType.UserStatus;
 import com.xyram.ticketingTool.service.EmployeeService;
 import com.xyram.ticketingTool.service.ProjectMemberService;
@@ -78,9 +79,9 @@ class TicketController {
 	
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/reopenTicket/{ticketId}",
 			AuthConstants.DEVELOPER_BASEPATH + "/reopenTicket/{ticketId}" })
-	public ApiResponse reopenTicket(@PathVariable Integer ticketId) {
+	public ApiResponse reopenTicket(@PathVariable Integer ticketId, @RequestBody TicketComments ticketComments) {
 //		logger.info("Recive request to reopened ticket by id:" + ticketRequest.getId());
-		return ticketService.reopenTicket(ticketId); 
+		return ticketService.reopenTicket(ticketId, ticketComments); 
 	}
 
 	/*

@@ -25,6 +25,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
 import com.xyram.ticketingTool.Repository.ProjectMemberRepository;
 import com.xyram.ticketingTool.Repository.ProjectRepository;
+import com.xyram.ticketingTool.Repository.TicketCommentRepository;
 import com.xyram.ticketingTool.Repository.TicketRepository;
 import com.xyram.ticketingTool.Repository.UserRepository;
 import com.xyram.ticketingTool.admin.model.User;
@@ -32,6 +33,7 @@ import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.ProjectMembers;
 import com.xyram.ticketingTool.entity.Projects;
 import com.xyram.ticketingTool.entity.Ticket;
+import com.xyram.ticketingTool.entity.TicketComments;
 import com.xyram.ticketingTool.enumType.ProjectMembersStatus;
 import com.xyram.ticketingTool.enumType.TicketStatus;
 import com.xyram.ticketingTool.exception.ResourceNotFoundException;
@@ -51,6 +53,9 @@ public class TicketServiceImpl implements TicketService {
 
 	@Autowired
 	TicketRepository ticketrepository;
+	
+	@Autowired
+	TicketCommentRepository ticketcommentRepository;
 	
 	@Autowired
 	UserRepository userrepository;
@@ -110,24 +115,35 @@ public class TicketServiceImpl implements TicketService {
 		}).orElseThrow(() -> new ResourceNotFoundException("ticket   not found with id: "));
 	}
 	@Override
-	public ApiResponse reopenTicket(Integer ticketId) {
+	public ApiResponse reopenTicket(Integer ticketId, TicketComments comments) {
 		
 		ApiResponse response = new ApiResponse(false);
 		Ticket ticketObj = ticketrepository.getById(ticketId);
 		if(ticketObj != null) {
 			if(ticketObj.getStatus().equals(TicketStatus.COMPLETED)) {
-				ticketObj.setStatus(TicketStatus.REOPEN);
-				Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-				String username = auth.getPrincipal().toString();
 				
-//				User user = userrepository.get
+				if(comments.getTicketCommentDescription().length() == 0) {
+					response.setSuccess(false);
+					response.setMessage(ResponseMessages.TICKET_COMMENTS_NOT_EXIST);
+					response.setContent(null);
+				}else {
+					ticketObj.setStatus(TicketStatus.REOPEN);
+//					Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//					String username = auth.getPrincipal().toString();
+					
+//					User user = userrepository.get
+					
+					ticketObj.setUpdatedBy(null);
+					ticketObj.setLastUpdatedAt(new Date());
+					ticketrepository.save(ticketObj);
+					
+					ticketcommentRepository.save(comments);
+					
+					response.setSuccess(true);
+					response.setMessage(ResponseMessages.TICKET_REOPENED);
+					response.setContent(null);
+				}
 				
-				ticketObj.setUpdatedBy(username);
-				ticketObj.setLastUpdatedAt(new Date());
-				ticketrepository.save(ticketObj);
-				response.setSuccess(true);
-				response.setMessage(ResponseMessages.TICKET_REOPENED);
-				response.setContent(null);
 			}else {
 				response.setSuccess(false);
 				response.setMessage(ResponseMessages.TICKET_NOT_RESOLVED);
