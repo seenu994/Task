@@ -1,6 +1,7 @@
 package com.xyram.ticketingTool.controller;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.ProjectMembers;
 import com.xyram.ticketingTool.entity.Projects;
@@ -46,9 +48,9 @@ class ProjectMemberContoller {
 
 	
 	@PostMapping(value= {AuthConstants.ADMIN_BASEPATH +"/assignProjectToEmployee",AuthConstants.DEVELOPER_BASEPATH +"/assignProjectToEmployee"})
-	public ProjectMembers assignProjectToEmployee(@RequestBody Map<String,Integer> requestMap) {
+	public ApiResponse assignProjectToEmployee(@RequestBody ArrayList<ProjectMembers> members) {
 		logger.info("Received request to add project Members");
-		return  projectMemberService.assignProjectToEmployee(requestMap);
+		return  projectMemberService.assignProjectToEmployee(members);
 	}	
 
 	
@@ -58,9 +60,9 @@ class ProjectMemberContoller {
 		return projectMemberService.getAllProjectMembers(pageable);
 	}
 	@PostMapping(value= {AuthConstants.ADMIN_BASEPATH +"/unassignProjectToEmployee",AuthConstants.DEVELOPER_BASEPATH +"/unassignProjectToEmployee"})
-	public ProjectMembers unassignProjectToEmployee(@RequestBody Map<String,Integer> requestMap) {
+	public ApiResponse unassignProjectToEmployee(@RequestBody ProjectMembers member) {
 		logger.info("Received request to add project Members");
-		return  projectMemberService.unassignProjectToEmployee(requestMap);
+		return  projectMemberService.unassignProjectToEmployee(member);
 	}
 
 	

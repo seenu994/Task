@@ -50,6 +50,9 @@ public interface ResponseMessages {
 	String PROJECT_EDIT ="Project Edited Successfully";
 
 	String PROJECT_ID_VALID ="Project Id Is Not Exists";
+	
+	String PROJECT_MEMBERS_ADDED ="Successfuly added members to the project.";
+	String PROJECT_MEMBER_REMOVED ="Successfuly removed member from the project.";
 
 
 }

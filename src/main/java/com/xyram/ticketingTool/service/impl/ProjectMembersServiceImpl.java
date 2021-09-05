@@ -1,8 +1,10 @@
 package com.xyram.ticketingTool.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -14,10 +16,13 @@ import org.springframework.stereotype.Service;
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
 import com.xyram.ticketingTool.Repository.ProjectMemberRepository;
 import com.xyram.ticketingTool.Repository.ProjectRepository;
+import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.ProjectMembers;
+import com.xyram.ticketingTool.entity.Projects;
 import com.xyram.ticketingTool.enumType.ProjectMembersStatus;
 import com.xyram.ticketingTool.exception.ResourceNotFoundException;
 import com.xyram.ticketingTool.service.ProjectMemberService;
+import com.xyram.ticketingTool.util.ResponseMessages;
 
 /**
  * 
@@ -47,46 +52,94 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 		return projectMemberRepository.findAll(pageable);
 
 	}
-
+	
 	@Override
-	public ProjectMembers assignProjectToEmployee(Map<String, Integer> requestMap) {
-		ProjectMembers projectMembers = new ProjectMembers();
-		if (requestMap.containsKey("employeeId") && requestMap.containsKey("projectId")) {
-			projectMembers.setEmployee(employeeRepository.getById(requestMap.get("employeeId")));
-			projectMembers.setProject(projectRepository.getById(requestMap.get("projectId")));
-			projectMembers.setStatus(ProjectMembersStatus.ACTIVE);
-			return projectMemberRepository.save(projectMembers);
-		} else {
-			if (requestMap.containsKey("employeId")) {
-				throw new ResourceNotFoundException("provide the EmployeeId to assign project for employee");
-			} else {
-				throw new ResourceNotFoundException("provide the ProjectId to assign project to employee");
+	public ApiResponse assignProjectToEmployee(ArrayList<ProjectMembers> members) {
+		// TODO Auto-generated method stub
+		
+		ApiResponse response = new ApiResponse(false);
+		
+		Optional<Projects> project = projectRepository.findById(members.get(0).getProjectId());
+		
+		if(project != null) {
+			for(int i=0;i<members.size();i++) {
+				members.get(i).setStatus(ProjectMembersStatus.ACTIVE);
+				projectMemberRepository.save(members.get(i));
 			}
+			response.setSuccess(true);
+			response.setMessage(ResponseMessages.PROJECT_MEMBERS_ADDED);
+			response.setContent(null);
+		}else {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.PROJECT_ID_VALID);
+			response.setContent(null);
 		}
-
+			
+		return response;
 	}
 
 	@Override
-	public ProjectMembers unassignProjectToEmployee(Map<String, Integer> requestMap) {
-		if (requestMap.containsKey("employeeId") && requestMap.containsKey("projectId")) {
-			List<ProjectMembers> projectMembers = projectMemberRepository
-					.findByProject_pIdAndEmployee_eId(requestMap.get("projectId"), requestMap.get("employeeId"));
-
-			if (projectMembers != null && projectMembers.size() > 0) {
-				projectMembers.get(0).setStatus(ProjectMembersStatus.INACTIVE);
-				return projectMemberRepository.save(projectMembers.get(0));
-			} else {
-				throw new ResourceNotFoundException("no mapping with respect to projectId and enployeeId");
-			}
-		} else {
-			if (requestMap.containsKey("employeId")) {
-
-				throw new ResourceNotFoundException("provide the EmployeeId to assign project for employee");
-			} else {
-				throw new ResourceNotFoundException("provide the ProjectId to assign project to employee");
-			}
+	public ApiResponse unassignProjectToEmployee(ProjectMembers member) {
+		// TODO Auto-generated method stub
+		ApiResponse response = new ApiResponse(false);
+		Optional<Projects> project = projectRepository.findById(member.getProjectId());
+		
+		if(project != null) {
+			member.setStatus(ProjectMembersStatus.INACTIVE);
+			projectMemberRepository.save(member);
+			
+			response.setSuccess(true);
+			response.setMessage(ResponseMessages.PROJECT_MEMBER_REMOVED);
+			response.setContent(null);
+		}else {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.PROJECT_ID_VALID);
+			response.setContent(null);
 		}
-
+		return response;
 	}
+
+//	@Override
+//	public ProjectMembers assignProjectToEmployee(Map<String, Integer> requestMap) {
+//		ProjectMembers projectMembers = new ProjectMembers();
+//		if (requestMap.containsKey("employeeId") && requestMap.containsKey("projectId")) {
+//			projectMembers.setEmployee(employeeRepository.getById(requestMap.get("employeeId")));
+//			projectMembers.setProject(projectRepository.getById(requestMap.get("projectId")));
+//			projectMembers.setStatus(ProjectMembersStatus.ACTIVE);
+//			return projectMemberRepository.save(projectMembers);
+//		} else {
+//			if (requestMap.containsKey("employeId")) {
+//				throw new ResourceNotFoundException("provide the EmployeeId to assign project for employee");
+//			} else {
+//				throw new ResourceNotFoundException("provide the ProjectId to assign project to employee");
+//			}
+//		}
+//
+//	}
+//
+//	@Override
+//	public ProjectMembers unassignProjectToEmployee(Map<String, Integer> requestMap) {
+//		if (requestMap.containsKey("employeeId") && requestMap.containsKey("projectId")) {
+//			List<ProjectMembers> projectMembers = projectMemberRepository
+//					.findByProject_pIdAndEmployee_eId(requestMap.get("projectId"), requestMap.get("employeeId"));
+//
+//			if (projectMembers != null && projectMembers.size() > 0) {
+//				projectMembers.get(0).setStatus(ProjectMembersStatus.INACTIVE);
+//				return projectMemberRepository.save(projectMembers.get(0));
+//			} else {
+//				throw new ResourceNotFoundException("no mapping with respect to projectId and enployeeId");
+//			}
+//		} else {
+//			if (requestMap.containsKey("employeId")) {
+//
+//				throw new ResourceNotFoundException("provide the EmployeeId to assign project for employee");
+//			} else {
+//				throw new ResourceNotFoundException("provide the ProjectId to assign project to employee");
+//			}
+//		}
+//
+//	}
+
+	
 
 }

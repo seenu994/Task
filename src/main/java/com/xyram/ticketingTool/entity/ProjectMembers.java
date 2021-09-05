@@ -39,6 +39,28 @@ public class ProjectMembers extends AuditModel {
 	@JoinColumn(name = "project_id")
 	private  Projects project;
 
+	@JoinColumn(name = "employee_id")
+	private  Integer employeeId;
+	
+	@JoinColumn(name = "project_id")
+	private  Integer projectId;
+
+	public Integer getEmployeeId() {
+		return employeeId;
+	}
+
+	public void setEmployeeId(Integer employeeId) {
+		this.employeeId = employeeId;
+	}
+
+	public Integer getProjectId() {
+		return projectId;
+	}
+
+	public void setProjectId(Integer projectId) {
+		this.projectId = projectId;
+	}
+
 	public Integer getId() {
 		return Id;
 	}
