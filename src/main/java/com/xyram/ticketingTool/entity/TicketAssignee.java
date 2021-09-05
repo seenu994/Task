@@ -38,12 +38,13 @@ public class TicketAssignee extends AuditModel {
 	private Integer Id;
 	
 	
-	@ManyToOne(cascade = { CascadeType.MERGE })
+//	@ManyToOne(cascade = { CascadeType.MERGE })
 	@JoinColumn(name = "ticket_id")
-	private Ticket ticket;
-	@ManyToOne(cascade = { CascadeType.MERGE })
+	private Integer ticketId;
+	
+//	@ManyToOne(cascade = { CascadeType.MERGE })
 	@JoinColumn(name = "employee_id")
-	private Employee employee;
+	private Integer employeeId;
 	
 	
 	@Enumerated(EnumType.STRING)
@@ -61,13 +62,13 @@ public class TicketAssignee extends AuditModel {
 	}
 
 
-	public Ticket getTicket() {
-		return ticket;
+	public Integer getTicket() {
+		return ticketId;
 	}
 
 
-	public void setTicket(Ticket ticket) {
-		this.ticket = ticket;
+	public void setTicket(Integer ticket) {
+		this.ticketId = ticket;
 	}
 
 
@@ -81,13 +82,13 @@ public class TicketAssignee extends AuditModel {
 	}
 
 
-	public Employee getEmployee() {
-		return employee;
+	public Integer getEmployee() {
+		return employeeId;
 	}
 
 
-	public void setEmployee(Employee employee) {
-		this.employee = employee;
+	public void setEmployee(Integer employee) {
+		this.employeeId = employee;
 	}
 	
 }

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Role;
 import com.xyram.ticketingTool.entity.TicketAssignee;
 import com.xyram.ticketingTool.service.RoleService;
@@ -49,8 +50,16 @@ public class TicketAssignController {
 	 * 
 	 */
 	@PostMapping(value= {AuthConstants.ADMIN_BASEPATH + "/assignTicketToInfraTeam",AuthConstants.INFRA_USER_BASEPATH + "/assignTicketToInfraTeam"})
-	public Map<String,String> assignTicketToInfraTeam(@RequestBody Map<String, Object> requestMap) {
+//	public Map<String,String> assignTicketToInfraTeam(@RequestBody Map<String, Object> requestMap) {
+	public ApiResponse assignTicketToInfraTeam(@RequestBody TicketAssignee assignee) {
 		logger.info("Received request to assign tickets to infra team");
-		return ticketAssignService.assignTicketToInfraTeam(requestMap);
+		return ticketAssignService.assignTicketToInfraTeam(assignee);
+	}
+	
+	@PostMapping(value= {AuthConstants.ADMIN_BASEPATH + "/assignTicketToInfraTeam",AuthConstants.INFRA_USER_BASEPATH + "/reassignTicketToInfraTeam"})
+//	public Map<String,String> assignTicketToInfraTeam(@RequestBody Map<String, Object> requestMap) {
+	public ApiResponse reassignTicketToInfraTeam(@RequestBody TicketAssignee assignee) {
+		logger.info("Received request to assign tickets to infra team");
+		return ticketAssignService.reassignTicketToInfraTeam(assignee);
 	}
 }

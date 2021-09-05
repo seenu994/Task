@@ -40,6 +40,7 @@ import com.xyram.ticketingTool.entity.TicketComments;
 import com.xyram.ticketingTool.enumType.ProjectMembersStatus;
 import com.xyram.ticketingTool.enumType.TicketStatus;
 import com.xyram.ticketingTool.exception.ResourceNotFoundException;
+import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.ProjectMemberService;
 import com.xyram.ticketingTool.service.TicketAttachmentService;
 import com.xyram.ticketingTool.service.TicketService;
@@ -74,6 +75,9 @@ public class TicketServiceImpl implements TicketService {
 
 	@Autowired
 	TicketCommentServiceImpl commentService;
+	
+	@Autowired
+	CurrentUser userDetail;
 
 	@Override
 	public ApiResponse createTickets(Ticket ticketRequest) {
@@ -90,7 +94,7 @@ public class TicketServiceImpl implements TicketService {
 			ticketRequest.setCreatedAt(new Date());
 			ticketRequest.setLastUpdatedAt(new Date());
 			ticketRequest.setStatus(TicketStatus.INITIATED);
-			ticketRequest.setCreatedBy(ticketRequest.getCreatedBy());
+			ticketRequest.setCreatedBy(userDetail.getUserId());
 			Ticket tickets = ticketrepository.save(ticketRequest);
 			// attachmentService.storeImage(tickets);
 
@@ -116,7 +120,7 @@ public class TicketServiceImpl implements TicketService {
 			} else if (!ticketObj.getStatus().equals(TicketStatus.COMPLETED)) {
 
 				ticketObj.setStatus(TicketStatus.CANCELLED);
-				ticketObj.setUpdatedBy(null);
+				ticketObj.setUpdatedBy(userDetail.getUserId());
 				ticketObj.setLastUpdatedAt(new Date());
 				ticketrepository.save(ticketObj);
 
@@ -151,7 +155,7 @@ public class TicketServiceImpl implements TicketService {
 			} else if (ticketObj.getStatus().equals(TicketStatus.ONREVIEW)) {
 
 				ticketObj.setStatus(TicketStatus.COMPLETED);
-				ticketObj.setUpdatedBy(null);
+				ticketObj.setUpdatedBy(userDetail.getUserId());
 				ticketObj.setLastUpdatedAt(new Date());
 				ticketrepository.save(ticketObj);
 
@@ -198,7 +202,7 @@ public class TicketServiceImpl implements TicketService {
 				ticketObj.setPriority(ticketRequest.getPriority());
 				ticketObj.setProjects(ticketRequest.getProjects());
 				ticketObj.setStatus(ticketRequest.getStatus());
-				ticketObj.setUpdatedBy(ticketRequest.getUpdatedBy());
+				ticketObj.setUpdatedBy(userDetail.getUserId());
 				ticketrepository.save(ticketObj);
 
 				response.setSuccess(true);
@@ -240,7 +244,7 @@ public class TicketServiceImpl implements TicketService {
 					ticketObj.setStatus(TicketStatus.REOPEN);
 					commentRepository.save(commentObj);
 
-					ticketObj.setUpdatedBy(null);
+					ticketObj.setUpdatedBy(userDetail.getUserId());
 					ticketObj.setLastUpdatedAt(new Date());
 					ticketrepository.save(ticketObj);
 
