@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.Projects;
 import com.xyram.ticketingTool.enumType.UserStatus;
@@ -44,19 +45,19 @@ class ProjectContoller {
 
 	
 	@PostMapping(value= {AuthConstants.ADMIN_BASEPATH + "/createProject"})
-	public Projects addproject(@RequestBody Projects project) {
+	public ApiResponse addproject(@RequestBody Projects project) {
 		logger.info("Received request to add project");
-		return projectService.addproject(project);
+		return projectService.addproject(project ) ;
 	}
 
 	
 	@GetMapping(value= {AuthConstants.ADMIN_BASEPATH +"/getAllProjects",AuthConstants.DEVELOPER_BASEPATH +"/getAllProjects",AuthConstants.INFRA_USER_BASEPATH +"/getAllProjects"})
-	public Page<Projects> getAllProjects(Pageable pageable) {
+	public ApiResponse getAllProjects(Pageable pageable) {
 		logger.info("indide ProjectContoller :: getAllProjects");
-		return projectService.getAllProjects(pageable);
+		return projectService.getAllProjects(pageable );
 	}
 	@PutMapping(value= {AuthConstants.ADMIN_BASEPATH + "/editProejct/{projectId}",AuthConstants.INFRA_USER_BASEPATH+"/editProejct/{projectId}"})
-	public Projects editProejct(@RequestBody Projects projectRequest,@PathVariable Integer projectId ) {
+	public ApiResponse editProejct(@RequestBody Projects projectRequest,@PathVariable Integer projectId ) {
 		logger.info("indide ProjectContoller :: editProejct");
 		return projectService.editEmployee(projectId,projectRequest);
 	}

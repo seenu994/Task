@@ -44,5 +44,12 @@ public interface ResponseMessages {
 	String CLIENT_UPDATED = "Client Updated Successfully";
 
 	String CLIENT_INVALID = "Invalid Client Id";
+	
+	 String  PROJECT_ADDED ="Project Added Successfully";
+	 String ClIENT_ID_VALID ="Client Id Is Invalid";
+	String PROJECT_EDIT ="Project Edited Successfully";
+
+	String PROJECT_ID_VALID ="Project Id Is Not Exists";
+
 
 }
