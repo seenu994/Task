@@ -1,48 +1,28 @@
 
 package com.xyram.ticketingTool.service.impl;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.xyram.ticketingTool.Repository.CommentRepository;
-import com.xyram.ticketingTool.Repository.EmployeeRepository;
-import com.xyram.ticketingTool.Repository.ProjectMemberRepository;
 import com.xyram.ticketingTool.Repository.ProjectRepository;
-import com.xyram.ticketingTool.Repository.TicketCommentRepository;
 import com.xyram.ticketingTool.Repository.TicketRepository;
 import com.xyram.ticketingTool.Repository.UserRepository;
-import com.xyram.ticketingTool.admin.model.User;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Comments;
-import com.xyram.ticketingTool.entity.ProjectMembers;
 import com.xyram.ticketingTool.entity.Projects;
-import com.xyram.ticketingTool.entity.Role;
 import com.xyram.ticketingTool.entity.Ticket;
-import com.xyram.ticketingTool.entity.TicketComments;
-import com.xyram.ticketingTool.enumType.ProjectMembersStatus;
 import com.xyram.ticketingTool.enumType.TicketStatus;
 import com.xyram.ticketingTool.exception.ResourceNotFoundException;
 import com.xyram.ticketingTool.request.CurrentUser;
-import com.xyram.ticketingTool.service.ProjectMemberService;
 import com.xyram.ticketingTool.service.TicketAttachmentService;
 import com.xyram.ticketingTool.service.TicketService;
 import com.xyram.ticketingTool.util.ResponseMessages;
@@ -296,10 +276,12 @@ public class TicketServiceImpl implements TicketService {
 	public ApiResponse addComment(Comments commentObj) {
 
 		ApiResponse response = new ApiResponse(false);
-		Ticket ticketObj = ticketrepository.getById(commentObj.getTicketId());
-		if (ticketObj != null) {
-			if (!ticketObj.getStatus().equals(TicketStatus.COMPLETED)) {
-
+		//Ticket ticketObj = ticketrepository.getById(commentObj.getTicketId());
+		String ticketObj = ticketrepository.getTicketById(commentObj.getTicketId());
+		if (ticketObj != null && ticketObj != "") {
+		//if (ticketObj != null) {
+			//if (!ticketObj.equalsIgnoreCase(TicketStatus.COMPLETED)) {
+			if (!ticketObj.equalsIgnoreCase(TicketStatus.COMPLETED.toString())) {
 				if (commentObj.getTicketCommentDescription() == null
 						|| commentObj.getTicketCommentDescription().length() == 0) {
 					response.setSuccess(false);
