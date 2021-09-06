@@ -122,11 +122,10 @@ class TicketController {
 		return ticketService.deleteComment(commentObj);
 	}
 
-	/*
-	 * @GetMapping(value = { AuthConstants.ADMIN_BASEPATH +"/getAllTicket") public
-	 * Page<Ticket> getAllTicket(Pageable pageable) {
-	 * logger.info("indide TicketController :: getAllTicket"); return
-	 * ticketService.getAllTicket(pageable); }
-	 */
-
+	
+	@GetMapping(value= {AuthConstants.ADMIN_BASEPATH +"/getAllTicket",AuthConstants.INFRA_USER_BASEPATH +"/getAllTicket"})
+	public ApiResponse getAllTicket(Pageable pageable) {
+		logger.info("indide Ticket controller :: getAllTicket");
+		return ticketService.getAllTicket(pageable);
+	}
 }

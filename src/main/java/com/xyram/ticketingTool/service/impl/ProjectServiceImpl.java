@@ -75,6 +75,7 @@ public class ProjectServiceImpl implements ProjectService {
 		Map content = new HashMap();
 	       content.put("projectList", projectList);
 	       ApiResponse response = new ApiResponse(true);
+	       response.setMessage(ResponseMessages.PROJECT_LIST);
 	       response.setSuccess(true);
 	       response.setContent(content);
 	       return  response;

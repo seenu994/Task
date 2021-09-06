@@ -10,6 +10,8 @@ import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.xyram.ticketingTool.Repository.CommentRepository;
@@ -388,5 +390,15 @@ String>();
 	}
 
 	
-
+	@Override
+	public ApiResponse getAllTicket(Pageable pageable) {
+       Page<Map> TicketList =   ticketrepository.getAllTicketList(pageable);
+       Map content = new HashMap();
+       content.put("TicketList", TicketList);
+       ApiResponse response = new ApiResponse(true);
+       response.setMessage(ResponseMessages.TICKET_LIST);
+       response.setSuccess(true);
+       response.setContent(content);
+       return  response;
+	}
 }
