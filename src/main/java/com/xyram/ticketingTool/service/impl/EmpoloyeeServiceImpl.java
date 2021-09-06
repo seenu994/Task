@@ -165,7 +165,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		if (response.isSuccess()) {
 			Employee employee = employeeRepository.getById(employeeID);
 			if (employee != null) {
-				employee.setStatus(userstatus.ACTIVE);
+				employee.setStatus(userstatus);
 				employeeRepository.save(employee);
 				// Employee employeere=new Employee();z
 

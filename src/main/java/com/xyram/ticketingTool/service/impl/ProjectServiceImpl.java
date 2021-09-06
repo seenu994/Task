@@ -55,7 +55,7 @@ public class ProjectServiceImpl implements ProjectService {
 
 	private ApiResponse validateProjects(Projects projects) {
 		ApiResponse response = new ApiResponse(false);
-		if (projects.getClient().getId() != null) {
+		if (projects.getClientId()!= null) {
 			response.setMessage("success");
 			response.setSuccess(true);
 			response.setContent(null);
@@ -72,11 +72,14 @@ public class ProjectServiceImpl implements ProjectService {
 	public ApiResponse getAllProjects(Pageable pageable) {
 
 		Page<Map> projectList =   projectRepository.getAllProjectLsit(pageable);
+		Map content = new HashMap();
+	       content.put("projectList", projectList);
 	       ApiResponse response = new ApiResponse(true);
 	       response.setSuccess(true);
-	       response.setContent((Map)projectList);
+	       response.setContent(content);
 	       return  response;
 		}
+	
 	
 	@Override
 	public ApiResponse editEmployee(String projectId, Projects projectRequest) {
