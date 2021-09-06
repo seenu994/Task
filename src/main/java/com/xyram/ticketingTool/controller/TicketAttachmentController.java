@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.data.domain.Page;
@@ -53,9 +54,9 @@ public class TicketAttachmentController {
 	 */
 	
 	@PostMapping(value= {AuthConstants.ADMIN_BASEPATH +"/addImage/{ticketId}",AuthConstants.DEVELOPER_BASEPATH +"/addImage/{ticketId}",AuthConstants.INFRA_USER_BASEPATH +"/addImage/{ticketId}"})
-	public Map storeImage(@RequestBody MultipartFile file,@PathVariable Ticket ticketId) {
+	public Map storeImage(@RequestPart(name = "files", required = true) MultipartFile[] files,@PathVariable Ticket ticketId) {
 		logger.info("indide TicketAttachmentController :: addImage");
-		return ticketAttachmentService.storeImage(file,ticketId);
+		return ticketAttachmentService.storeImage(files,ticketId);
 	}
 	@DeleteMapping(value= {AuthConstants.ADMIN_BASEPATH +"/deleteimage/{ticketId}",AuthConstants.DEVELOPER_BASEPATH +"/deleteimage/{ticketId}",AuthConstants.INFRA_USER_BASEPATH+"/deleteimage/{ticketId}"})
 	public String deleteImage(@PathVariable Integer ticketId) {
