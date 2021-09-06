@@ -33,29 +33,27 @@ public class JwtUserDetailsService implements UserDetailsService {
 
 		com.xyram.ticketingTool.admin.model.User user = null;
 
-		if (userCache.containsKey(username)) {
-			user = userCache.get(username);
-		} else {
+		
 			List<com.xyram.ticketingTool.admin.model.User> users = userRepository.findByUsername(username);
 			if (users != null && users.size() > 0) {
 				user = users.get(0);
-				userCache.put(username, users.get(0));
 			}
-		}
+		
 		Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
 		grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + user.getUserRole()));
-		/*
-		 * System.out.println(user.getStatus()); if(user.getStatus()==UserStatus.ACTIVE)
-		 * {
-		 */
+		
+		 System.out.println(user.getStatus()); if(user.getStatus()==UserStatus.ACTIVE)
+		  {
+		
 		return new User(user.getUsername(), user.getPassword(), grantedAuthorities);
 		}
-		/*
-		 * else { return new User(user.getUsername(), user.getPassword(), false, true,
-		 * true, true, grantedAuthorities); }
-		 */
+		
+		 else {
+			 return new User(user.getUsername(), user.getPassword(), false, true,true, true, grantedAuthorities); 
+		 }
 	
 	
+	}
 //		throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Found for the username: " + username);
 //		return new User(username, user.getPassword(), new ArrayList<>());
 
@@ -65,15 +63,11 @@ public class JwtUserDetailsService implements UserDetailsService {
 
 		com.xyram.ticketingTool.admin.model.User user = null;
 
-		if (userCache.containsKey(username)) {
-			user = userCache.get(username);
-			userCache.remove(username);
-		} else {
 			List<com.xyram.ticketingTool.admin.model.User> users = userRepository.findByUsername(username);
 			if (users != null && users.size() > 0) {
 				user = users.get(0);
 			}
-		}
+		
 
 		user.setPassword(null);
 		return user;

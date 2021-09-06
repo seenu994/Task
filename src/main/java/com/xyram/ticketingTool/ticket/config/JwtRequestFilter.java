@@ -15,6 +15,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.ticket.Service.JwtUserDetailsService;
 import com.xyram.ticketingTool.util.AuthConstants;
 
@@ -28,6 +29,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
+	
+    @Autowired
+    CurrentUser currentUser;
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
@@ -76,6 +80,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 //			    ctx.addZuulRequestHeader(AuthConstants.USER_ROLE, (String) jwtTokenUtil.getNamedClaimFromToken(jwtToken, AuthConstants.USER_ROLE));
 //			    ctx.addZuulRequestHeader(AuthConstants.USER_SCOPE, (String) jwtTokenUtil.getNamedClaimFromToken(jwtToken, AuthConstants.USER_SCOPE));
 //			    ctx.addZuulRequestHeader(AuthConstants.SCOPE_ID, (String) jwtTokenUtil.getNamedClaimFromToken(jwtToken, AuthConstants.SCOPE_ID));
+				
+				currentUser.setName((String) jwtTokenUtil.getNamedClaimFromToken(jwtToken, AuthConstants.NAME));
+				
+				currentUser.setUserId((String) jwtTokenUtil.getNamedClaimFromToken(jwtToken, AuthConstants.USER_ID));
+				currentUser.setUserRole((String) jwtTokenUtil.getNamedClaimFromToken(jwtToken, AuthConstants.USER_ROLE));
 			}
 		}
 		chain.doFilter(request, response);

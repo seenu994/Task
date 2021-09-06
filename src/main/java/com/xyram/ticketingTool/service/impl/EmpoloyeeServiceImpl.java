@@ -58,11 +58,14 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	
 	@Autowired
 	CurrentUser currentUser;
+	
+	private static Map<String, com.xyram.ticketingTool.admin.model.User> userCache = new HashMap<>();
 
 	@Override
 	public ApiResponse addemployee(Employee employee) {
 
 		ApiResponse response = validateEmployee(employee);
+		System.out.println(currentUser.getName());
 		
 		if (response.isSuccess()) {	
 			try {
@@ -81,7 +84,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				}
 				userRepository.save(user);
 				employee.setCreatedBy(currentUser.getUserId());
-			
+			    employee.setUserCredientials(user);
 				Employee employeeNew = employeeRepository.save(employee);
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.EMPLOYEE_ADDED);
@@ -165,8 +168,24 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		if (response.isSuccess()) {
 			Employee employee = employeeRepository.getById(employeeID);
 			if (employee != null) {
-				employee.setStatus(userstatus.ACTIVE);
+				if(userstatus == UserStatus.INACTIVE) {
+					
+				employee.setStatus(userstatus);
 				employeeRepository.save(employee);
+				User user = userRepository.getById(employee.getUserCredientials().getId());
+				if (userCache.containsKey(user.getUsername().toLowerCase()))
+					userCache.remove("USER", user.getUsername().toLowerCase());
+				user.setStatus(userstatus);
+				userRepository.save(user);
+				}
+				else
+				{
+					employee.setStatus(userstatus);
+					employeeRepository.save(employee);
+					User user = userRepository.getById(employee.getUserCredientials().getId());
+					user.setStatus(userstatus);
+					userRepository.save(user);
+				}
 				// Employee employeere=new Employee();z
 
 				response.setSuccess(true);
@@ -186,14 +205,15 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 	private ApiResponse validateStatus(UserStatus userstatus) {
 		ApiResponse response = new ApiResponse(false);
-		if (userstatus != UserStatus.ACTIVE || userstatus != UserStatus.INACTIVE) {
-			response.setMessage(ResponseMessages.USERSTATUS_INVALID);
-			response.setSuccess(false);
+		if (userstatus == UserStatus.ACTIVE || userstatus == UserStatus.INACTIVE) {
+			response.setMessage(ResponseMessages.STATUS_UPDATE);
+			response.setSuccess(true);
 		}
 
 		else {
-			response.setMessage(ResponseMessages.STATUS_UPDATE);
-			response.setSuccess(true);
+			response.setMessage(ResponseMessages.USERSTATUS_INVALID);
+			response.setSuccess(false);
+			
 		}
 
 		return response;

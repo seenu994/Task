@@ -8,10 +8,12 @@ import java.util.Map;
 import java.util.function.Function;
 
 import org.apache.catalina.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.util.AuthConstants;
 
 import io.jsonwebtoken.Claims;
@@ -27,6 +29,9 @@ public class JwtTokenUtil implements Serializable {
 
 	@Value("${jwt.secret}")
 	private String secret;
+	
+	@Autowired
+	CurrentUser currentUser;
 
 	//retrieve username from jwt token
 	public String getUsernameFromToken(String token) {
@@ -63,6 +68,9 @@ public class JwtTokenUtil implements Serializable {
 		return doGenerateToken(claims, userDetails.getUsername());
 	}
 
+	public Object getNamedClaimFromToken(String token, String claim) {
+		return getClaimFromToken(token, claims -> claims.get(claim));
+	}
 	//while creating the token -
 	//1. Define  claims of the token, like Issuer, Expiration, Subject, and the ID
 	//2. Sign the JWT using the HS512 algorithm and secret key.
