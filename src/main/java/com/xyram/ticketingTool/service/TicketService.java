@@ -14,6 +14,8 @@ public interface TicketService {
 
 	 
 	ApiResponse createTickets(Ticket ticketRequest);
+	
+	ApiResponse getAllTicketsByStatus(String statusId);
 
 	//Ticket ticket(Integer employeeId);
 

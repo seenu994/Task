@@ -22,6 +22,7 @@ public interface ResponseMessages {
 	String TICKET_ALREADY_RESOLVED = "Ticket is already Resolved.";
 	String TICKET_ADDED = "Ticket Added Successfully.";
 	String TICKET_NOT_IN_REVIEW = "Ticket is notin review state.";
+	String TICKETS_EXIST = "Tickets are exists";
 	
 	String EMPLOYEE_ADDED = "Employee Added Successfully";
 	

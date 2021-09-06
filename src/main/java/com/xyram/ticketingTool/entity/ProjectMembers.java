@@ -30,14 +30,14 @@ public class ProjectMembers extends AuditModel {
 	@Enumerated(EnumType.STRING)
 	@Column(name = "projectmemberstatus")
 	private ProjectMembersStatus status = ProjectMembersStatus.INACTIVE;
-@JsonIgnore
-	@OneToOne(cascade = { CascadeType.MERGE })
-	@JoinColumn(name = "employee_id")
-	private  Employee employee;
-@JsonIgnore
-	@OneToOne(cascade = { CascadeType.MERGE })
-	@JoinColumn(name = "project_id")
-	private  Projects project;
+//@JsonIgnore
+//	@OneToOne(cascade = { CascadeType.MERGE })
+//	@JoinColumn(name = "employee_id")
+//	private  Employee employee;
+//@JsonIgnore
+//	@OneToOne(cascade = { CascadeType.MERGE })
+//	@JoinColumn(name = "project_id")
+//	private  Projects project;
 
 	@JoinColumn(name = "employee_id")
 	private  Integer employeeId;
@@ -77,21 +77,21 @@ public class ProjectMembers extends AuditModel {
 		this.status = status;
 	}
 
-	public Employee getEmployee() {
-		return employee;
-	}
-
-	public void setEmployee(Employee employee) {
-		this.employee = employee;
-	}
-
-	public Projects getProject() {
-		return project;
-	}
-
-	public void setProject(Projects project) {
-		this.project = project;
-	}
+//	public Employee getEmployee() {
+//		return employee;
+//	}
+//
+//	public void setEmployee(Employee employee) {
+//		this.employee = employee;
+//	}
+//
+//	public Projects getProject() {
+//		return project;
+//	}
+//
+//	public void setProject(Projects project) {
+//		this.project = project;
+//	}
 
 
 }

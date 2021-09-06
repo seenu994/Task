@@ -35,6 +35,7 @@ import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Comments;
 import com.xyram.ticketingTool.entity.ProjectMembers;
 import com.xyram.ticketingTool.entity.Projects;
+import com.xyram.ticketingTool.entity.Role;
 import com.xyram.ticketingTool.entity.Ticket;
 import com.xyram.ticketingTool.entity.TicketComments;
 import com.xyram.ticketingTool.enumType.ProjectMembersStatus;
@@ -78,12 +79,35 @@ public class TicketServiceImpl implements TicketService {
 	
 	@Autowired
 	CurrentUser userDetail;
+	
+	@Override
+	public ApiResponse getAllTicketsByStatus(String statusId) {
+		// TODO Auto-generated method stub
+		ApiResponse response = new ApiResponse(false);
+		
+		if(userDetail.getUserRole() == "1") {
+			
+		}else if(userDetail.getUserRole() == "2") {
+			
+		}else {
+			List<Ticket> allTickets = ticketrepository.findAllByNameAndCreatedAndTicketStatus(statusId, userDetail.getUserId());
+			response.setSuccess(true);
+			response.setMessage(ResponseMessages.TICKETS_EXIST);
+			Map<String, List<Ticket>> content = new HashMap<String, List<Ticket>>();
+			content.put("tickets", allTickets);
+			response.setContent(content);
+		}
+		
+//		ArrayList<Ticket> ticketsList = ticketrepository.find
+		
+		return response;
+	}
 
 	@Override
 	public ApiResponse createTickets(Ticket ticketRequest) {
 		ApiResponse response = new ApiResponse(false);
 
-		Projects project = projectRepository.getById(ticketRequest.getProjects());
+		Projects project = projectRepository.getById(ticketRequest.getProjectId());
 
 		if (project == null) {
 			response.setSuccess(false);
@@ -199,8 +223,8 @@ public class TicketServiceImpl implements TicketService {
 
 				ticketObj.setTicketDescription(ticketRequest.getTicketDescription());
 				ticketObj.setLastUpdatedAt(new Date());
-				ticketObj.setPriority(ticketRequest.getPriority());
-				ticketObj.setProjects(ticketRequest.getProjects());
+				ticketObj.setPriorityId(ticketRequest.getPriorityId());
+				ticketObj.setProjectId(ticketRequest.getProjectId());
 				ticketObj.setStatus(ticketRequest.getStatus());
 				ticketObj.setUpdatedBy(userDetail.getUserId());
 				ticketrepository.save(ticketObj);
@@ -379,5 +403,7 @@ public class TicketServiceImpl implements TicketService {
 			return response;
 		}
 	}
+
+	
 
 }

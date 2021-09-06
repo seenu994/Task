@@ -39,11 +39,11 @@ public class TicketAssignee extends AuditModel {
 	
 	
 //	@ManyToOne(cascade = { CascadeType.MERGE })
-	@JoinColumn(name = "ticket_id")
+	@Column(name = "ticket_id")
 	private Integer ticketId;
 	
 //	@ManyToOne(cascade = { CascadeType.MERGE })
-	@JoinColumn(name = "employee_id")
+	@Column(name = "employee_id")
 	private Integer employeeId;
 	
 	
