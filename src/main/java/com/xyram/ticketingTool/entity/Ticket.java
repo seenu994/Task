@@ -21,12 +21,11 @@ import javax.validation.constraints.Size;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.xyram.ticketingTool.baseData.model.AuditModel;
 import com.xyram.ticketingTool.enumType.ProjectMembersStatus;
-import com.xyram.ticketingTool.enumType.TicketStatus;
 import com.xyram.ticketingTool.ticket.config.JSONObjectUserType;
+import com.xyram.ticketingTool.baseData.model.AuditModel;
+import com.xyram.ticketingTool.enumType.TicketStatus;
 
 @Entity
 @Table(name = "ticket")

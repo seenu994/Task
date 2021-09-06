@@ -20,11 +20,9 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 	List<Ticket> findAllByNameAndCreatedAndTicketStatus(@Param("createdBy") String createdBy, @Param("ticketStatus")String ticketStatus);
 	
 	@Query(value = "SELECT t.ticket_status from ticket t where t.ticket_id = :ticketId ", nativeQuery = true)
-	//String getTicketById(@Param("Id") String Id);
 	String getTicketById(String ticketId);
-	@Query("Select new map(t.Id as id,t.ticketDescription as ticketDescription,t.projectId as projectId,t.createdBy as createdBy,t.priorityId as priorityId,t.status as status) from Ticket t")
 	
-	 
+	@Query("Select new map(t.Id as id,t.ticketDescription as ticketDescription,t.projectId as projectId,t.createdBy as createdBy,t.priorityId as priorityId,t.status as status) from Ticket t")
 
 	Page<Map> getAllTicketList(Pageable pageable);
 

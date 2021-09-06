@@ -18,6 +18,7 @@ import com.xyram.ticketingTool.Repository.CommentRepository;
 import com.xyram.ticketingTool.Repository.ProjectRepository;
 import com.xyram.ticketingTool.Repository.TicketRepository;
 import com.xyram.ticketingTool.Repository.UserRepository;
+import com.xyram.ticketingTool.Repository.ticketAttachmentRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Comments;
 import com.xyram.ticketingTool.entity.Projects;
@@ -99,15 +100,14 @@ public class TicketServiceImpl implements TicketService {
 		} else {
 			ticketRequest.setCreatedAt(new Date());
 			ticketRequest.setLastUpdatedAt(new Date());
-			ticketRequest.setStatus(TicketStatus.INITIATED);
 			ticketRequest.setCreatedBy(userDetail.getUserId());
+			ticketRequest.setStatus(TicketStatus.INITIATED);
 			Ticket tickets = ticketrepository.save(ticketRequest);
 			// attachmentService.storeImage(tickets);
 
 			response.setSuccess(true);
 			response.setMessage(ResponseMessages.TICKET_ADDED);
-			Map<String, String> content = new HashMap<String, 
-String>();
+			Map<String, String> content = new HashMap<String, String>();
 			content.put("ticketId", tickets.getId());
 			response.setContent(content);
 			return response;
@@ -125,7 +125,6 @@ String>();
 				response.setMessage(ResponseMessages.TICKET_ALREADY_CANCELLED);
 				response.setContent(null);
 			} else if (!ticketObj.getStatus().equals(TicketStatus.COMPLETED)) {
-
 				ticketObj.setStatus(TicketStatus.CANCELLED);
 				ticketObj.setUpdatedBy(userDetail.getUserId());
 				ticketObj.setLastUpdatedAt(new Date());
@@ -134,7 +133,6 @@ String>();
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.TICKET_ALREADY_RESOLVED);
 				response.setContent(null);
-
 			} else {
 				response.setSuccess(false);
 				response.setMessage(ResponseMessages.TICKET_ALREADY_RESOLVED);
@@ -201,7 +199,9 @@ String>();
 
 		ApiResponse response = new ApiResponse(false);
 		Ticket ticketObj = ticketrepository.getById(ticketId);
-		if (ticketObj != null) {
+		//String s = ticketrepository.getTicketById(ticketId);
+		//System.out.println("s Value " + s);
+		if (ticketObj != null ) {
 			if (!ticketObj.getStatus().equals(TicketStatus.COMPLETED)) {
 
 				ticketObj.setTicketDescription(ticketRequest.getTicketDescription());
