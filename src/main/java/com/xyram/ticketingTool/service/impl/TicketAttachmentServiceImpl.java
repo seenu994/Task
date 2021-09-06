@@ -38,17 +38,18 @@ static Channel channel = null;
 static String PATHSEPARATOR = "/";
 
 @Override
-public Map storeImage(MultipartFile file,Ticket ticketId) {
+public Map storeImage(MultipartFile[] files,Ticket ticketId) {
 	Map fileMap = new HashMap();
-	System.out.println(file);
+	System.out.println(files);
 	  byte[] filearray;
+	  for (MultipartFile constentFile : files) {
 	try {
-	       filearray=file.getBytes();
+	       filearray=constentFile.getBytes();
 //	       System.out.println(file.);
-	      String filename=file.getOriginalFilename();
-	       addFileAdmin(file);
+	      String filename=constentFile.getOriginalFilename();
+	       addFileAdmin(constentFile);
 //	       addFileCustomer(file);
-	       if(addFileAdmin(file)!= null) {
+	       if(addFileAdmin(constentFile)!= null) {
 	    	  TicketAttachment ticketAttachment = new  TicketAttachment();
 	    	  ticketAttachment.setTicket(ticketId);
 	    	  ticketAttachment.setImagePath(filename);
@@ -58,7 +59,7 @@ public Map storeImage(MultipartFile file,Ticket ticketId) {
 	} catch (IOException e) {
 		e.printStackTrace();
 	}
-	
+	  }
 	return fileMap ;
 }
 
