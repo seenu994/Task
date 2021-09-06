@@ -12,6 +12,6 @@ import java.util.List;
 
 public interface TicketRepository extends JpaRepository<Ticket, Integer> {
 	
-	@Query(value = "SELECT * from ticket t where t.created_by =:name AND t.ticket_status = :ticketStatus ", nativeQuery = true)
+	@Query(value = "SELECT * from ticket t where t.created_by =:createdBy AND t.ticket_status = :ticketStatus ", nativeQuery = true)
 	List<Ticket> findAllByNameAndCreatedAndTicketStatus(@Param("createdBy") String createdBy, @Param("ticketStatus")String ticketStatus);
 }
