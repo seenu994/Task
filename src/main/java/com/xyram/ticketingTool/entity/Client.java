@@ -8,6 +8,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
+
+import org.hibernate.annotations.GenericGenerator;
 
 import com.xyram.ticketingTool.baseData.model.AuditModel;
 import com.xyram.ticketingTool.enumType.ClientStatus;
@@ -20,10 +23,12 @@ import com.xyram.ticketingTool.enumType.ClientStatus;
  */
 public class Client extends AuditModel {
 
-@Id
-@Column(name = "client_id")
-@GeneratedValue(strategy = GenerationType.IDENTITY)
-private Integer Id;
+	@Id
+	@GeneratedValue(generator = "uuid")
+	@GenericGenerator(name = "uuid", strategy = "uuid")
+	@Size( max = 8)
+	@Column(name="client_id")
+    private String Id;
 
 @Column(name="client_name")
 	private String clientName;
@@ -32,11 +37,12 @@ private Integer Id;
 @Column(name = "clientstatus")
 private ClientStatus status = ClientStatus.ACTIVE;
 
-public Integer getId() {
+
+public String getId() {
 	return Id;
 }
 
-public void setId(Integer id) {
+public void setId(String id) {
 	Id = id;
 }
 

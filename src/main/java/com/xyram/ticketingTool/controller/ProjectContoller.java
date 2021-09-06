@@ -57,7 +57,7 @@ class ProjectContoller {
 		return projectService.getAllProjects(pageable );
 	}
 	@PutMapping(value= {AuthConstants.ADMIN_BASEPATH + "/editProejct/{projectId}",AuthConstants.INFRA_USER_BASEPATH+"/editProejct/{projectId}"})
-	public ApiResponse editProejct(@RequestBody Projects projectRequest,@PathVariable Integer projectId ) {
+	public ApiResponse editProejct(@RequestBody Projects projectRequest,@PathVariable String projectId ) {
 		logger.info("indide ProjectContoller :: editProejct");
 		return projectService.editEmployee(projectId,projectRequest);
 	}

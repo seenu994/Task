@@ -17,7 +17,10 @@ public interface ProjectService {
 
 
 
-	ApiResponse editEmployee(Integer projectId, Projects projectRequest); 
+	
+
+
+	ApiResponse editEmployee(String projectId, Projects projectRequest); 
 		
 
 }

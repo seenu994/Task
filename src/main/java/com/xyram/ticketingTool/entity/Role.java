@@ -11,7 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
 
@@ -25,9 +27,11 @@ import com.xyram.ticketingTool.ticket.config.JSONObjectUserType;
 public class Role extends AuditModel {
 
 	@Id
-	@Column(name = "role_id")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer Id;
+	@GeneratedValue(generator = "uuid")
+	@GenericGenerator(name = "uuid", strategy = "uuid")
+	@Size( max = 8)
+	@Column(name="role_id")
+	private String Id;
 
 	@Column(name = "role_name")
 	private String roleName;
@@ -36,11 +40,11 @@ public class Role extends AuditModel {
 	@Column(name = "roleStatus")
 	private UserStatus status = UserStatus.INACTIVE;
 
-	public Integer getId() {
+	public String getId() {
 		return Id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(String id) {
 		Id = id;
 	}
 

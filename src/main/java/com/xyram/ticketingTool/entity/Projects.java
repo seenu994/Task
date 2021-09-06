@@ -9,7 +9,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
 /*import org.hibernate.mapping.Set;*/
@@ -30,9 +32,11 @@ import javax.persistence.CascadeType;
 public class Projects extends AuditModel {
 	
 	@Id
-    @Column(name = "project_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer pId;
+	@GeneratedValue(generator = "uuid")
+	@GenericGenerator(name = "uuid", strategy = "uuid")
+	@Size( max = 8)
+	@Column(name="project_id")
+	private String pId;
 	
     @Column(name="project_name")
 	private String projectName;
@@ -53,12 +57,11 @@ public class Projects extends AuditModel {
 	private ProjectStatus status = ProjectStatus.INDEVELOPMENT;
 
 	
-
-	public Integer getpId() {
+	public String getpId() {
 		return pId;
 	}
 
-	public void setpId(Integer pId) {
+	public void setpId(String pId) {
 		this.pId = pId;
 	}
 

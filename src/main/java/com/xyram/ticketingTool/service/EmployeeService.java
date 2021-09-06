@@ -17,8 +17,8 @@ public interface EmployeeService {
 
 	ApiResponse getAllEmployee(Pageable pageable);
 
-	ApiResponse editEmployee(Integer employeeId, Employee employee);
+	ApiResponse editEmployee(String employeeId, Employee employee);
 
-	ApiResponse updateEmployeeStatus(int employeeID, UserStatus userstatus);
+	ApiResponse updateEmployeeStatus(String employeeID, UserStatus userstatus);
 
 }

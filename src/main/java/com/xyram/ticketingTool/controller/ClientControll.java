@@ -44,14 +44,14 @@ public class ClientControll {
 	}
 	
 	@PutMapping("/editClient/{clientId}")
-	public ApiResponse editClient(@RequestBody Client clientRequest,@PathVariable Integer clientId ) {
+	public ApiResponse editClient(@RequestBody Client clientRequest,@PathVariable String clientId ) {
 	
 		return clientService.editClient(clientId,clientRequest);
 	}
 	
 	
 	@PutMapping("/{clientId}/status/{userstatus}")
-	public ApiResponse updateClientStatus(@PathVariable int clientId, @PathVariable ClientStatus userstatus) {
+	public ApiResponse updateClientStatus(@PathVariable String clientId, @PathVariable ClientStatus userstatus) {
 	
 		return clientService.updateClientStatus(clientId, userstatus);
 	}

@@ -16,7 +16,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
 
@@ -33,18 +35,20 @@ import com.xyram.ticketingTool.ticket.config.JSONObjectUserType;
 public class TicketAssignee extends AuditModel {
 
 	@Id
-	@Column(name = "ticketAssignee_id")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer Id;
+	@GeneratedValue(generator = "uuid")
+	@GenericGenerator(name = "uuid", strategy = "uuid")
+	@Size( max = 8)
+	@Column(name="ticketAssignee_id")
+	private String Id;
 	
 	
 //	@ManyToOne(cascade = { CascadeType.MERGE })
 	@Column(name = "ticket_id")
-	private Integer ticketId;
+	private String ticketId;
 	
 //	@ManyToOne(cascade = { CascadeType.MERGE })
 	@Column(name = "employee_id")
-	private Integer employeeId;
+	private String employeeId;
 	
 	
 	@Enumerated(EnumType.STRING)
@@ -52,23 +56,33 @@ public class TicketAssignee extends AuditModel {
 	private TicketAssigneeStatus status = TicketAssigneeStatus.ACTIVE;
 
 
-	public Integer getId() {
+	public String getId() {
 		return Id;
 	}
 
 
-	public void setId(Integer id) {
+	public void setId(String id) {
 		Id = id;
 	}
 
 
-	public Integer getTicket() {
+	public String getTicketId() {
 		return ticketId;
 	}
 
 
-	public void setTicket(Integer ticket) {
-		this.ticketId = ticket;
+	public void setTicketId(String ticketId) {
+		this.ticketId = ticketId;
+	}
+
+
+	public String getEmployeeId() {
+		return employeeId;
+	}
+
+
+	public void setEmployeeId(String employeeId) {
+		this.employeeId = employeeId;
 	}
 
 
@@ -82,13 +96,6 @@ public class TicketAssignee extends AuditModel {
 	}
 
 
-	public Integer getEmployee() {
-		return employeeId;
-	}
-
-
-	public void setEmployee(Integer employee) {
-		this.employeeId = employee;
-	}
+	
 	
 }

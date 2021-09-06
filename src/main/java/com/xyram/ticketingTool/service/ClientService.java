@@ -9,9 +9,9 @@ public interface ClientService {
 
  ApiResponse addClient(Client clientRequest);
 
-ApiResponse updateClientStatus(int clientId, ClientStatus userstatus);
+ApiResponse updateClientStatus(String clientId, ClientStatus userstatus);
 
-ApiResponse editClient(Integer clientId, Client clientRequest);
+ApiResponse editClient(String clientId, Client clientRequest);
 		
 	
 }

@@ -88,14 +88,14 @@ class TicketController {
 
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editTicket/{ticketId}",
 			AuthConstants.DEVELOPER_BASEPATH + "/editTicket/{ticketId}" })
-	public ApiResponse editTicket(@PathVariable Integer ticketId, @RequestBody Ticket ticketRequest) {
+	public ApiResponse editTicket(@PathVariable String ticketId, @RequestBody Ticket ticketRequest) {
 		logger.info("Recive request to edit ticket by id:" + ticketRequest.getId());
 		return ticketService.editTicket(ticketId, ticketRequest);
 	}
 
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/reopenTicket/{ticketId}",
 			AuthConstants.DEVELOPER_BASEPATH + "/reopenTicket/{ticketId}" })
-	public ApiResponse reopenTicket(@PathVariable Integer ticketId, @RequestBody Comments commentObj) {
+	public ApiResponse reopenTicket(@PathVariable String ticketId, @RequestBody Comments commentObj) {
 //		logger.info("Recive request to reopened ticket by id:" + ticketRequest.getId());
 		commentObj.setCreatedAt(new Date());
 		return ticketService.reopenTicket(ticketId, commentObj);

@@ -44,7 +44,7 @@ public class ClientServiceImpl implements ClientService {
 	}
 
 	@Override
-	public ApiResponse updateClientStatus(int clientId, ClientStatus status) {
+	public ApiResponse updateClientStatus(String clientId, ClientStatus status) {
 		ApiResponse response = validateStatus(status);
 		if (response.isSuccess()) {
 			Client client = clientRepository.getById(clientId);
@@ -72,7 +72,7 @@ public class ClientServiceImpl implements ClientService {
 	}
 
 	@Override
-	public ApiResponse editClient(Integer clientId, Client clientRequest) {
+	public ApiResponse editClient(String clientId, Client clientRequest) {
 		ApiResponse response = new ApiResponse(false);
 		if (clientRequest.getClientName() != null) {
 			clientRequest.setClientName(clientRequest.getClientName());

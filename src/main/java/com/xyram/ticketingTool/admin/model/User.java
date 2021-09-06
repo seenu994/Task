@@ -10,7 +10,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
 
@@ -26,9 +28,11 @@ import com.xyram.ticketingTool.ticket.config.JSONObjectUserType;
 public class User extends IBaseData {
 
 	@Id
-	@Column(name = "user_id")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+	@GeneratedValue(generator = "uuid")
+	@GenericGenerator(name = "uuid", strategy = "uuid")
+	@Size( max = 8)
+	@Column(name="user_id")
+	private String id;
 
 	@Column(name = "username", unique = true)
 	private String username;
@@ -51,13 +55,19 @@ public class User extends IBaseData {
 
 	}
 
-	public Integer getId() {
+
+
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+
+
+	public void setId(String id) {
 		this.id = id;
 	}
+
+
 
 	public String getPassword() {
 		return password;

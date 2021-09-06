@@ -13,6 +13,6 @@ public interface TicketAttachmentService {
 
 	//public Map deleteImage(MultipartFile file, Ticket ticketId);
 
-	public String deleteImage(Integer ticketId);
+	public String deleteImage(String ticketId);
 }
 		

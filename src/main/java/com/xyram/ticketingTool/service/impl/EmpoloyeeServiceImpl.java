@@ -63,28 +63,35 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	public ApiResponse addemployee(Employee employee) {
 
 		ApiResponse response = validateEmployee(employee);
-		if (response.isSuccess()) {
-			User user = new User();
-			user.setUsername(employee.getEmail());
-			String encodedPassword = new BCryptPasswordEncoder().encode(employee.getPassword());
-			user.setPassword(encodedPassword);
-			// Employee employeere=new Employee();
-			if (employee.getRole() != null && employee.getRole().getId() == 2) {
-				// if(user.getUserRole().equals("INFRA")) {
-				user.setUserRole(UserRole.INFRA);
-			} else if (employee.getRole() != null && employee.getRole().getId() == 3) {
-				user.setUserRole(UserRole.DEVELOPER);
-			} else {
-				throw new ResourceNotFoundException("invalid user role ");
+		
+		if (response.isSuccess()) {	
+			try {
+				User user = new User();
+				user.setUsername(employee.getEmail());
+				String encodedPassword = new BCryptPasswordEncoder().encode(employee.getPassword());
+				user.setPassword(encodedPassword);
+				// Employee employeere=new Employee();
+				if (employee.getRoleId().equals("R2")) {
+					// if(user.getUserRole().equals("INFRA")) {
+					user.setUserRole(UserRole.INFRA);
+				} else if(employee.getRoleId().equals("R3")){
+					user.setUserRole(UserRole.DEVELOPER);
+				} else {
+					throw new ResourceNotFoundException("invalid user role ");
+				}
+				userRepository.save(user);
+				employee.setCreatedBy(currentUser.getUserId());
+			
+				Employee employeeNew = employeeRepository.save(employee);
+				response.setSuccess(true);
+				response.setMessage(ResponseMessages.EMPLOYEE_ADDED);
+				Map content = new HashMap();
+				content.put("employeeId", employeeNew.geteId());
+				response.setContent(content);
+			}catch(Exception e) {
+				System.out.println("Error Occured :: "+e.getMessage());
 			}
-			userRepository.save(user);
-			employee.setCreatedBy(currentUser.getUserId());
-			Employee employeeNew = employeeRepository.save(employee);
-			response.setSuccess(true);
-			response.setMessage(ResponseMessages.EMPLOYEE_ADDED);
-			Map content = new HashMap();
-			content.put("employeeId", employeeNew.geteId());
-			response.setContent(content);
+			
 			return response;
 
 		}
@@ -96,30 +103,37 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		ApiResponse response = new ApiResponse(false);
 		if (!emailValidation(employee.getEmail())) {
 			response.setMessage(ResponseMessages.EMAIL_INVALID);
-			;
+			
 			response.setSuccess(false);
 		}
 
 		else if (employee.getMobileNumber().length() != 10) {
 			response.setMessage(ResponseMessages.MOBILE_INVALID);
-			;
+			
 			response.setSuccess(false);
 		}
 
-		else if (employee.getRole() != null && employee.getRole().getId() != null) {
-			Optional<Role> role = roleRepository.findById(employee.getRole().getId());
-			if (role == null) {
-				response.setMessage(ResponseMessages.ROLE_INVALID);
-				response.setSuccess(false);
-			}
-			else {
-				response.setMessage(ResponseMessages.EMPLOYEE_ADDED);
-				response.setSuccess(true);
-				response.setContent(null);
-			}
-
+		/*else if (employee.getRole() == null || employee.getRole().getId() == null) {
+//			Optional<Role> role = roleRepository.findById(employee.getRole().getId());
+//			if (role == null) {
+//				response.setMessage(ResponseMessages.ROLE_INVALID);
+//				response.setSuccess(false);
+//			}
+//			else {
+//				response.setMessage(ResponseMessages.EMPLOYEE_ADDED);
+//				response.setSuccess(true);
+//				response.setContent(null);
+//			}
+			response.setMessage(ResponseMessages.ROLE_INVALID);
+			*/
+			//response.setSuccess(false);
 			
 
+		else {
+			response.setMessage(ResponseMessages.EMPLOYEE_ADDED);
+		
+			
+			response.setSuccess(true);
 		}
 
 		
@@ -146,14 +160,14 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public ApiResponse updateEmployeeStatus(int employeeID, UserStatus userstatus) {
+	public ApiResponse updateEmployeeStatus(String employeeID, UserStatus userstatus) {
 		ApiResponse response = validateStatus(userstatus);
 		if (response.isSuccess()) {
 			Employee employee = employeeRepository.getById(employeeID);
 			if (employee != null) {
-				employee.setStatus(userstatus);
+				employee.setStatus(userstatus.ACTIVE);
 				employeeRepository.save(employee);
-				// Employee employeere=new Employee();
+				// Employee employeere=new Employee();z
 
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.STATUS_UPDATE);
@@ -186,7 +200,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public ApiResponse editEmployee(Integer employeeId, Employee employeeRequest) {
+	public ApiResponse editEmployee(String employeeId, Employee employeeRequest) {
 		ApiResponse response = validateEmployee(employeeRequest);
 		if (response.isSuccess()) {
 			Employee employee = employeeRepository.getById(employeeId);

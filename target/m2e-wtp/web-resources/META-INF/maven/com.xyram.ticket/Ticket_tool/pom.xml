@@ -33,7 +33,11 @@
     <artifactId>immutable</artifactId>
     <version>4.0.0-rc.12</version>
 </dependency>
-
+<dependency>
+    <groupId>javax.validation</groupId>
+    <artifactId>validation-api</artifactId>
+    <version>1.1.0.Final</version>
+</dependency>
         <dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-mail</artifactId>

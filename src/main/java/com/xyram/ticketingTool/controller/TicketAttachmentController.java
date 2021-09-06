@@ -58,7 +58,7 @@ public class TicketAttachmentController {
 		return ticketAttachmentService.storeImage(file,ticketId);
 	}
 	@DeleteMapping(value= {AuthConstants.ADMIN_BASEPATH +"/deleteimage/{ticketId}",AuthConstants.DEVELOPER_BASEPATH +"/deleteimage/{ticketId}",AuthConstants.INFRA_USER_BASEPATH+"/deleteimage/{ticketId}"})
-	public String deleteImage(@PathVariable Integer ticketId) {
+	public String deleteImage(@PathVariable String ticketId) {
 		logger.info("indide TicketAttachmentController :: deleteImage");
 		return ticketAttachmentService.deleteImage(ticketId);
 	}

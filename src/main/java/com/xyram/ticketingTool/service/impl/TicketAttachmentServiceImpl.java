@@ -115,7 +115,7 @@ public String addFileAdmin(MultipartFile file){
 
 
 @Override
-public String deleteImage(Integer ticketId) {
+public String deleteImage(String ticketId) {
 	String message = "";
 	 TicketAttachment ticketObj=ticketattachmentRepository.getById(ticketId);
 	 deleteFile(ticketObj.getImagePath());

@@ -44,18 +44,21 @@ public class JwtUserDetailsService implements UserDetailsService {
 		}
 		Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
 		grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + user.getUserRole()));
-		System.out.println(user.getStatus());
-		if(user.getStatus()==UserStatus.ACTIVE) {
+		/*
+		 * System.out.println(user.getStatus()); if(user.getStatus()==UserStatus.ACTIVE)
+		 * {
+		 */
 		return new User(user.getUsername(), user.getPassword(), grantedAuthorities);
 		}
-		else {
-		 return new User(user.getUsername(), user.getPassword(), false, true, true, true, grantedAuthorities);
-		}
+		/*
+		 * else { return new User(user.getUsername(), user.getPassword(), false, true,
+		 * true, true, grantedAuthorities); }
+		 */
 	
 	
 //		throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Found for the username: " + username);
 //		return new User(username, user.getPassword(), new ArrayList<>());
-}
+
 
 
 	public com.xyram.ticketingTool.admin.model.User getAppUser(String username) {

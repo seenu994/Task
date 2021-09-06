@@ -47,9 +47,9 @@ public class TicketAssignServiceImpl implements TicketAssignService {
 public ApiResponse reassignTicketToInfraTeam(TicketAssignee assignee) {
 		
 		ApiResponse response = new ApiResponse(false);
-		Ticket ticketObj = ticketRepository.getById(assignee.getTicket());
+		Ticket ticketObj = ticketRepository.getById(assignee.getTicketId());
 		if (ticketObj != null) {
-			Employee employeeObj = employeeRepository.getById(assignee.getEmployee());
+			Employee employeeObj = employeeRepository.getById(assignee.getEmployeeId());
 			if (employeeObj != null) {
 				assignee.setCreatedAt(new Date());
 				assignee.setCreatedBy(userDetail.getUserId());
@@ -57,7 +57,7 @@ public ApiResponse reassignTicketToInfraTeam(TicketAssignee assignee) {
 				
 				ticketObj.setStatus(TicketStatus.ASSIGNED);
 				ticketRepository.save(ticketObj);
-				List<TicketAssignee> allAssignees = ticketAssignRepository.findByTicket_IdAndEmployee_Id(assignee.getTicket(), assignee.getEmployee());
+				List<TicketAssignee> allAssignees = ticketAssignRepository.findByTicket_IdAndEmployee_Id(assignee.getTicketId(), assignee.getEmployeeId());
 				for(int i=0;i<allAssignees.size();i++) {
 					TicketAssignee prevAssignee = allAssignees.get(i);
 					prevAssignee.setStatus(TicketAssigneeStatus.INACTIVE);
@@ -83,9 +83,9 @@ public ApiResponse reassignTicketToInfraTeam(TicketAssignee assignee) {
 	public ApiResponse assignTicketToInfraTeam(TicketAssignee assignee) {
 		
 		ApiResponse response = new ApiResponse(false);
-		Ticket ticketObj = ticketRepository.getById(assignee.getTicket());
+		Ticket ticketObj = ticketRepository.getById(assignee.getTicketId());
 		if (ticketObj != null) {
-			Employee employeeObj = employeeRepository.getById(assignee.getEmployee());
+			Employee employeeObj = employeeRepository.getById(assignee.getEmployeeId());
 			if (employeeObj != null) {
 				assignee.setCreatedAt(new Date());
 				assignee.setCreatedBy(userDetail.getUserId());
@@ -94,7 +94,7 @@ public ApiResponse reassignTicketToInfraTeam(TicketAssignee assignee) {
 				ticketObj.setStatus(TicketStatus.ASSIGNED);
 				ticketRepository.save(ticketObj);
 				
-				List<TicketAssignee> allAssignees = ticketAssignRepository.findByTicket_IdAndEmployee_Id(assignee.getTicket(), assignee.getEmployee());
+				List<TicketAssignee> allAssignees = ticketAssignRepository.findByTicket_IdAndEmployee_Id(assignee.getTicketId(), assignee.getEmployeeId());
 				for(int i=0;i<allAssignees.size();i++) {
 					TicketAssignee prevAssignee = allAssignees.get(i);
 					prevAssignee.setStatus(TicketAssigneeStatus.INACTIVE);

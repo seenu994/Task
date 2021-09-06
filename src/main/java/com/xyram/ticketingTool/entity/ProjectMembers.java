@@ -11,6 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
+
+import org.hibernate.annotations.GenericGenerator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.xyram.ticketingTool.baseData.model.AuditModel;
@@ -22,9 +25,11 @@ import com.xyram.ticketingTool.enumType.ProjectMembersStatus;
 public class ProjectMembers extends AuditModel {
 
 	@Id
-	@Column(name = "project_member_id")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer Id;
+	@GeneratedValue(generator = "uuid")
+	@GenericGenerator(name = "uuid", strategy = "uuid")
+	@Size( max = 8)
+	@Column(name="projectMember_id")
+	private String Id;
 	
 	
 	@Enumerated(EnumType.STRING)
@@ -40,33 +45,34 @@ public class ProjectMembers extends AuditModel {
 //	private  Projects project;
 
 	@JoinColumn(name = "employee_id")
-	private  Integer employeeId;
+	private  String employeeId;
 	
 	@JoinColumn(name = "project_id")
-	private  Integer projectId;
+	private  String projectId;
 
-	public Integer getEmployeeId() {
-		return employeeId;
-	}
-
-	public void setEmployeeId(Integer employeeId) {
-		this.employeeId = employeeId;
-	}
-
-	public Integer getProjectId() {
-		return projectId;
-	}
-
-	public void setProjectId(Integer projectId) {
-		this.projectId = projectId;
-	}
-
-	public Integer getId() {
+	
+	public String getId() {
 		return Id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(String id) {
 		Id = id;
+	}
+
+	public String getEmployeeId() {
+		return employeeId;
+	}
+
+	public void setEmployeeId(String employeeId) {
+		this.employeeId = employeeId;
+	}
+
+	public String getProjectId() {
+		return projectId;
+	}
+
+	public void setProjectId(String projectId) {
+		this.projectId = projectId;
 	}
 
 	public ProjectMembersStatus getStatus() {

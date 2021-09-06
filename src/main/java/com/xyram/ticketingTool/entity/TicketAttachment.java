@@ -15,7 +15,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
 
@@ -30,9 +32,11 @@ import com.xyram.ticketingTool.ticket.config.JSONObjectUserType;
 public class TicketAttachment extends AuditModel {
 
 	@Id
-	@Column(name = "ticketAttachment_id")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer Id;
+	@GeneratedValue(generator = "uuid")
+	@GenericGenerator(name = "uuid", strategy = "uuid")
+	@Size( max = 8)
+	@Column(name="ticketAttachment_id")
+	private String Id;
 	
 	
 	
@@ -43,11 +47,12 @@ public class TicketAttachment extends AuditModel {
 	@Column(name="image_path")
 	private String imagePath;
 
-	public Integer getId() {
+	
+	public String getId() {
 		return Id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(String id) {
 		Id = id;
 	}
 

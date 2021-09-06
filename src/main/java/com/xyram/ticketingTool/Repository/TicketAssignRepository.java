@@ -6,10 +6,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import com.xyram.ticketingTool.entity.TicketAssignee;
-public interface TicketAssignRepository extends JpaRepository<TicketAssignee, Integer>{
+public interface TicketAssignRepository extends JpaRepository<TicketAssignee, String>{
 
 	@Query("SELECT t from TicketAssignee t Where t.ticketId = :ticketId AND t.employeeId = :employeeId")
-	public List<TicketAssignee> findByTicket_IdAndEmployee_Id(Integer ticketId,Integer employeeId);
+	public List<TicketAssignee> findByTicket_IdAndEmployee_Id(String ticketId,String employeeId);
 
 }
 

@@ -13,7 +13,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.annotations.TypeDef;
@@ -31,9 +33,11 @@ import com.xyram.ticketingTool.ticket.config.JSONObjectUserType;
 public class Employee extends AuditModel {
 
 	@Id
-	@Column(name = "employee_id")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer eId;
+	@GeneratedValue(generator = "uuid")
+	@GenericGenerator(name = "uuid", strategy = "uuid")
+	@Size( max = 8)
+	@Column(name="employee_id")
+	private String eId;
 
 	@Column(name = "password")
 	private String password;
@@ -54,28 +58,30 @@ public class Employee extends AuditModel {
 	private String mobileNumber;
 
 	
-	@ManyToOne(cascade = CascadeType.MERGE)
-	@JoinColumn(name = "role_id")
-	private Role role;
+	
+	@Column(name = "role_id")
+	private String roleId;
 	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "Employee_status")
 	private UserStatus status = UserStatus.INACTIVE;
 
-	@OneToOne(cascade = { CascadeType.MERGE})
-	@JoinColumn(name = "designation_id")
-	private Designation designation;
+	
+	@Column(name = "designation_id")
+	private String designationId;
 
 	@OneToOne(cascade = { CascadeType.MERGE })
 	@JoinColumn(name = "user_id")
 	@JsonIgnore
 	private User userCredientials;
 
-	public Integer geteId() {
+	
+
+	public String geteId() {
 		return eId;
 	}
 
-	public void seteId(Integer eId) {
+	public void seteId(String eId) {
 		this.eId = eId;
 	}
 
@@ -119,13 +125,7 @@ public class Employee extends AuditModel {
 		this.mobileNumber = mobileNumber;
 	}
 
-	public Role getRole() {
-		return role;
-	}
-
-	public void setRole(Role role) {
-		this.role = role;
-	}
+	
 
 	public String getPassword() {
 		return password;
@@ -143,12 +143,21 @@ public class Employee extends AuditModel {
 		this.status = status;
 	}
 
-	public Designation getDesignation() {
-		return designation;
+	
+	public String getRoleId() {
+		return roleId;
 	}
 
-	public void setDesignation(Designation designation) {
-		this.designation = designation;
+	public void setRoleId(String roleId) {
+		this.roleId = roleId;
+	}
+
+	public String getDesignationId() {
+		return designationId;
+	}
+
+	public void setDesignationId(String designationId) {
+		this.designationId = designationId;
 	}
 
 	public User getUserCredientials() {

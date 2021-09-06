@@ -28,37 +28,57 @@ public class TicketCommentServiceImpl implements TicketCommentService {
 
 	@Override
 	public TicketComments addCommentForTicket(TicketComments ticketComments) {
-
-		return ticketCommentRespository.save(ticketComments);
-	}
-
-	@Override
-	public TicketComments editTicketCommentns(Integer ticketCommentsId, TicketComments ticketComments) {
-		TicketComments ticketCommentsEdit = ticketCommentRespository.getById(ticketCommentsId);
-
-		if (ticketCommentsEdit != null) {
-			ticketCommentsEdit.setUpdatedBy(ticketCommentsEdit.getCreatedBy());
-			ticketCommentsEdit.setLastUpdatedAt(new Date());
-			ticketCommentsEdit.setStatus(ticketCommentsEdit.getStatus());
-			ticketCommentsEdit.setTicket(ticketCommentsEdit.getTicket());
-			ticketCommentsEdit.setTicketCommentDescription(ticketCommentsEdit.getTicketCommentDescription());
-			ticketCommentsEdit.setUpdatedBy(ticketCommentsEdit.getUpdatedBy());
-			return ticketCommentRespository.save(ticketCommentsEdit);
-		} else {
-			throw new ResourceNotFoundException("ticketComments not fund found with id " + ticketComments.getId());
-		}
-
-	}
-
-	@Override
-	public void addComment(Integer ticket_id, String commentDesc) {
 		// TODO Auto-generated method stub
-		Comments cmt = new Comments();
-		cmt.setTicketId(ticket_id);
-		cmt.setTicketCommentDescription(commentDesc);
-		cmt.setCreatedAt(new Date());
-		
-		commentRespository.save(cmt);
-
+		return null;
 	}
+
+	@Override
+	public TicketComments editTicketCommentns(String ticketCommentsId, TicketComments ticketComments) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+//	@Override
+//	public TicketComments addCommentForTicket(TicketComments ticketComments) {
+//	
+//		ticketComments.setCreatedAt(new Date());
+//		
+//		return ticketCommentRespository.save(ticketComments);
+//	}
+//
+//	@Override
+//	public TicketComments editTicketCommentns(String ticketCommentsId, TicketComments ticketComments) {
+//		TicketComments ticketCommentsEdit = ticketCommentRespository.getById(ticketCommentsId);
+//
+//		if (ticketCommentsEdit != null) {
+//			ticketCommentsEdit.setUpdatedBy(ticketCommentsEdit.getCreatedBy());
+//			ticketCommentsEdit.setLastUpdatedAt(new Date());
+//			ticketCommentsEdit.setStatus(ticketCommentsEdit.getStatus());
+//			ticketCommentsEdit.setTicket(ticketCommentsEdit.getTicket());
+//			ticketCommentsEdit.setTicketCommentDescription(ticketCommentsEdit.getTicketCommentDescription());
+//			ticketCommentsEdit.setUpdatedBy(ticketCommentsEdit.getUpdatedBy());
+//			return ticketCommentRespository.save(ticketCommentsEdit);
+//		} else {
+//			throw new ResourceNotFoundException("ticketComments not fund found with id " + ticketComments.getId());
+//		}
+//
+//	}
+//
+//	@Override
+//	public void addComment(String ticket_id, String commentDesc) {
+//		// TODO Auto-generated method stub
+//		Comments cmt = new Comments();
+//		cmt.setTicketId(ticket_id);
+//		cmt.setTicketCommentDescription(commentDesc);
+//		cmt.setCreatedAt(new Date());
+//		
+//		commentRespository.save(cmt);
+//
+//	}
+//
+//	@Override
+//	public void addComment(Integer ticket_id, String commentDesc) {
+//		// TODO Auto-generated method stub
+//		
+//	}
 }

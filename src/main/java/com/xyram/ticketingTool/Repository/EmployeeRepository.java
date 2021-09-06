@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.xyram.ticketingTool.entity.Employee;
 
 @Repository
-public interface EmployeeRepository extends JpaRepository<Employee,Integer> {
+public interface EmployeeRepository extends JpaRepository<Employee,String> {
 
 	@Query("Select new map(e.eId as id,e.firstName as firstName,e.lastName as lastName,e.status as status,e.mobileNumber as mobileNumber) from Employee e")
 	Page<Map> getAllEmployeeList(Pageable pageable);

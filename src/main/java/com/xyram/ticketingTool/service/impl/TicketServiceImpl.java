@@ -92,7 +92,7 @@ public class TicketServiceImpl implements TicketService {
 		}else {
 			List<Ticket> allTickets = ticketrepository.findAllByNameAndCreatedAndTicketStatus(statusId, userDetail.getUserId());
 			response.setSuccess(true);
-			response.setMessage(ResponseMessages.TICKETS_EXIST);
+			response.setMessage(ResponseMessages.TICKET_EXIST);
 			Map<String, List<Ticket>> content = new HashMap<String, List<Ticket>>();
 			content.put("tickets", allTickets);
 			response.setContent(content);
@@ -124,7 +124,8 @@ public class TicketServiceImpl implements TicketService {
 
 			response.setSuccess(true);
 			response.setMessage(ResponseMessages.TICKET_ADDED);
-			Map<String, Integer> content = new HashMap<String, Integer>();
+			Map<String, String> content = new HashMap<String, 
+String>();
 			content.put("ticketId", tickets.getId());
 			response.setContent(content);
 			return response;
@@ -214,7 +215,7 @@ public class TicketServiceImpl implements TicketService {
 	}
 
 	@Override
-	public ApiResponse editTicket(Integer ticketId, Ticket ticketRequest) {
+	public ApiResponse editTicket(String ticketId, Ticket ticketRequest) {
 
 		ApiResponse response = new ApiResponse(false);
 		Ticket ticketObj = ticketrepository.getById(ticketId);
@@ -248,7 +249,7 @@ public class TicketServiceImpl implements TicketService {
 	}
 
 	@Override
-	public ApiResponse reopenTicket(Integer ticketId, Comments commentObj) {
+	public ApiResponse reopenTicket(String ticketId, Comments commentObj) {
 
 		ApiResponse response = new ApiResponse(false);
 		Ticket ticketObj = ticketrepository.getById(ticketId);

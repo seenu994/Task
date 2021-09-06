@@ -16,7 +16,9 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
 
@@ -32,9 +34,11 @@ import com.xyram.ticketingTool.ticket.config.JSONObjectUserType;
 public class Ticket extends AuditModel {
 
 	@Id
-	@Column(name = "ticket_id")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer Id;
+	@GeneratedValue(generator = "uuid")
+	@GenericGenerator(name = "uuid", strategy = "uuid")
+	@Size( max = 8)
+	@Column(name="ticket_id")
+	private String Id;
 	@Column(name="ticket_description")
 	private String ticketDescription;
 	
@@ -43,7 +47,7 @@ public class Ticket extends AuditModel {
 //	private Projects project;
 	
 	@Column(name = "project_id")
-	private Integer projectId;
+	private String projectId;
 	
 	@Column(name = "created_by")
 	private String createdBy;
@@ -51,17 +55,19 @@ public class Ticket extends AuditModel {
 //	@OneToOne(cascade = { CascadeType.MERGE})
 	
 	@Column(name = "priority_id")
-	private Integer priorityId;
+	private String priorityId;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "ticketStatus")
 	private TicketStatus status = TicketStatus.INITIATED;
 
-	public Integer getId() {
+	
+
+	public String getId() {
 		return Id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(String id) {
 		Id = id;
 	}
 
@@ -76,35 +82,38 @@ public class Ticket extends AuditModel {
 //	public Projects getProject() {
 //		return project;
 //	}
-//
+//sssss
 //	public void setProject(Projects project) {
 //		this.project = project;
 //	}
 
-	public Integer getProjectId() {
-		return projectId;
-	}
-
-	public void setProjectId(Integer projectId) {
-		this.projectId = projectId;
-	}
+	
 
 	public String getCreatedBy() {
 		return createdBy;
+	}
+
+	public String getProjectId() {
+		return projectId;
+	}
+
+	public void setProjectId(String projectId) {
+		this.projectId = projectId;
+	}
+
+	public String getPriorityId() {
+		return priorityId;
+	}
+
+	public void setPriorityId(String priorityId) {
+		this.priorityId = priorityId;
 	}
 
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
 	}
 
-	public Integer getPriorityId() {
-		return priorityId;
-	}
-
-	public void setPriorityId(Integer priorityId) {
-		this.priorityId = priorityId;
-	}
-
+	
 	public TicketStatus getStatus() {
 		return status;
 	}

@@ -25,9 +25,9 @@ public interface TicketService {
 
 	Ticket onHoldTicket(Ticket ticketRequest);
 
-	ApiResponse editTicket(Integer ticketId, Ticket ticket);
+	ApiResponse editTicket(String ticketId, Ticket ticket);
 	
-	ApiResponse reopenTicket(Integer ticketId,Comments commentObj); 
+	ApiResponse reopenTicket( String ticketId,Comments commentObj); 
 	
 	ApiResponse addComment(Comments commentObj); 
 	

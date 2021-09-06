@@ -59,7 +59,7 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 		
 		ApiResponse response = new ApiResponse(false);
 		
-		Optional<Projects> project = projectRepository.findById(members.get(0).getProjectId());
+		Optional<Projects> project = projectRepository.findById(members.get(0).getId());
 		
 		if(project != null) {
 			for(int i=0;i<members.size();i++) {

@@ -43,7 +43,7 @@ public class TicketCommentController {
 	}
 
 	@PutMapping(value= {AuthConstants.ADMIN_BASEPATH +"/editTicketCommentns/{ticketCommentsId}",AuthConstants.DEVELOPER_BASEPATH +"/editTicketCommentns/{ticketCommentsId}",AuthConstants.INFRA_USER_BASEPATH +"/editTicketCommentns/{ticketCommentsId}"})
-	public TicketComments editTicketCommentns(@PathVariable Integer ticketCommentsId,
+	public TicketComments editTicketCommentns(@PathVariable String ticketCommentsId,
 			@RequestBody TicketComments ticketComments) {
 		logger.info("Recive request to edit ticket commenst by id:" + ticketComments.getId());
 		return ticketCommentService.editTicketCommentns(ticketCommentsId, ticketComments);

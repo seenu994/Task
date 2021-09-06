@@ -38,7 +38,7 @@ public class PasswordServiceImpl implements PasswordService {
 		Map<String, Object> response = new HashMap<>();
 
 		logger.info("Received request for reset password");
-		return userRepository.findById((Integer) passwordRequest.get("userId")).map(user -> {
+		return userRepository.findById((String) passwordRequest.get("userId")).map(user -> {
 
 			String oldPassword = passwordRequest.containsKey("existingPassword")
 					&& !StringUtils.isEmpty(passwordRequest.get("existingPassword"))

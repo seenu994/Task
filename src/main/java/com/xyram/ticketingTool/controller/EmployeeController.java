@@ -54,7 +54,7 @@ class EmployeeController {
 	}
 
 	
-	@GetMapping(value= {AuthConstants.ADMIN_BASEPATH +"/getAllEmployee"})
+	@GetMapping(value= {AuthConstants.ADMIN_BASEPATH +"/getAllEmployee",AuthConstants.INFRA_USER_BASEPATH +"/getAllEmployee"})
 	public ApiResponse getAllEmployee(Pageable pageable) {
 		logger.info("indide CatagoryController :: getAllCatagory");
 		return employeeService.getAllEmployee(pageable);
@@ -62,14 +62,14 @@ class EmployeeController {
 
 	
 	@PutMapping(value= {AuthConstants.ADMIN_BASEPATH + "/editEmployee/{employeeId}",AuthConstants.DEVELOPER_BASEPATH+"/editEmployee/{employeeId}"})
-	public ApiResponse editEmployee(@RequestBody Employee employeeRequest,@PathVariable Integer employeeId ) {
+	public ApiResponse editEmployee(@RequestBody Employee employeeRequest,@PathVariable String employeeId ) {
 		logger.info("indide ProductController :: getAllemployee");
 		return employeeService.editEmployee(employeeId,employeeRequest);
 	}
 	
 	
 	@PutMapping(value= {AuthConstants.ADMIN_BASEPATH + "/updateEmployeeStatus/{employeeID}/status/{userstatus}"})
-	public ApiResponse updateEmployeeStatus(@PathVariable int employeeID, @PathVariable UserStatus userstatus) {
+	public ApiResponse updateEmployeeStatus(@PathVariable String employeeID, @PathVariable UserStatus userstatus) {
 		logger.info("Received request to change category status to: " + userstatus + "for employeeId: " + employeeID);
 		return employeeService.updateEmployeeStatus(employeeID, userstatus);
 	}

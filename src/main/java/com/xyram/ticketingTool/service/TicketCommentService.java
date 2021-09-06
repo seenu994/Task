@@ -7,8 +7,9 @@ public interface TicketCommentService {
 
 	TicketComments addCommentForTicket(TicketComments ticketComments);
 
-	TicketComments editTicketCommentns(Integer ticketCommentsId, TicketComments ticketComments); 
 	
-    void addComment(Integer ticket_id, String commentDesc);
+    //void addComment(Integer ticket_id, String commentDesc);
+
+	TicketComments editTicketCommentns(String ticketCommentsId, TicketComments ticketComments);
 		
 }

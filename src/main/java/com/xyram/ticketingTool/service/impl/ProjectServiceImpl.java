@@ -79,7 +79,7 @@ public class ProjectServiceImpl implements ProjectService {
 		}
 	
 	@Override
-	public ApiResponse editEmployee(Integer projectId, Projects projectRequest) {
+	public ApiResponse editEmployee(String projectId, Projects projectRequest) {
 
 		ApiResponse response = validateProjects(projectRequest);
 		if (response.isSuccess()) {
@@ -115,4 +115,5 @@ public class ProjectServiceImpl implements ProjectService {
 		return response;
 	}
 
+	
 }
