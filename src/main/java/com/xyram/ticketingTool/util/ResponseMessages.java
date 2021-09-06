@@ -22,6 +22,10 @@ public interface ResponseMessages {
 	String TICKET_ALREADY_RESOLVED = "Ticket is already Resolved.";
 	String TICKET_ADDED = "Ticket Added Successfully.";
 	String TICKET_NOT_IN_REVIEW = "Ticket is notin review state.";
+	
+	String TICKET_LIST="Successfully get the list of tickets";
+	
+	
 
 	String EMPLOYEE_ADDED = "Employee Added Successfully";
 
@@ -46,7 +50,9 @@ public interface ResponseMessages {
 	String CLIENT_INVALID = "Invalid Client Id";
 
 	String PROJECT_ADDED = "Project Added Successfully";
-
+	
+	String PROJECT_LIST="Successfully get the list of projects";
+	
 	String ClIENT_ID_VALID = "Client Id Is Invalid";
 
 	String PROJECT_EDIT = "Project Edited Successfully";
