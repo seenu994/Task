@@ -44,9 +44,9 @@ public class Projects extends AuditModel {
 	@Column(name="project_description")
 	private String projectDescritpion;
 	
-	@ManyToOne(cascade = { CascadeType.MERGE })
-	@JoinColumn(name = "client_id")
-	private Client   client;
+	
+	@Column(name = "client_id")
+	private String   clientId;
 
 	
 	@Column(name="inhouse")
@@ -98,13 +98,14 @@ public class Projects extends AuditModel {
 		this.status = status;
 	}
 
-	public Client getClient() {
-		return client;
+	public String getClientId() {
+		return clientId;
 	}
 
-	public void setClient(Client client) {
-		this.client = client;
+	public void setClientId(String clientId) {
+		this.clientId = clientId;
 	}
+
 
 	
 }

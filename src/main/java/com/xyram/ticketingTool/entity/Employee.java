@@ -35,7 +35,7 @@ public class Employee extends AuditModel {
 	@Id
 	@GeneratedValue(generator = "uuid")
 	@GenericGenerator(name = "uuid", strategy = "uuid")
-	@Size( max = 8)
+	@Size(min=1, max = 8)
 	@Column(name="employee_id")
 	private String eId;
 
@@ -72,7 +72,7 @@ public class Employee extends AuditModel {
 
 	@OneToOne(cascade = { CascadeType.MERGE })
 	@JoinColumn(name = "user_id")
-	@JsonIgnore
+
 	private User userCredientials;
 
 	

@@ -12,6 +12,6 @@ import com.xyram.ticketingTool.entity.Projects;
 public interface  ProjectRepository extends  JpaRepository<Projects,String> {
 
 	
-	@Query("Select new map(e.pId as id,e.projectName as projectName,e.projectDescritpion as projectDescritpion,e.client as client,e.inHouse as inHouse,e.status as status) from Projects e")
+	@Query("Select new map(e.pId as id,e.projectName as projectName,e.projectDescritpion as projectDescritpion,e.clientId as clientId,e.inHouse as inHouse,e.status as status) from Projects e")
 	Page<Map> getAllProjectLsit(Pageable pageable);
 }
