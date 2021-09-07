@@ -3,6 +3,7 @@ package com.xyram.ticketingTool.service.impl;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.transaction.Transactional;
@@ -38,10 +39,17 @@ public class ProjectServiceImpl implements ProjectService {
 	CurrentUser userDetail;
 
 	@Override
-	public ApiResponse addproject(Projects project) {
+	public ApiResponse addproject(Projects project) {		
 		ApiResponse response = validateClientId(project);
 		if (response.isSuccess()) { 
 			//projectRepository.save(project);
+			String inHouse = project.getInHouse();
+			if (!inHouse.equals("") && !inHouse.equals("null")) {
+				if (!inHouse.equalsIgnoreCase("Yes") && !inHouse.equalsIgnoreCase("NO")) 
+					project.setInHouse("No");
+			} else
+				project.setInHouse("No");
+				
 			project.setCreatedAt(new Date());
 			project.setCreatedBy(userDetail.getUserId());
 			project.setLastUpdatedAt(new Date());
@@ -76,7 +84,8 @@ public class ProjectServiceImpl implements ProjectService {
 
 	@Override
 	public ApiResponse getAllProjects(Pageable pageable) {
-		Page<Map> projectList =   projectRepository.getAllProjectLsit(pageable);
+		//Page<Map> projectList =   projectRepository.getAllProjectLsit(pageable);
+		List<Map> projectList = projectRepository.getAllProjectsList();
 		Map content = new HashMap();
 	    content.put("projectList", projectList);
 	    ApiResponse response = new ApiResponse(true);
