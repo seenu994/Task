@@ -26,9 +26,9 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 
 	Page<Map> getAllTicketList(Pageable pageable);
 	
-	@Query(value = "SELECT a.ticket_id FROM ticketdbtool.ticket a where (('INFRA' = :roleId and a.ticket_status IN ('ASSIGNED', 'INPROGRESS', 'REOPEN')) \r\n"
-			+ "OR ('DEVELOPER' = :roleId and a.ticket_status IN ('INITIATED', 'ASSIGNED', 'INPROGRESS', 'REOPEN')) OR ('R1' = :roleId)) and a.created_by = :createdBy", nativeQuery = true)
-	List<String> getAllTicketsByStatus(@Param("createdBy") String createdBy, @Param("roleId")String roleId);
+	@Query(value = "SELECT a.ticket_id, a.ticket_description, a.created_at, a.created_by, a.priority_id FROM ticket a where (('INFRA' = :roleId and a.ticket_status IN ('ASSIGNED', 'INPROGRESS', 'REOPEN')) \r\n"
+			+ "OR ('DEVELOPER' = :roleId and a.ticket_status IN ('INITIATED', 'ASSIGNED', 'INPROGRESS', 'REOPEN')) OR ('TICKETINGTOOL_ADMIN' = :roleId)) and a.created_by = :createdBy", nativeQuery = true)
+	List<Map> getAllTicketsByStatus(@Param("createdBy") String createdBy, @Param("roleId")String roleId);
 
 	//String getTicketById(Integer ticketId);
 }
