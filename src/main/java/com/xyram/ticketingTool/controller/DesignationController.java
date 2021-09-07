@@ -19,10 +19,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.filter.CorsFilter;
 
+import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Designation;
 import com.xyram.ticketingTool.entity.Role;
 import com.xyram.ticketingTool.service.DesiggnaionService;
 import com.xyram.ticketingTool.service.RoleService;
+import com.xyram.ticketingTool.util.AuthConstants;
 
 import ch.qos.logback.core.pattern.color.ANSIConstants;
 
@@ -33,7 +35,7 @@ import ch.qos.logback.core.pattern.color.ANSIConstants;
  */
 @CrossOrigin
 @RestController
-@RequestMapping("/api/designation")
+
 public class DesignationController {
 	private final Logger logger = LoggerFactory.getLogger(DesignationController.class);
 	@Autowired
@@ -49,11 +51,12 @@ public class DesignationController {
 	 * @return List<Category>
 	 */
 
-	/* @CrossOrigin("*") */
-	@GetMapping("/getAllDesignation")
-	public Page<Designation> getAllDesignation(Pageable pageable) {
-		logger.info("indide RoleController :: getAllRole");
-		return desiggnaionService.getAllgetAllDesignationRole(pageable);
+	
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllDesignation",
+			AuthConstants.INFRA_USER_BASEPATH + "/getAllDesignation" })
+	public ApiResponse getAllDesignation(Pageable pageable) {
+		logger.info("indide Designation Controller :: getAllDesignation");
+		return desiggnaionService.getAllDesignation(pageable);
 	}
 }
 	

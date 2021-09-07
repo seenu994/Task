@@ -79,6 +79,7 @@ public class TicketServiceImpl implements TicketService {
 		} else {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.TICKET_NOT_EXIST);
+			
 			response.setContent(null);
 		}
 		
@@ -115,19 +116,20 @@ public class TicketServiceImpl implements TicketService {
 	}
 
 	@Override
-	public ApiResponse cancelTicket(Ticket ticketObj) {
+	public ApiResponse cancelTicket(String ticketId) {
 		ApiResponse response = new ApiResponse(false);
-
-		if (ticketObj != null) {
-			if (!ticketObj.getStatus().equals(TicketStatus.CANCELLED)) {
+		Ticket ticketNewRequest = ticketrepository.getById(ticketId);
+		System.out.println("Status :: "+ticketNewRequest.getStatus());
+		if (ticketNewRequest != null) {
+			if (ticketNewRequest.getStatus().equals(TicketStatus.CANCELLED)) {
 				response.setSuccess(false);
 				response.setMessage(ResponseMessages.TICKET_ALREADY_CANCELLED);
 				response.setContent(null);
-			} else if (!ticketObj.getStatus().equals(TicketStatus.COMPLETED)) {
-				ticketObj.setStatus(TicketStatus.CANCELLED);
-				ticketObj.setUpdatedBy(userDetail.getUserId());
-				ticketObj.setLastUpdatedAt(new Date());
-				ticketrepository.save(ticketObj);
+			} else if (!ticketNewRequest.getStatus().equals(TicketStatus.COMPLETED)) {
+				ticketNewRequest.setStatus(TicketStatus.CANCELLED);
+				ticketNewRequest.setUpdatedBy(userDetail.getUserId());
+				ticketNewRequest.setLastUpdatedAt(new Date());
+				ticketrepository.save(ticketNewRequest);
 
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.TICKET_ALREADY_RESOLVED);
@@ -148,20 +150,21 @@ public class TicketServiceImpl implements TicketService {
 	}
 
 	@Override
-	public ApiResponse resolveTicket(Ticket ticketObj) {
+	public ApiResponse resolveTicket(String ticketId) { {
 		ApiResponse response = new ApiResponse(false);
-
-		if (ticketObj != null) {
-			if (!ticketObj.getStatus().equals(TicketStatus.COMPLETED)) {
+		Ticket ticketNewRequest = ticketrepository.getById(ticketId);
+		System.out.println("Status :: "+ticketNewRequest.getStatus());
+		if (ticketNewRequest != null) {
+			if (ticketNewRequest.getStatus().equals(TicketStatus.COMPLETED)) {
 				response.setSuccess(false);
 				response.setMessage(ResponseMessages.TICKET_ALREADY_RESOLVED);
 				response.setContent(null);
-			} else if (ticketObj.getStatus().equals(TicketStatus.ONREVIEW)) {
+			} else if (ticketNewRequest.getStatus().equals(TicketStatus.INPROGRESS)) {
 
-				ticketObj.setStatus(TicketStatus.COMPLETED);
-				ticketObj.setUpdatedBy(userDetail.getUserId());
-				ticketObj.setLastUpdatedAt(new Date());
-				ticketrepository.save(ticketObj);
+				ticketNewRequest.setStatus(TicketStatus.COMPLETED);
+				ticketNewRequest.setUpdatedBy(userDetail.getUserId());
+				ticketNewRequest.setLastUpdatedAt(new Date());
+				ticketrepository.save(ticketNewRequest);
 
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.TICKET_RESOLVED);
@@ -180,10 +183,11 @@ public class TicketServiceImpl implements TicketService {
 			response.setContent(null);
 			return response;
 		}
-	}
+	}}
 
 	@Override
 	public Ticket onHoldTicket(Ticket ticketRequest) {
+		
 		return ticketrepository.findById(ticketRequest.getId()).map(ticket -> {
 			ticket.setStatus(TicketStatus.ONHOLD);
 			ticket.setUpdatedBy(ticketRequest.getUpdatedBy());
@@ -400,4 +404,51 @@ public class TicketServiceImpl implements TicketService {
        response.setContent(content);
        return  response;
 	}
-}
+
+	@Override
+	public ApiResponse inprogressTicket(String ticketId) {
+		
+			ApiResponse response = new ApiResponse(false);
+			
+			Ticket ticketNewRequest = ticketrepository.getById(ticketId);
+			System.out.println("Status :: "+ticketNewRequest.getStatus());
+			if (ticketNewRequest != null) {
+				
+				if (ticketNewRequest.getStatus() .equals( TicketStatus.INPROGRESS)) {
+					response.setSuccess(false);
+					response.setMessage(ResponseMessages.TICKET_ALREADY_INPROGRESS);
+					response.setContent(null);
+				}else {
+					if (ticketNewRequest.getStatus() == TicketStatus.ASSIGNED) {
+
+						ticketNewRequest.setStatus(TicketStatus.INPROGRESS);
+						ticketNewRequest.setUpdatedBy(userDetail.getUserId());
+						ticketNewRequest.setLastUpdatedAt(new Date());
+						ticketrepository.save(ticketNewRequest);
+
+						response.setSuccess(true);
+						response.setMessage(ResponseMessages.TICKET_ASSIGNED);
+						response.setContent(null);
+
+					} else {
+						response.setSuccess(false);
+						response.setMessage(ResponseMessages.TICKET_NOT_IN_ASSIGNE_STATE);
+						response.setContent(null);
+					}
+				}
+				
+
+				return response;
+			} else {
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.TICKET_NOT_EXIST);
+				response.setContent(null);
+				return response;
+			}
+		}
+
+	
+
+	
+
+	}

@@ -56,10 +56,10 @@ class ProjectContoller {
 		logger.info("indide ProjectContoller :: getAllProjects");
 		return projectService.getAllProjects(pageable);
 	}
-	@PutMapping(value= {AuthConstants.ADMIN_BASEPATH + "/editProejct/{projectId}",AuthConstants.INFRA_USER_BASEPATH+"/editProejct/{projectId}"})
-	public ApiResponse editProejct(@RequestBody Projects projectRequest,@PathVariable String projectId ) {
+	@PutMapping(value= {AuthConstants.ADMIN_BASEPATH + "/editProejct",AuthConstants.INFRA_USER_BASEPATH+"/editProejct"})
+	public ApiResponse editProject(@RequestBody Projects projectRequest ) {
 		logger.info("indide ProjectContoller :: editProejct");
-		return projectService.editEmployee(projectId,projectRequest);
+		return projectService.editEmployee(projectRequest);
 	}
 	
 }

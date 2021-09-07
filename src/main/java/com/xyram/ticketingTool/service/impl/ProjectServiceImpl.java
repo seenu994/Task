@@ -87,18 +87,19 @@ public class ProjectServiceImpl implements ProjectService {
 	
 	
 	@Override
-	public ApiResponse editEmployee(String projectId, Projects projectRequest) {
+	public ApiResponse editEmployee( Projects projectRequest) {
 
-		ApiResponse response = validateClientId(projectRequest);
+		ApiResponse response = validateClientIdProjectId(projectRequest);
 		if (response.isSuccess()) {
-			  Projects projects = projectRepository.getById(projectId);
-			if (projects != null) { 
-				projects.setUpdatedBy(projectRequest.getUpdatedBy());
-				projects.setLastUpdatedAt(new Date());
-				projects.setInHouse(projectRequest.getInHouse());
-				projects.setProjectDescritpion(projectRequest.getProjectDescritpion());
-				projects.setProjectName(projectRequest.getProjectName());
-				projects.setStatus(projectRequest.getStatus()); 
+		
+			if (projectRequest != null) { 
+				projectRequest.setpId(projectRequest.getpId());
+				projectRequest.setUpdatedBy(projectRequest.getUpdatedBy());
+				projectRequest.setLastUpdatedAt(new Date());
+				projectRequest.setInHouse(projectRequest.getInHouse());
+				projectRequest.setProjectDescritpion(projectRequest.getProjectDescritpion());
+				projectRequest.setProjectName(projectRequest.getProjectName());
+				projectRequest.setStatus(projectRequest.getStatus()); 
 				//projectRepository.save(projectRequest);			
 				Projects projetAdded = projectRepository.save(projectRequest);
 
@@ -116,4 +117,37 @@ public class ProjectServiceImpl implements ProjectService {
 		}
 		return response;
 	}
+	private ApiResponse validateClientIdProjectId(Projects projects) {
+		ApiResponse response = new ApiResponse(false);
+		if (projects.getClientId()== null ) {
+			/*response.setMessage("success");
+			response.setSuccess(true);
+			response.setContent(null);*/
+		
+			response.setMessage(ResponseMessages.ClIENT_ID_VALID );
+			response.setSuccess(false);
+			response.setContent(null);
+		}
+	
+		Projects projectid=projectRepository.getById(projects.getpId());
+		 if ( projectid==null ) {
+			/*
+			 * response.setMessage("success"); response.setSuccess(true);
+			 * response.setContent(null); } else {
+			 */
+			response.setMessage(ResponseMessages.PROJECT_ID_VALID );
+			response.setSuccess(false);
+			response.setContent(null);
+		} 
+		else {
+			response.setMessage(ResponseMessages.PROJECT_EDIT);
+		
+			
+			response.setSuccess(true);
+		}
+	
+		
+		return response;
+	}
+		
 }

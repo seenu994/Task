@@ -55,4 +55,10 @@ public class ClientControll {
 	
 		return clientService.updateClientStatus(clientId, userstatus);
 	}
+
+	@GetMapping(value= {AuthConstants.ADMIN_BASEPATH +"/getAllClient"})
+	public ApiResponse getAllClient(Pageable pageable) {
+		logger.info("indide Client controller :: getAllClient");
+		return clientService.getAllClient(pageable);
+	}
 }

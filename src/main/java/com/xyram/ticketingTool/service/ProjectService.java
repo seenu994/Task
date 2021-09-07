@@ -20,7 +20,7 @@ public interface ProjectService {
 	
 
 
-	ApiResponse editEmployee(String projectId, Projects projectRequest); 
+	ApiResponse editEmployee(Projects projectRequest); 
 		
 
 }

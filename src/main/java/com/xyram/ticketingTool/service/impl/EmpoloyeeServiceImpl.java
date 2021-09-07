@@ -168,38 +168,29 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		if (response.isSuccess()) {
 			Employee employee = employeeRepository.getById(employeeID);
 			if (employee != null) {
-				if(userstatus == UserStatus.INACTIVE) {
+				
 					
 				employee.setStatus(userstatus);
 				employeeRepository.save(employee);
 				User user = userRepository.getById(employee.getUserCredientials().getId());
-				if (userCache.containsKey(user.getUsername().toLowerCase()))
-					userCache.remove("USER", user.getUsername().toLowerCase());
 				user.setStatus(userstatus);
 				userRepository.save(user);
-				}
-				else
-				{
-					employee.setStatus(userstatus);
-					employeeRepository.save(employee);
-					User user = userRepository.getById(employee.getUserCredientials().getId());
-					user.setStatus(userstatus);
-					userRepository.save(user);
-				}
+				
+				
 				// Employee employeere=new Employee();z
 
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.STATUS_UPDATE);
 				response.setContent(null);
 			}
-
+		}
 			else {
 				response.setSuccess(false);
 				response.setMessage(ResponseMessages.EMPLOYEE_INVALID);
 				response.setContent(null);
 			}
 
-		}
+		
 		return response;
 	}
 

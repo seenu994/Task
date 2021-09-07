@@ -1,5 +1,7 @@
 package com.xyram.ticketingTool.service;
 
+import org.springframework.data.domain.Pageable;
+
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Client;
 import com.xyram.ticketingTool.enumType.ClientStatus;
@@ -12,6 +14,10 @@ public interface ClientService {
 ApiResponse updateClientStatus(String clientId, ClientStatus userstatus);
 
 ApiResponse editClient(String clientId, Client clientRequest);
+
+
+
+ApiResponse getAllClient(Pageable pageable);
 		
 	
 }

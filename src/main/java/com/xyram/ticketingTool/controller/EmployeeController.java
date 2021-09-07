@@ -43,32 +43,31 @@ class EmployeeController {
 
 	@Autowired
 	EmployeeService employeeService;
-	
+
 	@Autowired
 	UserRepository userRepository;
-	
-	@PostMapping(value= {AuthConstants.ADMIN_BASEPATH +  "/createEmployee"})
+
+	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/createEmployee" })
 	public ApiResponse addemployee(@RequestBody Employee employee) {
 		logger.info("Received request to add Employee");
 		return employeeService.addemployee(employee);
 	}
 
-	
-	@GetMapping(value= {AuthConstants.ADMIN_BASEPATH +"/getAllEmployee",AuthConstants.INFRA_USER_BASEPATH +"/getAllEmployee"})
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllEmployee",
+			AuthConstants.INFRA_USER_BASEPATH + "/getAllEmployee" })
 	public ApiResponse getAllEmployee(Pageable pageable) {
 		logger.info("indide CatagoryController :: getAllCatagory");
 		return employeeService.getAllEmployee(pageable);
 	}
 
-	
-	@PutMapping(value= {AuthConstants.ADMIN_BASEPATH + "/editEmployee/{employeeId}",AuthConstants.DEVELOPER_BASEPATH+"/editEmployee/{employeeId}"})
-	public ApiResponse editEmployee(@RequestBody Employee employeeRequest,@PathVariable String employeeId ) {
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editEmployee/{employeeId}",
+			AuthConstants.DEVELOPER_BASEPATH + "/editEmployee/{employeeId}" })
+	public ApiResponse editEmployee(@RequestBody Employee employeeRequest, @PathVariable String employeeId) {
 		logger.info("indide ProductController :: getAllemployee");
-		return employeeService.editEmployee(employeeId,employeeRequest);
+		return employeeService.editEmployee(employeeId, employeeRequest);
 	}
-	
-	
-	@PutMapping(value= {AuthConstants.ADMIN_BASEPATH + "/updateEmployeeStatus/{employeeID}/status/{userstatus}"})
+
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/updateEmployeeStatus/{employeeID}/status/{userstatus}" })
 	public ApiResponse updateEmployeeStatus(@PathVariable String employeeID, @PathVariable UserStatus userstatus) {
 		logger.info("Received request to change category status to: " + userstatus + "for employeeId: " + employeeID);
 		return employeeService.updateEmployeeStatus(employeeID, userstatus);

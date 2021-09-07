@@ -20,9 +20,9 @@ public interface TicketService {
 
 	//Ticket ticket(Integer employeeId);
 
-	ApiResponse cancelTicket(Ticket ticketRequest); 
+	ApiResponse cancelTicket(String ticketId); 
 	
-	ApiResponse resolveTicket(Ticket ticketRequest);
+	ApiResponse resolveTicket(String ticketId);
 
 	Ticket onHoldTicket(Ticket ticketRequest);
 
@@ -37,6 +37,8 @@ public interface TicketService {
 	ApiResponse deleteComment(Comments commentObj);
 
 	ApiResponse getAllTicket(Pageable pageable);
+
+	ApiResponse inprogressTicket(String ticketId);
 }
 		
 

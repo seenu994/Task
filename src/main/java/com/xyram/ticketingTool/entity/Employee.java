@@ -35,7 +35,7 @@ public class Employee extends AuditModel {
 	@Id
 	@GeneratedValue(generator = "uuid")
 	@GenericGenerator(name = "uuid", strategy = "uuid")
-	@Size(min=1, max = 8)
+	@Size( max = 8)
 	@Column(name="employee_id")
 	private String eId;
 

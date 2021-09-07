@@ -64,25 +64,26 @@ class TicketController {
 		logger.info("Received request to add tickets");
 		return ticketService.createTickets(ticketRequest);
 	}
+	
 
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/cancelTicket",
-			AuthConstants.DEVELOPER_BASEPATH + "/cancelTicket", AuthConstants.INFRA_USER_BASEPATH + "/cancelTicket" })
-	public ApiResponse cancelTicket(@RequestBody Ticket ticketRequest) {
-		logger.info("Received request to update ticket for ticketId: " + ticketRequest.getId());
-		return ticketService.cancelTicket(ticketRequest);
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/cancelTicket/{ticketId}",
+			AuthConstants.DEVELOPER_BASEPATH + "/cancelTicket/{ticketId}", AuthConstants.INFRA_USER_BASEPATH + "/cancelTicket/{ticketId}" })
+	public ApiResponse cancelTicket(@PathVariable String ticketId) {
+		logger.info("Received request to update ticket for ticketId: " + ticketId);
+		return ticketService.cancelTicket(ticketId);
 	}
 
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/resolveTicket",
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/resolveTicket/{ticketId}",
 			AuthConstants.DEVELOPER_BASEPATH + "/resolveTicket", AuthConstants.INFRA_USER_BASEPATH + "/resolveTicket" })
-	public ApiResponse resolveTicket(@RequestBody Ticket ticketRequest) {
-		logger.info("Received request to update ticket for ticketId: " + ticketRequest.getId());
-		return ticketService.resolveTicket(ticketRequest);
+	public ApiResponse resolveTicket(@PathVariable String ticketId) {
+		logger.info("Received request to update ticket for ticketId: " + ticketId);
+		return ticketService.resolveTicket(ticketId);
 	}
 
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/onHoldTicket",
 			AuthConstants.INFRA_USER_BASEPATH + "/onHoldTicket" })
-	public Ticket onHoldTicket(@RequestBody Ticket ticketRequest) {
-		logger.info("Received request to update ticket for ticketId: " + ticketRequest.getId());
+	public Ticket onHoldTicket(  @RequestBody Ticket ticketRequest) {
+		logger.info("Received request to update ticket for ticketId: " +   ticketRequest.getId());
 		return ticketService.onHoldTicket(ticketRequest);
 	}
 
@@ -136,4 +137,11 @@ class TicketController {
 		logger.info("indide Ticket controller :: getAllTicket");
 		return ticketService.getAllTicketsByStatus();
 	}
+
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/inprogressTicket/{ticketId}",
+			AuthConstants.DEVELOPER_BASEPATH + "/inprogressTicket/{ticketId}", AuthConstants.INFRA_USER_BASEPATH + "/inprogressTicket/{ticketId}" })
+	public ApiResponse inprogressTicket(@PathVariable String ticketId) {
+		logger.info("Received request to update ticket for ticketId: " + ticketId);
+		return ticketService.inprogressTicket(ticketId);
+}
 }

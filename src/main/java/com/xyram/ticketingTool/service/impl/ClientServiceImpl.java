@@ -9,6 +9,8 @@ import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.xyram.ticketingTool.Repository.ClientRepository;
@@ -100,4 +102,18 @@ public class ClientServiceImpl implements ClientService {
 		return response;
 	}
 
+	@Override
+	public ApiResponse getAllClient(Pageable pageable) {
+	
+	       Page<Map> ClientList =   clientRepository.getAllClientList(pageable);
+	       Map content = new HashMap();
+	       content.put("ClientList", ClientList);
+	       ApiResponse response = new ApiResponse(true);
+	       response.setMessage(ResponseMessages.CLIENT_LIST);
+	       response.setSuccess(true);
+	       response.setContent(content);
+	       return  response;
+		}
+
+	
 }

@@ -62,5 +62,14 @@ public interface ResponseMessages {
 	String PROJECT_MEMBERS_ADDED = "Successfuly added members to the project.";
 
 	String PROJECT_MEMBER_REMOVED = "Successfuly removed member from the project.";
+	
+	String CLIENT_LIST="Successfully get the list of Clients";
+	
+	
+	String TICKET_ASSIGNED="Ticket assigned successfully";
+	String TICKET_INPROGRESS="Ticket status changed to Inprogress";
+	String TICKET_ALREADY_INPROGRESS="Ticket already Inprogress";
+	String TICKET_NOT_IN_ASSIGNE_STATE="Ticket is not in assigne status";
+
 
 }

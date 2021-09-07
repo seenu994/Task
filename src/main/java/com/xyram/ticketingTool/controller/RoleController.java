@@ -18,8 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Role;
 import com.xyram.ticketingTool.service.RoleService;
+import com.xyram.ticketingTool.util.AuthConstants;
 
 import ch.qos.logback.core.pattern.color.ANSIConstants;
 
@@ -30,7 +32,7 @@ import ch.qos.logback.core.pattern.color.ANSIConstants;
  */
 @CrossOrigin
 @RestController
-@RequestMapping("/api/role")
+
 public class RoleController {
 	private final Logger logger = LoggerFactory.getLogger(RoleController.class);
 	@Autowired
@@ -45,9 +47,12 @@ public class RoleController {
 	 * @return List<Category>
 	 */
 
-	@GetMapping("/getAllRole")
-	public Page<Role> getAllRole(Pageable pageable) {
-		logger.info("indide RoleController :: getAllRole");
+	
+
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllRole",
+			AuthConstants.INFRA_USER_BASEPATH + "/getAllRole" })
+	public ApiResponse getAllRole(Pageable pageable) {
+		logger.info("indide Role Controller :: getAllRole");
 		return roleService.getAllRole(pageable);
 	}
 }
