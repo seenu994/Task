@@ -128,4 +128,12 @@ class TicketController {
 		logger.info("indide Ticket controller :: getAllTicket");
 		return ticketService.getAllTicket(pageable);
 	}
+	
+	@GetMapping(value= {AuthConstants.ADMIN_BASEPATH +"/getAllTktByStatus", 
+			AuthConstants.INFRA_USER_BASEPATH +"/getAllTktByStatus", 
+			AuthConstants.DEVELOPER_BASEPATH +"/getAllTktByStatus"})
+	public ApiResponse getAllTicketsByStatus() {
+		logger.info("indide Ticket controller :: getAllTicket");
+		return ticketService.getAllTicketsByStatus();
+	}
 }
