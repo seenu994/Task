@@ -408,13 +408,11 @@ public class TicketServiceImpl implements TicketService {
 
 	@Override
 	public ApiResponse inprogressTicket(String ticketId) {
-		
 			ApiResponse response = new ApiResponse(false);
 			
 			Ticket ticketNewRequest = ticketrepository.getById(ticketId);
-			System.out.println("Status :: "+ticketNewRequest.getStatus());
+			//System.out.println("Status :: "+ticketNewRequest.getStatus());
 			if (ticketNewRequest != null) {
-				
 				if (ticketNewRequest.getStatus() .equals( TicketStatus.INPROGRESS)) {
 					response.setSuccess(false);
 					response.setMessage(ResponseMessages.TICKET_ALREADY_INPROGRESS);
@@ -437,19 +435,12 @@ public class TicketServiceImpl implements TicketService {
 						response.setContent(null);
 					}
 				}
-				
-
-				return response;
 			} else {
 				response.setSuccess(false);
 				response.setMessage(ResponseMessages.TICKET_NOT_EXIST);
 				response.setContent(null);
-				return response;
+				//return response;
 			}
+			return response;
 		}
-
-	
-
-	
-
 	}
