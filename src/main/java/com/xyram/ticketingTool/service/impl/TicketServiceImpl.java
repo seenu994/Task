@@ -68,12 +68,11 @@ public class TicketServiceImpl implements TicketService {
 		// TODO Auto-generated method stub
 		ApiResponse response = new ApiResponse(false);
 		
-		//List<Ticket> allTickets = ticketrepository.findAllByNameAndCreatedAndTicketStatus(statusId, userDetail.getUserId());
-		List<String> allTickets = ticketrepository.getAllTicketsByStatus(userDetail.getUserId(), userDetail.getUserRole());
+		List<Map> allTickets = ticketrepository.getAllTicketsByStatus(userDetail.getUserId(), userDetail.getUserRole());
 		if (allTickets != null) {
 			response.setSuccess(true);
 			response.setMessage(ResponseMessages.TICKET_EXIST);
-			Map<String, List<String>> content = new HashMap<String, List<String>>();
+			Map<String, List<Map>> content = new HashMap<String, List<Map>>();
 			content.put("tickets", allTickets);
 			response.setContent(content);
 		} else {
