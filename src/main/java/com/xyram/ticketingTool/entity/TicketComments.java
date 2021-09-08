@@ -30,14 +30,11 @@ import com.xyram.ticketingTool.enumType.UserStatus;
 import com.xyram.ticketingTool.ticket.config.JSONObjectUserType;
 
 @Entity
-@Table(name = "ticket_comments")
+@Table(name = "ticket_comments_new")
 //@TypeDefs({ @TypeDef(name = "StringJsonObject", typeClass = JSONObjectUserType.class) })
 public class TicketComments extends AuditModel {
 
 	@Id
-	@GeneratedValue(generator = "uuid")
-	@GenericGenerator(name = "uuid", strategy = "uuid")
-	@Size( max = 8)
 	@Column(name="ticketComments_id")
 	private String Id;
 	

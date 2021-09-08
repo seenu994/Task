@@ -70,6 +70,7 @@ public interface ResponseMessages {
 	String TICKET_INPROGRESS="Ticket status changed to Inprogress";
 	String TICKET_ALREADY_INPROGRESS="Ticket already Inprogress";
 	String TICKET_NOT_IN_ASSIGNE_STATE="Ticket is not in assigne status";
+	String TICKET_REASSIGNED="Ticket Rassigned successfully";
 
 
 }
