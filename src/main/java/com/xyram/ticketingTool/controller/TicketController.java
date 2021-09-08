@@ -58,7 +58,7 @@ class TicketController {
 //		return ticketService.getAllTicketsByStatus(statusId);
 //	}
 
-	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/createTickets",
+	@PostMapping(value = { 
 			AuthConstants.DEVELOPER_BASEPATH + "/createTickets", AuthConstants.INFRA_USER_BASEPATH + "/createTickets" })
 	public ApiResponse createTickets(@RequestBody Ticket ticketRequest) {
 		logger.info("Received request to add tickets");
@@ -74,7 +74,7 @@ class TicketController {
 	}
 
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/resolveTicket/{ticketId}",
-			AuthConstants.DEVELOPER_BASEPATH + "/resolveTicket", AuthConstants.INFRA_USER_BASEPATH + "/resolveTicket" })
+			AuthConstants.DEVELOPER_BASEPATH + "/resolveTicket/{ticketId}", AuthConstants.INFRA_USER_BASEPATH + "/resolveTicket/{ticketId}" })
 	public ApiResponse resolveTicket(@PathVariable String ticketId) {
 		logger.info("Received request to update ticket for ticketId: " + ticketId);
 		return ticketService.resolveTicket(ticketId);
