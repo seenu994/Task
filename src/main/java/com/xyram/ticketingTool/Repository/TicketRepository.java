@@ -23,12 +23,20 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 	String getTicketById(String ticketId);
 	
 	@Query("Select new map(t.Id as id,t.ticketDescription as ticketDescription,t.projectId as projectId,t.createdBy as createdBy,t.priorityId as priorityId,t.status as status) from Ticket t")
-
 	Page<Map> getAllTicketList(Pageable pageable);
 	
-	@Query(value = "SELECT a.ticket_id FROM ticketdbtool.ticket a where (('INFRA' = :roleId and a.ticket_status IN ('ASSIGNED', 'INPROGRESS', 'REOPEN')) \r\n"
-			+ "OR ('DEVELOPER' = :roleId and a.ticket_status IN ('INITIATED', 'ASSIGNED', 'INPROGRESS', 'REOPEN')) OR ('TICKETINGTOOL_ADMIN' = :roleId)) and a.created_by = :createdBy", nativeQuery = true)
-	List<String> getAllTicketsByStatus(@Param("createdBy") String createdBy, @Param("roleId")String roleId);
+	@Query(value = "SELECT a.ticket_id as ticket_id, a.ticket_description as ticket_description, a.ticket_status as ticket_status, a.created_at as created_at, a.created_by as created_by, a.priority_id as priority_id"
+			+ "FROM ticket a where (('INFRA' = :roleId and a.ticket_status IN ('ASSIGNED', 'INPROGRESS', 'REOPEN')) "
+			+ "OR ('DEVELOPER' = :roleId and a.ticket_status IN ('INITIATED', 'ASSIGNED', 'INPROGRESS', 'REOPEN')) "
+			+ "OR ('TICKETINGTOOL_ADMIN' = :roleId and a.ticket_status NOT IN ('COMPLETED'))) and a.created_by = :createdBy", nativeQuery = true)
+	List<Map> getAllTicketsByStatus(@Param("createdBy") String createdBy, @Param("roleId")String roleId);
+	
+	@Query(value = "SELECT a.ticket_id as ticket_id, a.ticket_description as ticket_description, a.created_at as created_at, a.created_by as created_by, a.priority_id as priority_id"
+			+ "FROM ticket a where (('INFRA' = :roleId and a.ticket_status IN ('COMPLETED') and a.created_by = :createdBy) "
+			+ "OR ('DEVELOPER' = :roleId and a.ticket_status IN ('COMPLETED') and a.created_by = :createdBy) "
+			+ "OR ('TICKETINGTOOL_ADMIN' = :roleId and a.ticket_status IN ('COMPLETED'))) "
+			+ "and a.last_updated_at >= DATE_ADD(curdate(), INTERVAL -5 DAY) order by a.last_updated_at desc", nativeQuery = true)
+	List<Map> getAllCompletedTickets(@Param("createdBy") String createdBy, @Param("roleId")String roleId);
 
 	//String getTicketById(Integer ticketId);
 }

@@ -137,6 +137,14 @@ class TicketController {
 		logger.info("indide Ticket controller :: getAllTicket");
 		return ticketService.getAllTicketsByStatus();
 	}
+	
+	@GetMapping(value= {AuthConstants.ADMIN_BASEPATH +"/getAllCompletedTickets", 
+			AuthConstants.INFRA_USER_BASEPATH +"/getAllCompletedTickets", 
+			AuthConstants.DEVELOPER_BASEPATH +"/getAllCompletedTickets"})
+	public ApiResponse getAllCompletedTickets() {
+		logger.info("indide Ticket controller :: getAllTicket");
+		return ticketService.getAllTicketsByStatus();
+	}
 
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/inprogressTicket/{ticketId}",
 			AuthConstants.DEVELOPER_BASEPATH + "/inprogressTicket/{ticketId}", AuthConstants.INFRA_USER_BASEPATH + "/inprogressTicket/{ticketId}" })

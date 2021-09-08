@@ -85,6 +85,29 @@ public class TicketServiceImpl implements TicketService {
 		
 		return response;
 	}
+	
+	@Override
+	public ApiResponse getAllCompletedTickets() {
+		// TODO Auto-generated method stub
+		ApiResponse response = new ApiResponse(false);
+		
+		//List<Ticket> allTickets = ticketrepository.findAllByNameAndCreatedAndTicketStatus(statusId, userDetail.getUserId());
+		List<Map> allTickets = ticketrepository.getAllCompletedTickets(userDetail.getUserId(), userDetail.getUserRole());
+		if (allTickets != null) {
+			response.setSuccess(true);
+			response.setMessage(ResponseMessages.TICKET_EXIST);
+			Map<String, List<Map>> content = new HashMap<String, List<Map>>();
+			content.put("tickets", allTickets);
+			response.setContent(content);
+		} else {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.TICKET_NOT_EXIST);
+			
+			response.setContent(null);
+		}
+		
+		return response;
+	}
 
 	@Override
 	public ApiResponse createTickets(Ticket ticketRequest) {
@@ -119,7 +142,7 @@ public class TicketServiceImpl implements TicketService {
 	public ApiResponse cancelTicket(String ticketId) {
 		ApiResponse response = new ApiResponse(false);
 		Ticket ticketNewRequest = ticketrepository.getById(ticketId);
-		System.out.println("Status :: "+ticketNewRequest.getStatus());
+		//System.out.println("Status :: "+ticketNewRequest.getStatus());
 		if (ticketNewRequest != null) {
 			if (ticketNewRequest.getStatus().equals(TicketStatus.CANCELLED)) {
 				response.setSuccess(false);
@@ -407,13 +430,11 @@ public class TicketServiceImpl implements TicketService {
 
 	@Override
 	public ApiResponse inprogressTicket(String ticketId) {
-		
 			ApiResponse response = new ApiResponse(false);
 			
 			Ticket ticketNewRequest = ticketrepository.getById(ticketId);
-			System.out.println("Status :: "+ticketNewRequest.getStatus());
+			//System.out.println("Status :: "+ticketNewRequest.getStatus());
 			if (ticketNewRequest != null) {
-				
 				if (ticketNewRequest.getStatus() .equals( TicketStatus.INPROGRESS)) {
 					response.setSuccess(false);
 					response.setMessage(ResponseMessages.TICKET_ALREADY_INPROGRESS);
@@ -436,19 +457,12 @@ public class TicketServiceImpl implements TicketService {
 						response.setContent(null);
 					}
 				}
-				
-
-				return response;
 			} else {
 				response.setSuccess(false);
 				response.setMessage(ResponseMessages.TICKET_NOT_EXIST);
 				response.setContent(null);
-				return response;
+				//return response;
 			}
+			return response;
 		}
-
-	
-
-	
-
 	}
