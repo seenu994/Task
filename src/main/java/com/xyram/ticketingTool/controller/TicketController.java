@@ -102,22 +102,22 @@ class TicketController {
 		return ticketService.reopenTicket(ticketId, commentObj);
 	}
 
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/addComment}",
-			AuthConstants.DEVELOPER_BASEPATH + "/addComment" })
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/addComment",
+			AuthConstants.DEVELOPER_BASEPATH + "/addComment" ,AuthConstants.INFRA_USER_BASEPATH + "/addComment"})
 	public ApiResponse addComment(@RequestBody Comments commentObj) {
 		commentObj.setCreatedAt(new Date());
 		return ticketService.addComment(commentObj);
 	}
 
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editComment",
-			AuthConstants.DEVELOPER_BASEPATH + "/editComment" })
+			AuthConstants.DEVELOPER_BASEPATH + "/editComment",AuthConstants.INFRA_USER_BASEPATH + "/editComment" })
 	public ApiResponse editComment(@RequestBody Comments commentObj) {
 		commentObj.setCreatedAt(new Date());
 		return ticketService.editComment(commentObj);
 	}
 
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/deleteComment",
-			AuthConstants.DEVELOPER_BASEPATH + "/deleteComment" })
+			AuthConstants.DEVELOPER_BASEPATH + "/deleteComment",AuthConstants.INFRA_USER_BASEPATH + "/deleteComment"})
 	public ApiResponse deleteComment(@RequestBody Comments commentObj) {
 		commentObj.setCreatedAt(new Date());
 		return ticketService.deleteComment(commentObj);

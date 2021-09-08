@@ -69,11 +69,11 @@ public class TicketServiceImpl implements TicketService {
 		ApiResponse response = new ApiResponse(false);
 		
 		//List<Ticket> allTickets = ticketrepository.findAllByNameAndCreatedAndTicketStatus(statusId, userDetail.getUserId());
-		List<Map> allTickets = ticketrepository.getAllTicketsByStatus(userDetail.getUserId(), userDetail.getUserRole());
+		List<String> allTickets = ticketrepository.getAllTicketsByStatus(userDetail.getUserId(), userDetail.getUserRole());
 		if (allTickets != null) {
 			response.setSuccess(true);
 			response.setMessage(ResponseMessages.TICKET_EXIST);
-			Map<String, List<Map>> content = new HashMap<String, List<Map>>();
+			Map<String, List<String>> content = new HashMap<String, List<String>>();
 			content.put("tickets", allTickets);
 			response.setContent(content);
 		} else {
@@ -101,7 +101,6 @@ public class TicketServiceImpl implements TicketService {
 			ticketRequest.setCreatedAt(new Date());
 			ticketRequest.setLastUpdatedAt(new Date());
 			ticketRequest.setCreatedBy(userDetail.getUserId());
-			ticketRequest.setUpdatedBy(userDetail.getUserId());
 			ticketRequest.setStatus(TicketStatus.INITIATED);
 			Ticket tickets = ticketrepository.save(ticketRequest);
 			// attachmentService.storeImage(tickets);
