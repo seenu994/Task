@@ -34,7 +34,8 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 	@Query(value = "SELECT a.ticket_id as ticket_id, a.ticket_description as ticket_description, a.created_at as created_at, a.created_by as created_by, a.priority_id as priority_id"
 			+ "FROM ticket a where (('INFRA' = :roleId and a.ticket_status IN ('COMPLETED') and a.created_by = :createdBy) "
 			+ "OR ('DEVELOPER' = :roleId and a.ticket_status IN ('COMPLETED') and a.created_by = :createdBy) "
-			+ "OR ('TICKETINGTOOL_ADMIN' = :roleId and a.ticket_status IN ('COMPLETED')))", nativeQuery = true)
+			+ "OR ('TICKETINGTOOL_ADMIN' = :roleId and a.ticket_status IN ('COMPLETED'))) "
+			+ "and a.last_updated_at >= DATE_ADD(curdate(), INTERVAL -5 DAY) order by a.last_updated_at desc", nativeQuery = true)
 	List<Map> getAllCompletedTickets(@Param("createdBy") String createdBy, @Param("roleId")String roleId);
 
 	//String getTicketById(Integer ticketId);

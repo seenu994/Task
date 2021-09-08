@@ -17,6 +17,8 @@ public interface TicketService {
 	ApiResponse createTickets(Ticket ticketRequest);
 	
 	ApiResponse getAllTicketsByStatus();
+	
+	ApiResponse getAllCompletedTickets();
 
 	//Ticket ticket(Integer employeeId);
 
