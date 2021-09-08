@@ -105,6 +105,9 @@ public ApiResponse reassignTicketToInfraTeam(TicketAssignee assignee) {
 					ticketAssignRepository.save(prevAssignee);
 				}
 				ticketAssignRepository.save(assignee);
+				response.setSuccess(true);
+				response.setMessage(ResponseMessages.TICKET_ASSIGNED);
+				response.setContent(null);
 				
 			}else {
 				response.setSuccess(false);

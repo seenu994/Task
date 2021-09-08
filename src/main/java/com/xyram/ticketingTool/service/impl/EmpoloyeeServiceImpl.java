@@ -221,6 +221,9 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				employee.setLastUpdatedAt(new Date());
 				employee.setMiddleName(employeeRequest.getMiddleName());
 				employee.setMobileNumber(employeeRequest.getMobileNumber());
+				employee.setPassword(employeeRequest.getPassword());
+				employee.setRoleId(employeeRequest.getRoleId());
+				employee.setDesignationId(employeeRequest.getDesignationId());
 				employeeRepository.save(employee);
 
 				response.setSuccess(true);
