@@ -143,7 +143,7 @@ class TicketController {
 			AuthConstants.DEVELOPER_BASEPATH +"/getAllCompletedTickets"})
 	public ApiResponse getAllCompletedTickets() {
 		logger.info("indide Ticket controller :: getAllTicket");
-		return ticketService.getAllTicketsByStatus();
+		return ticketService.getAllCompletedTickets();
 	}
 
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/inprogressTicket/{ticketId}",
