@@ -20,5 +20,7 @@ public interface EmployeeService {
 	ApiResponse editEmployee(String employeeId, Employee employee);
 
 	ApiResponse updateEmployeeStatus(String employeeID, UserStatus userstatus);
+	
+	ApiResponse getAllEmpByProject(String projectid, String clientid);
 
 }

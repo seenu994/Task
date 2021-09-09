@@ -72,4 +72,10 @@ class EmployeeController {
 		logger.info("Received request to change category status to: " + userstatus + "for employeeId: " + employeeID);
 		return employeeService.updateEmployeeStatus(employeeID, userstatus);
 	}
+	
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllEmpByProject" })
+	public ApiResponse getAllEmpByProject(@PathVariable String projectid, @PathVariable String clientid) {
+		logger.info("indide CatagoryController :: getAllCatagory");
+		return employeeService.getAllEmpByProject(projectid, clientid);
+	}
 }

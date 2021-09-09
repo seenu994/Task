@@ -126,7 +126,7 @@ public class ProjectServiceImpl implements ProjectService {
 		}
 		return response;
 	}
-	private ApiResponse validateClientIdProjectId(Projects projects) {
+	public ApiResponse validateClientIdProjectId(Projects projects) {
 		ApiResponse response = new ApiResponse(false);
 		if (projects.getClientId()== null ) {
 			/*response.setMessage("success");

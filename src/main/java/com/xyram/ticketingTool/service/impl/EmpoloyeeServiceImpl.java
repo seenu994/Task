@@ -28,6 +28,7 @@ import com.xyram.ticketingTool.Repository.UserRepository;
 import com.xyram.ticketingTool.admin.model.User;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Employee;
+import com.xyram.ticketingTool.entity.Projects;
 import com.xyram.ticketingTool.entity.Role;
 import com.xyram.ticketingTool.entity.Ticket;
 import com.xyram.ticketingTool.enumType.UserRole;
@@ -36,7 +37,6 @@ import com.xyram.ticketingTool.exception.ResourceNotFoundException;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.EmployeeService;
 import com.xyram.ticketingTool.util.ResponseMessages;
-
 /**
  * 
  * @author sahana.neelappa
@@ -240,6 +240,27 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		}
 
 		return response;
+	}
+	
+	@Override
+	public ApiResponse getAllEmpByProject(String projectid, String clientid) {
+		ApiResponse response = new ApiResponse(false);
+		Projects projectRequest = new Projects();
+		projectRequest.setpId(projectid);
+		projectRequest.setClientId(clientid);
+		ProjectServiceImpl ps = new ProjectServiceImpl();
+		ApiResponse projvalres = ps.validateClientIdProjectId(projectRequest);
+		if (projvalres.isSuccess()) {
+			List<Map> employeeList =   employeeRepository.getAllEmpByProject(projectid);
+			Map content = new HashMap();
+			content.put("employeeList", employeeList);
+			response.setSuccess(true);
+			response.setContent(content);
+		} else {
+			response.setMessage(ResponseMessages.ClIENT_ID_VALID);
+			response.setSuccess(false);
+		}
+		return  response;
 	}
 
 }
