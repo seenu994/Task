@@ -59,6 +59,9 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	@Autowired
 	CurrentUser currentUser;
 	
+	@Autowired
+	ProjectServiceImpl ProjectSerImpl;
+	
 	private static Map<String, com.xyram.ticketingTool.admin.model.User> userCache = new HashMap<>();
 
 	@Override
@@ -248,12 +251,11 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		Projects projectRequest = new Projects();
 		projectRequest.setpId(projectid);
 		projectRequest.setClientId(clientid);
-		ProjectServiceImpl ps = new ProjectServiceImpl();
-		ApiResponse projvalres = ps.validateClientIdProjectId(projectRequest);
+		ApiResponse projvalres = ProjectSerImpl.validateClientIdProjectId(projectRequest);
 		if (projvalres.isSuccess()) {
 			List<Map> employeeList =   employeeRepository.getAllEmpByProject(projectid);
 			Map content = new HashMap();
-			content.put("employeeList", employeeList);
+			content.put("EmployeeList", employeeList);
 			response.setSuccess(true);
 			response.setContent(content);
 		} else {

@@ -28,8 +28,8 @@ public interface EmployeeRepository extends JpaRepository<Employee,String> {
 			+ "JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id")
 	Page<Map> getAllEmployeeList(Pageable pageable);
 	
-	@Query("Select new map(e.eId as id, e.firstName as firstName, e.lastName as lastName, case when p.projectId = :projectId then 1 else 0 end as projectAssignedStatus) from Employee e "
-			+ "left JOIN project_members p On e.eId = p.employeeId where e.status = 'ACTIVE'")
+	@Query("Select new map(e.eId as id, e.firstName as firstName, e.lastName as lastName, case when p.projectId = :projectId then 1 else 0 end as projectAssignedStatus) "
+			+ "from Employee e left JOIN ProjectMembers p On e.eId = p.employeeId where e.status = 'ACTIVE'")
 	List<Map> getAllEmpByProject(@Param("projectId") String projectId);
 }
 	

@@ -73,9 +73,9 @@ class EmployeeController {
 		return employeeService.updateEmployeeStatus(employeeID, userstatus);
 	}
 	
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllEmpByProject" })
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllEmpByProject/{projectid}/clientId/{clientid}" })
 	public ApiResponse getAllEmpByProject(@PathVariable String projectid, @PathVariable String clientid) {
-		logger.info("indide CatagoryController :: getAllCatagory");
+		logger.info("inside EmployeeController :: getAllEmpByProject ");
 		return employeeService.getAllEmpByProject(projectid, clientid);
 	}
 }

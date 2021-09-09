@@ -138,8 +138,10 @@ public class ProjectServiceImpl implements ProjectService {
 			response.setContent(null);
 		}
 	
+		System.out.println("projects.getClientId() " + projects.getClientId());
+		System.out.println("projects.getpId() " + projects.getpId());
 		Projects projectid=projectRepository.getById(projects.getpId());
-		 if ( projectid==null ) {
+		if ( projectid==null ) {
 			/*
 			 * response.setMessage("success"); response.setSuccess(true);
 			 * response.setContent(null); } else {
@@ -150,12 +152,8 @@ public class ProjectServiceImpl implements ProjectService {
 		} 
 		else {
 			response.setMessage(ResponseMessages.PROJECT_EDIT);
-		
-			
 			response.setSuccess(true);
 		}
-	
-		
 		return response;
 	}
 		
