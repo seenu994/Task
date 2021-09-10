@@ -8,7 +8,6 @@ import java.util.Map;
 
 import javax.transaction.Transactional;
 
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,12 +17,12 @@ import com.xyram.ticketingTool.Repository.CommentRepository;
 import com.xyram.ticketingTool.Repository.ProjectRepository;
 import com.xyram.ticketingTool.Repository.TicketRepository;
 import com.xyram.ticketingTool.Repository.UserRepository;
-import com.xyram.ticketingTool.Repository.ticketAttachmentRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Comments;
 import com.xyram.ticketingTool.entity.Projects;
 import com.xyram.ticketingTool.entity.Ticket;
 import com.xyram.ticketingTool.enumType.TicketStatus;
+import com.xyram.ticketingTool.enumType.UserRole;
 import com.xyram.ticketingTool.exception.ResourceNotFoundException;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.TicketAttachmentService;
@@ -110,22 +109,38 @@ public class TicketServiceImpl implements TicketService {
 		// TODO Auto-generated method stub
 		ApiResponse response = new ApiResponse(false);
 		Ticket ticketNewRequest = ticketrepository.getById(ticketId);
+		boolean noErrors = true;
 		//List<Map> allTickets = ticketrepository.getAllCompletedTickets(userDetail.getUserId(), userDetail.getUserRole());4
-		if (ticketNewRequest != null) {
-			List<Map> ticketComments = ticketrepository.getTktcommntsById(ticketId);
-			response.setSuccess(true);
-			response.setMessage(ResponseMessages.TICKET_EXIST);
-			Map<String, List<Map>> content = new HashMap<String, List<Map>>();
-			content.put("Comments", ticketComments);
-			List<Map> ticketAttachments = ticketrepository.getTktAttachmentsById(ticketId);
-			content.put("AttachmentDetails", ticketAttachments);
-			response.setContent(content);
-		} else {
-			response.setSuccess(false);
-			response.setMessage(ResponseMessages.TICKET_NOT_EXIST);			
-			response.setContent(null);
+		if(!userDetail.getUserRole().equals(UserRole.TICKETINGTOOL_ADMIN)) {
+			if(userDetail.getUserRole().equals(UserRole.DEVELOPER)) {
+				if(!ticketNewRequest.getCreatedBy().equals(userDetail.getUserId())){
+					response.setSuccess(false);
+					response.setMessage(ResponseMessages.NOT_AUTHORISED);			
+					response.setContent(null);
+					noErrors = false;
+				}
+				
+			}
+			if(userDetail.getUserRole().equals(UserRole.INFRA)) {
+				
+			}
 		}
-		
+		if(noErrors) {
+			if (ticketNewRequest != null) {
+				List<Map> ticketComments = ticketrepository.getTktcommntsById(ticketId);
+				response.setSuccess(true);
+				response.setMessage(ResponseMessages.TICKET_EXIST);
+				Map<String, List<Map>> content = new HashMap<String, List<Map>>();
+				content.put("Comments", ticketComments);
+				List<Map> ticketAttachments = ticketrepository.getTktAttachmentsById(ticketId);
+				content.put("AttachmentDetails", ticketAttachments);
+				response.setContent(content);
+			} else {
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.TICKET_NOT_EXIST);			
+				response.setContent(null);
+			}
+		}
 		return response;
 	}
 
