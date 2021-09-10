@@ -41,6 +41,8 @@ public interface TicketService {
 	ApiResponse getAllTicket(Pageable pageable);
 
 	ApiResponse inprogressTicket(String ticketId);
+	
+	ApiResponse getTktDetailsById(String ticketId);
 }
 		
 

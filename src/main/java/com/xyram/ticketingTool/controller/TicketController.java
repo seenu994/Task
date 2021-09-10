@@ -123,10 +123,9 @@ class TicketController {
 		return ticketService.deleteComment(commentObj);
 	}
 
-	
 	@GetMapping(value= {AuthConstants.ADMIN_BASEPATH +"/getAllTicket",AuthConstants.INFRA_USER_BASEPATH +"/getAllTicket"})
 	public ApiResponse getAllTicket(Pageable pageable) {
-		logger.info("indide Ticket controller :: getAllTicket");
+		logger.info("inside Ticket controller :: getAllTicket");
 		return ticketService.getAllTicket(pageable);
 	}
 	
@@ -134,7 +133,7 @@ class TicketController {
 			AuthConstants.INFRA_USER_BASEPATH +"/getAllTktByStatus", 
 			AuthConstants.DEVELOPER_BASEPATH +"/getAllTktByStatus"})
 	public ApiResponse getAllTicketsByStatus() {
-		logger.info("indide Ticket controller :: getAllTicket");
+		logger.info("inside Ticket controller :: getAllTicket");
 		return ticketService.getAllTicketsByStatus();
 	}
 	
@@ -142,7 +141,7 @@ class TicketController {
 			AuthConstants.INFRA_USER_BASEPATH +"/getAllCompletedTickets", 
 			AuthConstants.DEVELOPER_BASEPATH +"/getAllCompletedTickets"})
 	public ApiResponse getAllCompletedTickets() {
-		logger.info("indide Ticket controller :: getAllTicket");
+		logger.info("inside Ticket controller :: getAllTicket");
 		return ticketService.getAllCompletedTickets();
 	}
 
@@ -151,5 +150,12 @@ class TicketController {
 	public ApiResponse inprogressTicket(@PathVariable String ticketId) {
 		logger.info("Received request to update ticket for ticketId: " + ticketId);
 		return ticketService.inprogressTicket(ticketId);
-}
+	}
+	
+	@GetMapping(value= {AuthConstants.ADMIN_BASEPATH +"/getTktDetailsById/{ticketId}", 
+			AuthConstants.INFRA_USER_BASEPATH +"/getTktDetailsById/{ticketId}", AuthConstants.DEVELOPER_BASEPATH +"/getTktDetailsById/{ticketId}"})
+	public ApiResponse getTktDetailsById(@PathVariable String ticketId) {
+		logger.info("inside Ticket controller :: getTktDetailsById");
+		return ticketService.getTktDetailsById(ticketId);
+	}
 }

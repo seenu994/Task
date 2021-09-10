@@ -77,8 +77,7 @@ public class TicketServiceImpl implements TicketService {
 			response.setContent(content);
 		} else {
 			response.setSuccess(false);
-			response.setMessage(ResponseMessages.TICKET_NOT_EXIST);
-			
+			response.setMessage(ResponseMessages.TICKET_NOT_EXIST);			
 			response.setContent(null);
 		}
 		
@@ -90,7 +89,6 @@ public class TicketServiceImpl implements TicketService {
 		// TODO Auto-generated method stub
 		ApiResponse response = new ApiResponse(false);
 		
-		//List<Ticket> allTickets = ticketrepository.findAllByNameAndCreatedAndTicketStatus(statusId, userDetail.getUserId());
 		List<Map> allTickets = ticketrepository.getAllCompletedTickets(userDetail.getUserId(), userDetail.getUserRole());
 		if (allTickets != null) {
 			response.setSuccess(true);
@@ -100,8 +98,31 @@ public class TicketServiceImpl implements TicketService {
 			response.setContent(content);
 		} else {
 			response.setSuccess(false);
-			response.setMessage(ResponseMessages.TICKET_NOT_EXIST);
-			
+			response.setMessage(ResponseMessages.TICKET_NOT_EXIST);			
+			response.setContent(null);
+		}
+		
+		return response;
+	}
+	
+	@Override
+	public ApiResponse getTktDetailsById(String ticketId) {
+		// TODO Auto-generated method stub
+		ApiResponse response = new ApiResponse(false);
+		Ticket ticketNewRequest = ticketrepository.getById(ticketId);
+		//List<Map> allTickets = ticketrepository.getAllCompletedTickets(userDetail.getUserId(), userDetail.getUserRole());4
+		if (ticketNewRequest != null) {
+			List<Map> ticketComments = ticketrepository.getTktcommntsById(ticketId);
+			response.setSuccess(true);
+			response.setMessage(ResponseMessages.TICKET_EXIST);
+			Map<String, List<Map>> content = new HashMap<String, List<Map>>();
+			content.put("Comments", ticketComments);
+			List<Map> ticketAttachments = ticketrepository.getTktAttachmentsById(ticketId);
+			content.put("AttachmentDetails", ticketAttachments);
+			response.setContent(content);
+		} else {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.TICKET_NOT_EXIST);			
 			response.setContent(null);
 		}
 		
@@ -120,9 +141,10 @@ public class TicketServiceImpl implements TicketService {
 			response.setContent(null);
 			return response;
 		} else {
-			ticketRequest.setCreatedAt(new Date());
-			ticketRequest.setLastUpdatedAt(new Date());
 			ticketRequest.setCreatedBy(userDetail.getUserId());
+			ticketRequest.setCreatedAt(new Date());
+			ticketRequest.setUpdatedBy(userDetail.getUserId());
+			ticketRequest.setLastUpdatedAt(new Date());
 			ticketRequest.setStatus(TicketStatus.INITIATED);
 			Ticket tickets = ticketrepository.save(ticketRequest);
 			// attachmentService.storeImage(tickets);
@@ -175,14 +197,13 @@ public class TicketServiceImpl implements TicketService {
 	public ApiResponse resolveTicket(String ticketId) { {
 		ApiResponse response = new ApiResponse(false);
 		Ticket ticketNewRequest = ticketrepository.getById(ticketId);
-		System.out.println("Status :: "+ticketNewRequest.getStatus());
+		//System.out.println("Status :: "+ticketNewRequest.getStatus());
 		if (ticketNewRequest != null) {
 			if (ticketNewRequest.getStatus().equals(TicketStatus.COMPLETED)) {
 				response.setSuccess(false);
 				response.setMessage(ResponseMessages.TICKET_ALREADY_RESOLVED);
 				response.setContent(null);
 			} else if (ticketNewRequest.getStatus().equals(TicketStatus.INPROGRESS)) {
-
 				ticketNewRequest.setStatus(TicketStatus.COMPLETED);
 				ticketNewRequest.setUpdatedBy(userDetail.getUserId());
 				ticketNewRequest.setLastUpdatedAt(new Date());
@@ -191,7 +212,6 @@ public class TicketServiceImpl implements TicketService {
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.TICKET_RESOLVED);
 				response.setContent(null);
-
 			} else {
 				response.setSuccess(false);
 				response.setMessage(ResponseMessages.TICKET_NOT_IN_REVIEW);
@@ -230,11 +250,11 @@ public class TicketServiceImpl implements TicketService {
 			if (!ticketObj.getStatus().equals(TicketStatus.COMPLETED)) {
 
 				ticketObj.setTicketDescription(ticketRequest.getTicketDescription());
-				ticketObj.setLastUpdatedAt(new Date());
 				ticketObj.setPriorityId(ticketRequest.getPriorityId());
 				ticketObj.setProjectId(ticketRequest.getProjectId());
 				ticketObj.setStatus(ticketRequest.getStatus());
 				ticketObj.setUpdatedBy(userDetail.getUserId());
+				ticketObj.setLastUpdatedAt(new Date());
 				ticketrepository.save(ticketObj);
 
 				response.setSuccess(true);
@@ -274,6 +294,8 @@ public class TicketServiceImpl implements TicketService {
 					response.setContent(null);
 				} else {
 					ticketObj.setStatus(TicketStatus.REOPEN);
+					commentObj.setUpdatedBy(userDetail.getUserId());
+					commentObj.setLastUpdatedAt(new Date());
 					commentRepository.save(commentObj);
 
 					ticketObj.setUpdatedBy(userDetail.getUserId());
@@ -316,6 +338,10 @@ public class TicketServiceImpl implements TicketService {
 					response.setMessage(ResponseMessages.TICKET_COMMENTS_NOT_EXIST);
 					response.setContent(null);
 				} else {
+					commentObj.setCreatedBy(userDetail.getUserId());
+					commentObj.setCreatedAt(new Date());
+					commentObj.setUpdatedBy(userDetail.getUserId());
+					commentObj.setLastUpdatedAt(new Date());
 					commentRepository.save(commentObj);
 					response.setSuccess(true);
 					response.setMessage(ResponseMessages.TICKET_COMMENTS_ADDED);
@@ -353,6 +379,8 @@ public class TicketServiceImpl implements TicketService {
 						response.setMessage(ResponseMessages.TICKET_COMMENTS_NOT_EXIST);
 						response.setContent(null);
 					} else {
+						commentObj.setUpdatedBy(userDetail.getUserId());
+						commentObj.setLastUpdatedAt(new Date());
 						commentRepository.save(commentObj);
 						response.setSuccess(true);
 						response.setMessage(ResponseMessages.TICKET_COMMENTS_EDITED);

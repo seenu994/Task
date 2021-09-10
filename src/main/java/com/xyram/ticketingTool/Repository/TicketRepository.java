@@ -41,6 +41,12 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 			+ "OR ('TICKETINGTOOL_ADMIN' = :roleId and a.ticket_status IN ('COMPLETED', 'CANCELLED'))) "
 			+ "and a.last_updated_at >= DATE_ADD(curdate(), INTERVAL - 1 DAY) order by a.last_updated_at desc", nativeQuery = true)
 	List<Map> getAllCompletedTickets(@Param("createdBy") String createdBy, @Param("roleId")String roleId);
+	
+	@Query(value = "SELECT * from ticket_comments t where t.ticket_id = :ticketId ", nativeQuery = true)
+	List<Map> getTktcommntsById(String ticketId);
+	
+	@Query(value = "SELECT * from ticket_attachment t where t.ticket_id = :ticketId ", nativeQuery = true)
+	List<Map> getTktAttachmentsById(String ticketId);
 
 	//String getTicketById(Integer ticketId);
 }
