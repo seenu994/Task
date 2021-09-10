@@ -16,11 +16,13 @@ import org.springframework.stereotype.Service;
 import com.xyram.ticketingTool.Repository.CommentRepository;
 import com.xyram.ticketingTool.Repository.ProjectRepository;
 import com.xyram.ticketingTool.Repository.TicketRepository;
+import com.xyram.ticketingTool.Repository.TicketStatusHistRepository;
 import com.xyram.ticketingTool.Repository.UserRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Comments;
 import com.xyram.ticketingTool.entity.Projects;
 import com.xyram.ticketingTool.entity.Ticket;
+import com.xyram.ticketingTool.entity.TicketStatusHistory;
 import com.xyram.ticketingTool.enumType.TicketStatus;
 import com.xyram.ticketingTool.enumType.UserRole;
 import com.xyram.ticketingTool.exception.ResourceNotFoundException;
@@ -61,6 +63,9 @@ public class TicketServiceImpl implements TicketService {
 	
 	@Autowired
 	CurrentUser userDetail;
+	
+	@Autowired
+	TicketStatusHistRepository tktStatusHistory;
 	
 	@Override
 	public ApiResponse getAllTicketsByStatus() {
@@ -127,9 +132,13 @@ public class TicketServiceImpl implements TicketService {
 		}
 		if(noErrors) {
 			if (ticketNewRequest != null) {
-				List<Map> ticketComments = ticketrepository.getTktcommntsById(ticketId);
+				String tktStatus = ticketrepository.getTicketById(ticketId);
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.TICKET_EXIST);
+				Map<String, String> CurTktStatus = new HashMap<String, String>();
+				CurTktStatus.put("CurrentStatus", tktStatus);
+				response.setContent(CurTktStatus);
+				List<Map> ticketComments = ticketrepository.getTktcommntsById(ticketId);
 				Map<String, List<Map>> content = new HashMap<String, List<Map>>();
 				content.put("Comments", ticketComments);
 				List<Map> ticketAttachments = ticketrepository.getTktAttachmentsById(ticketId);
@@ -162,12 +171,21 @@ public class TicketServiceImpl implements TicketService {
 			ticketRequest.setLastUpdatedAt(new Date());
 			ticketRequest.setStatus(TicketStatus.INITIATED);
 			Ticket tickets = ticketrepository.save(ticketRequest);
-			// attachmentService.storeImage(tickets);
-
+			
+			TicketStatusHistory tktStatusHist = new TicketStatusHistory();
+			tktStatusHist.setTicketId(tickets.getId());
+			tktStatusHist.setTicketStatus(TicketStatus.INITIATED);
+			tktStatusHist.setCreatedBy(userDetail.getUserId());
+			tktStatusHist.setCreatedAt(new Date());
+			tktStatusHist.setUpdatedBy(userDetail.getUserId());
+			tktStatusHist.setLastUpdatedAt(new Date());
+			tktStatusHistory.save(tktStatusHist);
+			
 			response.setSuccess(true);
 			response.setMessage(ResponseMessages.TICKET_ADDED);
 			Map<String, String> content = new HashMap<String, String>();
 			content.put("ticketId", tickets.getId());
+
 			response.setContent(content);
 			return response;
 		}
@@ -189,9 +207,18 @@ public class TicketServiceImpl implements TicketService {
 				ticketNewRequest.setUpdatedBy(userDetail.getUserId());
 				ticketNewRequest.setLastUpdatedAt(new Date());
 				ticketrepository.save(ticketNewRequest);
+				
+				TicketStatusHistory tktStatusHist = new TicketStatusHistory();
+				tktStatusHist.setTicketId(ticketId);
+				tktStatusHist.setTicketStatus(TicketStatus.CANCELLED);
+				tktStatusHist.setCreatedBy(userDetail.getUserId());
+				tktStatusHist.setCreatedAt(new Date());
+				tktStatusHist.setUpdatedBy(userDetail.getUserId());
+				tktStatusHist.setLastUpdatedAt(new Date());
+				tktStatusHistory.save(tktStatusHist);
 
 				response.setSuccess(true);
-				response.setMessage(ResponseMessages.TICKET_ALREADY_RESOLVED);
+				response.setMessage(ResponseMessages.TICKET_CANCELLED);
 				response.setContent(null);
 			} else {
 				response.setSuccess(false);
@@ -223,6 +250,15 @@ public class TicketServiceImpl implements TicketService {
 				ticketNewRequest.setUpdatedBy(userDetail.getUserId());
 				ticketNewRequest.setLastUpdatedAt(new Date());
 				ticketrepository.save(ticketNewRequest);
+				
+				TicketStatusHistory tktStatusHist = new TicketStatusHistory();
+				tktStatusHist.setTicketId(ticketId);
+				tktStatusHist.setTicketStatus(TicketStatus.COMPLETED);
+				tktStatusHist.setCreatedBy(userDetail.getUserId());
+				tktStatusHist.setCreatedAt(new Date());
+				tktStatusHist.setUpdatedBy(userDetail.getUserId());
+				tktStatusHist.setLastUpdatedAt(new Date());
+				tktStatusHistory.save(tktStatusHist);
 
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.TICKET_RESOLVED);
@@ -316,6 +352,15 @@ public class TicketServiceImpl implements TicketService {
 					ticketObj.setUpdatedBy(userDetail.getUserId());
 					ticketObj.setLastUpdatedAt(new Date());
 					ticketrepository.save(ticketObj);
+					
+					TicketStatusHistory tktStatusHist = new TicketStatusHistory();
+					tktStatusHist.setTicketId(ticketId);
+					tktStatusHist.setTicketStatus(TicketStatus.REOPEN);
+					tktStatusHist.setCreatedBy(userDetail.getUserId());
+					tktStatusHist.setCreatedAt(new Date());
+					tktStatusHist.setUpdatedBy(userDetail.getUserId());
+					tktStatusHist.setLastUpdatedAt(new Date());
+					tktStatusHistory.save(tktStatusHist);
 
 					response.setSuccess(true);
 					response.setMessage(ResponseMessages.TICKET_REOPENED);
