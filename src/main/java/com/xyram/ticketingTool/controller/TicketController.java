@@ -27,7 +27,7 @@ import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.ProjectMembers;
 import com.xyram.ticketingTool.entity.Projects;
 import com.xyram.ticketingTool.entity.Ticket;
-import com.xyram.ticketingTool.entity.TicketComments;
+//import com.xyram.ticketingTool.entity.TicketComments;
 import com.xyram.ticketingTool.enumType.UserStatus;
 import com.xyram.ticketingTool.service.EmployeeService;
 import com.xyram.ticketingTool.service.ProjectMemberService;

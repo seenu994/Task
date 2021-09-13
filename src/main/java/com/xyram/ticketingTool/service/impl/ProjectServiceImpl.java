@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import com.xyram.ticketingTool.Repository.ProjectRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Projects;
+import com.xyram.ticketingTool.exception.ResourceNotFoundException;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.ProjectService;
 import com.xyram.ticketingTool.util.ResponseMessages;
@@ -95,6 +97,15 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 	
 	
+	public Projects getProjectById(String projectId) {
+		
+		return  projectRepository.findById(projectId).map(project->{
+			
+			return project;
+		}).orElseThrow(() -> new ResourceNotFoundException("project not found for id: " + projectId));
+	}
+	
+	
 	@Override
 	public ApiResponse editEmployee( Projects projectRequest) {
 
@@ -156,5 +167,20 @@ public class ProjectServiceImpl implements ProjectService {
 		}
 		return response;
 	}
+	
+	private ApiResponse validatePatientId(Projects projects) {
+		ApiResponse response = new ApiResponse(false);
+		if (projects.getpId()== null) {
+			response.setMessage("success");
+			response.setSuccess(true);
+			response.setContent(null);
+		} else {
+			response.setMessage(ResponseMessages.PROJECT_ID_VALID);
+			response.setSuccess(false);
+			response.setContent(null);
+		}
+		return response;
+	}
+
 		
 }

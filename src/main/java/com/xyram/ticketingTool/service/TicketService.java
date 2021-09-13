@@ -9,7 +9,7 @@ import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Comments;
 import com.xyram.ticketingTool.entity.ProjectMembers;
 import com.xyram.ticketingTool.entity.Ticket;
-import com.xyram.ticketingTool.entity.TicketComments;
+//import com.xyram.ticketingTool.entity.TicketComments;
 
 public interface TicketService {
 

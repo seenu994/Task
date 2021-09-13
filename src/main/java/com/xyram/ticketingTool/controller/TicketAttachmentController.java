@@ -44,8 +44,7 @@ public class TicketAttachmentController {
 	@Autowired
 	TicketAttachmentService ticketAttachmentService;
 
-	/**
-	 * add ticket attachment
+	/**	 * add ticket attachment
 	 * 
 	 * URL:http://<server name>/<context>/api/ticketAssign/assignticket
 	 * 

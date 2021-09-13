@@ -58,8 +58,9 @@ public class TicketServiceImpl implements TicketService {
 	@Autowired
 	TicketAttachmentService attachmentService;
 
-	@Autowired
-	TicketCommentServiceImpl commentService;
+	/*
+	 * @Autowired TicketCommentServiceImpl commentService;
+	 */
 	
 	@Autowired
 	CurrentUser userDetail;

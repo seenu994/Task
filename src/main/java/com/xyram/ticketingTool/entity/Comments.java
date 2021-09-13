@@ -34,7 +34,7 @@ import com.xyram.ticketingTool.enumType.TicketCommentsStatus;
 //import com.xyram.ticketingTool.ticket.config.JSONObjectUserType;
 
 @Entity
-@Table(name = "ticket_comments")
+@Table(name = "ticket_comment_log")
 //@TypeDefs({ @TypeDef(name = "StringJsonObject", typeClass = JSONObjectUserType.class) })
 public class Comments extends AuditModel {
 

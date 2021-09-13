@@ -21,8 +21,10 @@ public interface ProjectMemberService {
 //
 //	ProjectMembers unassignProjectToEmployee(Map<String, Integer> requestMap);
 	
-	ApiResponse assignProjectToEmployee(ArrayList<ProjectMembers> members);
+	ApiResponse assignProjectToEmployee(ArrayList<ProjectMembers> members, String projectId);
 
 	ApiResponse unassignProjectToEmployee(ProjectMembers member);
+
+	ApiResponse getAllProjectByEmployeeId(String employeeId);
 
 }

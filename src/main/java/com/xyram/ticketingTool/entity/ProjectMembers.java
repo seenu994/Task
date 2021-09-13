@@ -22,7 +22,7 @@ import com.xyram.ticketingTool.enumType.ProjectMembersStatus;
 @Entity
 @Table(name = "project_members")
 
-public class ProjectMembers extends AuditModel {
+public class ProjectMembers extends AuditModel {	
 
 	@Id
 	@GeneratedValue(generator = "uuid")

@@ -16,15 +16,15 @@ import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
-import com.xyram.ticketingTool.Repository.TicketCommentRepository;
+//import com.xyram.ticketingTool.Repository.TicketCommentRepository;
 import com.xyram.ticketingTool.Repository.ticketAttachmentRepository;
 import com.xyram.ticketingTool.entity.Ticket;
 import com.xyram.ticketingTool.entity.TicketAttachment;
-import com.xyram.ticketingTool.entity.TicketComments;
+//import com.xyram.ticketingTool.entity.TicketComments;
 import com.xyram.ticketingTool.enumType.TicketCommentsStatus;
 import com.xyram.ticketingTool.exception.ResourceNotFoundException;
 import com.xyram.ticketingTool.service.TicketAttachmentService;
-import com.xyram.ticketingTool.service.TicketCommentService;
+//import com.xyram.ticketingTool.service.TicketCommentService;
 @Service
 @Transactional
 public class TicketAttachmentServiceImpl  implements TicketAttachmentService{

@@ -47,10 +47,10 @@ class ProjectMemberContoller {
 	ProjectMemberService projectMemberService;
 
 	
-	@PostMapping(value= {AuthConstants.ADMIN_BASEPATH +"/assignProjectToEmployee",AuthConstants.DEVELOPER_BASEPATH +"/assignProjectToEmployee"})
-	public ApiResponse assignProjectToEmployee(@RequestBody ArrayList<ProjectMembers> members) {
+	@PostMapping(value= {AuthConstants.ADMIN_BASEPATH +"/assignProjectToEmployee/{projectId}",AuthConstants.DEVELOPER_BASEPATH +"/assignProjectToEmployee{projectId}"})
+	public ApiResponse assignProjectToEmployee(@RequestBody ArrayList<ProjectMembers> members,@PathVariable String projectId ) {
 		logger.info("Received request to add project Members");
-		return  projectMemberService.assignProjectToEmployee(members);
+		return  projectMemberService.assignProjectToEmployee(members,projectId);
 	}	
 
 	
@@ -65,5 +65,11 @@ class ProjectMemberContoller {
 		return  projectMemberService.unassignProjectToEmployee(member);
 	}
 
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllProjectByEmployeeId/{EmployeeId}" })
+	public ApiResponse getAllProjectByEmployeeId(@PathVariable String EmployeeId) {
+		logger.info("inside ProjectMemberContoller :: getAllProjectByEmployeeId ");
+		return projectMemberService.getAllProjectByEmployeeId(EmployeeId);
+	}
 	
 }
+	
