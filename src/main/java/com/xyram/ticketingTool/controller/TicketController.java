@@ -1,13 +1,10 @@
 package com.xyram.ticketingTool.controller;
 
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,27 +12,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Comments;
-import com.xyram.ticketingTool.entity.Designation;
-import com.xyram.ticketingTool.entity.Employee;
-import com.xyram.ticketingTool.entity.ProjectMembers;
-import com.xyram.ticketingTool.entity.Projects;
 import com.xyram.ticketingTool.entity.Ticket;
-//import com.xyram.ticketingTool.entity.TicketComments;
-import com.xyram.ticketingTool.enumType.UserStatus;
-import com.xyram.ticketingTool.service.EmployeeService;
-import com.xyram.ticketingTool.service.ProjectMemberService;
-import com.xyram.ticketingTool.service.ProjectService;
 import com.xyram.ticketingTool.service.TicketService;
 import com.xyram.ticketingTool.util.AuthConstants;
-
-import ch.qos.logback.core.pattern.color.ANSIConstants;
 
 /**
  * 

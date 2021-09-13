@@ -12,7 +12,6 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
@@ -21,9 +20,7 @@ import com.xyram.ticketingTool.Repository.ProjectRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.ProjectMembers;
 import com.xyram.ticketingTool.entity.Projects;
-import com.xyram.ticketingTool.entity.Ticket;
 import com.xyram.ticketingTool.enumType.ProjectMembersStatus;
-import com.xyram.ticketingTool.exception.ResourceNotFoundException;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.ProjectMemberService;
 import com.xyram.ticketingTool.util.ResponseMessages;
@@ -38,17 +35,18 @@ import com.xyram.ticketingTool.util.ResponseMessages;
 @Transactional
 public class ProjectMembersServiceImpl implements ProjectMemberService {
 
-	//private static final Projects  = null;
 	@Autowired
 	ProjectMemberRepository projectMemberRepository;
+	
 	@Autowired
-	ProjectRepository projectRepository;
+	ProjectRepository  projectRepository;
 	
 	@Autowired
 	EmployeeRepository employeeRepository;
 
 	@Autowired
 	ProjectServiceImpl projectServiceImpl;
+	
 	@Autowired
 	CurrentUser user;
 
@@ -59,9 +57,7 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 
 	@Override
 	public Page<ProjectMembers> getAllProjectMembers(Pageable pageable) {
-
 		return projectMemberRepository.findAll(pageable);
-
 	}
 
 	@Override
@@ -76,9 +72,8 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 			
 			for (ProjectMembers member : projectMembers) {
 				member.setCreatedAt(new Date());
-			
 				member.setLastUpdatedAt(new Date());
-		member.setUpdatedBy(user.getUserId());
+				member.setUpdatedBy(user.getUserId());
 				member.setCreatedBy(member.getCreatedBy());
 		
 				member.setStatus(ProjectMembersStatus.ACTIVE);
@@ -163,7 +158,6 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 		} else {
 			response.setMessage(ResponseMessages.EMPLOYEE_INVALID);
 			response.setSuccess(false);
-
 		}
 		return response;
 

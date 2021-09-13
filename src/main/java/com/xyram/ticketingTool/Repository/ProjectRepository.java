@@ -17,10 +17,7 @@ public interface  ProjectRepository extends  JpaRepository<Projects,String> {
 	Page<Map> getAllProjectLsit(Pageable pageable);
 	
 	@Query("Select p from Projects p where p.pId=:id")
-            Projects getProjecById(String id);
-	
-	
-	
+    Projects getProjecById(String id);
 	
 	@Query(value = "Select p.project_id as pId, p.project_name as projectName, p.project_description as projectDescritpion,\r\n"
 			+ "p.client_id as clientId, c.client_name, p.inhouse as inHouse, p.projectstatus as status from project p join client c ON p.client_id = c.client_id", nativeQuery = true)
