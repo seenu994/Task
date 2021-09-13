@@ -30,7 +30,7 @@ import com.xyram.ticketingTool.enumType.UserStatus;
 import com.xyram.ticketingTool.ticket.config.JSONObjectUserType;
 
 @Entity
-@Table(name = "ticket_comments_new")
+@Table(name = "ticket_comments")
 //@TypeDefs({ @TypeDef(name = "StringJsonObject", typeClass = JSONObjectUserType.class) })
 public class TicketComments extends AuditModel {
 
