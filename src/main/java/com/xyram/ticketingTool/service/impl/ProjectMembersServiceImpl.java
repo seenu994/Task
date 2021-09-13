@@ -12,6 +12,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
@@ -23,6 +24,7 @@ import com.xyram.ticketingTool.entity.Projects;
 import com.xyram.ticketingTool.entity.Ticket;
 import com.xyram.ticketingTool.enumType.ProjectMembersStatus;
 import com.xyram.ticketingTool.exception.ResourceNotFoundException;
+import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.ProjectMemberService;
 import com.xyram.ticketingTool.util.ResponseMessages;
 
@@ -47,6 +49,8 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 
 	@Autowired
 	ProjectServiceImpl projectServiceImpl;
+	@Autowired
+	CurrentUser user;
 
 	@Override
 	public ProjectMembers addprojectMember(ProjectMembers projectMembers) {
@@ -71,7 +75,12 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 		if (project != null) {
 			
 			for (ProjectMembers member : projectMembers) {
-				
+				member.setCreatedAt(new Date());
+			
+				member.setLastUpdatedAt(new Date());
+		member.setUpdatedBy(user.getUserId());
+				member.setCreatedBy(member.getCreatedBy());
+		
 				member.setStatus(ProjectMembersStatus.ACTIVE);
 				member.setProjectId(projectId);
 				projectMemberRepository.save(member);
