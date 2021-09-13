@@ -1,6 +1,7 @@
 
 package com.xyram.ticketingTool.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -133,18 +134,28 @@ public class TicketServiceImpl implements TicketService {
 		}
 		if(noErrors) {
 			if (ticketNewRequest != null) {
+				Map<String, List<Map>> content = new HashMap<String, List<Map>>();
 				String tktStatus = ticketrepository.getTicketById(ticketId);
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.TICKET_EXIST);
-				Map<String, String> CurTktStatus = new HashMap<String, String>();
-				CurTktStatus.put("CurrentStatus", tktStatus);
-				response.setContent(CurTktStatus);
+				
+				//Map<String, String> CurTktStatus = new HashMap<String, String>();
+				//CurTktStatus.put("CurrentStatus", tktStatus);
+				//response.setContent(CurTktStatus);
+				
 				List<Map> ticketComments = ticketrepository.getTktcommntsById(ticketId);
-				Map<String, List<Map>> content = new HashMap<String, List<Map>>();
 				content.put("Comments", ticketComments);
+				
 				List<Map> ticketAttachments = ticketrepository.getTktAttachmentsById(ticketId);
 				content.put("AttachmentDetails", ticketAttachments);
+				
+				Map<String, String> CurTktStatus = new HashMap<>();
+				ticketComments = new ArrayList<>();
+				CurTktStatus.put("CurrentStatus", tktStatus);
+				ticketComments.add(CurTktStatus);
+				content.put("CurrentStatus", ticketComments);
 				response.setContent(content);
+				
 			} else {
 				response.setSuccess(false);
 				response.setMessage(ResponseMessages.TICKET_NOT_EXIST);			
@@ -440,12 +451,18 @@ public class TicketServiceImpl implements TicketService {
 						response.setMessage(ResponseMessages.TICKET_COMMENTS_NOT_EXIST);
 						response.setContent(null);
 					} else {
-						commentObj.setUpdatedBy(userDetail.getUserId());
-						commentObj.setLastUpdatedAt(new Date());
-						commentRepository.save(commentObj);
-						response.setSuccess(true);
-						response.setMessage(ResponseMessages.TICKET_COMMENTS_EDITED);
-						response.setContent(null);
+						if (commentObj.getCreatedBy() == userDetail.getUserId()) {
+							commentObj.setUpdatedBy(userDetail.getUserId());
+							commentObj.setLastUpdatedAt(new Date());
+							commentRepository.save(commentObj);
+							response.setSuccess(true);
+							response.setMessage(ResponseMessages.TICKET_COMMENTS_EDITED);
+							response.setContent(null);
+						} else {
+							response.setSuccess(false);
+							response.setMessage(ResponseMessages.UN_AUTHORISED);
+							response.setContent(null);
+						}
 					}
 				}else {
 					response.setSuccess(false);

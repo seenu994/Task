@@ -74,6 +74,7 @@ public interface ResponseMessages {
 	
 	
 	String NOT_AUTHORISED="You are not authorised to access this information.";
+	String UN_AUTHORISED="You are not authorised to modify this information.";
 
 
 }
