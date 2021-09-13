@@ -451,7 +451,7 @@ public class TicketServiceImpl implements TicketService {
 						response.setMessage(ResponseMessages.TICKET_COMMENTS_NOT_EXIST);
 						response.setContent(null);
 					} else {
-						if (commentObj.getCreatedBy() == userDetail.getUserId()) {
+						if (commentObj.getCreatedBy() != userDetail.getUserId()) {
 							commentObj.setUpdatedBy(userDetail.getUserId());
 							commentObj.setLastUpdatedAt(new Date());
 							commentRepository.save(commentObj);
