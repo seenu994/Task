@@ -451,13 +451,16 @@ public class TicketServiceImpl implements TicketService {
 						response.setMessage(ResponseMessages.TICKET_COMMENTS_NOT_EXIST);
 						response.setContent(null);
 					} else {
-						if (commentObj.getCreatedBy() != userDetail.getUserId()) {
-							commentObj.setUpdatedBy(userDetail.getUserId());
-							commentObj.setLastUpdatedAt(new Date());
-							commentRepository.save(commentObj);
-							response.setSuccess(true);
-							response.setMessage(ResponseMessages.TICKET_COMMENTS_EDITED);
-							response.setContent(null);
+						if (comment.getCreatedBy() != null) {
+							if (comment.getCreatedBy().equals(userDetail.getUserId())) {
+								commentObj.setUpdatedBy(userDetail.getUserId());
+								commentObj.setLastUpdatedAt(new Date());
+								commentObj.setCreatedBy(comment.getCreatedBy());
+								commentRepository.save(commentObj);
+								response.setSuccess(true);
+								response.setMessage(ResponseMessages.TICKET_COMMENTS_EDITED);
+								response.setContent(null);
+							}
 						} else {
 							response.setSuccess(false);
 							response.setMessage(ResponseMessages.UN_AUTHORISED);
