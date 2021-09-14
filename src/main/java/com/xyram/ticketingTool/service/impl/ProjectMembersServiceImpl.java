@@ -79,7 +79,7 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 					ProjectMembers projectMember=new ProjectMembers();
 					projectMember.setCreatedAt(new Date());
 
-					projectMember.setLastUpdatedAt(new Date());
+					projectMember.setLastUpdatedAt(new Date()) ;
 					projectMember.setUpdatedBy(user.getUserId());
 					projectMember.setCreatedBy(user.getUserId());
 

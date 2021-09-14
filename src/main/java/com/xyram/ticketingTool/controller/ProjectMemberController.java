@@ -47,10 +47,10 @@ class ProjectMemberContoller {
 	ProjectMemberService projectMemberService;
 
 	
-	@PostMapping(value= {AuthConstants.ADMIN_BASEPATH +"/assignProjectToEmployee/{projectId}",AuthConstants.DEVELOPER_BASEPATH +"/assignProjectToEmployee{projectId}"})
-	public ApiResponse assignProjectToEmployee(@RequestBody ArrayList<ProjectMembers> members,@PathVariable String projectId ) {
+	@PostMapping(value= {AuthConstants.ADMIN_BASEPATH +"/assignProjectToEmployee",AuthConstants.DEVELOPER_BASEPATH +"/assignProjectToEmployee"})
+	public ApiResponse assignProjectToEmployee(@RequestBody Map<Object,Object> request) {
 		logger.info("Received request to add project Members");
-		return  projectMemberService.assignProjectToEmployee(members,projectId);
+		return  projectMemberService.assignProjectToEmployee(request);
 	}	
 
 	

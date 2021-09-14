@@ -52,6 +52,7 @@ public interface ResponseMessages {
 	String PROJECT_ADDED = "Project Added Successfully";
 	
 	String PROJECT_LIST="Successfully get the list of projects";
+	String PROJECT_NOT_ASSIGNED="No project assigned";
 	
 	String ClIENT_ID_VALID = "Client Id Is Invalid";
 
