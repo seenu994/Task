@@ -16,6 +16,7 @@ import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
+import com.xyram.ticketingTool.Repository.TicketRepository;
 //import com.xyram.ticketingTool.Repository.TicketCommentRepository;
 import com.xyram.ticketingTool.Repository.ticketAttachmentRepository;
 import com.xyram.ticketingTool.entity.Ticket;
@@ -24,6 +25,7 @@ import com.xyram.ticketingTool.entity.TicketAttachment;
 import com.xyram.ticketingTool.enumType.TicketCommentsStatus;
 import com.xyram.ticketingTool.exception.ResourceNotFoundException;
 import com.xyram.ticketingTool.service.TicketAttachmentService;
+import com.xyram.ticketingTool.service.TicketService;
 //import com.xyram.ticketingTool.service.TicketCommentService;
 @Service
 @Transactional
@@ -32,13 +34,16 @@ public class TicketAttachmentServiceImpl  implements TicketAttachmentService{
 @Autowired
 ticketAttachmentRepository  ticketattachmentRepository;
 
+@Autowired
+TicketRepository  ticketRepository;
+
 static ChannelSftp channelSftp = null;
 static Session session = null;
 static Channel channel = null;
 static String PATHSEPARATOR = "/";
 
 @Override
-public Map storeImage(MultipartFile[] files,Ticket ticketId) {
+public Map storeImage(MultipartFile[] files,String ticketId) {
 	Map fileMap = new HashMap();
 	System.out.println(files);
 	  byte[] filearray;
@@ -51,7 +56,8 @@ public Map storeImage(MultipartFile[] files,Ticket ticketId) {
 //	       addFileCustomer(file);
 	       if(addFileAdmin(constentFile)!= null) {
 	    	  TicketAttachment ticketAttachment = new  TicketAttachment();
-	    	  ticketAttachment.setTicket(ticketId);
+	    	  Ticket tickets = ticketRepository.getById(ticketId);
+	    	  ticketAttachment.setTicket(tickets);
 	    	  ticketAttachment.setImagePath(filename);
 	    	  ticketattachmentRepository.save(ticketAttachment);
 	       }

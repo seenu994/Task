@@ -1,4 +1,5 @@
 package com.xyram.ticketingTool.Repository;
+
 import java.util.List;
 import java.util.Map;
 
@@ -21,16 +22,20 @@ import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.enumType.UserStatus;
 
 @Repository
-public interface EmployeeRepository extends JpaRepository<Employee,String> {
+public interface EmployeeRepository extends JpaRepository<Employee, String> {
 
 	@Query("Select new map(e.eId as id,e.email as email,e.firstName as firstName,e.lastName as lastName,e.roleId as roleId ,e.designationId as designationId, "
 			+ "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,d.designationName as designationName) from Employee e "
 			+ "JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id")
 	Page<Map> getAllEmployeeList(Pageable pageable);
-	
+
 	@Query("Select new map(e.eId as id, e.firstName as firstName, e.lastName as lastName, case when p.projectId = :projectId then 1 else 0 end as projectAssignedStatus) "
 			+ "from Employee e left JOIN ProjectMembers p On e.eId = p.employeeId where e.status = 'ACTIVE'")
 	List<Map> getAllEmpByProject(@Param("projectId") String projectId);
+
+	@Query(value="SELECT e.employee_id, e.frist_name, e.last_name, count(e.employee_id) assigned_cnt FROM ticketdbtool.employee e "
+			+ "left join ticketdbtool.ticket_assignee a on e.employee_id = a.employee_id "
+			+ "where e.employee_status = 'ACTIVE' and a.ticket_assignee_status = 'ACTIVE' and e.role_id = 'R2' group by e.employee_id",nativeQuery = true)
+	Page<Map> getAllInfraUserList(Pageable pageable);
 }
-	
-	
+

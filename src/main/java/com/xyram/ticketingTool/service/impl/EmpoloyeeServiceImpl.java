@@ -158,6 +158,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	public ApiResponse getAllEmployee(Pageable pageable) {
        Page<Map> employeeList =   employeeRepository.getAllEmployeeList(pageable);
        Map content = new HashMap();
+    
        content.put("employeeList", employeeList);
        ApiResponse response = new ApiResponse(true);
        response.setSuccess(true);
@@ -265,4 +266,15 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		return  response;
 	}
 
+	@Override
+	public ApiResponse getAllInfraUser(Pageable pageable) {
+		Page<Map> infraUserList =   employeeRepository.getAllInfraUserList(pageable);
+	       Map content = new HashMap();
+	    
+	       content.put("infraUserList", infraUserList);
+	       ApiResponse response = new ApiResponse(true);
+	       response.setSuccess(true);
+	       response.setContent(content);
+	       return  response;
+		}
 }

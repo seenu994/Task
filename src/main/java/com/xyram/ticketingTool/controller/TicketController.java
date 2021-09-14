@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Comments;
@@ -41,33 +43,35 @@ class TicketController {
 //		return ticketService.getAllTicketsByStatus(statusId);
 //	}
 
-	@PostMapping(value = { 
-			AuthConstants.DEVELOPER_BASEPATH + "/createTickets", AuthConstants.INFRA_USER_BASEPATH + "/createTickets" })
-	public ApiResponse createTickets(@RequestBody Ticket ticketRequest) {
+	@PostMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/createTickets",
+			AuthConstants.INFRA_USER_BASEPATH + "/createTickets" })
+	public ApiResponse createTickets(@RequestPart(name = "files", required = true) MultipartFile[] files,
+			@RequestPart String ticketRequest) {
 		logger.info("Received request to add tickets");
-		return ticketService.createTickets(ticketRequest);
+		return ticketService.createTickets(files, ticketRequest);
 	}
-	
 
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/cancelTicket/{ticketId}",
-			AuthConstants.DEVELOPER_BASEPATH + "/cancelTicket/{ticketId}", AuthConstants.INFRA_USER_BASEPATH + "/cancelTicket/{ticketId}" })
+			AuthConstants.DEVELOPER_BASEPATH + "/cancelTicket/{ticketId}",
+			AuthConstants.INFRA_USER_BASEPATH + "/cancelTicket/{ticketId}" })
 	public ApiResponse cancelTicket(@PathVariable String ticketId) {
 		logger.info("Received request to update ticket for ticketId: " + ticketId);
 		return ticketService.cancelTicket(ticketId);
 	}
 
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/resolveTicket/{ticketId}",
-			AuthConstants.DEVELOPER_BASEPATH + "/resolveTicket/{ticketId}", AuthConstants.INFRA_USER_BASEPATH + "/resolveTicket/{ticketId}" })
+			AuthConstants.DEVELOPER_BASEPATH + "/resolveTicket/{ticketId}",
+			AuthConstants.INFRA_USER_BASEPATH + "/resolveTicket/{ticketId}" })
 	public ApiResponse resolveTicket(@PathVariable String ticketId) {
 		logger.info("Received request to update ticket for ticketId: " + ticketId);
 		return ticketService.resolveTicket(ticketId);
 	}
 
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/onHoldTicket",
-			AuthConstants.INFRA_USER_BASEPATH + "/onHoldTicket" })
-	public Ticket onHoldTicket(  @RequestBody Ticket ticketRequest) {
-		logger.info("Received request to update ticket for ticketId: " +   ticketRequest.getId());
-		return ticketService.onHoldTicket(ticketRequest);
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/onHoldTicket/{ticketId}",
+			AuthConstants.INFRA_USER_BASEPATH + "/onHoldTicket/{ticketId} " })
+	public ApiResponse onHoldTicket(@PathVariable String ticketId) {
+		logger.info("Received request to update ticket status for ticketId: " + ticketId);
+		return ticketService.onHoldTicket(ticketId);
 	}
 
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editTicket/{ticketId}",
@@ -86,57 +90,60 @@ class TicketController {
 	}
 
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/addComment",
-			AuthConstants.DEVELOPER_BASEPATH + "/addComment" ,AuthConstants.INFRA_USER_BASEPATH + "/addComment"})
+			AuthConstants.DEVELOPER_BASEPATH + "/addComment", AuthConstants.INFRA_USER_BASEPATH + "/addComment" })
 	public ApiResponse addComment(@RequestBody Comments commentObj) {
 		commentObj.setCreatedAt(new Date());
 		return ticketService.addComment(commentObj);
 	}
 
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editComment",
-			AuthConstants.DEVELOPER_BASEPATH + "/editComment",AuthConstants.INFRA_USER_BASEPATH + "/editComment" })
+			AuthConstants.DEVELOPER_BASEPATH + "/editComment", AuthConstants.INFRA_USER_BASEPATH + "/editComment" })
 	public ApiResponse editComment(@RequestBody Comments commentObj) {
 		commentObj.setCreatedAt(new Date());
 		return ticketService.editComment(commentObj);
 	}
 
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/deleteComment",
-			AuthConstants.DEVELOPER_BASEPATH + "/deleteComment",AuthConstants.INFRA_USER_BASEPATH + "/deleteComment"})
+			AuthConstants.DEVELOPER_BASEPATH + "/deleteComment", AuthConstants.INFRA_USER_BASEPATH + "/deleteComment" })
 	public ApiResponse deleteComment(@RequestBody Comments commentObj) {
 		commentObj.setCreatedAt(new Date());
 		return ticketService.deleteComment(commentObj);
 	}
 
-	@GetMapping(value= {AuthConstants.ADMIN_BASEPATH +"/getAllTicket",AuthConstants.INFRA_USER_BASEPATH +"/getAllTicket"})
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllTicket",
+			AuthConstants.INFRA_USER_BASEPATH + "/getAllTicket" })
 	public ApiResponse getAllTicket(Pageable pageable) {
 		logger.info("inside Ticket controller :: getAllTicket");
 		return ticketService.getAllTicket(pageable);
 	}
-	
-	@GetMapping(value= {AuthConstants.ADMIN_BASEPATH +"/getAllTktByStatus", 
-			AuthConstants.INFRA_USER_BASEPATH +"/getAllTktByStatus", 
-			AuthConstants.DEVELOPER_BASEPATH +"/getAllTktByStatus"})
+
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllTktByStatus",
+			AuthConstants.INFRA_USER_BASEPATH + "/getAllTktByStatus",
+			AuthConstants.DEVELOPER_BASEPATH + "/getAllTktByStatus" })
 	public ApiResponse getAllTicketsByStatus() {
 		logger.info("inside Ticket controller :: getAllTicket");
 		return ticketService.getAllTicketsByStatus();
 	}
-	
-	@GetMapping(value= {AuthConstants.ADMIN_BASEPATH +"/getAllCompletedTickets", 
-			AuthConstants.INFRA_USER_BASEPATH +"/getAllCompletedTickets", 
-			AuthConstants.DEVELOPER_BASEPATH +"/getAllCompletedTickets"})
+
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllCompletedTickets",
+			AuthConstants.INFRA_USER_BASEPATH + "/getAllCompletedTickets",
+			AuthConstants.DEVELOPER_BASEPATH + "/getAllCompletedTickets" })
 	public ApiResponse getAllCompletedTickets() {
 		logger.info("inside Ticket controller :: getAllTicket");
 		return ticketService.getAllCompletedTickets();
 	}
 
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/inprogressTicket/{ticketId}",
-			AuthConstants.DEVELOPER_BASEPATH + "/inprogressTicket/{ticketId}", AuthConstants.INFRA_USER_BASEPATH + "/inprogressTicket/{ticketId}" })
+			AuthConstants.DEVELOPER_BASEPATH + "/inprogressTicket/{ticketId}",
+			AuthConstants.INFRA_USER_BASEPATH + "/inprogressTicket/{ticketId}" })
 	public ApiResponse inprogressTicket(@PathVariable String ticketId) {
 		logger.info("Received request to update ticket for ticketId: " + ticketId);
 		return ticketService.inprogressTicket(ticketId);
 	}
-	
-	@GetMapping(value= {AuthConstants.ADMIN_BASEPATH +"/getTktDetailsById/{ticketId}", 
-			AuthConstants.INFRA_USER_BASEPATH +"/getTktDetailsById/{ticketId}", AuthConstants.DEVELOPER_BASEPATH +"/getTktDetailsById/{ticketId}"})
+
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getTktDetailsById/{ticketId}",
+			AuthConstants.INFRA_USER_BASEPATH + "/getTktDetailsById/{ticketId}",
+			AuthConstants.DEVELOPER_BASEPATH + "/getTktDetailsById/{ticketId}" })
 	public ApiResponse getTktDetailsById(@PathVariable String ticketId) {
 		logger.info("inside Ticket controller :: getTktDetailsById");
 		return ticketService.getTktDetailsById(ticketId);

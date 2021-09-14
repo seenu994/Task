@@ -14,7 +14,7 @@ import com.xyram.ticketingTool.entity.Ticket;
 public interface TicketService {
 
 	 
-	ApiResponse createTickets(Ticket ticketRequest);
+	ApiResponse createTickets(MultipartFile[] files, String ticketRequest);
 	
 	ApiResponse getAllTicketsByStatus();
 	
@@ -26,7 +26,7 @@ public interface TicketService {
 	
 	ApiResponse resolveTicket(String ticketId);
 
-	Ticket onHoldTicket(Ticket ticketRequest);
+	//Ticket onHoldTicket(Ticket ticketRequest);
 
 	ApiResponse editTicket(String ticketId, Ticket ticket);
 	
@@ -43,6 +43,8 @@ public interface TicketService {
 	ApiResponse inprogressTicket(String ticketId);
 	
 	ApiResponse getTktDetailsById(String ticketId);
+
+	ApiResponse onHoldTicket(String ticketId);
 }
 		
 

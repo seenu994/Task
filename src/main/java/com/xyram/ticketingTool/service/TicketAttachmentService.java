@@ -9,7 +9,7 @@ import com.xyram.ticketingTool.entity.TicketAttachment;
 
 public interface TicketAttachmentService {
 
-	public Map storeImage(MultipartFile[] files, Ticket ticketId);
+	public Map storeImage(MultipartFile[] files, String ticketId);
 
 	//public Map deleteImage(MultipartFile file, Ticket ticketId);
 

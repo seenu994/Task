@@ -9,11 +9,16 @@ import java.util.Map;
 
 import javax.transaction.Transactional;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xyram.ticketingTool.Repository.CommentRepository;
 import com.xyram.ticketingTool.Repository.ProjectRepository;
 import com.xyram.ticketingTool.Repository.TicketRepository;
@@ -166,10 +171,23 @@ public class TicketServiceImpl implements TicketService {
 	}
 
 	@Override
-	public ApiResponse createTickets(Ticket ticketRequest) {
+	public ApiResponse createTickets(MultipartFile[] files,String ticketRequest) {
 		ApiResponse response = new ApiResponse(false);
-
-		Projects project = projectRepository.getById(ticketRequest.getProjectId());
+		ObjectMapper objectMapper = new ObjectMapper();
+		 Ticket ticketreq=null;
+		try {
+			ticketreq = objectMapper.readValue(ticketRequest, Ticket.class);
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+			/*
+			 * JSONObject json = new JSONObject(ticketRequest); Ticket ticketreq=new
+			 * Ticket();
+			 */		Projects project = projectRepository.getById(ticketreq.getProjectId());
 
 		if (project == null) {
 			response.setSuccess(false);
@@ -177,13 +195,13 @@ public class TicketServiceImpl implements TicketService {
 			response.setContent(null);
 			return response;
 		} else {
-			ticketRequest.setCreatedBy(userDetail.getUserId());
-			ticketRequest.setCreatedAt(new Date());
-			ticketRequest.setUpdatedBy(userDetail.getUserId());
-			ticketRequest.setLastUpdatedAt(new Date());
-			ticketRequest.setStatus(TicketStatus.INITIATED);
-			Ticket tickets = ticketrepository.save(ticketRequest);
-			
+////			ticketreq.setCreatedBy(userDetail.getUserId());
+////			ticketreq.setCreatedAt(new Date());
+////			ticketreq.setUpdatedBy(userDetail.getUserId());
+////			ticketreq.setLastUpdatedAt(new Date());
+//			ticketreq.setStatus(TicketStatus.INITIATED);
+			Ticket tickets = ticketrepository.save(ticketreq);
+			attachmentService.storeImage(files,tickets.getId());
 			TicketStatusHistory tktStatusHist = new TicketStatusHistory();
 			tktStatusHist.setTicketId(tickets.getId());
 			tktStatusHist.setTicketStatus(TicketStatus.INITIATED);
@@ -290,18 +308,28 @@ public class TicketServiceImpl implements TicketService {
 		}
 	}}
 
+
 	@Override
-	public Ticket onHoldTicket(Ticket ticketRequest) {
-		
-		return ticketrepository.findById(ticketRequest.getId()).map(ticket -> {
-			ticket.setStatus(TicketStatus.ONHOLD);
-			ticket.setUpdatedBy(ticketRequest.getUpdatedBy());
-			ticket.setLastUpdatedAt(new Date());
-			return ticketrepository.save(ticket);
-		}).orElseThrow(() -> new ResourceNotFoundException("ticket not found with id:" + ticketRequest.getId()));
+	public ApiResponse onHoldTicket(String ticketId) {
+		ApiResponse response = new ApiResponse(false);
+		Ticket ticketObj = ticketrepository.getById(ticketId);
+		if (ticketObj != null ) {
 
+			ticketObj.setStatus(TicketStatus.ONHOLD);
+			ticketObj.setUpdatedBy(ticketObj.getUpdatedBy());
+			ticketObj.setLastUpdatedAt(new Date());
+		    ticketrepository.save(ticketObj);
+			response.setSuccess(true);
+			response.setMessage(ResponseMessages.ONHOLD_STATUS);
+			response.setContent(null);	
+
+		} else {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.TICKET_NOT_EXIST);
+			response.setContent(null);
+		}
+		return response;
 	}
-
 	@Override
 	public ApiResponse editTicket(String ticketId, Ticket ticketRequest) {
 
@@ -570,4 +598,6 @@ public class TicketServiceImpl implements TicketService {
 			}
 			return response;
 		}
+
+	
 	}
