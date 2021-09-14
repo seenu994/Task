@@ -38,12 +38,12 @@ import com.xyram.ticketingTool.util.ResponseMessages;
 @Transactional
 public class ProjectMembersServiceImpl implements ProjectMemberService {
 
-	//private static final Projects  = null;
+	// private static final Projects = null;
 	@Autowired
 	ProjectMemberRepository projectMemberRepository;
 	@Autowired
 	ProjectRepository projectRepository;
-	
+
 	@Autowired
 	EmployeeRepository employeeRepository;
 
@@ -65,38 +65,50 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 	}
 
 	@Override
-	public ApiResponse assignProjectToEmployee(ArrayList<ProjectMembers> projectMembers,String projectId ) {
+	public ApiResponse assignProjectToEmployee(Map<Object,Object> request) {
 		// TODO Auto-generated method stub
 
 		ApiResponse response = new ApiResponse(false);
+		if(request!=null&&request.containsKey("projectId")) {
+			Projects project = projectRepository.getProjecById((String) request.get("projectId"));
+			if(project!=null) {
+			if(request.containsKey("employeeId")){
+				List<String> employeeIds=(List<String>) request.get("employeeId");
+				
+				for (String employeeId : employeeIds) {
+					ProjectMembers projectMember=new ProjectMembers();
+					projectMember.setCreatedAt(new Date());
 
-		Projects project = projectRepository.getProjecById(projectId);
+					projectMember.setLastUpdatedAt(new Date());
+					projectMember.setUpdatedBy(user.getUserId());
+					projectMember.setCreatedBy(user.getUserId());
 
-		if (project != null) {
-			
-			for (ProjectMembers member : projectMembers) {
-				member.setCreatedAt(new Date());
-			
-				member.setLastUpdatedAt(new Date());
-		member.setUpdatedBy(user.getUserId());
-				member.setCreatedBy(member.getCreatedBy());
-		
-				member.setStatus(ProjectMembersStatus.ACTIVE);
-				member.setProjectId(projectId);
-				projectMemberRepository.save(member);
+					projectMember.setStatus(ProjectMembersStatus.ACTIVE);
+					projectMember.setProjectId(project.getpId());
+					projectMember.setEmployeeId(employeeId);
+					projectMemberRepository.save(projectMember);
+				}
+				
+			}else {
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.EMPLOYEE_INVALID);
+				response.setContent(null);
 			}
-		    			
+			}else{
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.PROJECT_NOTEXIST);
+				response.setContent(null);
+
+				}}else {
+			}
 			response.setSuccess(true);
 			response.setMessage(ResponseMessages.PROJECT_MEMBERS_ADDED);
 			response.setContent(null);
-		} else {
-			response.setSuccess(false);
-			response.setMessage(ResponseMessages.PROJECT_ID_VALID);
-			response.setContent(null);
+			return response;
 		}
 
-		return response;
-	}
+		
+
 	/*
 	 * @Override public ProjectMembers assignProjectToEmployee(Map<String, Integer>
 	 * requestMap) { ProjectMembers projectMembers = new ProjectMembers(); if
@@ -149,17 +161,21 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 
 		ApiResponse response = new ApiResponse(false);
 
-		ProjectMembers projectMemberRequest = projectMemberRepository.getById(employeeId);
-		// System.out.println("Status :: "+ticketNewRequest.getStatus());
-		if (projectMemberRequest != null) {
+	
+		if (employeeId != null) {
 
-			projectMemberRequest.setEmployeeId(employeeId);
 
 			List<Map> projectList = projectMemberRepository.getAllProjectByEmployeeId(employeeId);
+			if(projectList!=null&&projectList.size()>0) {
 			Map content = new HashMap();
 			content.put("ProjectList", projectList);
 			response.setSuccess(true);
 			response.setContent(content);
+			response.setMessage(ResponseMessages.PROJECT_LIST);
+			}else {
+				response.setSuccess(true);
+				response.setMessage(ResponseMessages.PROJECT_NOT_ASSIGNED);
+			}
 		} else {
 			response.setMessage(ResponseMessages.EMPLOYEE_INVALID);
 			response.setSuccess(false);
