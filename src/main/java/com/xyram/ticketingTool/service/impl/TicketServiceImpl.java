@@ -174,7 +174,7 @@ public class TicketServiceImpl implements TicketService {
 	public ApiResponse createTickets(MultipartFile[] files,String ticketRequest) {
 		ApiResponse response = new ApiResponse(false);
 		ObjectMapper objectMapper = new ObjectMapper();
-		 Ticket ticketreq=null;
+		Ticket ticketreq = null;
 		try {
 			ticketreq = objectMapper.readValue(ticketRequest, Ticket.class);
 		} catch (JsonMappingException e) {
@@ -184,10 +184,11 @@ public class TicketServiceImpl implements TicketService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
-			/*
-			 * JSONObject json = new JSONObject(ticketRequest); Ticket ticketreq=new
-			 * Ticket();
-			 */		Projects project = projectRepository.getById(ticketreq.getProjectId());
+		/*
+		 * JSONObject json = new JSONObject(ticketRequest); Ticket ticketreq=new
+		 * Ticket();
+		 */		
+		Projects project = projectRepository.getById(ticketreq.getProjectId());
 
 		if (project == null) {
 			response.setSuccess(false);
@@ -195,13 +196,17 @@ public class TicketServiceImpl implements TicketService {
 			response.setContent(null);
 			return response;
 		} else {
-////			ticketreq.setCreatedBy(userDetail.getUserId());
-////			ticketreq.setCreatedAt(new Date());
-////			ticketreq.setUpdatedBy(userDetail.getUserId());
-////			ticketreq.setLastUpdatedAt(new Date());
-//			ticketreq.setStatus(TicketStatus.INITIATED);
+			ticketreq.setCreatedBy(userDetail.getUserId());
+			ticketreq.setCreatedAt(new Date());
+			ticketreq.setUpdatedBy(userDetail.getUserId());
+			ticketreq.setLastUpdatedAt(new Date());
+			//ticketreq.setStatus(TicketStatus.INITIATED);
 			Ticket tickets = ticketrepository.save(ticketreq);
+			
+			//Calling file upload method
 			attachmentService.storeImage(files,tickets.getId());
+			
+			//Updating Ticket history Method
 			TicketStatusHistory tktStatusHist = new TicketStatusHistory();
 			tktStatusHist.setTicketId(tickets.getId());
 			tktStatusHist.setTicketStatus(TicketStatus.INITIATED);
@@ -219,7 +224,6 @@ public class TicketServiceImpl implements TicketService {
 			response.setContent(content);
 			return response;
 		}
-
 	}
 
 	@Override
