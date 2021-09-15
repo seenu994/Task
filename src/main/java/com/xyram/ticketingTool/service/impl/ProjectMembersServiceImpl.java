@@ -38,17 +38,18 @@ import com.xyram.ticketingTool.util.ResponseMessages;
 @Transactional
 public class ProjectMembersServiceImpl implements ProjectMemberService {
 
-	// private static final Projects = null;
 	@Autowired
 	ProjectMemberRepository projectMemberRepository;
+	
 	@Autowired
-	ProjectRepository projectRepository;
-
+	ProjectRepository  projectRepository;
+	
 	@Autowired
 	EmployeeRepository employeeRepository;
 
 	@Autowired
 	ProjectServiceImpl projectServiceImpl;
+	
 	@Autowired
 	CurrentUser user;
 
@@ -59,9 +60,7 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 
 	@Override
 	public Page<ProjectMembers> getAllProjectMembers(Pageable pageable) {
-
 		return projectMemberRepository.findAll(pageable);
-
 	}
 
 	@Override
