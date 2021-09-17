@@ -189,7 +189,7 @@ public class TicketServiceImpl implements TicketService {
 			 * Ticket();
 			 */		Projects project = projectRepository.getById(ticketreq.getProjectId());
 
-		if (project == null) {
+		if (project == null)  {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.PROJECT_NOTEXIST);
 			response.setContent(null);
@@ -602,6 +602,25 @@ public class TicketServiceImpl implements TicketService {
 			}
 			return response;
 		}
-
+	@Override
+	public ApiResponse getTicketSearchById(String ticketId) {
+		// TODO Auto-generated method stub
+		ApiResponse response = new ApiResponse(false);
+		
+		List<Map> allTickets = ticketrepository.getTicketSearchById(ticketId);
+		if (allTickets != null) {
+			response.setSuccess(true);
+			response.setMessage(ResponseMessages.TICKET_EXIST);
+			Map<String, List<Map>> content = new HashMap<String, List<Map>>();
+			content.put("tickets", allTickets);
+			response.setContent(content);
+		} else {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.TICKET_NOT_EXIST);			
+			response.setContent(null);
+		}
+		
+		return response;
+	}
 	
 	}

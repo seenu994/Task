@@ -43,6 +43,8 @@ public interface TicketService {
 	ApiResponse inprogressTicket(String ticketId);
 	
 	ApiResponse getTktDetailsById(String ticketId);
+	
+	ApiResponse getTicketSearchById(String ticketId);
 
 	ApiResponse onHoldTicket(String ticketId);
 }

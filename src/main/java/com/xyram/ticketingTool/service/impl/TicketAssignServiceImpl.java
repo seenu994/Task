@@ -11,12 +11,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
+import com.xyram.ticketingTool.Repository.NotificationsRepository;
 import com.xyram.ticketingTool.Repository.TicketAssignRepository;
 import com.xyram.ticketingTool.Repository.TicketRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Employee;
+import com.xyram.ticketingTool.entity.Notifications;
 import com.xyram.ticketingTool.entity.Ticket;
 import com.xyram.ticketingTool.entity.TicketAssignee;
+import com.xyram.ticketingTool.enumType.NotificationType;
 import com.xyram.ticketingTool.enumType.TicketAssigneeStatus;
 import com.xyram.ticketingTool.enumType.TicketStatus;
 import com.xyram.ticketingTool.exception.ResourceNotFoundException;
@@ -43,8 +46,11 @@ public class TicketAssignServiceImpl implements TicketAssignService {
 	@Autowired
 	CurrentUser userDetail;
 	
+	@Autowired
+	NotificationsRepository notificationsRepository;
+	
 	@Override
-public ApiResponse reassignTicketToInfraTeam(TicketAssignee assignee) {
+	public ApiResponse reassignTicketToInfraTeam(TicketAssignee assignee) {
 		
 		ApiResponse response = new ApiResponse(false);
 		Ticket ticketObj = ticketRepository.getById(assignee.getTicketId());
@@ -105,6 +111,20 @@ public ApiResponse reassignTicketToInfraTeam(TicketAssignee assignee) {
 					ticketAssignRepository.save(prevAssignee);
 				}
 				ticketAssignRepository.save(assignee);
+				
+				//Inserting Notifications Details
+				Notifications notifications = new Notifications();
+				notifications.setNotificationDesc("Ticket Assigned - " + ticketObj.getTicketDescription());
+				notifications.setNotificationType(NotificationType.TICKET_CREATED);
+				notifications.setSenderId(userDetail.getUserId());
+				notifications.setReceiverId(userDetail.getUserId());
+				notifications.setSeenStatus(false);
+				notifications.setCreatedBy(userDetail.getUserId());
+				notifications.setCreatedAt(new Date());
+				notifications.setUpdatedBy(userDetail.getUserId());
+				notifications.setLastUpdatedAt(new Date());
+				notificationsRepository.save(notifications);
+				
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.TICKET_ASSIGNED);
 				response.setContent(null);
