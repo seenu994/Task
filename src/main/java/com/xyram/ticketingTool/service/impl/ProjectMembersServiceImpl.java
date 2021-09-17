@@ -16,12 +16,15 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
+import com.xyram.ticketingTool.Repository.NotificationsRepository;
 import com.xyram.ticketingTool.Repository.ProjectMemberRepository;
 import com.xyram.ticketingTool.Repository.ProjectRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
+import com.xyram.ticketingTool.entity.Notifications;
 import com.xyram.ticketingTool.entity.ProjectMembers;
 import com.xyram.ticketingTool.entity.Projects;
 import com.xyram.ticketingTool.entity.Ticket;
+import com.xyram.ticketingTool.enumType.NotificationType;
 import com.xyram.ticketingTool.enumType.ProjectMembersStatus;
 import com.xyram.ticketingTool.exception.ResourceNotFoundException;
 import com.xyram.ticketingTool.request.CurrentUser;
@@ -52,6 +55,9 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 	
 	@Autowired
 	CurrentUser user;
+	
+	@Autowired
+	NotificationsRepository notificationsRepository;
 
 	@Override
 	public ProjectMembers addprojectMember(ProjectMembers projectMembers) {
@@ -71,40 +77,52 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 		if(request!=null&&request.containsKey("projectId")) {
 			Projects project = projectRepository.getProjecById((String) request.get("projectId"));
 			if(project!=null) {
-			if(request.containsKey("employeeId")){
-				List<String> employeeIds=(List<String>) request.get("employeeId");
-				
-				for (String employeeId : employeeIds) {
-					ProjectMembers projectMember=new ProjectMembers();
-					projectMember.setCreatedAt(new Date());
-
-					projectMember.setLastUpdatedAt(new Date()) ;
-					projectMember.setUpdatedBy(user.getUserId());
-					projectMember.setCreatedBy(user.getUserId());
-
-					projectMember.setStatus(ProjectMembersStatus.ACTIVE);
-					projectMember.setProjectId(project.getpId());
-					projectMember.setEmployeeId(employeeId);
-					projectMemberRepository.save(projectMember);
+				if(request.containsKey("employeeId")) {
+					
+					List<String> employeeIds=(List<String>) request.get("employeeId");
+					
+					for (String employeeId : employeeIds) {
+						ProjectMembers projectMember=new ProjectMembers();
+						
+						projectMember.setCreatedAt(new Date());
+						projectMember.setLastUpdatedAt(new Date()) ;
+						projectMember.setUpdatedBy(user.getUserId());
+						projectMember.setCreatedBy(user.getUserId());
+	
+						projectMember.setStatus(ProjectMembersStatus.ACTIVE);
+						projectMember.setProjectId(project.getpId());
+						projectMember.setEmployeeId(employeeId);
+						projectMemberRepository.save(projectMember);
+						
+						//Inserting Notifications Details
+						Notifications notifications = new Notifications();
+						notifications.setNotificationDesc(project.getProjectName() + " Project Access granted");
+						notifications.setNotificationType(NotificationType.PROJECT_ASSIGN_ACCCES);
+						notifications.setSenderId(user.getUserId());
+						notifications.setReceiverId(user.getUserId());
+						notifications.setSeenStatus(false);
+						notifications.setCreatedBy(user.getUserId());
+						notifications.setCreatedAt(new Date());
+						notifications.setUpdatedBy(user.getUserId());
+						notifications.setLastUpdatedAt(new Date());
+						notificationsRepository.save(notifications);
+					}
+				} else {
+					response.setSuccess(false);
+					response.setMessage(ResponseMessages.EMPLOYEE_INVALID);
+					response.setContent(null);
 				}
-				
-			}else {
-				response.setSuccess(false);
-				response.setMessage(ResponseMessages.EMPLOYEE_INVALID);
-				response.setContent(null);
-			}
-			}else{
+			} else {
 				response.setSuccess(false);
 				response.setMessage(ResponseMessages.PROJECT_NOTEXIST);
 				response.setContent(null);
-
-				}}else {
 			}
-			response.setSuccess(true);
-			response.setMessage(ResponseMessages.PROJECT_MEMBERS_ADDED);
-			response.setContent(null);
-			return response;
 		}
+		response.setSuccess(true);
+		response.setMessage(ResponseMessages.PROJECT_MEMBERS_ADDED);
+		response.setContent(null);
+		return response;
+	}
 
 		
 
@@ -135,6 +153,19 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 		if (project != null) {
 			member.setStatus(ProjectMembersStatus.INACTIVE);
 			projectMemberRepository.save(member);
+			
+			//Inserting Notifications Details
+			Notifications notifications = new Notifications();
+			notifications.setNotificationDesc(project.get().getProjectName() + " Project Access Revoked");
+			notifications.setNotificationType(NotificationType.PROJECT_ACCESS_REMOVE);
+			notifications.setSenderId(user.getUserId());
+			notifications.setReceiverId(user.getUserId());
+			notifications.setSeenStatus(false);
+			notifications.setCreatedBy(user.getUserId());
+			notifications.setCreatedAt(new Date());
+			notifications.setUpdatedBy(user.getUserId());
+			notifications.setLastUpdatedAt(new Date());
+			notificationsRepository.save(notifications);
 
 			response.setSuccess(true);
 			response.setMessage(ResponseMessages.PROJECT_MEMBER_REMOVED);
