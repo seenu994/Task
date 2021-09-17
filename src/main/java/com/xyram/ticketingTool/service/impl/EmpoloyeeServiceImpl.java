@@ -62,7 +62,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	@Autowired
 	ProjectServiceImpl ProjectSerImpl;
 	
-	private static Map<String, com.xyram.ticketingTool.admin.model.User> userCache = new HashMap<>();
+//	private static Map<String, com.xyram.ticketingTool.admin.model.User> userCache = new HashMap<>();
 
 	@Override
 	public ApiResponse addemployee(Employee employee) {
@@ -85,6 +85,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				} else {
 					throw new ResourceNotFoundException("invalid user role ");
 				}
+				user.setStatus(UserStatus.ACTIVE);
 				userRepository.save(user);
 				employee.setCreatedBy(currentUser.getUserId());
 			    employee.setUserCredientials(user);

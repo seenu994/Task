@@ -1,24 +1,25 @@
 package com.xyram.ticketingTool.ticket.Model;
 
-
 import java.io.Serializable;
 
 public class JwtRequest implements Serializable {
 
 	private static final long serialVersionUID = 5926468583005150707L;
-	
+
 	private String username;
 	private String password;
-	
-	//need default constructor for JSON Parsing
-	public JwtRequest()
-	{
-		
+	private String uid;
+
+	// need default constructor for JSON Parsing
+	public JwtRequest() {
+
 	}
 
-	public JwtRequest(String username, String password) {
+	public JwtRequest(String username, String password, String uid) {
 		this.setUsername(username);
 		this.setPassword(password);
+		this.setUid(uid);
+
 	}
 
 	public String getUsername() {
@@ -36,4 +37,13 @@ public class JwtRequest implements Serializable {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
+
 }

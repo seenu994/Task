@@ -37,5 +37,15 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 			+ "left join ticketdbtool.ticket_assignee a on e.employee_id = a.employee_id "
 			+ "where e.employee_status = 'ACTIVE' and a.ticket_assignee_status = 'ACTIVE' and e.role_id = 'R2' group by e.employee_id",nativeQuery = true)
 	Page<Map> getAllInfraUserList(Pageable pageable);
+	
+	/*
+	 * @Query(
+	 * value="SELECT e.employee_id as employeeId, e.frist_name as firstname, e.last_name as lastname, e.userCredientials.uid as uid FROM ticketdbtool.employee e "
+	 * 
+	 * + "where e.employee_status = 'ACTIVE'  and e.role_id = 'R2'", nativeQuery =
+	 * true) List<Map> getAllInfraList();
+	 */
+	
+
 }
 

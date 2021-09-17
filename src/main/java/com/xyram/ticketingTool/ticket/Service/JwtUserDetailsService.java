@@ -42,7 +42,8 @@ public class JwtUserDetailsService implements UserDetailsService {
 		Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
 		grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + user.getUserRole()));
 		
-		 System.out.println(user.getStatus()); if(user.getStatus()==UserStatus.ACTIVE)
+		 System.out.println(user.getStatus());
+		 if(user.getStatus()==UserStatus.ACTIVE)
 		  {
 		
 		return new User(user.getUsername(), user.getPassword(), grantedAuthorities);

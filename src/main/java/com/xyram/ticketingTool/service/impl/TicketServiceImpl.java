@@ -226,6 +226,10 @@ public class TicketServiceImpl implements TicketService {
 			tktStatusHist.setLastUpdatedAt(new Date());
 			tktStatusHistory.save(tktStatusHist);
 			
+			
+			
+			
+			
 			//Inserting Notifications Details
 			Notifications notifications = new Notifications();
 			notifications.setNotificationDesc("New Ticket Created - " + ticketreq.getTicketDescription());
@@ -237,6 +241,7 @@ public class TicketServiceImpl implements TicketService {
 			notifications.setCreatedAt(new Date());
 			notifications.setUpdatedBy(userDetail.getUserId());
 			notifications.setLastUpdatedAt(new Date());
+			notifications.setTicketId(tickets.getId());
 			notificationsRepository.save(notifications);
 			
 			response.setSuccess(true);

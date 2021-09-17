@@ -24,5 +24,7 @@ public interface EmployeeService {
 	ApiResponse getAllEmpByProject(String projectid, String clientid);
 
 	ApiResponse getAllInfraUser(Pageable pageable);
+	 
+	//List<Map> getListOfInfraUSer();
 
 }

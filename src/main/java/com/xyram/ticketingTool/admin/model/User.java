@@ -30,8 +30,8 @@ public class User extends IBaseData {
 	@Id
 	@GeneratedValue(generator = "uuid")
 	@GenericGenerator(name = "uuid", strategy = "uuid")
-	@Size( max = 8)
-	@Column(name="user_id")
+	@Size(max = 8)
+	@Column(name = "user_id")
 	private String id;
 
 	@Column(name = "username", unique = true)
@@ -43,10 +43,13 @@ public class User extends IBaseData {
 	@Column(name = "created_at")
 	private Date createdAt;
 
+	@Column(name = "uid")
+	private String uid;
+
 	@Enumerated(EnumType.STRING)
 	@Column(name = "userStatus")
 	private UserStatus status;
-	
+
 	@Enumerated(EnumType.STRING)
 	@Column(name = "TICKETINGTOOL_ADMIN")
 	private UserRole userRole;
@@ -55,19 +58,13 @@ public class User extends IBaseData {
 
 	}
 
-
-
 	public String getId() {
 		return id;
 	}
 
-
-
 	public void setId(String id) {
 		this.id = id;
 	}
-
-
 
 	public String getPassword() {
 		return password;
@@ -114,6 +111,13 @@ public class User extends IBaseData {
 	public void setStatus(UserStatus status) {
 		this.status = status;
 	}
-	
+
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
 
 }

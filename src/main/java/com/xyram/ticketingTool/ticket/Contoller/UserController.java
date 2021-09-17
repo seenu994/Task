@@ -47,7 +47,7 @@ public class UserController {
 
 		User user = userService.getUserByUsername("admin");
 		
-		if (user == null) {
+		if (user!=null) {
 			user = new User();
 			user.setUsername("admin");
 			 String encodedPassword = new BCryptPasswordEncoder().encode("admin");
