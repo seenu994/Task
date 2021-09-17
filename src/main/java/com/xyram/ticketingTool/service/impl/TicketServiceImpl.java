@@ -20,15 +20,18 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xyram.ticketingTool.Repository.CommentRepository;
+import com.xyram.ticketingTool.Repository.NotificationsRepository;
 import com.xyram.ticketingTool.Repository.ProjectRepository;
 import com.xyram.ticketingTool.Repository.TicketRepository;
 import com.xyram.ticketingTool.Repository.TicketStatusHistRepository;
 import com.xyram.ticketingTool.Repository.UserRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Comments;
+import com.xyram.ticketingTool.entity.Notifications;
 import com.xyram.ticketingTool.entity.Projects;
 import com.xyram.ticketingTool.entity.Ticket;
 import com.xyram.ticketingTool.entity.TicketStatusHistory;
+import com.xyram.ticketingTool.enumType.NotificationType;
 import com.xyram.ticketingTool.enumType.TicketStatus;
 import com.xyram.ticketingTool.enumType.UserRole;
 import com.xyram.ticketingTool.exception.ResourceNotFoundException;
@@ -63,6 +66,9 @@ public class TicketServiceImpl implements TicketService {
 
 	@Autowired
 	TicketAttachmentService attachmentService;
+	
+	@Autowired
+	NotificationsRepository notificationsRepository;
 
 	/*
 	 * @Autowired TicketCommentServiceImpl commentService;
@@ -177,7 +183,7 @@ public class TicketServiceImpl implements TicketService {
 	public ApiResponse createTickets(MultipartFile[] files,String ticketRequest) {
 		ApiResponse response = new ApiResponse(false);
 		ObjectMapper objectMapper = new ObjectMapper();
-		 Ticket ticketreq=null;
+		Ticket ticketreq = null;
 		try {
 			ticketreq = objectMapper.readValue(ticketRequest, Ticket.class);
 		} catch (JsonMappingException e) {
@@ -187,25 +193,30 @@ public class TicketServiceImpl implements TicketService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
-			/*
-			 * JSONObject json = new JSONObject(ticketRequest); Ticket ticketreq=new
-			 * Ticket();
-			 */		Projects project = projectRepository.getById(ticketreq.getProjectId());
+		/*
+		 * JSONObject json = new JSONObject(ticketRequest); 
+		 * Ticket ticketreq=new Ticket();
+		 */		
+		Projects project = projectRepository.getById(ticketreq.getProjectId());
 
-		if (project == null)  {
+		if (project == null) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.PROJECT_NOTEXIST);
 			response.setContent(null);
 			return response;
 		} else {
+			ticketreq.setCreatedBy(userDetail.getUserId());
+			ticketreq.setCreatedAt(new Date());
+			ticketreq.setUpdatedBy(userDetail.getUserId());
+			ticketreq.setLastUpdatedAt(new Date());
+			//ticketreq.setStatus(TicketStatus.INITIATED);
+			Ticket tickets = ticketrepository.save(ticketreq);
 			
-			  ticketreq.setCreatedBy(userDetail.getUserId());
-			  ticketreq.setCreatedAt(new Date());
-			  ticketreq.setUpdatedBy(userDetail.getUserId()); 
-			  ticketreq.setLastUpdatedAt(new Date());
-			  ticketreq.setStatus(TicketStatus.INITIATED);
-			 			Ticket tickets = ticketrepository.save(ticketreq);
+			//Calling file upload method
+			if (files != null)
 			attachmentService.storeImage(files,tickets.getId());
+			
+			//Inserting Ticket history details
 			TicketStatusHistory tktStatusHist = new TicketStatusHistory();
 			tktStatusHist.setTicketId(tickets.getId());
 			tktStatusHist.setTicketStatus(TicketStatus.INITIATED);
@@ -215,6 +226,19 @@ public class TicketServiceImpl implements TicketService {
 			tktStatusHist.setLastUpdatedAt(new Date());
 			tktStatusHistory.save(tktStatusHist);
 			
+			//Inserting Notifications Details
+			Notifications notifications = new Notifications();
+			notifications.setNotificationDesc("New Ticket Created - " + ticketreq.getTicketDescription());
+			notifications.setNotificationType(NotificationType.TICKET_CREATED);
+			notifications.setSenderId(userDetail.getUserId());
+			notifications.setReceiverId(userDetail.getUserId());
+			notifications.setSeenStatus(false);
+			notifications.setCreatedBy(userDetail.getUserId());
+			notifications.setCreatedAt(new Date());
+			notifications.setUpdatedBy(userDetail.getUserId());
+			notifications.setLastUpdatedAt(new Date());
+			notificationsRepository.save(notifications);
+			
 			response.setSuccess(true);
 			response.setMessage(ResponseMessages.TICKET_ADDED);
 			Map<String, String> content = new HashMap<String, String>();
@@ -223,7 +247,6 @@ public class TicketServiceImpl implements TicketService {
 			response.setContent(content);
 			return response;
 		}
-
 	}
 
 	@Override
@@ -242,6 +265,7 @@ public class TicketServiceImpl implements TicketService {
 				ticketNewRequest.setLastUpdatedAt(new Date());
 				ticketrepository.save(ticketNewRequest);
 				
+				//Inserting Ticket history details
 				TicketStatusHistory tktStatusHist = new TicketStatusHistory();
 				tktStatusHist.setTicketId(ticketId);
 				tktStatusHist.setTicketStatus(TicketStatus.CANCELLED);
@@ -250,6 +274,27 @@ public class TicketServiceImpl implements TicketService {
 				tktStatusHist.setUpdatedBy(userDetail.getUserId());
 				tktStatusHist.setLastUpdatedAt(new Date());
 				tktStatusHistory.save(tktStatusHist);
+				
+				//Inserting Notifications Details
+				if (ticketNewRequest.getStatus().equals(TicketStatus.ASSIGNED) || 
+						ticketNewRequest.getStatus().equals(TicketStatus.INPROGRESS)) {
+					Notifications notifications = new Notifications();
+					notifications.setNotificationDesc("Ticket Cancelled - " + ticketNewRequest.getTicketDescription());
+					if (userDetail.getUserRole().equalsIgnoreCase("DEVELOPER"))
+						notifications.setNotificationType(NotificationType.TICKET_CANCELLED_BY_USER);
+					else if (userDetail.getUserRole().equalsIgnoreCase("TICKETINGTOOL_ADMIN"))
+						notifications.setNotificationType(NotificationType.TICKET_CANCELLED_BY_ADMIN);
+					else
+						notifications.setNotificationType(NotificationType.TICKET_CANCELLED_BY_USER);
+					notifications.setSenderId(userDetail.getUserId());
+					notifications.setReceiverId(userDetail.getUserId());
+					notifications.setSeenStatus(false);
+					notifications.setCreatedBy(userDetail.getUserId());
+					notifications.setCreatedAt(new Date());
+					notifications.setUpdatedBy(userDetail.getUserId());
+					notifications.setLastUpdatedAt(new Date());
+					notificationsRepository.save(notifications);
+				}
 
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.TICKET_CANCELLED);
@@ -285,6 +330,7 @@ public class TicketServiceImpl implements TicketService {
 				ticketNewRequest.setLastUpdatedAt(new Date());
 				ticketrepository.save(ticketNewRequest);
 				
+				//Inserting Ticket history details
 				TicketStatusHistory tktStatusHist = new TicketStatusHistory();
 				tktStatusHist.setTicketId(ticketId);
 				tktStatusHist.setTicketStatus(TicketStatus.COMPLETED);
@@ -293,6 +339,19 @@ public class TicketServiceImpl implements TicketService {
 				tktStatusHist.setUpdatedBy(userDetail.getUserId());
 				tktStatusHist.setLastUpdatedAt(new Date());
 				tktStatusHistory.save(tktStatusHist);
+				
+				//Inserting Notifications Details
+				Notifications notifications = new Notifications();
+				notifications.setNotificationDesc("Ticket Cancelled - " + ticketNewRequest.getTicketDescription());
+				notifications.setNotificationType(NotificationType.TICKET_RESOLVED);
+				notifications.setSenderId(userDetail.getUserId());
+				notifications.setReceiverId(userDetail.getUserId());
+				notifications.setSeenStatus(false);
+				notifications.setCreatedBy(userDetail.getUserId());
+				notifications.setCreatedAt(new Date());
+				notifications.setUpdatedBy(userDetail.getUserId());
+				notifications.setLastUpdatedAt(new Date());
+				notificationsRepository.save(notifications);
 
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.TICKET_RESOLVED);
@@ -312,7 +371,6 @@ public class TicketServiceImpl implements TicketService {
 		}
 	}}
 
-
 	@Override
 	public ApiResponse onHoldTicket(String ticketId) {
 		ApiResponse response = new ApiResponse(false);
@@ -323,6 +381,17 @@ public class TicketServiceImpl implements TicketService {
 			ticketObj.setUpdatedBy(ticketObj.getUpdatedBy());
 			ticketObj.setLastUpdatedAt(new Date());
 		    ticketrepository.save(ticketObj);
+		    
+		    //Inserting Ticket history details
+			TicketStatusHistory tktStatusHist = new TicketStatusHistory();
+			tktStatusHist.setTicketId(ticketId);
+			tktStatusHist.setTicketStatus(TicketStatus.ONHOLD);
+			tktStatusHist.setCreatedBy(userDetail.getUserId());
+			tktStatusHist.setCreatedAt(new Date());
+			tktStatusHist.setUpdatedBy(userDetail.getUserId());
+			tktStatusHist.setLastUpdatedAt(new Date());
+			tktStatusHistory.save(tktStatusHist);
+			
 			response.setSuccess(true);
 			response.setMessage(ResponseMessages.ONHOLD_STATUS);
 			response.setContent(null);	
@@ -334,6 +403,7 @@ public class TicketServiceImpl implements TicketService {
 		}
 		return response;
 	}
+	
 	@Override
 	public ApiResponse editTicket(String ticketId, Ticket ticketRequest) {
 
@@ -351,6 +421,29 @@ public class TicketServiceImpl implements TicketService {
 				ticketObj.setUpdatedBy(userDetail.getUserId());
 				ticketObj.setLastUpdatedAt(new Date());
 				ticketrepository.save(ticketObj);
+				
+				//Inserting Ticket history details
+				TicketStatusHistory tktStatusHist = new TicketStatusHistory();
+				tktStatusHist.setTicketId(ticketId);
+				tktStatusHist.setTicketStatus(TicketStatus.EDITED);
+				tktStatusHist.setCreatedBy(userDetail.getUserId());
+				tktStatusHist.setCreatedAt(new Date());
+				tktStatusHist.setUpdatedBy(userDetail.getUserId());
+				tktStatusHist.setLastUpdatedAt(new Date());
+				tktStatusHistory.save(tktStatusHist);
+				
+				//Inserting Notifications Details
+				Notifications notifications = new Notifications();
+				notifications.setNotificationDesc("Ticket Cancelled - " + ticketObj.getTicketDescription());
+				notifications.setNotificationType(NotificationType.TICKET_EDITED_BY_DEV);
+				notifications.setSenderId(userDetail.getUserId());
+				notifications.setReceiverId(userDetail.getUserId());
+				notifications.setSeenStatus(false);
+				notifications.setCreatedBy(userDetail.getUserId());
+				notifications.setCreatedAt(new Date());
+				notifications.setUpdatedBy(userDetail.getUserId());
+				notifications.setLastUpdatedAt(new Date());
+				notificationsRepository.save(notifications);
 
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.TICKET_EDITED);
@@ -397,6 +490,7 @@ public class TicketServiceImpl implements TicketService {
 					ticketObj.setLastUpdatedAt(new Date());
 					ticketrepository.save(ticketObj);
 					
+					//Inserting Ticket history details
 					TicketStatusHistory tktStatusHist = new TicketStatusHistory();
 					tktStatusHist.setTicketId(ticketId);
 					tktStatusHist.setTicketStatus(TicketStatus.REOPEN);
@@ -405,6 +499,27 @@ public class TicketServiceImpl implements TicketService {
 					tktStatusHist.setUpdatedBy(userDetail.getUserId());
 					tktStatusHist.setLastUpdatedAt(new Date());
 					tktStatusHistory.save(tktStatusHist);
+					
+					//Inserting Notifications Details
+					if (ticketObj.getStatus().equals(TicketStatus.ASSIGNED) || 
+							ticketObj.getStatus().equals(TicketStatus.INPROGRESS)) {
+						Notifications notifications = new Notifications();
+						notifications.setNotificationDesc("Ticket Cancelled - " + ticketObj.getTicketDescription());
+						if (userDetail.getUserRole().equalsIgnoreCase("DEVELOPER"))
+							notifications.setNotificationType(NotificationType.TICKET_REOPENED_BY_DEV);
+						else if (userDetail.getUserRole().equalsIgnoreCase("TICKETINGTOOL_ADMIN"))
+							notifications.setNotificationType(NotificationType.TICKET_REOPENED_BY_ADMIN);
+						else
+							notifications.setNotificationType(NotificationType.TICKET_REOPENED_BY_DEV);
+						notifications.setSenderId(userDetail.getUserId());
+						notifications.setReceiverId(userDetail.getUserId());
+						notifications.setSeenStatus(false);
+						notifications.setCreatedBy(userDetail.getUserId());
+						notifications.setCreatedAt(new Date());
+						notifications.setUpdatedBy(userDetail.getUserId());
+						notifications.setLastUpdatedAt(new Date());
+						notificationsRepository.save(notifications);
+					}
 
 					response.setSuccess(true);
 					response.setMessage(ResponseMessages.TICKET_REOPENED);
@@ -447,6 +562,28 @@ public class TicketServiceImpl implements TicketService {
 					commentObj.setUpdatedBy(userDetail.getUserId());
 					commentObj.setLastUpdatedAt(new Date());
 					commentRepository.save(commentObj);
+					
+					//Inserting Notifications Details
+					if (ticketObj.equalsIgnoreCase(TicketStatus.ASSIGNED.toString()) || 
+							ticketObj.equalsIgnoreCase(TicketStatus.INPROGRESS.toString())) {
+						Notifications notifications = new Notifications();
+						notifications.setNotificationDesc("New comments added - " + commentObj.getTicketCommentDescription());
+						if (userDetail.getUserRole().equalsIgnoreCase("DEVELOPER"))
+							notifications.setNotificationType(NotificationType.TICKET_REOPENED_BY_DEV);
+						else if (userDetail.getUserRole().equalsIgnoreCase("TICKETINGTOOL_ADMIN"))
+							notifications.setNotificationType(NotificationType.TICKET_REOPENED_BY_ADMIN);
+						else
+							notifications.setNotificationType(NotificationType.TICKET_REOPENED_BY_DEV);
+						notifications.setSenderId(userDetail.getUserId());
+						notifications.setReceiverId(userDetail.getUserId());
+						notifications.setSeenStatus(false);
+						notifications.setCreatedBy(userDetail.getUserId());
+						notifications.setCreatedAt(new Date());
+						notifications.setUpdatedBy(userDetail.getUserId());
+						notifications.setLastUpdatedAt(new Date());
+						notificationsRepository.save(notifications);
+					}
+					
 					response.setSuccess(true);
 					response.setMessage(ResponseMessages.TICKET_COMMENTS_ADDED);
 					response.setContent(null);
@@ -605,6 +742,7 @@ public class TicketServiceImpl implements TicketService {
 			}
 			return response;
 		}
+	
 	@Override
 	public ApiResponse getTicketSearchById(String ticketId) {
 		// TODO Auto-generated method stub
@@ -625,5 +763,4 @@ public class TicketServiceImpl implements TicketService {
 		
 		return response;
 	}
-	
-	}
+}
