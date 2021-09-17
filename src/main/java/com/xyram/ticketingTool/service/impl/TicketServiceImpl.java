@@ -195,12 +195,13 @@ public class TicketServiceImpl implements TicketService {
 			response.setContent(null);
 			return response;
 		} else {
-////			ticketreq.setCreatedBy(userDetail.getUserId());
-////			ticketreq.setCreatedAt(new Date());
-////			ticketreq.setUpdatedBy(userDetail.getUserId());
-////			ticketreq.setLastUpdatedAt(new Date());
-//			ticketreq.setStatus(TicketStatus.INITIATED);
-			Ticket tickets = ticketrepository.save(ticketreq);
+			
+			  ticketreq.setCreatedBy(userDetail.getUserId());
+			  ticketreq.setCreatedAt(new Date());
+			  ticketreq.setUpdatedBy(userDetail.getUserId()); 
+			  ticketreq.setLastUpdatedAt(new Date());
+			  ticketreq.setStatus(TicketStatus.INITIATED);
+			 			Ticket tickets = ticketrepository.save(ticketreq);
 			attachmentService.storeImage(files,tickets.getId());
 			TicketStatusHistory tktStatusHist = new TicketStatusHistory();
 			tktStatusHist.setTicketId(tickets.getId());
