@@ -140,9 +140,7 @@ public class TicketServiceImpl implements TicketService {
 		if(noErrors) {
 			if (ticketNewRequest != null) {
 				Map<String, List<Map>> content = new HashMap<String, List<Map>>();
-				String tktStatus = ticketrepository.getTicketById(ticketId);
-				response.setSuccess(true);
-				response.setMessage(ResponseMessages.TICKET_EXIST);
+				//String tktStatus = ticketrepository.getTicketById(ticketId);
 				
 				//Map<String, String> CurTktStatus = new HashMap<String, String>();
 				//CurTktStatus.put("CurrentStatus", tktStatus);
@@ -154,11 +152,16 @@ public class TicketServiceImpl implements TicketService {
 				List<Map> ticketAttachments = ticketrepository.getTktAttachmentsById(ticketId);
 				content.put("AttachmentDetails", ticketAttachments);
 				
-				Map<String, String> CurTktStatus = new HashMap<>();
-				ticketComments = new ArrayList<>();
-				CurTktStatus.put("CurrentStatus", tktStatus);
-				ticketComments.add(CurTktStatus);
-				content.put("CurrentStatus", ticketComments);
+				//Map<String, String> CurTktStatus = new HashMap<>();
+				//ticketComments = new ArrayList<>();
+				//CurTktStatus.put("CurrentStatus", tktStatus);
+				//ticketComments.add(CurTktStatus);
+				
+				List<Map> ticketDetails = ticketrepository.getTicketSearchById(ticketId);
+				content.put("CurrentStatus", ticketDetails);
+				
+				response.setSuccess(true);
+				response.setMessage(ResponseMessages.TICKET_EXIST);
 				response.setContent(content);
 				
 			} else {
