@@ -15,6 +15,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import com.xyram.ticketingTool.Communication.PushNotificationCall;
+import com.xyram.ticketingTool.Communication.PushNotificationRequest;
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
 import com.xyram.ticketingTool.Repository.NotificationsRepository;
 import com.xyram.ticketingTool.Repository.ProjectMemberRepository;
@@ -43,21 +45,31 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 
 	@Autowired
 	ProjectMemberRepository projectMemberRepository;
-	
+
 	@Autowired
-	ProjectRepository  projectRepository;
-	
+	ProjectRepository projectRepository;
+
 	@Autowired
 	EmployeeRepository employeeRepository;
 
 	@Autowired
 	ProjectServiceImpl projectServiceImpl;
-	
+
 	@Autowired
 	CurrentUser user;
 	
 	@Autowired
+	EmpoloyeeServiceImpl employeeServiceImpl;
+	
+	@Autowired
 	NotificationsRepository notificationsRepository;
+	
+	@Autowired
+	PushNotificationCall pushNotificationCall;
+	
+	@Autowired
+	PushNotificationRequest pushNotificationRequest;
+
 
 	@Override
 	public ProjectMembers addprojectMember(ProjectMembers projectMembers) {
@@ -70,31 +82,45 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 	}
 
 	@Override
-	public ApiResponse assignProjectToEmployee(Map<Object,Object> request) {
+	public ApiResponse assignProjectToEmployee(Map<Object, Object> request) {
 		// TODO Auto-generated method stub
 
 		ApiResponse response = new ApiResponse(false);
-		if(request!=null&&request.containsKey("projectId")) {
+		if (request != null && request.containsKey("projectId")) {
 			Projects project = projectRepository.getProjecById((String) request.get("projectId"));
-			if(project!=null) {
-				if(request.containsKey("employeeId")) {
-					
-					List<String> employeeIds=(List<String>) request.get("employeeId");
-					
+			if (project != null) {
+				if (request.containsKey("employeeId")) {
+
+					List<String> employeeIds = (List<String>) request.get("employeeId");
+
 					for (String employeeId : employeeIds) {
-						ProjectMembers projectMember=new ProjectMembers();
-						
+						ProjectMembers projectMember = new ProjectMembers();
+
 						projectMember.setCreatedAt(new Date());
-						projectMember.setLastUpdatedAt(new Date()) ;
+						projectMember.setLastUpdatedAt(new Date());
 						projectMember.setUpdatedBy(user.getUserId());
 						projectMember.setCreatedBy(user.getUserId());
-	
+
 						projectMember.setStatus(ProjectMembersStatus.ACTIVE);
 						projectMember.setProjectId(project.getpId());
 						projectMember.setEmployeeId(employeeId);
 						projectMemberRepository.save(projectMember);
+
+						List<Map> developerList=	employeeServiceImpl.getListOfDeveloper();
 						
-						//Inserting Notifications Details
+						for (Map user : developerList) {
+							
+						Map request1=	new HashMap<>();
+						request1.put("id", user.get("projectId"));
+						request1.put("uid", user.get("uid"));
+						request1.put("title", "PROJECT ASSIGNED");
+						request1.put("body",project.getProjectName() + " Project Access granted" );
+						pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request1, 10, NotificationType.PROJECT_ASSIGN_ACCCES.toString()));
+						
+							
+							
+							}
+						// Inserting Notifications Details
 						Notifications notifications = new Notifications();
 						notifications.setNotificationDesc(project.getProjectName() + " Project Access granted");
 						notifications.setNotificationType(NotificationType.PROJECT_ASSIGN_ACCCES);
@@ -124,8 +150,6 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 		return response;
 	}
 
-		
-
 	/*
 	 * @Override public ProjectMembers assignProjectToEmployee(Map<String, Integer>
 	 * requestMap) { ProjectMembers projectMembers = new ProjectMembers(); if
@@ -154,7 +178,19 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 			member.setStatus(ProjectMembersStatus.INACTIVE);
 			projectMemberRepository.save(member);
 			
-			//Inserting Notifications Details
+			List<Map> developerList=	employeeServiceImpl.getListOfDeveloper();
+			
+			for (Map user : developerList) {
+				
+			Map request1=	new HashMap<>();
+			request1.put("id", user.get("projectId"));
+			request1.put("uid", user.get("uid"));
+			request1.put("title", "PROJECT_ACCESS_REMOVE");
+			request1.put("body",project.get().getProjectName() + " Project Access Revoked" );
+			pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request1, 11, NotificationType.PROJECT_ACCESS_REMOVE.toString()));
+			
+			}
+			// Inserting Notifications Details
 			Notifications notifications = new Notifications();
 			notifications.setNotificationDesc(project.get().getProjectName() + " Project Access Revoked");
 			notifications.setNotificationType(NotificationType.PROJECT_ACCESS_REMOVE);
@@ -191,18 +227,16 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 
 		ApiResponse response = new ApiResponse(false);
 
-	
 		if (employeeId != null) {
 
-
 			List<Map> projectList = projectMemberRepository.getAllProjectByEmployeeId(employeeId);
-			if(projectList!=null&&projectList.size()>0) {
-			Map content = new HashMap();
-			content.put("ProjectList", projectList);
-			response.setSuccess(true);
-			response.setContent(content);
-			response.setMessage(ResponseMessages.PROJECT_LIST);
-			}else {
+			if (projectList != null && projectList.size() > 0) {
+				Map content = new HashMap();
+				content.put("ProjectList", projectList);
+				response.setSuccess(true);
+				response.setContent(content);
+				response.setMessage(ResponseMessages.PROJECT_LIST);
+			} else {
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.PROJECT_NOT_ASSIGNED);
 			}

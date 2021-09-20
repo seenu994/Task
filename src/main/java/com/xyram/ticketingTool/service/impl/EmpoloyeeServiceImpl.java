@@ -37,6 +37,7 @@ import com.xyram.ticketingTool.exception.ResourceNotFoundException;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.EmployeeService;
 import com.xyram.ticketingTool.util.ResponseMessages;
+
 /**
  * 
  * @author sahana.neelappa
@@ -55,13 +56,13 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 	@Autowired
 	RoleRepository roleRepository;
-	
+
 	@Autowired
 	CurrentUser currentUser;
-	
+
 	@Autowired
 	ProjectServiceImpl ProjectSerImpl;
-	
+
 //	private static Map<String, com.xyram.ticketingTool.admin.model.User> userCache = new HashMap<>();
 
 	@Override
@@ -69,8 +70,8 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 		ApiResponse response = validateEmployee(employee);
 		System.out.println(currentUser.getName());
-		
-		if (response.isSuccess()) {	
+
+		if (response.isSuccess()) {
 			try {
 				User user = new User();
 				user.setUsername(employee.getEmail());
@@ -80,7 +81,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				if (employee.getRoleId().equals("R2")) {
 					// if(user.getUserRole().equals("INFRA")) {
 					user.setUserRole(UserRole.INFRA);
-				} else if(employee.getRoleId().equals("R3")){
+				} else if (employee.getRoleId().equals("R3")) {
 					user.setUserRole(UserRole.DEVELOPER);
 				} else {
 					throw new ResourceNotFoundException("invalid user role ");
@@ -88,17 +89,17 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				user.setStatus(UserStatus.ACTIVE);
 				userRepository.save(user);
 				employee.setCreatedBy(currentUser.getUserId());
-			    employee.setUserCredientials(user);
+				employee.setUserCredientials(user);
 				Employee employeeNew = employeeRepository.save(employee);
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.EMPLOYEE_ADDED);
 				Map content = new HashMap();
 				content.put("employeeId", employeeNew.geteId());
 				response.setContent(content);
-			}catch(Exception e) {
-				System.out.println("Error Occured :: "+e.getMessage());
+			} catch (Exception e) {
+				System.out.println("Error Occured :: " + e.getMessage());
 			}
-			
+
 			return response;
 
 		}
@@ -110,40 +111,33 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		ApiResponse response = new ApiResponse(false);
 		if (!emailValidation(employee.getEmail())) {
 			response.setMessage(ResponseMessages.EMAIL_INVALID);
-			
+
 			response.setSuccess(false);
 		}
 
 		else if (employee.getMobileNumber().length() != 10) {
 			response.setMessage(ResponseMessages.MOBILE_INVALID);
-			
+
 			response.setSuccess(false);
 		}
 
-		/*else if (employee.getRole() == null || employee.getRole().getId() == null) {
-//			Optional<Role> role = roleRepository.findById(employee.getRole().getId());
-//			if (role == null) {
-//				response.setMessage(ResponseMessages.ROLE_INVALID);
-//				response.setSuccess(false);
-//			}
-//			else {
-//				response.setMessage(ResponseMessages.EMPLOYEE_ADDED);
-//				response.setSuccess(true);
-//				response.setContent(null);
-//			}
-			response.setMessage(ResponseMessages.ROLE_INVALID);
-			*/
-			//response.setSuccess(false);
-			
+		/*
+		 * else if (employee.getRole() == null || employee.getRole().getId() == null) {
+		 * // Optional<Role> role = roleRepository.findById(employee.getRole().getId());
+		 * // if (role == null) { // response.setMessage(ResponseMessages.ROLE_INVALID);
+		 * // response.setSuccess(false); // } // else { //
+		 * response.setMessage(ResponseMessages.EMPLOYEE_ADDED); //
+		 * response.setSuccess(true); // response.setContent(null); // }
+		 * response.setMessage(ResponseMessages.ROLE_INVALID);
+		 */
+		// response.setSuccess(false);
 
 		else {
 			response.setMessage(ResponseMessages.EMPLOYEE_ADDED);
-		
-			
+
 			response.setSuccess(true);
 		}
 
-		
 		return response;
 	}
 
@@ -157,14 +151,14 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 	@Override
 	public ApiResponse getAllEmployee(Pageable pageable) {
-       Page<Map> employeeList =   employeeRepository.getAllEmployeeList(pageable);
-       Map content = new HashMap();
-    
-       content.put("employeeList", employeeList);
-       ApiResponse response = new ApiResponse(true);
-       response.setSuccess(true);
-       response.setContent(content);
-       return  response;
+		Page<Map> employeeList = employeeRepository.getAllEmployeeList(pageable);
+		Map content = new HashMap();
+
+		content.put("employeeList", employeeList);
+		ApiResponse response = new ApiResponse(true);
+		response.setSuccess(true);
+		response.setContent(content);
+		return response;
 	}
 
 	@Override
@@ -173,29 +167,25 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		if (response.isSuccess()) {
 			Employee employee = employeeRepository.getById(employeeID);
 			if (employee != null) {
-				
-					
+
 				employee.setStatus(userstatus);
 				employeeRepository.save(employee);
 				User user = userRepository.getById(employee.getUserCredientials().getId());
 				user.setStatus(userstatus);
 				userRepository.save(user);
-				
-				
+
 				// Employee employeere=new Employee();z
 
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.STATUS_UPDATE);
 				response.setContent(null);
 			}
+		} else {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.EMPLOYEE_INVALID);
+			response.setContent(null);
 		}
-			else {
-				response.setSuccess(false);
-				response.setMessage(ResponseMessages.EMPLOYEE_INVALID);
-				response.setContent(null);
-			}
 
-		
 		return response;
 	}
 
@@ -209,7 +199,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		else {
 			response.setMessage(ResponseMessages.USERSTATUS_INVALID);
 			response.setSuccess(false);
-			
+
 		}
 
 		return response;
@@ -246,7 +236,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 		return response;
 	}
-	
+
 	@Override
 	public ApiResponse getAllEmpByProject(String projectid, String clientid) {
 		ApiResponse response = new ApiResponse(false);
@@ -255,7 +245,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		projectRequest.setClientId(clientid);
 		ApiResponse projvalres = ProjectSerImpl.validateClientIdProjectId(projectRequest);
 		if (projvalres.isSuccess()) {
-			List<Map> employeeList =   employeeRepository.getAllEmpByProject(projectid);
+			List<Map> employeeList = employeeRepository.getAllEmpByProject(projectid);
 			Map content = new HashMap();
 			content.put("EmployeeList", employeeList);
 			response.setSuccess(true);
@@ -264,18 +254,55 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			response.setMessage(ResponseMessages.ClIENT_ID_VALID);
 			response.setSuccess(false);
 		}
-		return  response;
+		return response;
 	}
 
 	@Override
 	public ApiResponse getAllInfraUser(Pageable pageable) {
-		Page<Map> infraUserList =   employeeRepository.getAllInfraUserList(pageable);
-	       Map content = new HashMap();
-	    
-	       content.put("infraUserList", infraUserList);
-	       ApiResponse response = new ApiResponse(true);
-	       response.setSuccess(true);
-	       response.setContent(content);
-	       return  response;
-		}
+		Page<Map> infraUserList = employeeRepository.getAllInfraUserList(pageable);
+		Map content = new HashMap();
+
+		content.put("infraUserList", infraUserList);
+		ApiResponse response = new ApiResponse(true);
+		response.setSuccess(true);
+		response.setContent(content);
+		return response;
+	}
+
+	@Override
+	public List<Map> getListOfInfraUSer() {
+		List<Map> infraList = employeeRepository.getAllInfraList();
+		Map content = new HashMap();
+
+		content.put("infraList", infraList);
+		ApiResponse response = new ApiResponse(true);
+		response.setSuccess(true);
+		response.setContent(content);
+		return infraList;
+	}
+
+	@Override
+	public List<Map> getListOfDeveloper() {
+		List<Map> developerList = employeeRepository.getListOfDeveloper();
+		Map content = new HashMap();
+
+		content.put("developerList", developerList);
+		ApiResponse response = new ApiResponse(true);
+		response.setSuccess(true);
+		response.setContent(content);
+		return developerList;
+	}
+
+	@Override
+	public List<Map> getListOfDeveloperInfra() {
+		List<Map> developerInfraList = employeeRepository.getListOfDeveloper();
+		Map content = new HashMap();
+
+		content.put("developerList", developerInfraList);
+		ApiResponse response = new ApiResponse(true);
+		response.setSuccess(true);
+		response.setContent(content);
+		return developerInfraList;
+	}
+		
 }

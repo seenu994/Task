@@ -29,14 +29,13 @@ import com.xyram.ticketingTool.ticket.config.JSONObjectUserType;
 
 @Entity
 @Table(name = "employee")
-/*TypeDefs({ @TypeDef(name = "StringJsonObject", typeClass = JSONObjectUserType.class) })*/
 public class Employee extends AuditModel {
 
 	@Id
 	@GeneratedValue(generator = "uuid")
 	@GenericGenerator(name = "uuid", strategy = "uuid")
-	@Size( max = 8)
-	@Column(name="employee_id")
+	@Size(max = 8)
+	@Column(name = "employee_id")
 	private String eId;
 
 	@Column(name = "password")
@@ -57,25 +56,19 @@ public class Employee extends AuditModel {
 	@Column(name = "mobile_number")
 	private String mobileNumber;
 
-	
-	
 	@Column(name = "role_id")
 	private String roleId;
-	
+
 	@Enumerated(EnumType.STRING)
 	@Column(name = "Employee_status")
 	private UserStatus status = UserStatus.INACTIVE;
 
-	
 	@Column(name = "designation_id")
 	private String designationId;
 
 	@OneToOne(cascade = { CascadeType.MERGE })
 	@JoinColumn(name = "user_id")
-
-	private User userCredientials;
-
-	
+    private User userCredientials;
 
 	public String geteId() {
 		return eId;
@@ -125,8 +118,6 @@ public class Employee extends AuditModel {
 		this.mobileNumber = mobileNumber;
 	}
 
-	
-
 	public String getPassword() {
 		return password;
 	}
@@ -143,7 +134,6 @@ public class Employee extends AuditModel {
 		this.status = status;
 	}
 
-	
 	public String getRoleId() {
 		return roleId;
 	}

@@ -33,19 +33,27 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 			+ "from Employee e left JOIN ProjectMembers p On e.eId = p.employeeId where e.status = 'ACTIVE'")
 	List<Map> getAllEmpByProject(@Param("projectId") String projectId);
 
-	@Query(value="SELECT e.employee_id, e.frist_name, e.last_name, count(e.employee_id) assigned_cnt FROM ticketdbtool.employee e "
+	@Query(value = "SELECT e.employee_id, e.frist_name, e.last_name, count(e.employee_id) assigned_cnt FROM ticketdbtool.employee e "
 			+ "left join ticketdbtool.ticket_assignee a on e.employee_id = a.employee_id "
-			+ "where e.employee_status = 'ACTIVE' and a.ticket_assignee_status = 'ACTIVE' and e.role_id = 'R2' group by e.employee_id",nativeQuery = true)
+			+ "where e.employee_status = 'ACTIVE' and a.ticket_assignee_status = 'ACTIVE' and e.role_id = 'R2' group by e.employee_id", nativeQuery = true)
 	Page<Map> getAllInfraUserList(Pageable pageable);
-	
-	/*
-	 * @Query(
-	 * value="SELECT e.employee_id as employeeId, e.frist_name as firstname, e.last_name as lastname, e.userCredientials.uid as uid FROM ticketdbtool.employee e "
-	 * 
-	 * + "where e.employee_status = 'ACTIVE'  and e.role_id = 'R2'", nativeQuery =
-	 * true) List<Map> getAllInfraList();
-	 */
-	
+
+	@Query(value = "SELECT e.employee_id as employeeId, e.frist_name as firstname, e.last_name as lastname, u.uid as uid"
+			+ " FROM employee e inner join user u on u.user_id=e.user_id  "
+
+			+ "where e.employee_status = 'ACTIVE'  and e.role_id = 'R2'", nativeQuery = true)
+	List<Map> getAllInfraList();
+
+	@Query(value = "SELECT e.employee_id as employeeId, e.frist_name as firstname, e.last_name as lastname, u.uid as uid"
+			+ " FROM employee e inner join user u on u.user_id=e.user_id  "
+
+			+ "where e.employee_status = 'ACTIVE'  and e.role_id = 'R3'", nativeQuery = true)
+	List<Map> getListOfDeveloper();
+
+	@Query(value = "SELECT e.employee_id as employeeId, e.frist_name as firstname, e.last_name as lastname, u.uid as uid"
+			+ " FROM employee e inner join user u on u.user_id=e.user_id  "
+
+			+ "where e.employee_status = 'ACTIVE'  and e.role_id in('R2','R3')", nativeQuery = true)
+	List<Map> getListOfDeveloperInfra();
 
 }
-

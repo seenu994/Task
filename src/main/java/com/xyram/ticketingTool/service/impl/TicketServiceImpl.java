@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.security.auth.message.callback.PrivateKeyCallback.Request;
 import javax.transaction.Transactional;
 
 import org.json.JSONObject;
@@ -19,6 +20,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.xyram.ticketingTool.Communication.PushNotificationCall;
+import com.xyram.ticketingTool.Communication.PushNotificationRequest;
 import com.xyram.ticketingTool.Repository.CommentRepository;
 import com.xyram.ticketingTool.Repository.NotificationsRepository;
 import com.xyram.ticketingTool.Repository.ProjectRepository;
@@ -63,12 +66,21 @@ public class TicketServiceImpl implements TicketService {
 
 	@Autowired
 	TicketService ticketService;
+	
+	@Autowired
+	PushNotificationCall pushNotificationCall;
+	
+	@Autowired
+	PushNotificationRequest pushNotificationRequest;
 
 	@Autowired
 	TicketAttachmentService attachmentService;
 	
 	@Autowired
 	NotificationsRepository notificationsRepository;
+	
+	@Autowired
+	EmpoloyeeServiceImpl employeeServiceImpl;
 
 	/*
 	 * @Autowired TicketCommentServiceImpl commentService;
@@ -227,7 +239,20 @@ public class TicketServiceImpl implements TicketService {
 			tktStatusHistory.save(tktStatusHist);
 			
 			
+		List<Map> userList=	employeeServiceImpl.getListOfInfraUSer();
+		
+		for (Map user : userList) {
 			
+		Map request=	new HashMap<>();
+		request.put("id", user.get("employeeId"));
+		request.put("uid", user.get("uid"));
+		request.put("title", "TICKET CREATED");
+		request.put("body","New Ticket Created - " + ticketreq.getTicketDescription() );
+		pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 17, NotificationType.TICKET_CREATED.toString()));
+		
+			
+			
+			}
 			
 			
 			//Inserting Notifications Details

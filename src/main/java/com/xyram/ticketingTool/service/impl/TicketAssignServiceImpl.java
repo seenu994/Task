@@ -10,6 +10,8 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.xyram.ticketingTool.Communication.PushNotificationCall;
+import com.xyram.ticketingTool.Communication.PushNotificationRequest;
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
 import com.xyram.ticketingTool.Repository.NotificationsRepository;
 import com.xyram.ticketingTool.Repository.TicketAssignRepository;
@@ -48,6 +50,17 @@ public class TicketAssignServiceImpl implements TicketAssignService {
 	
 	@Autowired
 	NotificationsRepository notificationsRepository;
+	
+	@Autowired
+	EmpoloyeeServiceImpl employeeServiceImpl;
+	
+	@Autowired
+	PushNotificationCall pushNotificationCall;
+	
+	@Autowired
+	PushNotificationRequest pushNotificationRequest;
+
+
 	
 	@Override
 	public ApiResponse reassignTicketToInfraTeam(TicketAssignee assignee) {
@@ -111,11 +124,23 @@ public class TicketAssignServiceImpl implements TicketAssignService {
 					ticketAssignRepository.save(prevAssignee);
 				}
 				ticketAssignRepository.save(assignee);
+
+				List<Map> developerInfraList=	employeeServiceImpl.getListOfDeveloperInfra();
 				
+				for (Map user : developerInfraList) {
+					
+				Map request=	new HashMap<>();
+				request.put("id", user.get("projectId"));
+				request.put("uid", user.get("uid"));
+				request.put("title", "TICKET_ASSIGNED");
+				request.put("body","Ticket Assigned - " + ticketObj.getTicketDescription() );
+				pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 13, NotificationType.TICKET_ASSIGNED.toString()));
+				
+				}
 				//Inserting Notifications Details
 				Notifications notifications = new Notifications();
 				notifications.setNotificationDesc("Ticket Assigned - " + ticketObj.getTicketDescription());
-				notifications.setNotificationType(NotificationType.TICKET_CREATED);
+				notifications.setNotificationType(NotificationType.TICKET_ASSIGNED);
 				notifications.setSenderId(userDetail.getUserId());
 				notifications.setReceiverId(userDetail.getUserId());
 				notifications.setSeenStatus(false);
