@@ -125,18 +125,18 @@ public class TicketAssignServiceImpl implements TicketAssignService {
 				}
 				ticketAssignRepository.save(assignee);
 
-				List<Map> developerInfraList=	employeeServiceImpl.getListOfDeveloperInfra();
+//				List<Map> developerInfraList=	employeeServiceImpl.getListOfDeveloperInfra();
 				
-				for (Map user : developerInfraList) {
+//				for (Map user : developerInfraList) {
 					
 				Map request=	new HashMap<>();
-				request.put("id", user.get("projectId"));
-				request.put("uid", user.get("uid"));
+//				request.put("id", user.get("projectId"));
+				request.put("uid", employeeObj.getUserCredientials().getUid());
 				request.put("title", "TICKET_ASSIGNED");
 				request.put("body","Ticket Assigned - " + ticketObj.getTicketDescription() );
 				pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 13, NotificationType.TICKET_ASSIGNED.toString()));
 				
-				}
+//				}
 				//Inserting Notifications Details
 				Notifications notifications = new Notifications();
 				notifications.setNotificationDesc("Ticket Assigned - " + ticketObj.getTicketDescription());
