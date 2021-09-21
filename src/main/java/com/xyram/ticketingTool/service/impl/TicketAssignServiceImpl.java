@@ -131,7 +131,7 @@ public class TicketAssignServiceImpl implements TicketAssignService {
 					
 				Map request=	new HashMap<>();
 				request.put("id", user.get("projectId"));
-				request.put("uid", user.get("uid"));
+				request.put("uid",employeeObj. getUserCredientials().getUid());
 				request.put("title", "TICKET_ASSIGNED");
 				request.put("body","Ticket Assigned - " + ticketObj.getTicketDescription() );
 				pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 13, NotificationType.TICKET_ASSIGNED.toString()));
