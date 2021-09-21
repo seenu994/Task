@@ -298,7 +298,7 @@ public class TicketServiceImpl implements TicketService {
 				ticketNewRequest.setStatus(TicketStatus.CANCELLED);
 				ticketNewRequest.setUpdatedBy(userDetail.getUserId());
 				ticketNewRequest.setLastUpdatedAt(new Date());
-				ticketrepository.save(ticketNewRequest);
+				
 
 				// Inserting Ticket history details
 				TicketStatusHistory tktStatusHist = new TicketStatusHistory();
@@ -309,28 +309,23 @@ public class TicketServiceImpl implements TicketService {
 				tktStatusHist.setUpdatedBy(userDetail.getUserId());
 				tktStatusHist.setLastUpdatedAt(new Date());
 				tktStatusHistory.save(tktStatusHist);
-
-				// Inserting Notifications Details
-				if (ticketNewRequest.getStatus().equals(TicketStatus.ASSIGNED)
-						|| ticketNewRequest.getStatus().equals(TicketStatus.INPROGRESS)) {
-					Notifications notifications = new Notifications();
-					notifications.setNotificationDesc("Ticket Cancelled - " + ticketNewRequest.getTicketDescription());
-					if (userDetail.getUserRole().equalsIgnoreCase("DEVELOPER"))
-						notifications.setNotificationType(NotificationType.TICKET_CANCELLED_BY_USER);
-					else if (userDetail.getUserRole().equalsIgnoreCase("TICKETINGTOOL_ADMIN"))
-						notifications.setNotificationType(NotificationType.TICKET_CANCELLED_BY_ADMIN);
-					else
-						notifications.setNotificationType(NotificationType.TICKET_CANCELLED_BY_USER);
-					notifications.setSenderId(userDetail.getUserId());
-					notifications.setReceiverId(userDetail.getUserId());
-					notifications.setSeenStatus(false);
-					notifications.setCreatedBy(userDetail.getUserId());
-					notifications.setCreatedAt(new Date());
-					notifications.setUpdatedBy(userDetail.getUserId());
-					notifications.setLastUpdatedAt(new Date());
-					notificationsRepository.save(notifications);
+				
+				if (userDetail.getUserRole().equalsIgnoreCase("DEVELOPER")) {
+					if (ticketNewRequest.getStatus().equals(TicketStatus.ASSIGNED)
+							|| ticketNewRequest.getStatus().equals(TicketStatus.INPROGRESS)) {
+						// Change userDetail.getUserId() to Ticket Assignee
+						sendPushNotification(userDetail.getUserId(),"Ticket Cancelled By Admin -",ticketNewRequest,"TICKET_CANCELLED");
+					}
+				}else {
+					if (ticketNewRequest.getStatus().equals(TicketStatus.ASSIGNED)
+							|| ticketNewRequest.getStatus().equals(TicketStatus.INPROGRESS)) {
+						// Change userDetail.getUserId() to Ticket Assignee
+						sendPushNotification(userDetail.getUserId(),"Ticket Cancelled By Admin - ",ticketNewRequest,"TICKET_CANCELLED");
+						
+					}
+					sendPushNotification(ticketNewRequest.getCreatedBy(),"Ticket Cancelled By Admin - ",ticketNewRequest,"TICKET_CANCELLED");
 				}
-
+				ticketrepository.save(ticketNewRequest);
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.TICKET_CANCELLED);
 				response.setContent(null);
@@ -347,6 +342,35 @@ public class TicketServiceImpl implements TicketService {
 			response.setContent(null);
 			return response;
 		}
+	}
+	
+	public void sendPushNotification(String userId, String message, Ticket ticketNewRequest, String title) {
+		
+		Employee employeeObj = employeeRepository.getById(userId);
+		if(employeeObj != null) {
+			Map request=	new HashMap<>();
+			request.put("uid", userId);
+			request.put("title", title);
+			request.put("body","Your Ticket is in review - " + ticketNewRequest.getTicketDescription() );
+			if (userDetail.getUserRole().equalsIgnoreCase("DEVELOPER"))
+				pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 13, NotificationType.TICKET_CANCELLED_BY_USER.toString()));
+			else
+				pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 13, NotificationType.TICKET_CANCELLED_BY_ADMIN.toString()));
+			
+			Notifications notifications2 = new Notifications();
+			notifications2.setNotificationDesc(message + ticketNewRequest.getTicketDescription());
+			
+			notifications2.setNotificationType(NotificationType.TICKET_CANCELLED_BY_ADMIN);
+			notifications2.setSenderId(userDetail.getUserId());
+			notifications2.setReceiverId(ticketNewRequest.getCreatedBy());
+			notifications2.setSeenStatus(false);
+			notifications2.setCreatedBy(userId);
+			notifications2.setCreatedAt(new Date());
+			notifications2.setUpdatedBy(userDetail.getUserId());
+			notifications2.setLastUpdatedAt(new Date());
+			notificationsRepository.save(notifications2);
+		}
+		
 	}
 
 	@Override
@@ -375,19 +399,31 @@ public class TicketServiceImpl implements TicketService {
 					tktStatusHist.setUpdatedBy(userDetail.getUserId());
 					tktStatusHist.setLastUpdatedAt(new Date());
 					tktStatusHistory.save(tktStatusHist);
+					
+					Employee employeeObj = employeeRepository.getById(ticketNewRequest.getCreatedBy());
+					if(employeeObj != null) {
+						Map request=	new HashMap<>();
+//						request.put("id", user.get("projectId"));
+						request.put("uid", employeeObj.getUserCredientials().getUid());
+						request.put("title", "TICKET_RESOLVED");
+						request.put("body","Your Ticket is in review - " + ticketNewRequest.getTicketDescription() );
+						pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 13, NotificationType.TICKET_RESOLVED.toString()));
+						
 
-					// Inserting Notifications Details
-					Notifications notifications = new Notifications();
-					notifications.setNotificationDesc("Ticket Cancelled - " + ticketNewRequest.getTicketDescription());
-					notifications.setNotificationType(NotificationType.TICKET_RESOLVED);
-					notifications.setSenderId(userDetail.getUserId());
-					notifications.setReceiverId(userDetail.getUserId());
-					notifications.setSeenStatus(false);
-					notifications.setCreatedBy(userDetail.getUserId());
-					notifications.setCreatedAt(new Date());
-					notifications.setUpdatedBy(userDetail.getUserId());
-					notifications.setLastUpdatedAt(new Date());
-					notificationsRepository.save(notifications);
+						// Inserting Notifications Details
+						Notifications notifications = new Notifications();
+						notifications.setNotificationDesc("Ticket Cancelled - " + ticketNewRequest.getTicketDescription());
+						notifications.setNotificationType(NotificationType.TICKET_RESOLVED);
+						notifications.setSenderId(userDetail.getUserId());
+						notifications.setReceiverId(userDetail.getUserId());
+						notifications.setSeenStatus(false);
+						notifications.setCreatedBy(userDetail.getUserId());
+						notifications.setCreatedAt(new Date());
+						notifications.setUpdatedBy(userDetail.getUserId());
+						notifications.setLastUpdatedAt(new Date());
+						notificationsRepository.save(notifications);
+					}
+					
 
 					response.setSuccess(true);
 					response.setMessage(ResponseMessages.TICKET_RESOLVED);
