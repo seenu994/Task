@@ -280,6 +280,18 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		response.setContent(content);
 		return infraList;
 	}
+	
+	@Override
+	public List<Map> getListOfInfraAdmins() {
+		List<Map> infraList = employeeRepository.getAllInfraAdmins();
+		Map content = new HashMap();
+
+		content.put("infraList", infraList);
+		ApiResponse response = new ApiResponse(true);
+		response.setSuccess(true);
+		response.setContent(content);
+		return infraList;
+	}
 
 	@Override
 	public List<Map> getListOfDeveloper() {

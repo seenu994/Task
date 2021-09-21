@@ -22,6 +22,7 @@ import com.xyram.ticketingTool.Repository.NotificationsRepository;
 import com.xyram.ticketingTool.Repository.ProjectMemberRepository;
 import com.xyram.ticketingTool.Repository.ProjectRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
+import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.Notifications;
 import com.xyram.ticketingTool.entity.ProjectMembers;
 import com.xyram.ticketingTool.entity.Projects;
@@ -94,44 +95,45 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 					List<String> employeeIds = (List<String>) request.get("employeeId");
 
 					for (String employeeId : employeeIds) {
-						ProjectMembers projectMember = new ProjectMembers();
-
-						projectMember.setCreatedAt(new Date());
-						projectMember.setLastUpdatedAt(new Date());
-						projectMember.setUpdatedBy(user.getUserId());
-						projectMember.setCreatedBy(user.getUserId());
-
-						projectMember.setStatus(ProjectMembersStatus.ACTIVE);
-						projectMember.setProjectId(project.getpId());
-						projectMember.setEmployeeId(employeeId);
-						projectMemberRepository.save(projectMember);
-
-						List<Map> developerList=	employeeServiceImpl.getListOfDeveloper();
+						Employee employeeObj = employeeRepository.getById(employeeId);
 						
-						for (Map user : developerList) {
+						if(employeeObj != null) {
+							ProjectMembers projectMember = new ProjectMembers();
+
+							projectMember.setCreatedAt(new Date());
+							projectMember.setLastUpdatedAt(new Date());
+							projectMember.setUpdatedBy(user.getUserId());
+							projectMember.setCreatedBy(user.getUserId());
+							projectMember.setStatus(ProjectMembersStatus.ACTIVE);
+							projectMember.setProjectId(project.getpId());
+							projectMember.setEmployeeId(employeeId);
+							projectMemberRepository.save(projectMember);
 							
-						Map request1=	new HashMap<>();
-						request1.put("id", user.get("projectId"));
-						request1.put("uid", user.get("uid"));
-						request1.put("title", "PROJECT ASSIGNED");
-						request1.put("body",project.getProjectName() + " Project Access granted" );
-						pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request1, 10, NotificationType.PROJECT_ASSIGN_ACCCES.toString()));
+							List<Map> developerList=	employeeServiceImpl.getListOfDeveloper();
+							
+//							for (Map user : developerList) {
+								
+							Map request1=	new HashMap<>();
+//							request1.put("id", user.get("projectId"));
+							request1.put("uid", employeeObj.getUserCredientials().getUid());
+							request1.put("title", "PROJECT ASSIGNED");
+							request1.put("body",project.getProjectName() + " Project Access granted" );
+							pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request1, 10, NotificationType.PROJECT_ASSIGN_ACCCES.toString()));	
+//								}
+							// Inserting Notifications Details
+							Notifications notifications = new Notifications();
+							notifications.setNotificationDesc(project.getProjectName() + " Project Access granted");
+							notifications.setNotificationType(NotificationType.PROJECT_ASSIGN_ACCCES);
+							notifications.setSenderId(user.getUserId());
+							notifications.setReceiverId(user.getUserId());
+							notifications.setSeenStatus(false);
+							notifications.setCreatedBy(user.getUserId());
+							notifications.setCreatedAt(new Date());
+							notifications.setUpdatedBy(user.getUserId());
+							notifications.setLastUpdatedAt(new Date());
+							notificationsRepository.save(notifications);
+						}
 						
-							
-							
-							}
-						// Inserting Notifications Details
-						Notifications notifications = new Notifications();
-						notifications.setNotificationDesc(project.getProjectName() + " Project Access granted");
-						notifications.setNotificationType(NotificationType.PROJECT_ASSIGN_ACCCES);
-						notifications.setSenderId(user.getUserId());
-						notifications.setReceiverId(user.getUserId());
-						notifications.setSeenStatus(false);
-						notifications.setCreatedBy(user.getUserId());
-						notifications.setCreatedAt(new Date());
-						notifications.setUpdatedBy(user.getUserId());
-						notifications.setLastUpdatedAt(new Date());
-						notificationsRepository.save(notifications);
 					}
 				} else {
 					response.setSuccess(false);
@@ -178,34 +180,44 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 			member.setStatus(ProjectMembersStatus.INACTIVE);
 			projectMemberRepository.save(member);
 			
-			List<Map> developerList=	employeeServiceImpl.getListOfDeveloper();
+			Employee employeeObj = employeeRepository.getById(member.getEmployeeId());
 			
-			for (Map user : developerList) {
+			if(employeeObj != null) {
+				Map request1=	new HashMap<>();
+//				request1.put("id", user.get("projectId"));
+				request1.put("uid", employeeObj.getUserCredientials().getUid());
+				request1.put("title", "PROJECT_ACCESS_REMOVE");
+				request1.put("body",project.get().getProjectName() + " Project Access Revoked" );
+				pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request1, 11, NotificationType.PROJECT_ACCESS_REMOVE.toString()));
 				
-			Map request1=	new HashMap<>();
-			request1.put("id", user.get("projectId"));
-			request1.put("uid", user.get("uid"));
-			request1.put("title", "PROJECT_ACCESS_REMOVE");
-			request1.put("body",project.get().getProjectName() + " Project Access Revoked" );
-			pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request1, 11, NotificationType.PROJECT_ACCESS_REMOVE.toString()));
-			
-			}
-			// Inserting Notifications Details
-			Notifications notifications = new Notifications();
-			notifications.setNotificationDesc(project.get().getProjectName() + " Project Access Revoked");
-			notifications.setNotificationType(NotificationType.PROJECT_ACCESS_REMOVE);
-			notifications.setSenderId(user.getUserId());
-			notifications.setReceiverId(user.getUserId());
-			notifications.setSeenStatus(false);
-			notifications.setCreatedBy(user.getUserId());
-			notifications.setCreatedAt(new Date());
-			notifications.setUpdatedBy(user.getUserId());
-			notifications.setLastUpdatedAt(new Date());
-			notificationsRepository.save(notifications);
+//				}
+				// Inserting Notifications Details
+				Notifications notifications = new Notifications();
+				notifications.setNotificationDesc(project.get().getProjectName() + " Project Access Revoked");
+				notifications.setNotificationType(NotificationType.PROJECT_ACCESS_REMOVE);
+				notifications.setSenderId(user.getUserId());
+				notifications.setReceiverId(user.getUserId());
+				notifications.setSeenStatus(false);
+				notifications.setCreatedBy(user.getUserId());
+				notifications.setCreatedAt(new Date());
+				notifications.setUpdatedBy(user.getUserId());
+				notifications.setLastUpdatedAt(new Date());
+				notificationsRepository.save(notifications);
 
-			response.setSuccess(true);
-			response.setMessage(ResponseMessages.PROJECT_MEMBER_REMOVED);
-			response.setContent(null);
+				response.setSuccess(true);
+				response.setMessage(ResponseMessages.PROJECT_MEMBER_REMOVED);
+				response.setContent(null);
+			}else {
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.EMPLOYEE_INVALID);
+				response.setContent(null);
+			}
+			
+//			List<Map> developerList=	employeeServiceImpl.getListOfDeveloper();
+//			
+//			for (Map user : developerList) {
+				
+			
 		} else {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.PROJECT_ID_VALID);
