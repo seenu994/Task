@@ -270,8 +270,8 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public List<Map> getListOfInfraUSer() {
-		List<Map> infraList = employeeRepository.getAllInfraList();
+	public List<Employee> getListOfInfraUSer() {
+		List<Employee> infraList = employeeRepository.getAllInfraList();
 		Map content = new HashMap();
 
 		content.put("infraList", infraList);

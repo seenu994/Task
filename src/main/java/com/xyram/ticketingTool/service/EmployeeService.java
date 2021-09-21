@@ -25,9 +25,7 @@ public interface EmployeeService {
 
 	ApiResponse getAllInfraUser(Pageable pageable);
 	 
-	List<Map> getListOfInfraUSer();
-	
-	List<Map> getListOfInfraAdmins();
+	List<Employee> getListOfInfraUSer();
 	 
 	List<Map> getListOfDeveloper();
 	
