@@ -31,4 +31,6 @@ public interface EmployeeService {
 	
 	List<Map>  getListOfDeveloperInfra();
 
+	List<Map> getListOfInfraAdmins();
+
 }
