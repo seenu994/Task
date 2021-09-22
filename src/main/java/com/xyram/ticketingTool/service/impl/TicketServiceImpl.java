@@ -26,6 +26,7 @@ import com.xyram.ticketingTool.Repository.CommentRepository;
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
 import com.xyram.ticketingTool.Repository.NotificationsRepository;
 import com.xyram.ticketingTool.Repository.ProjectRepository;
+import com.xyram.ticketingTool.Repository.TicketAssignRepository;
 import com.xyram.ticketingTool.Repository.TicketRepository;
 import com.xyram.ticketingTool.Repository.TicketStatusHistRepository;
 import com.xyram.ticketingTool.Repository.UserRepository;
@@ -35,6 +36,7 @@ import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.Notifications;
 import com.xyram.ticketingTool.entity.Projects;
 import com.xyram.ticketingTool.entity.Ticket;
+import com.xyram.ticketingTool.entity.TicketAssignee;
 import com.xyram.ticketingTool.entity.TicketStatusHistory;
 import com.xyram.ticketingTool.enumType.NotificationType;
 import com.xyram.ticketingTool.enumType.TicketStatus;
@@ -86,6 +88,9 @@ public class TicketServiceImpl implements TicketService {
 	
 	@Autowired
 	EmployeeRepository employeeRepository;
+	
+	@Autowired
+	TicketAssignRepository ticketAssigneeRepository;
 
 	/*
 	 * @Autowired TicketCommentServiceImpl commentService;
@@ -314,13 +319,13 @@ public class TicketServiceImpl implements TicketService {
 					if (ticketNewRequest.getStatus().equals(TicketStatus.ASSIGNED)
 							|| ticketNewRequest.getStatus().equals(TicketStatus.INPROGRESS)) {
 						// Change userDetail.getUserId() to Ticket Assignee
-						sendPushNotification(userDetail.getUserId(),"Ticket Cancelled By User -",ticketNewRequest,"TICKET_CANCELLED",16);
+						sendPushNotification(ticketAssigneeRepository.getAssigneeId(ticketNewRequest.getId()),"Ticket Cancelled By User -",ticketNewRequest,"TICKET_CANCELLED",16);
 					}
 				}else {
 					if (ticketNewRequest.getStatus().equals(TicketStatus.ASSIGNED)
 							|| ticketNewRequest.getStatus().equals(TicketStatus.INPROGRESS)) {
 						// Change userDetail.getUserId() to Ticket Assignee
-						sendPushNotification(userDetail.getUserId(),"Ticket Cancelled By Admin - ",ticketNewRequest,"TICKET_CANCELLED",17);
+						sendPushNotification(ticketAssigneeRepository.getAssigneeId(ticketNewRequest.getId()),"Ticket Cancelled By Admin - ",ticketNewRequest,"TICKET_CANCELLED",17);
 						
 					}
 					sendPushNotification(ticketNewRequest.getCreatedBy(),"Ticket Cancelled By Admin - ",ticketNewRequest,"TICKET_CANCELLED",17);
@@ -536,7 +541,7 @@ public class TicketServiceImpl implements TicketService {
 				tktStatusHistory.save(tktStatusHist);
 				
 				//Change userID to assignee
-				sendPushNotification(userDetail.getUserId(),"Ticket Edited By User - "+ticketObj.getTicketDescription(),ticketObj,"TICKET_EDITED",26);
+				sendPushNotification(ticketAssigneeRepository.getAssigneeId(ticketObj.getId()),"Ticket Edited By User - "+ticketObj.getTicketDescription(),ticketObj,"TICKET_EDITED",26);
 
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.TICKET_EDITED);
@@ -611,7 +616,7 @@ public class TicketServiceImpl implements TicketService {
 						}
 					}else {
 						// Change userDetail.getUserId() to Ticket Assignee
-						sendPushNotification(userDetail.getUserId(),"Ticket Re-opened By Admin - ",ticketObj,"TICKET_REOPENED",18);
+						sendPushNotification(ticketAssigneeRepository.getAssigneeId(ticketObj.getId()),"Ticket Re-opened By Admin - ",ticketObj,"TICKET_REOPENED",18);
 						sendPushNotification(ticketObj.getCreatedBy(),"Ticket Re-opened By Admin - ",ticketObj,"TICKET_REOPENED",18);
 					}
 					
@@ -662,40 +667,18 @@ public class TicketServiceImpl implements TicketService {
 						if (ticketObj.equals(TicketStatus.ASSIGNED.toString())
 								|| ticketObj.equals(TicketStatus.INPROGRESS.toString())) {
 							// Change userDetail.getUserId() to Ticket Assignee
-							sendPushNotification(userDetail.getUserId(), "Commented on Ticket - ", ticketObj, "TICKET_COMMENTED", 24);
+							sendPushNotification(ticketAssigneeRepository.getAssigneeId(ticketObj.getId()), "Commented on Ticket - ", ticketObj, "TICKET_COMMENTED", 24);
 						}						
 					}else if (userDetail.getUserRole().equalsIgnoreCase("TICKETINGTOOL_ADMIN")) {
 						if (ticketObj.equals(TicketStatus.ASSIGNED.toString())
 								|| ticketObj.equals(TicketStatus.INPROGRESS.toString())) {
 							// Change userDetail.getUserId() to Ticket Assignee
-							sendPushNotification(userDetail.getUserId(), "Commented on Ticket By Admin - ", ticketObj, "TICKET_COMMENTED", 23);
+							sendPushNotification(ticketAssigneeRepository.getAssigneeId(ticketObj.getId()), "Commented on Ticket By Admin - ", ticketObj, "TICKET_COMMENTED", 23);
 						}
 						sendPushNotification(ticketObj.getCreatedBy(),"Commented on Ticket By Admin - ",ticketObj,"TICKET_COMMENTED",23);
 					}else {
 						sendPushNotification(ticketObj.getCreatedBy(),"Commented on Ticket By Infra User - ",ticketObj,"TICKET_COMMENTED",25);
 					}
-
-					// Inserting Notifications Details
-//					if (ticketObj.equalsIgnoreCase(TicketStatus.ASSIGNED.toString())
-//							|| ticketObj.equalsIgnoreCase(TicketStatus.INPROGRESS.toString())) {
-//						Notifications notifications = new Notifications();
-//						notifications.setNotificationDesc(
-//								"New comments added - " + commentObj.getTicketCommentDescription());
-//						if (userDetail.getUserRole().equalsIgnoreCase("DEVELOPER"))
-//							notifications.setNotificationType(NotificationType.TICKET_REOPENED_BY_DEV);
-//						else if (userDetail.getUserRole().equalsIgnoreCase("TICKETINGTOOL_ADMIN"))
-//							notifications.setNotificationType(NotificationType.TICKET_REOPENED_BY_ADMIN);
-//						else
-//							notifications.setNotificationType(NotificationType.TICKET_REOPENED_BY_DEV);
-//						notifications.setSenderId(userDetail.getUserId());
-//						notifications.setReceiverId(userDetail.getUserId());
-//						notifications.setSeenStatus(false);
-//						notifications.setCreatedBy(userDetail.getUserId());
-//						notifications.setCreatedAt(new Date());
-//						notifications.setUpdatedBy(userDetail.getUserId());
-//						notifications.setLastUpdatedAt(new Date());
-//						notificationsRepository.save(notifications);
-//					}
 
 					response.setSuccess(true);
 					response.setMessage(ResponseMessages.TICKET_COMMENTS_ADDED);
