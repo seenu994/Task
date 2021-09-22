@@ -258,8 +258,8 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public ApiResponse getAllInfraUser(Pageable pageable) {
-		Page<Map> infraUserList = employeeRepository.getAllInfraUserList();
+	public ApiResponse getAllInfraUser() {
+		List<Map> infraUserList = employeeRepository.getAllInfraUserList();
 		Map content = new HashMap();
 
 		content.put("infraUserList", infraUserList);
@@ -282,6 +282,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	}
 	
 	
+
 	@Override
 	public List<Map> getListOfInfraAdmins() {
 		List<Map> infraList = employeeRepository.getAllInfraAdmins();
