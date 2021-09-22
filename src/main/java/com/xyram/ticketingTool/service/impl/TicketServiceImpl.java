@@ -356,7 +356,7 @@ public class TicketServiceImpl implements TicketService {
 			Map request=	new HashMap<>();
 			request.put("uid", userId);
 			request.put("title", title);
-			request.put("body","Your Ticket is in review - " + ticketNewRequest.getTicketDescription() );
+			request.put("body",message + ticketNewRequest.getTicketDescription() );
 			Notifications notifications2 = new Notifications();
 
 			if(title.equals("TICKET_CANCELLED")) {
@@ -397,9 +397,9 @@ public class TicketServiceImpl implements TicketService {
 			
 			notifications2.setNotificationDesc(message + ticketNewRequest.getTicketDescription());
 			notifications2.setSenderId(userDetail.getUserId());
-			notifications2.setReceiverId(ticketNewRequest.getCreatedBy());
+			notifications2.setReceiverId(userId);
 			notifications2.setSeenStatus(false);
-			notifications2.setCreatedBy(userId);
+			notifications2.setCreatedBy(userDetail.getUserId());
 			notifications2.setCreatedAt(new Date());
 			notifications2.setUpdatedBy(userDetail.getUserId());
 			notifications2.setLastUpdatedAt(new Date());
@@ -441,7 +441,7 @@ public class TicketServiceImpl implements TicketService {
 //						request.put("id", user.get("projectId"));
 						request.put("uid", employeeObj.getUserCredientials().getUid());
 						request.put("title", "TICKET_RESOLVED");
-						request.put("body","Your Ticket is in review - " + ticketNewRequest.getTicketDescription() );
+						request.put("body","Your Ticket is in resolved - " + ticketNewRequest.getTicketDescription() );
 						pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 15, NotificationType.TICKET_RESOLVED.toString()));
 						
 
@@ -450,7 +450,7 @@ public class TicketServiceImpl implements TicketService {
 						notifications.setNotificationDesc("Ticket Cancelled - " + ticketNewRequest.getTicketDescription());
 						notifications.setNotificationType(NotificationType.TICKET_RESOLVED);
 						notifications.setSenderId(userDetail.getUserId());
-						notifications.setReceiverId(userDetail.getUserId());
+						notifications.setReceiverId(ticketNewRequest.getCreatedBy());
 						notifications.setSeenStatus(false);
 						notifications.setCreatedBy(userDetail.getUserId());
 						notifications.setCreatedAt(new Date());
