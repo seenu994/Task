@@ -282,21 +282,6 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	}
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	@Override
 	public List<Map> getListOfInfraAdmins() {
 		List<Map> infraList = employeeRepository.getAllInfraAdmins();

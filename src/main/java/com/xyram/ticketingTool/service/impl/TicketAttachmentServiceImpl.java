@@ -16,14 +16,24 @@ import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
+import com.xyram.ticketingTool.Communication.PushNotificationCall;
+import com.xyram.ticketingTool.Communication.PushNotificationRequest;
+import com.xyram.ticketingTool.Repository.EmployeeRepository;
+import com.xyram.ticketingTool.Repository.NotificationsRepository;
+import com.xyram.ticketingTool.Repository.TicketAssignRepository;
 import com.xyram.ticketingTool.Repository.TicketRepository;
 //import com.xyram.ticketingTool.Repository.TicketCommentRepository;
 import com.xyram.ticketingTool.Repository.ticketAttachmentRepository;
+import com.xyram.ticketingTool.entity.Employee;
+import com.xyram.ticketingTool.entity.Notifications;
 import com.xyram.ticketingTool.entity.Ticket;
 import com.xyram.ticketingTool.entity.TicketAttachment;
+import com.xyram.ticketingTool.enumType.NotificationType;
 //import com.xyram.ticketingTool.entity.TicketComments;
 import com.xyram.ticketingTool.enumType.TicketCommentsStatus;
+import com.xyram.ticketingTool.enumType.TicketStatus;
 import com.xyram.ticketingTool.exception.ResourceNotFoundException;
+import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.TicketAttachmentService;
 import com.xyram.ticketingTool.service.TicketService;
 //import com.xyram.ticketingTool.service.TicketCommentService;
@@ -36,6 +46,24 @@ ticketAttachmentRepository  ticketattachmentRepository;
 
 @Autowired
 TicketRepository  ticketRepository;
+
+@Autowired
+TicketAssignRepository ticketAssigneeRepository;
+
+@Autowired
+NotificationsRepository notificationsRepository;
+
+@Autowired
+EmployeeRepository employeeRepository;
+
+@Autowired
+PushNotificationCall pushNotificationCall;
+
+@Autowired
+PushNotificationRequest pushNotificationRequest;
+
+@Autowired
+CurrentUser userDetail;
 
 static ChannelSftp channelSftp = null;
 static Session session = null;
@@ -60,6 +88,23 @@ public Map storeImage(MultipartFile[] files,String ticketId) {
 	    	  ticketAttachment.setTicket(tickets);
 	    	  ticketAttachment.setImagePath(filename);
 	    	  ticketattachmentRepository.save(ticketAttachment);
+	    	  
+	    	  if (userDetail.getUserRole().equalsIgnoreCase("DEVELOPER")) {
+					if (tickets.getStatus().equals(TicketStatus.ASSIGNED.toString())
+							|| tickets.getStatus().equals(TicketStatus.INPROGRESS.toString())) {
+						// Change userDetail.getUserId() to Ticket Assignee
+						sendPushNotification(ticketAssigneeRepository.getAssigneeId(tickets.getId()), "New Attachment added by User - ", tickets, "TICKET_COMMENTED", 24);
+					}						
+				}else if (userDetail.getUserRole().equalsIgnoreCase("TICKETINGTOOL_ADMIN")) {
+					if (tickets.getStatus().equals(TicketStatus.ASSIGNED.toString())
+							|| tickets.getStatus().equals(TicketStatus.INPROGRESS.toString())) {
+						// Change userDetail.getUserId() to Ticket Assignee
+						sendPushNotification(ticketAssigneeRepository.getAssigneeId(tickets.getId()), "New Attachment added by Admin - ", tickets, "TICKET_COMMENTED", 23);
+					}
+					sendPushNotification(tickets.getCreatedBy(),"New Attachment added by Admin - ",tickets,"TICKET_COMMENTED",23);
+				}else {
+					sendPushNotification(tickets.getCreatedBy(),"New Attachment added by Infra User - ",tickets,"TICKET_COMMENTED",25);
+				}
 	       }
 	       fileMap.put("fileName", filename);
 	} catch (IOException e) {
@@ -67,6 +112,41 @@ public Map storeImage(MultipartFile[] files,String ticketId) {
 	}
 	  }
 	return fileMap ;
+}
+public void sendPushNotification(String userId, String message, Ticket ticketNewRequest, String title, int notiType) {
+	
+	Employee employeeObj = employeeRepository.getById(userId);
+	if(employeeObj != null) {
+		Map request=	new HashMap<>();
+		request.put("uid", userId);
+		request.put("title", title);
+		request.put("body",message + ticketNewRequest.getTicketDescription() );
+		Notifications notifications2 = new Notifications();
+
+		if (userDetail.getUserRole().equalsIgnoreCase("DEVELOPER")) {
+			pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, notiType, NotificationType.ATTACHMENT_ADDED_BY_DEV.toString()));
+			notifications2.setNotificationType(NotificationType.ATTACHMENT_ADDED_BY_DEV);
+
+		}else if (userDetail.getUserRole().equalsIgnoreCase("TICKETINGTOOL_ADMIN")) {
+			pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, notiType, NotificationType.ATTACHMENT_ADDED_BY_ADMIN.toString()));
+			notifications2.setNotificationType(NotificationType.ATTACHMENT_ADDED_BY_ADMIN);
+
+		}else {
+			pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, notiType, NotificationType.ATTACHMENT_ADDED_BY_INFRA_USER.toString()));
+			notifications2.setNotificationType(NotificationType.ATTACHMENT_ADDED_BY_INFRA_USER);
+		}
+		
+		notifications2.setNotificationDesc(message + ticketNewRequest.getTicketDescription());
+		notifications2.setSenderId(userDetail.getUserId());
+		notifications2.setReceiverId(ticketNewRequest.getCreatedBy());
+		notifications2.setSeenStatus(false);
+		notifications2.setCreatedBy(userId);
+		notifications2.setCreatedAt(new Date());
+		notifications2.setUpdatedBy(userDetail.getUserId());
+		notifications2.setLastUpdatedAt(new Date());
+		notificationsRepository.save(notifications2);
+	}
+	
 }
 
 

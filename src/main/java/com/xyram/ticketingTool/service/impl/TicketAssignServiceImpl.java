@@ -76,7 +76,7 @@ public class TicketAssignServiceImpl implements TicketAssignService {
 				
 				ticketObj.setStatus(TicketStatus.ASSIGNED);
 				ticketRepository.save(ticketObj);
-				List<TicketAssignee> allAssignees = ticketAssignRepository.findByTicket_IdAndEmployee_Id(assignee.getTicketId(), assignee.getEmployeeId());
+				List<TicketAssignee> allAssignees = ticketAssignRepository.findByTicketId(assignee.getTicketId());
 				for(int i=0;i<allAssignees.size();i++) {
 					TicketAssignee prevAssignee = allAssignees.get(i);
 					prevAssignee.setStatus(TicketAssigneeStatus.INACTIVE);
@@ -117,7 +117,7 @@ public class TicketAssignServiceImpl implements TicketAssignService {
 				ticketObj.setStatus(TicketStatus.ASSIGNED);
 				ticketRepository.save(ticketObj);
 				
-				List<TicketAssignee> allAssignees = ticketAssignRepository.findByTicket_IdAndEmployee_Id(assignee.getTicketId(), assignee.getEmployeeId());
+				List<TicketAssignee> allAssignees = ticketAssignRepository.findByTicketId(assignee.getTicketId());
 				for(int i=0;i<allAssignees.size();i++) {
 					TicketAssignee prevAssignee = allAssignees.get(i);
 					prevAssignee.setStatus(TicketAssigneeStatus.INACTIVE);
