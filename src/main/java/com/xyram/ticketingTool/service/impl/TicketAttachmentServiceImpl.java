@@ -138,9 +138,9 @@ public void sendPushNotification(String userId, String message, Ticket ticketNew
 		
 		notifications2.setNotificationDesc(message + ticketNewRequest.getTicketDescription());
 		notifications2.setSenderId(userDetail.getUserId());
-		notifications2.setReceiverId(ticketNewRequest.getCreatedBy());
+		notifications2.setReceiverId(userId);
 		notifications2.setSeenStatus(false);
-		notifications2.setCreatedBy(userId);
+		notifications2.setCreatedBy(userDetail.getUserId());
 		notifications2.setCreatedAt(new Date());
 		notifications2.setUpdatedBy(userDetail.getUserId());
 		notifications2.setLastUpdatedAt(new Date());
