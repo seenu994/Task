@@ -22,19 +22,19 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties(value = { "createdAt", "updatedAt", "createdBy", "lastUpdatedBy" }, allowGetters = true)
 public abstract class AuditModel implements Serializable {
-
+	
+	@CreatedDate
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "created_at")
-	@CreatedDate
-	private Date createdAt;
-
-	@Column(name = "created_by")
+    private Date createdAt;
+	
 	@CreatedBy
+	@Column(name = "created_by")
 	private String createdBy;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "last_updated_at")
 	@LastModifiedDate
+	@Column(name = "last_updated_at")
 	private Date lastUpdatedAt;
 
 	@Column(name = "updated_by")

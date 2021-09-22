@@ -435,7 +435,7 @@ public class TicketServiceImpl implements TicketService {
 					tktStatusHist.setLastUpdatedAt(new Date());
 					tktStatusHistory.save(tktStatusHist);
 					
-					Employee employeeObj = employeeRepository.getById(ticketNewRequest.getCreatedBy());
+					Employee employeeObj = employeeRepository.getbyUserId(ticketNewRequest.getCreatedBy());
 					if(employeeObj != null) {
 						Map request=	new HashMap<>();
 //						request.put("id", user.get("projectId"));
@@ -532,7 +532,7 @@ public class TicketServiceImpl implements TicketService {
 
 				// Inserting Ticket history details
 				TicketStatusHistory tktStatusHist = new TicketStatusHistory();
-				tktStatusHist.setTicketId(ticketId);
+				//tktStatusHist.setTicketId(ticketId);
 				tktStatusHist.setTicketStatus(TicketStatus.EDITED);
 				tktStatusHist.setCreatedBy(userDetail.getUserId());
 				tktStatusHist.setCreatedAt(new Date());
@@ -812,6 +812,7 @@ public class TicketServiceImpl implements TicketService {
 				response.setMessage(ResponseMessages.TICKET_ALREADY_INPROGRESS);
 				response.setContent(null);
 			} else {
+
 				if (ticketNewRequest.getStatus() == TicketStatus.ASSIGNED) {
 
 					ticketNewRequest.setStatus(TicketStatus.INPROGRESS);
@@ -819,17 +820,19 @@ public class TicketServiceImpl implements TicketService {
 					ticketNewRequest.setLastUpdatedAt(new Date());
 					ticketrepository.save(ticketNewRequest);
 					
-					Employee employeeObj = employeeRepository.getById(ticketNewRequest.getCreatedBy());
-					Map request=	new HashMap<>();
-//					request.put("id", user.get("projectId"));
-					request.put("uid", employeeObj.getUserCredientials().getUid());
-					request.put("title", "TICKET_ASSIGNED");
-					request.put("body","Your Ticket is in review - " + ticketNewRequest.getTicketDescription() );
-					pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 14, NotificationType.TICKET_INREVIEW.toString()));
-
-
+					Employee employeeObj = employeeRepository.getbyUserId(ticketNewRequest.getCreatedBy());
+					
+					if(employeeObj != null) {
+						Map request=	new HashMap<>();
+//						request.put("id", user.get("projectId"));
+						request.put("uid", employeeObj.getUserCredientials().getUid());
+						request.put("title", "TICKET_INPROGRESS");
+						request.put("body","Your Ticket is in review - " + ticketNewRequest.getTicketDescription() );
+						pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 14, NotificationType.TICKET_INREVIEW.toString()));
+					}
+					
 					response.setSuccess(true);
-					response.setMessage(ResponseMessages.TICKET_ASSIGNED);
+					response.setMessage(ResponseMessages.TICKET_INPROGRESS);
 					response.setContent(null);
 
 				} else {
