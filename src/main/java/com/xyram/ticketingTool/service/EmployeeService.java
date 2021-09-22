@@ -23,7 +23,7 @@ public interface EmployeeService {
 	
 	ApiResponse getAllEmpByProject(String projectid, String clientid);
 
-	ApiResponse getAllInfraUser(Pageable pageable);
+	ApiResponse getAllInfraUser();
 	 
 	List<Employee> getListOfInfraUSer();
 	 
