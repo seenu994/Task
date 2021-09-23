@@ -95,7 +95,7 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 					List<String> employeeIds = (List<String>) request.get("employeeId");
 
 					for (String employeeId : employeeIds) {
-						Employee employeeObj = employeeRepository.getById(employeeId);
+						Employee employeeObj = employeeRepository.getbyUserId(employeeId);
 						
 						if(employeeObj != null) {
 							ProjectMembers projectMember = new ProjectMembers();
@@ -109,7 +109,7 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 							projectMember.setEmployeeId(employeeId);
 							projectMemberRepository.save(projectMember);
 							
-							List<Map> developerList=	employeeServiceImpl.getListOfDeveloper();
+//							List<Map> developerList=	employeeServiceImpl.getListOfDeveloper();
 							
 //							for (Map user : developerList) {
 								

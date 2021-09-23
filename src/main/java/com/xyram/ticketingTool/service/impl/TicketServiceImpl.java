@@ -647,7 +647,7 @@ public class TicketServiceImpl implements TicketService {
 		ApiResponse response = new ApiResponse(false);
 		Ticket ticketObj = ticketrepository.getById(commentObj.getTicketId());
 //		String ticketStatus = ticketrepository.getTicketById(commentObj.getTicketId());
-		if (ticketObj.getStatus() != null && ticketObj.getStatus().equals("")) {
+		if (ticketObj.getStatus() != null ) {
 			// if (ticketObj != null) {
 			// if (!ticketObj.equalsIgnoreCase(TicketStatus.COMPLETED)) {
 			if (!ticketObj.getStatus().equals(TicketStatus.COMPLETED.toString())) {

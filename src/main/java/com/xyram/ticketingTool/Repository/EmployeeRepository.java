@@ -1,6 +1,6 @@
 package com.xyram.ticketingTool.Repository;
 
-import java.util.List;
+import java.util.List; 
 import java.util.Map;
 
 import javax.persistence.CascadeType;
@@ -24,7 +24,7 @@ import com.xyram.ticketingTool.enumType.UserStatus;
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, String> {
 
-	@Query("Select new map(e.eId as id,e.email as email,e.firstName as firstName,e.lastName as lastName,e.roleId as roleId ,e.designationId as designationId, "
+	@Query("Select new map(e.eId as id,e.email as email,e.firstName as firstName,e.lastName as lastName,e.middleName as middleName ,e.password as password ,e.roleId as roleId ,e.designationId as designationId, "
 			+ "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,d.designationName as designationName) from Employee e "
 			+ "JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id")
 	Page<Map> getAllEmployeeList(Pageable pageable);

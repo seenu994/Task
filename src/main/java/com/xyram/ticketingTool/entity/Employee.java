@@ -61,7 +61,7 @@ public class Employee extends AuditModel {
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "Employee_status")
-	private UserStatus status = UserStatus.INACTIVE;
+	private UserStatus status = UserStatus.ACTIVE;
 
 	@Column(name = "designation_id")
 	private String designationId;
