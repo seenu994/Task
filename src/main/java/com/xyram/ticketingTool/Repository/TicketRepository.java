@@ -42,7 +42,7 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 			+ "and a.last_updated_at >= DATE_ADD(curdate(), INTERVAL - 1 DAY) order by a.last_updated_at desc", nativeQuery = true)
 	List<Map> getAllCompletedTickets(@Param("createdBy") String createdBy, @Param("roleId")String roleId);
 	
-	@Query(value = "SELECT * from ticket_comment_log t where t.ticket_id = :ticketId inner join employee e on t.createdBy = e.employee_id ", nativeQuery = true)
+	@Query(value = "SELECT t.*, concat(e.frist_name, ' ', e.last_name) as createdByEmp from ticket_comment_log t inner join employee e on t.created_by = e.user_id where t.ticket_id = :ticketId ", nativeQuery = true)
 	List<Map> getTktcommntsById(String ticketId);
 	
 	@Query(value = "SELECT * from ticket_attachment t where t.ticket_id = :ticketId  ", nativeQuery = true)
