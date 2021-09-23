@@ -45,7 +45,7 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 	@Query(value = "SELECT * from ticket_comment_log t where t.ticket_id = :ticketId inner join employee e on t.createdBy = e.employee_id ", nativeQuery = true)
 	List<Map> getTktcommntsById(String ticketId);
 	
-	@Query(value = "SELECT * from ticket_attachment t where t.ticket_id = :ticketId and join  ", nativeQuery = true)
+	@Query(value = "SELECT * from ticket_attachment t where t.ticket_id = :ticketId  ", nativeQuery = true)
 	List<Map> getTktAttachmentsById(String ticketId);
 	
 	@Query(value = "SELECT a.ticket_id as ticket_id, a.ticket_description as ticket_description , a.ticket_status as ticket_status, a.created_at as created_at, a.created_by as created_by, "
