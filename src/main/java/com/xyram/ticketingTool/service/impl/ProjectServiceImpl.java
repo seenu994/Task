@@ -87,7 +87,8 @@ public class ProjectServiceImpl implements ProjectService {
 	@Override
 	public ApiResponse getAllProjects(Pageable pageable) {
 		//Page<Map> projectList =   projectRepository.getAllProjectLsit(pageable);
-		List<Map> projectList = projectRepository.getAllProjectsList();
+		Page<Map> projectList = projectRepository.getAllProjectsList(pageable);
+		                       
 		Map content = new HashMap();
 	    content.put("projectList", projectList);
 	    ApiResponse response = new ApiResponse(true);

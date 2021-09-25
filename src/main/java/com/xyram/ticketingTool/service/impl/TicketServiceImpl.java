@@ -103,15 +103,15 @@ public class TicketServiceImpl implements TicketService {
 	TicketStatusHistRepository tktStatusHistory;
 
 	@Override
-	public ApiResponse getAllTicketsByStatus() {
+	public ApiResponse getAllTicketsByStatus(Pageable pageable) {
 		// TODO Auto-generated method stub
 		ApiResponse response = new ApiResponse(false);
 
-		List<Map> allTickets = ticketrepository.getAllTicketsByStatus(userDetail.getUserId(), userDetail.getUserRole());
+		Page<Map> allTickets = ticketrepository.getAllTicketsByStatus(pageable, userDetail.getUserId(), userDetail.getUserRole());
 		if (allTickets != null) {
 			response.setSuccess(true);
 			response.setMessage(ResponseMessages.TICKET_EXIST);
-			Map<String, List<Map>> content = new HashMap<String, List<Map>>();
+			Map<String, Page<Map>> content = new HashMap<String, Page<Map>>();
 			content.put("tickets", allTickets);
 			response.setContent(content);
 		} else {
@@ -647,7 +647,7 @@ public class TicketServiceImpl implements TicketService {
 		ApiResponse response = new ApiResponse(false);
 		Ticket ticketObj = ticketrepository.getById(commentObj.getTicketId());
 //		String ticketStatus = ticketrepository.getTicketById(commentObj.getTicketId());
-		if (ticketObj.getStatus() != null ) {
+		if (ticketObj.getStatus() != null || ticketObj.getStatus().equals("")) {
 			// if (ticketObj != null) {
 			// if (!ticketObj.equalsIgnoreCase(TicketStatus.COMPLETED)) {
 			if (!ticketObj.getStatus().equals(TicketStatus.COMPLETED.toString())) {
@@ -720,7 +720,7 @@ public class TicketServiceImpl implements TicketService {
 							if (comment.getCreatedBy().equals(userDetail.getUserId())) {
 								commentObj.setUpdatedBy(userDetail.getUserId());
 								commentObj.setLastUpdatedAt(new Date());
-								commentObj.setCreatedBy(comment.getCreatedBy());
+								//commentObj.setCreatedBy(comment.getCreatedBy());
 								commentRepository.save(commentObj);
 								response.setSuccess(true);
 								response.setMessage(ResponseMessages.TICKET_COMMENTS_EDITED);
@@ -762,11 +762,17 @@ public class TicketServiceImpl implements TicketService {
 
 				Comments comment = commentRepository.getById(commentObj.getId());
 				if (comment != null) {
-
-					commentRepository.delete(commentObj);
-					response.setSuccess(true);
-					response.setMessage(ResponseMessages.TICKET_COMMENTS_DELETED);
-					response.setContent(null);
+					if (!comment.getCreatedBy().equals(userDetail.getUserId())) {
+						response.setSuccess(false);
+						response.setMessage(ResponseMessages.NOT_AUTHORISED);
+						response.setContent(null);
+					}
+					else {
+						commentRepository.delete(commentObj);
+						response.setSuccess(true);
+						response.setMessage(ResponseMessages.TICKET_COMMENTS_DELETED);
+						response.setContent(null);
+					}
 
 				} else {
 					response.setSuccess(false);
