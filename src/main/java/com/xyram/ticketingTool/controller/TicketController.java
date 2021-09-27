@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -76,9 +77,9 @@ class TicketController {
 
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editTicket/{ticketId}",
 			AuthConstants.DEVELOPER_BASEPATH + "/editTicket/{ticketId}" })
-	public ApiResponse editTicket(@PathVariable String ticketId, @RequestBody Ticket ticketRequest) {
+	public ApiResponse editTicket(@RequestPart(name = "files", required = true) MultipartFile[] files,@PathVariable String ticketId, @RequestPart Ticket ticketRequest) {
 		logger.info("Recive request to edit ticket by id:" + ticketRequest.getId());
-		return ticketService.editTicket(ticketId, ticketRequest);
+		return ticketService.editTicket(files,ticketId, ticketRequest);
 	}
 
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/reopenTicket/{ticketId}",
@@ -105,7 +106,7 @@ class TicketController {
 		return ticketService.editComment(commentObj);
 	}
 
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/deleteComment",
+	@DeleteMapping(value = { AuthConstants.ADMIN_BASEPATH + "/deleteComment",
 			AuthConstants.DEVELOPER_BASEPATH + "/deleteComment", 
 			AuthConstants.INFRA_USER_BASEPATH + "/deleteComment" })
 	public ApiResponse deleteComment(@RequestBody Comments commentObj) {

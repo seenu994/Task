@@ -28,7 +28,7 @@ public interface TicketService {
 
 	//Ticket onHoldTicket(Ticket ticketRequest);
 
-	ApiResponse editTicket(String ticketId, Ticket ticket);
+	ApiResponse editTicket(MultipartFile[] files, String ticketId, Ticket ticket);
 	
 	ApiResponse reopenTicket( String ticketId,Comments commentObj); 
 	
