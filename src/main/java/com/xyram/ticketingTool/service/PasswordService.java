@@ -2,11 +2,13 @@ package com.xyram.ticketingTool.service;
 
 import java.util.Map;
 
+import com.xyram.ticketingTool.apiresponses.ApiResponse;
+
 
 
 public interface PasswordService {
 
-	Map<String, Object> resetPassword(Map<String, Object> passwordRequest);
+	ApiResponse resetPassword(Map<String, Object> passwordRequest);
 
 	//Map forgotPassword(String userName);
 

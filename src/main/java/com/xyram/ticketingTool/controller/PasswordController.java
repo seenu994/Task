@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.service.PasswordService;
+import com.xyram.ticketingTool.util.AuthConstants;
 
 
 @CrossOrigin
@@ -25,12 +27,12 @@ public class PasswordController {
 	@Autowired
 	PasswordService passwordService;
 
-	@PostMapping( "/resetpassword")
-	public ResponseEntity<Map<String, Object>> resetPassword(@RequestBody Map<String, Object> passwordRequest) {
+	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/resetpassword",AuthConstants.DEVELOPER_BASEPATH + "/resetpassword"})
+	public ApiResponse resetPassword(@RequestBody Map<String, Object> passwordRequest) {
 
-		logger.info("Received request for get profile");
+		logger.info("Received request for reset password");
 
-		return new ResponseEntity<>(passwordService.resetPassword(passwordRequest), HttpStatus.OK);
+		return passwordService.resetPassword(passwordRequest);
 	}
 }
 /*
