@@ -123,9 +123,9 @@ class TicketController {
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllTktByStatus",
 			AuthConstants.INFRA_USER_BASEPATH + "/getAllTktByStatus",
 			AuthConstants.DEVELOPER_BASEPATH + "/getAllTktByStatus" })
-	public ApiResponse getAllTicketsByStatus() {
+	public ApiResponse getAllTicketsByStatus(Pageable pageable) {
 		logger.info("inside Ticket controller :: getAllTicket");
-		return ticketService.getAllTicketsByStatus();
+		return ticketService.getAllTicketsByStatus(pageable);
 	}
 
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllCompletedTickets",

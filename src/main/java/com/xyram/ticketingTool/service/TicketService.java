@@ -16,7 +16,7 @@ public interface TicketService {
 	 
 	ApiResponse createTickets(MultipartFile[] files, String ticketRequest);
 	
-	ApiResponse getAllTicketsByStatus();
+	ApiResponse getAllTicketsByStatus(Pageable pageable);
 	
 	ApiResponse getAllCompletedTickets();
 

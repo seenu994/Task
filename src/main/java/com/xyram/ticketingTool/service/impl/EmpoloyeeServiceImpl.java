@@ -23,14 +23,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
+import com.xyram.ticketingTool.Repository.ProjectMemberRepository;
 import com.xyram.ticketingTool.Repository.RoleRepository;
 import com.xyram.ticketingTool.Repository.UserRepository;
 import com.xyram.ticketingTool.admin.model.User;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Employee;
+import com.xyram.ticketingTool.entity.ProjectMembers;
 import com.xyram.ticketingTool.entity.Projects;
 import com.xyram.ticketingTool.entity.Role;
 import com.xyram.ticketingTool.entity.Ticket;
+import com.xyram.ticketingTool.enumType.ProjectMembersStatus;
 import com.xyram.ticketingTool.enumType.UserRole;
 import com.xyram.ticketingTool.enumType.UserStatus;
 import com.xyram.ticketingTool.exception.ResourceNotFoundException;
@@ -62,6 +65,9 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 	@Autowired
 	ProjectServiceImpl ProjectSerImpl;
+	
+	@Autowired
+	ProjectMemberRepository projectMemberRepository;
 
 //	private static Map<String, com.xyram.ticketingTool.admin.model.User> userCache = new HashMap<>();
 
@@ -88,9 +94,27 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				}
 				user.setStatus(UserStatus.ACTIVE);
 				userRepository.save(user);
+				
 				employee.setCreatedBy(currentUser.getUserId());
+				employee.setUpdatedBy(currentUser.getUserId());
+				employee.setCreatedAt(new Date());
+				employee.setLastUpdatedAt(new Date());
 				employee.setUserCredientials(user);
 				Employee employeeNew = employeeRepository.save(employee);
+				
+				//Assigning default project to Developer
+				if (employee.getRoleId().equals("R3")) {
+					System.out.println("Inside employee.getRoleId() - " + employee.getRoleId());
+					ProjectMembers projectMember = new ProjectMembers();
+					projectMember.setCreatedAt(new Date());
+					projectMember.setLastUpdatedAt(new Date());
+					projectMember.setUpdatedBy(currentUser.getUserId());
+					projectMember.setCreatedBy(currentUser.getUserId());
+					projectMember.setStatus(ProjectMembersStatus.ACTIVE);
+					projectMember.setProjectId("2c9fab1f7bbeee88017bbf22f0af0002");
+					projectMember.setEmployeeId(employee.geteId());
+					projectMemberRepository.save(projectMember);
+				}
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.EMPLOYEE_ADDED);
 				Map content = new HashMap();
