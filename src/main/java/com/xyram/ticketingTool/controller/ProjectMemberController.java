@@ -70,6 +70,11 @@ class ProjectMemberContoller {
 		logger.info("inside ProjectMemberContoller :: getAllProjectByEmployeeId ");
 		return projectMemberService.getAllProjectByEmployeeId(EmployeeId);
 	}
-		
+	
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/	",AuthConstants.DEVELOPER_BASEPATH + "/getAllProjectByEmployeeId",AuthConstants.INFRA_USER_BASEPATH + "/getAllProjectByEmployeeId" })
+	public ApiResponse getAllProjectByEmployeeId() {
+		logger.info("inside ProjectMemberContoller :: getAllProjectByEmployeeId ");
+		return projectMemberService.getAllProjectByEmployeeId();
+	}	
 }
 	

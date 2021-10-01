@@ -15,6 +15,10 @@ public interface ProjectMemberRepository extends JpaRepository<ProjectMembers, S
 	@Query("Select new map(e.projectId as projectId,p.projectName as projectName) from ProjectMembers e left join  Projects p On e.projectId = p.pId where e.employeeId=:employeeId" )
     List<Map> getAllProjectByEmployeeId(String employeeId);
 //	public List<ProjectMembers> findByProject_pIdAndEmployee_eId(Integer pId,Integer eId);
+	
+	@Query("Select new map(e.projectId as projectId,p.projectName as projectName) from ProjectMembers e left join  Projects p On e.projectId = p.pId " )
+
+	List<Map> getAllProjectByEmployee();
 
 }
 /*

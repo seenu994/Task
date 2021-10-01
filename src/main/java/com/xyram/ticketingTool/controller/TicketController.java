@@ -115,7 +115,7 @@ class TicketController {
 	}
 
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllTicket",
-			AuthConstants.INFRA_USER_BASEPATH + "/getAllTicket" })
+			AuthConstants.INFRA_USER_BASEPATH + "/getAllTicket" ,AuthConstants.DEVELOPER_BASEPATH + "/getAllTicket"})
 	public ApiResponse getAllTicket(Pageable pageable) {
 		logger.info("inside Ticket controller :: getAllTicket");
 		return ticketService.getAllTicket(pageable);
@@ -149,12 +149,12 @@ class TicketController {
 			AuthConstants.INFRA_USER_BASEPATH + "/getTktDetailsById/{ticketId}",
 			AuthConstants.DEVELOPER_BASEPATH + "/getTktDetailsById/{ticketId}" })
 	public ApiResponse getTktDetailsById(@PathVariable String ticketId) {
-		logger.info("inside Ticket controller :: getTktDetailsById");
-		return ticketService.getTktDetailsById(ticketId);
-	}
-	
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getTicketSearchById/{ticketId}",
-			AuthConstants.INFRA_USER_BASEPATH + "/getTicketSearchById/{ticketId}",
+			logger.info("inside Ticket controller :: getTktDetailsById");
+			return ticketService.getTktDetailsById(ticketId);
+		}
+		
+		@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getTicketSearchById/{ticketId}",
+				AuthConstants.INFRA_USER_BASEPATH + "/getTicketSearchById/{ticketId}",
 			AuthConstants.DEVELOPER_BASEPATH + "/getTicketSearchById/{ticketId}" })
 	public ApiResponse getTicketSearchById(@PathVariable String ticketId) {
 		logger.info("inside Ticket controller :: getTicketSearchById");

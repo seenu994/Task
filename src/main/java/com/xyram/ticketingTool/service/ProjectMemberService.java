@@ -28,4 +28,6 @@ public interface ProjectMemberService {
 
 	ApiResponse assignProjectToEmployee(Map<Object, Object> request);
 
+	ApiResponse getAllProjectByEmployeeId();
+
 }

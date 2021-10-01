@@ -83,6 +83,12 @@ public interface ResponseMessages {
 	String PASSWORD_INCORRECT = "Existing password did not match.";
 	String INVALID_USERID = "User id is invalid";
 	String INVALID_PASSWORD ="Invalid password request : ";
+	
+	String FORGOT_PASSOWRD ="Mail Sent Successfully : ";
+	
+	String INVALID_EMAIL_ID ="invalid  email id : ";
+
+
 
 	
 

@@ -95,7 +95,7 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 					List<String> employeeIds = (List<String>) request.get("employeeId");
 
 					for (String employeeId : employeeIds) {
-						Employee employeeObj = employeeRepository.getbyUserId(employeeId);
+						Employee employeeObj = employeeRepository.getbyUserEmpId(employeeId);
 						
 						if(employeeObj != null) {
 							ProjectMembers projectMember = new ProjectMembers();
@@ -135,6 +135,7 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 						}
 						
 					}
+
 				} else {
 					response.setSuccess(false);
 					response.setMessage(ResponseMessages.EMPLOYEE_INVALID);
@@ -257,6 +258,32 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 			response.setSuccess(false);
 
 		}
+		return response;
+
+	}
+
+	@Override
+	public ApiResponse getAllProjectByEmployeeId() {
+		ApiResponse response = new ApiResponse(false);
+
+		//if (employeeId != null) {
+
+			List<Map> projectList = projectMemberRepository.getAllProjectByEmployee();
+			if (projectList != null && projectList.size() > 0) {
+				Map content = new HashMap();
+				content.put("ProjectList", projectList);
+				response.setSuccess(true);
+				response.setContent(content);
+				response.setMessage(ResponseMessages.PROJECT_LIST);
+			} else {
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.PROJECT_NOT_ASSIGNED);
+				Map content = new HashMap();
+				content.put("ProjectList", projectList);
+				response.setContent(content);
+				
+			}
+		
 		return response;
 
 	}

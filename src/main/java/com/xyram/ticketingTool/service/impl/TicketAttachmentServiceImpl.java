@@ -65,6 +65,7 @@ PushNotificationRequest pushNotificationRequest;
 @Autowired
 CurrentUser userDetail;
 
+
 static ChannelSftp channelSftp = null;
 static Session session = null;
 static Channel channel = null;
@@ -85,6 +86,11 @@ public Map storeImage(MultipartFile[] files,String ticketId) {
 	       if(addFileAdmin(constentFile)!= null) {
 	    	  TicketAttachment ticketAttachment = new  TicketAttachment();
 	    	  Ticket tickets = ticketRepository.getById(ticketId);
+	    	  ticketAttachment.setCreatedBy(userDetail.getUserId());
+	    	  ticketAttachment.setCreatedAt(new Date());
+	    	  ticketAttachment.setUpdatedBy(userDetail.getUserId());
+	    	  
+	    	  ticketAttachment.setLastUpdatedAt(new Date());
 	    	  ticketAttachment.setTicket(tickets);
 	    	  ticketAttachment.setImagePath(filename);
 	    	  ticketattachmentRepository.save(ticketAttachment);

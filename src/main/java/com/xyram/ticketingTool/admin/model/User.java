@@ -49,10 +49,23 @@ public class User extends IBaseData {
 	@Enumerated(EnumType.STRING)
 	@Column(name = "userStatus")
 	private UserStatus status;
+	
+	@Column(name = "accesskey")
+	private String accesskey;
+	
+
+	public String getAccesskey() {
+		return accesskey;
+	}
+
+	public void setAccesskey(String accesskey) {
+		this.accesskey = accesskey;
+	}
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "TICKETINGTOOL_ADMIN")
 	private UserRole userRole;
+	
 
 	public User() {
 
