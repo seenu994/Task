@@ -41,8 +41,8 @@ public class PasswordController {
 		return passwordService.resetPassword(passwordRequest);
 	}
 
-	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/forgotPassword/{userName}",
-			AuthConstants.DEVELOPER_BASEPATH + "/forgotPassword/{userName}" })
+	@PostMapping( "/forgotPassword/{userName}")
+			
 	// @HystrixCommand(fallbackMethod="care365method")
 	public ApiResponse forgotPassword(@PathVariable String userName) {
 

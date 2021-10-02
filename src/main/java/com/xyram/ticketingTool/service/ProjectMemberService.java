@@ -30,4 +30,6 @@ public interface ProjectMemberService {
 
 	ApiResponse getAllProjectByEmployeeId();
 
+	//ProjectMembers unassignProjectToEmployee(Map<String, String> requestMap);
+
 }

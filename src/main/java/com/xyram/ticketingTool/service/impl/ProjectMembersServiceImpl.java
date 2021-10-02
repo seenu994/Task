@@ -174,12 +174,20 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 	@Override
 	public ApiResponse unassignProjectToEmployee(ProjectMembers member) {
 		// TODO Auto-generated method stub
+		List<ProjectMembers> projectMembers = projectMemberRepository.findByEmployeeIdAndProjectId(member.getEmployeeId(),member.getProjectId());
+		if(projectMembers!=null && projectMembers.size()>0) {
+			projectMembers.get(0).setStatus(ProjectMembersStatus.INACTIVE);
+			projectMemberRepository.save(projectMembers.get(0));
+			
+		}
 		ApiResponse response = new ApiResponse(false);
 		Optional<Projects> project = projectRepository.findById(member.getProjectId());
 
-		if (project != null) {
-			member.setStatus(ProjectMembersStatus.INACTIVE);
-			projectMemberRepository.save(member);
+		if (project != null )
+			
+		{
+			
+			
 			
 			Employee employeeObj = employeeRepository.getById(member.getEmployeeId());
 			
@@ -290,7 +298,7 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 }
 
 //	@Override
-//	public ProjectMembers assignProjectToEmployee(Map<String, Integer> requestMap) {
+//	public ProjectMembers assignProjectToEmployee(Map<String, String> requestMap) {
 //		ProjectMembers projectMembers = new ProjectMembers();
 //		if (requestMap.containsKey("employeeId") && requestMap.containsKey("projectId")) {
 //			projectMembers.setEmployee(employeeRepository.getById(requestMap.get("employeeId")));

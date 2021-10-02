@@ -106,7 +106,7 @@ class TicketController {
 		return ticketService.editComment(commentObj);
 	}
 
-	@DeleteMapping(value = { AuthConstants.ADMIN_BASEPATH + "/deleteComment",
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/deleteComment",
 			AuthConstants.DEVELOPER_BASEPATH + "/deleteComment", 
 			AuthConstants.INFRA_USER_BASEPATH + "/deleteComment" })
 	public ApiResponse deleteComment(@RequestBody Comments commentObj) {
