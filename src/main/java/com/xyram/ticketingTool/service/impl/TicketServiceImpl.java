@@ -591,7 +591,7 @@ public class TicketServiceImpl implements TicketService {
 				response.setSuccess(false);
 				response.setMessage(ResponseMessages.TICKET_ALREADY_REOPEND);
 				response.setContent(null);
-			} else if (ticketObj.getStatus().equals(TicketStatus.COMPLETED)) {
+			} else if (ticketObj.getStatus().equals(TicketStatus.COMPLETED) || ticketObj.getStatus().equals(TicketStatus.CANCELLED)) {
 
 				if (commentObj.getTicketCommentDescription() == null
 						|| commentObj.getTicketCommentDescription().length() == 0) {
