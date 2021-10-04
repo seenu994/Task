@@ -41,8 +41,8 @@ public class PasswordController {
 		return passwordService.resetPassword(passwordRequest);
 	}
 
-	@PostMapping( "/forgotPassword/{userName}")
-			
+	@PostMapping("/forgotPassword/{userName}")
+
 	// @HystrixCommand(fallbackMethod="care365method")
 	public ApiResponse forgotPassword(@PathVariable String userName) {
 
@@ -50,7 +50,7 @@ public class PasswordController {
 		return passwordService.forgotPassword(userName);
 	}
 
-	@PostMapping(  "/updatePassword/{accestoken}" )
+	@PostMapping("/updatePassword/{accestoken}")
 	// @HystrixCommand(fallbackMethod="care365method")
 	public Map updatePassword(@PathVariable String accestoken,
 			@RequestBody(required = true) Map<String, Object> passwordRequest) {

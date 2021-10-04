@@ -58,19 +58,18 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 
 	@Autowired
 	CurrentUser user;
-	
+
 	@Autowired
 	EmpoloyeeServiceImpl employeeServiceImpl;
-	
+
 	@Autowired
 	NotificationsRepository notificationsRepository;
-	
+
 	@Autowired
 	PushNotificationCall pushNotificationCall;
-	
+
 	@Autowired
 	PushNotificationRequest pushNotificationRequest;
-
 
 	@Override
 	public ProjectMembers addprojectMember(ProjectMembers projectMembers) {
@@ -96,8 +95,8 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 
 					for (String employeeId : employeeIds) {
 						Employee employeeObj = employeeRepository.getbyUserEmpId(employeeId);
-						
-						if(employeeObj != null) {
+
+						if (employeeObj != null) {
 							ProjectMembers projectMember = new ProjectMembers();
 
 							projectMember.setCreatedAt(new Date());
@@ -108,17 +107,18 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 							projectMember.setProjectId(project.getpId());
 							projectMember.setEmployeeId(employeeId);
 							projectMemberRepository.save(projectMember);
-							
+
 //							List<Map> developerList=	employeeServiceImpl.getListOfDeveloper();
-							
+
 //							for (Map user : developerList) {
-								
-							Map request1=	new HashMap<>();
+
+							Map request1 = new HashMap<>();
 //							request1.put("id", user.get("projectId"));
 							request1.put("uid", employeeObj.getUserCredientials().getUid());
 							request1.put("title", "PROJECT ASSIGNED");
-							request1.put("body",project.getProjectName() + " Project Access granted" );
-							pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request1, 10, NotificationType.PROJECT_ASSIGN_ACCCES.toString()));	
+							request1.put("body", project.getProjectName() + " Project Access granted");
+							pushNotificationCall.restCallToNotification(pushNotificationRequest
+									.PushNotification(request1, 10, NotificationType.PROJECT_ASSIGN_ACCCES.toString()));
 //								}
 							// Inserting Notifications Details
 							Notifications notifications = new Notifications();
@@ -133,7 +133,7 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 							notifications.setLastUpdatedAt(new Date());
 							notificationsRepository.save(notifications);
 						}
-						
+
 					}
 
 				} else {
@@ -174,31 +174,31 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 	@Override
 	public ApiResponse unassignProjectToEmployee(ProjectMembers member) {
 		// TODO Auto-generated method stub
-		List<ProjectMembers> projectMembers = projectMemberRepository.findByEmployeeIdAndProjectId(member.getEmployeeId(),member.getProjectId());
-		if(projectMembers!=null && projectMembers.size()>0) {
+		List<ProjectMembers> projectMembers = projectMemberRepository
+				.findByEmployeeIdAndProjectId(member.getEmployeeId(), member.getProjectId());
+		if (projectMembers != null && projectMembers.size() > 0) {
 			projectMembers.get(0).setStatus(ProjectMembersStatus.INACTIVE);
 			projectMemberRepository.save(projectMembers.get(0));
-			
+
 		}
 		ApiResponse response = new ApiResponse(false);
 		Optional<Projects> project = projectRepository.findById(member.getProjectId());
 
-		if (project != null )
-			
+		if (project != null)
+
 		{
-			
-			
-			
+
 			Employee employeeObj = employeeRepository.getById(member.getEmployeeId());
-			
-			if(employeeObj != null) {
-				Map request1=	new HashMap<>();
+
+			if (employeeObj != null) {
+				Map request1 = new HashMap<>();
 //				request1.put("id", user.get("projectId"));
 				request1.put("uid", employeeObj.getUserCredientials().getUid());
 				request1.put("title", "PROJECT_ACCESS_REMOVE");
-				request1.put("body",project.get().getProjectName() + " Project Access Revoked" );
-				pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request1, 11, NotificationType.PROJECT_ACCESS_REMOVE.toString()));
-				
+				request1.put("body", project.get().getProjectName() + " Project Access Revoked");
+				pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request1, 11,
+						NotificationType.PROJECT_ACCESS_REMOVE.toString()));
+
 //				}
 				// Inserting Notifications Details
 				Notifications notifications = new Notifications();
@@ -216,17 +216,16 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.PROJECT_MEMBER_REMOVED);
 				response.setContent(null);
-			}else {
+			} else {
 				response.setSuccess(false);
 				response.setMessage(ResponseMessages.EMPLOYEE_INVALID);
 				response.setContent(null);
 			}
-			
+
 //			List<Map> developerList=	employeeServiceImpl.getListOfDeveloper();
 //			
 //			for (Map user : developerList) {
-				
-			
+
 		} else {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.PROJECT_ID_VALID);
@@ -274,24 +273,24 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 	public ApiResponse getAllProjectByEmployeeId() {
 		ApiResponse response = new ApiResponse(false);
 
-		//if (employeeId != null) {
+		// if (employeeId != null) {
 
-			List<Map> projectList = projectMemberRepository.getAllProjectByEmployee();
-			if (projectList != null && projectList.size() > 0) {
-				Map content = new HashMap();
-				content.put("ProjectList", projectList);
-				response.setSuccess(true);
-				response.setContent(content);
-				response.setMessage(ResponseMessages.PROJECT_LIST);
-			} else {
-				response.setSuccess(false);
-				response.setMessage(ResponseMessages.PROJECT_NOT_ASSIGNED);
-				Map content = new HashMap();
-				content.put("ProjectList", projectList);
-				response.setContent(content);
-				
-			}
-		
+		List<Map> projectList = projectMemberRepository.getAllProjectByEmployee();
+		if (projectList != null && projectList.size() > 0) {
+			Map content = new HashMap();
+			content.put("ProjectList", projectList);
+			response.setSuccess(true);
+			response.setContent(content);
+			response.setMessage(ResponseMessages.PROJECT_LIST);
+		} else {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.PROJECT_NOT_ASSIGNED);
+			Map content = new HashMap();
+			content.put("ProjectList", projectList);
+			response.setContent(content);
+
+		}
+
 		return response;
 
 	}

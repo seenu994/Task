@@ -9,18 +9,12 @@ import com.xyram.ticketingTool.entity.Projects;
 
 public interface ProjectService {
 
-	ApiResponse addproject(Projects project); 
-		
-	
+	ApiResponse addproject(Projects project);
 
-	ApiResponse getAllProjects(Pageable pageable );
+	ApiResponse getAllProjects(Pageable pageable);
 
+	ApiResponse editEmployee(Projects projectRequest);
 
-
-	
-
-
-	ApiResponse editEmployee(Projects projectRequest); 
-		
+	ApiResponse getAllProjectsByDeveloper(Pageable pageable);
 
 }
