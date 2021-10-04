@@ -28,10 +28,27 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 			+ "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,d.designationName as designationName) from Employee e "
 			+ "JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id")
 	Page<Map> getAllEmployeeList(Pageable pageable);
+	
+	//Select e.`employee_id` as id, e.`frist_name` as firstName, e.`last_name` as lastName
+	//from employee e left JOIN project_members p On e.`employee_id` = p.`employee_id` where e.`employee_status` = 'ACTIVE' and e.`role_id` = 'R3' and p.`project_id` = '2c9fab1f7c3eebc6017c4073c8770010'
 
-	@Query("Select new map(e.eId as id, e.firstName as firstName, e.lastName as lastName, case when p.projectId = :projectId then 1 else 0 end as projectAssignedStatus) "
-			+ "from Employee e left JOIN ProjectMembers p On e.eId = p.employeeId where e.status = 'ACTIVE'")
+	@Query("Select new map(e.eId as id, e.firstName as firstName, e.lastName as lastName) "
+			+ "from Employee e left JOIN ProjectMembers p On e.eId = p.employeeId where e.status = 'ACTIVE' and e.roleId = 'R3' and p.projectId = :projectId")
 	List<Map> getAllEmpByProject(@Param("projectId") String projectId);
+	
+	/* SELECT e.*
+	FROM employees_tbl e
+	WHERE e.id NOT IN (SELECT employee_id
+	    FROM project_assignment_tbl
+	    WHERE project_id=1234)*/
+	@Query("Select distinct new map(e.eId as id, e.firstName as firstName, e.lastName as lastName) from Employee e "
+			+ " where e.id not in (select p1.employeeId from ProjectMembers p1 where p1.projectId = :projectId) "
+			+ " and e.status = 'ACTIVE' and e.email like %:searchString% and e.roleId = 'R3' ")
+//	@Query("Select distinct new map(e.eId as id, e.firstName as firstName, e.lastName as lastName) "
+//			+ "from Employee e left JOIN ProjectMembers p On e.eId = p.employeeId where e.status = 'ACTIVE' and e.roleId = 'R3' "
+//			+ "and (p.projectId != :projectId and not exists (Select 1 from ProjectMembers p1 where e.eId = p1.employeeId "
+//			+ "and p1.projectId = :projectId)) and e.email like %:searchString%")
+	List<Map> searchEmployeeNotAssignedToProject(@Param("projectId") String projectId, @Param("searchString") String searchString);
 
 	@Query(value = "SELECT e.employee_id, e.frist_name, e.last_name, count(e.employee_id) assigned_cnt FROM ticketdbtool.employee e "
 			+ "left join ticketdbtool.ticket_assignee a on e.employee_id = a.employee_id "

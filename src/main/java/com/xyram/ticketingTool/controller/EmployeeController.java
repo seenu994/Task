@@ -77,8 +77,14 @@ class EmployeeController {
 	public ApiResponse getAllEmpByProject(@PathVariable String projectid, @PathVariable String clientid) {
 		logger.info("inside EmployeeController :: getAllEmpByProject ");
 		return employeeService.getAllEmpByProject(projectid, clientid);
+	} 
+	
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/searchEmployeeNotAssignedToProject/{projectid}/clientId/{clientid}/searchString/{searchString}" })
+	public ApiResponse searchEmployeeNotAssignedToProject(@PathVariable String projectid, @PathVariable String clientid, @PathVariable String searchString) {
+		logger.info("inside EmployeeController :: getAllEmpByProject ");
+		return employeeService.searchEmployeeNotAssignedToProject(projectid, clientid, searchString);
 	}
-
+ 
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllInfraUser",
 			AuthConstants.INFRA_USER_BASEPATH + "/getAllInfraUser" })
 	public ApiResponse getAllInfraUser() {

@@ -21,7 +21,9 @@ public interface EmployeeService {
 
 	ApiResponse updateEmployeeStatus(String employeeID, UserStatus userstatus);
 	
-	ApiResponse getAllEmpByProject(String projectid, String clientid);
+	ApiResponse getAllEmpByProject(String projectid, String clientid); 
+	
+	ApiResponse searchEmployeeNotAssignedToProject(String projectid,String clientid, String searchString);
 
 	ApiResponse getAllInfraUser();
 	 

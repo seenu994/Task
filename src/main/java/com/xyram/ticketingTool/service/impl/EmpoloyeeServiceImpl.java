@@ -279,6 +279,21 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			response.setSuccess(false);
 		}
 		return response;
+	} 
+	
+	@Override
+	public ApiResponse searchEmployeeNotAssignedToProject(String projectid, String clientid, String searchString) {
+		ApiResponse response = new ApiResponse(false);
+		Projects projectRequest = new Projects();
+		projectRequest.setpId(projectid);
+		projectRequest.setClientId(clientid);
+		ApiResponse projvalres = ProjectSerImpl.validateClientIdProjectId(projectRequest);
+		List<Map> employeeList = employeeRepository.searchEmployeeNotAssignedToProject(projectid,searchString);
+		Map content = new HashMap();
+		content.put("EmployeeList", employeeList);
+		response.setSuccess(true);
+		response.setContent(content);
+		return response;
 	}
 
 	@Override
