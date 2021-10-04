@@ -107,11 +107,17 @@ public class TicketServiceImpl implements TicketService {
 		// TODO Auto-generated method stub
 		ApiResponse response = new ApiResponse(false);
 
-		Page<Map> allTickets = ticketrepository.getAllTicketsByStatus(pageable, userDetail.getUserId(),
-				userDetail.getUserRole());
+		Page<Map> allTickets ;
+		if (userDetail.getUserRole().equals("INFRA")) {
+			allTickets = ticketrepository.getAllTicketsForInfraUser(pageable, userDetail.getUserId());
+		}else {
+			allTickets = ticketrepository.getAllTicketsByStatus(pageable, userDetail.getUserId(),
+					userDetail.getUserRole());
+		}
+		
 		if (allTickets != null) {
 			response.setSuccess(true);
-			response.setMessage(ResponseMessages.TICKET_EXIST);
+			response.setMessage(ResponseMessages.TICKET_EXIST+" ROLE :: "+userDetail.getUserRole());
 			Map<String, Page<Map>> content = new HashMap<String, Page<Map>>();
 			content.put("tickets", allTickets);
 			response.setContent(content);

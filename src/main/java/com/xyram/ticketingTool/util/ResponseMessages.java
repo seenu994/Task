@@ -87,6 +87,11 @@ public interface ResponseMessages {
 	String FORGOT_PASSOWRD ="Mail Sent Successfully : ";
 	
 	String INVALID_EMAIL_ID ="invalid  email id : ";
+	
+	
+	String TEST_SAMPLE_1 = "gggggggggggggggg";
+	String TEST_SAMPLE_2 = "hhhhhhhhhhhhhhhh";
+	
 
 
 
