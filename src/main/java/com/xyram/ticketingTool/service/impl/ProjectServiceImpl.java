@@ -87,7 +87,9 @@ public class ProjectServiceImpl implements ProjectService {
 	@Override
 	public ApiResponse getAllProjects(Pageable pageable) {
 		//Page<Map> projectList =   projectRepository.getAllProjectLsit(pageable);
+		
 		Page<Map> projectList = projectRepository.getAllProjectsList(pageable);
+		
 		                       
 		Map content = new HashMap();
 	    content.put("projectList", projectList);
@@ -182,6 +184,19 @@ public class ProjectServiceImpl implements ProjectService {
 		}
 		return response;
 	}
+
+	@Override
+	public ApiResponse getAllProjectsByDeveloper(Pageable pageable) {
+		Page<Map> projectList = projectRepository.getAllProjectByEmployee(pageable);
+        
+		Map content = new HashMap();
+	    content.put("projectList", projectList);
+	    ApiResponse response = new ApiResponse(true);
+	    response.setSuccess(true);
+	    response.setContent(content);
+	    return  response;
+	}
+	
 
 		
 }

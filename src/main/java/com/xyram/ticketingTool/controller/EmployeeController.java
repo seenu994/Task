@@ -54,7 +54,7 @@ class EmployeeController {
 	}
 
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllEmployee",
-			AuthConstants.INFRA_USER_BASEPATH + "/getAllEmployee" })
+			AuthConstants.INFRA_USER_BASEPATH + "/getAllEmployee",AuthConstants.DEVELOPER_BASEPATH + "/getAllEmployee" })
 	public ApiResponse getAllEmployee(Pageable pageable) {
 		logger.info("indide CatagoryController :: getAllCatagory");
 		return employeeService.getAllEmployee(pageable);
