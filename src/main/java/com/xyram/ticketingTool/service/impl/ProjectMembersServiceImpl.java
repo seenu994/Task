@@ -94,7 +94,7 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 					List<String> employeeIds = (List<String>) request.get("employeeId");
 
 					for (String employeeId : employeeIds) {
-						Employee employeeObj = employeeRepository.getbyUserId(employeeId);
+						Employee employeeObj = employeeRepository.getbyUserEmpId(employeeId);
 
 						if (employeeObj != null) {
 							ProjectMembers projectMember = new ProjectMembers();
