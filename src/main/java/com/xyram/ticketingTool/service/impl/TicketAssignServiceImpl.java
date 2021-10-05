@@ -80,6 +80,7 @@ public class TicketAssignServiceImpl implements TicketAssignService {
 				for(int i=0;i<allAssignees.size();i++) {
 					TicketAssignee prevAssignee = allAssignees.get(i);
 					prevAssignee.setStatus(TicketAssigneeStatus.INACTIVE);
+					ticketObj.setStatus(TicketStatus.REASSIGNED);
 					ticketAssignRepository.save(prevAssignee);
 				}
 				ticketAssignRepository.save(assignee);

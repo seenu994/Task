@@ -41,4 +41,6 @@ public interface EmployeeService {
 
 	List<Map> getListOfInfraAdmins();
 
+	ApiResponse updateEmployee(Employee employeeRequest);
+
 }
