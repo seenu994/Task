@@ -47,6 +47,8 @@ public interface TicketService {
 	ApiResponse getTicketSearchById(String ticketId);
 
 	ApiResponse onHoldTicket(String ticketId);
+	
+	ApiResponse searchTicket(String searchString);
 }
 		
 

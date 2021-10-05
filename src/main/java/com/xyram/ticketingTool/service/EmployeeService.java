@@ -25,7 +25,9 @@ public interface EmployeeService {
 	
 	ApiResponse searchEmployeeNotAssignedToProject(String projectid,String clientid, String searchString); 
 	
-	ApiResponse searchInfraUser(String searchString); 
+	ApiResponse searchInfraUser(String searchString);
+	
+	ApiResponse searchEmployee(String searchString); 
 	
 	ApiResponse searchInfraUsersForInfraUser(String searchString);
 

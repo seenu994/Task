@@ -831,6 +831,18 @@ public class TicketServiceImpl implements TicketService {
 		response.setContent(content);
 		return response;
 	}
+	@Override
+	public ApiResponse searchTicket(String searchString) {
+		List<Map> serachList = ticketrepository.searchTicket(searchString);
+		Map content = new HashMap();
+		content.put("serachList", serachList);
+		ApiResponse response = new ApiResponse(true);
+		response.setMessage(ResponseMessages.TICKET_LIST);
+		response.setSuccess(true);
+		response.setContent(content);
+		return response;
+	}
+	
 
 	@Override
 	public ApiResponse inprogressTicket(String ticketId) {
