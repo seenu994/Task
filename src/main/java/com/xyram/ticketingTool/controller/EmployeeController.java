@@ -85,11 +85,17 @@ class EmployeeController {
 		return employeeService.searchEmployeeNotAssignedToProject(projectid, clientid, searchString);
 	}
 	
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/searchInfraUser/searchString/{searchString}",
-			AuthConstants.INFRA_USER_BASEPATH + "/searchInfraUser/searchString/{searchString} "})
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/searchInfraUser/{searchString}",
+			AuthConstants.INFRA_USER_BASEPATH + "/searchInfraUser/{searchString}" })
 	public ApiResponse searchInfraUser(@PathVariable String searchString) {
 		logger.info("inside EmployeeController :: searchInfraUser ");
 		return employeeService.searchInfraUser(searchString);
+	}
+	
+	@GetMapping(value = { AuthConstants.INFRA_USER_BASEPATH + "/searchInfraUsersForInfraUser/{searchString}" })
+	public ApiResponse searchInfraUsersForInfraUser(@PathVariable String searchString) {
+		logger.info("inside EmployeeController :: searchInfraUsersForInfraUser ");
+		return employeeService.searchInfraUsersForInfraUser(searchString);
 	}
  
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllInfraUser",

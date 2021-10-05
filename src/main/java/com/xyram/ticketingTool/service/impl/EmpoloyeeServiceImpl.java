@@ -299,11 +299,40 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	@Override
 	public ApiResponse searchInfraUser(String searchString) {
 		ApiResponse response = new ApiResponse(false);
-		List<Map> employeeList = employeeRepository.searchInfraUser(searchString);
+		List<Map> employeeList = employeeRepository.searchInfraUsersForInfraUser(searchString,currentUser.getUserId());
 		Map content = new HashMap();
-		content.put("EmployeeList", employeeList);
-		response.setSuccess(true);
-		response.setContent(content);
+		if(employeeList.size() > 0) {
+			content.put("EmployeeList", employeeList);
+			response.setSuccess(true);
+			response.setContent(content);
+		}else {
+			content.put("EmployeeList", employeeList);
+			response.setSuccess(false);
+			response.setContent(content);
+		}
+		
+		
+		return response;
+	}
+	
+	@Override
+	public ApiResponse searchInfraUsersForInfraUser(String searchString) {
+		ApiResponse response = new ApiResponse(false);
+//		List<Map> employeeList = employeeRepository.searchInfraUsersForInfraUser(searchString,currentUser.getUserId());
+		List<Map> employeeList = employeeRepository.searchInfraUsersForInfraUser(searchString,currentUser.getUserId());
+
+		Map content = new HashMap();
+		if(employeeList.size() > 0) {
+			content.put("EmployeeList", employeeList);
+			response.setSuccess(true);
+			response.setContent(content);
+		}else {
+			content.put("EmployeeList", employeeList);
+			response.setSuccess(false);
+			response.setContent(content);
+		}
+		
+		
 		return response;
 	}
 
