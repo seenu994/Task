@@ -31,4 +31,10 @@ public interface ProjectRepository extends JpaRepository<Projects, String> {
 	
 	
 
+	
+	@Query("SELECT p.projectName FROM Projects p WHERE p.pId=:pId")
+	String getProjectNameByProjectId(String pId);
+	
+	
+
 }

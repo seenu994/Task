@@ -1,6 +1,8 @@
 package com.xyram.ticketingTool.service;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,6 +49,10 @@ public interface TicketService {
 	ApiResponse getTicketSearchById(String ticketId);
 
 	ApiResponse onHoldTicket(String ticketId);
+	
+	Optional <Ticket> findById(String Id);
+	List<Ticket> findAll();
+	
 }
 		
 

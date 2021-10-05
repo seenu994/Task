@@ -1,6 +1,8 @@
 package com.xyram.ticketingTool.controller;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -160,4 +162,23 @@ class TicketController {
 		logger.info("inside Ticket controller :: getTicketSearchById");
 		return ticketService.getTicketSearchById(ticketId);
 	}
+		
+		
+		@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getTickets/{ticketId}",
+				AuthConstants.INFRA_USER_BASEPATH + "/getTickets/{ticketId}",
+			AuthConstants.DEVELOPER_BASEPATH + "/getTickets/{ticketId}" })
+		public Optional<Ticket> getTicketDetailsById(@PathVariable String ticketId) {
+			logger.info(" inside Ticket controller :: get ticket details by Id");
+			return ticketService.findById(ticketId);
+		}
+		
+		@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllTickets",
+				AuthConstants.INFRA_USER_BASEPATH + "/getAllTickets",
+			AuthConstants.DEVELOPER_BASEPATH + "/getAllTickets" })
+		public List<Ticket> getAllTicketDetails() {
+			logger.info(" inside Ticket controller :: get ticket details of all");
+			return ticketService.findAll();
+		}
+		
+		
 }

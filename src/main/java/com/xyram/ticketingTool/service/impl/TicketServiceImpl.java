@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.security.auth.message.callback.PrivateKeyCallback.Request;
 import javax.transaction.Transactional;
@@ -902,5 +903,15 @@ public class TicketServiceImpl implements TicketService {
 		}
 
 		return response;
+	}
+
+	@Override
+	public Optional<Ticket> findById(String Id) {
+		return ticketrepository.findById(Id);
+	}
+
+	@Override
+	public List<Ticket> findAll() {
+		return ticketrepository.findAll();
 	}
 }

@@ -196,6 +196,11 @@ public class ProjectServiceImpl implements ProjectService {
 	    response.setContent(content);
 	    return  response;
 	}
+
+	@Override
+	public Optional<Projects> findById(String id) {
+		return projectRepository.findById(id);
+	}
 	
 
 		
