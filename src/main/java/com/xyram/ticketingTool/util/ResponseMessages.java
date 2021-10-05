@@ -3,7 +3,7 @@ package com.xyram.ticketingTool.util;
 public interface ResponseMessages {
 
 	String PROJECT_NOTEXIST = "Project is not exist.";
-	
+
 	String TICKET_EXIST = "Ticket Id is  exist";
 
 	String TICKET_NOT_EXIST = "Ticket Id is not exist";
@@ -22,10 +22,8 @@ public interface ResponseMessages {
 	String TICKET_ALREADY_RESOLVED = "Ticket is already Resolved.";
 	String TICKET_ADDED = "Ticket Added Successfully.";
 	String TICKET_NOT_IN_REVIEW = "Ticket is notin review state.";
-	
-	String TICKET_LIST="Successfully get the list of tickets";
-	
-	
+
+	String TICKET_LIST = "Successfully get the list of tickets";
 
 	String EMPLOYEE_ADDED = "Employee Added Successfully";
 
@@ -50,10 +48,10 @@ public interface ResponseMessages {
 	String CLIENT_INVALID = "Invalid Client Id";
 
 	String PROJECT_ADDED = "Project Added Successfully";
-	
-	String PROJECT_LIST="Successfully get the list of projects";
-	String PROJECT_NOT_ASSIGNED="No project assigned";
-	
+
+	String PROJECT_LIST = "Successfully get the list of projects";
+	String PROJECT_NOT_ASSIGNED = "No project assigned";
+
 	String ClIENT_ID_VALID = "Client Id Is Invalid";
 
 	String PROJECT_EDIT = "Project Edited Successfully";
@@ -63,40 +61,33 @@ public interface ResponseMessages {
 	String PROJECT_MEMBERS_ADDED = "Successfuly added members to the project.";
 
 	String PROJECT_MEMBER_REMOVED = "Successfuly removed member from the project.";
-	
-	String CLIENT_LIST="Successfully get the list of Clients";
-	
-	
-	String TICKET_ASSIGNED="Ticket assigned successfully";
-	String TICKET_INPROGRESS="Ticket status changed to Inprogress";
-	String TICKET_ALREADY_INPROGRESS="Ticket already Inprogress";
-	String TICKET_NOT_IN_ASSIGNE_STATE="Ticket is not in assigne status";
-	String TICKET_REASSIGNED="Ticket Rassigned successfully";
-	
-	
-	String NOT_AUTHORISED="You are not authorised to access this information.";
-	String UN_AUTHORISED="You are not authorised to modify this information.";
+
+	String CLIENT_LIST = "Successfully get the list of Clients";
+
+	String TICKET_ASSIGNED = "Ticket assigned successfully";
+	String TICKET_INPROGRESS = "Ticket status changed to Inprogress";
+	String TICKET_ALREADY_INPROGRESS = "Ticket already Inprogress";
+	String TICKET_NOT_IN_ASSIGNE_STATE = "Ticket is not in assigne status";
+	String TICKET_REASSIGNED = "Ticket Rassigned successfully";
+
+	String NOT_AUTHORISED = "You are not authorised to access this information.";
+	String UN_AUTHORISED = "You are not authorised to modify this information.";
 
 	String ONHOLD_STATUS = "Ticket Status changed successfully.";
-	
+
 	String PASSWORD_RESET = "Password is reset successfully.";
 	String PASSWORD_INCORRECT = "Existing password did not match.";
 	String INVALID_USERID = "User id is invalid";
-	String INVALID_PASSWORD ="Invalid password request : ";
-	
-	String FORGOT_PASSOWRD ="Mail Sent Successfully : ";
-	
-	String INVALID_EMAIL_ID ="invalid  email id : ";
-	
-	
+	String INVALID_PASSWORD = "Invalid password request : ";
+
+	String FORGOT_PASSOWRD = "Mail Sent Successfully : ";
+
+	String INVALID_EMAIL_ID = "invalid  email id : ";
+
 	String TEST_SAMPLE_1 = "gggggggggggggggg";
 	String TEST_SAMPLE_2 = "hhhhhhhhhhhhhhhh";
-	
 
+	String NOTIFICATIONS_EXISTS = "list of notifications";
+	String NOTIFICATIONS_NOT_EXISTS = "There is no notifications exists";
 
-
-	
-
-
-	
 }
