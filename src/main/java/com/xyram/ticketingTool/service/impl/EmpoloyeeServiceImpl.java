@@ -416,5 +416,42 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		response.setContent(content);
 		return developerInfraList;
 	}
-		
+
+	@Override
+	public ApiResponse updateEmployee(Employee employeeRequest) {
+		ApiResponse response = new ApiResponse(true);
+	
+		Employee employeeObj = employeeRepository.getbyUserByUserId(currentUser.getUserId());
+			
+			if (employeeObj != null) {
+
+				employeeObj.setFirstName(employeeObj.getFirstName());
+				employeeObj.setLastName(employeeObj.getLastName());
+				employeeObj.setLastUpdatedAt(new Date());
+				employeeObj.setMiddleName(employeeObj.getMiddleName());
+				employeeObj.setMobileNumber(employeeObj.getMobileNumber());
+				
+				
+				
+				employeeRepository.save(employeeObj);
+
+				response.setSuccess(true);
+				response.setMessage(ResponseMessages.EMPLOYEE_UPDATION);
+				response.setContent(null);
+				return response;
+			}
+
+			else {
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.EMPLOYEE_INVALID);
+				response.setContent(null);
+			
+	
+
+		return response;
+			}
+	}
+
 }
+
+		
