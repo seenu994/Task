@@ -105,7 +105,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 	@Query("SELECT e from Employee e where e.eId = :employeeId")
 	Employee getbyUserEmpId(String employeeId);
 
-	@Query("SELECT b FROM Employee b WHERE b.userCredientials.id = :userId")
+	@Query("SELECT DISTINCT b FROM Employee b WHERE b.userCredientials.id = :userId")
 
 	Employee getbyUserByUserId(String userId);
 
