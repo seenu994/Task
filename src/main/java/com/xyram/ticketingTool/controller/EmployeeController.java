@@ -92,6 +92,14 @@ class EmployeeController {
 		return employeeService.searchInfraUser(searchString);
 	}
 	
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/searchEmployee/{searchString}",
+			AuthConstants.INFRA_USER_BASEPATH + "/searchEmployee/{searchString}",
+			AuthConstants.DEVELOPER_BASEPATH + "/searchEmployee/{searchString}"})
+	public ApiResponse searchEmployee(@PathVariable String searchString) {
+		logger.info("inside EmployeeController :: searchEmployee ");
+		return employeeService.searchEmployee(searchString);
+	}
+	
 	@GetMapping(value = { AuthConstants.INFRA_USER_BASEPATH + "/searchInfraUsersForInfraUser/{searchString}" })
 	public ApiResponse searchInfraUsersForInfraUser(@PathVariable String searchString) {
 		logger.info("inside EmployeeController :: searchInfraUsersForInfraUser ");

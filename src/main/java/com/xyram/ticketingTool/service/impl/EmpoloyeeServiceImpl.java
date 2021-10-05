@@ -313,6 +313,25 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		
 		
 		return response;
+	} 
+	
+	@Override
+	public ApiResponse searchEmployee(String searchString) {
+		ApiResponse response = new ApiResponse(false);
+		List<Map> employeeList = employeeRepository.searchEmployee(searchString);
+		Map content = new HashMap();
+		if(employeeList.size() > 0) {
+			content.put("EmployeeList", employeeList);
+			response.setSuccess(true);
+			response.setContent(content);
+		}else {
+			content.put("EmployeeList", employeeList);
+			response.setSuccess(false);
+			response.setContent(content);
+		}
+		
+		
+		return response;
 	}
 	
 	@Override
