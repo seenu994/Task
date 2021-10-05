@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 import com.xyram.ticketingTool.Communication.PushNotificationCall;
 import com.xyram.ticketingTool.Communication.PushNotificationRequest;
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
-import com.xyram.ticketingTool.Repository.NotificationsRepository;
+import com.xyram.ticketingTool.Repository.NotificationRepository;
 import com.xyram.ticketingTool.Repository.ProjectMemberRepository;
 import com.xyram.ticketingTool.Repository.ProjectRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
@@ -63,7 +63,7 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 	EmpoloyeeServiceImpl employeeServiceImpl;
 
 	@Autowired
-	NotificationsRepository notificationsRepository;
+	NotificationRepository notificationsRepository;
 
 	@Autowired
 	PushNotificationCall pushNotificationCall;
