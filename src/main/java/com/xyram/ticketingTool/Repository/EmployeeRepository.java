@@ -53,7 +53,13 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 	
 	@Query("Select distinct new map(e.eId as id, e.firstName as firstName, e.lastName as lastName) from Employee e "
 			+ "where e.status = 'ACTIVE' and e.email like %:searchString% and e.roleId = 'R2' ")
-	List<Map> searchInfraUser(String searchString);
+	List<Map> searchInfraUser(@Param("searchString") String searchString);
+	
+	@Query("Select distinct new map(e.eId as id, e.firstName as firstName, e.lastName as lastName) from Employee e "
+			+ "where e.status = 'ACTIVE' and e.email like %:searchString% and e.roleId = 'R2' and e.userCredientials.id != :userId")
+	List<Map> searchInfraUsersForInfraUser(@Param("searchString") String searchString,@Param("userId") String userId);
+	
+	
 	
 
 	@Query(value = "SELECT e.employee_id, e.frist_name, e.last_name, count(e.employee_id) assigned_cnt FROM ticketdbtool.employee e "

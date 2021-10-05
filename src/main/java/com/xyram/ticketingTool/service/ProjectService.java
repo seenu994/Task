@@ -16,5 +16,7 @@ public interface ProjectService {
 	ApiResponse editEmployee(Projects projectRequest);
 
 	ApiResponse getAllProjectsByDeveloper(Pageable pageable);
+	
+	ApiResponse searchProject(String searchString); 
 
 }
