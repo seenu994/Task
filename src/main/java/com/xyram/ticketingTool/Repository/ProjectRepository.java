@@ -30,8 +30,8 @@ public interface ProjectRepository extends JpaRepository<Projects, String> {
 			+ "p.inHouse as inHouse, p.status as status) from Projects p join Client c ON p.clientId = c.Id   join  ProjectMembers m On p.pId=m.projectId")
 	Page<Map> getAllProjectByEmployee(Pageable pageable);
 	
-	@Query("Select new map(e.pId as id,e.projectName as projectName,e.projectDescritpion as projectDescritpion,e.clientId as clientId,e.inHouse as inHouse,"
-			+ "e.status as status) from Projects e where e.projectName like %:searchString% and e.status != 'INACTIVE'")
+	@Query("Select new map(e.pId as id,e.projectName as PName,e.projectDescritpion as projectDescritpion,e.clientId as clientId, c.clientName as clientname,e.inHouse as inHouse,"
+			+ "e.status as status) from Projects e join Client c ON e.clientId = c.Id where e.projectName like %:searchString% and e.status != 'INACTIVE'")
 	List<Map> searchProject(@Param("searchString") String searchString);
 
 }
