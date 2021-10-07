@@ -81,13 +81,13 @@ public Map storeImage(MultipartFile[] files,String ticketId) {
 	try {
 	       filearray=constentFile.getBytes();
 //	       System.out.println(file.);
-	       
-	      String filename = getRandomFileName();//constentFile.getOriginalFilename();
+	       String fileextension = constentFile.getOriginalFilename().substring(constentFile.getOriginalFilename().lastIndexOf("."));
+	      String filename = getRandomFileName()+fileextension;//constentFile.getOriginalFilename();
 	      
 //	       addFileAdmin(constentFile);
 //	       addFileCustomer(file);
-	      String[] fileextension = constentFile.getOriginalFilename().split("-");
-	       if(addFileAdmin(constentFile,filename+'.'+fileextension[1])!= null) {
+//	      String[] fileextension = constentFile.getOriginalFilename().split("-");
+	       if(addFileAdmin(constentFile,filename)!= null) {
 	    	  TicketAttachment ticketAttachment = new  TicketAttachment();
 	    	  Ticket tickets = ticketRepository.getById(ticketId);
 	    	  ticketAttachment.setCreatedBy(userDetail.getUserId());
