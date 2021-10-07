@@ -24,7 +24,7 @@ import com.xyram.ticketingTool.enumType.UserStatus;
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, String> {
 
-	@Query("Select new map(e.eId as id,e.email as email,e.firstName as firstName,e.lastName as lastName,e.middleName as middleName ,e.password as password ,e.roleId as roleId ,e.designationId as designationId, "
+	@Query("Select new map(e.eId as id,e.email as email,e.firstName as firstName,e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId, "
 			+ "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,d.designationName as designationName) from Employee e "
 			+ "JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id")
 	Page<Map> getAllEmployeeList(Pageable pageable);
@@ -61,8 +61,11 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 			+ "where e.status = 'ACTIVE' and e.email like %:searchString% and e.roleId = 'R2' and e.userCredientials.id != :userId")
 	List<Map> searchInfraUsersForInfraUser(@Param("searchString") String searchString, @Param("userId") String userId);
 
-	@Query("Select distinct new map(e.eId as id, e.firstName as firstName, e.lastName as lastName) from Employee e "
-			+ "where e.status = 'ACTIVE' and e.email like %:searchString% ")
+//	@Query("Select distinct new map(e.eId as id, e.firstName as firstName, e.lastName as lastName) from Employee e "
+//			+ "where e.status = 'ACTIVE' and e.email like %:searchString% ")
+	@Query("Select new map(e.eId as id,e.email as email,e.firstName as firstName,e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId, "
+			+ "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,d.designationName as designationName) from Employee e "
+			+ "JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id where e.email like %:searchString%")
 	List<Map> searchEmployee(@Param("searchString") String searchString);
 
 	@Query(value = "SELECT e.employee_id, e.frist_name, e.last_name, count(e.employee_id) assigned_cnt FROM ticketdbtool.employee e "

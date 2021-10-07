@@ -55,11 +55,16 @@ public class Projects extends AuditModel {
 	@Enumerated(EnumType.STRING)
 	@Column(name = "projectstatus")
 	private ProjectStatus status = ProjectStatus.INDEVELOPMENT;
-
+	
+	@Column(name="allot_to_all")
+	private Integer allotToAll = 0;
+	
 	
 	public String getpId() {
 		return pId;
 	}
+	
+	
 
 	public void setpId(String pId) {
 		this.pId = pId;
@@ -104,6 +109,18 @@ public class Projects extends AuditModel {
 
 	public void setClientId(String clientId) {
 		this.clientId = clientId;
+	}
+
+
+
+	public Integer getAllotToAll() {
+		return allotToAll;
+	}
+
+
+
+	public void setAllotToAll(Integer allotToAll) {
+		this.allotToAll = allotToAll;
 	}
 
 

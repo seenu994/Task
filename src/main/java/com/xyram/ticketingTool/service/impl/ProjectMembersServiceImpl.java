@@ -250,9 +250,17 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 		if (employeeId != null) {
 
 			List<Map> projectList = projectMemberRepository.getAllProjectByEmployeeId(employeeId);
-			if (projectList != null && projectList.size() > 0) {
+			List<Map> allotedProjectList = projectMemberRepository.getAllAllottedProjects();
+//			for(int i=0; i<= allotedProjectList.size();i++) {
+//				projectList.add(allotedProjectList[i]);
+//			}
+			List<Map> allProjects = new ArrayList();
+			allProjects.addAll(projectList);
+			allProjects.addAll(allotedProjectList);
+			
+			if (allProjects != null && allProjects.size() > 0) {
 				Map content = new HashMap();
-				content.put("ProjectList", projectList);
+				content.put("ProjectList", allProjects);
 				response.setSuccess(true);
 				response.setContent(content);
 				response.setMessage(ResponseMessages.PROJECT_LIST);

@@ -46,7 +46,7 @@ class TicketController {
 
 	@PostMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/createTickets",
 			AuthConstants.INFRA_USER_BASEPATH + "/createTickets" })
-	public ApiResponse createTickets(@RequestPart(name = "files", required = true) MultipartFile[] files,
+	public ApiResponse createTickets(@RequestPart(name = "files", required = false) MultipartFile[] files,
 			@RequestPart String ticketRequest) {
 		logger.info("Received request to add tickets");
 		return ticketService.createTickets(files, ticketRequest);
@@ -77,7 +77,7 @@ class TicketController {
 
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editTicket/{ticketId}",
 			AuthConstants.DEVELOPER_BASEPATH + "/editTicket/{ticketId}" })
-	public ApiResponse editTicket(@RequestPart(name = "files", required = true) MultipartFile[] files,@PathVariable String ticketId, @RequestPart Ticket ticketRequest) {
+	public ApiResponse editTicket(@RequestPart(name = "files", required = false) MultipartFile[] files,@PathVariable String ticketId, @RequestPart Ticket ticketRequest) {
 		logger.info("Recive request to edit ticket by id:" + ticketRequest.getId());
 		return ticketService.editTicket(files,ticketId, ticketRequest);
 	}

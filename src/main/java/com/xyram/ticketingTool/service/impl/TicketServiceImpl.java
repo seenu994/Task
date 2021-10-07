@@ -171,9 +171,9 @@ public class TicketServiceImpl implements TicketService {
 				}
 
 			}
-			if (userDetail.getUserRole().equals(UserRole.INFRA)) {
-
-			}
+//			if (userDetail.getUserRole().equals(UserRole.INFRA)) {
+//
+//			}
 		}
 		if (noErrors) {
 			if (ticketNewRequest != null) {
@@ -600,6 +600,8 @@ public class TicketServiceImpl implements TicketService {
 					response.setContent(null);
 				} else {
 					ticketObj.setStatus(TicketStatus.REOPEN);
+					commentObj.setCreatedBy(userDetail.getUserId());
+					commentObj.setCreatedAt(new Date());
 					commentObj.setUpdatedBy(userDetail.getUserId());
 					commentObj.setLastUpdatedAt(new Date());
 					commentRepository.save(commentObj);
