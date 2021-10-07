@@ -418,18 +418,18 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public ApiResponse updateEmployee(Employee employeeRequest) {
+	public ApiResponse updateEmployee(Map employeeRequest) {
 		ApiResponse response = new ApiResponse(true);
 	
 		Employee employeeObj = employeeRepository.getbyUserByUserId(currentUser.getUserId());
 			
 			if (employeeObj != null) {
 
-				employeeObj.setFirstName(employeeObj.getFirstName());
-				employeeObj.setLastName(employeeObj.getLastName());
-				employeeObj.setLastUpdatedAt(new Date());
-				employeeObj.setMiddleName(employeeObj.getMiddleName());
-				employeeObj.setMobileNumber(employeeObj.getMobileNumber());
+				employeeObj.setFirstName((String) employeeRequest.get("firstName"));
+				employeeObj.setLastName((String) employeeRequest.get("lastName"));
+				//employeeObj.setLastUpdatedAt(new Date());
+				employeeObj.setMiddleName((String) employeeRequest.get("middleName"));
+				employeeObj.setMobileNumber((String) employeeRequest.get("mobileNumber"));
 				
 				
 				
