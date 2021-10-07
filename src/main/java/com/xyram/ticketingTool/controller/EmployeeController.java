@@ -95,7 +95,11 @@ class EmployeeController {
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllInfraUser",
 			AuthConstants.INFRA_USER_BASEPATH + "/getAllInfraUser" })
 	public ApiResponse getAllInfraUser() {
-		logger.info("indide CatagoryController :: getAllInfraUser");
+		logger.info("indside CatagoryController :: getAllInfraUser");
 		return employeeService.getAllInfraUser();
 	}
+	
+	
+	
+	
 }

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -52,6 +53,15 @@ public interface TicketService {
 	
 	Optional <Ticket> findById(String Id);
 	List<Ticket> findAll();
+
+	
+	ApiResponse getAllTicketsByDuration(Pageable pageable, String date1, String date2);
+
+
+
+
+
+ApiResponse getTicketStatusCountWithProject(Pageable pageable);
 	
 }
 		

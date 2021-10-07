@@ -180,5 +180,22 @@ class TicketController {
 			return ticketService.findAll();
 		}
 		
+		//duration/projectName/EmpName/
+		  @GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllTktByDuration/{date1}/{date2}",
+		  AuthConstants.INFRA_USER_BASEPATH +"/getAllTktByDuration/{date1}/{date2}",
+		  AuthConstants.DEVELOPER_BASEPATH + "/getAllTktByDuration/{date1}/{date2}" }) 
+		  public  ApiResponse getAllTicketDetailsByDuration(Pageable pageable,@PathVariable String date1, @PathVariable String date2) {
+				  logger.info("inside Report controller :: getAllTicket By date function"); 
+				  
+				  return ticketService.getAllTicketsByDuration(pageable, date1, date2);
+		  }
+		  
+		  @GetMapping(value =  AuthConstants.ADMIN_BASEPATH + "/getTicketTotalCount11")
+				  public  ApiResponse getTicketTotalCount(Pageable pageable) {
+						  logger.info("inside Report controller :: getAllTicket By total count"); 
+						  return ticketService.getTicketStatusCountWithProject(pageable);
+				  }
+				  
+		
 		
 }
