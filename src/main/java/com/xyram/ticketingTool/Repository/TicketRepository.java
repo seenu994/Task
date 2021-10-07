@@ -2,7 +2,9 @@ package com.xyram.ticketingTool.Repository;
 
 
 import java.util.ArrayList;
+import java.util.Date;
 
+import org.hibernate.query.NativeQuery;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,6 +12,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.xyram.ticketingTool.entity.Ticket;
+import com.xyram.ticketingTool.entity.TicketAssignee;
 
 import java.util.List;
 import java.util.Map;
@@ -71,17 +74,37 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 			+ "and a.last_updated_at >= DATE_ADD(curdate(), INTERVAL - 1 DAY) order by a.last_updated_at desc", nativeQuery = true)
 	List<Map> getAllCompletedTickets(@Param("createdBy") String createdBy, @Param("roleId")String roleId);
 	
-	@Query(value = "SELECT t.*, concat(e.frist_name, ' ', e.last_name) as createdByEmp from ticket_comment_log t inner join employee e on t.created_by = e.user_id where t.ticket_id = :ticketId ", nativeQuery = true)
+	@Query(value = "SELECT t.*, concat(e.frist_name, ' ', e.last_name) as createdByEmp from ticket_comment_log t inner join employee e on t.updated_by = e.user_id where t.ticket_id = :ticketId ", nativeQuery = true)
 	List<Map> getTktcommntsById(String ticketId);
 	
-	@Query(value = "SELECT t.*,concat(e.frist_name, ' ', e.last_name) as createdByEmp from ticket_attachment t inner join employee e on t.created_by = e.user_id where t.ticket_id = :ticketId  ", nativeQuery = true)
+	@Query(value = "SELECT * from ticket_attachment t where t.ticket_id = :ticketId  ", nativeQuery = true)
 	List<Map> getTktAttachmentsById(String ticketId);
 	
 	@Query(value = "SELECT a.ticket_id as ticket_id, a.ticket_description as ticket_description , a.ticket_status as ticket_status, a.created_at as created_at, a.created_by as created_by, "
 			+ "a.priority_id as priority_id, b.employee_id as assigneeId, concat(e.frist_name, ' ', e.last_name) as assigneeName, concat(ee.frist_name, ' ', ee.last_name) as createdByEmp, a.project_id, p.project_name "
 			+ "FROM ticket a left join project p on a.project_id = p.project_id left join employee ee on a.created_by = ee.user_id left join ticket_assignee b ON a.ticket_id = b.ticket_id "
-			+ "left join employee e on b.employee_id = e.employee_id where a.ticket_id = :ticketId", nativeQuery = true)
+			+ "left join employee e on b.employee_id = 	e.employee_id where a.ticket_id = :ticketId", nativeQuery = true)
 	List<Map> getTicketSearchById(@Param("ticketId") String ticketId);
 
-	//String getTicketById(Integer ticketId);
+	
+	
+	//where t.ticket_status != 'REASSIGNED'p.status != 'INACTIVE'
+	/*
+	 * @Query(value="SELECT t from Ticket t  where t.ticket_status != 'REASSIGNED' "
+	 * ) List<Ticket> getTicketDetailsExceptStatus();
+	 */
+	@Query( value="SELECT  a.ticket_id, a.ticket_description,a.ticket_status, a.created_at, a.created_by, a.priority_id, b.ticket_assignee_id, concat(e.frist_name,' ', e.last_name) as assigneeName, concat(ee.frist_name,' ', ee.last_name) as createdByEmp\r\n" + 
+			"FROM ticket a left join employee ee on a.created_by = ee.user_id \r\n" + 
+			"left join ticket_assignee b ON a.ticket_id = b.ticket_id  \r\n" + 
+			"left join employee e on b.employee_id = e.employee_id "+
+			"WHERE (a.created_at between :fromDate and :toDate)", nativeQuery = true)
+	Page<Map> getAllTicketsByDuration(Pageable pageable, String fromDate,  String toDate);
+	
+	
+	
+	@Query(value="SELECT t.ticket_status, count(t.ticket_status) as TotalCount, p.project_name from ticket t \r\n" + 
+			"left join  project p on t.project_id=p.project_id \r\n" + 
+			"group by t.ticket_status, p.project_name",nativeQuery=true)
+	Page<Map> getTicketStatusCountWithProject(Pageable pageable);
+	
 }
