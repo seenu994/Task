@@ -112,7 +112,7 @@ class EmployeeController {
 		logger.info("indide CatagoryController :: getAllInfraUser");
 		return employeeService.getAllInfraUser();
 	}
-	@PutMapping(value = { AuthConstants.INFRA_USER_BASEPATH +"/updateEmployee",AuthConstants.DEVELOPER_BASEPATH +"/updateEmployee,"})
+	@PutMapping(value = { AuthConstants.INFRA_USER_BASEPATH +"/updateEmployee",AuthConstants.DEVELOPER_BASEPATH +"/updateEmployee"})
 	public ApiResponse editEmployee(@RequestBody Map employeeRequest) {
 		logger.info("indide ProductController :: getAllemployee");
 		return employeeService.updateEmployee( employeeRequest);
