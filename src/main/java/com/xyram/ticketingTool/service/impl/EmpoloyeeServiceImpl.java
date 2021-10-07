@@ -299,11 +299,59 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	@Override
 	public ApiResponse searchInfraUser(String searchString) {
 		ApiResponse response = new ApiResponse(false);
-		List<Map> employeeList = employeeRepository.searchInfraUser(searchString);
+		List<Map> employeeList = employeeRepository.searchInfraUsersForInfraUser(searchString,currentUser.getUserId());
 		Map content = new HashMap();
-		content.put("EmployeeList", employeeList);
-		response.setSuccess(true);
-		response.setContent(content);
+		if(employeeList.size() > 0) {
+			content.put("EmployeeList", employeeList);
+			response.setSuccess(true);
+			response.setContent(content);
+		}else {
+			content.put("EmployeeList", employeeList);
+			response.setSuccess(false);
+			response.setContent(content);
+		}
+		
+		
+		return response;
+	} 
+	
+	@Override
+	public ApiResponse searchEmployee(String searchString) {
+		ApiResponse response = new ApiResponse(false);
+		List<Map> employeeList = employeeRepository.searchEmployee(searchString);
+		Map content = new HashMap();
+		if(employeeList.size() > 0) {
+			content.put("EmployeeList", employeeList);
+			response.setSuccess(true);
+			response.setContent(content);
+		}else {
+			content.put("EmployeeList", employeeList);
+			response.setSuccess(false);
+			response.setContent(content);
+		}
+		
+		
+		return response;
+	}
+	
+	@Override
+	public ApiResponse searchInfraUsersForInfraUser(String searchString) {
+		ApiResponse response = new ApiResponse(false);
+//		List<Map> employeeList = employeeRepository.searchInfraUsersForInfraUser(searchString,currentUser.getUserId());
+		List<Map> employeeList = employeeRepository.searchInfraUsersForInfraUser(searchString,currentUser.getUserId());
+
+		Map content = new HashMap();
+		if(employeeList.size() > 0) {
+			content.put("EmployeeList", employeeList);
+			response.setSuccess(true);
+			response.setContent(content);
+		}else {
+			content.put("EmployeeList", employeeList);
+			response.setSuccess(false);
+			response.setContent(content);
+		}
+		
+		
 		return response;
 	}
 
@@ -368,5 +416,42 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		response.setContent(content);
 		return developerInfraList;
 	}
-		
+
+	@Override
+	public ApiResponse updateEmployee(Map employeeRequest) {
+		ApiResponse response = new ApiResponse(true);
+	
+		Employee employeeObj = employeeRepository.getbyUserByUserId(currentUser.getUserId());
+			
+			if (employeeObj != null) {
+
+				employeeObj.setFirstName((String) employeeRequest.get("firstName"));
+				employeeObj.setLastName((String) employeeRequest.get("lastName"));
+				//employeeObj.setLastUpdatedAt(new Date());
+				employeeObj.setMiddleName((String) employeeRequest.get("middleName"));
+				employeeObj.setMobileNumber((String) employeeRequest.get("mobileNumber"));
+				
+				
+				
+				employeeRepository.save(employeeObj);
+
+				response.setSuccess(true);
+				response.setMessage(ResponseMessages.EMPLOYEE_UPDATION);
+				response.setContent(null);
+				return response;
+			}
+
+			else {
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.EMPLOYEE_INVALID);
+				response.setContent(null);
+			
+	
+
+		return response;
+			}
+	}
+
 }
+
+		

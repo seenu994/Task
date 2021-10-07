@@ -19,6 +19,10 @@ public interface ProjectService {
 
 	ApiResponse getAllProjectsByDeveloper(Pageable pageable);
 	
+
 	Optional <Projects> findById(String id);
+
+	ApiResponse searchProject(String searchString); 
+
 
 }

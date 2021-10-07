@@ -30,7 +30,7 @@ import com.xyram.ticketingTool.Communication.PushNotificationCall;
 import com.xyram.ticketingTool.Communication.PushNotificationRequest;
 import com.xyram.ticketingTool.Repository.CommentRepository;
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
-import com.xyram.ticketingTool.Repository.NotificationsRepository;
+import com.xyram.ticketingTool.Repository.NotificationRepository;
 import com.xyram.ticketingTool.Repository.ProjectRepository;
 import com.xyram.ticketingTool.Repository.TicketAssignRepository;
 import com.xyram.ticketingTool.Repository.TicketRepository;
@@ -87,7 +87,7 @@ public class TicketServiceImpl implements TicketService {
 	TicketAttachmentService attachmentService;
 
 	@Autowired
-	NotificationsRepository notificationsRepository;
+	NotificationRepository notificationsRepository;
 
 	@Autowired
 	EmpoloyeeServiceImpl employeeServiceImpl;
@@ -177,9 +177,9 @@ public class TicketServiceImpl implements TicketService {
 				}
 
 			}
-			if (userDetail.getUserRole().equals(UserRole.INFRA)) {
-
-			}
+//			if (userDetail.getUserRole().equals(UserRole.INFRA)) {
+//
+//			}
 		}
 		if (noErrors) {
 			if (ticketNewRequest != null) {
@@ -606,6 +606,8 @@ public class TicketServiceImpl implements TicketService {
 					response.setContent(null);
 				} else {
 					ticketObj.setStatus(TicketStatus.REOPEN);
+					commentObj.setCreatedBy(userDetail.getUserId());
+					commentObj.setCreatedAt(new Date());
 					commentObj.setUpdatedBy(userDetail.getUserId());
 					commentObj.setLastUpdatedAt(new Date());
 					commentRepository.save(commentObj);
@@ -837,6 +839,18 @@ public class TicketServiceImpl implements TicketService {
 		response.setContent(content);
 		return response;
 	}
+	@Override
+	public ApiResponse searchTicket(String searchString) {
+		List<Map> serachList = ticketrepository.searchTicket(searchString);
+		Map content = new HashMap();
+		content.put("serachList", serachList);
+		ApiResponse response = new ApiResponse(true);
+		response.setMessage(ResponseMessages.TICKET_LIST);
+		response.setSuccess(true);
+		response.setContent(content);
+		return response;
+	}
+	
 
 	@Override
 	public ApiResponse inprogressTicket(String ticketId) {

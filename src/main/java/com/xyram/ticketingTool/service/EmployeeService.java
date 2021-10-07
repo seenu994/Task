@@ -26,6 +26,10 @@ public interface EmployeeService {
 	ApiResponse searchEmployeeNotAssignedToProject(String projectid,String clientid, String searchString); 
 	
 	ApiResponse searchInfraUser(String searchString);
+	
+	ApiResponse searchEmployee(String searchString); 
+	
+	ApiResponse searchInfraUsersForInfraUser(String searchString);
 
 	ApiResponse getAllInfraUser();
 	 
@@ -36,5 +40,7 @@ public interface EmployeeService {
 	List<Map>  getListOfDeveloperInfra();
 
 	List<Map> getListOfInfraAdmins();
+
+	ApiResponse updateEmployee(Map employeeRequest);
 
 }

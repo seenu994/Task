@@ -51,18 +51,15 @@ public interface TicketService {
 
 	ApiResponse onHoldTicket(String ticketId);
 	
+
 	Optional <Ticket> findById(String Id);
 	List<Ticket> findAll();
 
 	
 	ApiResponse getAllTicketsByDuration(Pageable pageable, String date1, String date2);
-
-
-
-
-
 ApiResponse getTicketStatusCountWithProject(Pageable pageable);
-	
+	ApiResponse searchTicket(String searchString);
+
 }
 		
 

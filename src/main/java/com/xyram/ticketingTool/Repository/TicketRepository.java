@@ -27,7 +27,16 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 	
 	@Query("Select new map(t.Id as id,t.ticketDescription as ticketDescription,t.projectId as projectId,t.createdBy as createdBy,"
 			+ "t.priorityId as priorityId,t.status as status) from Ticket t")
-	Page<Map> getAllTicketList(Pageable pageable);
+	Page<Map> getAllTicketList(Pageable pageable); 
+	
+	@Query(value = "SELECT a.ticket_id as ticket_id, a.ticket_description as ticket_description, a.ticket_status as ticket_status, a.created_at as created_at, "
+			+ "a.created_by as created_by, a.priority_id as priority_id, b.employee_id as assigneeId, concat(e.frist_name,' ', e.last_name) as assigneeName, concat(ee.frist_name,' ', ee.last_name) as createdByEmp "
+			+ "FROM ticketdbtool.ticket a "
+			+ "left join ticketdbtool.employee ee on a.created_by = ee.user_id "
+			+ "left join ticketdbtool.ticket_assignee b ON a.ticket_id = b.ticket_id "
+			+ "left join ticketdbtool.employee e on b.employee_id = e.employee_id "
+			+ "where a.ticket_description like %:searchString% ", nativeQuery = true)
+	List<Map> searchTicket(@Param("searchString") String searchString );
 	
 	/*
 	@Query(value = "SELECT a.ticket_id as ticket_id, a.ticket_description as ticket_description , a.ticket_status as ticket_status, a.created_at as created_at, a.created_by as created_by, "
@@ -68,7 +77,7 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 	@Query(value = "SELECT t.*, concat(e.frist_name, ' ', e.last_name) as createdByEmp from ticket_comment_log t inner join employee e on t.created_by = e.user_id where t.ticket_id = :ticketId ", nativeQuery = true)
 	List<Map> getTktcommntsById(String ticketId);
 	
-	@Query(value = "SELECT * from ticket_attachment t where t.ticket_id = :ticketId  ", nativeQuery = true)
+	@Query(value = "SELECT t.*,concat(e.frist_name, ' ', e.last_name) as createdByEmp from ticket_attachment t inner join employee e on t.created_by = e.user_id where t.ticket_id = :ticketId  ", nativeQuery = true)
 	List<Map> getTktAttachmentsById(String ticketId);
 	
 	@Query(value = "SELECT a.ticket_id as ticket_id, a.ticket_description as ticket_description , a.ticket_status as ticket_status, a.created_at as created_at, a.created_by as created_by, "

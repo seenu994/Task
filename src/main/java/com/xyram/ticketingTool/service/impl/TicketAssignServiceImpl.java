@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import com.xyram.ticketingTool.Communication.PushNotificationCall;
 import com.xyram.ticketingTool.Communication.PushNotificationRequest;
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
-import com.xyram.ticketingTool.Repository.NotificationsRepository;
+import com.xyram.ticketingTool.Repository.NotificationRepository;
 import com.xyram.ticketingTool.Repository.TicketAssignRepository;
 import com.xyram.ticketingTool.Repository.TicketRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
@@ -49,7 +49,7 @@ public class TicketAssignServiceImpl implements TicketAssignService {
 	CurrentUser userDetail;
 	
 	@Autowired
-	NotificationsRepository notificationsRepository;
+	NotificationRepository notificationsRepository;
 	
 	@Autowired
 	EmpoloyeeServiceImpl employeeServiceImpl;
@@ -80,6 +80,7 @@ public class TicketAssignServiceImpl implements TicketAssignService {
 				for(int i=0;i<allAssignees.size();i++) {
 					TicketAssignee prevAssignee = allAssignees.get(i);
 					prevAssignee.setStatus(TicketAssigneeStatus.INACTIVE);
+					
 					ticketAssignRepository.save(prevAssignee);
 				}
 				ticketAssignRepository.save(assignee);

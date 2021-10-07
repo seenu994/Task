@@ -19,7 +19,7 @@ import com.jcraft.jsch.Session;
 import com.xyram.ticketingTool.Communication.PushNotificationCall;
 import com.xyram.ticketingTool.Communication.PushNotificationRequest;
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
-import com.xyram.ticketingTool.Repository.NotificationsRepository;
+import com.xyram.ticketingTool.Repository.NotificationRepository;
 import com.xyram.ticketingTool.Repository.TicketAssignRepository;
 import com.xyram.ticketingTool.Repository.TicketRepository;
 //import com.xyram.ticketingTool.Repository.TicketCommentRepository;
@@ -51,7 +51,7 @@ TicketRepository  ticketRepository;
 TicketAssignRepository ticketAssigneeRepository;
 
 @Autowired
-NotificationsRepository notificationsRepository;
+NotificationRepository notificationsRepository;
 
 @Autowired
 EmployeeRepository employeeRepository;

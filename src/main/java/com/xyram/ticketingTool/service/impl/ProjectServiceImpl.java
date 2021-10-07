@@ -202,6 +202,26 @@ public class ProjectServiceImpl implements ProjectService {
 		return projectRepository.findById(id);
 	}
 	
+	
+	@Override
+	public ApiResponse searchProject(String searchString) {
+		ApiResponse response = new ApiResponse(false);
+		List<Map> projectList = projectRepository.searchProject(searchString);
+		Map content = new HashMap();
+		if(projectList.size() > 0) {
+			content.put("projectList", projectList);
+			response.setSuccess(true);
+			response.setContent(content);
+		}else {
+			content.put("projectList", projectList);
+			response.setSuccess(false);
+			response.setContent(content);
+		}
+		
+		
+		return response;
+	}
+	
 
 		
 }
