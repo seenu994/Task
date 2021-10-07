@@ -1,11 +1,17 @@
 
 package com.xyram.ticketingTool.service.impl;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.Set;
 
 import javax.security.auth.message.callback.PrivateKeyCallback.Request;
 import javax.transaction.Transactional;
@@ -918,4 +924,78 @@ public class TicketServiceImpl implements TicketService {
 
 		return response;
 	}
+
+	@Override
+	public Optional<Ticket> findById(String Id) {
+		return ticketrepository.findById(Id);
+	}
+
+	@Override
+	public List<Ticket> findAll() {
+		return ticketrepository.findAll();
+	}
+	
+	@Override
+	public ApiResponse getAllTicketsByDuration(Pageable pageable,String date1,String date2) {
+		// TODO Auto-generated method stub
+	System.out.println("inside service method");
+		ApiResponse response = new ApiResponse(false);
+		
+		 SimpleDateFormat sdf = new SimpleDateFormat(  "dd-MM-yyyy HH:mm:ss");
+		 Date startTime,endTime;
+		Page<Map> allTks =  ticketrepository.getAllTicketsByDuration(pageable, date1, date2);
+		  System.out.println( allTks.getContent());
+		  for(Map map: allTks) {
+			  map.entrySet();
+			  map.forEach((k, v) -> System.out.println("Key : " + k + ", Value : " + v.toString()));
+		  }
+		
+			if (allTks != null) {
+				response.setSuccess(true);
+				response.setMessage(ResponseMessages.TICKET_EXIST+" ROLE :: "+userDetail.getUserRole());
+				Map<String, Page<Map>> content = new HashMap<String, Page<Map>>();
+				
+				content.put("tickets", allTks);
+				
+				response.setContent(content);
+			} else {
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.TICKET_NOT_EXIST);
+				response.setContent(null);
+			}
+	     
+		return response;
+
+		
+	}
+	
+	@Override
+	public ApiResponse getTicketStatusCountWithProject(Pageable pageable) {
+		// TODO Auto-generated method stub
+	System.out.println("inside service method");
+		ApiResponse response = new ApiResponse(false);
+		
+		
+		Page<Map> allTks =  ticketrepository.getTicketStatusCountWithProject(pageable);
+		System.out.println("ticket service impl");
+		  System.out.println( allTks.getContent());
+		
+			if (allTks != null) {
+				response.setSuccess(true);
+				response.setMessage(ResponseMessages.TICKET_EXIST+" ROLE :: "+userDetail.getUserRole());
+				Map<String, Page<Map>> content = new HashMap<String, Page<Map>>();
+				
+				content.put("tickets", allTks);
+				
+				response.setContent(content);
+			} else {
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.TICKET_NOT_EXIST);
+				response.setContent(null);
+			}
+	     
+		return response;
+	}
+	
+	
 }

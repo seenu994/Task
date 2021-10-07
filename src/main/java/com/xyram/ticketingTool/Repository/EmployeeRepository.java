@@ -107,6 +107,11 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 
 	@Query("SELECT e from Employee e where e.eId = :employeeId")
 	Employee getbyUserEmpId(String employeeId);
+	
+	@Query(value="SELECT concat(e.frist_name,' ', e.last_name) as assigneeName FROM employee e WHERE e.user_id = :userId",nativeQuery = true)
+	String getEmpName(String userId);
+	
+	
 
 	@Query("SELECT DISTINCT b FROM Employee b WHERE b.userCredientials.id = :userId")
 

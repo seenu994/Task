@@ -3,6 +3,7 @@ package com.xyram.ticketingTool.controller;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,6 +67,14 @@ class ProjectContoller {
 		logger.info("indide ProjectContoller :: editProejct");
 		return projectService.editEmployee(projectRequest);
 	}
+	@GetMapping(value= AuthConstants.ADMIN_BASEPATH+"/getProjectDetails/{projectId}")
+	public Optional<Projects> getProjectDetailsById(@PathVariable String projectId){
+		 return projectService.findById(projectId);
+	}
+	
+	
+	
+	
 	
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/searchProject/{searchString}",
 			AuthConstants.INFRA_USER_BASEPATH + "/searchProject/{searchString}",

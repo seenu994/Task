@@ -1,6 +1,8 @@
 package com.xyram.ticketingTool.controller;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -168,4 +170,40 @@ class TicketController {
 		logger.info("inside Ticket controller :: getTicketSearchById");
 		return ticketService.getTicketSearchById(ticketId);
 	}
+		
+		
+		@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getTickets/{ticketId}",
+				AuthConstants.INFRA_USER_BASEPATH + "/getTickets/{ticketId}",
+			AuthConstants.DEVELOPER_BASEPATH + "/getTickets/{ticketId}" })
+		public Optional<Ticket> getTicketDetailsById(@PathVariable String ticketId) {
+			logger.info(" inside Ticket controller :: get ticket details by Id");
+			return ticketService.findById(ticketId);
+		}
+		
+		@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllTickets",
+				AuthConstants.INFRA_USER_BASEPATH + "/getAllTickets",
+			AuthConstants.DEVELOPER_BASEPATH + "/getAllTickets" })
+		public List<Ticket> getAllTicketDetails() {
+			logger.info(" inside Ticket controller :: get ticket details of all");
+			return ticketService.findAll();
+		}
+		
+		//duration/projectName/EmpName/
+		  @GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllTktByDuration/{date1}/{date2}",
+		  AuthConstants.INFRA_USER_BASEPATH +"/getAllTktByDuration/{date1}/{date2}",
+		  AuthConstants.DEVELOPER_BASEPATH + "/getAllTktByDuration/{date1}/{date2}" }) 
+		  public  ApiResponse getAllTicketDetailsByDuration(Pageable pageable,@PathVariable String date1, @PathVariable String date2) {
+				  logger.info("inside Report controller :: getAllTicket By date function"); 
+				  
+				  return ticketService.getAllTicketsByDuration(pageable, date1, date2);
+		  }
+		  
+		  @GetMapping(value =  AuthConstants.ADMIN_BASEPATH + "/getTicketTotalCount11")
+				  public  ApiResponse getTicketTotalCount(Pageable pageable) {
+						  logger.info("inside Report controller :: getAllTicket By total count"); 
+						  return ticketService.getTicketStatusCountWithProject(pageable);
+				  }
+				  
+		
+		
 }
