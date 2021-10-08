@@ -120,9 +120,9 @@ class EmployeeController {
 	}
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllprofile",
 			AuthConstants.INFRA_USER_BASEPATH + "/getAllprofile",AuthConstants.DEVELOPER_BASEPATH + "/getAllprofile" })
-	public ApiResponse getAllprofile(Pageable pageable) {
+	public ApiResponse getAllprofile() {
 		logger.info("indide CatagoryController :: getAllCatagory");
-		return employeeService.getAllProfile(pageable);
+		return employeeService.getAllProfile();
 	}
 
 }

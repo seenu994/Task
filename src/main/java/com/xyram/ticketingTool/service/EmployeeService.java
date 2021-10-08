@@ -43,6 +43,6 @@ public interface EmployeeService {
 
 	ApiResponse updateEmployee(Map employeeRequest);
 
-	ApiResponse getAllProfile(Pageable pageable);
+	ApiResponse getAllProfile();
 
 }

@@ -115,8 +115,10 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 
 	Employee getbyUserByUserId(String userId);
 
-	@Query("SELECT e from Employee e WHERE e.userCredientials.id = :userId")
+	@Query("Select new map(e.eId as id,e.email as email,e.firstName as firstName,e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId, "
+			+ "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,d.designationName as designationName) from Employee e  "
+			+ "JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id where e.userCredientials.id = :userId")
+	Map getAllEmployeeUserList(String userId);
 
-	Page<Employee> getAllEmployeeUserList(Pageable pageable, String userId);
 
 }
