@@ -28,17 +28,12 @@ public class ReportController {
 	
 	  @GetMapping(value = AuthConstants.ADMIN_BASEPATH + "/getAllTickets11") public
 	  Map getReports() {
-	  logger.info(" inside Report controller :: get ticket details by Id"); return
-	  reportService.prepareReport(); }
-	 
-	
-	 
-	
-	
-	
-
-	
-	 
-	
-
+	  logger.info(" inside Report controller :: get ticket details by Id"); 
+	  return reportService.prepareReport(); }
+	  
+	  @GetMapping(value = AuthConstants.ADMIN_BASEPATH + "/getSummaryReport") 
+	  public Map getSummaryReports(Pageable pageable) {
+	  logger.info(" inside Report controller :: get Summary Report"); 
+	  return reportService.getSummaryReportData( pageable);
+	  }
 }

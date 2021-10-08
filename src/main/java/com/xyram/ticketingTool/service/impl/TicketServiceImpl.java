@@ -1,6 +1,11 @@
 
 package com.xyram.ticketingTool.service.impl;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -18,14 +23,26 @@ import javax.transaction.Transactional;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import com.xyram.ticketingTool.Communication.PushNotificationCall;
 import com.xyram.ticketingTool.Communication.PushNotificationRequest;
 import com.xyram.ticketingTool.Repository.CommentRepository;
@@ -51,6 +68,7 @@ import com.xyram.ticketingTool.exception.ResourceNotFoundException;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.TicketAttachmentService;
 import com.xyram.ticketingTool.service.TicketService;
+import com.xyram.ticketingTool.util.PdfUtil;
 import com.xyram.ticketingTool.util.ResponseMessages;
 
 /**
@@ -143,6 +161,7 @@ public class TicketServiceImpl implements TicketService {
 
 		List<Map> allTickets = ticketrepository.getAllCompletedTickets(userDetail.getUserId(),
 				userDetail.getUserRole());
+		
 		if (allTickets != null) {
 			response.setSuccess(true);
 			response.setMessage(ResponseMessages.TICKET_EXIST);
@@ -974,10 +993,13 @@ public class TicketServiceImpl implements TicketService {
 	System.out.println("inside service method");
 		ApiResponse response = new ApiResponse(false);
 		
-		
+	
 		Page<Map> allTks =  ticketrepository.getTicketStatusCountWithProject(pageable);
+	
+	
+
 		System.out.println("ticket service impl");
-		  System.out.println( allTks.getContent());
+		
 		
 			if (allTks != null) {
 				response.setSuccess(true);
@@ -996,5 +1018,8 @@ public class TicketServiceImpl implements TicketService {
 		return response;
 	}
 	
+
 	
-}
+	  
+	
+	}

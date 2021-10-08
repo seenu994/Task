@@ -107,4 +107,6 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 			"group by t.ticket_status, p.project_name",nativeQuery=true)
 	Page<Map> getTicketStatusCountWithProject(Pageable pageable);
 	
+	
+	
 }

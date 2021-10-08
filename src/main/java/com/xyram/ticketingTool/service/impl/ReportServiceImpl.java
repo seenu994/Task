@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -15,6 +16,8 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -58,7 +61,8 @@ public class ReportServiceImpl implements ReportService{
 	   TicketRepository ticketRepo;
 	  
 	
-	  @Override public Map prepareReport() {
+	  @Override
+	  public Map prepareReport() {
 		  Map response = new HashMap<>();
 	  Document document = new Document(); ClassLoader classLoader =
 	  getClass().getClassLoader(); File file = new
@@ -223,6 +227,90 @@ public class ReportServiceImpl implements ReportService{
 			return duration;
 			
 	    }
+
+	  public Map getSummaryReportData(Pageable pageable) {
+		  Map response = new HashMap<>();
+	  Document document = new Document(); ClassLoader classLoader =
+	  getClass().getClassLoader(); File file = new
+	  File(classLoader.getResource("SummaryReport.pdf").getFile());
+	  System.out.println("=====file.getName()======> " + file.getName());
+	  System.out.println("=====file.length()======> " + file.length()); 
+	 
+	  
+	  try { 
+		  PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(classLoader.getResource("SummaryReport.pdf").getFile()));
+	  document.open();
+	  
+	  Paragraph intro= new Paragraph("SummaryReport"); 
+	  Paragraph space = new Paragraph(" "); 
+	 
+	  PdfPCell cell = new PdfPCell();
+	  cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+	  
+	  PdfPTable table1 = new PdfPTable(3);
+	  
+	  
+	  table1.getDefaultCell().setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
+	  
+	  table1.addCell(new Phrase("ProjectName")); 
+	  table1.addCell(new Paragraph("Ticket_Status")); 
+	  table1.addCell(new Phrase("TotalCount"));
+	 
+	  
+	  table1.setHeaderRows(1);
+	  
+	  
+	  Page<Map> allTks =  ticketRepo.getTicketStatusCountWithProject(pageable);
+		
+		for(Map map: allTks) {
+			
+			String projectName=(String) map.get("project_name");
+			String ticketStatus = (String) map.get("ticket_status");	
+			 Integer count = ((BigInteger)  map.get("TotalCount")).intValue();
+			
+			
+			table1.addCell(projectName);
+			table1.addCell(ticketStatus);
+			table1.addCell(String.valueOf(count));
+			
+		}
+	
+		 
+	  
+	  document.add(intro);
+	  document.add(space); 
+	  
+	//  document.add(space); 
+	  document.add(table1);
+	  
+	  
+	  document.close(); writer.close(); } catch (Exception e) {
+	  e.printStackTrace();
+	  
+	  } InputStreamResource resource = null; try { resource = new
+	  InputStreamResource(new FileInputStream(file)); } catch
+	  (FileNotFoundException e1) { e1.printStackTrace(); }
+	  ResponseEntity<InputStreamResource> preparePdf = ResponseEntity.ok()
+	  .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" +
+	  file.getName()) .contentLength(file.length())
+	  .contentType(MediaType.parseMediaType(MediaType.
+	  APPLICATION_OCTET_STREAM_VALUE)).body(resource);
+	  
+	  byte[] blob = PdfUtil.toblob(preparePdf); File someFile = new
+	  File(classLoader.getResource("SummaryReport.pdf").getFile()); FileOutputStream fos;
+	  try { fos = new FileOutputStream(someFile); fos.write(blob); fos.flush();
+	  fos.close(); } catch (IOException e) {
+	  
+	  e.printStackTrace(); }
+	  
+	  
+	  response.put("fileName", "Report"); response.put("type", "application/pdf");
+	  response.put("blob", blob); return response;
+	  
+	  }
+	 
+	
+
 }
 
 
