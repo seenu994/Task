@@ -43,4 +43,6 @@ public interface EmployeeService {
 
 	ApiResponse updateEmployee(Map employeeRequest);
 
+	ApiResponse getAllUserEmployee(Pageable pageable);
+
 }
