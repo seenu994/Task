@@ -453,7 +453,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public ApiResponse getAllUserEmployee(Pageable pageable) {
+	public ApiResponse getAllProfile(Pageable pageable) {
 		Page<Employee> ProfileList = employeeRepository.getAllEmployeeUserList(pageable,currentUser.getUserId());
 		Map content = new HashMap();
 

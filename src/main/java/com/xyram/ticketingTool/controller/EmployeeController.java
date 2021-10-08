@@ -122,7 +122,7 @@ class EmployeeController {
 			AuthConstants.INFRA_USER_BASEPATH + "/getAllprofile",AuthConstants.DEVELOPER_BASEPATH + "/getAllprofile" })
 	public ApiResponse getAllprofile(Pageable pageable) {
 		logger.info("indide CatagoryController :: getAllCatagory");
-		return employeeService.getAllUserEmployee(pageable);
+		return employeeService.getAllProfile(pageable);
 	}
 
 }
