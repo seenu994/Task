@@ -452,6 +452,19 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			}
 	}
 
+	@Override
+	public ApiResponse getAllUserEmployee(Pageable pageable) {
+		Page<Employee> ProfileList = employeeRepository.getAllEmployeeUserList(pageable,currentUser.getUserId());
+		Map content = new HashMap();
+
+		content.put("ProfileList", ProfileList);
+		ApiResponse response = new ApiResponse(true);
+		response.setSuccess(true);
+		response.setContent(content);
+		return response;
+	}
+
+
 }
 
 		
