@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import javax.transaction.Transactional;
 
@@ -80,10 +81,13 @@ public Map storeImage(MultipartFile[] files,String ticketId) {
 	try {
 	       filearray=constentFile.getBytes();
 //	       System.out.println(file.);
-	      String filename=constentFile.getOriginalFilename();
-	       addFileAdmin(constentFile);
+	       String fileextension = constentFile.getOriginalFilename().substring(constentFile.getOriginalFilename().lastIndexOf("."));
+	      String filename = getRandomFileName()+fileextension;//constentFile.getOriginalFilename();
+	      
+//	       addFileAdmin(constentFile);
 //	       addFileCustomer(file);
-	       if(addFileAdmin(constentFile)!= null) {
+//	      String[] fileextension = constentFile.getOriginalFilename().split("-");
+	       if(addFileAdmin(constentFile,filename)!= null) {
 	    	  TicketAttachment ticketAttachment = new  TicketAttachment();
 	    	  Ticket tickets = ticketRepository.getById(ticketId);
 	    	  ticketAttachment.setCreatedBy(userDetail.getUserId());
@@ -119,6 +123,21 @@ public Map storeImage(MultipartFile[] files,String ticketId) {
 	  }
 	return fileMap ;
 }
+
+public String getRandomFileName() {
+    int leftLimit = 97; // letter 'a'
+    int rightLimit = 122; // letter 'z'
+    int targetStringLength = 10;
+    Random random = new Random();
+
+    String generatedString = random.ints(leftLimit, rightLimit + 1)
+      .limit(targetStringLength)
+      .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+      .toString();
+
+    return generatedString;
+}
+
 public void sendPushNotification(String userId, String message, Ticket ticketNewRequest, String title, int notiType) {
 	
 	Employee employeeObj = employeeRepository.getById(userId);
@@ -156,7 +175,7 @@ public void sendPushNotification(String userId, String message, Ticket ticketNew
 }
 
 
-public String addFileAdmin(MultipartFile file){
+public String addFileAdmin(MultipartFile file, String fileName){
 	System.out.println("bjsjsjn");
     String SFTPHOST = "13.229.55.43"; // SFTP Host Name or SFTP Host IP Address
     int SFTPPORT = 22; // SFTP Port Number
@@ -165,7 +184,7 @@ public String addFileAdmin(MultipartFile file){
     String SFTPKEY = "/home/ubuntu/tomcat/webapps/Ticket_tool-0.0.1-SNAPSHOT/WEB-INF/classes/Covid-Phast-Prod.ppk";
 //    String SFTPWORKINGDIR = "/home/ubuntu/tomcat-customer/webapps/images/daydrop-images"; 
     String SFTPWORKINGDIRAADMIN = "/home/ubuntu/tomcat/webapps/image/ticket-attachment";// Source Directory on SFTP server
-    String fileNameOriginal = file.getOriginalFilename();
+    String fileNameOriginal = fileName;
 //    String LOCALDIRECTORY = "C:\\daydrop-images"; // Local Target Directory
     try {
           JSch jsch = new JSch();
@@ -189,7 +208,7 @@ public String addFileAdmin(MultipartFile file){
 //        channelSftp = (ChannelSftp) channel;
         channelSftp.cd(SFTPWORKINGDIRAADMIN);// Change Directory on SFTP Server
 //      File f = new File(fileName);
-      channelSftp.put(file.getInputStream(),file.getOriginalFilename());
+      channelSftp.put(file.getInputStream(),fileName);
         System.out.println("added");
 //        recursiveFolderUpload(LOCALDIRECTORY, SFTPWORKINGDIR);
     } catch (Exception ex) {
