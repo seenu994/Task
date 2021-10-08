@@ -885,7 +885,7 @@ public class TicketServiceImpl implements TicketService {
 				response.setContent(null);
 			} else {
 
-				if (ticketNewRequest.getStatus() == TicketStatus.ASSIGNED) {
+				if (ticketNewRequest.getStatus() == TicketStatus.ASSIGNED || ticketNewRequest.getStatus() == TicketStatus.REOPEN  ) {
 
 					ticketNewRequest.setStatus(TicketStatus.INPROGRESS);
 					ticketNewRequest.setUpdatedBy(userDetail.getUserId());
