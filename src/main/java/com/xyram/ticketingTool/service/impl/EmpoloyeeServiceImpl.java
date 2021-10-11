@@ -452,6 +452,20 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			}
 	}
 
+	@Override
+	public ApiResponse getAllProfile() {
+		Map ProfileList = employeeRepository.getAllEmployeeUserList(currentUser.getUserId());
+		Map content = new HashMap();
+
+		content.put("ProfileList", ProfileList);
+		ApiResponse response = new ApiResponse(true);
+		response.setSuccess(true);
+		response.setContent(content);
+		return response;
+	}
+
+
+
 }
 
 		

@@ -113,10 +113,16 @@ class EmployeeController {
 		return employeeService.getAllInfraUser();
 	}
 	
-	@PutMapping(value = { AuthConstants.INFRA_USER_BASEPATH +"/updateEmployee",AuthConstants.DEVELOPER_BASEPATH +"/updateEmployee"})
+	@PutMapping(value = { AuthConstants.INFRA_USER_BASEPATH +"/updateProfile",AuthConstants.DEVELOPER_BASEPATH +"/updateProfile"})
 	public ApiResponse editEmployee(@RequestBody Map employeeRequest) {
 		logger.info("indide ProductController :: getAllemployee");
 		return employeeService.updateEmployee( employeeRequest);
+	}
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllprofile",
+			AuthConstants.INFRA_USER_BASEPATH + "/getAllprofile",AuthConstants.DEVELOPER_BASEPATH + "/getAllprofile" })
+	public ApiResponse getAllprofile() {
+		logger.info("indide CatagoryController :: getAllCatagory");
+		return employeeService.getAllProfile();
 	}
 
 }

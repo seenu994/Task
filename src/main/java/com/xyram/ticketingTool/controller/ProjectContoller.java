@@ -1,6 +1,5 @@
 package com.xyram.ticketingTool.controller;
 
-
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -30,7 +29,8 @@ import com.xyram.ticketingTool.util.AuthConstants;
 
 import ch.qos.logback.core.pattern.color.ANSIConstants;
 
-/**a
+/**
+ * a
  * 
  * @author sahana.neelappa
  *
@@ -44,38 +44,37 @@ class ProjectContoller {
 	@Autowired
 	ProjectService projectService;
 
-	
-	@PostMapping(value= {AuthConstants.ADMIN_BASEPATH + "/createProject"})
+	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/createProject" })
 	public ApiResponse addproject(@RequestBody Projects project) {
 		logger.info("Received request to add project");
-		return projectService.addproject(project ) ;
+		return projectService.addproject(project);
 	}
 
-	
-	@GetMapping(value= {AuthConstants.ADMIN_BASEPATH +"/getAllProjects",AuthConstants.INFRA_USER_BASEPATH +"/getAllProjects", })
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllProjects",
+			AuthConstants.INFRA_USER_BASEPATH + "/getAllProjects", })
 	public ApiResponse getAllProjects(Pageable pageable) {
 		logger.info("indide ProjectContoller :: getAllProjects");
 		return projectService.getAllProjects(pageable);
 	}
-	@GetMapping(value= {AuthConstants.DEVELOPER_BASEPATH +"/getAllProjects"})
-			public ApiResponse getAllProjectsByDeveloper(Pageable pageable) {
-				logger.info("indide ProjectContoller :: getAllProjects");
-				return projectService.getAllProjectsByDeveloper(pageable);
-			}
-	@PutMapping(value= {AuthConstants.ADMIN_BASEPATH + "/editProejct",AuthConstants.INFRA_USER_BASEPATH+"/editProejct"})
-	public ApiResponse editProject(@RequestBody Projects projectRequest ) {
+
+	@GetMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/getAllProjects" })
+	public ApiResponse getAllProjectsByDeveloper(Pageable pageable) {
+		logger.info("indide ProjectContoller :: getAllProjects");
+		return projectService.getAllProjectsByDeveloper(pageable);
+	}
+
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editProejct",
+			AuthConstants.INFRA_USER_BASEPATH + "/editProejct" })
+	public ApiResponse editProject(@RequestBody Projects projectRequest) {
 		logger.info("indide ProjectContoller :: editProejct");
 		return projectService.editEmployee(projectRequest);
 	}
-	@GetMapping(value= AuthConstants.ADMIN_BASEPATH+"/getProjectDetails/{projectId}")
-	public Optional<Projects> getProjectDetailsById(@PathVariable String projectId){
-		 return projectService.findById(projectId);
+
+	@GetMapping(value = AuthConstants.ADMIN_BASEPATH + "/getProjectDetails/{projectId}")
+	public Optional<Projects> getProjectDetailsById(@PathVariable String projectId) {
+		return projectService.findById(projectId);
 	}
-	
-	
-	
-	
-	
+
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/searchProject/{searchString}",
 			AuthConstants.INFRA_USER_BASEPATH + "/searchProject/{searchString}",
 			AuthConstants.DEVELOPER_BASEPATH + "/searchProject/{searchString}" })
@@ -83,5 +82,5 @@ class ProjectContoller {
 		logger.info("inside ProjectContoller :: searchProject ");
 		return projectService.searchProject(searchString);
 	}
-	
+
 }
