@@ -3,3 +3,4 @@
 *.class
 /target/Ticket_tool-0.0.1-SNAPSHOT/WEB-INF/classes/SummaryReport.pdf
 /target/classes/SummaryReport.pdf
+/target/*
