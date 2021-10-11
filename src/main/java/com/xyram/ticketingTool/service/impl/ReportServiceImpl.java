@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -62,31 +63,14 @@ public class ReportServiceImpl implements ReportService{
 	  
 	
 	  @Override
-	  public Map prepareReport() {
+	  public Map prepareReport(Pageable pageable,String date1,String date2) {
 		  Map response = new HashMap<>();
-	  Document document = new Document(); ClassLoader classLoader =
-	  getClass().getClassLoader(); File file = new
-	  File(classLoader.getResource("Report.pdf").getFile());
+	  Document document = new Document();
+	  ClassLoader classLoader =getClass().getClassLoader(); 
+	  File file = new File(classLoader.getResource("Report.pdf").getFile());
 	  System.out.println("=====file.getName()======> " + file.getName());
-	  System.out.println("=====file.length()======> " + file.length()); String
-	  projectId="2c9fab1f7c4109ba017c410a3d0c0000"; String
-	  name=projRepo.getProjectNameByProjectId(projectId);
-	  System.out.println("ProjectName::"+name);
-	  
-	  Employee emp=empRepo.getById("2c9fab1f7c3eebc6017c4067cade000w");
-	  System.out.println("empName"+ emp.getFirstName());
-	  
-	  String  empId=ticketAssignRepo.getAssigneeId("2c9fab1f7c550c48017c551626780005"); 
-	  System.out.println("empId::"+empId);
-	  Employee emp1=empRepo.getById(empId);
-	  System.out.println("empName::"+ emp1.getFirstName());
-	  //testing ticket raised by => created_by column 
-	 System.out.println("find out ticket raised by");
-	  String created_by="2c9fab1f7c3eebc6017c406295e4000a";
-	  String empName=empRepo.getEmpName(created_by) ;
-	  System.out.println("empName::"+ empName);
-	  
-	  
+	  System.out.println("=====file.length()======> " + file.length()); 
+	 
 	  try { 
 		  PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(classLoader.getResource("Report.pdf").getFile()));
 	  document.open();
@@ -97,7 +81,7 @@ public class ReportServiceImpl implements ReportService{
 	  PdfPCell cell = new PdfPCell();
 	  cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
 	  
-	  PdfPTable table2 = new PdfPTable(7);
+	  PdfPTable table2 = new PdfPTable(8);
 	  
 	  
 	  table2.getDefaultCell().setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
@@ -105,54 +89,67 @@ public class ReportServiceImpl implements ReportService{
 	  table2.addCell(new Phrase("Project")); 
 	  table2.addCell(new Phrase("TicketRaised_By"));
 	  table2.addCell(new Paragraph("Date")); 
-	  table2.addCell(new Phrase("Resovled_By")); 
+	 table2.addCell(new Phrase("Assigned_To"));
 	  table2.addCell(new Phrase("Status"));
+	  table2.addCell(new Phrase("Resovled_By")); 
 	table2.addCell(new Phrase("Duration"));
 	  
 	  table2.setHeaderRows(1);
 	  
 	  
-	  List<Ticket> tks =ticketRepo.findAll(); 
-	 for(Ticket t:  tks) { 
-		 if(t.getId()!=null) {
-			 table2.addCell(t.getId());
-			 table2.addCell(projRepo.getProjectNameByProjectId(t.getProjectId()));
-		  //ticketRaised by 
-			 if(empRepo.getEmpName(t.getCreatedBy())!=null) {
-				 table2.addCell(empRepo.getEmpName(t.getCreatedBy()));
+	 
+	  
+	  SimpleDateFormat sdf = new SimpleDateFormat(  "dd-MM-yyyy HH:mm:ss");
+		 Date startTime,endTime;
+		Page<Map> allTks =  ticketRepo.getAllTicketsByDuration(pageable, date1, date2);
+
+		for(Map map : allTks) {
+			String ticketNo=(String) map.get("ticket_id");
+			table2.addCell(ticketNo);
+			String projectName =  projRepo.getProjectNameByProjectId11(map.get("project_id"));
+			 table2.addCell(projectName);
+		
+			 if(map.get("created_by")!=null) {
+				 String TicketRaisedBy =(String)map.get("createdByEmp");
+				 table2.addCell(TicketRaisedBy);
 			 }
 			 else {
-				 table2.addCell(t.getCreatedBy());
+				 table2.addCell(" ");
 			 }
+			 Date createdDate= (Date) map.get("created_at");
+			 table2.addCell(createdDate.toString());
+			 String assignee = (String) map.get("assigneeName");
+			 table2.addCell(assignee);
+			 //Status
+			  String status= (String) map.get("ticket_status");
+			  table2.addCell(status);
+			 //ResolvedBy
+			  String  empId1=ticketAssignRepo.getAssigneeId(map.get("created_by")); 
+			  
+			 if(empId1!=null) {
+				// ResolvedBy
+				 Employee emp2=empRepo.getById(empId1);
+				 String ResolvedBy= emp2.getFirstName();
+				  table2.addCell(ResolvedBy);
+			 }
+			 else {
+				 table2.addCell(" ");
+			 }
+			 
+			  //Duration
+			  if(status.equalsIgnoreCase("completed")) {
+				  Date createdAt = (Date) map.get("created_at");
+				  Date lastUpated=  (Date) map.get("last_updated_at");
+				  String  duration=findDifference(createdAt,lastUpated);
+				  table2.addCell(duration);
+			  }
+			  else {
+				  table2.addCell(" ");
+			  }
 			
-			 table2.addCell(t.getCreatedAt().toString()); //resolved by String
-					
-		  String  empId1=ticketAssignRepo.getAssigneeId(t.getId()); 
-		  if(empId1!=null) {
-			  Employee emp2=empRepo.getById(empId1); 
-				 table2.addCell( emp2.getFirstName());
-		  }
-		  else {
-			  table2.addCell(" ");
-		  }
-		  
-		 table2.addCell(t.getStatus().toString());
-		 if(t.getStatus().equals("COMPLETED")) {
-			 String  duration=findDifference(t.getCreatedAt(),t.getLastUpdatedAt());
-			 table2.addCell(duration); 
-		 }
-		 else {
-			 table2.addCell(" "); 
-		 }
-		 
-		 }
-		 else {
-			 System.out.println("id cant be null");
-			 continue;
-		 }
+		}
+	
 		
-	  
-	  }
 	  
 	  document.add(intro);
 	  document.add(space); 
@@ -161,12 +158,17 @@ public class ReportServiceImpl implements ReportService{
 	  document.add(table2);
 	  
 	  
-	  document.close(); writer.close(); } catch (Exception e) {
+	  document.close(); 
+	  writer.close(); }
+	  catch (Exception e) {
 	  e.printStackTrace();
 	  
-	  } InputStreamResource resource = null; try { resource = new
-	  InputStreamResource(new FileInputStream(file)); } catch
-	  (FileNotFoundException e1) { e1.printStackTrace(); }
+	  } 
+	  InputStreamResource resource = null; try 
+	  { resource = new
+	  InputStreamResource(new FileInputStream(file)); } 
+	  catch (FileNotFoundException e1) {
+		  e1.printStackTrace(); }
 	  ResponseEntity<InputStreamResource> preparePdf = ResponseEntity.ok()
 	  .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" +
 	  file.getName()) .contentLength(file.length())

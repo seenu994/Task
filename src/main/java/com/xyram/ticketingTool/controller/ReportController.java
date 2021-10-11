@@ -26,10 +26,13 @@ public class ReportController {
 	private final Logger logger = LoggerFactory.getLogger(ReportController.class);
 	
 	
-	  @GetMapping(value = AuthConstants.ADMIN_BASEPATH + "/getAllTickets11") public
-	  Map getReports() {
-	  logger.info(" inside Report controller :: get ticket details by Id"); 
-	  return reportService.prepareReport(); }
+	  @GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getTicketReport/{date1}/{date2}", 
+			  AuthConstants.INFRA_USER_BASEPATH + "/getTicketReport/{date1}/{date2}", 
+			  AuthConstants.DEVELOPER_BASEPATH + "/getTicketReport/{date1}/{date2}" }) 
+	  public Map getReports(Pageable pageable,@PathVariable String date1, @PathVariable String date2) {
+	  logger.info(" inside Report controller :: get ticket details by duration"); 
+	  return reportService.prepareReport(pageable,date1,date2); 
+	  }
 	  
 	  @GetMapping(value = AuthConstants.ADMIN_BASEPATH + "/getSummaryReport") 
 	  public Map getSummaryReports(Pageable pageable) {

@@ -37,6 +37,8 @@ public interface ProjectRepository extends JpaRepository<Projects, String> {
 	@Query("SELECT p.projectName FROM Projects p WHERE p.pId=:pId")
 	String getProjectNameByProjectId(String pId);
 	
+	@Query("SELECT p.projectName FROM Projects p WHERE p.pId=:pId")
+	String getProjectNameByProjectId11(Object pId);
 	
 
 	@Query("Select distinct new map(e.pId as id,e.projectName as PName,e.projectDescritpion as projectDescritpion,e.clientId as clientId,c.clientName as clientname,e.inHouse as inHouse,"

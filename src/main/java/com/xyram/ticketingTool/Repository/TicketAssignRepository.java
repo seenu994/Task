@@ -13,7 +13,7 @@ public interface TicketAssignRepository extends JpaRepository<TicketAssignee, St
 	public List<TicketAssignee> findByTicketId(String ticketId);
 	
 	@Query("SELECT t.employeeId from TicketAssignee t Where t.ticketId = :ticketId")
-	public String getAssigneeId(String ticketId);
+	public String getAssigneeId(Object ticketId);
 	
 	
 	

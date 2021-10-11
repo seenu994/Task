@@ -93,7 +93,7 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 	 * @Query(value="SELECT t from Ticket t  where t.ticket_status != 'REASSIGNED' "
 	 * ) List<Ticket> getTicketDetailsExceptStatus();
 	 */
-	@Query( value="SELECT  a.ticket_id, a.ticket_description,a.ticket_status, a.created_at, a.created_by, a.priority_id, b.ticket_assignee_id, concat(e.frist_name,' ', e.last_name) as assigneeName, concat(ee.frist_name,' ', ee.last_name) as createdByEmp\r\n" + 
+	@Query( value="SELECT  a.ticket_id, a.ticket_description,a.ticket_status, a.created_at,a.last_updated_at, a.created_by, a.priority_id,a.project_id,b.ticket_assignee_id, concat(e.frist_name,' ', e.last_name) as assigneeName, concat(ee.frist_name,' ', ee.last_name) as createdByEmp\r\n" + 
 			"FROM ticket a left join employee ee on a.created_by = ee.user_id \r\n" + 
 			"left join ticket_assignee b ON a.ticket_id = b.ticket_id  \r\n" + 
 			"left join employee e on b.employee_id = e.employee_id "+
