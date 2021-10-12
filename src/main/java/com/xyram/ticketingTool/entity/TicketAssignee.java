@@ -52,7 +52,7 @@ public class TicketAssignee extends AuditModel {
 	
 	
 	@Enumerated(EnumType.STRING)
-	@Column(name = "ticketAssigneeStatus")
+	@Column(name = "ticket_assignee_status")
 	private TicketAssigneeStatus status = TicketAssigneeStatus.ACTIVE;
 
 

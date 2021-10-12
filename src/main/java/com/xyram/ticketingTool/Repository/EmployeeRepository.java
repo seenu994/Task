@@ -36,7 +36,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 	// and p.`project_id` = '2c9fab1f7c3eebc6017c4073c8770010'
 
 	@Query("Select new map(e.eId as id, e.firstName as firstName, e.lastName as lastName) "
-			+ "from Employee e left JOIN ProjectMembers p On e.eId = p.employeeId where e.status = 'ACTIVE' and e.roleId = 'R3' and p.projectId = :projectId")
+			+ "from Employee e left JOIN ProjectMembers p On e.eId = p.employeeId where p.status = 'ACTIVE' and e.status = 'ACTIVE' and e.roleId = 'R3' and p.projectId = :projectId")
 	List<Map> getAllEmpByProject(@Param("projectId") String projectId);
 
 	/*
