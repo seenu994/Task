@@ -9,6 +9,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
@@ -21,6 +22,9 @@ import com.xyram.ticketingTool.enumType.ProjectStatus;
 import com.xyram.ticketingTool.enumType.UserRole;
 import com.xyram.ticketingTool.enumType.UserStatus;
 import com.xyram.ticketingTool.ticket.config.JSONObjectUserType;
+import javax.persistence.Lob;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Type;   
 
 @Entity
 @Table(name = "user")
@@ -52,6 +56,22 @@ public class User extends IBaseData {
 	
 	@Column(name = "accesskey")
 	private String accesskey;
+	
+	
+	@Lob
+	@Type(type = "org.hibernate.type.ImageType")
+	@JsonIgnore
+	private byte[] image;
+
+	@JsonIgnore
+	@Column(name = "mime_type")
+	private String mimeType;
+
+	@Column(name = "file_name")
+	@JsonIgnore
+	private String fileName;
+	
+	
 	
 
 	public String getAccesskey() {
