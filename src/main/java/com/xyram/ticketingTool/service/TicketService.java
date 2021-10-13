@@ -60,7 +60,9 @@ public interface TicketService {
 ApiResponse getTicketStatusCountWithProject(Pageable pageable);
 	ApiResponse searchTicket(String searchString);
 
-	ApiResponse deleteComment(String ticketId);
+	
+
+	ApiResponse deleteComment(Comments commentObj);
 	
 	
 
