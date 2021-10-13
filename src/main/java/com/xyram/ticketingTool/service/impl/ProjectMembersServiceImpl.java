@@ -135,6 +135,9 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 						}
 
 					}
+					response.setSuccess(true);
+					response.setMessage(ResponseMessages.PROJECT_MEMBERS_ADDED);
+					response.setContent(null);
 
 				} else {
 					response.setSuccess(false);
@@ -146,10 +149,12 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 				response.setMessage(ResponseMessages.PROJECT_NOTEXIST);
 				response.setContent(null);
 			}
+		}else {
+			response.setSuccess(false);
+			response.setMessage("request Object having problem..");
+			response.setContent(null);
 		}
-		response.setSuccess(true);
-		response.setMessage(ResponseMessages.PROJECT_MEMBERS_ADDED);
-		response.setContent(null);
+		
 		return response;
 	}
 
