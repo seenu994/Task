@@ -8,6 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
+import java.util.Date;
+
 
 import org.hibernate.annotations.GenericGenerator;
 import com.xyram.ticketingTool.baseData.model.AuditModel;
@@ -46,7 +48,11 @@ public class Ticket extends AuditModel {
 	@Column(name = "ticketStatus")
 	private TicketStatus status = TicketStatus.INITIATED;
 
+	@Column(name = "resolved_at")
+	private Date resolvedAt;
 	
+	@Column(name = "cancelled_at")
+	private Date cancelledAt;
 	
 
 	public String getId() {
@@ -59,6 +65,14 @@ public class Ticket extends AuditModel {
 
 	public String getTicketDescription() {
 		return ticketDescription;
+	}
+	
+	public void setResolvedAt(Date date) {
+		resolvedAt = date;
+	}
+	
+	public void setCancelledAt(Date date) {
+		resolvedAt = date;
 	}
 
 	public void setTicketDescription(String ticketDescription) {
@@ -77,6 +91,14 @@ public class Ticket extends AuditModel {
 
 	public String getCreatedBy() {
 		return createdBy;
+	}
+	
+	public Date getResolvedOn() {
+		return resolvedAt;
+	}
+	
+	public Date getCancelledOn() {
+		return cancelledAt;
 	}
 
 	public String getProjectId() {

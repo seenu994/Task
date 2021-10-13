@@ -335,6 +335,7 @@ public class TicketServiceImpl implements TicketService {
 				ticketNewRequest.setStatus(TicketStatus.CANCELLED);
 				ticketNewRequest.setUpdatedBy(userDetail.getUserId());
 				ticketNewRequest.setLastUpdatedAt(new Date());
+				ticketNewRequest.setCancelledAt(new Date());
 
 				// Inserting Ticket history details
 				TicketStatusHistory tktStatusHist = new TicketStatusHistory();
@@ -466,6 +467,7 @@ public class TicketServiceImpl implements TicketService {
 					ticketNewRequest.setStatus(TicketStatus.COMPLETED);
 					ticketNewRequest.setUpdatedBy(userDetail.getUserId());
 					ticketNewRequest.setLastUpdatedAt(new Date());
+					ticketNewRequest.setResolvedAt(new Date());
 					ticketrepository.save(ticketNewRequest);
 
 					// Inserting Ticket history details
