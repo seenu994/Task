@@ -31,8 +31,10 @@ public interface ProjectRepository extends JpaRepository<Projects, String> {
 	Page<Map> getAllProjectByEmployee(Pageable pageable);
 	
 
-	
-
+	@Query("Select distinct new map(p.pId as id,p.projectName as PName, p.projectDescritpion as projectDescritpion, p.clientId as clientId, "
+			+ " p.inHouse as inHouse, p.status as status) from ProjectMembers "
+			+ " e left join  Projects p On e.projectId = p.pId where e.status = 'ACTIVE' and e.employeeId = :employeeId ")
+	Page<Map> getAllProjectByDeveloper(Pageable pageable, String employeeId);
 	
 
 	

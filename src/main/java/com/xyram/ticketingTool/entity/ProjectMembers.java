@@ -34,7 +34,7 @@ public class ProjectMembers extends AuditModel {
 	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "projectmemberstatus")
-	private ProjectMembersStatus status = ProjectMembersStatus.INACTIVE;
+	private ProjectMembersStatus status = ProjectMembersStatus.ACTIVE;
 //@JsonIgnore
 //	@OneToOne(cascade = { CascadeType.MERGE })
 //	@JoinColumn(name = "employee_id")

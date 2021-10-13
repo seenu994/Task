@@ -253,8 +253,10 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 		ApiResponse response = new ApiResponse(false);
 
 		if (employeeId != null) {
-
-			List<Map> projectList = projectMemberRepository.getAllProjectByEmployeeId(employeeId);
+			Employee employeeObj = employeeRepository.getbyUserByUserId(employeeId);
+			
+			
+			List<Map> projectList = projectMemberRepository.getAllProjectByEmployeeId(employeeObj.geteId());
 			List<Map> allotedProjectList = projectMemberRepository.getAllAllottedProjects();
 //			for(int i=0; i<= allotedProjectList.size();i++) {
 //				projectList.add(allotedProjectList[i]);

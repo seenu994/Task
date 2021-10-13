@@ -13,10 +13,13 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
+import com.xyram.ticketingTool.Repository.EmployeeRepository;
 import com.xyram.ticketingTool.Repository.ProjectRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
+import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.Projects;
 import com.xyram.ticketingTool.entity.Role;
 import com.xyram.ticketingTool.enumType.UserRole;
@@ -41,6 +44,9 @@ public class ProjectServiceImpl implements ProjectService {
 	
 	@Autowired
 	CurrentUser userDetail;
+	
+	@Autowired
+	EmployeeRepository employeeRepository;
 
 	@Override
 	public ApiResponse addproject(Projects project) {		
@@ -92,7 +98,7 @@ public class ProjectServiceImpl implements ProjectService {
 		
 		Page<Map> projectList;
 		
-		if(userDetail.getUserRole().equals(UserRole.DEVELOPER)) {
+		if(userDetail.getUserRole().equalsIgnoreCase("DEVELOPER")) {
 			projectList = projectRepository.getAllProjectByEmployee(pageable);
 		}else
 			projectList = projectRepository.getAllProjectsList(pageable);
@@ -194,7 +200,16 @@ public class ProjectServiceImpl implements ProjectService {
 
 	@Override
 	public ApiResponse getAllProjectsByDeveloper(Pageable pageable) {
-		Page<Map> projectList = projectRepository.getAllProjectByEmployee(pageable);
+		Page<Map> projectList ;
+		if(!userDetail.getUserRole().equalsIgnoreCase("DEVELOPER"))
+			projectList = projectRepository.getAllProjectByEmployee(pageable); 
+		else {
+			Employee employeeObj = employeeRepository.getbyUserByUserId(userDetail.getUserId());
+			projectList = projectRepository.getAllProjectByDeveloper(pageable, employeeObj.geteId()); 
+		}
+		//@Query("Select distinct new map(e.projectId as projectId,p.projectName as projectName) from ProjectMembers "
+		//+ "e left join  Projects p On e.projectId = p.pId where e.status = 'ACTIVE' and e.employeeId = :employeeId ")
+		
         
 		Map content = new HashMap();
 	    content.put("projectList", projectList);
