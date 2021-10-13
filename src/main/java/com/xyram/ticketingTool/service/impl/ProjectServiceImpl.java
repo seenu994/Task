@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 import com.xyram.ticketingTool.Repository.ProjectRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Projects;
+import com.xyram.ticketingTool.entity.Role;
+import com.xyram.ticketingTool.enumType.UserRole;
 import com.xyram.ticketingTool.exception.ResourceNotFoundException;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.ProjectService;
@@ -88,7 +90,12 @@ public class ProjectServiceImpl implements ProjectService {
 	public ApiResponse getAllProjects(Pageable pageable) {
 		//Page<Map> projectList =   projectRepository.getAllProjectLsit(pageable);
 		
-		Page<Map> projectList = projectRepository.getAllProjectsList(pageable);
+		Page<Map> projectList;
+		
+		if(userDetail.getUserRole().equals(UserRole.DEVELOPER)) {
+			projectList = projectRepository.getAllProjectByEmployee(pageable);
+		}else
+			projectList = projectRepository.getAllProjectsList(pageable);
 		
 		                       
 		Map content = new HashMap();

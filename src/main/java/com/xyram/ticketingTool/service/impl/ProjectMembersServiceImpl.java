@@ -255,7 +255,9 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 //				projectList.add(allotedProjectList[i]);
 //			}
 			List<Map> allProjects = new ArrayList();
+			if (projectList != null && projectList.size() > 0)
 			allProjects.addAll(projectList);
+			if (allotedProjectList != null && allotedProjectList.size() > 0)
 			allProjects.addAll(allotedProjectList);
 			
 			if (allProjects != null && allProjects.size() > 0) {
@@ -283,7 +285,7 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 
 		// if (employeeId != null) {
 
-		List<Map> projectList = projectMemberRepository.getAllProjectByEmployee();
+		List<Map> projectList = projectMemberRepository.getAllProjectByEmployeeId(user.getUserId());
 		if (projectList != null && projectList.size() > 0) {
 			Map content = new HashMap();
 			content.put("ProjectList", projectList);
