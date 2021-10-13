@@ -807,22 +807,25 @@ public class TicketServiceImpl implements TicketService {
 		}
 	}
 
+
+
 	@Override
-	public ApiResponse deleteComment(Comments commentObj) {
+	public ApiResponse deleteComment(String ticketId) {
 
 		ApiResponse response = new ApiResponse(false);
-		Ticket ticketObj = ticketrepository.getById(commentObj.getTicketId());
-		if (ticketObj != null) {
-			if (!ticketObj.getStatus().equals(TicketStatus.COMPLETED)) {
-
-				Comments comment = commentRepository.getById(commentObj.getId());
+		Comments comment = commentRepository.getById(ticketId);
+		Ticket ticket = ticketrepository.getById(ticketId);
+		if (ticket!=null ) {
+			if (!ticket.getStatus().equals(TicketStatus.COMPLETED)) {
+				
 				if (comment != null) {
 					if (!comment.getCreatedBy().equals(userDetail.getUserId())) {
 						response.setSuccess(false);
 						response.setMessage(ResponseMessages.NOT_AUTHORISED);
 						response.setContent(null);
 					} else {
-						commentRepository.delete(commentObj);
+						String commentId =commentRepository.getCommentsID(ticketId);
+						commentRepository.deleteById(commentId);
 						response.setSuccess(true);
 						response.setMessage(ResponseMessages.TICKET_COMMENTS_DELETED);
 						response.setContent(null);
@@ -1018,6 +1021,8 @@ public class TicketServiceImpl implements TicketService {
 	     
 		return response;
 	}
+
+
 	
 
 	

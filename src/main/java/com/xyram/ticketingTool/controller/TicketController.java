@@ -108,12 +108,12 @@ class TicketController {
 		return ticketService.editComment(commentObj);
 	}
 
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/deleteComment",
-			AuthConstants.DEVELOPER_BASEPATH + "/deleteComment", 
-			AuthConstants.INFRA_USER_BASEPATH + "/deleteComment" })
-	public ApiResponse deleteComment(@RequestBody Comments commentObj) {
-		commentObj.setCreatedAt(new Date());
-		return ticketService.deleteComment(commentObj);
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/deleteComment/{ticketId}",
+			AuthConstants.DEVELOPER_BASEPATH + "/deleteComment/{ticketId}", 
+			AuthConstants.INFRA_USER_BASEPATH + "/deleteComment/{ticketId}" })
+	public ApiResponse deleteComment(@PathVariable("ticketId") String ticketId) {
+		//commentObj.setCreatedAt(new Date());
+		return ticketService.deleteComment(ticketId);
 	}
 
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllTicket",

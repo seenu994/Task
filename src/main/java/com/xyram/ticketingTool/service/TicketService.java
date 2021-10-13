@@ -39,7 +39,7 @@ public interface TicketService {
 	
 	ApiResponse editComment(Comments commentObj); 
 	
-	ApiResponse deleteComment(Comments commentObj);
+
 
 	ApiResponse getAllTicket(Pageable pageable);
 
@@ -59,6 +59,10 @@ public interface TicketService {
 	ApiResponse getAllTicketsByDuration(Pageable pageable, String date1, String date2);
 ApiResponse getTicketStatusCountWithProject(Pageable pageable);
 	ApiResponse searchTicket(String searchString);
+
+	ApiResponse deleteComment(String ticketId);
+	
+	
 
 }
 		
