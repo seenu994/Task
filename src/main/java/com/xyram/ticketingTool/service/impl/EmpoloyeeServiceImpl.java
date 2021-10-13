@@ -75,7 +75,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	public ApiResponse addemployee(Employee employee) {
 
 		ApiResponse response = validateEmployee(employee);
-		System.out.println(currentUser.getName());
+		System.out.println("username::"+currentUser.getName());
 
 		if (response.isSuccess()) {
 			try {
@@ -84,6 +84,8 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				String encodedPassword = new BCryptPasswordEncoder().encode(employee.getPassword());
 				user.setPassword(encodedPassword);
 				// Employee employeere=new Employee();
+				
+				System.out.println("RoleId::"+employee.getRoleId());
 				if (employee.getRoleId().equals("R2")) {
 					// if(user.getUserRole().equals("INFRA")) {
 					user.setUserRole(UserRole.INFRA);
@@ -93,6 +95,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 					throw new ResourceNotFoundException("invalid user role ");
 				}
 				user.setStatus(UserStatus.ACTIVE);
+				System.out.println(user.getEmail()+"::"+user.getUsername()+"::"+user.getCreatedAt());
 				userRepository.save(user);
 				
 				employee.setCreatedBy(currentUser.getUserId());
@@ -452,7 +455,6 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			}
 	}
 
-	@Override
 	public ApiResponse getAllProfile() {
 		Map ProfileList = employeeRepository.getAllEmployeeUserList(currentUser.getUserId());
 		Map content = new HashMap();

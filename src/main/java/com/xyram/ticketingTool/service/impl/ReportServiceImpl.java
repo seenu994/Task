@@ -106,7 +106,7 @@ public class ReportServiceImpl implements ReportService{
 		for(Map map : allTks) {
 			String ticketNo=(String) map.get("ticket_id");
 			table2.addCell(ticketNo);
-			String projectName =  projRepo.getProjectNameByProjectId11(map.get("project_id"));
+			String projectName =  projRepo.getProjectNameByProjectId(map.get("project_id"));
 			 table2.addCell(projectName);
 		
 			 if(map.get("created_by")!=null) {

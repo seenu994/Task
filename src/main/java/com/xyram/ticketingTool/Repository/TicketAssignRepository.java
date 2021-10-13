@@ -14,6 +14,8 @@ public interface TicketAssignRepository extends JpaRepository<TicketAssignee, St
 	
 	@Query("SELECT t.employeeId from TicketAssignee t Where t.ticketId = :ticketId")
 	public String getAssigneeId(Object ticketId);
+
+
 	
 	
 	

@@ -58,6 +58,32 @@ public class User extends IBaseData {
 	private String accesskey;
 	
 	
+	  @Column(name = "reset_password_token")
+	  private String resetPasswordToken;
+	  
+		@Column(unique = true, nullable = false)
+		  private String email;
+		
+	  
+	  
+	  public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+
+	
+	public String getResetPasswordToken() {
+		return resetPasswordToken;
+	}
+
+	public void setResetPasswordToken(String resetPasswordToken) {
+		this.resetPasswordToken = resetPasswordToken;
+	}
+
 	@Lob
 	@Type(type = "org.hibernate.type.ImageType")
 	@JsonIgnore
