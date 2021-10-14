@@ -106,6 +106,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				employee.setCreatedAt(new Date());
 				employee.setLastUpdatedAt(new Date());
 				employee.setUserCredientials(user);
+				employee.setProfileUrl("https://covidtest.xyramsoft.com/image/ticket-attachment/user-default-pic");
 				Employee employeeNew = employeeRepository.save(employee);
 				
 				//Assigning default project to Developer
