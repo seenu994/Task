@@ -29,7 +29,7 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 			+ "t.priorityId as priorityId,t.status as status) from Ticket t")
 	Page<Map> getAllTicketList(Pageable pageable); 
 	
-	@Query(value = "SELECT a.ticket_id as ticket_id, a.ticket_description as ticket_description, a.ticket_status as ticket_status, a.created_at as created_at, "
+	@Query(value = "SELECT a.ticket_id as ticket_id, a.ticket_description as ticket_description, a.ticket_status as ticket_status, a.created_at as created_at, a.last_updated_at as last_updated_at, "
 			+ "a.created_by as created_by, a.priority_id as priority_id, b.employee_id as assigneeId, concat(e.frist_name,' ', e.last_name) as assigneeName, concat(ee.frist_name,' ', ee.last_name) as createdByEmp "
 			+ "FROM ticketdbtool.ticket a "
 			+ "left join ticketdbtool.employee ee on a.created_by = ee.user_id "
@@ -48,7 +48,7 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 	Page<Map> getAllTicketsByStatus(Pageable pageable, @Param("createdBy") String createdBy, @Param("roleId")String roleId);
 	*/	 
 	
-	@Query(value = "SELECT a.ticket_id as ticket_id, a.ticket_description as ticket_description, a.ticket_status as ticket_status, a.created_at as created_at, "
+	@Query(value = "SELECT a.ticket_id as ticket_id, a.ticket_description as ticket_description, a.ticket_status as ticket_status, a.created_at as created_at, a.last_updated_at as last_updated_at, "
 			+ "a.created_by as created_by, a.priority_id as priority_id, b.employee_id as assigneeId, concat(e.frist_name,' ', e.last_name) as assigneeName, concat(ee.frist_name,' ', ee.last_name) as createdByEmp "
 			+ "FROM ticketdbtool.ticket a "
 			+ "left join ticketdbtool.employee ee on a.created_by = ee.user_id "
@@ -57,7 +57,7 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 			+ "where ('INFRA' = 'INFRA' and a.ticket_status IN ('ASSIGNED', 'INPROGRESS', 'REOPEN') and e.user_id = :createdBy)", nativeQuery = true)
 	Page<Map> getAllTicketsForInfraUser(Pageable pageable, @Param("createdBy") String createdBy);
 	
-	@Query("SELECT new map(a.Id as ticket_id, a.ticketDescription as ticket_description, a.status as ticket_status, a.createdAt as created_at, a.createdBy as created_by, "
+	@Query("SELECT new map(a.Id as ticket_id, a.ticketDescription as ticket_description, a.status as ticket_status, a.createdAt as created_at, a.createdBy as created_by, a.lastUpdatedAt as last_updated_at, "
 			+ "a.priorityId as priority_id, b.employeeId as assigneeId, concat(e.firstName,' ', e.lastName) as assigneeName, concat(ee.firstName,' ', ee.lastName) as createdByEmp) "
 			+ "FROM Ticket a left join Employee ee on a.createdBy = ee.userCredientials left join TicketAssignee b ON a.Id = b.ticketId "
 			+ "left join Employee e on b.employeeId = e.eId where (('INFRA' = :roleId and a.status IN ('ASSIGNED', 'INPROGRESS', 'REOPEN') and b.employeeId  = :createdBy) "
@@ -65,7 +65,7 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 			+ "OR ('TICKETINGTOOL_ADMIN' = :roleId and a.status NOT IN ('COMPLETED', 'CANCELLED')))")
 	Page<Map> getAllTicketsByStatus(Pageable pageable, @Param("createdBy") String createdBy, @Param("roleId")String roleId);
 	
-	@Query(value = "SELECT a.ticket_id as ticket_id, a.ticket_description as ticket_description, a.ticket_status as ticket_status, a.created_at as created_at, a.created_by as created_by, "
+	@Query(value = "SELECT a.ticket_id as ticket_id, a.ticket_description as ticket_description, a.ticket_status as ticket_status, a.created_at as created_at, a.created_by as created_by, a.last_updated_at as last_updated_at, "
 			+ "a.priority_id as priority_id, b.employee_id as assigneeId, concat(e.frist_name, ' ', e.last_name) as assigneeName, a.resolved_at as completed_at, a.cancelled_at as cancelled_at, concat(ee.frist_name, ' ', ee.last_name) as createdByEmp "
 			+ "FROM ticket a left join employee ee on a.created_by = ee.user_id left join ticket_assignee b ON a.ticket_id = b.ticket_id  and b.ticket_assignee_status = 'ACTIVE' "
 			+ "left join employee e on b.employee_id = e.employee_id where (('INFRA' = :roleId and a.ticket_status IN ('COMPLETED', 'CANCELLED') and e.user_id = :createdBy) "
@@ -80,7 +80,7 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 	@Query(value = "SELECT * from ticket_attachment t where t.ticket_id = :ticketId  ", nativeQuery = true)
 	List<Map> getTktAttachmentsById(String ticketId);
 	
-	@Query(value = "SELECT a.ticket_id as ticket_id, a.ticket_description as ticket_description , a.ticket_status as ticket_status, a.created_at as created_at, a.created_by as created_by, "
+	@Query(value = "SELECT a.ticket_id as ticket_id, a.ticket_description as ticket_description , a.ticket_status as ticket_status, a.created_at as created_at, a.created_by as created_by, a.last_updated_at as last_updated_at, "
 			+ "a.priority_id as priority_id, b.employee_id as assigneeId, concat(e.frist_name, ' ', e.last_name) as assigneeName, concat(ee.frist_name, ' ', ee.last_name) as createdByEmp, a.project_id, p.project_name "
 			+ "FROM ticket a left join project p on a.project_id = p.project_id left join employee ee on a.created_by = ee.user_id left join ticket_assignee b ON a.ticket_id = b.ticket_id and b.ticket_assignee_status = 'ACTIVE' "
 			+ "left join employee e on b.employee_id = 	e.employee_id where a.ticket_id = :ticketId", nativeQuery = true)
