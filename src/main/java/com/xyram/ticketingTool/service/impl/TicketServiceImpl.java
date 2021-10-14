@@ -968,10 +968,10 @@ public class TicketServiceImpl implements TicketService {
 		 SimpleDateFormat sdf = new SimpleDateFormat(  "dd-MM-yyyy HH:mm:ss");
 		 Date startTime,endTime;
 		Page<Map> allTks =  ticketrepository.getAllTicketsByDuration(pageable, date1, date2);
-		  System.out.println( allTks.getContent());
+		  System.out.println( "values"+allTks.getContent());
 		  for(Map map: allTks) {
 			  map.entrySet();
-			  map.forEach((k, v) -> System.out.println("Key : " + k + ", Value : " + v.toString()));
+			//  map.forEach((k, v) -> System.out.println("Key : " + k + ", Value : " + v.toString()));
 		  }
 		
 			if (allTks != null) {
