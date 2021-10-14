@@ -69,6 +69,9 @@ public class Employee extends AuditModel {
 	@OneToOne(cascade = { CascadeType.MERGE })
 	@JoinColumn(name = "user_id")
     private User userCredientials;
+	
+	@Column(name="profile_pic_url")
+	private String profileUrl;
 
 	public String geteId() {
 		return eId;
@@ -158,4 +161,13 @@ public class Employee extends AuditModel {
 		this.userCredientials = userCredientials;
 	}
 
+	public String getProfileUrl() {
+		return profileUrl;
+	}
+
+	public void setProfileUrl(String profileUrl) {
+		this.profileUrl = profileUrl;
+	}
+
+	
 }
