@@ -13,7 +13,7 @@ import com.xyram.ticketingTool.entity.ProjectMembers;
 public interface ProjectMemberRepository extends JpaRepository<ProjectMembers, String> {
 
 	@Query("Select distinct new map(e.projectId as projectId,p.projectName as projectName) from ProjectMembers "
-			+ "e left join  Projects p On e.projectId = p.pId left join  Employee ee On ee.eId =:employeeId where e.status = 'ACTIVE' ")
+			+ "e left join  Projects p On e.projectId = p.pId where e.status = 'ACTIVE' and e.employeeId = :employeeId ")
 	List<Map> getAllProjectByEmployeeId(String employeeId);
 	
 	@Query("Select distinct new map(p.pId as projectId,p.projectName as projectName) from Projects p where p.allotToAll = 1")

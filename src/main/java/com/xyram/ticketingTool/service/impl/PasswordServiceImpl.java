@@ -18,11 +18,13 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
+import com.xyram.ticketingTool.Repository.ForgotPasswordToken;
 import com.xyram.ticketingTool.Repository.UserRepository;
 import com.xyram.ticketingTool.admin.model.User;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.email.EmailService;
 import com.xyram.ticketingTool.entity.Employee;
+import com.xyram.ticketingTool.entity.ForgotPasswordKey;
 import com.xyram.ticketingTool.enumType.UserRole;
 import com.xyram.ticketingTool.exception.ResourceNotFoundException;
 import com.xyram.ticketingTool.service.PasswordService;
@@ -51,6 +53,9 @@ public class PasswordServiceImpl implements PasswordService {
 	
 	@Autowired
 	EmailService emailService;
+	
+	@Autowired
+	ForgotPasswordToken tokenRepository;
 
 
 	@Override
@@ -138,6 +143,8 @@ public class PasswordServiceImpl implements PasswordService {
 	  User user = userService.getUserByUsername(userName);
 		/*if (userCache.isPresent("USER", userName.toLowerCase()))
 			userCache.remove("USER", userName.toLowerCase());*/
+	  
+	  ForgotPasswordKey forgotKeyDetails = new ForgotPasswordKey();
 
 		if (user != null) {
 			UserRole userrole = user.getUserRole();
@@ -154,7 +161,6 @@ public class PasswordServiceImpl implements PasswordService {
 			}
 
 			if (userrole.value() == "INFRA_USER") {
-				System.out.println("  CAREGIVER ==================>  " + userrole.value());
 				Employee employee = employeeRepository.getbyUserId(userid);
 				if (employee != null) {
 					name = employee.getFirstName() + " " + employee.getMiddleName() + " " + employee.getLastName();
@@ -185,8 +191,10 @@ public class PasswordServiceImpl implements PasswordService {
 			String uuidAsString = uuid.toString();
 			if (userName != null && userName.equals(user.getUsername())) {
 
-				user.setCreatedAt(new Date());
-				user.setAccesskey(uuidAsString);
+				forgotKeyDetails.setCreatedAt(new Date());
+				forgotKeyDetails.setResetPasswordToken(uuidAsString);
+				forgotKeyDetails.setUsername(userName);
+				tokenRepository.save(forgotKeyDetails);
 /*
 				if (userCache.isPresent("USER", userName.toLowerCase()))
 					userCache.remove("USER", userName.toLowerCase());*/
@@ -231,8 +239,10 @@ public class PasswordServiceImpl implements PasswordService {
 	@Override
 	public User updatePasswordByAccestoken(String accessToken, Map<String, Object> passwordRequest) {
 
-		return userRepository.findByAccestoken(accessToken).map(user -> {
-
+             ForgotPasswordKey token =  tokenRepository.findByAccestoken(accessToken);
+             if(token != null) {
+            	 
+             User user = userService.getUserByUsername(token.getUsername());
 			/*if (userCache.isPresent("USER", user.getUsername().toLowerCase()))
 				userCache.remove("USER", user.getUsername().toLowerCase());
 */
@@ -264,17 +274,23 @@ public class PasswordServiceImpl implements PasswordService {
 					user.setAccesskey(null);
 					//user.setUniqueDeviceCode(PasswordUtil.generateRandomDeviceCode());
 
-				} else {
+				}
+				
+				else {
 					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "passwords dont match,please try again");
 					// return map;
 				}
 
-				return userRepository.save(user);
-			} else {
+				
+			} 
+			return userRepository.save(user);
+             }
+             
+             else {
 				throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "token has expired");
 			}
 
-		}).orElseThrow(() -> new ResourceNotFoundException("user not found with id "));
+		
 	}
 
 	

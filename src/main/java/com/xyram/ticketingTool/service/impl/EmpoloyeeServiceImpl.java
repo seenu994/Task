@@ -74,7 +74,9 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	@Override
 	public ApiResponse addemployee(Employee employee) {
 
-		ApiResponse response = validateEmployee(employee);
+		ApiResponse response = new ApiResponse(false);
+		
+		response = validateEmployee(employee);
 		System.out.println("username::"+currentUser.getName());
 
 		if (response.isSuccess()) {
@@ -87,10 +89,11 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				
 				System.out.println("RoleId::"+employee.getRoleId());
 				if (employee.getRoleId().equals("R2")) {
-					// if(user.getUserRole().equals("INFRA")) {
 					user.setUserRole(UserRole.INFRA);
 				} else if (employee.getRoleId().equals("R3")) {
 					user.setUserRole(UserRole.DEVELOPER);
+				}else if (employee.getRoleId().equals("R1")) {
+					user.setUserRole(UserRole.TICKETINGTOOL_ADMIN);
 				} else {
 					throw new ResourceNotFoundException("invalid user role ");
 				}
@@ -106,18 +109,18 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				Employee employeeNew = employeeRepository.save(employee);
 				
 				//Assigning default project to Developer
-				if (employee.getRoleId().equals("R3")) {
-					System.out.println("Inside employee.getRoleId() - " + employee.getRoleId());
-					ProjectMembers projectMember = new ProjectMembers();
-					projectMember.setCreatedAt(new Date());
-					projectMember.setLastUpdatedAt(new Date());
-					projectMember.setUpdatedBy(currentUser.getUserId());
-					projectMember.setCreatedBy(currentUser.getUserId());
-					projectMember.setStatus(ProjectMembersStatus.ACTIVE);
-					projectMember.setProjectId("2c9fab1f7bbeee88017bbf22f0af0002");
-					projectMember.setEmployeeId(employee.geteId());
-					projectMemberRepository.save(projectMember);
-				}
+//				if (employee.getRoleId().equals("R3")) {
+//					System.out.println("Inside employee.getRoleId() - " + employee.getRoleId());
+//					ProjectMembers projectMember = new ProjectMembers();
+//					projectMember.setCreatedAt(new Date());
+//					projectMember.setLastUpdatedAt(new Date());
+//					projectMember.setUpdatedBy(currentUser.getUserId());
+//					projectMember.setCreatedBy(currentUser.getUserId());
+//					projectMember.setStatus(ProjectMembersStatus.ACTIVE);
+//					projectMember.setProjectId("2c9fab1f7bbeee88017bbf22f0af0002");
+//					projectMember.setEmployeeId(employee.geteId());
+//					projectMemberRepository.save(projectMember);
+//				}
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.EMPLOYEE_ADDED);
 				Map content = new HashMap();

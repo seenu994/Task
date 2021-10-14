@@ -61,7 +61,7 @@ public class User extends IBaseData {
 	  @Column(name = "reset_password_token")
 	  private String resetPasswordToken;
 	  
-		@Column(unique = true, nullable = false)
+		@Column(unique = true, nullable = true)
 		  private String email;
 		
 	  
@@ -84,18 +84,18 @@ public class User extends IBaseData {
 		this.resetPasswordToken = resetPasswordToken;
 	}
 
-	@Lob
-	@Type(type = "org.hibernate.type.ImageType")
-	@JsonIgnore
-	private byte[] image;
-
-	@JsonIgnore
-	@Column(name = "mime_type")
-	private String mimeType;
-
-	@Column(name = "file_name")
-	@JsonIgnore
-	private String fileName;
+//	@Lob
+//	@Type(type = "org.hibernate.type.ImageType")
+//	@JsonIgnore
+//	private byte[] image;
+//
+//	@JsonIgnore
+//	@Column(name = "mime_type")
+//	private String mimeType;
+//
+//	@Column(name = "file_name")
+//	@JsonIgnore
+//	private String fileName;
 	
 	
 	

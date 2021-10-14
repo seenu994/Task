@@ -774,6 +774,7 @@ public class TicketServiceImpl implements TicketService {
 					} else {
 						if (comment.getCreatedBy() != null) {
 							if (comment.getCreatedBy().equals(userDetail.getUserId())) {
+								commentObj.setCreatedBy(comment.getCreatedBy());
 								commentObj.setUpdatedBy(userDetail.getUserId());
 								commentObj.setLastUpdatedAt(new Date());
 								
