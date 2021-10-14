@@ -197,8 +197,10 @@ class TicketController {
 				  
 				  return ticketService.getAllTicketsByDuration(pageable, date1, date2);
 		  }
-		  
-		  @GetMapping(value =  AuthConstants.ADMIN_BASEPATH + "/getTicketTotalCount")
+		   
+		  @GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getTicketTotalCount",
+				  AuthConstants.INFRA_USER_BASEPATH +"/getTicketTotalCount",
+				  AuthConstants.DEVELOPER_BASEPATH + "/getTicketTotalCount" }) 
 				  public  ApiResponse getTicketTotalCount(Pageable pageable) {
 						  logger.info("inside Report controller :: getAllTicket By total count"); 
 						  return ticketService.getTicketStatusCountWithProject(pageable);
