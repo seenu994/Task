@@ -1,5 +1,7 @@
 package com.xyram.ticketingTool.controller;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -96,7 +98,9 @@ class TicketController {
 			AuthConstants.DEVELOPER_BASEPATH + "/addComment", 
 			AuthConstants.INFRA_USER_BASEPATH + "/addComment" })
 	public ApiResponse addComment(@RequestBody Comments commentObj) {
-		commentObj.setCreatedAt(new Date());
+		long millis=System.currentTimeMillis();  
+		java.util.Date date=new java.util.Date(millis);   
+		commentObj.setCreatedAt(date);
 		return ticketService.addComment(commentObj);
 	}
 
@@ -104,7 +108,9 @@ class TicketController {
 			AuthConstants.DEVELOPER_BASEPATH + "/editComment", 
 			AuthConstants.INFRA_USER_BASEPATH + "/editComment" })
 	public ApiResponse editComment(@RequestBody Comments commentObj) {
-		commentObj.setCreatedAt(new Date());
+		long millis=System.currentTimeMillis();  
+		java.util.Date date=new java.util.Date(millis);   
+		commentObj.setCreatedAt(date);
 		return ticketService.editComment(commentObj);
 	}
 
@@ -112,7 +118,9 @@ class TicketController {
 			AuthConstants.DEVELOPER_BASEPATH + "/deleteComment", 
 			AuthConstants.INFRA_USER_BASEPATH + "/deleteComment" })
 	public ApiResponse deleteComment(@RequestBody Comments commentObj) {
-		commentObj.setCreatedAt(new Date());
+		long millis=System.currentTimeMillis();  
+		java.util.Date date=new java.util.Date(millis);   
+		commentObj.setCreatedAt(date);
 		return ticketService.deleteComment(commentObj);
 	}
 
