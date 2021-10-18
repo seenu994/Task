@@ -71,7 +71,7 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 			+ "left join employee e on b.employee_id = e.employee_id where (('INFRA' = :roleId and a.ticket_status IN ('COMPLETED', 'CANCELLED') and e.user_id = :createdBy) "
 			+ "OR ('DEVELOPER' = :roleId and a.ticket_status IN ('COMPLETED', 'CANCELLED') and a.created_by = :createdBy ) "
 			+ "OR ('TICKETINGTOOL_ADMIN' = :roleId and a.ticket_status IN ('COMPLETED', 'CANCELLED'))) "
-			+ "and a.last_updated_at >= DATE_ADD(curdate(), INTERVAL - 1 DAY) order by a.last_updated_at desc", nativeQuery = true)
+			+ "and a.last_updated_at >= DATE_ADD(curdate(), INTERVAL - 10 DAY) order by a.last_updated_at desc", nativeQuery = true)
 	List<Map> getAllCompletedTickets(@Param("createdBy") String createdBy, @Param("roleId")String roleId);
 	
 	@Query(value = "SELECT t.*, concat(e.frist_name, ' ', e.last_name) as createdByEmp from ticket_comment_log t inner join employee e on t.updated_by = e.user_id where t.ticket_id = :ticketId ", nativeQuery = true)
