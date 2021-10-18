@@ -125,19 +125,13 @@ public class TicketAssignServiceImpl implements TicketAssignService {
 					ticketAssignRepository.save(prevAssignee);
 				}
 				ticketAssignRepository.save(assignee);
-
-//				List<Map> developerInfraList=	employeeServiceImpl.getListOfDeveloperInfra();
-				
-//				for (Map user : developerInfraList) {
 					
 				Map request=	new HashMap<>();
-//				request.put("id", user.get("projectId"));
 				request.put("uid", employeeObj.getUserCredientials().getUid());
 				request.put("title", "TICKET_ASSIGNED");
 				request.put("body","Ticket Assigned - " + ticketObj.getTicketDescription() );
 				pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 13, NotificationType.TICKET_ASSIGNED.toString()));
 				
-//				}
 				//Inserting Notifications Details
 				Notifications notifications = new Notifications();
 				notifications.setNotificationDesc("Ticket Assigned - " + ticketObj.getTicketDescription());
@@ -167,46 +161,6 @@ public class TicketAssignServiceImpl implements TicketAssignService {
 			response.setContent(null);
 		}
 		return response;
-//		TicketAssignee ticketAssignee = new TicketAssignee();
-//		Map<String, String> responseMAp = new HashMap<>();
-//		if (requestMap.containsKey("employeeId") && requestMap.containsKey("ticketId")) {
-//			Employee employee = employeeRepository.getById((Integer) requestMap.get("employeeId"));
-//			List<Integer> ticketIds = (List<Integer>) requestMap.get("ticketId");
-//			if (ticketIds != null && ticketIds.size() > 0) {
-//				for (Integer tId : ticketIds) {
-//
-//					Ticket ticket = ticketRepository.getById(tId);
-//
-//					if (ticket.getStatus().equals(TicketStatus.INITIATED)) {
-//						if (employee.getRole().getRoleName().equalsIgnoreCase("Infra User")) {
-//
-//							ticketAssignee.setEmployee(employee);
-//
-//							ticketAssignee.setTicket(ticket);
-//							// ticketAssignee.setTicket(ticketRepository.getById(requestMap.get("ticketId")));
-//							ticketAssignee.setStatus(TicketAssigneeStatus.ACTIVE);
-//							ticketAssignee.setCreatedAt(new Date());
-//							ticketAssignRepository.save(ticketAssignee);
-//						} else {
-//							throw new ResourceNotFoundException(
-//									"cannot assign to " + employee.getRole().getRoleName() + " role ");
-//						}
-//					} else {
-//						throw new ResourceNotFoundException("ticket is not initiated");
-//					}
-//				}
-//				responseMAp.put("message", "Assigning Tickets to employee");
-//				return responseMAp;
-//			} else {
-//				throw new ResourceNotFoundException("ticket list is empty");
-//			}
-//		} else {
-//			if (requestMap.containsKey("employeId")) {
-//				throw new ResourceNotFoundException("provide the EmployeeId to assign ticket for employee");
-//			} else {
-//				throw new ResourceNotFoundException("provide the ticketId to assign ticket to employee");
-//			}
-//		}
 
 	}
 

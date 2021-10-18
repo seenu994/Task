@@ -62,6 +62,7 @@ import com.xyram.ticketingTool.entity.Ticket;
 import com.xyram.ticketingTool.entity.TicketAssignee;
 import com.xyram.ticketingTool.entity.TicketStatusHistory;
 import com.xyram.ticketingTool.enumType.NotificationType;
+import com.xyram.ticketingTool.enumType.TicketAssigneeStatus;
 import com.xyram.ticketingTool.enumType.TicketStatus;
 import com.xyram.ticketingTool.enumType.UserRole;
 import com.xyram.ticketingTool.exception.ResourceNotFoundException;
@@ -317,6 +318,57 @@ public class TicketServiceImpl implements TicketService {
 			content.put("ticketId", tickets.getId());
 
 			response.setContent(content);
+			
+			String assignEmployeeId = ticketrepository.getElgibleAssignee();
+//			Ticket ticketObj = ticketRepository.getById(assignee.getTicketId());
+			if (assignEmployeeId != null) {
+				Employee employeeObj = employeeRepository.getById(assignEmployeeId);
+				if (employeeObj != null) {
+					TicketAssignee assignee = new TicketAssignee();
+					assignee.setEmployeeId(assignEmployeeId);
+					assignee.setTicketId(tickets.getId());
+					assignee.setCreatedAt(new Date());
+					assignee.setCreatedBy(userDetail.getUserId());
+					assignee.setStatus(TicketAssigneeStatus.ACTIVE);
+					
+					ticketreq.setStatus(TicketStatus.ASSIGNED);
+					ticketrepository.save(ticketreq);
+					ticketAssigneeRepository.save(assignee);
+						
+					Map request = new HashMap<>();
+					request.put("uid", employeeObj.getUserCredientials().getUid());
+					request.put("title", "TICKET_ASSIGNED");
+					request.put("body","Ticket Assigned - " + ticketreq.getTicketDescription() );
+					pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 13, NotificationType.TICKET_ASSIGNED.toString()));
+					
+					//Inserting Notifications Details
+					notifications.setNotificationDesc("Ticket Assigned - " + ticketreq.getTicketDescription());
+					notifications.setNotificationType(NotificationType.TICKET_ASSIGNED);
+					notifications.setSenderId(userDetail.getUserId());
+					notifications.setReceiverId(userDetail.getUserId());
+					notifications.setSeenStatus(false);
+					notifications.setCreatedBy(userDetail.getUserId());
+					notifications.setCreatedAt(new Date());
+					notifications.setUpdatedBy(userDetail.getUserId());
+					notifications.setLastUpdatedAt(new Date());
+					notificationsRepository.save(notifications);
+					
+					response.setSuccess(true);
+					response.setMessage(ResponseMessages.TICKET_ASSIGNED);
+					response.setContent(null);
+					
+				}else {
+					response.setSuccess(false);
+					response.setMessage(ResponseMessages.EMPLOYEE_INVALID);
+					response.setContent(null);
+				}
+			
+			}else {
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.TICKET_NOT_EXIST);
+				response.setContent(null);
+			}
+			
 			return response;
 		}
 	}
