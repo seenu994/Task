@@ -81,6 +81,9 @@ public class WebSecurityConfigure extends WebSecurityConfigurerAdapter {
 				.antMatchers(AuthUtil.ADMIN_PATHS).hasRole(AuthConstants.ROLE_ADMIN)
 				.antMatchers(AuthUtil.INFRA_PATHS).hasRole(AuthConstants.ROLE_INFRA)
 				.antMatchers(AuthUtil.DEVELOPER_PATHS).hasRole(AuthConstants.ROLE_DEVELOPER)
+				.antMatchers(AuthUtil.HR_ADMIN_PATHS).hasRole(AuthConstants.ROLE_HR_ADMIN)
+				.antMatchers(AuthUtil.HR_PATHS).hasRole(AuthConstants.ROLE_HR)
+				.antMatchers(AuthUtil.JOB_VENDOR_PATHS).hasRole(AuthConstants.ROLE_JOB_VENDOR)
 				// all other requests need to be authenticated
 				.anyRequest().authenticated().and().
 				// make sure we use stateless session; session won't be used to

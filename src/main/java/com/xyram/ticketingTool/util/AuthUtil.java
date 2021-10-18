@@ -10,6 +10,9 @@ public interface AuthUtil {
 	String[] ADMIN_PATHS = { "/admin-resource/**" };
 	String[] INFRA_PATHS = { "/infra-resource/**" };
 	String[] DEVELOPER_PATHS = { "/developer-resource/**" };
+	String[] HR_ADMIN_PATHS = { "/hr-admin-resource/**" };
+	String[] HR_PATHS = { "/hr-resource/**" };
+	String[] JOB_VENDOR_PATHS = { "/job-vendor-resource/**" };
 
 	
 
@@ -23,6 +26,12 @@ public interface AuthUtil {
 			return AuthConstants.INFRA_USER_BASEPATH;
 		case AuthConstants.ROLE_DEVELOPER:
 			return AuthConstants.DEVELOPER_BASEPATH;
+		case AuthConstants.ROLE_HR_ADMIN:
+			return AuthConstants.HR_ADMIN_BASEPATH;
+		case AuthConstants.ROLE_HR:
+			return AuthConstants.HR_BASEPATH;
+		case AuthConstants.ROLE_JOB_VENDOR:
+			return AuthConstants.JOB_VENDOR_BASEPATH;
 		
 		
 			
