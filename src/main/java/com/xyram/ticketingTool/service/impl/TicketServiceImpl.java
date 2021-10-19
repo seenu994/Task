@@ -965,21 +965,24 @@ public class TicketServiceImpl implements TicketService {
 	System.out.println("inside service method");
 		ApiResponse response = new ApiResponse(false);
 		
-		 SimpleDateFormat sdf = new SimpleDateFormat(  "dd-MM-yyyy HH:mm:ss");
-		 Date startTime,endTime;
-		Page<Map> allTks =  ticketrepository.getAllTicketsByDuration(pageable, date1, date2);
-		  System.out.println( "values"+allTks.getContent());
-		  for(Map map: allTks) {
-			  map.entrySet();
-			//  map.forEach((k, v) -> System.out.println("Key : " + k + ", Value : " + v.toString()));
-		  }
 		
+		 try {
+			 SimpleDateFormat sdf = new SimpleDateFormat(  "yyyy-MM-dd");
+			 Date startTime,endTime;
+			startTime=sdf.parse(date1);
+			endTime = sdf.parse(date2);
+			Page<Map> allTks =  ticketrepository.getAllTicketsByDuration(pageable, startTime, endTime);
+			//  System.out.println( "values"+allTks.getContent());
+			/*
+			 * for(Map map: allTks) { map.entrySet(); // map.forEach((k, v) ->
+			 * System.out.println("Key : " + k + ", Value : " + v.toString())); }
+			 */
 			if (allTks != null) {
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.TICKET_EXIST+" ROLE :: "+userDetail.getUserRole());
 				Map<String, Page<Map>> content = new HashMap<String, Page<Map>>();
 				
-				content.put("tickets", allTks);
+				content.put("tickets", (Page<Map>) allTks);
 				
 				response.setContent(content);
 			} else {
@@ -988,6 +991,12 @@ public class TicketServiceImpl implements TicketService {
 				response.setContent(null);
 			}
 	     
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 		return response;
 
 		
@@ -1025,8 +1034,29 @@ public class TicketServiceImpl implements TicketService {
 	}
 
 
-	
-
+	/*
+	 * public ApiResponse getTicketsDetailsByStatus(Pageable pageable, String
+	 * ticketStatus) { // TODO Auto-generated method stub ApiResponse response = new
+	 * ApiResponse(false);
+	 * 
+	 * Page<Map> allTickets ; if (userDetail.getUserRole().equals("INFRA")) {
+	 * allTickets = ticketrepository.getAllTicketsForInfraUser(pageable,
+	 * userDetail.getUserId()); }else { allTickets =
+	 * ticketrepository.getAllTicketsByStatus(pageable, userDetail.getUserId(),
+	 * userDetail.getUserRole()); }
+	 * 
+	 * if (allTickets != null) { response.setSuccess(true);
+	 * response.setMessage(ResponseMessages.TICKET_EXIST+" ROLE :: "+userDetail.
+	 * getUserRole()); Map<String, Page<Map>> content = new HashMap<String,
+	 * Page<Map>>(); content.put("tickets", allTickets);
+	 * response.setContent(content); } else { response.setSuccess(false);
+	 * response.setMessage(ResponseMessages.TICKET_NOT_EXIST);
+	 * response.setContent(null); }
+	 * 
+	 * return response;
+	 * 
+	 * }
+	 */
 	
 	  
 	
