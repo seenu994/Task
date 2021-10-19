@@ -107,10 +107,12 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 			"group by t.ticket_status, p.project_name",nativeQuery=true)
 	Page<Map> getTicketStatusCountWithProject(Pageable pageable);
 	
-	@Query(value="select employee_id "
+	@Query(value="select distinct employee_id, count(*)"
 			+ " as emp_cnt from ticketdbtool.ticket_assignee where ticket_assignee_status = 'ACTIVE' and ticket_id in "
-			+ "(select ticket_id from ticketdbtool.ticket where ticket_status in ('ASSIGNED','INPROGRESS')) "
-			+ "group by employee_id",nativeQuery=true)
+			+ " (select ticket_id from ticketdbtool.ticket where ticket_status in ('ASSIGNED','INPROGRESS'))"
+			+ " group by employee_id"
+			+ " order by count(*) "
+			+ " limit 1 ",nativeQuery=true)
 	String getElgibleAssignee();
 	
 	@Query("SELECT distinct new map(a.Id as ticket_id, a.ticketDescription as ticket_description, a.status as ticket_status, a.createdAt as created_at, a.createdBy as created_by, a.lastUpdatedAt as last_updated_at, a.projectId as project_id, b.employeeId as assigneeId, concat(e.firstName,' ', e.lastName) as assigneeName, concat(ee.firstName,' ', ee.lastName) as createdByEmp) "

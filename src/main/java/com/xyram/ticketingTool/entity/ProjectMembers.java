@@ -25,7 +25,7 @@ import com.xyram.ticketingTool.enumType.ProjectMembersStatus;
 public class ProjectMembers extends AuditModel {	
 
 	@Id
-	@GeneratedValue(generator = "uuid")
+	@GeneratedValue(generator = "uuid",strategy = GenerationType.AUTO)
 	@GenericGenerator(name = "uuid", strategy = "uuid")
 	@Size( max = 8)
 	@Column(name="projectMember_id")
