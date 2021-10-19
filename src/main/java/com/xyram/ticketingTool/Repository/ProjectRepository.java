@@ -41,6 +41,9 @@ public interface ProjectRepository extends JpaRepository<Projects, String> {
 	@Query("SELECT p.projectName FROM Projects p WHERE p.pId=:pId")
 	String getProjectNameByProjectId(Object pId);
 	
+	@Query("SELECT p.pId from Projects p  WHERE p.projectName=:projectName")
+	String getProjectId(String projectName);
+	
 
 	@Query("Select distinct new map(e.pId as id,e.projectName as PName,e.projectDescritpion as projectDescritpion,e.clientId as clientId,c.clientName as clientname,e.inHouse as inHouse,"
 			+ "e.status as status) from Projects e join Client c ON e.clientId = c.Id where e.projectName like %:searchString% and e.status != 'INACTIVE'")

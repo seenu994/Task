@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -1099,6 +1100,156 @@ public class TicketServiceImpl implements TicketService {
 		
 		 Page<Map> allTks =  ticketrepository.getAllTicketsDetails(pageable);
 		//  System.out.println( "values"+allTks.getContent());
+	
+		/*
+		 * for(Map map: allTks) { map.entrySet(); map.forEach((k, v) ->
+		 * System.out.println("Key : " + k + ", Value : " + v.toString())); }
+		 */
+		 
+		if (allTks != null) {
+			response.setSuccess(true);
+			response.setMessage(ResponseMessages.TICKET_EXIST+" ROLE :: "+userDetail.getUserRole());
+			Map value = new HashMap<>();
+			 Map<String, Page<Map>> content = new HashMap<String, Page<Map>>();
+			for(Map map : allTks) {
+				String ticketNo=(String) map.get("ticket_id");
+				value.put("ticket_id", ticketNo);
+				//System.out.println("ticketNO::"+ticketNo);
+				String ticketDescription= (String) map.get("ticket_description");
+				value.put("ticketDescription", ticketDescription);
+			//	System.out.println("ticketDescription"+ticketDescription);
+				String projectName =  projectRepository.getProjectNameByProjectId(map.get("project_id"));
+				value.put("project_name", projectName);
+				//System.out.println("projectName"+projectName);
+				if(map.get("created_by")!=null) {
+					 String TicketRaisedBy =(String)map.get("createdByEmp");
+					 value.put("TicketRaisedBy", TicketRaisedBy);
+				 }
+				else {
+					value.put("TicketRaisedBy", " ");
+				}
+				 Date createdDate= (Date) map.get("created_at");
+				 value.put("createdDate",createdDate);
+				 String assigneeName = (String) map.get("assigneeName");
+				 value.put("assigneeName", assigneeName);
+				 Object status= map.get("ticket_status");
+				 value.put("status", status);
+				 int count=0;
+				 count++;
+				 System.out.println("count::"+count+"::status::"+status);
+				
+				 String  empId1=ticketAssigneeRepository.getAssigneeId(map.get("created_by")); 
+				  
+				 if(empId1!=null) {
+					// ResolvedBy
+					 Employee emp2=employeeRepository.getById(empId1);
+					 String ResolvedBy= emp2.getFirstName();
+				  value.put("ResolvedBy", ResolvedBy);
+				 }
+				 else {
+					 value.put("ResolvedBy", " ");
+				 }
+				 if(status.toString().equalsIgnoreCase("completed")) {
+					  Date createdAt = (Date) map.get("created_at");
+					  Date lastUpated=  (Date) map.get("last_updated_at");
+					  String  duration=findDifference(createdAt,lastUpated);
+					  value.put("duration", duration);
+				 }
+				 else {
+					 value.put("duration", " ");
+				 }
+				 System.out.println(value.entrySet());
+			
+					
+					content.put("values", (Page<Map>) value.entrySet());
+			}
+			
+			
+				System.out.println(content.keySet());
+				response.setContent(content);
+			
+		} else {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.TICKET_NOT_EXIST);
+			response.setContent(null);
+		}
+		
+		
+		return response;
+
+		
+	}
+	
+	  public static String findDifference(Date date, Date date2)
+		 {
+			  long difference_In_Days = 0;
+			  String duration=" ";
+		      try {
+		        	 SimpleDateFormat sdf = new SimpleDateFormat(  "dd-MM-yyyy HH:mm:ss");
+		       Date d1 = date;
+		       Date d2 = date2;
+		  
+		          
+		            long difference_In_Time
+		                = d2.getTime() - d1.getTime();
+		  
+		            difference_In_Days
+		                = (difference_In_Time
+		                   / (1000 * 60 * 60 * 24))
+		                  % 365;
+		            long difference_In_Hours
+	                = (difference_In_Time
+	                   / (1000 * 60 * 60))
+	                  % 24;
+		            System.out.println(
+		                   
+		                    + difference_In_Days
+		                    + " days, "
+		                    +difference_In_Hours+"hrs"
+		                    );
+		       duration= String.valueOf(difference_In_Days)+"Days"+String.valueOf(difference_In_Hours)+"hr";
+		     
+		  
+		            return duration;
+		        }
+		  
+		        // Catch the Exception
+		        catch (Exception e) {
+		            e.printStackTrace();
+		        }
+				return duration;
+				
+		    }
+	//report 	  ticketrepo.getTicketDataByStatus
+	  
+	public ApiResponse getTicketDtlsByProjectNameAndStatus(Pageable pageable, String projectName, String status) {
+		// TODO Auto-generated method stub
+	System.out.println("inside service method");
+		ApiResponse response = new ApiResponse(false);
+		 String project_id;
+		 Object statusVal;
+		if(projectName.isEmpty()) {
+			project_id=" ";
+		}
+		else {
+			project_id=projectRepository.getProjectId(projectName);
+		}
+		if(status.isEmpty()) {
+			statusVal=" ";
+		}
+		else {
+			statusVal= status;
+			System.out.println(statusVal);
+			 
+		}
+		/*
+		 * Arrays.asList(TicketStatus.values()) .forEach(season ->
+		 * System.out.println(season));
+		 */
+		 
+		 System.out.println(" projectName::"+projectName+"status::"+statusVal);
+		Page<Map> allTks =  ticketrepository.getTicketDataByStatusProjectName(pageable, project_id, statusVal);
+		//  System.out.println( "values"+allTks.getContent());
 		/*
 		 * for(Map map: allTks) { map.entrySet(); // map.forEach((k, v) ->
 		 * System.out.println("Key : " + k + ", Value : " + v.toString())); }
@@ -1123,6 +1274,5 @@ public class TicketServiceImpl implements TicketService {
 		
 	}
 	
-	  
 	
 	}
