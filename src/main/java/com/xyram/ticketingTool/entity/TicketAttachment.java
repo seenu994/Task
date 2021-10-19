@@ -28,7 +28,6 @@ public class TicketAttachment extends AuditModel {
 	private String Id;
 	
 	
-	
 	@ManyToOne(cascade = { CascadeType.ALL })
 	@JoinColumn(name = "ticket_id")
 	private Ticket ticket;

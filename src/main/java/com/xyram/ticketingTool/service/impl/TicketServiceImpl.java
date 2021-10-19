@@ -610,19 +610,30 @@ public class TicketServiceImpl implements TicketService {
 	}
 
 	@Override
-	public ApiResponse editTicket(MultipartFile[] files, String ticketId, Ticket ticketRequest) {
+	public ApiResponse editTicket(MultipartFile[] files, String ticketId, String ticketRequest) {
 
 		ApiResponse response = new ApiResponse(false);
 		Ticket ticketObj = ticketrepository.getById(ticketId);
+		ObjectMapper objectMapper = new ObjectMapper();
+		Ticket ticketreq = null;
+		try {
+			ticketreq = objectMapper.readValue(ticketRequest, Ticket.class);
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		// String s = ticketrepository.getTicketById(ticketId);
 		// System.out.println("s Value " + s);
 		if (ticketObj != null) {
 			if (!ticketObj.getStatus().equals(TicketStatus.COMPLETED)) {
 
-				ticketObj.setTicketDescription(ticketRequest.getTicketDescription());
-				ticketObj.setPriorityId(ticketRequest.getPriorityId());
-				ticketObj.setProjectId(ticketRequest.getProjectId());
-				ticketObj.setStatus(ticketRequest.getStatus());
+				ticketObj.setTicketDescription(ticketreq.getTicketDescription());
+				ticketObj.setPriorityId(ticketreq.getPriorityId());
+				ticketObj.setProjectId(ticketreq.getProjectId());
+				ticketObj.setStatus(ticketreq.getStatus());
 				ticketObj.setUpdatedBy(userDetail.getUserId());
 				
 				ticketObj.setLastUpdatedAt(new Date());

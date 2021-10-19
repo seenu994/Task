@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
@@ -21,11 +22,12 @@ import com.xyram.ticketingTool.enumType.TicketStatus;
 public class Ticket extends AuditModel {
 
 	@Id
-	@GeneratedValue(generator = "uuid")
+	@GeneratedValue(generator = "uuid",strategy=GenerationType.AUTO)
 	@GenericGenerator(name = "uuid", strategy = "uuid")
 	@Size( max = 8)
 	@Column(name="ticket_id")
 	private String Id;
+	
 	@Column(name="ticket_description")
 	private String ticketDescription;
 	
