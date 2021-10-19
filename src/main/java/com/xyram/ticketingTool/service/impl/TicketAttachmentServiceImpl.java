@@ -25,6 +25,7 @@ import com.xyram.ticketingTool.Repository.TicketAssignRepository;
 import com.xyram.ticketingTool.Repository.TicketRepository;
 //import com.xyram.ticketingTool.Repository.TicketCommentRepository;
 import com.xyram.ticketingTool.Repository.ticketAttachmentRepository;
+import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.Notifications;
 import com.xyram.ticketingTool.entity.Ticket;
@@ -37,6 +38,7 @@ import com.xyram.ticketingTool.exception.ResourceNotFoundException;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.TicketAttachmentService;
 import com.xyram.ticketingTool.service.TicketService;
+import com.xyram.ticketingTool.util.ResponseMessages;
 //import com.xyram.ticketingTool.service.TicketCommentService;
 @Service
 @Transactional
@@ -227,15 +229,17 @@ public String addFileAdmin(MultipartFile file, String fileName){
 
 
 @Override
-public String deleteImage(String ticketId) {
-	String message = "";
+public ApiResponse deleteImage(String ticketId) {
+	ApiResponse response = new ApiResponse(false);
 	 TicketAttachment ticketObj=ticketattachmentRepository.getById(ticketId);
 	 deleteFile(ticketObj.getImagePath());
 	 ticketattachmentRepository.deletByTicket(ticketId);
-	 
-	 message = "Deleted ticket id successfully";
-	 
-	 return message;
+				response.setSuccess(true);
+				response.setMessage(ResponseMessages.DELETE_ATTACHMENT);
+				response.setContent(null);
+			
+
+		return response;
 }
 
 
