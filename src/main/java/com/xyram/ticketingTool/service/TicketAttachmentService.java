@@ -14,6 +14,6 @@ public interface TicketAttachmentService {
 
 	//public Map deleteImage(MultipartFile file, Ticket ticketId);
 
-	public String deleteImage(String ticketId);
+	public ApiResponse deleteImage(String ticketId);
 }
 		

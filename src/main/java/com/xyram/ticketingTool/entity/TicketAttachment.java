@@ -5,6 +5,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -21,12 +22,11 @@ import com.xyram.ticketingTool.baseData.model.AuditModel;
 public class TicketAttachment extends AuditModel {
 
 	@Id
-	@GeneratedValue(generator = "uuid")
+	@GeneratedValue(generator = "uuid" ,strategy = GenerationType.AUTO)
 	@GenericGenerator(name = "uuid", strategy = "uuid")
 	@Size( max = 8)
 	@Column(name="ticketAttachment_id")
 	private String Id;
-	
 	
 	
 	@ManyToOne(cascade = { CascadeType.ALL })

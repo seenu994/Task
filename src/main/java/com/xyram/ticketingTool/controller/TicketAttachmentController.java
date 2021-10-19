@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Role;
 import com.xyram.ticketingTool.entity.Ticket;
 import com.xyram.ticketingTool.entity.TicketAssignee;
@@ -58,7 +59,7 @@ public class TicketAttachmentController {
 		return ticketAttachmentService.storeImage(files,ticketId);
 	}
 	@DeleteMapping(value= {AuthConstants.ADMIN_BASEPATH +"/deleteimage/{ticketId}",AuthConstants.DEVELOPER_BASEPATH +"/deleteimage/{ticketId}",AuthConstants.INFRA_USER_BASEPATH+"/deleteimage/{ticketId}"})
-	public String deleteImage(@PathVariable String ticketId) {
+	public ApiResponse deleteImage(@PathVariable String ticketId) {
 		logger.info("indide TicketAttachmentController :: deleteImage");
 		return ticketAttachmentService.deleteImage(ticketId);
 	}
