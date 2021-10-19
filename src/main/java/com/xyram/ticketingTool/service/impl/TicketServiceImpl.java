@@ -62,6 +62,7 @@ import com.xyram.ticketingTool.entity.Ticket;
 import com.xyram.ticketingTool.entity.TicketAssignee;
 import com.xyram.ticketingTool.entity.TicketStatusHistory;
 import com.xyram.ticketingTool.enumType.NotificationType;
+import com.xyram.ticketingTool.enumType.TicketAssigneeStatus;
 import com.xyram.ticketingTool.enumType.TicketStatus;
 import com.xyram.ticketingTool.enumType.UserRole;
 import com.xyram.ticketingTool.exception.ResourceNotFoundException;
@@ -317,6 +318,58 @@ public class TicketServiceImpl implements TicketService {
 			content.put("ticketId", tickets.getId());
 
 			response.setContent(content);
+			
+			String assignEmployeeId = ticketrepository.getElgibleAssignee();
+//			Ticket ticketObj = ticketRepository.getById(assignee.getTicketId());
+			if (assignEmployeeId != null) {
+				Employee employeeObj = employeeRepository.getById(assignEmployeeId);
+				if (employeeObj != null) {
+					response.setMessage(ResponseMessages.TICKET_ADDED+" And assigned.");
+					TicketAssignee assignee = new TicketAssignee();
+					assignee.setEmployeeId(assignEmployeeId);
+					assignee.setTicketId(tickets.getId());
+					assignee.setCreatedAt(new Date());
+					assignee.setCreatedBy(userDetail.getUserId());
+					assignee.setStatus(TicketAssigneeStatus.ACTIVE);
+					
+					tickets.setStatus(TicketStatus.ASSIGNED);
+					ticketrepository.save(tickets);
+					ticketAssigneeRepository.save(assignee);
+//						
+					Map request = new HashMap<>();
+					request.put("uid", employeeObj.getUserCredientials().getUid());
+					request.put("title", "TICKET_ASSIGNED");
+					request.put("body","Ticket Assigned - " + tickets.getTicketDescription() );
+					pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 13, NotificationType.TICKET_ASSIGNED.toString()));
+//					
+					//Inserting Notifications Details
+					notifications.setNotificationDesc("Ticket Assigned - " + tickets.getTicketDescription());
+					notifications.setNotificationType(NotificationType.TICKET_ASSIGNED);
+					notifications.setSenderId(userDetail.getUserId());
+					notifications.setReceiverId(userDetail.getUserId());
+					notifications.setSeenStatus(false);
+					notifications.setCreatedBy(userDetail.getUserId());
+					notifications.setCreatedAt(new Date());
+					notifications.setUpdatedBy(userDetail.getUserId());
+					notifications.setLastUpdatedAt(new Date());
+					notificationsRepository.save(notifications);
+					
+//					response.setSuccess(true);
+//					response.setMessage(ResponseMessages.TICKET_ASSIGNED);
+//					response.setContent(null);
+//					
+				}else {
+//					response.setSuccess(false);
+//					response.setMessage(ResponseMessages.EMPLOYEE_INVALID);
+//					response.setContent(null);
+				}
+			
+			}else {
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.TICKET_NOT_EXIST);
+				response.setContent(null);
+			}
+			
 			return response;
 		}
 	}
@@ -332,21 +385,7 @@ public class TicketServiceImpl implements TicketService {
 				response.setMessage(ResponseMessages.TICKET_ALREADY_CANCELLED);
 				response.setContent(null);
 			} else if (!ticketNewRequest.getStatus().equals(TicketStatus.COMPLETED)) {
-				ticketNewRequest.setStatus(TicketStatus.CANCELLED);
-				ticketNewRequest.setUpdatedBy(userDetail.getUserId());
-				ticketNewRequest.setLastUpdatedAt(new Date());
-				ticketNewRequest.setCancelledAt(new Date());
-
-				// Inserting Ticket history details
-				TicketStatusHistory tktStatusHist = new TicketStatusHistory();
-				tktStatusHist.setTicketId(ticketId);
-				tktStatusHist.setTicketStatus(TicketStatus.CANCELLED);
-				tktStatusHist.setCreatedBy(userDetail.getUserId());
-				tktStatusHist.setCreatedAt(new Date());
-				tktStatusHist.setUpdatedBy(userDetail.getUserId());
-				tktStatusHist.setLastUpdatedAt(new Date());
-				tktStatusHistory.save(tktStatusHist);
-
+				
 				if (userDetail.getUserRole().equalsIgnoreCase("DEVELOPER")) {
 					if (ticketNewRequest.getStatus().equals(TicketStatus.ASSIGNED)
 							|| ticketNewRequest.getStatus().equals(TicketStatus.INPROGRESS)) {
@@ -365,7 +404,23 @@ public class TicketServiceImpl implements TicketService {
 					sendPushNotification(ticketNewRequest.getCreatedBy(), "Ticket Cancelled By Admin - ",
 							ticketNewRequest, "TICKET_CANCELLED", 17);
 				}
+				
+				ticketNewRequest.setStatus(TicketStatus.CANCELLED);
+				ticketNewRequest.setUpdatedBy(userDetail.getUserId());
+				ticketNewRequest.setLastUpdatedAt(new Date());
+				ticketNewRequest.setCancelledAt(new Date());
 				ticketrepository.save(ticketNewRequest);
+
+				// Inserting Ticket history details
+				TicketStatusHistory tktStatusHist = new TicketStatusHistory();
+				tktStatusHist.setTicketId(ticketId);
+				tktStatusHist.setTicketStatus(TicketStatus.CANCELLED);
+				tktStatusHist.setCreatedBy(userDetail.getUserId());
+				tktStatusHist.setCreatedAt(new Date());
+				tktStatusHist.setUpdatedBy(userDetail.getUserId());
+				tktStatusHist.setLastUpdatedAt(new Date());
+				tktStatusHistory.save(tktStatusHist);
+
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.TICKET_CANCELLED);
 				response.setContent(null);
@@ -636,6 +691,7 @@ public class TicketServiceImpl implements TicketService {
 
 					ticketObj.setUpdatedBy(userDetail.getUserId());
 					ticketObj.setLastUpdatedAt(new Date());
+					ticketrepository.save(ticketObj);
 
 					// Inserting Ticket history details
 					TicketStatusHistory tktStatusHist = new TicketStatusHistory();
@@ -672,7 +728,7 @@ public class TicketServiceImpl implements TicketService {
 								"TICKET_REOPENED", 18);
 					}
 
-					ticketrepository.save(ticketObj);
+					
 					response.setSuccess(true);
 					response.setMessage(ResponseMessages.TICKET_REOPENED);
 					response.setContent(null);
