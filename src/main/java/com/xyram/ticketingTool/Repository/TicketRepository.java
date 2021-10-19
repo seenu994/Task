@@ -81,7 +81,7 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 	List<Map> getTktAttachmentsById(String ticketId);
 	
 	@Query(value = "SELECT a.ticket_id as ticket_id, a.ticket_description as ticket_description , a.ticket_status as ticket_status, a.created_at as created_at, a.created_by as created_by, a.last_updated_at as last_updated_at, "
-			+ "a.priority_id as priority_id, b.employee_id as assigneeId, concat(e.frist_name, ' ', e.last_name) as assigneeName, concat(ee.frist_name, ' ', ee.last_name) as createdByEmp, a.project_id, p.project_name "
+			+ "a.priority_id as priority_id, b.employee_id as assigneeId, concat(e.frist_name, ' ', e.last_name) as assigneeName, concat(ee.frist_name, ' ', ee.last_name) as createdByEmp, a.project_id, p.project_name as projectName "
 			+ "FROM ticket a left join project p on a.project_id = p.project_id left join employee ee on a.created_by = ee.user_id left join ticket_assignee b ON a.ticket_id = b.ticket_id and b.ticket_assignee_status = 'ACTIVE' "
 			+ "left join employee e on b.employee_id = 	e.employee_id where a.ticket_id = :ticketId", nativeQuery = true)
 	List<Map> getTicketSearchById(@Param("ticketId") String ticketId);
