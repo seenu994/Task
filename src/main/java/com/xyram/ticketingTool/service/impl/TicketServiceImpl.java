@@ -1090,29 +1090,38 @@ public class TicketServiceImpl implements TicketService {
 	}
 
 
-	/*
-	 * public ApiResponse getTicketsDetailsByStatus(Pageable pageable, String
-	 * ticketStatus) { // TODO Auto-generated method stub ApiResponse response = new
-	 * ApiResponse(false);
-	 * 
-	 * Page<Map> allTickets ; if (userDetail.getUserRole().equals("INFRA")) {
-	 * allTickets = ticketrepository.getAllTicketsForInfraUser(pageable,
-	 * userDetail.getUserId()); }else { allTickets =
-	 * ticketrepository.getAllTicketsByStatus(pageable, userDetail.getUserId(),
-	 * userDetail.getUserRole()); }
-	 * 
-	 * if (allTickets != null) { response.setSuccess(true);
-	 * response.setMessage(ResponseMessages.TICKET_EXIST+" ROLE :: "+userDetail.
-	 * getUserRole()); Map<String, Page<Map>> content = new HashMap<String,
-	 * Page<Map>>(); content.put("tickets", allTickets);
-	 * response.setContent(content); } else { response.setSuccess(false);
-	 * response.setMessage(ResponseMessages.TICKET_NOT_EXIST);
-	 * response.setContent(null); }
-	 * 
-	 * return response;
-	 * 
-	 * }
-	 */
+	@Override
+	public ApiResponse getAllTicketsDetails(Pageable pageable) {
+		// TODO Auto-generated method stub
+		System.out.println("inside service method");
+		ApiResponse response = new ApiResponse(false);
+		
+		
+		 Page<Map> allTks =  ticketrepository.getAllTicketsDetails(pageable);
+		//  System.out.println( "values"+allTks.getContent());
+		/*
+		 * for(Map map: allTks) { map.entrySet(); // map.forEach((k, v) ->
+		 * System.out.println("Key : " + k + ", Value : " + v.toString())); }
+		 */
+		if (allTks != null) {
+			response.setSuccess(true);
+			response.setMessage(ResponseMessages.TICKET_EXIST+" ROLE :: "+userDetail.getUserRole());
+			Map<String, Page<Map>> content = new HashMap<String, Page<Map>>();
+			
+			content.put("tickets", (Page<Map>) allTks);
+			
+			response.setContent(content);
+		} else {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.TICKET_NOT_EXIST);
+			response.setContent(null);
+		}
+		
+		
+		return response;
+
+		
+	}
 	
 	  
 	

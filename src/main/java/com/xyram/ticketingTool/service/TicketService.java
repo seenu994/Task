@@ -63,6 +63,7 @@ ApiResponse getTicketStatusCountWithProject(Pageable pageable);
 	
 
 	ApiResponse deleteComment(Comments commentObj);
+ ApiResponse getAllTicketsDetails(Pageable pageable);
 	
 	
 

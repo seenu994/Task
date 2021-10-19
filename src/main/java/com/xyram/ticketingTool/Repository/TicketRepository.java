@@ -113,5 +113,8 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 			+ "group by employee_id",nativeQuery=true)
 	String getElgibleAssignee();
 	
-	
+	@Query("SELECT distinct new map(a.Id as ticket_id, a.ticketDescription as ticket_description, a.status as ticket_status, a.createdAt as created_at, a.createdBy as created_by, a.lastUpdatedAt as last_updated_at, a.projectId as project_id, b.employeeId as assigneeId, concat(e.firstName,' ', e.lastName) as assigneeName, concat(ee.firstName,' ', ee.lastName) as createdByEmp) "
+			+ "from Ticket a left join Employee ee on a.createdBy = ee.userCredientials left join TicketAssignee b ON a.Id = b.ticketId and b.status = 'ACTIVE'\r\n" + 
+			"left join Employee e on b.employeeId = e.eId")
+	Page<Map> getAllTicketsDetails(Pageable pageable);
 }
