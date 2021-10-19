@@ -203,6 +203,16 @@ class TicketController {
 				  
 				  return ticketService.getAllTicketsByDuration(pageable, date1, date2);
 		  }
+		  
+	
+	  @GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllTktDetails",
+	  AuthConstants.INFRA_USER_BASEPATH +"/getAllTktDetails",
+	  AuthConstants.DEVELOPER_BASEPATH + "/getAllTktDetails" }) 
+	  public ApiResponse getAllTicketDetails(Pageable pageable) {
+	  logger.info("inside Report controller :: getAllTicket By date function");
+	  return ticketService.getAllTicketsDetails(pageable); }
+	 
+		 
 		   
 		  @GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getTicketTotalCount",
 				  AuthConstants.INFRA_USER_BASEPATH +"/getTicketTotalCount",

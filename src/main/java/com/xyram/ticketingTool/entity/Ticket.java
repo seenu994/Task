@@ -57,8 +57,8 @@ public class Ticket extends AuditModel {
 	private Date cancelledAt;
 	
 	
-	@Column(name = "last_updated_at")
-	private Date lastUpdatedAt;
+//	@Column(name = "last_updated_at")
+//	private Date lastUpdatedAt;
 	
 
 	public String getId() {
@@ -99,13 +99,13 @@ public class Ticket extends AuditModel {
 		return createdBy;
 	}
 	
-	public Date getLast_updated_at() {
-		return lastUpdatedAt;
-	}
-
-	public void setLast_updated_at(Date last_updated_at) {
-		this.lastUpdatedAt = last_updated_at;
-	}
+//	public Date getLast_updated_at() {
+//		return lastUpdatedAt;
+//	}
+//
+//	public void setLast_updated_at(Date last_updated_at) {
+//		this.lastUpdatedAt = last_updated_at;
+//	}
 
 	public Date getResolvedOn() {
 		return resolvedAt;

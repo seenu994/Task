@@ -324,6 +324,7 @@ public class TicketServiceImpl implements TicketService {
 			if (assignEmployeeId != null) {
 				Employee employeeObj = employeeRepository.getById(assignEmployeeId);
 				if (employeeObj != null) {
+					response.setMessage(ResponseMessages.TICKET_ADDED+" And assigned.");
 					TicketAssignee assignee = new TicketAssignee();
 					assignee.setEmployeeId(assignEmployeeId);
 					assignee.setTicketId(tickets.getId());
@@ -331,18 +332,18 @@ public class TicketServiceImpl implements TicketService {
 					assignee.setCreatedBy(userDetail.getUserId());
 					assignee.setStatus(TicketAssigneeStatus.ACTIVE);
 					
-					ticketreq.setStatus(TicketStatus.ASSIGNED);
-					ticketrepository.save(ticketreq);
+					tickets.setStatus(TicketStatus.ASSIGNED);
+					ticketrepository.save(tickets);
 					ticketAssigneeRepository.save(assignee);
-						
+//						
 					Map request = new HashMap<>();
 					request.put("uid", employeeObj.getUserCredientials().getUid());
 					request.put("title", "TICKET_ASSIGNED");
-					request.put("body","Ticket Assigned - " + ticketreq.getTicketDescription() );
+					request.put("body","Ticket Assigned - " + tickets.getTicketDescription() );
 					pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 13, NotificationType.TICKET_ASSIGNED.toString()));
-					
+//					
 					//Inserting Notifications Details
-					notifications.setNotificationDesc("Ticket Assigned - " + ticketreq.getTicketDescription());
+					notifications.setNotificationDesc("Ticket Assigned - " + tickets.getTicketDescription());
 					notifications.setNotificationType(NotificationType.TICKET_ASSIGNED);
 					notifications.setSenderId(userDetail.getUserId());
 					notifications.setReceiverId(userDetail.getUserId());
@@ -353,14 +354,14 @@ public class TicketServiceImpl implements TicketService {
 					notifications.setLastUpdatedAt(new Date());
 					notificationsRepository.save(notifications);
 					
-					response.setSuccess(true);
-					response.setMessage(ResponseMessages.TICKET_ASSIGNED);
-					response.setContent(null);
-					
+//					response.setSuccess(true);
+//					response.setMessage(ResponseMessages.TICKET_ASSIGNED);
+//					response.setContent(null);
+//					
 				}else {
-					response.setSuccess(false);
-					response.setMessage(ResponseMessages.EMPLOYEE_INVALID);
-					response.setContent(null);
+//					response.setSuccess(false);
+//					response.setMessage(ResponseMessages.EMPLOYEE_INVALID);
+//					response.setContent(null);
 				}
 			
 			}else {
@@ -384,21 +385,7 @@ public class TicketServiceImpl implements TicketService {
 				response.setMessage(ResponseMessages.TICKET_ALREADY_CANCELLED);
 				response.setContent(null);
 			} else if (!ticketNewRequest.getStatus().equals(TicketStatus.COMPLETED)) {
-				ticketNewRequest.setStatus(TicketStatus.CANCELLED);
-				ticketNewRequest.setUpdatedBy(userDetail.getUserId());
-				ticketNewRequest.setLastUpdatedAt(new Date());
-				ticketNewRequest.setCancelledAt(new Date());
-
-				// Inserting Ticket history details
-				TicketStatusHistory tktStatusHist = new TicketStatusHistory();
-				tktStatusHist.setTicketId(ticketId);
-				tktStatusHist.setTicketStatus(TicketStatus.CANCELLED);
-				tktStatusHist.setCreatedBy(userDetail.getUserId());
-				tktStatusHist.setCreatedAt(new Date());
-				tktStatusHist.setUpdatedBy(userDetail.getUserId());
-				tktStatusHist.setLastUpdatedAt(new Date());
-				tktStatusHistory.save(tktStatusHist);
-
+				
 				if (userDetail.getUserRole().equalsIgnoreCase("DEVELOPER")) {
 					if (ticketNewRequest.getStatus().equals(TicketStatus.ASSIGNED)
 							|| ticketNewRequest.getStatus().equals(TicketStatus.INPROGRESS)) {
@@ -417,7 +404,23 @@ public class TicketServiceImpl implements TicketService {
 					sendPushNotification(ticketNewRequest.getCreatedBy(), "Ticket Cancelled By Admin - ",
 							ticketNewRequest, "TICKET_CANCELLED", 17);
 				}
+				
+				ticketNewRequest.setStatus(TicketStatus.CANCELLED);
+				ticketNewRequest.setUpdatedBy(userDetail.getUserId());
+				ticketNewRequest.setLastUpdatedAt(new Date());
+				ticketNewRequest.setCancelledAt(new Date());
 				ticketrepository.save(ticketNewRequest);
+
+				// Inserting Ticket history details
+				TicketStatusHistory tktStatusHist = new TicketStatusHistory();
+				tktStatusHist.setTicketId(ticketId);
+				tktStatusHist.setTicketStatus(TicketStatus.CANCELLED);
+				tktStatusHist.setCreatedBy(userDetail.getUserId());
+				tktStatusHist.setCreatedAt(new Date());
+				tktStatusHist.setUpdatedBy(userDetail.getUserId());
+				tktStatusHist.setLastUpdatedAt(new Date());
+				tktStatusHistory.save(tktStatusHist);
+
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.TICKET_CANCELLED);
 				response.setContent(null);
@@ -699,6 +702,7 @@ public class TicketServiceImpl implements TicketService {
 
 					ticketObj.setUpdatedBy(userDetail.getUserId());
 					ticketObj.setLastUpdatedAt(new Date());
+					ticketrepository.save(ticketObj);
 
 					// Inserting Ticket history details
 					TicketStatusHistory tktStatusHist = new TicketStatusHistory();
@@ -735,7 +739,7 @@ public class TicketServiceImpl implements TicketService {
 								"TICKET_REOPENED", 18);
 					}
 
-					ticketrepository.save(ticketObj);
+					
 					response.setSuccess(true);
 					response.setMessage(ResponseMessages.TICKET_REOPENED);
 					response.setContent(null);
@@ -1028,21 +1032,24 @@ public class TicketServiceImpl implements TicketService {
 	System.out.println("inside service method");
 		ApiResponse response = new ApiResponse(false);
 		
-		 SimpleDateFormat sdf = new SimpleDateFormat(  "dd-MM-yyyy HH:mm:ss");
-		 Date startTime,endTime;
-		Page<Map> allTks =  ticketrepository.getAllTicketsByDuration(pageable, date1, date2);
-		  System.out.println( "values"+allTks.getContent());
-		  for(Map map: allTks) {
-			  map.entrySet();
-			//  map.forEach((k, v) -> System.out.println("Key : " + k + ", Value : " + v.toString()));
-		  }
 		
+		 try {
+			 SimpleDateFormat sdf = new SimpleDateFormat(  "yyyy-MM-dd");
+			 Date startTime,endTime;
+			startTime=sdf.parse(date1);
+			endTime = sdf.parse(date2);
+			Page<Map> allTks =  ticketrepository.getAllTicketsByDuration(pageable, startTime, endTime);
+			//  System.out.println( "values"+allTks.getContent());
+			/*
+			 * for(Map map: allTks) { map.entrySet(); // map.forEach((k, v) ->
+			 * System.out.println("Key : " + k + ", Value : " + v.toString())); }
+			 */
 			if (allTks != null) {
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.TICKET_EXIST+" ROLE :: "+userDetail.getUserRole());
 				Map<String, Page<Map>> content = new HashMap<String, Page<Map>>();
 				
-				content.put("tickets", allTks);
+				content.put("tickets", (Page<Map>) allTks);
 				
 				response.setContent(content);
 			} else {
@@ -1051,6 +1058,12 @@ public class TicketServiceImpl implements TicketService {
 				response.setContent(null);
 			}
 	     
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 		return response;
 
 		
@@ -1088,8 +1101,38 @@ public class TicketServiceImpl implements TicketService {
 	}
 
 
-	
+	@Override
+	public ApiResponse getAllTicketsDetails(Pageable pageable) {
+		// TODO Auto-generated method stub
+		System.out.println("inside service method");
+		ApiResponse response = new ApiResponse(false);
+		
+		
+		 Page<Map> allTks =  ticketrepository.getAllTicketsDetails(pageable);
+		//  System.out.println( "values"+allTks.getContent());
+		/*
+		 * for(Map map: allTks) { map.entrySet(); // map.forEach((k, v) ->
+		 * System.out.println("Key : " + k + ", Value : " + v.toString())); }
+		 */
+		if (allTks != null) {
+			response.setSuccess(true);
+			response.setMessage(ResponseMessages.TICKET_EXIST+" ROLE :: "+userDetail.getUserRole());
+			Map<String, Page<Map>> content = new HashMap<String, Page<Map>>();
+			
+			content.put("tickets", (Page<Map>) allTks);
+			
+			response.setContent(content);
+		} else {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.TICKET_NOT_EXIST);
+			response.setContent(null);
+		}
+		
+		
+		return response;
 
+		
+	}
 	
 	  
 	

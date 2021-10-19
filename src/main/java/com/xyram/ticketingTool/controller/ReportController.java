@@ -34,7 +34,12 @@ public class ReportController {
 	  return reportService.prepareReport(pageable,date1,date2); 
 	  }
 	  
-	  @GetMapping(value = AuthConstants.ADMIN_BASEPATH + "/getSummaryReport") 
+	 
+	  
+	 
+	  @GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getSummaryReport", 
+			  AuthConstants.INFRA_USER_BASEPATH + "/getSummaryReport", 
+			  AuthConstants.DEVELOPER_BASEPATH + "/getSummaryReport" }) 
 	  public Map getSummaryReports(Pageable pageable) {
 	  logger.info(" inside Report controller :: get Summary Report"); 
 	  return reportService.getSummaryReportData( pageable);

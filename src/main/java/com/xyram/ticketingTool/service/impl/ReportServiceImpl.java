@@ -38,6 +38,7 @@ import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.Projects;
 import com.xyram.ticketingTool.entity.Ticket;
 import com.xyram.ticketingTool.entity.TicketAssignee;
+import com.xyram.ticketingTool.enumType.TicketStatus;
 import com.xyram.ticketingTool.service.ProjectService;
 import com.xyram.ticketingTool.service.ReportService;
 import com.xyram.ticketingTool.service.TicketService;
@@ -96,12 +97,13 @@ public class ReportServiceImpl implements ReportService{
 	  
 	  table2.setHeaderRows(1);
 	  
-	  
-	 
-	  
-	  SimpleDateFormat sdf = new SimpleDateFormat(  "dd-MM-yyyy HH:mm:ss");
-		 Date startTime,endTime;
-		Page<Map> allTks =  ticketRepo.getAllTicketsByDuration(pageable, date1, date2);
+	
+			 SimpleDateFormat sdf = new SimpleDateFormat(  "yyyy-MM-dd");
+			 Date startTime,endTime;
+			startTime=sdf.parse(date1);
+			endTime = sdf.parse(date2);
+
+		Page<Map> allTks =  ticketRepo.getAllTicketsByDuration(pageable, startTime, endTime);
 
 		for(Map map : allTks) {
 			String ticketNo=(String) map.get("ticket_id");
@@ -121,8 +123,8 @@ public class ReportServiceImpl implements ReportService{
 			 String assignee = (String) map.get("assigneeName");
 			 table2.addCell(assignee);
 			 //Status
-			  String status= (String) map.get("ticket_status");
-			  table2.addCell(status);
+			  Object status= map.get("ticket_status");
+			  table2.addCell(status.toString());
 			 //ResolvedBy
 			  String  empId1=ticketAssignRepo.getAssigneeId(map.get("created_by")); 
 			  
@@ -137,7 +139,7 @@ public class ReportServiceImpl implements ReportService{
 			 }
 			 
 			  //Duration
-			  if(status.equalsIgnoreCase("completed")) {
+			  if(status.toString().equalsIgnoreCase("completed")) {
 				  Date createdAt = (Date) map.get("created_at");
 				  Date lastUpated=  (Date) map.get("last_updated_at");
 				  String  duration=findDifference(createdAt,lastUpated);
@@ -149,8 +151,7 @@ public class ReportServiceImpl implements ReportService{
 			
 		}
 	
-		
-	  
+	
 	  document.add(intro);
 	  document.add(space); 
 	  
@@ -311,7 +312,10 @@ public class ReportServiceImpl implements ReportService{
 	  
 	  }
 	 
+	  
+	  
 	
+	 
 
 }
 
