@@ -85,14 +85,14 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 	@Query(value = "SELECT e.employee_id as employeeId, e.frist_name as firstname, e.last_name as lastname, u.uid as uid"
 			+ " FROM employee e inner join user u on u.user_id=e.user_id  "
 
-			+ "where e.employee_status = 'ACTIVE'  and e.role_id = 'R1'", nativeQuery = true)
+			+ "where e.employee_status = 'ACTIVE'  and e.role_id = 'R3'", nativeQuery = true)
 
 	List<Map> getAllInfraAdmins();
 
 	@Query(value = "SELECT e.employee_id as employeeId, e.frist_name as firstname, e.last_name as lastname, u.uid as uid"
 			+ " FROM employee e inner join user u on u.user_id=e.user_id  "
 
-			+ "where e.employee_status = 'ACTIVE'  and e.role_id = 'R3'", nativeQuery = true)
+			+ "where e.employee_status = 'ACTIVE'  and e.role_id = 'R1'", nativeQuery = true)
 
 	List<Map> getListOfDeveloper();
 
