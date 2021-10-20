@@ -74,7 +74,7 @@ import com.xyram.ticketingTool.enumType.UserRole;
 import com.xyram.ticketingTool.exception.ResourceNotFoundException;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.request.JobOpeningSearchRequest;
-import com.xyram.ticketingTool.request.ReportSearchRequest;
+
 import com.xyram.ticketingTool.service.TicketAttachmentService;
 import com.xyram.ticketingTool.service.TicketService;
 import com.xyram.ticketingTool.util.PdfUtil;
@@ -1228,39 +1228,6 @@ public class TicketServiceImpl implements TicketService {
 	
 	
 	
-	@Override
-	public ApiResponse getAllTicketsBasedOnCriteria(ReportSearchRequest reportSearchObj) {
-		// TODO Auto-generated method stub
-		ApiResponse response = new ApiResponse(false);
-		Map<String, List<Ticket>> content = new HashMap<String, List<Ticket>>();
-//		List<Map> allJobs = jobRepository.getAllJobOpenings();
-		
-		List<Ticket> allList =  ticketrepository.findAll(new Specification<Ticket>() {
-				@Override
-				public Predicate toPredicate(Root<Ticket> root, javax.persistence.criteria.CriteriaQuery<?> query,
-						CriteriaBuilder criteriaBuilder) {
-					// TODO Auto-generated method stub
-					List<Predicate> predicates = new ArrayList<>();
-				
-	                if(reportSearchObj.getStatus() != null && !reportSearchObj.getStatus().equalsIgnoreCase("ALL")) {
-	                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("status"), reportSearchObj.getStatus())));
-	                }
-	              
-	                return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
-				}
-	        });
-		content.put("ticketList",allList);
-		if(allList.size() > 0) {
-			response.setSuccess(true);
-			response.setMessage("Succesfully retrieved Jobs");
-		}
-		else {
-			response.setSuccess(true);
-			response.setMessage("No Records Found");
-		}
-		response.setContent(content);
-		return response;
-	} 
-	
+
 	
 	}

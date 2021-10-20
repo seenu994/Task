@@ -13,7 +13,7 @@ import com.xyram.ticketingTool.entity.Comments;
 import com.xyram.ticketingTool.entity.ProjectMembers;
 import com.xyram.ticketingTool.entity.Ticket;
 //import com.xyram.ticketingTool.entity.TicketComments;
-import com.xyram.ticketingTool.request.ReportSearchRequest;
+
 
 public interface TicketService {
 
@@ -67,7 +67,7 @@ ApiResponse getTicketStatusCountWithProject(Pageable pageable);
 	ApiResponse deleteComment(Comments commentObj);
  ApiResponse getAllTicketsDetails(Pageable pageable);
 
-ApiResponse getAllTicketsBasedOnCriteria(ReportSearchRequest reportSearchObj);
+
 	
 	
 

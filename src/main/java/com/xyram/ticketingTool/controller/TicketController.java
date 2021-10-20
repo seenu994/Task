@@ -23,7 +23,7 @@ import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Comments;
 import com.xyram.ticketingTool.entity.Ticket;
 import com.xyram.ticketingTool.request.JobOpeningSearchRequest;
-import com.xyram.ticketingTool.request.ReportSearchRequest;
+
 import com.xyram.ticketingTool.service.TicketService;
 import com.xyram.ticketingTool.util.AuthConstants;
 
@@ -235,10 +235,6 @@ class TicketController {
 						  return ticketService.getTicketDtlsByProjectNameAndStatus(pageable, projectName, status);
 				  }
 		  
-			@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllTicketsData" })
-			public ApiResponse getAllJobs(@RequestBody  ReportSearchRequest reportSearchObj) {
-				logger.info("Get All Job");
-				return ticketService.getAllTicketsBasedOnCriteria(reportSearchObj);
-			}
+		
 		
 }
