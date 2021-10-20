@@ -32,8 +32,7 @@ public class PasswordController {
 	@Autowired
 	PasswordService passwordService;
 
-	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/resetpassword",
-			AuthConstants.DEVELOPER_BASEPATH + "/resetpassword" })
+	@PostMapping( "/resetpassword" )
 	public ApiResponse resetPassword(@RequestBody Map<String, Object> passwordRequest) {
 
 		logger.info("Received request for reset password");

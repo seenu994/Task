@@ -28,7 +28,7 @@ public class Ticket extends AuditModel {
 	@Column(name="ticket_id")
 	private String Id;
 	
-	@Column(name="ticket_description")
+	@Column(name="ticket_description", length = 5000)
 	private String ticketDescription;
 	
 //	@ManyToOne(cascade = { CascadeType.ALL })
