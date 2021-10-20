@@ -19,6 +19,9 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.security.auth.message.callback.PrivateKeyCallback.Request;
 import javax.transaction.Transactional;
 
@@ -27,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -57,6 +61,7 @@ import com.xyram.ticketingTool.Repository.UserRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Comments;
 import com.xyram.ticketingTool.entity.Employee;
+import com.xyram.ticketingTool.entity.JobOpenings;
 import com.xyram.ticketingTool.entity.Notifications;
 import com.xyram.ticketingTool.entity.Projects;
 import com.xyram.ticketingTool.entity.Ticket;
@@ -68,6 +73,8 @@ import com.xyram.ticketingTool.enumType.TicketStatus;
 import com.xyram.ticketingTool.enumType.UserRole;
 import com.xyram.ticketingTool.exception.ResourceNotFoundException;
 import com.xyram.ticketingTool.request.CurrentUser;
+import com.xyram.ticketingTool.request.JobOpeningSearchRequest;
+import com.xyram.ticketingTool.request.ReportSearchRequest;
 import com.xyram.ticketingTool.service.TicketAttachmentService;
 import com.xyram.ticketingTool.service.TicketService;
 import com.xyram.ticketingTool.util.PdfUtil;
@@ -1105,89 +1112,22 @@ public class TicketServiceImpl implements TicketService {
 	@Override
 	public ApiResponse getAllTicketsDetails(Pageable pageable) {
 		// TODO Auto-generated method stub
-		System.out.println("inside service method");
 		ApiResponse response = new ApiResponse(false);
-		
-		
-		 Page<Map> allTks =  ticketrepository.getAllTicketsDetails(pageable);
-		//  System.out.println( "values"+allTks.getContent());
-	
-		/*
-		 * for(Map map: allTks) { map.entrySet(); map.forEach((k, v) ->
-		 * System.out.println("Key : " + k + ", Value : " + v.toString())); }
-		 */
-		 
-		if (allTks != null) {
+
+		Page<Map> allTickets = ticketrepository.getAllTicketsDetails(pageable);
+		if (allTickets != null) {
 			response.setSuccess(true);
-			response.setMessage(ResponseMessages.TICKET_EXIST+" ROLE :: "+userDetail.getUserRole());
-			Map value = new HashMap<>();
-			 Map<String, Page<Map>> content = new HashMap<String, Page<Map>>();
-			for(Map map : allTks) {
-				String ticketNo=(String) map.get("ticket_id");
-				value.put("ticket_id", ticketNo);
-				//System.out.println("ticketNO::"+ticketNo);
-				String ticketDescription= (String) map.get("ticket_description");
-				value.put("ticketDescription", ticketDescription);
-			//	System.out.println("ticketDescription"+ticketDescription);
-				String projectName =  projectRepository.getProjectNameByProjectId(map.get("project_id"));
-				value.put("project_name", projectName);
-				//System.out.println("projectName"+projectName);
-				if(map.get("created_by")!=null) {
-					 String TicketRaisedBy =(String)map.get("createdByEmp");
-					 value.put("TicketRaisedBy", TicketRaisedBy);
-				 }
-				else {
-					value.put("TicketRaisedBy", " ");
-				}
-				 Date createdDate= (Date) map.get("created_at");
-				 value.put("createdDate",createdDate);
-				 String assigneeName = (String) map.get("assigneeName");
-				 value.put("assigneeName", assigneeName);
-				 Object status= map.get("ticket_status");
-				 value.put("status", status);
-				 int count=0;
-				 count++;
-				 System.out.println("count::"+count+"::status::"+status);
-				
-				 String  empId1=ticketAssigneeRepository.getAssigneeId(map.get("created_by")); 
-				  
-				 if(empId1!=null) {
-					// ResolvedBy
-					 Employee emp2=employeeRepository.getById(empId1);
-					 String ResolvedBy= emp2.getFirstName();
-				  value.put("ResolvedBy", ResolvedBy);
-				 }
-				 else {
-					 value.put("ResolvedBy", " ");
-				 }
-				 if(status.toString().equalsIgnoreCase("completed")) {
-					  Date createdAt = (Date) map.get("created_at");
-					  Date lastUpated=  (Date) map.get("last_updated_at");
-					  String  duration=findDifference(createdAt,lastUpated);
-					  value.put("duration", duration);
-				 }
-				 else {
-					 value.put("duration", " ");
-				 }
-				 System.out.println(value.entrySet());
-			
-					
-					content.put("values", (Page<Map>) value.entrySet());
-			}
-			
-			
-				System.out.println(content.keySet());
-				response.setContent(content);
-			
+			response.setMessage(ResponseMessages.TICKET_EXIST);
+			Map<String, Page<Map>> content = new HashMap<String, Page<Map>>();
+			content.put("tickets", allTickets);
+			response.setContent(content);
 		} else {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.TICKET_NOT_EXIST);
 			response.setContent(null);
 		}
-		
-		
-		return response;
 
+		return response;
 		
 	}
 	
@@ -1284,6 +1224,43 @@ public class TicketServiceImpl implements TicketService {
 
 		
 	}
+	
+	
+	
+	
+	@Override
+	public ApiResponse getAllTicketsBasedOnCriteria(ReportSearchRequest reportSearchObj) {
+		// TODO Auto-generated method stub
+		ApiResponse response = new ApiResponse(false);
+		Map<String, List<Ticket>> content = new HashMap<String, List<Ticket>>();
+//		List<Map> allJobs = jobRepository.getAllJobOpenings();
+		
+		List<Ticket> allList =  ticketrepository.findAll(new Specification<Ticket>() {
+				@Override
+				public Predicate toPredicate(Root<Ticket> root, javax.persistence.criteria.CriteriaQuery<?> query,
+						CriteriaBuilder criteriaBuilder) {
+					// TODO Auto-generated method stub
+					List<Predicate> predicates = new ArrayList<>();
+				
+	                if(reportSearchObj.getStatus() != null && !reportSearchObj.getStatus().equalsIgnoreCase("ALL")) {
+	                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("status"), reportSearchObj.getStatus())));
+	                }
+	              
+	                return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+				}
+	        });
+		content.put("ticketList",allList);
+		if(allList.size() > 0) {
+			response.setSuccess(true);
+			response.setMessage("Succesfully retrieved Jobs");
+		}
+		else {
+			response.setSuccess(true);
+			response.setMessage("No Records Found");
+		}
+		response.setContent(content);
+		return response;
+	} 
 	
 	
 	}
