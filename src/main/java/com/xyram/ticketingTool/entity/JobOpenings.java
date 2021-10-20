@@ -12,7 +12,10 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.GenericGenerator;
 import com.xyram.ticketingTool.baseData.model.AuditModel;
+import com.xyram.ticketingTool.enumType.JobOpeningStatus;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 
 @Entity
 @Table(name = "job_openings")
@@ -67,8 +70,9 @@ public class JobOpenings extends AuditModel{
 	@JoinColumn(name = "wing_id")
     private CompanyWings wings;
 	
+	@Enumerated(EnumType.STRING)
 	@Column(name="status")
-	private String jobStatus;
+	private JobOpeningStatus jobStatus = JobOpeningStatus.VACANT;
 	
 	@Column(name="salary")
 	private Integer jobSalary;
@@ -145,20 +149,20 @@ public class JobOpenings extends AuditModel{
 		this.maxExp = maxExp;
 	}
 
+	public JobOpeningStatus getJobStatus() {
+		return jobStatus;
+	}
+
+	public void setJobStatus(JobOpeningStatus jobStatus) {
+		this.jobStatus = jobStatus;
+	}
+
 	public CompanyWings getWings() {
 		return wings;
 	}
 
 	public void setWings(CompanyWings wings) {
 		this.wings = wings;
-	}
-
-	public String getStatus() {
-		return jobStatus;
-	}
-
-	public void setStatus(String status) {
-		this.jobStatus = status;
 	}
 
 	public String getJobCode() {
