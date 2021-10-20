@@ -92,4 +92,6 @@ public interface ResponseMessages {
 
 	String DELETE_ATTACHMENT = "Attachments Deleted Successfully";
 
+	String EMPLOYEE_PROFILE_UPDATION = "Profile Updated Successfully";
+
 }
