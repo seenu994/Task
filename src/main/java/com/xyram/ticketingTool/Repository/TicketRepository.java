@@ -119,4 +119,10 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 			+ "from Ticket a left join Employee ee on a.createdBy = ee.userCredientials left join TicketAssignee b ON a.Id = b.ticketId and b.status = 'ACTIVE'\r\n" + 
 			"left join Employee e on b.employeeId = e.eId")
 	Page<Map> getAllTicketsDetails(Pageable pageable);
+	
+	@Query(value="SELECT a.ticket_id, a.ticket_description, a.ticket_status, a.created_at, a.created_by, a.last_updated_at, a.project_id, b.ticket_assignee_id, concat(e.frist_name,' ', e.last_name) as assigneeName, concat(ee.frist_name,' ', ee.last_name) as createdByEmp "
+			+ "from ticket a left join employee ee on a.created_by = ee.user_id left join ticket_assignee b ON a.ticket_id = b.ticket_id and b.ticket_assignee_status = 'ACTIVE'\r\n" + 
+			"left join employee e on b.employee_id = e.employee_id where (a.ticket_status='' OR a.ticket_status =:status)"
+			+ "and  (a.project_id='' OR a.project_id =:projectId)",nativeQuery = true)
+	Page<Map> getTicketDataByStatusProjectName(Pageable pageable, @Param("projectId") String projectId, @Param("status") Object status);
 }
