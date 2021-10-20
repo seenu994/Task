@@ -7,10 +7,12 @@ import java.util.Date;
 import org.hibernate.query.NativeQuery;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.xyram.ticketingTool.entity.JobOpenings;
 import com.xyram.ticketingTool.entity.Ticket;
 import com.xyram.ticketingTool.entity.TicketAssignee;
 
@@ -125,4 +127,9 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 			"left join employee e on b.employee_id = e.employee_id where (a.ticket_status='' OR a.ticket_status =:status)"
 			+ "and  (a.project_id='' OR a.project_id =:projectId)",nativeQuery = true)
 	Page<Map> getTicketDataByStatusProjectName(Pageable pageable, @Param("projectId") String projectId, @Param("status") Object status);
+
+	
+	
+
+	List<Ticket> findAll(Specification<Ticket> specification);
 }

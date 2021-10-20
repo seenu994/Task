@@ -22,6 +22,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Comments;
 import com.xyram.ticketingTool.entity.Ticket;
+import com.xyram.ticketingTool.request.JobOpeningSearchRequest;
+import com.xyram.ticketingTool.request.ReportSearchRequest;
 import com.xyram.ticketingTool.service.TicketService;
 import com.xyram.ticketingTool.util.AuthConstants;
 
@@ -81,7 +83,8 @@ class TicketController {
 			AuthConstants.DEVELOPER_BASEPATH + "/editTicket/{ticketId}" })
 	public ApiResponse editTicket(@RequestPart(name = "files", required = false) MultipartFile[] files,@PathVariable String ticketId, @RequestPart String ticketRequest) {
 //		logger.info("Recive request to edit ticket by id:" + ticketRequest.getId());
-		return ticketService.editTicket(files,ticketId, ticketRequest);
+		//return ticketService.editTicket(files,ticketId, ticketRequest);
+		return null;
 	}
 
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/reopenTicket/{ticketId}",
@@ -218,7 +221,7 @@ class TicketController {
 				  AuthConstants.INFRA_USER_BASEPATH +"/getTicketTotalCount",
 				  AuthConstants.DEVELOPER_BASEPATH + "/getTicketTotalCount" }) 
 				  public  ApiResponse getTicketTotalCount(Pageable pageable) {
-						  logger.info("inside Report controller :: getAllTicket By total count"); 
+						  logger.info("inside ticket controller :: getAllTicket By total count"); 
 						  return ticketService.getTicketStatusCountWithProject(pageable);
 				  }
 				  
@@ -227,10 +230,15 @@ class TicketController {
 				  AuthConstants.INFRA_USER_BASEPATH +"/getTicketDetails/{projectName}/{status}",
 				  AuthConstants.DEVELOPER_BASEPATH + "/getTicketDetails/{projectName}/{status}" }) 
 				  public  ApiResponse getTicketDataByProjectNameAndStatus(Pageable pageable,@PathVariable String projectName, @PathVariable String status) {
-						  logger.info("inside Report controller :: getAllTicket By projectName and status function"); 
+						  logger.info("inside ticket controller :: getAllTicket By projectName and status function"); 
 						  
 						  return ticketService.getTicketDtlsByProjectNameAndStatus(pageable, projectName, status);
 				  }
 		  
+			@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllTicketsData" })
+			public ApiResponse getAllJobs(@RequestBody  ReportSearchRequest reportSearchObj) {
+				logger.info("Get All Job");
+				return ticketService.getAllTicketsBasedOnCriteria(reportSearchObj);
+			}
 		
 }
