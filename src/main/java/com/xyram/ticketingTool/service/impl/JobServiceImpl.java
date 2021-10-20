@@ -36,6 +36,7 @@ import com.xyram.ticketingTool.entity.JobApplication;
 import com.xyram.ticketingTool.entity.JobInterviews;
 import com.xyram.ticketingTool.entity.JobOpenings;
 import com.xyram.ticketingTool.entity.Ticket;
+import com.xyram.ticketingTool.enumType.JobOpeningStatus;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.request.JobApplicationSearchRequest;
 import com.xyram.ticketingTool.request.JobInterviewsRequest;
@@ -72,7 +73,7 @@ public class JobServiceImpl implements JobService{
 		
 		jobObj.setCreatedAt(new Date());
 		jobObj.setCreatedBy(userDetail.getUserId());
-		jobObj.setStatus("VACATE");
+		jobObj.setJobStatus(JobOpeningStatus.VACANT);
 		if(jobRepository.save(jobObj) != null) {
 			response.setSuccess(true);
 			response.setMessage("New Job Opening Created");
@@ -343,6 +344,60 @@ public class JobServiceImpl implements JobService{
 	            session.disconnect();
 	    }
 		return fileNameOriginal;
+	}
+
+	@Override
+	public ApiResponse getAllJobOpenings(JobInterviewsRequest serachObj) {
+		// TODO Auto-generated method stub
+		ApiResponse response = new ApiResponse(false);
+		Map<String, List<JobOpenings>> content = new HashMap<String, List<JobOpenings>>();		
+		List<JobOpenings> allList =  jobRepository.findAll(new Specification<JobOpenings>() {
+				@Override
+				public Predicate toPredicate(Root<JobOpenings> root, javax.persistence.criteria.CriteriaQuery<?> query,
+						CriteriaBuilder criteriaBuilder) {
+					// TODO Auto-generated method stub
+					List<Predicate> predicates = new ArrayList<>();
+//	                if(searchObj.getStatus() != null && !searchObj.getStatus().equalsIgnoreCase("ALL")) {
+//	                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("status"), searchObj.getStatus())));
+//	                }
+	                
+//	                if(searchObj.getSearchString() != null && !searchObj.getSearchString().equalsIgnoreCase("")) {
+//	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("candidateName"), "%" + searchObj.getSearchString() + "%")));
+//	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("candidateMobile"), "%" + searchObj.getSearchString() + "%")));
+//	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("candidateEmail"), "%" + searchObj.getSearchString() + "%")));
+//	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobCode"), "%" + searchObj.getSearchString() + "%")));
+//	                }
+	                return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+				}
+	        });
+		content.put("JobOpeningList",allList);
+		if(allList.size() > 0) {
+			response.setSuccess(true);
+			response.setMessage("Succesfully retrieved Job openings");
+		}
+		else {
+			response.setSuccess(true);
+			response.setMessage("No Records Found");
+		}
+		response.setContent(content);
+		return response;
+		
+	}
+
+	@Override
+	public ApiResponse getAllJobOpeningsById(String jobOpeningId) {
+		// TODO Auto-generated method stub
+		ApiResponse response = new ApiResponse(false);
+		Map jobOpening  = jobRepository.getJobOpeningById(jobOpeningId);
+		if(jobOpening != null) {
+			response.setSuccess(true);
+			response.setMessage("Job Opening Detail");
+			response.setContent(jobOpening);
+		}else {
+			response.setSuccess(false);
+			response.setMessage("Job Application Not Exist");
+		}
+		return response;
 	}
 
 	
