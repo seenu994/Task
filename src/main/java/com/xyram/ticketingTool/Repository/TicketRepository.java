@@ -28,7 +28,7 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 	String getTicketById(String ticketId);
 	
 	@Query("Select new map(t.Id as id,t.ticketDescription as ticketDescription,t.projectId as projectId,t.createdBy as createdBy,"
-			+ "t.priorityId as priorityId,t.status as status) from Ticket t")
+			+ "t.priorityId as priorityId,t.status as status) from Ticket t ")
 	Page<Map> getAllTicketList(Pageable pageable); 
 	
 	@Query(value = "SELECT a.ticket_id as ticket_id, a.ticket_description as ticket_description, a.ticket_status as ticket_status, a.created_at as created_at, a.last_updated_at as last_updated_at, "
@@ -64,7 +64,7 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 			+ "FROM Ticket a left join Employee ee on a.createdBy = ee.userCredientials left join TicketAssignee b ON a.Id = b.ticketId and b.status = 'ACTIVE' "
 			+ "left join Employee e on b.employeeId = e.eId where  (('INFRA' = :roleId and a.status IN ('ASSIGNED', 'INPROGRESS', 'REOPEN') and b.employeeId  = :createdBy) "
 			+ "OR ('DEVELOPER' = :roleId and a.status IN ('INITIATED', 'ASSIGNED', 'INPROGRESS', 'REOPEN') and a.createdBy = :createdBy) "
-			+ "OR ('TICKETINGTOOL_ADMIN' = :roleId and a.status NOT IN ('COMPLETED', 'CANCELLED')))")
+			+ "OR ('TICKETINGTOOL_ADMIN' = :roleId and a.status NOT IN ('COMPLETED', 'CANCELLED'))) ORDER BY a.createdAt DESC")
 	Page<Map> getAllTicketsByStatus(Pageable pageable, @Param("createdBy") String createdBy, @Param("roleId")String roleId);
 	
 	@Query(value = "SELECT a.ticket_id as ticket_id, a.ticket_description as ticket_description, a.ticket_status as ticket_status, a.created_at as created_at, a.created_by as created_by, a.last_updated_at as last_updated_at, "
@@ -109,11 +109,15 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 			"group by t.ticket_status, p.project_name",nativeQuery=true)
 	Page<Map> getTicketStatusCountWithProject(Pageable pageable);
 	
-	@Query(value="select distinct employee_id, count(*)"
-			+ " as emp_cnt from ticketdbtool.ticket_assignee where ticket_assignee_status = 'ACTIVE' and ticket_id in "
-			+ " (select ticket_id from ticketdbtool.ticket where ticket_status in ('ASSIGNED','INPROGRESS'))"
-			+ " group by employee_id"
-			+ " order by count(*) "
+	@Query(value=" select c.employee_id from( "
+			+ " select e.employee_id, count(e.employee_id) as emp_cnt from employee e join ticket_assignee t on e.employee_id = t.employee_id"
+			+ " where ticket_assignee_status = 'ACTIVE' and ticket_id in (select ticket_id from ticket where ticket_status in ('ASSIGNED','INPROGRESS'))"
+			+ " group by e.employee_id"
+			+ " union"
+			+ " select e.employee_id, count(e.employee_id) as emp_cnt from employee e where e.role_id = 'R2' "
+			+ " and e.employee_id not in (select t.employee_id from ticket_assignee t where e.employee_id = t.employee_id)"
+			+ " group by e.employee_id) c "
+			+ " order by c.emp_cnt"
 			+ " limit 1 ",nativeQuery=true)
 	String getElgibleAssignee();
 	

@@ -24,9 +24,9 @@ import com.xyram.ticketingTool.enumType.UserStatus;
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, String> {
 
-	@Query("Select new map(e.eId as id,e.email as email,e.firstName as firstName,e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId, "
+	@Query("Select distinct new map(e.eId as id,e.email as email,e.firstName as firstName,e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId, "
 			+ "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,d.designationName as designationName,e.profileUrl as profileUrl) from Employee e "
-			+ "JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id")
+			+ "JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id ORDER BY e.createdAt DESC")
 	Page<Map> getAllEmployeeList(Pageable pageable);
 
 	// Select e.`employee_id` as id, e.`frist_name` as firstName, e.`last_name` as
@@ -35,7 +35,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 	// p.`employee_id` where e.`employee_status` = 'ACTIVE' and e.`role_id` = 'R3'
 	// and p.`project_id` = '2c9fab1f7c3eebc6017c4073c8770010'
 
-	@Query("Select new map(e.eId as id, e.firstName as firstName, e.lastName as lastName) "
+	@Query("Select distinct new map(e.eId as id, e.firstName as firstName, e.lastName as lastName) "
 			+ "from Employee e left JOIN ProjectMembers p On e.eId = p.employeeId where p.status = 'ACTIVE' and e.status = 'ACTIVE' and e.roleId = 'R3' and p.projectId = :projectId")
 	List<Map> getAllEmpByProject(@Param("projectId") String projectId);
 

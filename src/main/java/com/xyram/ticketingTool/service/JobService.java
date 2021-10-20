@@ -34,4 +34,8 @@ public interface JobService {
 	ApiResponse scheduleJobInterview(JobInterviews schedule, String applicationId); 
 	
 	ApiResponse getAllJobInterviews(JobInterviewsRequest searchObj);
+
+	ApiResponse getAllJobOpenings(JobInterviewsRequest serachObj);
+
+	ApiResponse getAllJobOpeningsById(String jobOpeningId);
 }
