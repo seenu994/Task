@@ -25,7 +25,7 @@ import com.xyram.ticketingTool.enumType.UserStatus;
 public interface EmployeeRepository extends JpaRepository<Employee, String> {
 
 	@Query("Select distinct new map(e.eId as id,e.email as email,e.firstName as firstName,e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId, "
-			+ "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,d.designationName as designationName,e.profileUrl as profileUrl) from Employee e "
+			+ "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,d.designationName as designationName,e.profileUrl as profileUrl,e.createdAt as createdAt) from Employee e "
 			+ "JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id ORDER BY e.createdAt DESC")
 	Page<Map> getAllEmployeeList(Pageable pageable);
 

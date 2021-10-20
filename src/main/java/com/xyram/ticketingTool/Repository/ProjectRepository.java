@@ -23,11 +23,11 @@ public interface ProjectRepository extends JpaRepository<Projects, String> {
 	Projects getProjecById(String id);
 
 	@Query("Select distinct new map(p.pId as id, p.projectName as PName, p.projectDescritpion as projectDescritpion, p.clientId as clientId, c.clientName as clientname, "
-			+ "p.inHouse as inHouse, p.status as status) from Projects p join Client c ON p.clientId = c.Id and p.status != 'INACTIVE' ORDER BY p.createdAt DESC")
+			+ "p.inHouse as inHouse, p.status as status,p.createdAt as createdAt) from Projects p join Client c ON p.clientId = c.Id and p.status != 'INACTIVE' ORDER BY p.createdAt DESC")
 	Page<Map> getAllProjectsList(Pageable pageable);
 
 	@Query("Select distinct new map(p.pId as id, p.projectName as PName, p.projectDescritpion as projectDescritpion, p.clientId as clientId, "
-			+ "p.inHouse as inHouse, p.status as status) from Projects p join  ProjectMembers m On p.pId=m.projectId and m.status = 'ACTIVE' ORDER BY p.createdAt DESC ")
+			+ "p.inHouse as inHouse, p.status as status,p.createdAt as createdAt) from Projects p join  ProjectMembers m On p.pId=m.projectId and m.status = 'ACTIVE' ORDER BY p.createdAt DESC ")
 	Page<Map> getAllProjectByEmployee(Pageable pageable);
 	
 
