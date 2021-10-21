@@ -628,6 +628,7 @@ public class TicketServiceImpl implements TicketService {
 
 		ApiResponse response = new ApiResponse(false);
 		Ticket ticketObj = ticketrepository.getById(ticketId);
+		Employee employee = employeeRepository.getbyUserByUserId(userDetail.getUserId());
 		ObjectMapper objectMapper = new ObjectMapper();
 		Ticket ticketreq = null;
 		try {
@@ -665,7 +666,7 @@ public class TicketServiceImpl implements TicketService {
 				if (files != null)
 					attachmentService.storeImage(files, ticketId);
 				// Change userID to assignee
-				sendPushNotification(ticketAssigneeRepository.getAssigneeId(ticketObj.getId()),
+				sendPushNotification(ticketAssigneeRepository.getAssigneeIdForDeveloper(ticketObj.getId(),employee.geteId()),
 						"Ticket Edited By User - " + ticketObj.getTicketDescription(), ticketObj, "TICKET_EDITED", 26);
 
 				response.setSuccess(true);

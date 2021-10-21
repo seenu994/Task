@@ -44,10 +44,10 @@ public class ProjectMembers extends AuditModel {
 //	@JoinColumn(name = "project_id")
 //	private  Projects project;
 
-	@JoinColumn(name = "employee_id")
+	@Column(name = "employee_id")
 	private String employeeId;
 	
-	@JoinColumn(name = "project_id")
+	@Column(name = "project_id")
 	private  String projectId;
 
 	

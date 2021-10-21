@@ -179,8 +179,7 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 	@Override
 	public ApiResponse unassignProjectToEmployee(ProjectMembers member) {
 		// TODO Auto-generated method stub
-		ProjectMembers projectMembers = projectMemberRepository
-				.findByEmployeeIdAndProjectId(member.getEmployeeId(), member.getProjectId());
+		ProjectMembers projectMembers = projectMemberRepository.findByEmployeeIdAndProjectId(member.getEmployeeId(), member.getProjectId());
 		if (projectMembers != null) {
 			projectMembers.setStatus(ProjectMembersStatus.INACTIVE);
 			projectMemberRepository.save(projectMembers);
