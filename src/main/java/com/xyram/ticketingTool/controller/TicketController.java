@@ -227,6 +227,11 @@ class TicketController {
 						  return ticketService.getTicketStatusCountWithProject(pageable);
 				  }
 				  
+
+		
+		
+	
+	
 		//projectName/status/
 		  @GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getTicketDetails",
 				  AuthConstants.INFRA_USER_BASEPATH +"/getTicketDetails",
@@ -236,6 +241,7 @@ class TicketController {
 						  
 						  return ticketService.getTicketDtlsByProjectNameAndStatus(filter,pageable);
 				  }
+
 		  
 		
 		

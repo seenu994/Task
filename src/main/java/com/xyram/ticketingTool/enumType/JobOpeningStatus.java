@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 public enum JobOpeningStatus {
-	VACANT("VACANT"),
+	VACATE("VACATE"),
 
 	COMPLETED("COMPLETED"),
 	

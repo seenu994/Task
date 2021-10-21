@@ -388,6 +388,7 @@ public class TicketServiceImpl implements TicketService {
 	public ApiResponse cancelTicket(String ticketId) {
 		ApiResponse response = new ApiResponse(false);
 		Ticket ticketNewRequest = ticketrepository.getById(ticketId);
+		Employee employee = employeeRepository.getbyUserByUserId(userDetail.getUserId());
 		// System.out.println("Status :: "+ticketNewRequest.getStatus());
 		if (ticketNewRequest != null) {
 			if (ticketNewRequest.getStatus().equals(TicketStatus.CANCELLED)) {
@@ -400,7 +401,7 @@ public class TicketServiceImpl implements TicketService {
 					if (ticketNewRequest.getStatus().equals(TicketStatus.ASSIGNED)
 							|| ticketNewRequest.getStatus().equals(TicketStatus.INPROGRESS)) {
 						// Change userDetail.getUserId() to Ticket Assignee
-						sendPushNotification(ticketAssigneeRepository.getAssigneeId(ticketNewRequest.getId()),
+						sendPushNotification(ticketAssigneeRepository.getAssigneeIdForDeveloper(ticketNewRequest.getId(),employee.geteId()),
 								"Ticket Cancelled By User -", ticketNewRequest, "TICKET_CANCELLED", 16);
 					}
 				} else {
@@ -1180,7 +1181,9 @@ public class TicketServiceImpl implements TicketService {
 	@Override
 	public ApiResponse getTicketDtlsByProjectNameAndStatus(Map<String, Object> filter, Pageable pageable) {
 		ApiResponse response = new ApiResponse(false);
+
 		String projectName = filter.containsKey("projectName") ? ((String) filter.get("projectName")).toLowerCase() : null;
+
 		String fromDate = filter.containsKey("fromDate") ? filter.get("fromDate").toString() : null;
 		String toDate = filter.containsKey("toDate") ? filter.get("toDate").toString() : null;
 		String searchQuery = filter.containsKey("searchQuery") ? ((String) filter.get("searchQuery")).toLowerCase()
@@ -1204,7 +1207,9 @@ public class TicketServiceImpl implements TicketService {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 					filter.get("status").toString() + " is not a valid status");
 		}
+
 		Page<Map> allTks =  ticketrepository.getTicketDataByStatusProjectName(projectName,status,parsedFromDate,parsedToDate,searchQuery,pageable);
+
 		if (allTks != null) {
 			response.setSuccess(true);
 			response.setMessage(ResponseMessages.TICKET_EXIST+" ROLE :: "+userDetail.getUserRole());

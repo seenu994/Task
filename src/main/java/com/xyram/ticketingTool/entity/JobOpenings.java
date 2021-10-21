@@ -72,7 +72,7 @@ public class JobOpenings extends AuditModel{
 	
 	@Enumerated(EnumType.STRING)
 	@Column(name="status")
-	private JobOpeningStatus jobStatus = JobOpeningStatus.VACANT;
+	private JobOpeningStatus jobStatus = JobOpeningStatus.VACATE;
 	
 	@Column(name="salary")
 	private Integer jobSalary;
