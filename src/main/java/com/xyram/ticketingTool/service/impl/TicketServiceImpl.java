@@ -388,6 +388,7 @@ public class TicketServiceImpl implements TicketService {
 	public ApiResponse cancelTicket(String ticketId) {
 		ApiResponse response = new ApiResponse(false);
 		Ticket ticketNewRequest = ticketrepository.getById(ticketId);
+		Employee employee = employeeRepository.getbyUserByUserId(userDetail.getUserId());
 		// System.out.println("Status :: "+ticketNewRequest.getStatus());
 		if (ticketNewRequest != null) {
 			if (ticketNewRequest.getStatus().equals(TicketStatus.CANCELLED)) {
@@ -400,7 +401,7 @@ public class TicketServiceImpl implements TicketService {
 					if (ticketNewRequest.getStatus().equals(TicketStatus.ASSIGNED)
 							|| ticketNewRequest.getStatus().equals(TicketStatus.INPROGRESS)) {
 						// Change userDetail.getUserId() to Ticket Assignee
-						sendPushNotification(ticketAssigneeRepository.getAssigneeId(ticketNewRequest.getId()),
+						sendPushNotification(ticketAssigneeRepository.getAssigneeIdForDeveloper(ticketNewRequest.getId(),employee.geteId()),
 								"Ticket Cancelled By User -", ticketNewRequest, "TICKET_CANCELLED", 16);
 					}
 				} else {

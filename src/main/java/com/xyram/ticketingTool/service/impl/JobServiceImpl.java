@@ -73,7 +73,7 @@ public class JobServiceImpl implements JobService{
 		
 		jobObj.setCreatedAt(new Date());
 		jobObj.setCreatedBy(userDetail.getUserId());
-		jobObj.setJobStatus(JobOpeningStatus.VACANT);
+		jobObj.setJobStatus(JobOpeningStatus.VACATE);
 		if(jobRepository.save(jobObj) != null) {
 			response.setSuccess(true);
 			response.setMessage("New Job Opening Created");
