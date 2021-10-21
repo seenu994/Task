@@ -58,7 +58,6 @@ public interface TicketService {
 
 	
 	ApiResponse getAllTicketsByDuration(Pageable pageable, String date1, String date2);
-	ApiResponse getTicketDtlsByProjectNameAndStatus(Pageable pageable, String projectName, String status);
 ApiResponse getTicketStatusCountWithProject(Pageable pageable);
 	ApiResponse searchTicket(String searchString);
 
@@ -66,6 +65,8 @@ ApiResponse getTicketStatusCountWithProject(Pageable pageable);
 
 	ApiResponse deleteComment(Comments commentObj);
  ApiResponse getAllTicketsDetails(Pageable pageable);
+
+ApiResponse getTicketDtlsByProjectNameAndStatus(Map<String, Object> filter, Pageable pageable);
 
 
 	

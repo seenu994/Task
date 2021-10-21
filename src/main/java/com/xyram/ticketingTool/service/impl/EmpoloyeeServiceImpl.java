@@ -1,12 +1,14 @@
 
 package com.xyram.ticketingTool.service.impl;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,8 +22,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.Session;
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
 import com.xyram.ticketingTool.Repository.ProjectMemberRepository;
 import com.xyram.ticketingTool.Repository.RoleRepository;
@@ -68,6 +75,11 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	
 	@Autowired
 	ProjectMemberRepository projectMemberRepository;
+	
+	static ChannelSftp channelSftp = null;
+	static Session session = null;
+	static Channel channel = null;
+	static String PATHSEPARATOR = "/";
 
 //	private static Map<String, com.xyram.ticketingTool.admin.model.User> userCache = new HashMap<>();
 
@@ -94,6 +106,12 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 					user.setUserRole(UserRole.DEVELOPER);
 				}else if (employee.getRoleId().equals("R1")) {
 					user.setUserRole(UserRole.TICKETINGTOOL_ADMIN);
+				} else if (employee.getRoleId().equals("R4")) {
+					user.setUserRole(UserRole.HR_ADMIN);
+				} else if (employee.getRoleId().equals("R5")) {
+					user.setUserRole(UserRole.HR);
+				}else if (employee.getRoleId().equals("R6")) {
+					user.setUserRole(UserRole.JOB_VENDOR);
 				} else {
 					throw new ResourceNotFoundException("invalid user role ");
 				}
@@ -468,6 +486,94 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		response.setSuccess(true);
 		response.setContent(content);
 		return response;
+	}
+
+	@Override
+	public ApiResponse updateProfileImage(MultipartFile file,String employeeId) {
+		ApiResponse response = new ApiResponse(true);
+		 byte[] filearray;
+		 try {
+			filearray=file.getBytes();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+//	       System.out.println(file.);
+	       String fileextension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+	      String filename = getRandomFileName()+fileextension;//constentFile.getOriginalFilename();
+	      
+	      if(addFileAdmin(file,filename)!= null) {
+	    	  Employee employeeObj = employeeRepository.getById(employeeId);
+	    	  employeeObj.setProfileUrl("https://covidtest.xyramsoft.com/image/ticket-attachment/"+filename);
+	    	  employeeRepository.save(employeeObj);
+	    	  response.setSuccess(true);
+				response.setMessage(ResponseMessages.EMPLOYEE_PROFILE_UPDATION);
+				response.setContent(null);
+				return response;
+	      }
+	      
+	      else
+	      {
+	    	  
+	    	  response.setSuccess(false);
+				response.setMessage(ResponseMessages.EMPLOYEE_INVALID);
+				response.setContent(null);
+	      }
+	      
+	      return response;
+	}
+
+	public String getRandomFileName() {
+	    int leftLimit = 97; // letter 'a'
+	    int rightLimit = 122; // letter 'z'
+	    int targetStringLength = 10;
+	    Random random = new Random();
+
+	    String generatedString = random.ints(leftLimit, rightLimit + 1)
+	      .limit(targetStringLength)
+	      .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+	      .toString();
+
+	    return generatedString;
+	}
+	public String addFileAdmin(MultipartFile file, String fileName){
+		System.out.println("bjsjsjn");
+	    String SFTPHOST = "13.229.55.43"; // SFTP Host Name or SFTP Host IP Address
+	    int SFTPPORT = 22; // SFTP Port Number
+	    String SFTPUSER = "ubuntu"; // User Name
+	    String SFTPPASS = ""; // Password
+	    String SFTPKEY = "/home/ubuntu/tomcat/webapps/Ticket_tool-0.0.1-SNAPSHOT/WEB-INF/classes/Covid-Phast-Prod.ppk";
+	    String SFTPWORKINGDIRAADMIN = "/home/ubuntu/tomcat/webapps/image/ticket-attachment";// Source Directory on SFTP server
+	    String fileNameOriginal = fileName;
+	    try {
+	          JSch jsch = new JSch();
+	        if (SFTPKEY != null && !SFTPKEY.isEmpty()) {
+				jsch.addIdentity(SFTPKEY);
+			}
+	        session = jsch.getSession(SFTPUSER, SFTPHOST, SFTPPORT);
+//	        session.setPassword(SFTPPASS);
+	        java.util.Properties config = new java.util.Properties();
+	        config.put("StrictHostKeyChecking", "no");
+	        session.setConfig(config);
+	        session.connect(); // Create SFTP Session
+	        channel = session.openChannel("sftp"); // Open SFTP Channel
+	        channel.connect();
+	        channelSftp = (ChannelSftp) channel;
+	        channelSftp.cd(SFTPWORKINGDIRAADMIN);// Change Directory on SFTP Server
+	        channelSftp.put(file.getInputStream(),fileName);
+	        System.out.println("added");
+	    } catch (Exception ex) {
+	        ex.printStackTrace();
+	    } 
+	        finally {
+	        if (channelSftp != null)
+	            channelSftp.disconnect();
+	        if (channel != null)
+	            channel.disconnect();
+	        if (session != null)
+	            session.disconnect();
+	    }
+		return fileNameOriginal;
 	}
 
 

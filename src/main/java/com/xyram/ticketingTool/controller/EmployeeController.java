@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.xyram.ticketingTool.Repository.UserRepository;
 import com.xyram.ticketingTool.admin.model.User;
@@ -60,6 +62,12 @@ class EmployeeController {
 		return employeeService.getAllEmployee(pageable);
 	}
 
+	@PutMapping("/profile/image/{employeeId}")
+	public ApiResponse updateProfileImage(@RequestPart(name = "file", required = true) MultipartFile file,@PathVariable String employeeId) {
+		logger.info("Received request for update doctor profile");
+		return employeeService.updateProfileImage(file,employeeId);
+	}
+	
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editEmployee/{employeeId}",
 			AuthConstants.DEVELOPER_BASEPATH + "/editEmployee/{employeeId}" })
 	public ApiResponse editEmployee(@RequestBody Employee employeeRequest, @PathVariable String employeeId) {
@@ -119,14 +127,7 @@ class EmployeeController {
 		return employeeService.updateEmployee( employeeRequest);
 	}
 	
-	/*
-	 * @GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllprofile",
-	 * AuthConstants.INFRA_USER_BASEPATH +
-	 * "/getAllprofile",AuthConstants.DEVELOPER_BASEPATH + "/getAllprofile" })
-	 * public ApiResponse getAllprofile() {
-	 * logger.info("indide CatagoryController :: getAllCatagory"); //return
-	 * employeeService.getAllProfile(); }
-	 */
+	
 	
 
 }

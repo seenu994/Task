@@ -15,6 +15,7 @@ import org.springframework.data.repository.query.Param;
 import com.xyram.ticketingTool.entity.JobOpenings;
 import com.xyram.ticketingTool.entity.Ticket;
 import com.xyram.ticketingTool.entity.TicketAssignee;
+import com.xyram.ticketingTool.enumType.TicketStatus;
 
 import java.util.List;
 import java.util.Map;
@@ -126,11 +127,7 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 			"left join Employee e on b.employeeId = e.eId")
 	Page<Map> getAllTicketsDetails(Pageable pageable);
 	
-	@Query(value="SELECT a.ticket_id, a.ticket_description, a.ticket_status, a.created_at, a.created_by, a.last_updated_at, a.project_id, b.ticket_assignee_id, concat(e.frist_name,' ', e.last_name) as assigneeName, concat(ee.frist_name,' ', ee.last_name) as createdByEmp "
-			+ "from ticket a left join employee ee on a.created_by = ee.user_id left join ticket_assignee b ON a.ticket_id = b.ticket_id and b.ticket_assignee_status = 'ACTIVE'\r\n" + 
-			"left join employee e on b.employee_id = e.employee_id where (a.ticket_status='' OR a.ticket_status =:status)"
-			+ "and  (a.project_id='' OR a.project_id =:projectId)",nativeQuery = true)
-	Page<Map> getTicketDataByStatusProjectName(Pageable pageable, @Param("projectId") String projectId, @Param("status") Object status);
+	
 
 	@Query("SELECT distinct new map(a.Id as ticket_id, a.ticketDescription as ticket_description, a.status as ticket_status, a.createdAt as created_at, a.createdBy as created_by, a.lastUpdatedAt as last_updated_at, a.projectId as project_id, b.employeeId as assigneeId, concat(e.firstName,' ', e.lastName) as assigneeName, concat(ee.firstName,' ', ee.lastName) as createdByEmp) \r\n" + 
 			"from Ticket a left join Employee ee on a.createdBy = ee.userCredientials left join TicketAssignee b ON a.Id = b.ticketId and b.status = 'ACTIVE' left join Employee e on b.employeeId = e.eId  WHERE (:projectId='' OR a.projectId LIKE concat('%', :projectId ,'%''))\r\n" + 
@@ -139,4 +136,26 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 	
 
 	List<Ticket> findAll(Specification<Ticket> specification);
+
+	@Query(value="SELECT new map(a.Id, a.ticketDescription, a.status, a.createdAt, a.createdBy, a.lastUpdatedAt, a.projectId, b.Id, concat(e.firstName,' ', e.lastName) as assigneeName, concat(e.firstName,' ', e.lastName) as createdByEmp) "
+			+ "from Ticket a left join TicketAssignee b ON a.Id = b.ticketId and b.status = 'ACTIVE'" + 
+			"left join Employee e on b.employeeId = e.eId left join Projects p ON a.projectId = p.pId where (:status is null or a.status LIKE %:status%)"
+			+ "and  (:projectId is null or a.projectId LIKE %:projectId%) and  (cast(:parsedFromDate as date) is null or DATE(a.createdAt) >= :parsedFromDate ) and (cast(:parsedToDate as date) is null or DATE(a.created_at) <= :parsedToDate ) AND (:searchQuery is null OR lower(p.projectName) LIKE %:searchQuery%) ",nativeQuery = true)
+	Page<Map> getTicketDataByStatusProjectName(String projectId, TicketStatus status, Date parsedFromDate,
+			Date parsedToDate, String searchQuery, Pageable pageable);
+	
+//	@Query("SELECT DISTINCT b FROM Branch b WHERE " + " (:name is null or lower(b.name) LIKE %:name%)"
+//			+ " AND (:contactno is null or lower(b.primaryContactNumber) LIKE %:contactno%)"
+//			+ "AND (:clinicNpi is null or lower(b.clinicNPI)  LIKE %:clinicNpi%)"
+//			+ "AND (:status is null or b.status = :status)"
+//			+ "AND (:practice is null or lower(b.organization.name) LIKE %:practice%)" 
+//			+ "AND (:city is null or lower(b.address.city) LIKE %:city%)" 
+//			+ "AND (:searchQuery is null"
+//			+ " OR lower(b.name) LIKE %:searchQuery%" + " OR lower(b.emailId) LIKE %:searchQuery% "
+//			+ " OR lower(b.primaryContactNumber) LIKE %:searchQuery%"
+//			+ " OR lower(b.primaryContactNumber) LIKE %:searchQuery% OR lower(b.primaryContactPersonName) LIKE %:searchQuery%"
+//			+ " OR lower(b.primaryPersonContactNumber) LIKE %:searchQuery% OR lower(b.emergencyContactNumber) LIKE %:searchQuery%"
+//			+ " OR lower(b.address.city) LIKE %:searchQuery% OR lower(b.address.state) LIKE %:searchQuery%"
+//			+ " OR STR(b.address.zipCode) LIKE %:searchQuery% OR lower(b.organization.name) LIKE %:searchQuery%"
+//			+ " OR lower(b.clinicNPI) LIKE %:searchQuery% )")
 }

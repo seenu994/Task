@@ -203,9 +203,9 @@ public class PasswordServiceImpl implements PasswordService {
 				mailDetails.put("toEmail", user.getUsername());
 				mailDetails.put("subject", name + ", " + "Here's your new PASSWORD");
 				mailDetails.put("message", "Hi " + name
-						+ ", \n\n We received a request to reset the password for your Account. \n\n Here's your new PASSWORD Link is:"
-						+ application_url + "/update-password" + "?key=" + uuidAsString
-						+ "\n\n Thanks for helping us keep your account secure.,\n\n Xyram Software Solutions Pvt Ltd.");
+						+ ", \n\n We received a request to reset the password for your Account. \n\n Here's your new PASSWORD Link is: "
+						+  application_url + "/update-password" + "?key=" + uuidAsString
+						+ "\n\n Thanks for helping us keep your account secure.\n\n Xyram Software Solutions Pvt Ltd.");
 				emailService.sendMail(mailDetails);
 
 				response.setMessage(ResponseMessages.FORGOT_PASSOWRD);
