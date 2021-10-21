@@ -1179,26 +1179,26 @@ public class TicketServiceImpl implements TicketService {
 		ApiResponse response = new ApiResponse(false);
 		 String project_id;
 		 Object statusVal;
-		if(projectName.isEmpty()) {
+		if(projectName.equalsIgnoreCase(" ")) {
 			project_id=" ";
+			System.out.println("project id is::"+project_id+"::");
 		}
 		else {
 			project_id=projectRepository.getProjectId(projectName);
+			System.out.println("project id is::"+project_id+"::");
 		}
-		if(status.isEmpty()) {
-			statusVal=" ";
-		}
-		else {
-			statusVal= status;
-			System.out.println(statusVal);
-			 
-		}
+		
+		  if(status.isEmpty()) { statusVal=" "; } else { statusVal= status;
+		  System.out.println(statusVal);
+		  
+		  }
+		 
 		/*
 		 * Arrays.asList(TicketStatus.values()) .forEach(season ->
 		 * System.out.println(season));
 		 */
 		 
-		 System.out.println(" projectName::"+projectName+"status::"+statusVal);
+		 System.out.println(" project_id::"+project_id +"status"+status);
 		Page<Map> allTks =  ticketrepository.getTicketDataByStatusProjectName(pageable, project_id, statusVal);
 		//  System.out.println( "values"+allTks.getContent());
 		/*

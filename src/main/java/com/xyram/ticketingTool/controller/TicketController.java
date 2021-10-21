@@ -225,15 +225,21 @@ class TicketController {
 						  return ticketService.getTicketStatusCountWithProject(pageable);
 				  }
 				  
-		//projectName/status/
-		  @GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getTicketDetails/{projectName}/{status}",
-				  AuthConstants.INFRA_USER_BASEPATH +"/getTicketDetails/{projectName}/{status}",
-				  AuthConstants.DEVELOPER_BASEPATH + "/getTicketDetails/{projectName}/{status}" }) 
-				  public  ApiResponse getTicketDataByProjectNameAndStatus(Pageable pageable,@PathVariable String projectName, @PathVariable String status) {
-						  logger.info("inside ticket controller :: getAllTicket By projectName and status function"); 
-						  
-						  return ticketService.getTicketDtlsByProjectNameAndStatus(pageable, projectName, status);
-				  }
+		
+		
+	
+	  //projectName/status/
+	  
+	  @GetMapping(value = { AuthConstants.ADMIN_BASEPATH +
+	  "/getTicketDetails/{projectName}/{status}", AuthConstants.INFRA_USER_BASEPATH
+	  +"/getTicketDetails/{projectName}/{status}", AuthConstants.DEVELOPER_BASEPATH
+	  + "/getTicketDetails/{projectName}/{status}" }) 
+	  public ApiResponse getTicketDataByProjectNameAndStatus(Pageable pageable,@PathVariable String projectName, @PathVariable String status) { 
+		  logger.info("inside ticket controller :: getAllTicket By projectName and status function" );
+	  
+	  return ticketService.getTicketDtlsByProjectNameAndStatus(pageable,projectName, status); 
+	  }
+	 
 		  
 		
 		
