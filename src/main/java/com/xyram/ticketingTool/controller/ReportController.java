@@ -46,12 +46,5 @@ public class ReportController {
 	  }
 	  
 	  
-	  @GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getTicketDataReport/{projectName}/{status}",
-			  AuthConstants.INFRA_USER_BASEPATH +"/getTicketDataReport/{projectName}/{status}",
-			  AuthConstants.DEVELOPER_BASEPATH + "/getTicketDataReport/{projectName}/{status}" }) 
-			  public  Map getTicketDataByProjectNameAndStatus(Pageable pageable,@PathVariable String projectName, @PathVariable String status) {
-					  logger.info("inside Report controller :: getAllTicket Report By projectName and status function"); 
-					  
-					  return reportService.prepareReportOnProjectNameAndTksStatus(pageable, projectName, status);
-			  }
+
 }
