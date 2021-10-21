@@ -85,8 +85,8 @@ class TicketController {
 			AuthConstants.DEVELOPER_BASEPATH + "/editTicket/{ticketId}" })
 	public ApiResponse editTicket(@RequestPart(name = "files", required = false) MultipartFile[] files,@PathVariable String ticketId, @RequestPart String ticketRequest) {
 //		logger.info("Recive request to edit ticket by id:" + ticketRequest.getId());
-		//return ticketService.editTicket(files,ticketId, ticketRequest);
-		return null;
+		return ticketService.editTicket(files,ticketId, ticketRequest);
+		
 	}
 
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/reopenTicket/{ticketId}",

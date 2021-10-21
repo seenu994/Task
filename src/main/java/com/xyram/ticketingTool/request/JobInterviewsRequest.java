@@ -5,6 +5,7 @@ public class JobInterviewsRequest {
 	private String status;
 	
 	private String searchString;
+	
 
 	public String getSearchString() {
 		return searchString;

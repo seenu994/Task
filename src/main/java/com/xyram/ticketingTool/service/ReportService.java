@@ -11,6 +11,6 @@ public interface ReportService {
 public Map getSummaryReportData(Pageable pageable);
 public Map prepareReport(Pageable pageable, String date1, String date2);
 
-public Map prepareReportOnProjectNameAndTksStatus(Pageable pageable, String projectName, String status);
+public Map prepareReportOnProjectNameAndTksStatus(Map<String, Object> filter,Pageable pageable);
 
 }

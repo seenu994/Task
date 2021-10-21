@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
@@ -46,12 +47,12 @@ public class ReportController {
 	  }
 	  
 	  
-	  @GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getTicketDataReport/{projectName}/{status}",
-			  AuthConstants.INFRA_USER_BASEPATH +"/getTicketDataReport/{projectName}/{status}",
-			  AuthConstants.DEVELOPER_BASEPATH + "/getTicketDataReport/{projectName}/{status}" }) 
-			  public  Map getTicketDataByProjectNameAndStatus(Pageable pageable,@PathVariable String projectName, @PathVariable String status) {
+	  @GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getTicketDataReport",
+			  AuthConstants.INFRA_USER_BASEPATH +"/getTicketDataReport",
+			  AuthConstants.DEVELOPER_BASEPATH + "/getTicketDataReport" }) 
+			  public  Map getTicketDataByProjectNameAndStatus(@RequestParam Map<String, Object> filter,Pageable pageable) {
 					  logger.info("inside Report controller :: getAllTicket Report By projectName and status function"); 
 					  
-					  return reportService.prepareReportOnProjectNameAndTksStatus(pageable, projectName, status);
+					  return reportService.prepareReportOnProjectNameAndTksStatus(filter,pageable);
 			  }
 }

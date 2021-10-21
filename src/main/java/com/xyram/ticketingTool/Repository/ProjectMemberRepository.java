@@ -25,7 +25,8 @@ public interface ProjectMemberRepository extends JpaRepository<ProjectMembers, S
 
 	List<Map> getAllProjectByEmployee();
 
-	List<ProjectMembers> findByEmployeeIdAndProjectId(String employeeId, String projectId);
+	@Query("select p from ProjectMembers p where p.Id = :projectId and p.employeeId = :employeeId ")
+	ProjectMembers findByEmployeeIdAndProjectId(String employeeId, String projectId);
 
 }
 /*

@@ -21,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
@@ -44,6 +45,7 @@ import com.xyram.ticketingTool.service.ReportService;
 import com.xyram.ticketingTool.service.TicketService;
 import com.xyram.ticketingTool.util.PdfUtil;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 @Service
@@ -60,7 +62,7 @@ public class ReportServiceImpl implements ReportService{
 	  @Autowired
 	  TicketAssignRepository ticketAssignRepo;
 	   @Autowired
-	   TicketRepository ticketRepo;
+	   TicketRepository ticketrepository;
 	  
 	
 	  @Override
@@ -103,7 +105,7 @@ public class ReportServiceImpl implements ReportService{
 			startTime=sdf.parse(date1);
 			endTime = sdf.parse(date2);
 
-		Page<Map> allTks =  ticketRepo.getAllTicketsByDuration(pageable, startTime, endTime);
+		Page<Map> allTks =  ticketrepository.getAllTicketsByDuration(pageable, startTime, endTime);
 
 		for(Map map : allTks) {
 			String ticketNo=(String) map.get("ticket_id");
@@ -263,7 +265,7 @@ public class ReportServiceImpl implements ReportService{
 	  table1.setHeaderRows(1);
 	  
 	  
-	  Page<Map> allTks =  ticketRepo.getTicketStatusCountWithProject(pageable);
+	  Page<Map> allTks =  ticketrepository.getTicketStatusCountWithProject(pageable);
 		
 		for(Map map: allTks) {
 			
@@ -314,147 +316,153 @@ public class ReportServiceImpl implements ReportService{
 	 
 	  
 	  @Override
-	  public Map prepareReportOnProjectNameAndTksStatus(Pageable pageable,String projectName, String status) {
-		  return null;
-//		  Map response = new HashMap<>();
-//	  Document document = new Document();
-//	  ClassLoader classLoader =getClass().getClassLoader(); 
-//	  File file = new File(classLoader.getResource("ReportOnProjNameStatus.pdf").getFile());
-//	  System.out.println("=====file.getName()======> " + file.getName());
-//	
-//	 
-//	  try { 
-//		  PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(classLoader.getResource("ReportOnProjNameStatus.pdf").getFile()));
-//	  document.open();
-//	  
-//	  Paragraph intro= new Paragraph("ReportOnProjNameStatus"); 
-//	  Paragraph space = new Paragraph(" "); 
-//	  PdfPTable table1 = new PdfPTable(2);
-//	  PdfPCell cell = new PdfPCell();
-//	  cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
-//	  
-//	  PdfPTable table2 = new PdfPTable(8);
-//	  
-//	  
-//	  table2.getDefaultCell().setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
-//	  table2.addCell(new Paragraph("TicketNo")); 
-//	  table2.addCell(new Phrase("Project")); 
-//	  table2.addCell(new Phrase("TicketRaised_By"));
-//	  table2.addCell(new Paragraph("Date")); 
-//	 table2.addCell(new Phrase("Assigned_To"));
-//	  table2.addCell(new Phrase("Status"));
-//	  table2.addCell(new Phrase("Resovled_By")); 
-//	table2.addCell(new Phrase("Duration"));
-//	  
-//	  table2.setHeaderRows(1);
-//	  
-//	
-//	  String project_id;
-//		 Object statusVal;
-//		if(projectName.isEmpty()) {
-//			project_id=" ";
-//		}
-//		else {
-//			project_id=projRepo.getProjectId(projectName);
-//		}
-//		if(status.isEmpty()) {
-//			statusVal=" ";
-//		}
-//		else {
-//			statusVal= status;
-//			System.out.println(statusVal);
-//			 
-//		}
-//
-////		Page<Map> allTks =  ticketRepo.getTicketDataByStatusProjectName(pageable, project_id, statusVal);
-//
-//		for(Map map : allTks) {
-//			String ticketNo=(String) map.get("ticket_id");
-//			table2.addCell(ticketNo);
-//			String projectName1 =  projRepo.getProjectNameByProjectId(map.get("project_id"));
-//			 table2.addCell(projectName1);
-//		
-//			 if(map.get("created_by")!=null) {
-//				 String TicketRaisedBy =(String)map.get("createdByEmp");
-//				 table2.addCell(TicketRaisedBy);
-//			 }
-//			 else {
-//				 table2.addCell(" ");
-//			 }
-//			 Date createdDate= (Date) map.get("created_at");
-//			 table2.addCell(createdDate.toString());
-//			 String assignee = (String) map.get("assigneeName");
-//			 table2.addCell(assignee);
-//			 //Status
-//			  Object status1= map.get("ticket_status");
-//			  table2.addCell(status1.toString());
-//			 //ResolvedBy
-//			  String  empId1=ticketAssignRepo.getAssigneeId(map.get("created_by")); 
-//			  
-//			 if(empId1!=null) {
-//				// ResolvedBy
-//				 Employee emp2=empRepo.getById(empId1);
-//				 String ResolvedBy= emp2.getFirstName();
-//				  table2.addCell(ResolvedBy);
-//			 }
-//			 else {
-//				 table2.addCell(" ");
-//			 }
-//			 
-//			  //Duration
-//			  if(status.toString().equalsIgnoreCase("completed")) {
-//				  Date createdAt = (Date) map.get("created_at");
-//				  Date lastUpated=  (Date) map.get("last_updated_at");
-//				  String  duration=findDifference(createdAt,lastUpated);
-//				  table2.addCell(duration);
-//			  }
-//			  else {
-//				  table2.addCell(" ");
-//			  }
-//			
-//		}
-//	
-//	
-//	  document.add(intro);
-//	  document.add(space); 
-//	  
-//	//  document.add(space); 
-//	  document.add(table2);
-//	  
-//	  
-//	  document.close(); 
-//	  writer.close(); }
-//	  catch (Exception e) {
-//	  e.printStackTrace();
-//	  
-//	  } 
-//	  InputStreamResource resource = null; try 
-//	  { resource = new
-//	  InputStreamResource(new FileInputStream(file)); } 
-//	  catch (FileNotFoundException e1) {
-//		  e1.printStackTrace(); }
-//	  ResponseEntity<InputStreamResource> preparePdf = ResponseEntity.ok()
-//	  .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" +
-//	  file.getName()) .contentLength(file.length())
-//	  .contentType(MediaType.parseMediaType(MediaType.
-//	  APPLICATION_OCTET_STREAM_VALUE)).body(resource);
-//	  
-//	  byte[] blob = PdfUtil.toblob(preparePdf); File someFile = new
-//	  File(classLoader.getResource("ReportOnProjNameStatus.pdf").getFile()); FileOutputStream fos;
-//	  try { fos = new FileOutputStream(someFile); fos.write(blob); fos.flush();
-//	  fos.close(); } catch (IOException e) {
-//	  
-//	  e.printStackTrace(); }
-//	  
-//	  
-//	  response.put("fileName", "ReportOnProjNameStatus"); response.put("type", "application/pdf");
-//	  response.put("blob", blob); return response;
-//	  
-//	  }
-//	 
-//	  
-//	
+	  public Map prepareReportOnProjectNameAndTksStatus(Map<String, Object> filter,Pageable pageable) {
+		  Map response = new HashMap<>();
+		  String projectName = filter.containsKey("projectName") ? ((String) filter.get("projectName")).toLowerCase() : null;
+
+			String fromDate = filter.containsKey("fromDate") ? filter.get("fromDate").toString() : null;
+			String toDate = filter.containsKey("toDate") ? filter.get("toDate").toString() : null;
+			String searchQuery = filter.containsKey("searchQuery") ? ((String) filter.get("searchQuery")).toLowerCase()
+					: null;
+			Date parsedFromDate = null;
+			Date parsedToDate = null;
+			try {
+				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+				parsedFromDate = fromDate != null ? dateFormat.parse(fromDate) : null;
+				parsedToDate = toDate != null ? dateFormat.parse(toDate) : null;
+
+			} catch (ParseException e) {
+				
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid date format date should be yyyy-MM-dd");
+
+			}
+			TicketStatus status = null;
+			try {
+				status = filter.containsKey("status") ? TicketStatus.toEnum((String) filter.get("status")) : null;
+			} catch (IllegalArgumentException e) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+						filter.get("status").toString() + " is not a valid status");
+			}
+	  Document document = new Document();
+	  ClassLoader classLoader =getClass().getClassLoader(); 
+	  File file = new File(classLoader.getResource("ReportOnProjNameStatus.pdf").getFile());
+	  System.out.println("=====file.getName()======> " + file.getName());
+	
+	 
+	  try { 
+		  PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(classLoader.getResource("ReportOnProjNameStatus.pdf").getFile()));
+	  document.open();
+	  
+	  Paragraph intro= new Paragraph("ReportOnProjNameStatus"); 
+	  Paragraph space = new Paragraph(" "); 
+	  PdfPTable table1 = new PdfPTable(2);
+	  PdfPCell cell = new PdfPCell();
+	  cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+	  
+	  PdfPTable table2 = new PdfPTable(8);
+	  
+	  
+	  table2.getDefaultCell().setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
+	  table2.addCell(new Paragraph("TicketNo")); 
+	  table2.addCell(new Phrase("Project")); 
+	  table2.addCell(new Phrase("TicketRaised_By"));
+	  table2.addCell(new Paragraph("Date")); 
+	 table2.addCell(new Phrase("Assigned_To"));
+	  table2.addCell(new Phrase("Status"));
+	  table2.addCell(new Phrase("Resovled_By")); 
+	table2.addCell(new Phrase("Duration"));
+	  
+	  table2.setHeaderRows(1);
+	  
+		Page<Map> allTks =  ticketrepository.getTicketDataByStatusProjectName(projectName,status,parsedFromDate,parsedToDate,searchQuery,pageable);
+
+		for(Map map : allTks) {
+			String ticketNo=(String) map.get("ticket_id");
+			table2.addCell(ticketNo);
+			String projectName1 =  projRepo.getProjectNameByProjectId(map.get("project_id"));
+			 table2.addCell(projectName1);
+		
+			 if(map.get("created_by")!=null) {
+				 String TicketRaisedBy =(String)map.get("createdByEmp");
+				 table2.addCell(TicketRaisedBy);
+			 }
+			 else {
+				 table2.addCell(" ");
+			 }
+			 Date createdDate= (Date) map.get("created_at");
+			 table2.addCell(createdDate.toString());
+			 String assignee = (String) map.get("assigneeName");
+			 table2.addCell(assignee);
+			 //Status
+			  Object status1= map.get("ticket_status");
+			  table2.addCell(status1.toString());
+			 //ResolvedBy
+			  String  empId1=ticketAssignRepo.getAssigneeId(map.get("created_by")); 
+			  
+			 if(empId1!=null) {
+				// ResolvedBy
+				 Employee emp2=empRepo.getById(empId1);
+				 String ResolvedBy= emp2.getFirstName();
+				  table2.addCell(ResolvedBy);
+			 }
+			 else {
+				 table2.addCell(" ");
+			 }
+			 
+			  //Duration
+			  if(status.toString().equalsIgnoreCase("completed")) {
+				  Date createdAt = (Date) map.get("created_at");
+				  Date lastUpated=  (Date) map.get("last_updated_at");
+				  String  duration=findDifference(createdAt,lastUpated);
+				  table2.addCell(duration);
+			  }
+			  else {
+				  table2.addCell(" ");
+			  }
+			
+		}
+	
+	
+	  document.add(intro);
+	  document.add(space); 
+	  
+	//  document.add(space); 
+	  document.add(table2);
+	  
+	  
+	  document.close(); 
+	  writer.close(); }
+	  catch (Exception e) {
+	  e.printStackTrace();
+	  
+	  } 
+	  InputStreamResource resource = null; try 
+	  { resource = new
+	  InputStreamResource(new FileInputStream(file)); } 
+	  catch (FileNotFoundException e1) {
+		  e1.printStackTrace(); }
+	  ResponseEntity<InputStreamResource> preparePdf = ResponseEntity.ok()
+	  .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" +
+	  file.getName()) .contentLength(file.length())
+	  .contentType(MediaType.parseMediaType(MediaType.
+	  APPLICATION_OCTET_STREAM_VALUE)).body(resource);
+	  
+	  byte[] blob = PdfUtil.toblob(preparePdf); File someFile = new
+	  File(classLoader.getResource("ReportOnProjNameStatus.pdf").getFile()); FileOutputStream fos;
+	  try { fos = new FileOutputStream(someFile); fos.write(blob); fos.flush();
+	  fos.close(); } catch (IOException e) {
+	  
+	  e.printStackTrace(); }
+	  
+	  
+	  response.put("fileName", "ReportOnProjNameStatus"); response.put("type", "application/pdf");
+	  response.put("blob", blob); return response;
+	  
 	  }
+	 
+	  
+	
+	  
 	 
 
 }

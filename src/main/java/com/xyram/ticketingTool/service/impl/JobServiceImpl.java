@@ -358,7 +358,7 @@ public class JobServiceImpl implements JobService{
 					// TODO Auto-generated method stub
 					List<Predicate> predicates = new ArrayList<>();
 	                if(searchObj.getStatus() != null) {
-	                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("status"), searchObj.getStatus())));
+	                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("jobStatus"), searchObj.getStatus())));
 	                }
 	                
 	                if(searchObj.getSearchString() != null && !searchObj.getSearchString().equalsIgnoreCase("")) {
@@ -371,7 +371,7 @@ public class JobServiceImpl implements JobService{
 	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobSalary"), "%" + searchObj.getSearchString() + "%")));
 	                }
 	                if(searchObj.getWing() != null) {
-	                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("wing"), searchObj.getWing())));
+	                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("wings"), searchObj.getWing())));
 	                }
 	                return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 				}
