@@ -1,8 +1,10 @@
 package com.xyram.ticketingTool.request;
 
+import com.xyram.ticketingTool.enumType.JobOpeningStatus;
+
 public class JobOpeningSearchRequest {
 	
-	private String status;
+	private JobOpeningStatus status;
 	
 	private String wing;
 	
@@ -16,11 +18,13 @@ public class JobOpeningSearchRequest {
 		this.searchString = searchString;
 	}
 
-	public String getStatus() {
+	
+
+	public JobOpeningStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(JobOpeningStatus status) {
 		this.status = status;
 	}
 

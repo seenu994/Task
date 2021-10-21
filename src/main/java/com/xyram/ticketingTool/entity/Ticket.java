@@ -32,7 +32,7 @@ public class Ticket extends AuditModel {
 	@Column(name="ticket_id")
 	private String Id;
 	
-	
+
 	@Column(name="ticket_description", columnDefinition="TEXT")
 	private String ticketDescription;
 	

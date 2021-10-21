@@ -228,9 +228,9 @@ class TicketController {
 				  }
 				  
 		//projectName/status/
-		  @GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getTicketDetails/{projectName}/{status}",
-				  AuthConstants.INFRA_USER_BASEPATH +"/getTicketDetails/{projectName}/{status}",
-				  AuthConstants.DEVELOPER_BASEPATH + "/getTicketDetails/{projectName}/{status}" }) 
+		  @GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getTicketDetails",
+				  AuthConstants.INFRA_USER_BASEPATH +"/getTicketDetails",
+				  AuthConstants.DEVELOPER_BASEPATH + "/getTicketDetails" }) 
 				  public  ApiResponse getTicketDataByProjectNameAndStatus(@RequestParam Map<String, Object> filter,Pageable pageable) {
 						  logger.info("inside ticket controller :: getAllTicket By projectName and status function"); 
 						  

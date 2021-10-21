@@ -44,7 +44,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 	 * project_assignment_tbl WHERE project_id=1234)
 	 */
 	@Query("Select distinct new map(e.eId as id, e.firstName as firstName, e.lastName as lastName) from Employee e "
-			+ " where e.id not in (select p1.employeeId from ProjectMembers p1 where p1.projectId = :projectId) "
+			+ " where e.id not in (select p1.employeeId from ProjectMembers p1 where p1.projectId = :projectId and p1.status = 'ACTIVE') "
 			+ " and e.status = 'ACTIVE' and e.email like %:searchString% and e.roleId = 'R3' ")
 //	@Query("Select distinct new map(e.eId as id, e.firstName as firstName, e.lastName as lastName) "
 //			+ "from Employee e left JOIN ProjectMembers p On e.eId = p.employeeId where e.status = 'ACTIVE' and e.roleId = 'R3' "
