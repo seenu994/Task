@@ -97,7 +97,7 @@ public class JobServiceImpl implements JobService{
 						CriteriaBuilder criteriaBuilder) {
 					// TODO Auto-generated method stub
 					List<Predicate> predicates = new ArrayList<>();
-	                if(jobOpeningObj.getStatus() != null && !jobOpeningObj.getStatus().equalsIgnoreCase("ALL")) {
+	                if(jobOpeningObj.getStatus() != null) {
 	                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("jobStatus"), jobOpeningObj.getStatus())));
 	                }
 	                if(jobOpeningObj.getWing() != null && !jobOpeningObj.getWing().equalsIgnoreCase("ALL")) {
