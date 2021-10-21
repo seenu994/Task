@@ -86,8 +86,8 @@ public class JobController {
 		return jobService.getAllJobInterviews(serachObj);
 	}
 	
-	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/getAllJobOpenings",AuthConstants.HR_BASEPATH + "/getAllJobOpenings" ,AuthConstants.JOB_VENDOR_BASEPATH + "/getAllJobOpenings"})
-	public ApiResponse getAllJobOpenings(@RequestBody JobInterviewsRequest serachObj) {
+	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/getAllJobOpenings",AuthConstants.HR_BASEPATH + "/getAllJobOpenings" ,AuthConstants.JOB_VENDOR_BASEPATH + "/getAllJobOpenings",AuthConstants.DEVELOPER_BASEPATH + "/getAllJobOpenings" })
+	public ApiResponse getAllJobOpenings(@RequestBody JobOpeningSearchRequest serachObj) {
 		logger.info("Get All Job Openings");
 		return jobService.getAllJobOpenings(serachObj);
 	}
