@@ -1181,7 +1181,9 @@ public class TicketServiceImpl implements TicketService {
 	@Override
 	public ApiResponse getTicketDtlsByProjectNameAndStatus(Map<String, Object> filter, Pageable pageable) {
 		ApiResponse response = new ApiResponse(false);
+
 		String projectName = filter.containsKey("projectName") ? ((String) filter.get("projectName")).toLowerCase() : null;
+
 		String fromDate = filter.containsKey("fromDate") ? filter.get("fromDate").toString() : null;
 		String toDate = filter.containsKey("toDate") ? filter.get("toDate").toString() : null;
 		String searchQuery = filter.containsKey("searchQuery") ? ((String) filter.get("searchQuery")).toLowerCase()
@@ -1205,7 +1207,9 @@ public class TicketServiceImpl implements TicketService {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 					filter.get("status").toString() + " is not a valid status");
 		}
+
 		Page<Map> allTks =  ticketrepository.getTicketDataByStatusProjectName(projectName,status,parsedFromDate,parsedToDate,searchQuery,pageable);
+
 		if (allTks != null) {
 			response.setSuccess(true);
 			response.setMessage(ResponseMessages.TICKET_EXIST+" ROLE :: "+userDetail.getUserRole());
