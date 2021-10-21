@@ -259,7 +259,6 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		ApiResponse response = validateEmployee(employeeRequest);
 		if (response.isSuccess()) {
 			Employee employee = employeeRepository.getById(employeeId);
-			User user = userRepository.getById(employeeRequest.getUserCredientials().getId());
 			if (employee != null) {
 				employee.setFirstName(employeeRequest.getFirstName());
 				employee.setLastName(employeeRequest.getLastName());

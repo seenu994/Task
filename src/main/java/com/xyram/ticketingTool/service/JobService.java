@@ -35,7 +35,7 @@ public interface JobService {
 	
 	ApiResponse getAllJobInterviews(JobInterviewsRequest searchObj);
 
-	ApiResponse getAllJobOpenings(JobInterviewsRequest serachObj);
+	ApiResponse getAllJobOpenings(JobOpeningSearchRequest serachObj);
 
 	ApiResponse getAllJobOpeningsById(String jobOpeningId);
 }

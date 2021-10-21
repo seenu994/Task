@@ -73,7 +73,7 @@ public class JobServiceImpl implements JobService{
 		
 		jobObj.setCreatedAt(new Date());
 		jobObj.setCreatedBy(userDetail.getUserId());
-		jobObj.setJobStatus(JobOpeningStatus.VACANT);
+		jobObj.setJobStatus(JobOpeningStatus.VACATE);
 		if(jobRepository.save(jobObj) != null) {
 			response.setSuccess(true);
 			response.setMessage("New Job Opening Created");
@@ -347,7 +347,7 @@ public class JobServiceImpl implements JobService{
 	}
 
 	@Override
-	public ApiResponse getAllJobOpenings(JobInterviewsRequest serachObj) {
+	public ApiResponse getAllJobOpenings(JobOpeningSearchRequest searchObj) {
 		// TODO Auto-generated method stub
 		ApiResponse response = new ApiResponse(false);
 		Map<String, List<JobOpenings>> content = new HashMap<String, List<JobOpenings>>();		
@@ -357,16 +357,22 @@ public class JobServiceImpl implements JobService{
 						CriteriaBuilder criteriaBuilder) {
 					// TODO Auto-generated method stub
 					List<Predicate> predicates = new ArrayList<>();
-//	                if(searchObj.getStatus() != null && !searchObj.getStatus().equalsIgnoreCase("ALL")) {
-//	                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("status"), searchObj.getStatus())));
-//	                }
+	                if(searchObj.getStatus() != null) {
+	                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("status"), searchObj.getStatus())));
+	                }
 	                
-//	                if(searchObj.getSearchString() != null && !searchObj.getSearchString().equalsIgnoreCase("")) {
-//	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("candidateName"), "%" + searchObj.getSearchString() + "%")));
-//	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("candidateMobile"), "%" + searchObj.getSearchString() + "%")));
-//	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("candidateEmail"), "%" + searchObj.getSearchString() + "%")));
-//	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobCode"), "%" + searchObj.getSearchString() + "%")));
-//	                }
+	                if(searchObj.getSearchString() != null && !searchObj.getSearchString().equalsIgnoreCase("")) {
+	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobCode"), "%" + searchObj.getSearchString() + "%")));
+	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobTitle"), "%" + searchObj.getSearchString() + "%")));
+	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobDescription"), "%" + searchObj.getSearchString() + "%")));
+	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobSkills"), "%" + searchObj.getSearchString() + "%")));
+	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("totalOpenings"), "%" + searchObj.getSearchString() + "%")));
+	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("filledPositions"), "%" + searchObj.getSearchString() + "%")));
+	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobSalary"), "%" + searchObj.getSearchString() + "%")));
+	                }
+	                if(searchObj.getWing() != null) {
+	                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("wing"), searchObj.getWing())));
+	                }
 	                return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 				}
 	        });
