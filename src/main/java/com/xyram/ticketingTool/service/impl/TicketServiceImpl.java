@@ -32,10 +32,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -1173,38 +1175,36 @@ public class TicketServiceImpl implements TicketService {
 		    }
 	//report 	  ticketrepo.getTicketDataByStatus
 	  
-	public ApiResponse getTicketDtlsByProjectNameAndStatus(Pageable pageable, String projectName, String status) {
-		// TODO Auto-generated method stub
-	System.out.println("inside service method");
+	
+
+	@Override
+	public ApiResponse getTicketDtlsByProjectNameAndStatus(Map<String, Object> filter, Pageable pageable) {
 		ApiResponse response = new ApiResponse(false);
-		 String project_id;
-		 Object statusVal;
-		if(projectName.isEmpty()) {
-			project_id=" ";
+		String projectId = filter.containsKey("projectId") ? ((String) filter.get("projectId")).toLowerCase() : null;
+		String fromDate = filter.containsKey("fromDate") ? filter.get("fromDate").toString() : null;
+		String toDate = filter.containsKey("toDate") ? filter.get("toDate").toString() : null;
+		String searchQuery = filter.containsKey("searchQuery") ? ((String) filter.get("searchQuery")).toLowerCase()
+				: null;
+		Date parsedFromDate = null;
+		Date parsedToDate = null;
+		try {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			parsedFromDate = fromDate != null ? dateFormat.parse(fromDate) : null;
+			parsedToDate = toDate != null ? dateFormat.parse(toDate) : null;
+
+		} catch (ParseException e) {
+			
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid date format date should be yyyy-MM-dd");
+
 		}
-		else {
-			project_id=projectRepository.getProjectId(projectName);
+		TicketStatus status = null;
+		try {
+			status = filter.containsKey("status") ? TicketStatus.toEnum((String) filter.get("status")) : null;
+		} catch (IllegalArgumentException e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+					filter.get("status").toString() + " is not a valid status");
 		}
-		if(status.isEmpty()) {
-			statusVal=" ";
-		}
-		else {
-			statusVal= status;
-			System.out.println(statusVal);
-			 
-		}
-		/*
-		 * Arrays.asList(TicketStatus.values()) .forEach(season ->
-		 * System.out.println(season));
-		 */
-		 
-		 System.out.println(" projectName::"+projectName+"status::"+statusVal);
-		Page<Map> allTks =  ticketrepository.getTicketDataByStatusProjectName(pageable, project_id, statusVal);
-		//  System.out.println( "values"+allTks.getContent());
-		/*
-		 * for(Map map: allTks) { map.entrySet(); // map.forEach((k, v) ->
-		 * System.out.println("Key : " + k + ", Value : " + v.toString())); }
-		 */
+		Page<Map> allTks =  ticketrepository.getTicketDataByStatusProjectName(projectId,status,parsedFromDate,parsedToDate,searchQuery,pageable);
 		if (allTks != null) {
 			response.setSuccess(true);
 			response.setMessage(ResponseMessages.TICKET_EXIST+" ROLE :: "+userDetail.getUserRole());
@@ -1222,7 +1222,6 @@ public class TicketServiceImpl implements TicketService {
 		
 		return response;
 
-		
 	}
 	
 	
