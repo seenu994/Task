@@ -312,7 +312,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		projectRequest.setpId(projectid);
 		projectRequest.setClientId(clientid);
 		ApiResponse projvalres = ProjectSerImpl.validateClientIdProjectId(projectRequest);
-		List<Map> employeeList = employeeRepository.searchEmployeeNotAssignedToProject(searchString);
+		List<Map> employeeList = employeeRepository.searchEmployeeNotAssignedToProject(projectid,searchString);
 		Map content = new HashMap();
 		content.put("EmployeeList", employeeList);
 		response.setSuccess(true);

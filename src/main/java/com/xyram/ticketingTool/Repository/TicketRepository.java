@@ -84,7 +84,7 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 	List<Map> getTktAttachmentsById(String ticketId);
 	
 	@Query(value = "SELECT a.ticket_id as ticket_id, a.ticket_description as ticket_description , a.ticket_status as ticket_status, a.created_at as created_at, a.created_by as created_by, a.last_updated_at as last_updated_at, "
-			+ "a.priority_id as priority_id, b.employee_id as assigneeId, concat(e.frist_name, ' ', e.last_name) as assigneeName, concat(ee.frist_name, ' ', ee.last_name) as createdByEmp, a.project_id, p.project_name as projectName "
+			+ "a.priority_id as priority_id, b.employee_id as assigneeId, concat(e.frist_name, ' ', e.last_name) as assigneeName, concat(ee.frist_name, ' ', ee.last_name) as createdByEmp, a.project_id as projectId, p.project_name as projectName "
 			+ "FROM ticket_info a left join project p on a.project_id = p.project_id left join employee ee on a.created_by = ee.user_id left join ticket_assignee b ON a.ticket_id = b.ticket_id and b.ticket_assignee_status = 'ACTIVE' "
 			+ "left join employee e on b.employee_id = 	e.employee_id where a.ticket_id = :ticketId", nativeQuery = true)
 	List<Map> getTicketSearchById(@Param("ticketId") String ticketId);
@@ -137,9 +137,9 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 
 	List<Ticket> findAll(Specification<Ticket> specification);
 
-	@Query(value="SELECT new map(a.Id as ticketId,a.ticketDescription as ticketDescription,a.status as ticketStatus,a.createdAt as createdAt,a.createdBy as createdBy,a.lastUpdatedAt as lastUpdatedAt,a.projectId as projectId,b.Id as ticketAsigneeId,concat(e.firstName,' ', e.lastName) as assigneeName,concat(e.firstName,' ', e.lastName) as createdByEmp) "
+	@Query(value="SELECT new map(a.Id as ticketId,a.ticketDescription as ticketDescription,a.status as ticketStatus,a.createdAt as createdAt,a.createdBy as createdBy,a.lastUpdatedAt as lastUpdatedAt,p.projectName as projectName,b.Id as ticketAsigneeId,concat(e.firstName,' ', e.lastName) as assignedTo,concat(ee.firstName,' ',ee.lastName) as createdByEmp) "
 			+ "from Ticket a left join TicketAssignee b ON a.Id = b.ticketId and b.status = 'ACTIVE' " + 
-			"left join Employee e on b.employeeId = e.eId left join Projects p ON a.projectId = p.pId where (:status is null or a.status = :status)"
+			"left join Employee e on b.employeeId = e.eId left join Employee ee on a.createdBy = ee.eId left join Projects p ON a.projectId = p.pId where (:status is null or a.status = :status)"
 			+ "and  (:projectName is null or p.projectName = :projectName) and  (cast(:parsedFromDate as date) is null or DATE(a.createdAt) >= :parsedFromDate ) and (cast(:parsedToDate as date) is null or DATE(a.createdAt) <= :parsedToDate ) AND (:searchQuery is null OR lower(p.projectName) LIKE %:searchQuery%) ")
 	Page<Map> getTicketDataByStatusProjectName(String projectName, TicketStatus status, Date parsedFromDate,
 			Date parsedToDate, String searchQuery, Pageable pageable);

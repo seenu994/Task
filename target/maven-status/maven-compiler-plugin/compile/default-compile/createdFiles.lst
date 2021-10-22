@@ -115,6 +115,7 @@ com\xyram\ticketingTool\service\impl\JobServiceImpl$3.class
 com\xyram\ticketingTool\entity\ProjectMembers.class
 com\xyram\ticketingTool\ticket\Contoller\UserController.class
 com\xyram\ticketingTool\service\impl\EmpoloyeeServiceImpl.class
+com\xyram\ticketingTool\entity\CheckToken.class
 com\xyram\ticketingTool\controller\ProjectMemberContoller.class
 com\xyram\ticketingTool\Repository\CommentRepository.class
 com\xyram\ticketingTool\Repository\RoleRepository.class

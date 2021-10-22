@@ -16,6 +16,8 @@ public interface PasswordService {
 
 	HashMap<String, String> setPasswordByAccestoken(Map<String, Object> passwordRequest);
 
+	HashMap<String, String> checkTokenValid(String key);
+
 	// Map forgotPassword(String userName);
 
 	// Map forgotPassword(String userName);
