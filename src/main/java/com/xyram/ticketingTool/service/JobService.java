@@ -15,6 +15,7 @@ import com.xyram.ticketingTool.entity.JobInterviews;
 import com.xyram.ticketingTool.entity.JobOpenings;
 import com.xyram.ticketingTool.entity.ProjectMembers;
 import com.xyram.ticketingTool.entity.Ticket;
+import com.xyram.ticketingTool.enumType.JobOpeningStatus;
 import com.xyram.ticketingTool.request.JobApplicationSearchRequest;
 import com.xyram.ticketingTool.request.JobInterviewsRequest;
 import com.xyram.ticketingTool.request.JobOpeningSearchRequest;
@@ -38,4 +39,6 @@ public interface JobService {
 	ApiResponse getAllJobOpenings(JobOpeningSearchRequest serachObj);
 
 	ApiResponse getAllJobOpeningsById(String jobOpeningId);
+
+	ApiResponse changeJobOpeningStatus(String jobOpeningId,JobOpeningStatus jobOpeningStatus);
 }

@@ -406,6 +406,24 @@ public class JobServiceImpl implements JobService{
 		return response;
 	}
 
+	@Override
+	public ApiResponse changeJobOpeningStatus(String jobOpeningId,JobOpeningStatus jobOpeningStatus) {
+		ApiResponse response = new ApiResponse(false);
+		JobOpenings status= jobRepository.getById(jobOpeningId);
+		if(status!= null) {
+			status.setJobStatus(jobOpeningStatus);
+			jobRepository.save(status);
+			response.setSuccess(true);
+			response.setMessage("Job Opening Status Updated Sucessfully");
+			response.setContent(null);
+		}else {
+			response.setSuccess(false);
+			response.setMessage("Job Opening Id does Not Exist");
+		}
+		// TODO Auto-generated method stub
+		return response;
+	}
+
 	
 
 	
