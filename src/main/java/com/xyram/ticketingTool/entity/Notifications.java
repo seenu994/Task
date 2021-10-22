@@ -25,7 +25,7 @@ public class Notifications extends AuditModel{
 	@Column(name="notification_id")
 	private String notificationId;
 	
-	@Column(name = "notification_desc")
+	@Column(name = "notification_desc" ,length=5000)
 	private String notificationDesc;
 	
 	@Enumerated(EnumType.STRING)

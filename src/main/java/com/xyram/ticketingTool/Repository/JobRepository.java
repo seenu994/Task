@@ -40,6 +40,9 @@ public interface JobRepository extends CrudRepository<JobOpenings,Long>,JpaSpeci
 	
 	@Query(value = "SELECT jo.job_code as jobCode,jo.job_title as jobTitle,jo.job_description as jobDescription,jo.job_skills as jobSkills,jo.total_openings as jobOpenings,jo.filled_positions as jobPositions,jo.min_exp as jobMinExperience,jo.max_exp as jobMaxExperience,jo.wing_id as jobWing,jo.status as jobstatus,jo.salary as jobSalary,jo.created_at as jobCreatedAt,jo.created_by as jobCreatedBy,jo.last_updated_at as jobLastUpdatedAt,jo.updated_by as jobLastUpdatedBy from ticketdbtool.job_openings jo where jo.job_id = :jobOpeningId ", nativeQuery = true)
 	Map getJobOpeningById(String jobOpeningId);
+    
+	@Query(value = "SELECT * from ticketdbtool.job_openings jo where jo.job_id = :jobOpeningId ", nativeQuery = true)
+	JobOpenings getById(String jobOpeningId);
 	
 //	public List<JobOpenings> findByCriteria(String employeeName){
 //        return employeeDAO.findAll(new Specification<Employee>() {

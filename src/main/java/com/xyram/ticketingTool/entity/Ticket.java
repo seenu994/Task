@@ -13,7 +13,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import java.util.Date;
 
-
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
@@ -26,28 +25,27 @@ import com.xyram.ticketingTool.enumType.TicketStatus;
 public class Ticket extends AuditModel {
 
 	@Id
-	@GeneratedValue(generator = "uuid",strategy=GenerationType.AUTO)
+	@GeneratedValue(generator = "uuid", strategy = GenerationType.AUTO)
 	@GenericGenerator(name = "uuid", strategy = "uuid")
-	@Size( max = 8)
-	@Column(name="ticket_id")
+	@Size(max = 8)
+	@Column(name = "ticket_id")
 	private String Id;
-	
 
-	@Column(name="ticket_description", columnDefinition="TEXT")
+	@Column(name = "ticket_description", length = 5000)
 	private String ticketDescription;
-	
+
 //	@ManyToOne(cascade = { CascadeType.ALL })
 //	@JoinColumn(name = "project_id")
 //	private Projects project;
-	
+
 	@Column(name = "project_id")
 	private String projectId;
-	
+
 	@Column(name = "created_by")
 	private String createdBy;
-	
+
 //	@OneToOne(cascade = { CascadeType.MERGE})
-	
+
 	@Column(name = "priority_id")
 	private String priorityId;
 
@@ -57,14 +55,12 @@ public class Ticket extends AuditModel {
 
 	@Column(name = "resolved_at")
 	private Date resolvedAt;
-	
+
 	@Column(name = "cancelled_at")
 	private Date cancelledAt;
-	
-	
+
 //	@Column(name = "last_updated_at")
 //	private Date lastUpdatedAt;
-	
 
 	public String getId() {
 		return Id;
@@ -74,20 +70,12 @@ public class Ticket extends AuditModel {
 		Id = id;
 	}
 
-	public String getTicketDescription() {
-		return ticketDescription;
-	}
-	
 	public void setResolvedAt(Date date) {
 		resolvedAt = date;
 	}
-	
+
 	public void setCancelledAt(Date date) {
 		resolvedAt = date;
-	}
-
-	public void setTicketDescription(String ticketDescription) {
-		this.ticketDescription = ticketDescription;
 	}
 
 //	public Projects getProject() {
@@ -98,12 +86,10 @@ public class Ticket extends AuditModel {
 //		this.project = project;
 //	}
 
-	
-
 	public String getCreatedBy() {
 		return createdBy;
 	}
-	
+
 //	public Date getLast_updated_at() {
 //		return lastUpdatedAt;
 //	}
@@ -115,7 +101,7 @@ public class Ticket extends AuditModel {
 	public Date getResolvedOn() {
 		return resolvedAt;
 	}
-	
+
 	public Date getCancelledOn() {
 		return cancelledAt;
 	}
@@ -140,7 +126,6 @@ public class Ticket extends AuditModel {
 		this.createdBy = createdBy;
 	}
 
-	
 	public TicketStatus getStatus() {
 		return status;
 	}
@@ -149,6 +134,14 @@ public class Ticket extends AuditModel {
 		this.status = status;
 	}
 
+	public String getTicketDescription() {
+		return ticketDescription;
+	}
+
+	public void setTicketDescription(String ticketDescription) {
+		this.ticketDescription = ticketDescription;
+	}
+
+	
 	
 }
-	
