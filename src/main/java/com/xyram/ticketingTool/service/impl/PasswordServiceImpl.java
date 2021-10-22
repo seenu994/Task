@@ -247,7 +247,7 @@ public class PasswordServiceImpl implements PasswordService {
 				userCache.remove("USER", user.getUsername().toLowerCase());
 */
 			Date now = new Date();
-			long diff = now.getTime() - user.getCreatedAt().getTime();
+			long diff = now.getTime() - token.getCreatedAt().getTime();
 			// String diffminutes = map.get("minutes");
 			long duration = diff / (60 * 1000);
 
