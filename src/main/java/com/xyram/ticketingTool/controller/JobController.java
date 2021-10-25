@@ -43,13 +43,19 @@ public class JobController {
 	@Autowired
 	JobService jobService;
 	
+	@PostMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/createJob/{jobId}" })
+	public ApiResponse editJob(@PathVariable String jobId,@RequestBody JobOpenings jobObj) {
+		logger.info("Creating Job");
+		return jobService.editJob(jobId,jobObj);
+	} 
+	
 	@PostMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/createJob" })
 	public ApiResponse createJob(@RequestBody JobOpenings jobObj) {
 		logger.info("Creating Job");
 		return jobService.createJob(jobObj);
 	} 
 	
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllJobs" })
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllJobs" })
 	public ApiResponse getAllJobs(@RequestBody JobOpeningSearchRequest jobOpeningObj) {
 		logger.info("Get All Job");
 		return jobService.getAllJobs(jobOpeningObj);
@@ -88,7 +94,7 @@ public class JobController {
 	}
 	
 	
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllJobOpenings/{jobOpeningId}",AuthConstants.HR_BASEPATH + "/getAllJobOpenings/{jobOpeningId}",AuthConstants.JOB_VENDOR_BASEPATH + "/getAllJobOpenings/{jobOpeningId}" })
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllJobOpenings/{jobOpeningId}",AuthConstants.HR_ADMIN_BASEPATH + "/getAllJobOpenings/{jobOpeningId}",AuthConstants.HR_BASEPATH + "/getAllJobOpenings/{jobOpeningId}",AuthConstants.JOB_VENDOR_BASEPATH + "/getAllJobOpenings/{jobOpeningId}" })
 	public ApiResponse getAllJobOpeningsById(@PathVariable String jobOpeningId) {
 		logger.info("Get JobOpening by id");
 		return jobService.getAllJobOpeningsById(jobOpeningId);

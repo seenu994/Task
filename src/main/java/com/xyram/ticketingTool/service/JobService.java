@@ -36,9 +36,9 @@ public interface JobService {
 	
 	ApiResponse getAllJobInterviews(JobInterviewsRequest searchObj);
 
-	ApiResponse getAllJobOpenings(JobOpeningSearchRequest serachObj);
-
 	ApiResponse getAllJobOpeningsById(String jobOpeningId);
 
 	ApiResponse changeJobOpeningStatus(String jobOpeningId,JobOpeningStatus jobOpeningStatus);
+
+	ApiResponse editJob(String jobId, JobOpenings jobObj);
 }

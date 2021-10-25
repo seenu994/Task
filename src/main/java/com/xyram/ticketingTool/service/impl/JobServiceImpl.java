@@ -346,50 +346,7 @@ public class JobServiceImpl implements JobService{
 		return fileNameOriginal;
 	}
 
-	@Override
-	public ApiResponse getAllJobOpenings(JobOpeningSearchRequest searchObj) {
-		// TODO Auto-generated method stub
-		ApiResponse response = new ApiResponse(false);
-		Map<String, List<JobOpenings>> content = new HashMap<String, List<JobOpenings>>();		
-		List<JobOpenings> allList =  jobRepository.findAll(new Specification<JobOpenings>() {
-				@Override
-				public Predicate toPredicate(Root<JobOpenings> root, javax.persistence.criteria.CriteriaQuery<?> query,
-						CriteriaBuilder criteriaBuilder) {
-					// TODO Auto-generated method stub
-					List<Predicate> predicates = new ArrayList<>();
-	                if(searchObj.getStatus() != null) {
-	                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("jobStatus"), searchObj.getStatus())));
-	                }
-	                
-	                if(searchObj.getSearchString() != null && !searchObj.getSearchString().equalsIgnoreCase("")) {
-	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobCode"), "%" + searchObj.getSearchString() + "%")));
-	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobTitle"), "%" + searchObj.getSearchString() + "%")));
-	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobDescription"), "%" + searchObj.getSearchString() + "%")));
-	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobSkills"), "%" + searchObj.getSearchString() + "%")));
-	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("totalOpenings"), "%" + searchObj.getSearchString() + "%")));
-	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("filledPositions"), "%" + searchObj.getSearchString() + "%")));
-	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobSalary"), "%" + searchObj.getSearchString() + "%")));
-	                }
-	                if(searchObj.getWing() != null) {
-	                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("wings"), searchObj.getWing())));
-	                }
-	                return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
-				}
-	        });
-		content.put("JobOpeningList",allList);
-		if(allList.size() > 0) {
-			response.setSuccess(true);
-			response.setMessage("Succesfully retrieved Job openings");
-		}
-		else {
-			response.setSuccess(true);
-			response.setMessage("No Records Found");
-		}
-		response.setContent(content);
-		return response;
-		
-	}
-
+	
 	@Override
 	public ApiResponse getAllJobOpeningsById(String jobOpeningId) {
 		// TODO Auto-generated method stub
@@ -421,6 +378,36 @@ public class JobServiceImpl implements JobService{
 			response.setMessage("Job Opening Id does Not Exist");
 		}
 		// TODO Auto-generated method stub
+		return response;
+	}
+
+	@Override
+	public ApiResponse editJob(String jobId, JobOpenings jobObj) {
+		ApiResponse response = new ApiResponse(false);
+		JobOpenings jobOpening = jobRepository.getById(jobId);
+		if(jobOpening != null) {
+			jobOpening.setJobCode(jobObj.getJobCode());
+			jobOpening.setJobDescription(jobObj.getJobDescription());
+			jobOpening.setJobSkills(jobObj.getJobSkills());
+			jobOpening.setJobTitle(jobObj.getJobTitle());
+			jobOpening.setLastUpdatedAt(new Date());
+			jobOpening.setMaxExp(jobObj.getMaxExp());
+			jobOpening.setMinExp(jobObj.getMinExp());
+			jobOpening.setSalary(jobObj.getSalary());
+			jobOpening.setTotalOpenings(jobObj.getTotalOpenings());
+			jobOpening.setWings(jobObj.getWings());
+			jobRepository.save(jobOpening);
+			response.setSuccess(true);
+			response.setMessage("Job Opening Updated Sucessfully");
+			response.setContent(null);
+		}
+		
+		else
+		{
+			response.setSuccess(false);
+			response.setMessage("Job Opening Id does Not Exist");
+		}
+		
 		return response;
 	}
 
