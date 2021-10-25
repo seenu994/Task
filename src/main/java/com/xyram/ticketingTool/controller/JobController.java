@@ -23,6 +23,7 @@ import com.xyram.ticketingTool.entity.Comments;
 import com.xyram.ticketingTool.entity.JobApplication;
 import com.xyram.ticketingTool.entity.JobInterviews;
 import com.xyram.ticketingTool.entity.Ticket;
+import com.xyram.ticketingTool.enumType.JobOpeningStatus;
 import com.xyram.ticketingTool.request.JobApplicationSearchRequest;
 import com.xyram.ticketingTool.request.JobInterviewsRequest;
 import com.xyram.ticketingTool.request.JobOpeningSearchRequest;
@@ -91,6 +92,12 @@ public class JobController {
 	public ApiResponse getAllJobOpeningsById(@PathVariable String jobOpeningId) {
 		logger.info("Get JobOpening by id");
 		return jobService.getAllJobOpeningsById(jobOpeningId);
+	}
+	
+	@PutMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/changeJobOpeningStatus/{jobOpeningId}/{status}"})
+	public ApiResponse changeJobOpeningStatus(@PathVariable String jobOpeningId,@PathVariable JobOpeningStatus status) {
+		logger.info("Get JobOpening by id");
+		return jobService.changeJobOpeningStatus(jobOpeningId,status);
 	}
 
 }

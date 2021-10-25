@@ -65,4 +65,15 @@ public class NotificationServiceImpl implements NotificationService {
 		return response;
 	}
 
+	
+	@Override
+	public Notifications createNotification(Notifications notification)
+	{
+	String	desc=notification.getNotificationDesc()!=null ?notification.getNotificationDesc().toString().substring(0, 50):null;
+	notification.setNotificationDesc(desc);
+		return notificationRepository.save(notification);
+	}
+	
+	
+
 }

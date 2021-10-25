@@ -26,6 +26,7 @@ import com.xyram.ticketingTool.enumType.TicketAssigneeStatus;
 import com.xyram.ticketingTool.enumType.TicketStatus;
 import com.xyram.ticketingTool.exception.ResourceNotFoundException;
 import com.xyram.ticketingTool.request.CurrentUser;
+import com.xyram.ticketingTool.service.NotificationService;
 import com.xyram.ticketingTool.service.TicketAssignService;
 import com.xyram.ticketingTool.util.ResponseMessages;
 
@@ -47,6 +48,9 @@ public class TicketAssignServiceImpl implements TicketAssignService {
 	EmployeeRepository employeeRepository;
 	@Autowired
 	CurrentUser userDetail;
+	
+	@Autowired
+	  NotificationService notificationService;
 	
 	@Autowired
 	NotificationRepository notificationsRepository;
@@ -143,7 +147,8 @@ public class TicketAssignServiceImpl implements TicketAssignService {
 				notifications.setCreatedAt(new Date());
 				notifications.setUpdatedBy(userDetail.getUserId());
 				notifications.setLastUpdatedAt(new Date());
-				notificationsRepository.save(notifications);
+			//	notificationsRepository.save(notifications);
+				notificationService.createNotification(notifications);
 				
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.TICKET_ASSIGNED);

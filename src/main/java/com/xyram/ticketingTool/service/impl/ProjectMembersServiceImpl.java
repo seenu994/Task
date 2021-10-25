@@ -31,6 +31,7 @@ import com.xyram.ticketingTool.enumType.NotificationType;
 import com.xyram.ticketingTool.enumType.ProjectMembersStatus;
 import com.xyram.ticketingTool.exception.ResourceNotFoundException;
 import com.xyram.ticketingTool.request.CurrentUser;
+import com.xyram.ticketingTool.service.NotificationService;
 import com.xyram.ticketingTool.service.ProjectMemberService;
 import com.xyram.ticketingTool.util.ResponseMessages;
 
@@ -49,6 +50,9 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 
 	@Autowired
 	ProjectRepository projectRepository;
+	
+	@Autowired
+	  NotificationService notificationService;
 
 	@Autowired
 	EmployeeRepository employeeRepository;
@@ -131,7 +135,8 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 							notifications.setCreatedAt(new Date());
 							notifications.setUpdatedBy(user.getUserId());
 							notifications.setLastUpdatedAt(new Date());
-							notificationsRepository.save(notifications);
+						//	notificationsRepository.save(notifications);
+							notificationService.createNotification(notifications);
 						}
 
 					}
@@ -215,7 +220,8 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 				notifications.setCreatedAt(new Date());
 				notifications.setUpdatedBy(user.getUserId());
 				notifications.setLastUpdatedAt(new Date());
-				notificationsRepository.save(notifications);
+			//	notificationsRepository.save(notifications);
+				notificationService.createNotification(notifications);
 
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.PROJECT_MEMBER_REMOVED);
