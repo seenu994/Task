@@ -33,7 +33,7 @@ public class Ticket extends AuditModel {
 	private String Id;
 	
 
-	@Column(name="ticket_description", columnDefinition="TEXT")
+	@Column(name="ticket_description",length = 5000)
 	private String ticketDescription;
 	
 //	@ManyToOne(cascade = { CascadeType.ALL })
