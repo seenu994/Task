@@ -411,6 +411,52 @@ public class JobServiceImpl implements JobService{
 		return response;
 	}
 
+	@Override
+	public ApiResponse editJobApplication(MultipartFile[] files, String jobAppObj, String jobAppId) {
+		ApiResponse response = new ApiResponse(false);
+//		JobOpenings jobOpening = jobRepository.getJobOpeningFromCode(jobCode);
+		if(jobOpening != null) {
+			ObjectMapper objectMapper = new ObjectMapper();
+			JobApplication jobAppObj = null;
+			try {
+				jobAppObj = objectMapper.readValue(jobAppString, JobApplication.class);
+			} catch (JsonMappingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (JsonProcessingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			for (MultipartFile constentFile : files) {
+				try {
+				      String fileextension = constentFile.getOriginalFilename().substring(constentFile.getOriginalFilename().lastIndexOf("."));
+				      String filename = getRandomFileName()+fileextension;//constentFile.getOriginalFilename();
+				      if(addFileAdmin(constentFile,filename)!= null) {
+				    	  jobAppObj.setResumePath(filename);
+				      }
+				}catch(Exception e) {
+					
+				}
+			}
+			jobAppObj.setJobCode(jobCode);
+			jobAppObj.setJobOpenings(jobOpening);
+			jobAppObj.setCreatedAt(new Date());
+			jobAppObj.setCreatedBy(userDetail.getUserId());
+			jobAppObj.setStatus("APPLIED");
+			if(jobAppRepository.save(jobAppObj) != null) {
+				response.setSuccess(true);
+				response.setMessage("New Job Application Created");
+			}else {
+				response.setSuccess(false);
+				response.setMessage("New Job Application Not Created");
+			}
+		}else {
+			response.setSuccess(false);
+			response.setMessage("Job Code Not Exist");
+		}
+		return response;
+	}
+
 	
 
 	

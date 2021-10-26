@@ -41,4 +41,6 @@ public interface JobService {
 	ApiResponse changeJobOpeningStatus(String jobOpeningId,JobOpeningStatus jobOpeningStatus);
 
 	ApiResponse editJob(String jobId, JobOpenings jobObj);
+
+	ApiResponse editJobApplication(MultipartFile[] files, String jobAppObj, String jobAppId);
 }

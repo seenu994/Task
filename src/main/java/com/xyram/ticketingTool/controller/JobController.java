@@ -80,6 +80,13 @@ public class JobController {
 		return jobService.createJobApplication(files,jobAppObj,jobCode);
 	}
 	
+	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editJobApplication/{jobAppId}" })
+	public ApiResponse editJobApplication(@RequestPart(name = "files", required = false) MultipartFile[] files,@RequestBody String jobAppObj,
+			@PathVariable String jobAppId) {
+		logger.info("Creating Job Application");
+		return jobService.editJobApplication(files,jobAppObj,jobAppId);
+	}
+	
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/scheduleJobInterview/{applicationId}" })
 	public ApiResponse scheduleJobInterview(@RequestBody JobInterviews schedule,
 			@PathVariable String applicationId) {
