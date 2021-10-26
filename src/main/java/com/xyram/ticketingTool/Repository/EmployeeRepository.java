@@ -17,9 +17,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.xyram.ticketingTool.admin.model.User;
 import com.xyram.ticketingTool.entity.Employee;
-import com.xyram.ticketingTool.enumType.UserStatus;
+
+
+
+
 
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, String> {
