@@ -76,7 +76,7 @@ import com.xyram.ticketingTool.enumType.UserRole;
 import com.xyram.ticketingTool.exception.ResourceNotFoundException;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.request.JobOpeningSearchRequest;
-
+import com.xyram.ticketingTool.service.NotificationService;
 import com.xyram.ticketingTool.service.TicketAttachmentService;
 import com.xyram.ticketingTool.service.TicketService;
 import com.xyram.ticketingTool.util.PdfUtil;
@@ -117,6 +117,10 @@ public class TicketServiceImpl implements TicketService {
 
 	@Autowired
 	NotificationRepository notificationsRepository;
+	
+	
+	@Autowired
+  NotificationService notificationService;
 
 	@Autowired
 	EmpoloyeeServiceImpl employeeServiceImpl;
@@ -320,8 +324,8 @@ public class TicketServiceImpl implements TicketService {
 			notifications.setUpdatedBy(userDetail.getUserId());
 			notifications.setLastUpdatedAt(new Date());
 			notifications.setTicketId(tickets.getId());
-			notificationsRepository.save(notifications);
-
+			//notificationsRepository.save(notifications);
+			notificationService.createNotification(notifications);
 			response.setSuccess(true);
 			response.setMessage(ResponseMessages.TICKET_ADDED);
 			Map<String, String> content = new HashMap<String, String>();
@@ -362,7 +366,8 @@ public class TicketServiceImpl implements TicketService {
 					notifications.setCreatedAt(new Date());
 					notifications.setUpdatedBy(userDetail.getUserId());
 					notifications.setLastUpdatedAt(new Date());
-					notificationsRepository.save(notifications);
+				//	notificationsRepository.save(notifications);
+					notificationService.createNotification(notifications);
 					
 //					response.setSuccess(true);
 //					response.setMessage(ResponseMessages.TICKET_ASSIGNED);
@@ -568,7 +573,8 @@ public class TicketServiceImpl implements TicketService {
 						notifications.setCreatedAt(new Date());
 						notifications.setUpdatedBy(userDetail.getUserId());
 						notifications.setLastUpdatedAt(new Date());
-						notificationsRepository.save(notifications);
+					//	notificationsRepository.save(notifications);
+						notificationService.createNotification(notifications);
 					}
 
 					response.setSuccess(true);

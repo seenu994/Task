@@ -252,7 +252,7 @@ public class PasswordServiceImpl implements PasswordService {
 			// String diffminutes = map.get("minutes");
 			long duration = diff / (60 * 1000);
 
-//			if (duration <= 10) {
+			if (duration <= 10) {
 
 				String password = passwordRequest.containsKey("password")
 						&& !StringUtils.isEmpty(passwordRequest.get("password"))
@@ -283,7 +283,7 @@ public class PasswordServiceImpl implements PasswordService {
 				}
 
 				
-//			} 
+			} 
 			return userRepository.save(user);
              }
              
@@ -339,24 +339,27 @@ public class PasswordServiceImpl implements PasswordService {
 		try {
 			ForgotPasswordKey token =  tokenRepository.findByAccestoken(key);
         if(token != null) {
-//			Date createdAt = user.getPasswordUpdatedTime();
-//			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//			String currentDateTime = null;
-//			Date currentDate = new Date();
-//			long diff = currentDate.getTime() - createdAt.getTime();
-//			// String diffminutes = map.get("minutes");
-//			long diffMinutes1 = diff / (60 * 1000);
-//
-//
-//			if (diffMinutes1 <= 10) {
+			Date createdAt = token.getPasswordUpdatedTime();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			String currentDateTime = null;
+			Date currentDate = new Date();
+			long diff = currentDate.getTime() - createdAt.getTime();
+			// String diffminutes = map.get("minutes");
+			long diffMinutes1 = diff / (60 * 1000);
+
+
+			if (diffMinutes1 <= 10) {
 				token.getUsername();
 //				
 				map.put("key", "token validation successfull.");
 				return map;
 			} else {
-				throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"Invalid Token");				//return map;
+				throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"Invalid Token");				
 			}
-		} catch (Exception e) {
+		} 
+        return map;
+		}
+        catch (Exception e) {
 
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token is expired ");
 		}
