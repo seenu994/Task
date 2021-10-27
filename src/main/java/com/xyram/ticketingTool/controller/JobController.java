@@ -89,15 +89,16 @@ public class JobController {
 		return jobService.scheduleJobInterview(schedule,applicationId);
 	}
 
-	/*
-	 * @PutMapping(value=
-	 * {AuthConstants.ADMIN_BASEPATH+"/editScheduleJobInterview/{jobInterviewId}",
-	 * AuthConstants.HR_BASEPATH+"/editScheduleJobInterview/{applicationId}"})
-	 * public ApiResponse editJobInterview(@RequestBody JobInterviews
-	 * jobInterviewRequest,@PathVariable String jobInterviewId ) {
-	 * 
-	 * return jobService.editJobInterview(jobInterviewId,jobInterviewRequest); }
-	 */
+	
+	  @PutMapping(value=
+	  {AuthConstants.ADMIN_BASEPATH+"/editJobInterviewSchedule/{interviewId}",
+	  AuthConstants.HR_BASEPATH+"/editJobInterviewSchedule/{interviewId}"})
+	  public ApiResponse editJobInterviewSchedule(@RequestBody JobInterviews
+	  jobInterviewRequest,@PathVariable String interviewId) {
+		  logger.info("Edit Job Interview Schedule");
+	  return jobService.editJobInterview(jobInterviewRequest, interviewId); 
+	  }
+	 
 	
 	
 	  @PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/changeJobInterviewStatus/{jobInerviewId}/{status}"})

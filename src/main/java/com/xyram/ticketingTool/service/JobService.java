@@ -42,10 +42,12 @@ public interface JobService {
 	ApiResponse changeJobOpeningStatus(String jobOpeningId,JobOpeningStatus jobOpeningStatus);
 
 
-	ApiResponse editJobInterview(String applicationId, JobInterviews jobInterviewRequest);
+
 
 	ApiResponse changeJobInterviewStatus(String jobInerviewId, JobInterviewStatus status);
 
 	ApiResponse editJob(String jobId, JobOpenings jobObj);
+
+	ApiResponse editJobInterview(JobInterviews jobInterviewRequest, String interviewId);
 
 }

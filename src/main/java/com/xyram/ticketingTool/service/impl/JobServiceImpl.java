@@ -387,19 +387,24 @@ public class JobServiceImpl implements JobService{
 
 	@Override
 
-	public ApiResponse editJobInterview(String jobInterviewId, JobInterviews jobInterviewRequest) {
+	public ApiResponse editJobInterview( JobInterviews jobInterviewRequest, String interviewId ) {
+		
 		ApiResponse response = new ApiResponse(false);
-		if (response.isSuccess()) {
-			JobInterviews jbInterviews = jobInterviewRepository.getById(jobInterviewId);
+		
+		  System.out.println("InterviewId::"+interviewId);
+		JobInterviews jbInterviews = jobInterviewRepository.getById(interviewId);
+	
+		System.out.println("feedBack::"+jobInterviewRequest.getFeedback());
 			if (jbInterviews != null) {
-				//
+			
 				jbInterviews.setFeedback(jobInterviewRequest.getFeedback());
 				jbInterviews.setInterviewType(jobInterviewRequest.getInterviewType());
 				jbInterviews.setRoundDetails(jobInterviewRequest.getRoundDetails());
 				jbInterviews.setInterviewLink(jobInterviewRequest.getInterviewLink());
 				jbInterviews.setInterviewer(jobInterviewRequest.getInterviewer());
 				jbInterviews.setInterviewDate(jobInterviewRequest.getInterviewDate());
-				jbInterviews.setJobApplication(jobInterviewRequest.getJobApplication());
+				jbInterviews.setRecommendation(jobInterviewRequest.getRecommendation());
+				jbInterviews.setRating(jobInterviewRequest.getRateGiven());
 				
 				
 				jobInterviewRepository.save(jbInterviews);
@@ -414,9 +419,6 @@ public class JobServiceImpl implements JobService{
 				response.setMessage(ResponseMessages.SCHEDULEINIERVIEW_INVALID);
 				response.setContent(null);
 			}
-
-		}
-
 		return response;
 	}
 
