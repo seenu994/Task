@@ -5,6 +5,8 @@ import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -14,6 +16,8 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.GenericGenerator;
 import com.xyram.ticketingTool.baseData.model.AuditModel;
+import com.xyram.ticketingTool.enumType.JobInterviewStatus;
+import com.xyram.ticketingTool.enumType.JobOpeningStatus;
 
 
 @Entity
@@ -69,9 +73,12 @@ public class JobInterviews extends AuditModel{
 	@JoinColumn(name = "application_id")
     private JobApplication jobApplication;
 	
+	@Enumerated(EnumType.STRING)
 	@Column(name="status")
-	private String status;
+	private JobInterviewStatus jobInterviewStatus = JobInterviewStatus.SCHEDULED;
 	
+
+
 	@Column(name="rating")
 	private Integer rateGiven;
 
@@ -163,12 +170,20 @@ public class JobInterviews extends AuditModel{
 		this.jobApplication = jobApplication;
 	}
 
-	public String getStatus() {
-		return status;
+	public JobInterviewStatus getJobInterviewStatus() {
+		return jobInterviewStatus;
 	}
 
-	public void setStatus(String status) {
-		this.status = status;
+	public void setJobInterviewStatus(JobInterviewStatus jobInterviewStatus) {
+		this.jobInterviewStatus = jobInterviewStatus;
+	}
+
+	public Integer getRateGiven() {
+		return rateGiven;
+	}
+
+	public void setRateGiven(Integer rateGiven) {
+		this.rateGiven = rateGiven;
 	}
 	
 	

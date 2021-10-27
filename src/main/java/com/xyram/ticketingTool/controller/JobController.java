@@ -19,10 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
+import com.xyram.ticketingTool.entity.Client;
 import com.xyram.ticketingTool.entity.Comments;
 import com.xyram.ticketingTool.entity.JobApplication;
 import com.xyram.ticketingTool.entity.JobInterviews;
 import com.xyram.ticketingTool.entity.Ticket;
+import com.xyram.ticketingTool.enumType.JobInterviewStatus;
 import com.xyram.ticketingTool.enumType.JobOpeningStatus;
 import com.xyram.ticketingTool.request.JobApplicationSearchRequest;
 import com.xyram.ticketingTool.request.JobInterviewsRequest;
@@ -80,6 +82,25 @@ public class JobController {
 		logger.info("Get All Job");
 		return jobService.scheduleJobInterview(schedule,applicationId);
 	}
+
+	/*
+	 * @PutMapping(value=
+	 * {AuthConstants.ADMIN_BASEPATH+"/editScheduleJobInterview/{jobInterviewId}",
+	 * AuthConstants.HR_BASEPATH+"/editScheduleJobInterview/{applicationId}"})
+	 * public ApiResponse editJobInterview(@RequestBody JobInterviews
+	 * jobInterviewRequest,@PathVariable String jobInterviewId ) {
+	 * 
+	 * return jobService.editJobInterview(jobInterviewId,jobInterviewRequest); }
+	 */
+	
+	
+	  @PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/changeJobInterviewStatus/{jobInerviewId}/{status}"})
+	  public ApiResponse changeJobInterviewStatus(@PathVariable String jobInerviewId,@PathVariable JobInterviewStatus status) { 
+		  logger.info("Get JobOpening by id");
+	  return  jobService.changeJobInterviewStatus(jobInerviewId,status); 
+	  }
+	 
+	
 	
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllJobInterviews" })
 	public ApiResponse getAllJobInterviews(@RequestBody JobInterviewsRequest serachObj) {
