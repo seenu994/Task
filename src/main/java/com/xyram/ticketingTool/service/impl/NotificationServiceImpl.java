@@ -64,6 +64,22 @@ public class NotificationServiceImpl implements NotificationService {
 
 		return response;
 	}
+	
+	@Override
+	public ApiResponse getNotificationCount() {
+
+		ApiResponse response = new ApiResponse(false);
+		Long notiCount = notificationRepository.getNotificationCount(currentUser.getUserId());
+		response.setSuccess(true);
+		response.setMessage(ResponseMessages.NOTIFICATIONS_EXISTS);
+
+		Map content = new HashMap();
+		content.put("Count", notiCount);
+		response.setContent(content);
+		return response;
+	}
+	
+	
 
 	
 	@Override

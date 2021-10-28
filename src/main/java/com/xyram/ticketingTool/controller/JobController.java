@@ -58,7 +58,7 @@ public class JobController {
 		return jobService.createJob(jobObj);
 	} 
 	
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllJobs" })
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllJobs",AuthConstants.HR_ADMIN_BASEPATH + "/getAllJobs",AuthConstants.DEVELOPER_BASEPATH+ "/getAllJobs", AuthConstants.HR_BASEPATH + "/getAllJobs",AuthConstants.INFRA_ADMIIN_BASEPATH + "/getAllJobs",AuthConstants.INFRA_USER_BASEPATH + "/getAllJobs", AuthConstants.JOB_VENDOR_BASEPATH + "/getAllJobs" })
 	public ApiResponse getAllJobs(@RequestBody JobOpeningSearchRequest jobOpeningObj) {
 		logger.info("Get All Job");
 		return jobService.getAllJobs(jobOpeningObj);

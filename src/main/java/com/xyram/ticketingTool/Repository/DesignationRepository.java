@@ -10,8 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import com.xyram.ticketingTool.entity.Designation;
 
 public interface DesignationRepository extends JpaRepository<Designation, String> {
-	@Query("Select new map(e.Id as id,e.designationName as designationName) from Designation e")
-
+	@Query("Select new map(e.Id as id,e.designationName as designationName) from Designation e where Id != 'D7'")
 	Page<Map> getAllDesignationList(Pageable pageable);
 
 }

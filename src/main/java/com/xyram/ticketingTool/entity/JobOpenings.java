@@ -76,6 +76,9 @@ public class JobOpenings extends AuditModel{
 	
 	@Column(name="salary")
 	private Integer jobSalary;
+	
+	@Column(name="vendor_view")
+	private Integer vendor_view = 1;
 
 	public String getId() {
 		return Id;
@@ -173,4 +176,21 @@ public class JobOpenings extends AuditModel{
 		this.jobCode = jobCode;
 	}
 
+	public Integer getJobSalary() {
+		return jobSalary;
+	}
+
+	public void setJobSalary(Integer jobSalary) {
+		this.jobSalary = jobSalary;
+	}
+
+	public Integer getVendor_view() {
+		return vendor_view;
+	}
+
+	public void setVendor_view(Integer vendor_view) {
+		this.vendor_view = vendor_view;
+	}
+
+	
 }

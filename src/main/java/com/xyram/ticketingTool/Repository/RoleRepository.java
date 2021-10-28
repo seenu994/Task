@@ -12,8 +12,7 @@ import com.xyram.ticketingTool.entity.Role;
 
 @Repository
 public interface RoleRepository extends JpaRepository< Role, String>{
-	@Query("Select new map(e.Id as id,e.roleName as roleName,e.status as status) from Role e")
-
+	@Query("Select new map(e.Id as id,e.roleName as roleName,e.status as status) from Role e where Id != 'R6'")
 	Page<Map> getAllRoleList(Pageable pageable);
 
 }
