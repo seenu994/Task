@@ -490,6 +490,54 @@ public class JobServiceImpl implements JobService{
 		
 	}
 
+	@Override
+	public ApiResponse editJobApplication(MultipartFile[] files, String jobAppObj, String jobAppId) {
+		ApiResponse response = new ApiResponse(false);
+		JobApplication jobApp = jobAppRepository.getApplicationById(jobAppId);
+		if(jobApp != null && userDetail.getUserId() == jobApp.getCreatedBy() || userDetail.getUserRole().equals(UserRole.HR_ADMIN)) {
+			ObjectMapper objectMapper = new ObjectMapper();
+			JobApplication newJobAppObj = null;
+			try {
+				newJobAppObj = objectMapper.readValue(jobAppObj, JobApplication.class);
+			} catch (JsonMappingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (JsonProcessingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			for (MultipartFile constentFile : files) {
+				try {
+				      String fileextension = constentFile.getOriginalFilename().substring(constentFile.getOriginalFilename().lastIndexOf("."));
+				      String filename = getRandomFileName()+fileextension;//constentFile.getOriginalFilename();
+				      if(addFileAdmin(constentFile,filename)!= null) {
+				    	  jobApp.setResumePath(filename);
+				      }
+				}catch(Exception e) {
+					
+				}
+			}
+			jobApp.setJobCode(newJobAppObj.getJobCode());
+			jobApp.setJobOpenings(newJobAppObj.getJobOpenings());
+			jobApp.setCandidateEmail(newJobAppObj.getCandidateEmail());
+			jobApp.setCandidateMobile(newJobAppObj.getCandidateMobile());
+			jobApp.setCandidateName(newJobAppObj.getCandidateName());
+			jobApp.setExpectedSalary(newJobAppObj.getExpectedSalary());
+			if(jobAppRepository.save(jobApp) != null) {
+				response.setSuccess(true);
+				response.setMessage(" Job Application Updated");
+			}else {
+				response.setSuccess(false);
+				response.setMessage(" Job Application Not Updated");
+			}
+		}
+		else {
+			response.setSuccess(false);
+			response.setMessage("Job Application Id Not Exist");
+		}
+		return response;
+	}
+
 
 	
 

@@ -55,4 +55,6 @@ public interface JobService {
 
 	ApiResponse changeJobApplicationStatus(String jobApplicationId, JobApplicationStatus jobStatus);
 
+	ApiResponse editJobApplication(MultipartFile[] files, String jobAppObj, String jobAppId);
+
 }
