@@ -14,7 +14,9 @@ import com.xyram.ticketingTool.entity.Notifications;
 public interface NotificationRepository extends JpaRepository<Notifications, String> {
 	
 	@Query("SELECT n FROM Notifications n WHERE n.receiverId = :id ")
-
 	Page<Notifications> getAllNotifications(String id, Pageable pageable);
+	
+	@Query("SELECT COUNT(n) FROM Notifications n WHERE n.receiverId = :id ")
+    long getNotificationCount(String id);
 
 }

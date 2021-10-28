@@ -33,6 +33,14 @@ public class NotificationController {
 		logger.info("Received request for get all notifications");
 		return notificationService.getAllNotifications(pageable);
 
+	} 
+	
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getNotificationCount",
+			AuthConstants.INFRA_USER_BASEPATH + "/getNotificationCount", AuthConstants.DEVELOPER_BASEPATH + "/getNotificationCount" })
+	public ApiResponse getNotificationCount() {
+		logger.info("Received request for getNotificationCount");
+		return notificationService.getNotificationCount();
+
 	}
 
 	

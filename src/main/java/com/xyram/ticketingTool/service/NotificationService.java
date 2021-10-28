@@ -13,6 +13,8 @@ public interface NotificationService {
 	//Page<Notification> getActiveNotifications(Pageable pageable);
 
 	ApiResponse getAllNotifications(Pageable pageable);
+	
+	ApiResponse getNotificationCount();
 
 	Notifications createNotification(Notifications notification);
 
