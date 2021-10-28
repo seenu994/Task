@@ -31,19 +31,22 @@ import com.xyram.ticketingTool.Repository.JobApplicationRepository;
 import com.xyram.ticketingTool.Repository.JobInterviewRepository;
 import com.xyram.ticketingTool.Repository.JobRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
+import com.xyram.ticketingTool.entity.Client;
 import com.xyram.ticketingTool.entity.CompanyWings;
+import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.JobApplication;
 import com.xyram.ticketingTool.entity.JobInterviews;
 import com.xyram.ticketingTool.entity.JobOpenings;
 import com.xyram.ticketingTool.entity.Ticket;
+import com.xyram.ticketingTool.enumType.JobApplicationStatus;
 import com.xyram.ticketingTool.enumType.JobInterviewStatus;
 import com.xyram.ticketingTool.enumType.JobOpeningStatus;
-import com.xyram.ticketingTool.enumType.UserRole;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.request.JobApplicationSearchRequest;
 import com.xyram.ticketingTool.request.JobInterviewsRequest;
 import com.xyram.ticketingTool.request.JobOpeningSearchRequest;
 import com.xyram.ticketingTool.service.JobService;
+import com.xyram.ticketingTool.util.ResponseMessages;
 
 
 @Service
@@ -217,7 +220,7 @@ public class JobServiceImpl implements JobService{
 			jobAppObj.setJobOpenings(jobOpening);
 			jobAppObj.setCreatedAt(new Date());
 			jobAppObj.setCreatedBy(userDetail.getUserId());
-			jobAppObj.setStatus("APPLIED");
+			jobAppObj.setJobApplicationSatus(JobApplicationStatus.APPLIED);
 			if(jobAppRepository.save(jobAppObj) != null) {
 				response.setSuccess(true);
 				response.setMessage("New Job Application Created");
@@ -240,10 +243,10 @@ public class JobServiceImpl implements JobService{
 		if(jobApp != null) {
 			schedule.setCreatedAt(new Date());
 			schedule.setCreatedBy(userDetail.getUserId());
-//			schedule("SCHEDULED");
+			schedule.setJobInterviewStatus(JobInterviewStatus.SCHEDULED);
 			schedule.setJobApplication(jobApp);
 			if(jobInterviewRepository.save(schedule) != null) {
-				jobApp.setStatus("SCHEDULED");
+				schedule.setJobInterviewStatus(JobInterviewStatus.SCHEDULED);
 				jobAppRepository.save(jobApp);
 				response.setSuccess(true);
 				response.setMessage("Interview Scheduled");
@@ -384,6 +387,59 @@ public class JobServiceImpl implements JobService{
 	}
 
 	@Override
+
+	public ApiResponse editJobInterview( JobInterviews jobInterviewRequest, String interviewId ) {
+		
+		ApiResponse response = new ApiResponse(false);
+		
+		  System.out.println("InterviewId::"+interviewId);
+		JobInterviews jbInterviews = jobInterviewRepository.getById(interviewId);
+	
+		System.out.println("feedBack::"+jobInterviewRequest.getFeedback());
+			if (jbInterviews != null) {
+			
+				jbInterviews.setFeedback(jobInterviewRequest.getFeedback());
+				jbInterviews.setInterviewType(jobInterviewRequest.getInterviewType());
+				jbInterviews.setRoundDetails(jobInterviewRequest.getRoundDetails());
+				jbInterviews.setInterviewLink(jobInterviewRequest.getInterviewLink());
+				jbInterviews.setInterviewer(jobInterviewRequest.getInterviewer());
+				jbInterviews.setInterviewDate(jobInterviewRequest.getInterviewDate());
+				jbInterviews.setRecommendation(jobInterviewRequest.getRecommendation());
+				jbInterviews.setRating(jobInterviewRequest.getRateGiven());
+				
+				
+				jobInterviewRepository.save(jbInterviews);
+				response.setSuccess(true);
+				String msg="Job Interview Updated Successfully";
+				response.setMessage(ResponseMessages.SCHEDULEINIERVIEW_UPDATED);
+				response.setContent(null);
+			}
+
+			else {
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.SCHEDULEINIERVIEW_INVALID);
+				response.setContent(null);
+			}
+		return response;
+	}
+
+	@Override
+	public ApiResponse changeJobInterviewStatus(String jobInerviewId, JobInterviewStatus jobInterviewStatus) {
+		ApiResponse response = new ApiResponse(false);
+		JobInterviews status= jobInterviewRepository.getById(jobInerviewId);
+		if(status!= null) {
+			status.setJobInterviewStatus(jobInterviewStatus);
+			jobInterviewRepository.save(status);
+			response.setSuccess(true);
+			response.setMessage("Job Interview Status Updated Sucessfully");
+			response.setContent(null);
+		}else {
+			response.setSuccess(false);
+			response.setMessage("Job Interview Id does Not Exist");
+		}
+		// TODO Auto-generated method stub
+		return response;
+	}
 	public ApiResponse editJob(String jobId, JobOpenings jobObj) {
 		ApiResponse response = new ApiResponse(false);
 		JobOpenings jobOpening = jobRepository.getById(jobId);
@@ -410,72 +466,30 @@ public class JobServiceImpl implements JobService{
 			response.setMessage("Job Opening Id does Not Exist");
 		}
 		
+
 		return response;
 	}
 
 	@Override
-	public ApiResponse editJobApplication(MultipartFile[] files, String jobAppObj, String jobAppId) {
+	public ApiResponse changeJobApplicationStatus(String jobApplicationId, JobApplicationStatus jobStatus) {
 		ApiResponse response = new ApiResponse(false);
-		JobApplication jobApp = jobAppRepository.getApplicationById(jobAppId);
-		if(jobApp != null && userDetail.getUserId() == jobApp.getCreatedBy() || userDetail.getUserRole().equals(UserRole.HR_ADMIN)) {
-			ObjectMapper objectMapper = new ObjectMapper();
-			JobApplication newJobAppObj = null;
-			try {
-				newJobAppObj = objectMapper.readValue(jobAppObj, JobApplication.class);
-			} catch (JsonMappingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (JsonProcessingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			for (MultipartFile constentFile : files) {
-				try {
-				      String fileextension = constentFile.getOriginalFilename().substring(constentFile.getOriginalFilename().lastIndexOf("."));
-				      String filename = getRandomFileName()+fileextension;//constentFile.getOriginalFilename();
-				      if(addFileAdmin(constentFile,filename)!= null) {
-				    	  jobApp.setResumePath(filename);
-				      }
-				}catch(Exception e) {
-					
-				}
-			}
-			jobApp.setJobCode(newJobAppObj.getJobCode());
-			jobApp.setJobOpenings(newJobAppObj.getJobOpenings());
-			jobApp.setCandidateEmail(newJobAppObj.getCandidateEmail());
-//			jobApp.setCandidateMobile(newJobAppObj.getca);
-			if(jobAppRepository.save(jobApp) != null) {
-				response.setSuccess(true);
-				response.setMessage(" Job Application Updated");
-			}else {
-				response.setSuccess(false);
-				response.setMessage(" Job Application Not Updated");
-			}
-		}
-		else {
+		JobApplication status= jobAppRepository.getApplicationById(jobApplicationId);
+		if(status!= null) {
+			status.setJobApplicationSatus(jobStatus);
+			jobAppRepository.save(status);
+			response.setSuccess(true);
+			response.setMessage("Job Application Status Updated Sucessfully");
+			response.setContent(null);
+		}else {
 			response.setSuccess(false);
-			response.setMessage("Job Application Id Not Exist");
+			response.setMessage("Job application Id does Not Exist");
 		}
+		// TODO Auto-generated method stub
 		return response;
+		
+		
 	}
 
-	@Override
-	public ApiResponse changeJobInterviewStatus(String jobInerviewId, JobInterviews status) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ApiResponse editJobInterview(JobInterviews jobInterviewRequest, String interviewId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ApiResponse changeJobInterviewStatus(String jobInerviewId, JobInterviewStatus status) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	
 

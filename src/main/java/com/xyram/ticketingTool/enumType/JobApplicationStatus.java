@@ -4,26 +4,22 @@ import java.util.Arrays;
 import java.util.Optional;
 
 public enum JobApplicationStatus {
-	
-	SUBMITTED("SUBMITTED"),
-
-	REJECTED_BY_HR("REJECTED_BY_HR"),
-	
+	SUBMITTED ("SUBMITTED"),
+	APPLIED("APPLIED"),
+	REJECTED_BY_HR ("REJECTED_BY_HR"),
+	IN_REVIEW("IN_REVIEW"),
 	SCHEDULED("SCHEDULED"),
-	
-	SELECTED("SELECTED"),
-	
+	SELECTED ("SELECTED"),
 	REJECTED_BY_INTERVIEWER("REJECTED_BY_INTERVIEWER"),
-	
 	ONHOLD("ONHOLD"),
-	
 	CANDIDATE_NOT_INTERESTED("CANDIDATE_NOT_INTERESTED"),
-	
-	RELEASED_OFFER("RELEASED_OFFER"),
-	
-	IN_REVIEW("IN_REVIEW");
-	private String value;
+	RELEASED_OFFER("RELEASED_OFFER");
 
+	
+	
+	
+	private String value;
+	
 	JobApplicationStatus(String value) {
 		this.value = value;
 	}
@@ -31,7 +27,8 @@ public enum JobApplicationStatus {
 	public String value() {
 		return this.value;
 	}
-
+	
+	
 	public static JobApplicationStatus toEnum(String value) {
 		Optional<JobApplicationStatus> optional = Arrays.stream(values()).filter(e -> e.value.equalsIgnoreCase(value))
 				.findFirst();
@@ -40,5 +37,5 @@ public enum JobApplicationStatus {
 		else
 			throw new IllegalArgumentException(value + " is not a valid status");
 	}
-
-}
+	
+	}
