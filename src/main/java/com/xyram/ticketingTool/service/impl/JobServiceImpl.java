@@ -37,6 +37,7 @@ import com.xyram.ticketingTool.entity.JobInterviews;
 import com.xyram.ticketingTool.entity.JobOpenings;
 import com.xyram.ticketingTool.entity.Ticket;
 import com.xyram.ticketingTool.enumType.JobOpeningStatus;
+import com.xyram.ticketingTool.enumType.UserRole;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.request.JobApplicationSearchRequest;
 import com.xyram.ticketingTool.request.JobInterviewsRequest;
@@ -414,12 +415,12 @@ public class JobServiceImpl implements JobService{
 	@Override
 	public ApiResponse editJobApplication(MultipartFile[] files, String jobAppObj, String jobAppId) {
 		ApiResponse response = new ApiResponse(false);
-//		JobOpenings jobOpening = jobRepository.getJobOpeningFromCode(jobCode);
-		if(jobOpening != null) {
+		JobApplication jobApp = jobAppRepository.getApplicationById(jobAppId);
+		if(jobApp != null && userDetail.getUserId() == jobApp.getCreatedBy() || userDetail.getUserRole().equals(UserRole.HR_ADMIN)) {
 			ObjectMapper objectMapper = new ObjectMapper();
-			JobApplication jobAppObj = null;
+			JobApplication newJobAppObj = null;
 			try {
-				jobAppObj = objectMapper.readValue(jobAppString, JobApplication.class);
+				newJobAppObj = objectMapper.readValue(jobAppObj, JobApplication.class);
 			} catch (JsonMappingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -432,27 +433,27 @@ public class JobServiceImpl implements JobService{
 				      String fileextension = constentFile.getOriginalFilename().substring(constentFile.getOriginalFilename().lastIndexOf("."));
 				      String filename = getRandomFileName()+fileextension;//constentFile.getOriginalFilename();
 				      if(addFileAdmin(constentFile,filename)!= null) {
-				    	  jobAppObj.setResumePath(filename);
+				    	  jobApp.setResumePath(filename);
 				      }
 				}catch(Exception e) {
 					
 				}
 			}
-			jobAppObj.setJobCode(jobCode);
-			jobAppObj.setJobOpenings(jobOpening);
-			jobAppObj.setCreatedAt(new Date());
-			jobAppObj.setCreatedBy(userDetail.getUserId());
-			jobAppObj.setStatus("APPLIED");
-			if(jobAppRepository.save(jobAppObj) != null) {
+			jobApp.setJobCode(newJobAppObj.getJobCode());
+			jobApp.setJobOpenings(newJobAppObj.getJobOpenings());
+			jobApp.setCandidateEmail(newJobAppObj.getCandidateEmail());
+			jobApp.setCandidateMobile(newJobAppObj.getca);
+			if(jobAppRepository.save(jobApp) != null) {
 				response.setSuccess(true);
-				response.setMessage("New Job Application Created");
+				response.setMessage(" Job Application Updated");
 			}else {
 				response.setSuccess(false);
-				response.setMessage("New Job Application Not Created");
+				response.setMessage(" Job Application Not Updated");
 			}
-		}else {
+		}
+		else {
 			response.setSuccess(false);
-			response.setMessage("Job Code Not Exist");
+			response.setMessage("Job Application Id Not Exist");
 		}
 		return response;
 	}

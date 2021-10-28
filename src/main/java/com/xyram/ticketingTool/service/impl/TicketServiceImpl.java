@@ -654,7 +654,7 @@ public class TicketServiceImpl implements TicketService {
 				ticketObj.setTicketDescription(ticketreq.getTicketDescription());
 				ticketObj.setPriorityId(ticketreq.getPriorityId());
 				ticketObj.setProjectId(ticketreq.getProjectId());
-				ticketObj.setStatus(ticketreq.getStatus());
+//				ticketObj.setStatus(ticketreq.getStatus());
 				ticketObj.setUpdatedBy(userDetail.getUserId());
 				
 				ticketObj.setLastUpdatedAt(new Date());
