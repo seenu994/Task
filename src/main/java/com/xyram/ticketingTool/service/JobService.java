@@ -15,6 +15,7 @@ import com.xyram.ticketingTool.entity.JobInterviews;
 import com.xyram.ticketingTool.entity.JobOpenings;
 import com.xyram.ticketingTool.entity.ProjectMembers;
 import com.xyram.ticketingTool.entity.Ticket;
+import com.xyram.ticketingTool.enumType.JobInterviewStatus;
 import com.xyram.ticketingTool.enumType.JobOpeningStatus;
 import com.xyram.ticketingTool.request.JobApplicationSearchRequest;
 import com.xyram.ticketingTool.request.JobInterviewsRequest;
@@ -40,7 +41,17 @@ public interface JobService {
 
 	ApiResponse changeJobOpeningStatus(String jobOpeningId,JobOpeningStatus jobOpeningStatus);
 
+
+
+
+	ApiResponse changeJobInterviewStatus(String jobInerviewId, JobInterviewStatus status);
+
 	ApiResponse editJob(String jobId, JobOpenings jobObj);
 
+<<<<<<< HEAD
 	ApiResponse editJobApplication(MultipartFile[] files, String jobAppObj, String jobAppId);
+=======
+	ApiResponse editJobInterview(JobInterviews jobInterviewRequest, String interviewId);
+
+>>>>>>> dd90c66df773d9a1370563f26a5d3f5f48c54ff1
 }

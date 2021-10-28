@@ -17,5 +17,12 @@ import com.xyram.ticketingTool.entity.JobOpenings;
 
 public interface JobInterviewRepository extends CrudRepository<JobInterviews,Long>,JpaSpecificationExecutor<JobInterviews>{
 	
+	
+	@Query(value = "SELECT * from ticketdbtool.job_interviews jo where jo.interview_id = :interviewId  and  jo.application_id = :applicationId", nativeQuery = true)
+	JobInterviews getByDataId(String interviewId, String applicationId);
+	
+	
+	@Query(value = "SELECT * from ticketdbtool.job_interviews jo where jo.interview_id = :interviewId  ", nativeQuery = true)
+	JobInterviews getById(String interviewId);
 
 }
