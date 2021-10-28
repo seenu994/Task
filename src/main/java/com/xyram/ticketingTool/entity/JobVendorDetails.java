@@ -53,6 +53,9 @@ public class JobVendorDetails {
 	
 	@Column(name="profile_pic_url")
 	private String profileUrl;
+	
+	@Column(name="type_of_vendor")
+	private String typeOfVendor;
 
 	public String getvId() {
 		return vId;
@@ -124,6 +127,14 @@ public class JobVendorDetails {
 
 	public void setProfileUrl(String profileUrl) {
 		this.profileUrl = profileUrl;
+	}
+
+	public String getTypeOfVendor() {
+		return typeOfVendor;
+	}
+
+	public void setTypeOfVendor(String typeOfVendor) {
+		this.typeOfVendor = typeOfVendor;
 	}
 	
 	
