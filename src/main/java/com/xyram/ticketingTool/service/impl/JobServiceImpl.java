@@ -41,6 +41,7 @@ import com.xyram.ticketingTool.entity.Ticket;
 import com.xyram.ticketingTool.enumType.JobApplicationStatus;
 import com.xyram.ticketingTool.enumType.JobInterviewStatus;
 import com.xyram.ticketingTool.enumType.JobOpeningStatus;
+import com.xyram.ticketingTool.enumType.UserRole;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.request.JobApplicationSearchRequest;
 import com.xyram.ticketingTool.request.JobInterviewsRequest;
