@@ -38,6 +38,7 @@ import com.xyram.ticketingTool.entity.JobApplication;
 import com.xyram.ticketingTool.entity.JobInterviews;
 import com.xyram.ticketingTool.entity.JobOpenings;
 import com.xyram.ticketingTool.entity.Ticket;
+import com.xyram.ticketingTool.enumType.JobApplicationStatus;
 import com.xyram.ticketingTool.enumType.JobInterviewStatus;
 import com.xyram.ticketingTool.enumType.JobOpeningStatus;
 import com.xyram.ticketingTool.request.CurrentUser;
@@ -219,7 +220,7 @@ public class JobServiceImpl implements JobService{
 			jobAppObj.setJobOpenings(jobOpening);
 			jobAppObj.setCreatedAt(new Date());
 			jobAppObj.setCreatedBy(userDetail.getUserId());
-			jobAppObj.setStatus("APPLIED");
+			jobAppObj.setJobApplicationSatus(JobApplicationStatus.APPLIED);
 			if(jobAppRepository.save(jobAppObj) != null) {
 				response.setSuccess(true);
 				response.setMessage("New Job Application Created");
@@ -468,6 +469,27 @@ public class JobServiceImpl implements JobService{
 
 		return response;
 	}
+
+	@Override
+	public ApiResponse changeJobApplicationStatus(String jobApplicationId, JobApplicationStatus jobStatus) {
+		ApiResponse response = new ApiResponse(false);
+		JobApplication status= jobAppRepository.getApplicationById(jobApplicationId);
+		if(status!= null) {
+			status.setJobApplicationSatus(jobStatus);
+			jobAppRepository.save(status);
+			response.setSuccess(true);
+			response.setMessage("Job Application Status Updated Sucessfully");
+			response.setContent(null);
+		}else {
+			response.setSuccess(false);
+			response.setMessage("Job application Id does Not Exist");
+		}
+		// TODO Auto-generated method stub
+		return response;
+		
+		
+	}
+
 
 	
 

@@ -3,6 +3,8 @@ package com.xyram.ticketingTool.entity;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -13,6 +15,8 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.GenericGenerator;
 import com.xyram.ticketingTool.baseData.model.AuditModel;
+import com.xyram.ticketingTool.enumType.JobApplicationStatus;
+import com.xyram.ticketingTool.enumType.JobInterviewStatus;
 
 
 @Entity
@@ -51,6 +55,8 @@ public class JobApplication extends AuditModel{
 	@Column(name="expected_salary")
 	private Integer expectedSalary;
 	
+	
+
 	@Column(name="resume_path")
 	private String resumePath;
 	
@@ -61,8 +67,18 @@ public class JobApplication extends AuditModel{
 	@JoinColumn(name = "job_id")
     private JobOpenings jobOpenings;
 	
+	@Enumerated(EnumType.STRING)
 	@Column(name="status")
-	private String status;
+	private JobApplicationStatus jobApplicationSatus = JobApplicationStatus.SUBMITTED;
+	
+	
+	public JobApplicationStatus getJobApplicationSatus() {
+		return jobApplicationSatus;
+	}
+
+	public void setJobApplicationSatus(JobApplicationStatus jobApplicationSatus) {
+		this.jobApplicationSatus = jobApplicationSatus;
+	}
 
 	public String getId() {
 		return Id;
@@ -160,13 +176,8 @@ public class JobApplication extends AuditModel{
 		this.jobOpenings = jobOpenings;
 	}
 
-	public String getStatus() {
-		return status;
-	}
 
-	public void setStatus(String status) {
-		this.status = status;
-	}
+	
 	
 	
 

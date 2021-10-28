@@ -24,6 +24,7 @@ import com.xyram.ticketingTool.entity.Comments;
 import com.xyram.ticketingTool.entity.JobApplication;
 import com.xyram.ticketingTool.entity.JobInterviews;
 import com.xyram.ticketingTool.entity.Ticket;
+import com.xyram.ticketingTool.enumType.JobApplicationStatus;
 import com.xyram.ticketingTool.enumType.JobInterviewStatus;
 import com.xyram.ticketingTool.enumType.JobOpeningStatus;
 import com.xyram.ticketingTool.request.JobApplicationSearchRequest;
@@ -92,7 +93,8 @@ public class JobController {
 	
 	  @PutMapping(value=
 	  {AuthConstants.ADMIN_BASEPATH+"/editJobInterviewSchedule/{interviewId}",
-	  AuthConstants.HR_BASEPATH+"/editJobInterviewSchedule/{interviewId}"})
+	  AuthConstants.HR_BASEPATH+"/editJobInterviewSchedule/{interviewId}",
+	  AuthConstants.HR_ADMIN_BASEPATH+"/editJobInterviewSchedule/{interviewId}"})
 	  public ApiResponse editJobInterviewSchedule(@RequestBody JobInterviews
 	  jobInterviewRequest,@PathVariable String interviewId) {
 		  logger.info("Edit Job Interview Schedule");
@@ -101,12 +103,20 @@ public class JobController {
 	 
 	
 	
-	  @PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/changeJobInterviewStatus/{jobInerviewId}/{status}"})
+	  @PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/changeJobInterviewStatus/{jobInerviewId}/{status}",
+			  AuthConstants.HR_BASEPATH+"/changeJobInterviewStatus/{jobInerviewId}/{status}"})
 	  public ApiResponse changeJobInterviewStatus(@PathVariable String jobInerviewId,@PathVariable JobInterviewStatus status) { 
 		  logger.info("Get JobOpening by id");
 	  return  jobService.changeJobInterviewStatus(jobInerviewId,status); 
 	  }
 	 
+	  
+	  @PutMapping(value= {AuthConstants.ADMIN_BASEPATH+"/changeJobApplicationStatus/{jobApplicationId}/{status}"})
+	  public ApiResponse changeJobApplicatonStatus(@PathVariable String jobApplicationId,@PathVariable JobApplicationStatus status)
+	  {
+		  logger.info("change job application status");
+		  return jobService.changeJobApplicationStatus(jobApplicationId, status);
+	  }
 	
 	
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllJobInterviews" })
