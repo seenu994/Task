@@ -44,14 +44,15 @@ public interface JobService {
 
 
 
-	ApiResponse changeJobInterviewStatus(String jobInerviewId, JobInterviewStatus status);
+	ApiResponse changeJobInterviewStatus(String jobInerviewId, JobInterviews status);
 
 	ApiResponse editJob(String jobId, JobOpenings jobObj);
 
-<<<<<<< HEAD
 	ApiResponse editJobApplication(MultipartFile[] files, String jobAppObj, String jobAppId);
-=======
+
 	ApiResponse editJobInterview(JobInterviews jobInterviewRequest, String interviewId);
 
->>>>>>> dd90c66df773d9a1370563f26a5d3f5f48c54ff1
+	ApiResponse changeJobInterviewStatus(String jobInerviewId, JobInterviewStatus status);
+
+
 }

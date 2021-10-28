@@ -33,9 +33,11 @@ import com.xyram.ticketingTool.Repository.EmployeeRepository;
 import com.xyram.ticketingTool.Repository.ProjectMemberRepository;
 import com.xyram.ticketingTool.Repository.RoleRepository;
 import com.xyram.ticketingTool.Repository.UserRepository;
+import com.xyram.ticketingTool.Repository.VendorRepository;
 import com.xyram.ticketingTool.admin.model.User;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Employee;
+import com.xyram.ticketingTool.entity.JobVendorDetails;
 import com.xyram.ticketingTool.entity.ProjectMembers;
 import com.xyram.ticketingTool.entity.Projects;
 import com.xyram.ticketingTool.entity.Role;
@@ -76,6 +78,9 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	@Autowired
 	ProjectMemberRepository projectMemberRepository;
 	
+	@Autowired
+	VendorRepository vendorRepository;
+	
 	static ChannelSftp channelSftp = null;
 	static Session session = null;
 	static Channel channel = null;
@@ -110,8 +115,6 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 					user.setUserRole(UserRole.HR_ADMIN);
 				} else if (employee.getRoleId().equals("R5")) {
 					user.setUserRole(UserRole.HR);
-				}else if (employee.getRoleId().equals("R6")) {
-					user.setUserRole(UserRole.JOB_VENDOR);
 				} else {
 					throw new ResourceNotFoundException("invalid user role ");
 				}
@@ -574,6 +577,62 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	    }
 		return fileNameOriginal;
 	}
+
+	@Override
+	public ApiResponse createJobVendor(JobVendorDetails vendorDetails) {
+        ApiResponse response = new ApiResponse(false);
+		
+//		response = validateEmployee(vendorDetails);
+		System.out.println("username::"+currentUser.getName());
+
+//		if (response.isSuccess()) {
+			try {
+				User user = new User();
+				user.setUsername(vendorDetails.getEmail());
+				String encodedPassword = new BCryptPasswordEncoder().encode(vendorDetails.getPassword());
+				user.setPassword(encodedPassword);
+				// Employee employeere=new Employee();
+				if (vendorDetails.getRoleId().equals("R6")) {
+					user.setUserRole(UserRole.JOB_VENDOR);
+				}  else {
+					throw new ResourceNotFoundException("invalid user role ");
+				}
+				user.setStatus(UserStatus.ACTIVE);
+				System.out.println(user.getEmail()+"::"+user.getUsername()+"::"+user.getCreatedAt());
+				userRepository.save(user);
+				
+//				vendorDetails.setCreatedBy(currentUser.getUserId());
+//				vendorDetails.setUpdatedBy(currentUser.getUserId());
+//				vendorDetails.setCreatedAt(new Date());
+//				vendorDetails.setLastUpdatedAt(new Date());
+				vendorDetails.setUserCredientials(user);
+				vendorDetails.setProfileUrl("https://covidtest.xyramsoft.com/image/ticket-attachment/user-default-pic.png");
+				JobVendorDetails vendorNew = vendorRepository.save(vendorDetails);
+				
+				//Assigning default project to Developer
+//				if (employee.getRoleId().equals("R3")) {
+//					System.out.println("Inside employee.getRoleId() - " + employee.getRoleId());
+//					ProjectMembers projectMember = new ProjectMembers();
+//					projectMember.setCreatedAt(new Date());
+//					projectMember.setLastUpdatedAt(new Date());
+//					projectMember.setUpdatedBy(currentUser.getUserId());
+//					projectMember.setCreatedBy(currentUser.getUserId());
+//					projectMember.setStatus(ProjectMembersStatus.ACTIVE);
+//					projectMember.setProjectId("2c9fab1f7bbeee88017bbf22f0af0002");
+//					projectMember.setEmployeeId(employee.geteId());
+//					projectMemberRepository.save(projectMember);
+//				}
+				response.setSuccess(true);
+				response.setMessage(ResponseMessages.EMPLOYEE_ADDED);
+				Map content = new HashMap();
+				content.put("vendorId", vendorNew.getvId());
+				response.setContent(content);
+			} catch (Exception e) {
+				System.out.println("Error Occured :: " + e.getMessage());
+			}
+
+			return response;
+}
 
 
 

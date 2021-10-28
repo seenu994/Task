@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Employee;
+import com.xyram.ticketingTool.entity.JobVendorDetails;
 import com.xyram.ticketingTool.enumType.UserStatus;
 
 public interface EmployeeService {
@@ -47,5 +48,7 @@ public interface EmployeeService {
 	ApiResponse getAllProfile();
 
 	ApiResponse updateProfileImage(MultipartFile file, String employeeId);
+
+	ApiResponse createJobVendor(JobVendorDetails vendorDetails);
 
 }

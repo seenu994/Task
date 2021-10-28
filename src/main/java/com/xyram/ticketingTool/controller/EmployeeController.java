@@ -26,6 +26,7 @@ import com.xyram.ticketingTool.Repository.UserRepository;
 import com.xyram.ticketingTool.admin.model.User;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Employee;
+import com.xyram.ticketingTool.entity.JobVendorDetails;
 import com.xyram.ticketingTool.enumType.UserRole;
 import com.xyram.ticketingTool.enumType.UserStatus;
 import com.xyram.ticketingTool.service.EmployeeService;
@@ -53,6 +54,12 @@ class EmployeeController {
 	public ApiResponse addemployee(@RequestBody Employee employee) {
 		logger.info("Received request to add Employee");
 		return employeeService.addemployee(employee);
+	}
+
+	@PostMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/createJobVendor" })
+	public ApiResponse createJobVendor(@RequestBody JobVendorDetails vendorDetails) {
+		logger.info("Received request to add Employee");
+		return employeeService.createJobVendor(vendorDetails);
 	}
 
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllEmployee",

@@ -17,7 +17,6 @@ import com.xyram.ticketingTool.baseData.model.AuditModel;
 
 @Entity
 @Table(name = "job_application")
-
 public class JobApplication extends AuditModel{
 	
 	@Id

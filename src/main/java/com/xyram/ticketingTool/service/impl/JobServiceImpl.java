@@ -31,9 +31,7 @@ import com.xyram.ticketingTool.Repository.JobApplicationRepository;
 import com.xyram.ticketingTool.Repository.JobInterviewRepository;
 import com.xyram.ticketingTool.Repository.JobRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
-import com.xyram.ticketingTool.entity.Client;
 import com.xyram.ticketingTool.entity.CompanyWings;
-import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.JobApplication;
 import com.xyram.ticketingTool.entity.JobInterviews;
 import com.xyram.ticketingTool.entity.JobOpenings;
@@ -46,7 +44,6 @@ import com.xyram.ticketingTool.request.JobApplicationSearchRequest;
 import com.xyram.ticketingTool.request.JobInterviewsRequest;
 import com.xyram.ticketingTool.request.JobOpeningSearchRequest;
 import com.xyram.ticketingTool.service.JobService;
-import com.xyram.ticketingTool.util.ResponseMessages;
 
 
 @Service
@@ -243,10 +240,10 @@ public class JobServiceImpl implements JobService{
 		if(jobApp != null) {
 			schedule.setCreatedAt(new Date());
 			schedule.setCreatedBy(userDetail.getUserId());
-			schedule.setJobInterviewStatus(JobInterviewStatus.SCHEDULED);
+//			schedule("SCHEDULED");
 			schedule.setJobApplication(jobApp);
 			if(jobInterviewRepository.save(schedule) != null) {
-				schedule.setJobInterviewStatus(JobInterviewStatus.SCHEDULED);
+				jobApp.setStatus("SCHEDULED");
 				jobAppRepository.save(jobApp);
 				response.setSuccess(true);
 				response.setMessage("Interview Scheduled");
@@ -387,59 +384,6 @@ public class JobServiceImpl implements JobService{
 	}
 
 	@Override
-
-	public ApiResponse editJobInterview( JobInterviews jobInterviewRequest, String interviewId ) {
-		
-		ApiResponse response = new ApiResponse(false);
-		
-		  System.out.println("InterviewId::"+interviewId);
-		JobInterviews jbInterviews = jobInterviewRepository.getById(interviewId);
-	
-		System.out.println("feedBack::"+jobInterviewRequest.getFeedback());
-			if (jbInterviews != null) {
-			
-				jbInterviews.setFeedback(jobInterviewRequest.getFeedback());
-				jbInterviews.setInterviewType(jobInterviewRequest.getInterviewType());
-				jbInterviews.setRoundDetails(jobInterviewRequest.getRoundDetails());
-				jbInterviews.setInterviewLink(jobInterviewRequest.getInterviewLink());
-				jbInterviews.setInterviewer(jobInterviewRequest.getInterviewer());
-				jbInterviews.setInterviewDate(jobInterviewRequest.getInterviewDate());
-				jbInterviews.setRecommendation(jobInterviewRequest.getRecommendation());
-				jbInterviews.setRating(jobInterviewRequest.getRateGiven());
-				
-				
-				jobInterviewRepository.save(jbInterviews);
-				response.setSuccess(true);
-				String msg="Job Interview Updated Successfully";
-				response.setMessage(ResponseMessages.SCHEDULEINIERVIEW_UPDATED);
-				response.setContent(null);
-			}
-
-			else {
-				response.setSuccess(false);
-				response.setMessage(ResponseMessages.SCHEDULEINIERVIEW_INVALID);
-				response.setContent(null);
-			}
-		return response;
-	}
-
-	@Override
-	public ApiResponse changeJobInterviewStatus(String jobInerviewId, JobInterviewStatus jobInterviewStatus) {
-		ApiResponse response = new ApiResponse(false);
-		JobInterviews status= jobInterviewRepository.getById(jobInerviewId);
-		if(status!= null) {
-			status.setJobInterviewStatus(jobInterviewStatus);
-			jobInterviewRepository.save(status);
-			response.setSuccess(true);
-			response.setMessage("Job Interview Status Updated Sucessfully");
-			response.setContent(null);
-		}else {
-			response.setSuccess(false);
-			response.setMessage("Job Interview Id does Not Exist");
-		}
-		// TODO Auto-generated method stub
-		return response;
-	}
 	public ApiResponse editJob(String jobId, JobOpenings jobObj) {
 		ApiResponse response = new ApiResponse(false);
 		JobOpenings jobOpening = jobRepository.getById(jobId);
@@ -466,7 +410,6 @@ public class JobServiceImpl implements JobService{
 			response.setMessage("Job Opening Id does Not Exist");
 		}
 		
-
 		return response;
 	}
 
@@ -500,7 +443,7 @@ public class JobServiceImpl implements JobService{
 			jobApp.setJobCode(newJobAppObj.getJobCode());
 			jobApp.setJobOpenings(newJobAppObj.getJobOpenings());
 			jobApp.setCandidateEmail(newJobAppObj.getCandidateEmail());
-			jobApp.setCandidateMobile(newJobAppObj.getca);
+//			jobApp.setCandidateMobile(newJobAppObj.getca);
 			if(jobAppRepository.save(jobApp) != null) {
 				response.setSuccess(true);
 				response.setMessage(" Job Application Updated");
@@ -514,6 +457,24 @@ public class JobServiceImpl implements JobService{
 			response.setMessage("Job Application Id Not Exist");
 		}
 		return response;
+	}
+
+	@Override
+	public ApiResponse changeJobInterviewStatus(String jobInerviewId, JobInterviews status) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ApiResponse editJobInterview(JobInterviews jobInterviewRequest, String interviewId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ApiResponse changeJobInterviewStatus(String jobInerviewId, JobInterviewStatus status) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	
