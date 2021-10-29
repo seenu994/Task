@@ -428,7 +428,7 @@ public class JobServiceImpl implements JobService{
 	public ApiResponse changeJobInterviewStatus(String jobInerviewId, JobInterviewStatus jobInterviewStatus) {
 		ApiResponse response = new ApiResponse(false);
 		JobInterviews status= jobInterviewRepository.getById(jobInerviewId);
-		if(status!= null) {
+		if(status!= null && status.getInterviewer() == userDetail.getUserId()) {
 			status.setJobInterviewStatus(jobInterviewStatus);
 			jobInterviewRepository.save(status);
 			response.setSuccess(true);

@@ -150,6 +150,14 @@ class TicketController {
 		logger.info("inside Ticket controller :: getAllTicket");
 		return ticketService.getAllTicketsByStatus(status,pageable);
 	}
+	
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllTktByStatus",
+			AuthConstants.INFRA_USER_BASEPATH + "/getAllTktByStatus",
+			AuthConstants.DEVELOPER_BASEPATH + "/getAllTktByStatus" })
+	public ApiResponse getAllTicketsByStatusMobile(Pageable pageable) {
+		logger.info("inside Ticket controller :: getAllTicket");
+		return ticketService.getAllTicketsByStatusMobile(pageable);
+	}
 
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllCompletedTickets",
 			AuthConstants.INFRA_USER_BASEPATH + "/getAllCompletedTickets",

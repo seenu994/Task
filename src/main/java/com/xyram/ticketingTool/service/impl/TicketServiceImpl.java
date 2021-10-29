@@ -1235,6 +1235,33 @@ public class TicketServiceImpl implements TicketService {
 		return response;
 
 	}
+
+	@Override
+	public ApiResponse getAllTicketsByStatusMobile(Pageable pageable) {
+		ApiResponse response = new ApiResponse(false);
+
+		Page<Map> allTickets ;
+		if (userDetail.getUserRole().equals("INFRA")) {
+			allTickets = ticketrepository.getAllTicketsForInfraUser(pageable, userDetail.getUserId());
+		}else {
+			allTickets = ticketrepository.getAllTicketsByStatusMobile(pageable, userDetail.getUserId(),
+					userDetail.getUserRole());
+		}
+		
+		if (allTickets != null) {
+			response.setSuccess(true);
+			response.setMessage(ResponseMessages.TICKET_EXIST+" ROLE :: "+userDetail.getUserRole());
+			Map<String, Page<Map>> content = new HashMap<String, Page<Map>>();
+			content.put("tickets", allTickets);
+			response.setContent(content);
+		} else {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.TICKET_NOT_EXIST);
+			response.setContent(null);
+		}
+
+		return response;
+	}
 	
 	
 	

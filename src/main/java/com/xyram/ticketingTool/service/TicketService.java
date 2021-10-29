@@ -69,6 +69,8 @@ ApiResponse getTicketStatusCountWithProject(Pageable pageable);
 
 ApiResponse getTicketDtlsByProjectNameAndStatus(Map<String, Object> filter, Pageable pageable);
 
+ApiResponse getAllTicketsByStatusMobile(Pageable pageable);
+
 
 	
 	
