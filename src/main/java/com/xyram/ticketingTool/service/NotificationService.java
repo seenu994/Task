@@ -14,7 +14,9 @@ public interface NotificationService {
 
 	ApiResponse getAllNotifications(Pageable pageable);
 	
-	ApiResponse getNotificationCount();
+	ApiResponse getNotificationCount(); 
+	
+	ApiResponse clearAllNotifications();
 
 	Notifications createNotification(Notifications notification);
 

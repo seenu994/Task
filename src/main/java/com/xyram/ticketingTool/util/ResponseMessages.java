@@ -89,6 +89,7 @@ public interface ResponseMessages {
 
 	String NOTIFICATIONS_EXISTS = "list of notifications";
 	String NOTIFICATIONS_NOT_EXISTS = "There is no notifications exists";
+	String NOTIFICATIONS_CLEARED = "All notifications cleared";
 
 	String DELETE_ATTACHMENT = "Attachments Deleted Successfully";
 

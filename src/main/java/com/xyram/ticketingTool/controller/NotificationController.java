@@ -41,8 +41,14 @@ public class NotificationController {
 		logger.info("Received request for getNotificationCount");
 		return notificationService.getNotificationCount();
 
-	}
+	} 
 
-	
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/clearAllNotifications",
+			AuthConstants.INFRA_USER_BASEPATH + "/clearAllNotifications", AuthConstants.DEVELOPER_BASEPATH + "/clearAllNotifications" })
+	public ApiResponse clearAllNotifications() {
+		logger.info("Received request for clearAllNotifications");
+		return notificationService.clearAllNotifications();
+
+	}
 
 }
