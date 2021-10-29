@@ -116,8 +116,7 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 			+ " group by e.employee_id"
 			+ " union"
 			+ " select e.employee_id, 0 as emp_cnt from employee e where e.role_id = 'R2' "
-			+ " and e.employee_id not in (select t.employee_id from ticket_assignee t where e.employee_id = t.employee_id)"
-			+ " group by e.employee_id) c "
+			+ " and e.employee_id not in (select t.employee_id from ticket_assignee t where e.employee_id = t.employee_id)) c "
 			+ " order by c.emp_cnt"
 			+ " limit 1 ",nativeQuery=true)
 	String getElgibleAssignee();
