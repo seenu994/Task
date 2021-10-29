@@ -123,6 +123,9 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 			+ "JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id where e.userCredientials.id = :userId")
 	Map getAllEmployeeUserList(String userId);
 
+	@Query("Select e.email from Employee e where e.email = :email")
+	String filterByEmail(String email);
+
 	
 
 

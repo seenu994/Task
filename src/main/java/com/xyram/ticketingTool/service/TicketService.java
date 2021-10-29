@@ -13,6 +13,7 @@ import com.xyram.ticketingTool.entity.Comments;
 import com.xyram.ticketingTool.entity.ProjectMembers;
 import com.xyram.ticketingTool.entity.Ticket;
 //import com.xyram.ticketingTool.entity.TicketComments;
+import com.xyram.ticketingTool.enumType.TicketStatus;
 
 
 public interface TicketService {
@@ -20,7 +21,7 @@ public interface TicketService {
 	 
 	ApiResponse createTickets(MultipartFile[] files, String ticketRequest);
 	
-	ApiResponse getAllTicketsByStatus(Pageable pageable);
+	ApiResponse getAllTicketsByStatus(TicketStatus status, Pageable pageable);
 	
 	ApiResponse getAllCompletedTickets();
 

@@ -142,7 +142,7 @@ public class TicketServiceImpl implements TicketService {
 	TicketStatusHistRepository tktStatusHistory;
 
 	@Override
-	public ApiResponse getAllTicketsByStatus(Pageable pageable) {
+	public ApiResponse getAllTicketsByStatus(TicketStatus status,Pageable pageable) {
 		// TODO Auto-generated method stub
 		ApiResponse response = new ApiResponse(false);
 
@@ -151,7 +151,7 @@ public class TicketServiceImpl implements TicketService {
 			allTickets = ticketrepository.getAllTicketsForInfraUser(pageable, userDetail.getUserId());
 		}else {
 			allTickets = ticketrepository.getAllTicketsByStatus(pageable, userDetail.getUserId(),
-					userDetail.getUserRole());
+					userDetail.getUserRole(),status);
 		}
 		
 		if (allTickets != null) {

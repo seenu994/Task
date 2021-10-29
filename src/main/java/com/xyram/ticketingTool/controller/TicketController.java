@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Comments;
 import com.xyram.ticketingTool.entity.Ticket;
+import com.xyram.ticketingTool.enumType.TicketStatus;
 import com.xyram.ticketingTool.request.JobOpeningSearchRequest;
 
 import com.xyram.ticketingTool.service.TicketService;
@@ -142,12 +143,12 @@ class TicketController {
 		return ticketService.searchTicket(searchString);
 	}
 
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllTktByStatus",
-			AuthConstants.INFRA_USER_BASEPATH + "/getAllTktByStatus",
-			AuthConstants.DEVELOPER_BASEPATH + "/getAllTktByStatus" })
-	public ApiResponse getAllTicketsByStatus(Pageable pageable) {
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllTktByStatus/{status}",
+			AuthConstants.INFRA_USER_BASEPATH + "/getAllTktByStatus/{status}",
+			AuthConstants.DEVELOPER_BASEPATH + "/getAllTktByStatus/{status}" })
+	public ApiResponse getAllTicketsByStatus(@PathVariable TicketStatus status,Pageable pageable) {
 		logger.info("inside Ticket controller :: getAllTicket");
-		return ticketService.getAllTicketsByStatus(pageable);
+		return ticketService.getAllTicketsByStatus(status,pageable);
 	}
 
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllCompletedTickets",

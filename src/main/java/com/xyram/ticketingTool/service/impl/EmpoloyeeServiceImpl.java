@@ -161,6 +161,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 	private ApiResponse validateEmployee(Employee employee) {
 		ApiResponse response = new ApiResponse(false);
+		String email = employeeRepository.filterByEmail(employee.getEmail());
 		if (!emailValidation(employee.getEmail())) {
 			response.setMessage(ResponseMessages.EMAIL_INVALID);
 
@@ -171,6 +172,10 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			response.setMessage(ResponseMessages.MOBILE_INVALID);
 
 			response.setSuccess(false);
+		}
+		
+		else if (email!= null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "email already exists!!!");
 		}
 
 		/*
@@ -192,6 +197,8 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 		return response;
 	}
+
+	
 
 	private boolean emailValidation(String email) {
 		Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$",
