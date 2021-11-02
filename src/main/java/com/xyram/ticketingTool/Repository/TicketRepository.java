@@ -75,7 +75,7 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 			+ "OR ('DEVELOPER' = :roleId and a.ticket_status IN ('COMPLETED', 'CANCELLED') and a.created_by = :createdBy ) "
 			+ "OR ('TICKETINGTOOL_ADMIN' = :roleId and a.ticket_status IN ('COMPLETED', 'CANCELLED'))) "
 			+ "and a.last_updated_at >= DATE_ADD(curdate(), INTERVAL - 10 DAY) order by a.last_updated_at desc", nativeQuery = true)
-	Page<Map> getAllCompletedTickets(@Param("createdBy") String createdBy, @Param("roleId")String roleId, Pageable pageable);
+	Page<Map> getAllCompletedTickets(Pageable pageable,@Param("createdBy") String createdBy, @Param("roleId")String roleId);
 	
 	@Query(value = "SELECT t.*, concat(e.frist_name, ' ', e.last_name) as createdByEmp from ticket_comment_log t inner join employee e on t.updated_by = e.user_id where t.ticket_id = :ticketId ", nativeQuery = true)
 	List<Map> getTktcommntsById(String ticketId);
@@ -150,6 +150,11 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 			+ "OR ('DEVELOPER' = :roleId and a.status IN ('INITIATED', 'ASSIGNED', 'INPROGRESS', 'REOPEN') and a.createdBy = :createdBy) "
 			+ "OR ('TICKETINGTOOL_ADMIN' = :roleId and a.status NOT IN ('COMPLETED', 'CANCELLED'))) ORDER BY a.createdAt DESC")
 	Page<Map> getAllTicketsByStatusMobile(Pageable pageable, @Param("createdBy") String createdBy, @Param("roleId")String roleId);
+
+	@Query(value="select ticket_status, count(ticket_status) from ticket_info "
+			+ "where ticket_status in ('ASSIGNED', 'INPROGRESS', 'REOPEN')"
+			+ "group by ticket_status",nativeQuery = true)
+	Map getTicketCount();
 	
 //	@Query("SELECT DISTINCT b FROM Branch b WHERE " + " (:name is null or lower(b.name) LIKE %:name%)"
 //			+ " AND (:contactno is null or lower(b.primaryContactNumber) LIKE %:contactno%)"

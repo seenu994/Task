@@ -25,9 +25,9 @@ import com.xyram.ticketingTool.enumType.UserStatus;
 
 @Entity
 @Table(name = "permissions")
-
 public class Permissions {
 	
+	@Id
 	@Column(name = "permission_id")
 	private Integer permissionId;
 

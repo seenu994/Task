@@ -49,6 +49,7 @@ import com.xyram.ticketingTool.enumType.UserStatus;
 import com.xyram.ticketingTool.exception.ResourceNotFoundException;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.EmployeeService;
+import com.xyram.ticketingTool.ticket.config.PermissionConfig;
 import com.xyram.ticketingTool.util.ResponseMessages;
 
 /**
@@ -85,6 +86,9 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	@Autowired
 	VendorRepository vendorRepository;
 	
+	@Autowired
+	PermissionConfig permissionConfig;
+	
 	static ChannelSftp channelSftp = null;
 	static Session session = null;
 	static Channel channel = null;
@@ -111,6 +115,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				System.out.println("RoleId::"+employee.getRoleId());
 				if (employee.getRoleId().equals("R2")) {
 					user.setUserRole(UserRole.INFRA);
+					
 				} else if (employee.getRoleId().equals("R3")) {
 					user.setUserRole(UserRole.DEVELOPER);
 				}else if (employee.getRoleId().equals("R1")) {
@@ -122,6 +127,8 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				} else {
 					throw new ResourceNotFoundException("invalid user role ");
 				}
+				Integer permission = permissionConfig.setDefaultPermissions(user.getUserRole().toString());
+				user.setPermission(permission);
 				user.setStatus(UserStatus.ACTIVE);
 				System.out.println(user.getEmail()+"::"+user.getUsername()+"::"+user.getCreatedAt());
 				userRepository.save(user);
@@ -182,16 +189,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "email already exists!!!");
 		}
 
-		/*
-		 * else if (employee.getRole() == null || employee.getRole().getId() == null) {
-		 * // Optional<Role> role = roleRepository.findById(employee.getRole().getId());
-		 * // if (role == null) { // response.setMessage(ResponseMessages.ROLE_INVALID);
-		 * // response.setSuccess(false); // } // else { //
-		 * response.setMessage(ResponseMessages.EMPLOYEE_ADDED); //
-		 * response.setSuccess(true); // response.setContent(null); // }
-		 * response.setMessage(ResponseMessages.ROLE_INVALID);
-		 */
-		// response.setSuccess(false);
+		
 
 		else {
 			response.setMessage(ResponseMessages.EMPLOYEE_ADDED);
@@ -271,7 +269,6 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	@Override
 	public ApiResponse editEmployee(String employeeId, Employee employeeRequest) {
 		ApiResponse response = validateEmployee(employeeRequest);
-		if (response.isSuccess()) {
 			Employee employee = employeeRepository.getById(employeeId);
 			if (employee != null) {
 				employee.setFirstName(employeeRequest.getFirstName());
@@ -294,7 +291,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				response.setContent(null);
 			}
 
-		}
+		
 
 		return response;
 	}
@@ -656,6 +653,27 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 			return response;
 }
+
+	@Override
+	public ApiResponse getEmployeeDetails(String employeeId) {
+		ApiResponse response = new ApiResponse(false);
+		Map employee = employeeRepository.getbyEmpId(employeeId);
+		Map content = new HashMap();
+		content.put("employeeDetails",employee);
+		if (employee != null) {
+			response.setSuccess(true);
+			response.setMessage("Employee Retrieved Successfully");
+			response.setContent(employee);
+		}
+
+		else {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.EMPLOYEE_INVALID);
+			response.setContent(null);
+		}
+
+	return response;
+	}
 
 
 

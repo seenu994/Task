@@ -81,6 +81,13 @@ class EmployeeController {
 		logger.info("indide ProductController :: getAllemployee");
 		return employeeService.editEmployee(employeeId, employeeRequest);
 	}
+	
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getEmployee/{employeeId}",
+			AuthConstants.DEVELOPER_BASEPATH + "/getEmployee/{employeeId}" })
+	public ApiResponse getEmployeeDetails(@PathVariable String employeeId) {
+		logger.info("indide ProductController :: getAllemployee");
+		return employeeService.getEmployeeDetails(employeeId);
+	}
 
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/updateEmployeeStatus/{employeeID}/status/{userstatus}" })
 	public ApiResponse updateEmployeeStatus(@PathVariable String employeeID, @PathVariable UserStatus userstatus) {

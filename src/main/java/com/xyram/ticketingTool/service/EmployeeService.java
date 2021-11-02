@@ -53,4 +53,6 @@ public interface EmployeeService {
 
 	ApiResponse createJobVendor(JobVendorDetails vendorDetails);
 
+	ApiResponse getEmployeeDetails(String employeeId);
+
 }

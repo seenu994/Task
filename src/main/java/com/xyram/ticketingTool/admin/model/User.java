@@ -57,6 +57,9 @@ public class User extends IBaseData {
 	@Column(name = "accesskey")
 	private String accesskey;
 	
+	@Column(name="permissions")
+	private Integer permission;
+	
 	
 	  @Column(name = "reset_password_token")
 	  private String resetPasswordToken;
@@ -178,5 +181,15 @@ public class User extends IBaseData {
 	public void setUid(String uid) {
 		this.uid = uid;
 	}
+
+	public Integer getPermission() {
+		return permission;
+	}
+
+	public void setPermission(Integer permission) {
+		this.permission = permission;
+	}
+	
+	
 
 }

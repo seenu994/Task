@@ -1,5 +1,8 @@
 package com.xyram.ticketingTool.ticket.config;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class PermissionConfig {
 	
 	

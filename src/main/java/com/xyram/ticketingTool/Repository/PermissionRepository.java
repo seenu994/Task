@@ -14,10 +14,10 @@ import com.xyram.ticketingTool.entity.Client;
 import com.xyram.ticketingTool.entity.Permissions;
 
 @Repository
-public interface PermissionRepository extends JpaRepository<Permissions, String> {
+public interface PermissionRepository extends JpaRepository<Permissions, Integer> {
 	
 	
-	@Query("Select new map(p.permissionId as id,p.permissionName as name,p.status as status) from permissions p")
+	@Query("Select new map(p.permissionId as id,p.permissionName as name,p.status as status) from Permissions p")
 	List<Map> getAllPermissions();
 	
 }

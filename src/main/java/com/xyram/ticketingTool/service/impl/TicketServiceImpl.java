@@ -174,8 +174,8 @@ public class TicketServiceImpl implements TicketService {
 		// TODO Auto-generated method stub
 		ApiResponse response = new ApiResponse(false);
 
-		Page<Map> allTickets = ticketrepository.getAllCompletedTickets(userDetail.getUserId(),
-				userDetail.getUserRole(),pageable);
+		Page<Map> allTickets = ticketrepository.getAllCompletedTickets(pageable,userDetail.getUserId(),
+				userDetail.getUserRole());
 		
 		if (allTickets != null) {
 			response.setSuccess(true);
@@ -1265,8 +1265,25 @@ public class TicketServiceImpl implements TicketService {
 
 	@Override
 	public ApiResponse getTicketCount() {
-		// TODO Auto-generated method stub
-		return null;
+		ApiResponse response = new ApiResponse(false);
+
+		Map allTickets ;
+		
+			allTickets = ticketrepository.getTicketCount();
+		
+		if (allTickets != null) {
+			response.setSuccess(true);
+			response.setMessage("ticket status count retrieved successfully!!");
+			Map content = new HashMap();
+			content.put("tickets", allTickets);
+			response.setContent(content);
+		} else {
+			response.setSuccess(false);
+			response.setMessage("Count Not found");
+			response.setContent(null);
+		}
+
+		return response;
 	}
 	
 	
