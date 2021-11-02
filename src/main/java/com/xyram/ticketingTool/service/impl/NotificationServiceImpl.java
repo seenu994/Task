@@ -83,7 +83,7 @@ public class NotificationServiceImpl implements NotificationService {
 	public ApiResponse clearAllNotifications() {
 
 		ApiResponse response = new ApiResponse(false);
-		notificationRepository.getNotificationCount(currentUser.getUserId());
+		notificationRepository.clearAllNotifications(currentUser.getUserId());
 		response.setSuccess(true);
 		Map content = new HashMap();
 		response.setContent(content);

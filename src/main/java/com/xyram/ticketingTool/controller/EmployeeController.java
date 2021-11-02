@@ -128,6 +128,13 @@ class EmployeeController {
 		return employeeService.getAllInfraUser();
 	}
 	
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllPermissions",
+			AuthConstants.INFRA_USER_BASEPATH + "/getAllPermissions" })
+	public ApiResponse getAllPermissions() {
+		logger.info("indside :: getAllPermissions");
+		return employeeService.getAllPermissions();
+	}
+	
 	@PutMapping(value = { AuthConstants.INFRA_USER_BASEPATH +"/updateProfile",AuthConstants.DEVELOPER_BASEPATH +"/updateProfile"})
 	public ApiResponse editEmployee(@RequestBody Map employeeRequest) {
 		logger.info("indide ProductController :: getAllemployee");

@@ -34,6 +34,8 @@ public interface EmployeeService {
 	ApiResponse searchInfraUsersForInfraUser(String searchString);
 
 	ApiResponse getAllInfraUser();
+	
+	ApiResponse getAllPermissions();
 	 
 	List<Employee> getListOfInfraUSer();
 	 
