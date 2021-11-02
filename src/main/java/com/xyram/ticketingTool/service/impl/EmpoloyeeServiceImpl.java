@@ -30,6 +30,7 @@ import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
+import com.xyram.ticketingTool.Repository.PermissionRepository;
 import com.xyram.ticketingTool.Repository.ProjectMemberRepository;
 import com.xyram.ticketingTool.Repository.RoleRepository;
 import com.xyram.ticketingTool.Repository.UserRepository;
@@ -62,6 +63,9 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 	@Autowired
 	EmployeeRepository employeeRepository;
+	
+	@Autowired
+	PermissionRepository permissionRepository;
 
 	@Autowired
 	UserRepository userRepository;
@@ -395,6 +399,18 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		Map content = new HashMap();
 
 		content.put("infraUserList", infraUserList);
+		ApiResponse response = new ApiResponse(true);
+		response.setSuccess(true);
+		response.setContent(content);
+		return response;
+	} 
+	
+	@Override
+	public ApiResponse getAllPermissions() {
+		List<Map> permissionList = permissionRepository.getAllPermissions();
+		Map content = new HashMap();
+
+		content.put("PermissionList", permissionList);
 		ApiResponse response = new ApiResponse(true);
 		response.setSuccess(true);
 		response.setContent(content);
