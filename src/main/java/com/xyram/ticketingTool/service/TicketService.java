@@ -23,7 +23,7 @@ public interface TicketService {
 	
 	ApiResponse getAllTicketsByStatus(TicketStatus status, Pageable pageable);
 	
-	ApiResponse getAllCompletedTickets();
+	ApiResponse getAllCompletedTickets(Pageable pageable);
 
 	//Ticket ticket(Integer employeeId);
 
@@ -70,6 +70,8 @@ ApiResponse getTicketStatusCountWithProject(Pageable pageable);
 ApiResponse getTicketDtlsByProjectNameAndStatus(Map<String, Object> filter, Pageable pageable);
 
 ApiResponse getAllTicketsByStatusMobile(Pageable pageable);
+
+ApiResponse getTicketCount();
 
 
 	

@@ -170,17 +170,17 @@ public class TicketServiceImpl implements TicketService {
 	}
 
 	@Override
-	public ApiResponse getAllCompletedTickets() {
+	public ApiResponse getAllCompletedTickets(Pageable pageable) {
 		// TODO Auto-generated method stub
 		ApiResponse response = new ApiResponse(false);
 
-		List<Map> allTickets = ticketrepository.getAllCompletedTickets(userDetail.getUserId(),
-				userDetail.getUserRole());
+		Page<Map> allTickets = ticketrepository.getAllCompletedTickets(userDetail.getUserId(),
+				userDetail.getUserRole(),pageable);
 		
 		if (allTickets != null) {
 			response.setSuccess(true);
 			response.setMessage(ResponseMessages.TICKET_EXIST);
-			Map<String, List<Map>> content = new HashMap<String, List<Map>>();
+			Map<String, Page<Map>> content = new HashMap<String, Page<Map>>();
 			content.put("tickets", allTickets);
 			response.setContent(content);
 		} else {
@@ -1261,6 +1261,12 @@ public class TicketServiceImpl implements TicketService {
 		}
 
 		return response;
+	}
+
+	@Override
+	public ApiResponse getTicketCount() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	

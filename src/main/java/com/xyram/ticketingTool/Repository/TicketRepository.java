@@ -75,7 +75,7 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 			+ "OR ('DEVELOPER' = :roleId and a.ticket_status IN ('COMPLETED', 'CANCELLED') and a.created_by = :createdBy ) "
 			+ "OR ('TICKETINGTOOL_ADMIN' = :roleId and a.ticket_status IN ('COMPLETED', 'CANCELLED'))) "
 			+ "and a.last_updated_at >= DATE_ADD(curdate(), INTERVAL - 10 DAY) order by a.last_updated_at desc", nativeQuery = true)
-	List<Map> getAllCompletedTickets(@Param("createdBy") String createdBy, @Param("roleId")String roleId);
+	Page<Map> getAllCompletedTickets(@Param("createdBy") String createdBy, @Param("roleId")String roleId, Pageable pageable);
 	
 	@Query(value = "SELECT t.*, concat(e.frist_name, ' ', e.last_name) as createdByEmp from ticket_comment_log t inner join employee e on t.updated_by = e.user_id where t.ticket_id = :ticketId ", nativeQuery = true)
 	List<Map> getTktcommntsById(String ticketId);
@@ -139,7 +139,7 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 	@Query(value="SELECT new map(a.Id as ticketId,a.ticketDescription as ticketDescription,a.status as ticketStatus,a.createdAt as createdAt,a.createdBy as createdBy,a.lastUpdatedAt as lastUpdatedAt,p.projectName as projectName,b.Id as ticketAsigneeId,concat(e.firstName,' ', e.lastName) as assignedTo,concat(ee.firstName,' ',ee.lastName) as createdByEmp,DATEDIFF(a.resolvedAt,a.createdAt) as duration) "
 			+ "from Ticket a left join TicketAssignee b ON a.Id = b.ticketId and b.status = 'ACTIVE' " + 
 			"left join Employee e on b.employeeId = e.eId left join Employee ee on a.createdBy = ee.userCredientials.id left join Projects p ON a.projectId = p.pId where (:status is null or a.status = :status)"
-			+ "and  (:projectName is null or p.projectName = :projectName) and  (cast(:parsedFromDate as date) is null or DATE(a.createdAt) >= :parsedFromDate ) and (cast(:parsedToDate as date) is null or DATE(a.createdAt) <= :parsedToDate ) AND (:searchQuery is null OR lower(e.firstName) LIKE %:searchQuery%) AND (:searchQuery is null OR lower(e.lastName) LIKE %:searchQuery%) AND (:searchQuery is null OR e.eId LIKE %:searchQuery%) ")
+			+ "and  (:projectName is null or p.projectName = :projectName) and  (cast(:parsedFromDate as date) is null or DATE(a.createdAt) >= :parsedFromDate ) and (cast(:parsedToDate as date) is null or DATE(a.createdAt) <= :parsedToDate ) AND (:searchQuery is null OR lower(e.firstName) LIKE %:searchQuery% OR lower(e.lastName) LIKE %:searchQuery%  OR e.eId LIKE %:searchQuery%) ")
 	Page<Map> getTicketDataByStatusProjectName(String projectName, TicketStatus status, Date parsedFromDate,
 			Date parsedToDate, String searchQuery, Pageable pageable);
 

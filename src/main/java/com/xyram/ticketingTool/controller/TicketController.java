@@ -162,9 +162,9 @@ class TicketController {
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllCompletedTickets",
 			AuthConstants.INFRA_USER_BASEPATH + "/getAllCompletedTickets",
 			AuthConstants.DEVELOPER_BASEPATH + "/getAllCompletedTickets" })
-	public ApiResponse getAllCompletedTickets() {
+	public ApiResponse getAllCompletedTickets(Pageable pageable) {
 		logger.info("inside Ticket controller :: getAllTicket");
-		return ticketService.getAllCompletedTickets();
+		return ticketService.getAllCompletedTickets(pageable);
 	}
 
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/inprogressTicket/{ticketId}",
@@ -251,6 +251,14 @@ class TicketController {
 						  return ticketService.getTicketDtlsByProjectNameAndStatus(filter,pageable);
 				  }
 
+		  @GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getTicketCount",
+				  AuthConstants.INFRA_USER_BASEPATH +"/getTicketCount",
+				  AuthConstants.DEVELOPER_BASEPATH + "/getTicketCount" }) 
+				  public  ApiResponse getTicketCount() {
+						  logger.info("inside ticket controller :: getAllTicket By projectName and status function"); 
+						  
+						  return ticketService.getTicketCount();
+				  }
 		  
 		
 		
