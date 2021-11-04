@@ -663,7 +663,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		if (employee != null) {
 			response.setSuccess(true);
 			response.setMessage("Employee Retrieved Successfully");
-			response.setContent(employee);
+			response.setContent(content);
 		}
 
 		else {

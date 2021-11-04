@@ -48,13 +48,13 @@ public class JobController {
 	@Autowired
 	JobService jobService;
 	
-	@PostMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/createJob/{jobId}" })
+	@PostMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/createJob/{jobId}",AuthConstants.ADMIN_BASEPATH + "/createJob/{jobId}" })
 	public ApiResponse editJob(@PathVariable String jobId,@RequestBody JobOpenings jobObj) {
 		logger.info("Creating Job");
 		return jobService.editJob(jobId,jobObj);
 	} 
 	
-	@PostMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/createJob" })
+	@PostMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/createJob",AuthConstants.ADMIN_BASEPATH + "/createJob" })
 	public ApiResponse createJob(@RequestBody JobOpenings jobObj) {
 		logger.info("Creating Job");
 		return jobService.createJob(jobObj);
@@ -66,26 +66,26 @@ public class JobController {
 		return jobService.getAllJobs(jobOpeningObj);
 	}
 	
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllJobApplications" })
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllJobApplications",AuthConstants.ADMIN_BASEPATH + "/getAllJobApplications",AuthConstants.ADMIN_BASEPATH + "/getAllJobApplications",AuthConstants.ADMIN_BASEPATH + "/getAllJobApplications",AuthConstants.ADMIN_BASEPATH + "/getAllJobApplications" })
 	public ApiResponse getAllJobApplications(@RequestBody JobApplicationSearchRequest jobAppSearch) {
 		logger.info("Get All Job");
 		return jobService.getAllJobApplications(jobAppSearch);
 	}
 	
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllCompanyWingsAndSkills" })
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllCompanyWingsAndSkills",AuthConstants.HR_ADMIN_BASEPATH + "/getAllCompanyWingsAndSkills" })
 	public ApiResponse getAllCompanyWingsAndSkills() {
 		logger.info("Get All Wings & Skills");
 		return jobService.getAllCompanyWingsAndSkills();
 	}
 	
-	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/createJobApplication/{jobCode}" })
+	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/createJobApplication/{jobCode}",AuthConstants.HR_ADMIN_BASEPATH + "/createJobApplication/{jobCode}",AuthConstants.DEVELOPER_BASEPATH+ "/createJobApplication/{jobCode}", AuthConstants.HR_BASEPATH + "/createJobApplication/{jobCode}",AuthConstants.INFRA_ADMIIN_BASEPATH + "/createJobApplication/{jobCode}",AuthConstants.INFRA_USER_BASEPATH + "/createJobApplication/{jobCode}", AuthConstants.JOB_VENDOR_BASEPATH + "/createJobApplication/{jobCode}" })
 	public ApiResponse createJobApplication(@RequestPart(name = "files", required = false) MultipartFile[] files,@RequestBody String jobAppObj,
 			@PathVariable String jobCode) {
 		logger.info("Creating Job Application");
 		return jobService.createJobApplication(files,jobAppObj,jobCode);
 	}
 	
-	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editJobApplication/{jobAppId}" })
+	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editJobApplication/{jobAppId}",AuthConstants.HR_ADMIN_BASEPATH + "/editJobApplication/{jobAppId}",AuthConstants.DEVELOPER_BASEPATH+ "/editJobApplication/{jobAppId}", AuthConstants.HR_BASEPATH + "/editJobApplication/{jobAppId}",AuthConstants.INFRA_ADMIIN_BASEPATH + "/editJobApplication/{jobAppId}",AuthConstants.INFRA_USER_BASEPATH + "/createJobApplication/{jobCode}", AuthConstants.JOB_VENDOR_BASEPATH + "/createJobApplication/{jobCode}"  })
 	public ApiResponse editJobApplication(@RequestPart(name = "files", required = false) MultipartFile[] files,@RequestBody String jobAppObj,
 			@PathVariable String jobAppId) {
 		logger.info("Creating Job Application");
@@ -121,10 +121,10 @@ public class JobController {
 	 
 	  
 	  @PutMapping(value= {AuthConstants.ADMIN_BASEPATH+"/changeJobApplicationStatus/{jobApplicationId}/{status}"})
-	  public ApiResponse changeJobApplicatonStatus(@PathVariable String jobApplicationId,@PathVariable JobApplicationStatus status)
+	  public ApiResponse changeJobApplicatonStatus(@PathVariable String jobApplicationId,@PathVariable JobApplicationStatus status,@RequestParam(required = false) String comment)
 	  {
 		  logger.info("change job application status");
-		  return jobService.changeJobApplicationStatus(jobApplicationId, status);
+		  return jobService.changeJobApplicationStatus(jobApplicationId, status,comment);
 	  }
 	
 	
@@ -141,7 +141,7 @@ public class JobController {
 		return jobService.getAllJobOpeningsById(jobOpeningId);
 	}
 	
-	@PutMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/changeJobOpeningStatus/{jobOpeningId}/{status}"})
+	@PutMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/changeJobOpeningStatus/{jobOpeningId}/{status}",AuthConstants.ADMIN_BASEPATH + "/changeJobOpeningStatus/{jobOpeningId}/{status}"})
 	public ApiResponse changeJobOpeningStatus(@PathVariable String jobOpeningId,@PathVariable JobOpeningStatus status) {
 		logger.info("Get JobOpening by id");
 		return jobService.changeJobOpeningStatus(jobOpeningId,status);

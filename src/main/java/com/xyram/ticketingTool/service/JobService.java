@@ -53,7 +53,7 @@ public interface JobService {
 
 	ApiResponse editJobInterview(JobInterviews jobInterviewRequest, String interviewId);
 
-	ApiResponse changeJobApplicationStatus(String jobApplicationId, JobApplicationStatus jobStatus);
+	ApiResponse changeJobApplicationStatus(String jobApplicationId, JobApplicationStatus jobStatus, String comment);
 
 	ApiResponse editJobApplication(MultipartFile[] files, String jobAppObj, String jobAppId);
 

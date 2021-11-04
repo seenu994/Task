@@ -27,10 +27,12 @@ import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 import com.sun.mail.iap.Response;
+import com.xyram.ticketingTool.Repository.ApplicationCommentsRepository;
 import com.xyram.ticketingTool.Repository.JobApplicationRepository;
 import com.xyram.ticketingTool.Repository.JobInterviewRepository;
 import com.xyram.ticketingTool.Repository.JobRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
+import com.xyram.ticketingTool.entity.ApplicationComments;
 import com.xyram.ticketingTool.entity.Client;
 import com.xyram.ticketingTool.entity.CompanyWings;
 import com.xyram.ticketingTool.entity.Employee;
@@ -66,6 +68,9 @@ public class JobServiceImpl implements JobService{
 	
 	@Autowired
 	JobInterviewRepository jobInterviewRepository;
+	
+	@Autowired
+	ApplicationCommentsRepository appRepository;
 	
 	static ChannelSftp channelSftp = null;
 	static Session session = null;
@@ -472,16 +477,35 @@ public class JobServiceImpl implements JobService{
 	}
 
 	@Override
-	public ApiResponse changeJobApplicationStatus(String jobApplicationId, JobApplicationStatus jobStatus) {
+	public ApiResponse changeJobApplicationStatus(String jobApplicationId, JobApplicationStatus jobStatus,String comment) {
 		ApiResponse response = new ApiResponse(false);
 		JobApplication status= jobAppRepository.getApplicationById(jobApplicationId);
+		if(status != null && userDetail.getUserId() == status.getCreatedBy() || userDetail.getUserRole().equals(UserRole.HR_ADMIN)) {
 		if(status!= null) {
+			ApplicationComments appComments = new ApplicationComments();
+			appComments.setApplicationId(jobApplicationId);
+			if(comment != null) {
+				appComments.setGivenDescription(comment);
+			}
+			else
+			{
+				appComments.setAutoDescription("Status changed to"+" "+jobStatus+"by"+status.getCreatedBy());
+			}
+			appRepository.save(appComments);
 			status.setJobApplicationSatus(jobStatus);
 			jobAppRepository.save(status);
 			response.setSuccess(true);
 			response.setMessage("Job Application Status Updated Sucessfully");
 			response.setContent(null);
-		}else {
+		}
+		else {
+			response.setSuccess(false);
+			response.setMessage("Job application Id does Not Exist");
+		}
+		
+		}
+		else
+		{
 			response.setSuccess(false);
 			response.setMessage("Job application Id does Not Exist");
 		}

@@ -1267,7 +1267,7 @@ public class TicketServiceImpl implements TicketService {
 	public ApiResponse getTicketCount() {
 		ApiResponse response = new ApiResponse(false);
 
-		Map allTickets ;
+		List<Map> allTickets ;
 		
 			allTickets = ticketrepository.getTicketCount();
 		

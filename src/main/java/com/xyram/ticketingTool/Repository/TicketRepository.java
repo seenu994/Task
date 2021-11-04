@@ -151,10 +151,10 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 			+ "OR ('TICKETINGTOOL_ADMIN' = :roleId and a.status NOT IN ('COMPLETED', 'CANCELLED'))) ORDER BY a.createdAt DESC")
 	Page<Map> getAllTicketsByStatusMobile(Pageable pageable, @Param("createdBy") String createdBy, @Param("roleId")String roleId);
 
-	@Query(value="select ticket_status, count(ticket_status) from ticket_info "
+	@Query(value="select ticket_status as status, count(ticket_status) as count from ticket_info "
 			+ "where ticket_status in ('ASSIGNED', 'INPROGRESS', 'REOPEN')"
 			+ "group by ticket_status",nativeQuery = true)
-	Map getTicketCount();
+	List<Map> getTicketCount();
 	
 //	@Query("SELECT DISTINCT b FROM Branch b WHERE " + " (:name is null or lower(b.name) LIKE %:name%)"
 //			+ " AND (:contactno is null or lower(b.primaryContactNumber) LIKE %:contactno%)"
