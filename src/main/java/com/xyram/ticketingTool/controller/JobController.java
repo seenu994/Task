@@ -66,7 +66,7 @@ public class JobController {
 		return jobService.getAllJobs(jobOpeningObj);
 	}
 	
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllJobApplications",AuthConstants.ADMIN_BASEPATH + "/getAllJobApplications",AuthConstants.ADMIN_BASEPATH + "/getAllJobApplications",AuthConstants.ADMIN_BASEPATH + "/getAllJobApplications",AuthConstants.ADMIN_BASEPATH + "/getAllJobApplications" })
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllJobApplications",AuthConstants.HR_ADMIN_BASEPATH + "/getAllJobApplications",AuthConstants.DEVELOPER_BASEPATH+ "/getAllJobApplications", AuthConstants.HR_BASEPATH + "/getAllJobApplications",AuthConstants.INFRA_ADMIIN_BASEPATH + "/getAllJobApplications",AuthConstants.INFRA_USER_BASEPATH + "/getAllJobApplications", AuthConstants.JOB_VENDOR_BASEPATH + "/getAllJobApplications" })
 	public ApiResponse getAllJobApplications(@RequestBody JobApplicationSearchRequest jobAppSearch) {
 		logger.info("Get All Job");
 		return jobService.getAllJobApplications(jobAppSearch);
@@ -79,20 +79,20 @@ public class JobController {
 	}
 	
 	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/createJobApplication/{jobCode}",AuthConstants.HR_ADMIN_BASEPATH + "/createJobApplication/{jobCode}",AuthConstants.DEVELOPER_BASEPATH+ "/createJobApplication/{jobCode}", AuthConstants.HR_BASEPATH + "/createJobApplication/{jobCode}",AuthConstants.INFRA_ADMIIN_BASEPATH + "/createJobApplication/{jobCode}",AuthConstants.INFRA_USER_BASEPATH + "/createJobApplication/{jobCode}", AuthConstants.JOB_VENDOR_BASEPATH + "/createJobApplication/{jobCode}" })
-	public ApiResponse createJobApplication(@RequestPart(name = "files", required = false) MultipartFile[] files,@RequestBody String jobAppObj,
+	public ApiResponse createJobApplication(@RequestPart(name = "files", required = false) MultipartFile[] files,@RequestPart String jobAppObj,
 			@PathVariable String jobCode) {
 		logger.info("Creating Job Application");
 		return jobService.createJobApplication(files,jobAppObj,jobCode);
 	}
 	
 	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editJobApplication/{jobAppId}",AuthConstants.HR_ADMIN_BASEPATH + "/editJobApplication/{jobAppId}",AuthConstants.DEVELOPER_BASEPATH+ "/editJobApplication/{jobAppId}", AuthConstants.HR_BASEPATH + "/editJobApplication/{jobAppId}",AuthConstants.INFRA_ADMIIN_BASEPATH + "/editJobApplication/{jobAppId}",AuthConstants.INFRA_USER_BASEPATH + "/createJobApplication/{jobCode}", AuthConstants.JOB_VENDOR_BASEPATH + "/createJobApplication/{jobCode}"  })
-	public ApiResponse editJobApplication(@RequestPart(name = "files", required = false) MultipartFile[] files,@RequestBody String jobAppObj,
+	public ApiResponse editJobApplication(@RequestPart(name = "files", required = false) MultipartFile[] files,@RequestPart String jobAppObj,
 			@PathVariable String jobAppId) {
 		logger.info("Creating Job Application");
 		return jobService.editJobApplication(files,jobAppObj,jobAppId);
 	}
 	
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/scheduleJobInterview/{applicationId}" })
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/scheduleJobInterview/{applicationId}",AuthConstants.HR_ADMIN_BASEPATH + "/scheduleJobInterview/{applicationId}"  })
 	public ApiResponse scheduleJobInterview(@RequestBody JobInterviews schedule,
 			@PathVariable String applicationId) {
 		logger.info("Get All Job");
@@ -100,10 +100,7 @@ public class JobController {
 	}
 
 	
-	  @PutMapping(value=
-	  {AuthConstants.ADMIN_BASEPATH+"/editJobInterviewSchedule/{interviewId}",
-	  AuthConstants.HR_BASEPATH+"/editJobInterviewSchedule/{interviewId}",
-	  AuthConstants.HR_ADMIN_BASEPATH+"/editJobInterviewSchedule/{interviewId}"})
+	  @PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editJobInterviewSchedule/{interviewId}",AuthConstants.HR_ADMIN_BASEPATH + "/editJobInterviewSchedule/{interviewId}"  })
 	  public ApiResponse editJobInterviewSchedule(@RequestBody JobInterviews
 	  jobInterviewRequest,@PathVariable String interviewId) {
 		  logger.info("Edit Job Interview Schedule");
@@ -112,15 +109,14 @@ public class JobController {
 	 
 	
 	
-	  @PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/changeJobInterviewStatus/{jobInerviewId}/{status}",
-			  AuthConstants.HR_BASEPATH+"/changeJobInterviewStatus/{jobInerviewId}/{status}"})
+	  @PutMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/changeJobInterviewStatus/{jobInerviewId}/{status}"})
 	  public ApiResponse changeJobInterviewStatus(@PathVariable String jobInerviewId,@PathVariable JobInterviewStatus status) { 
 		  logger.info("Get JobOpening by id");
 	  return  jobService.changeJobInterviewStatus(jobInerviewId,status); 
 	  }
 	 
 	  
-	  @PutMapping(value= {AuthConstants.ADMIN_BASEPATH+"/changeJobApplicationStatus/{jobApplicationId}/{status}"})
+	  @PutMapping(value= {AuthConstants.ADMIN_BASEPATH+"/changeJobApplicationStatus/{jobApplicationId}/{status}",AuthConstants.HR_ADMIN_BASEPATH + "/changeJobApplicationStatus/{jobApplicationId}/{status}",AuthConstants.DEVELOPER_BASEPATH+ "/changeJobApplicationStatus/{jobApplicationId}/{status}", AuthConstants.HR_BASEPATH + "/changeJobApplicationStatus/{jobApplicationId}/{status}",AuthConstants.INFRA_ADMIIN_BASEPATH + "/changeJobApplicationStatus/{jobApplicationId}/{status}",AuthConstants.INFRA_USER_BASEPATH + "/changeJobApplicationStatus/{jobApplicationId}/{status}", AuthConstants.JOB_VENDOR_BASEPATH + "/changeJobApplicationStatus/{jobApplicationId}/{status}"})
 	  public ApiResponse changeJobApplicatonStatus(@PathVariable String jobApplicationId,@PathVariable JobApplicationStatus status,@RequestParam(required = false) String comment)
 	  {
 		  logger.info("change job application status");
@@ -128,7 +124,7 @@ public class JobController {
 	  }
 	
 	
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllJobInterviews" })
+	@PutMapping(value= {AuthConstants.ADMIN_BASEPATH+"/getAllJobInterviews",AuthConstants.HR_ADMIN_BASEPATH + "/getAllJobInterviews",AuthConstants.DEVELOPER_BASEPATH+ "/getAllJobInterviews", AuthConstants.HR_BASEPATH + "/getAllJobInterviews",AuthConstants.INFRA_ADMIIN_BASEPATH + "/getAllJobInterviews",AuthConstants.INFRA_USER_BASEPATH + "/getAllJobInterviews", AuthConstants.JOB_VENDOR_BASEPATH + "/getAllJobInterviews"})
 	public ApiResponse getAllJobInterviews(@RequestBody JobInterviewsRequest serachObj) {
 		logger.info("Get All Job");
 		return jobService.getAllJobInterviews(serachObj);
