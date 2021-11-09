@@ -5,73 +5,79 @@ import org.springframework.stereotype.Component;
 @Component
 public class PermissionConfig {
 	
+	public static final int EMPLOYEE_MODULE = 1;
+	public static final int  PROJECT_MODULE = 2;
+	public static final int  TICKET_MODULE = 3;
+	public static final int  JOBOPENING_MODULE = 4;
+	public static final int  JOBAPPLICATION_MODULE = 5;
+	public static final int  JOBINTERVIEW_MODULE = 6;
+	public static final int  JOBOFFER_MODULE = 7;
+	public static final int  JOBVENDOR_MODULE = 8;
 	
-	private Integer PROJ_ADD = 1;
-	private Integer PROJ_EDIT = 2;
-	private Integer PROJ_VIEW = 3;
-	private Integer PROJ_STATUS_EDIT = 4;
+	private int NOTHING = 0;
+	private int ADD = 2;
+	private int VIEW_SELF = 4;
+	private int VIEW_ALL = VIEW_SELF | 8;
+	private int EDIT_SELF = 16;
+	private int EDIT_ALL = (EDIT_SELF | 32);
+	private int DELETE_SELF = 64;
+	private int DELETE_ALL = (DELETE_SELF | 128);
+	private int STATUS_CHANGE = 256;
+	private int ALL = (ADD | VIEW_ALL | EDIT_ALL | DELETE_ALL | STATUS_CHANGE);
 	
-	private Integer EMP_ADD = 5;
-	private Integer EMP_EDIT = 6;
-	private Integer EMP_VIEW = 7;
-	private Integer EMP_STATUS_EDIT = 8;
+	private int EMPLOYEES_PERMISSION = NOTHING;
+	private int PROJECTS_PERMISSION = NOTHING;
+	private int TICKETS_PERMISSION = NOTHING;
+	private int JOBOPENINGS_PERMISSION = NOTHING;
+	private int JOBAPPLICATIONS_PERMISSION = NOTHING;
+	private int JOBINTERVIEWS_PERMISSION = NOTHING;
+	private int JOBOFFERS_PERMISSION = NOTHING;
+	private int JOBVENDORS_PERMISSION = NOTHING;
 	
-	private Integer TCKT_ADD = 9;
-	private Integer TCKT_EDIT = 10;
-	private Integer TCKT_VIEW = 11;
-	private Integer TCKT_STATUS_EDIT = 12;
-	
-	private Integer JBOP_ADD = 13;
-	private Integer JBOP_EDIT = 14;
-	private Integer JBOP_VIEW = 15;
-	private Integer JBOP_STATUS_EDIT = 16;
-	
-	private Integer JBAPLC_ADD = 17;
-	private Integer JBAPLC_EDIT = 18;
-	private Integer JBAPLC_VIEW = 19;
-	private Integer JBAPLC_STATUS_EDIT = 20;
-	
-	private Integer JBINTV_ADD = 21;
-	private Integer JBINTV_EDIT = 22;
-	private Integer JBINTV_VIEW = 23;
-	private Integer JBINTV_STATUS_EDIT = 24;
-	
-	private Integer JBOFR_ADD = 25;
-	private Integer JBOFR_EDIT = 26;
-	private Integer JBOFR_VIEW = 27;
-	private Integer JBOFR_STATUS_EDIT = 28;
-	
-	private Integer JBVND_ADD = 29;
-	private Integer JBVND_EDIT = 30;
-	private Integer JBVND_VIEW = 31;
-	private Integer JBVND_STATUS_EDIT = 32;
-	
-	private Integer access = 0;
 	
 	public PermissionConfig() {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public PermissionConfig(Integer access) {
-		// TODO Auto-generated constructor stub
-		this.access = access;
-	}
+//	public PermissionConfig(Integer access) {
+//		// TODO Auto-generated constructor stub
+//		this.access = access;
+//	}
+//	
+//	public void addPermissions(Integer permission[]) {
+//		// TODO Auto-generated constructor stub
+//		for(int i=0;i <permission.length;i++)
+//			this.access |= permission[i];
+//	}
+//	
+//	public void removePermissions(Integer permission[]) {
+//		// TODO Auto-generated constructor stub
+//		for(int i=0;i <permission.length;i++)
+//			this.access &= ~permission[i];
+//	}
 	
-	public void addPermissions(Integer permission[]) {
+	public Boolean hasPermission(int permission, int module) {
 		// TODO Auto-generated constructor stub
-		for(int i=0;i <permission.length;i++)
-			this.access = this.access | permission[i];
-	}
-	
-	public void removePermissions(Integer permission[]) {
-		// TODO Auto-generated constructor stub
-		for(int i=0;i <permission.length;i++)
-			this.access = this.access ^ permission[i];
-	}
-	
-	public Boolean hasPermission(Integer permission) {
-		// TODO Auto-generated constructor stub
-		return (this.access & permission) == permission;
+		switch(module) {
+			case EMPLOYEE_MODULE:
+				return (this.EMPLOYEES_PERMISSION & permission) == permission;
+			case PROJECT_MODULE:
+				return (this.PROJECTS_PERMISSION & permission) == permission;
+			case TICKET_MODULE:
+				return (this.TICKETS_PERMISSION & permission) == permission;
+			case JOBOPENING_MODULE:
+				return (this.JOBOPENINGS_PERMISSION & permission) == permission;
+			case JOBAPPLICATION_MODULE:
+				return (this.JOBAPPLICATIONS_PERMISSION & permission) == permission;
+			case JOBOFFER_MODULE:
+				return (this.JOBOFFERS_PERMISSION & permission) == permission;
+			case JOBINTERVIEW_MODULE:
+				return (this.JOBINTERVIEWS_PERMISSION & permission) == permission;
+			case JOBVENDOR_MODULE:
+				return (this.JOBVENDORS_PERMISSION & permission) == permission;
+		}
+		return false;
+		
 	}
 	
 	public Integer setDefaultPermissions(String role) {
@@ -79,83 +85,74 @@ public class PermissionConfig {
 		Integer access = 0;
 		switch(role) {
 			case "SUPER_ADMIN":
-				access =  
-				(
-					   PROJ_ADD | PROJ_EDIT | PROJ_VIEW | PROJ_STATUS_EDIT
-					 | EMP_ADD | EMP_EDIT | EMP_VIEW | EMP_STATUS_EDIT
-					 | TCKT_ADD | TCKT_EDIT | TCKT_VIEW | TCKT_STATUS_EDIT 
-					 | JBOP_ADD | JBOP_EDIT | JBOP_VIEW | JBOP_STATUS_EDIT
-					 | JBAPLC_ADD | JBAPLC_EDIT | JBAPLC_VIEW | JBAPLC_STATUS_EDIT
-					 | JBINTV_ADD | JBINTV_EDIT | JBINTV_VIEW | JBINTV_STATUS_EDIT 
-					 | JBOFR_ADD | JBOFR_EDIT | JBOFR_VIEW | JBOFR_STATUS_EDIT 
-					 | JBVND_ADD | JBVND_EDIT | JBVND_VIEW | JBVND_STATUS_EDIT   
-				);
+				this.EMPLOYEES_PERMISSION = ALL;
+				this.PROJECTS_PERMISSION = ALL;
+				this.TICKETS_PERMISSION = ALL;
+				this.JOBOPENINGS_PERMISSION = ALL;
+				this.JOBAPPLICATIONS_PERMISSION = ALL;
+				this.JOBINTERVIEWS_PERMISSION = ALL;
+				this.JOBOFFERS_PERMISSION = ALL;
+				this.JOBVENDORS_PERMISSION = ALL;
 			break;
 			case "TICKETINGTOOL_ADMIN":
-				access =  
-				(
-					   PROJ_ADD | PROJ_EDIT | PROJ_VIEW | PROJ_STATUS_EDIT
-					 | EMP_ADD | EMP_EDIT | EMP_VIEW | EMP_STATUS_EDIT
-					 | TCKT_ADD | TCKT_EDIT | TCKT_VIEW | TCKT_STATUS_EDIT 
-					 | JBOP_VIEW 
-					 | JBAPLC_ADD | JBAPLC_EDIT | JBAPLC_VIEW | JBAPLC_STATUS_EDIT
-					 | JBINTV_VIEW 
-				);
+				this.EMPLOYEES_PERMISSION = ALL;
+				this.PROJECTS_PERMISSION = ALL;
+				this.TICKETS_PERMISSION = ALL;
+				this.JOBOPENINGS_PERMISSION = VIEW_ALL;
+				this.JOBAPPLICATIONS_PERMISSION = (ADD | VIEW_SELF | EDIT_SELF | DELETE_SELF);
+				this.JOBINTERVIEWS_PERMISSION = (VIEW_SELF | STATUS_CHANGE);
+				this.JOBOFFERS_PERMISSION = NOTHING;
+				this.JOBVENDORS_PERMISSION = NOTHING;
 			break;
 			case "INFRA":
-				access =  
-				(
-					   PROJ_VIEW
-					 | EMP_VIEW
-					 | TCKT_ADD | TCKT_EDIT | TCKT_VIEW | TCKT_STATUS_EDIT 
-					 | JBOP_VIEW
-					 | JBAPLC_ADD | JBAPLC_EDIT | JBAPLC_VIEW | JBAPLC_STATUS_EDIT
-					 | JBINTV_VIEW
-				);
+				this.EMPLOYEES_PERMISSION = VIEW_ALL;
+				this.PROJECTS_PERMISSION = VIEW_ALL;
+				this.TICKETS_PERMISSION = (VIEW_SELF | STATUS_CHANGE);
+				this.JOBOPENINGS_PERMISSION = VIEW_ALL;
+				this.JOBAPPLICATIONS_PERMISSION = (ADD | VIEW_SELF | EDIT_SELF | DELETE_SELF);
+				this.JOBINTERVIEWS_PERMISSION = (VIEW_SELF | STATUS_CHANGE);
+				this.JOBOFFERS_PERMISSION = NOTHING;
+				this.JOBVENDORS_PERMISSION = NOTHING;
 			break;
 			case "HR_ADMIN":
-				access =  
-				(
-					   PROJ_VIEW
-					 | EMP_VIEW
-					 | TCKT_ADD | TCKT_EDIT | TCKT_VIEW | TCKT_STATUS_EDIT 
-					 | JBOP_ADD | JBOP_EDIT | JBOP_VIEW | JBOP_STATUS_EDIT
-					 | JBAPLC_ADD | JBAPLC_EDIT | JBAPLC_VIEW | JBAPLC_STATUS_EDIT
-					 | JBINTV_ADD | JBINTV_EDIT | JBINTV_VIEW | JBINTV_STATUS_EDIT 
-					 | JBOFR_ADD | JBOFR_EDIT | JBOFR_VIEW | JBOFR_STATUS_EDIT 
-					 | JBVND_ADD | JBVND_EDIT | JBVND_VIEW | JBVND_STATUS_EDIT
-				);
+				this.EMPLOYEES_PERMISSION = VIEW_ALL;
+				this.PROJECTS_PERMISSION = VIEW_ALL;
+				this.TICKETS_PERMISSION = (ADD | VIEW_SELF | EDIT_SELF | DELETE_SELF | STATUS_CHANGE);
+				this.JOBOPENINGS_PERMISSION = ALL;
+				this.JOBAPPLICATIONS_PERMISSION = (ADD | VIEW_ALL | EDIT_SELF | DELETE_SELF | STATUS_CHANGE);
+				this.JOBINTERVIEWS_PERMISSION = ALL;
+				this.JOBOFFERS_PERMISSION = ALL;
+				this.JOBVENDORS_PERMISSION = ALL;
 			break;
 			case "HR":
-				access =  
-				(
-					   PROJ_VIEW
-					 | EMP_VIEW
-					 | TCKT_ADD | TCKT_EDIT | TCKT_VIEW | TCKT_STATUS_EDIT 
-					 | JBOP_VIEW
-					 | JBAPLC_ADD | JBAPLC_EDIT | JBAPLC_VIEW | JBAPLC_STATUS_EDIT
-					 | JBINTV_VIEW | JBINTV_EDIT | JBINTV_VIEW 
-				);
+				this.EMPLOYEES_PERMISSION = VIEW_ALL;
+				this.PROJECTS_PERMISSION = VIEW_ALL;
+				this.TICKETS_PERMISSION = (ADD | VIEW_SELF | EDIT_SELF | DELETE_SELF | STATUS_CHANGE);
+				this.JOBOPENINGS_PERMISSION = VIEW_ALL;
+				this.JOBAPPLICATIONS_PERMISSION = (ADD | VIEW_ALL | EDIT_SELF | DELETE_SELF | STATUS_CHANGE);
+				this.JOBINTERVIEWS_PERMISSION = (ADD | VIEW_ALL | EDIT_SELF | DELETE_SELF | STATUS_CHANGE);
+				this.JOBOFFERS_PERMISSION = VIEW_ALL;
+				this.JOBVENDORS_PERMISSION = VIEW_ALL;
 			break;
 			case "DEVELOPER":
-				access =  
-				(
-					   PROJ_VIEW
-					 | EMP_VIEW
-					 | TCKT_ADD | TCKT_EDIT | TCKT_VIEW | TCKT_STATUS_EDIT 
-					 | JBOP_VIEW
-					 | JBAPLC_ADD | JBAPLC_EDIT | JBAPLC_VIEW | JBAPLC_STATUS_EDIT
-					 | JBINTV_VIEW | JBINTV_STATUS_EDIT   
-				);
+				this.EMPLOYEES_PERMISSION = VIEW_ALL;
+				this.PROJECTS_PERMISSION = VIEW_SELF;
+				this.TICKETS_PERMISSION = (ADD | VIEW_SELF | EDIT_SELF | DELETE_SELF | STATUS_CHANGE);
+				this.JOBOPENINGS_PERMISSION = VIEW_ALL;
+				this.JOBAPPLICATIONS_PERMISSION = (ADD | VIEW_ALL | EDIT_SELF | DELETE_SELF | STATUS_CHANGE);
+				this.JOBINTERVIEWS_PERMISSION = (VIEW_SELF | EDIT_SELF | DELETE_SELF | STATUS_CHANGE);
+				this.JOBOFFERS_PERMISSION = NOTHING;
+				this.JOBVENDORS_PERMISSION = NOTHING;
 			break;
 			case "JOB_VENDOR":
-				access =  
-				(
-					   JBOP_VIEW
-					 | JBAPLC_ADD | JBAPLC_EDIT | JBAPLC_VIEW
-					 | JBINTV_VIEW
-					 | JBOFR_VIEW
-				);
+				this.EMPLOYEES_PERMISSION = NOTHING;
+				this.PROJECTS_PERMISSION = NOTHING;
+				this.TICKETS_PERMISSION = NOTHING;
+				this.JOBOPENINGS_PERMISSION = VIEW_SELF;
+				this.JOBAPPLICATIONS_PERMISSION = (ADD | VIEW_SELF | EDIT_SELF | DELETE_SELF | STATUS_CHANGE);
+				this.JOBINTERVIEWS_PERMISSION = VIEW_SELF;
+				this.JOBOFFERS_PERMISSION = VIEW_SELF;
+				this.JOBVENDORS_PERMISSION = NOTHING;
 			break;
 		}
 		
