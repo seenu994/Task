@@ -268,7 +268,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 	@Override
 	public ApiResponse editEmployee(String employeeId, Employee employeeRequest) {
-		ApiResponse response = validateEmployee(employeeRequest);
+		ApiResponse response = new ApiResponse(false);
 			Employee employee = employeeRepository.getById(employeeId);
 			if (employee != null) {
 				employee.setFirstName(employeeRequest.getFirstName());

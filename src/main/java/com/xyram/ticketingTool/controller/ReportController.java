@@ -47,7 +47,7 @@ public class ReportController {
 	  }
 	  
 	  
-	  @GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getTicketDataReport",
+	  @GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getTicketDataReport",AuthConstants.INFRA_ADMIIN_BASEPATH + "/getTicketDataReport",
 			  AuthConstants.INFRA_USER_BASEPATH +"/getTicketDataReport",
 			  AuthConstants.DEVELOPER_BASEPATH + "/getTicketDataReport" }) 
 			  public  Map getTicketDataByProjectNameAndStatus(@RequestParam Map<String, Object> filter,Pageable pageable) {

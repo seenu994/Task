@@ -50,7 +50,7 @@ class EmployeeController {
 	@Autowired
 	UserRepository userRepository;
 
-	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/createEmployee",AuthConstants.HR_ADMIN_BASEPATH + "/createEmployee" })
+	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/createEmployee",AuthConstants.HR_ADMIN_BASEPATH + "/createEmployee",AuthConstants.INFRA_ADMIIN_BASEPATH + "/createEmployee" })
 	public ApiResponse addemployee(@RequestBody Employee employee) {
 		logger.info("Received request to add Employee");
 		return employeeService.addemployee(employee);
@@ -63,7 +63,7 @@ class EmployeeController {
 	}
 
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllEmployee",
-			AuthConstants.INFRA_USER_BASEPATH + "/getAllEmployee",AuthConstants.DEVELOPER_BASEPATH + "/getAllEmployee" })
+			AuthConstants.INFRA_USER_BASEPATH + "/getAllEmployee",AuthConstants.DEVELOPER_BASEPATH + "/getAllEmployee",AuthConstants.INFRA_ADMIIN_BASEPATH + "/getAllEmployee" })
 	public ApiResponse getAllEmployee(Pageable pageable) {
 		logger.info("indide CatagoryController :: getAllCatagory");
 		return employeeService.getAllEmployee(pageable);
@@ -75,40 +75,40 @@ class EmployeeController {
 		return employeeService.updateProfileImage(file,employeeId);
 	}
 	
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editEmployee/{employeeId}",
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editEmployee/{employeeId}",AuthConstants.INFRA_ADMIIN_BASEPATH + "/editEmployee/{employeeId}",
 			AuthConstants.DEVELOPER_BASEPATH + "/editEmployee/{employeeId}" })
 	public ApiResponse editEmployee(@RequestBody Employee employeeRequest, @PathVariable String employeeId) {
 		logger.info("indide ProductController :: getAllemployee");
 		return employeeService.editEmployee(employeeId, employeeRequest);
 	}
 	
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getEmployee/{employeeId}",
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getEmployee/{employeeId}",AuthConstants.INFRA_ADMIIN_BASEPATH + "/getEmployee/{employeeId}",
 			AuthConstants.DEVELOPER_BASEPATH + "/getEmployee/{employeeId}" })
 	public ApiResponse getEmployeeDetails(@PathVariable String employeeId) {
 		logger.info("indide ProductController :: getAllemployee");
 		return employeeService.getEmployeeDetails(employeeId);
 	}
 
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/updateEmployeeStatus/{employeeID}/status/{userstatus}" })
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/updateEmployeeStatus/{employeeID}/status/{userstatus}",AuthConstants.INFRA_ADMIIN_BASEPATH + "/updateEmployeeStatus/{employeeID}/status/{userstatus}" })
 	public ApiResponse updateEmployeeStatus(@PathVariable String employeeID, @PathVariable UserStatus userstatus) {
 		logger.info("Received request to change category status to: " + userstatus + "for employeeId: " + employeeID);
 		return employeeService.updateEmployeeStatus(employeeID, userstatus);
 	}
 	
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllEmpByProject/{projectid}/clientId/{clientid}",AuthConstants.DEVELOPER_BASEPATH + "/getAllEmpByProject/{projectid}/clientId/{clientid}",AuthConstants.INFRA_USER_BASEPATH + "/getAllEmpByProject/{projectid}/clientId/{clientid}" })
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllEmpByProject/{projectid}/clientId/{clientid}",AuthConstants.DEVELOPER_BASEPATH + "/getAllEmpByProject/{projectid}/clientId/{clientid}",AuthConstants.INFRA_USER_BASEPATH + "/getAllEmpByProject/{projectid}/clientId/{clientid}",AuthConstants.INFRA_ADMIIN_BASEPATH + "/getAllEmpByProject/{projectid}/clientId/{clientid}" })
 	public ApiResponse getAllEmpByProject(@PathVariable String projectid, @PathVariable String clientid) {
 		logger.info("inside EmployeeController :: getAllEmpByProject ");
 		return employeeService.getAllEmpByProject(projectid, clientid);
 	} 
 	
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/searchEmployeeNotAssignedToProject/{projectid}/clientId/{clientid}/searchString/{searchString}" })
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/searchEmployeeNotAssignedToProject/{projectid}/clientId/{clientid}/searchString/{searchString}", AuthConstants.INFRA_ADMIIN_BASEPATH + "/searchEmployeeNotAssignedToProject/{projectid}/clientId/{clientid}/searchString/{searchString}" })
 	public ApiResponse searchEmployeeNotAssignedToProject(@PathVariable String projectid, @PathVariable String clientid, @PathVariable String searchString) {
 		logger.info("inside EmployeeController :: getAllEmpByProject ");
 		return employeeService.searchEmployeeNotAssignedToProject(projectid, clientid, searchString);
 	}
 	
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/searchInfraUser/{searchString}",
-			AuthConstants.INFRA_USER_BASEPATH + "/searchInfraUser/{searchString}" })
+			AuthConstants.INFRA_USER_BASEPATH + "/searchInfraUser/{searchString}",AuthConstants.INFRA_ADMIIN_BASEPATH + "/searchInfraUser/{searchString}" })
 	public ApiResponse searchInfraUser(@PathVariable String searchString) {
 		logger.info("inside EmployeeController :: searchInfraUser ");
 		return employeeService.searchInfraUser(searchString);
@@ -116,32 +116,32 @@ class EmployeeController {
 	
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/searchEmployee/{searchString}",
 			AuthConstants.INFRA_USER_BASEPATH + "/searchEmployee/{searchString}",
-			AuthConstants.DEVELOPER_BASEPATH + "/searchEmployee/{searchString}"})
+			AuthConstants.DEVELOPER_BASEPATH + "/searchEmployee/{searchString}",AuthConstants.INFRA_ADMIIN_BASEPATH + "/searchEmployee/{searchString}"})
 	public ApiResponse searchEmployee(@PathVariable String searchString) {
 		logger.info("inside EmployeeController :: searchEmployee ");
 		return employeeService.searchEmployee(searchString);
 	}
 	
-	@GetMapping(value = { AuthConstants.INFRA_USER_BASEPATH + "/searchInfraUsersForInfraUser/{searchString}" })
+	@GetMapping(value = { AuthConstants.INFRA_USER_BASEPATH + "/searchInfraUsersForInfraUser/{searchString}",AuthConstants.INFRA_ADMIIN_BASEPATH + "/searchInfraUsersForInfraUser/{searchString}"  })
 	public ApiResponse searchInfraUsersForInfraUser(@PathVariable String searchString) {
 		logger.info("inside EmployeeController :: searchInfraUsersForInfraUser ");
 		return employeeService.searchInfraUsersForInfraUser(searchString);
 	}
  
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllInfraUser",
-			AuthConstants.INFRA_USER_BASEPATH + "/getAllInfraUser" })
+			AuthConstants.INFRA_USER_BASEPATH + "/getAllInfraUser",AuthConstants.INFRA_ADMIIN_BASEPATH + "/getAllInfraUser" })
 	public ApiResponse getAllInfraUser() {
 		logger.info("indside CatagoryController :: getAllInfraUser");
 		return employeeService.getAllInfraUser();
 	}
 	
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllPermissions",AuthConstants.HR_ADMIN_BASEPATH + "getAllPermissions",AuthConstants.HR_BASEPATH + "getAllPermissions",AuthConstants.DEVELOPER_BASEPATH + "getAllPermissions",AuthConstants.JOB_VENDOR_BASEPATH + "getAllPermissions" })
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllPermissions",AuthConstants.HR_ADMIN_BASEPATH + "/getAllPermissions",AuthConstants.HR_BASEPATH + "/getAllPermissions",AuthConstants.DEVELOPER_BASEPATH + "/getAllPermissions",AuthConstants.JOB_VENDOR_BASEPATH + "/getAllPermissions",AuthConstants.INFRA_USER_BASEPATH + "/getAllPermissions" })
 	public ApiResponse getAllPermissions() {
 		logger.info("indside :: getAllPermissions");
 		return employeeService.getAllPermissions();
 	}
 	
-	@PutMapping(value = { AuthConstants.INFRA_USER_BASEPATH +"/updateProfile",AuthConstants.DEVELOPER_BASEPATH +"/updateProfile"})
+	@PutMapping(value = { AuthConstants.INFRA_USER_BASEPATH +"/updateProfile",AuthConstants.DEVELOPER_BASEPATH +"/updateProfile",AuthConstants.INFRA_ADMIIN_BASEPATH +"/updateProfile"})
 	public ApiResponse editEmployee(@RequestBody Map employeeRequest) {
 		logger.info("indide ProductController :: getAllemployee");
 		return employeeService.updateEmployee( employeeRequest);

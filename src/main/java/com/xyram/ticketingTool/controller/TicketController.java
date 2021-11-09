@@ -51,7 +51,7 @@ class TicketController {
 //		return ticketService.getAllTicketsByStatus(statusId);
 //	}
 
-	@PostMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/createTickets",
+	@PostMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/createTickets",AuthConstants.INFRA_ADMIIN_BASEPATH + "/createTickets",
 			AuthConstants.INFRA_USER_BASEPATH + "/createTickets" })
 	public ApiResponse createTickets(@RequestPart(name = "files", required = false) MultipartFile[] files,
 			@RequestPart String ticketRequest) {
@@ -59,7 +59,7 @@ class TicketController {
 		return ticketService.createTickets(files, ticketRequest);
 	}
 
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/cancelTicket/{ticketId}",
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/cancelTicket/{ticketId}",AuthConstants.INFRA_ADMIIN_BASEPATH + "/cancelTicket/{ticketId}",
 			AuthConstants.DEVELOPER_BASEPATH + "/cancelTicket/{ticketId}",
 			AuthConstants.INFRA_USER_BASEPATH + "/cancelTicket/{ticketId}" })
 	public ApiResponse cancelTicket(@PathVariable String ticketId) {
@@ -69,21 +69,21 @@ class TicketController {
 
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/resolveTicket/{ticketId}",
 			AuthConstants.DEVELOPER_BASEPATH + "/resolveTicket/{ticketId}",
-			AuthConstants.INFRA_USER_BASEPATH + "/resolveTicket/{ticketId}" })
+			AuthConstants.INFRA_USER_BASEPATH + "/resolveTicket/{ticketId}",AuthConstants.INFRA_ADMIIN_BASEPATH + "/resolveTicket/{ticketId}" })
 	public ApiResponse resolveTicket(@PathVariable String ticketId) {
 		logger.info("Received request to update ticket for ticketId: " + ticketId);
 		return ticketService.resolveTicket(ticketId);
 	}
 
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/onHoldTicket/{ticketId}",
-			AuthConstants.INFRA_USER_BASEPATH + "/onHoldTicket/{ticketId} " })
+			AuthConstants.INFRA_USER_BASEPATH + "/onHoldTicket/{ticketId} ",AuthConstants.INFRA_ADMIIN_BASEPATH + "/onHoldTicket/{ticketId} " })
 	public ApiResponse onHoldTicket(@PathVariable String ticketId) {
 		logger.info("Received request to update ticket status for ticketId: " + ticketId);
 		return ticketService.onHoldTicket(ticketId);
 	}
 
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editTicket/{ticketId}",
-			AuthConstants.DEVELOPER_BASEPATH + "/editTicket/{ticketId}" })
+			AuthConstants.DEVELOPER_BASEPATH + "/editTicket/{ticketId}",AuthConstants.INFRA_ADMIIN_BASEPATH + "/editTicket/{ticketId}" })
 	public ApiResponse editTicket(@RequestPart(name = "files", required = false) MultipartFile[] files,@PathVariable String ticketId, @RequestPart String ticketRequest) {
 //		logger.info("Recive request to edit ticket by id:" + ticketRequest.getId());
 		return ticketService.editTicket(files,ticketId, ticketRequest);
@@ -91,7 +91,7 @@ class TicketController {
 	}
 
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/reopenTicket/{ticketId}",
-			AuthConstants.DEVELOPER_BASEPATH + "/reopenTicket/{ticketId}" })
+			AuthConstants.DEVELOPER_BASEPATH + "/reopenTicket/{ticketId}",AuthConstants.INFRA_ADMIIN_BASEPATH + "/reopenTicket/{ticketId}" })
 	public ApiResponse reopenTicket(@PathVariable String ticketId, @RequestBody Comments commentObj) {
 //		logger.info("Recive request to reopened ticket by id:" + ticketRequest.getId());
 		commentObj.setCreatedAt(new Date());
@@ -100,7 +100,7 @@ class TicketController {
 
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/addComment",
 			AuthConstants.DEVELOPER_BASEPATH + "/addComment", 
-			AuthConstants.INFRA_USER_BASEPATH + "/addComment" })
+			AuthConstants.INFRA_USER_BASEPATH + "/addComment",AuthConstants.INFRA_ADMIIN_BASEPATH + "/addComment" })
 	public ApiResponse addComment(@RequestBody Comments commentObj) {
 		long millis=System.currentTimeMillis();  
 		java.util.Date date=new java.util.Date(millis);   
@@ -110,7 +110,7 @@ class TicketController {
 
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editComment",
 			AuthConstants.DEVELOPER_BASEPATH + "/editComment", 
-			AuthConstants.INFRA_USER_BASEPATH + "/editComment" })
+			AuthConstants.INFRA_USER_BASEPATH + "/editComment",AuthConstants.INFRA_ADMIIN_BASEPATH + "/editComment" })
 	public ApiResponse editComment(@RequestBody Comments commentObj) {
 		long millis=System.currentTimeMillis();  
 		java.util.Date date=new java.util.Date(millis);   
@@ -120,7 +120,7 @@ class TicketController {
 
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/deleteComment",
 			AuthConstants.DEVELOPER_BASEPATH + "/deleteComment", 
-			AuthConstants.INFRA_USER_BASEPATH + "/deleteComment" })
+			AuthConstants.INFRA_USER_BASEPATH + "/deleteComment",AuthConstants.INFRA_ADMIIN_BASEPATH + "/deleteComment" })
 	public ApiResponse deleteComment(@RequestBody Comments commentObj) {
 		long millis=System.currentTimeMillis();  
 		java.util.Date date=new java.util.Date(millis);   
@@ -128,14 +128,14 @@ class TicketController {
 		return ticketService.deleteComment(commentObj);
 	}
 
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllTicket",
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllTicket",AuthConstants.INFRA_ADMIIN_BASEPATH + "/getAllTicket",
 			AuthConstants.INFRA_USER_BASEPATH + "/getAllTicket" ,AuthConstants.DEVELOPER_BASEPATH + "/getAllTicket"})
 	public ApiResponse getAllTicket(Pageable pageable) {
 		logger.info("inside Ticket controller :: getAllTicket");
 		return ticketService.getAllTicket(pageable);
 	}
 	
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/searchTicket/{searchString}",
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/searchTicket/{searchString}",AuthConstants.INFRA_ADMIIN_BASEPATH+ "/searchTicket/{searchString}",
 			AuthConstants.INFRA_USER_BASEPATH + "/searchTicket/{searchString}" ,
 			AuthConstants.DEVELOPER_BASEPATH + "/searchTicket/{searchString}"})
 	public ApiResponse searchTicket(@PathVariable String searchString) {
@@ -143,7 +143,7 @@ class TicketController {
 		return ticketService.searchTicket(searchString);
 	}
 
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllTktByStatus/{status}",
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllTktByStatus/{status}",AuthConstants.INFRA_ADMIIN_BASEPATH + "/getAllTktByStatus/{status}",
 			AuthConstants.INFRA_USER_BASEPATH + "/getAllTktByStatus/{status}",
 			AuthConstants.DEVELOPER_BASEPATH + "/getAllTktByStatus/{status}" })
 	public ApiResponse getAllTicketsByStatus(@PathVariable TicketStatus status,Pageable pageable) {
@@ -151,7 +151,7 @@ class TicketController {
 		return ticketService.getAllTicketsByStatus(status,pageable);
 	}
 	
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllTktByStatus",
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllTktByStatus",AuthConstants.INFRA_ADMIIN_BASEPATH + "/getAllTktByStatus",
 			AuthConstants.INFRA_USER_BASEPATH + "/getAllTktByStatus",
 			AuthConstants.DEVELOPER_BASEPATH + "/getAllTktByStatus" })
 	public ApiResponse getAllTicketsByStatusMobile(Pageable pageable) {
@@ -161,7 +161,7 @@ class TicketController {
 
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllCompletedTickets",
 			AuthConstants.INFRA_USER_BASEPATH + "/getAllCompletedTickets",
-			AuthConstants.DEVELOPER_BASEPATH + "/getAllCompletedTickets" })
+			AuthConstants.DEVELOPER_BASEPATH + "/getAllCompletedTickets",AuthConstants.INFRA_ADMIIN_BASEPATH + "/getAllCompletedTickets" })
 	public ApiResponse getAllCompletedTickets(Pageable pageable) {
 		logger.info("inside Ticket controller :: getAllTicket");
 		return ticketService.getAllCompletedTickets(pageable);
@@ -169,13 +169,13 @@ class TicketController {
 
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/inprogressTicket/{ticketId}",
 			AuthConstants.DEVELOPER_BASEPATH + "/inprogressTicket/{ticketId}",
-			AuthConstants.INFRA_USER_BASEPATH + "/inprogressTicket/{ticketId}" })
+			AuthConstants.INFRA_USER_BASEPATH + "/inprogressTicket/{ticketId}",AuthConstants.INFRA_ADMIIN_BASEPATH + "/inprogressTicket/{ticketId}" })
 	public ApiResponse inprogressTicket(@PathVariable String ticketId) {
 		logger.info("Received request to update ticket for ticketId: " + ticketId);
 		return ticketService.inprogressTicket(ticketId);
 	}
 
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getTktDetailsById/{ticketId}",
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getTktDetailsById/{ticketId}",AuthConstants.INFRA_ADMIIN_BASEPATH + "/getTktDetailsById/{ticketId}",
 			AuthConstants.INFRA_USER_BASEPATH + "/getTktDetailsById/{ticketId}",
 			AuthConstants.DEVELOPER_BASEPATH + "/getTktDetailsById/{ticketId}" })
 	public ApiResponse getTktDetailsById(@PathVariable String ticketId) {
@@ -185,7 +185,7 @@ class TicketController {
 		
 		@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getTicketSearchById/{ticketId}",
 				AuthConstants.INFRA_USER_BASEPATH + "/getTicketSearchById/{ticketId}",
-			AuthConstants.DEVELOPER_BASEPATH + "/getTicketSearchById/{ticketId}" })
+			AuthConstants.DEVELOPER_BASEPATH + "/getTicketSearchById/{ticketId}",AuthConstants.INFRA_ADMIIN_BASEPATH + "/getTicketSearchById/{ticketId}"  })
 	public ApiResponse getTicketSearchById(@PathVariable String ticketId) {
 		logger.info("inside Ticket controller :: getTicketSearchById");
 		return ticketService.getTicketSearchById(ticketId);
@@ -194,7 +194,7 @@ class TicketController {
 		
 		@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getTickets/{ticketId}",
 				AuthConstants.INFRA_USER_BASEPATH + "/getTickets/{ticketId}",
-			AuthConstants.DEVELOPER_BASEPATH + "/getTickets/{ticketId}" })
+			AuthConstants.DEVELOPER_BASEPATH + "/getTickets/{ticketId}",AuthConstants.INFRA_ADMIIN_BASEPATH + "/getTickets/{ticketId}" })
 		public Optional<Ticket> getTicketDetailsById(@PathVariable String ticketId) {
 			logger.info(" inside Ticket controller :: get ticket details by Id");
 			return ticketService.findById(ticketId);
@@ -202,7 +202,7 @@ class TicketController {
 		
 		@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllTickets",
 				AuthConstants.INFRA_USER_BASEPATH + "/getAllTickets",
-			AuthConstants.DEVELOPER_BASEPATH + "/getAllTickets" })
+			AuthConstants.DEVELOPER_BASEPATH + "/getAllTickets",AuthConstants.INFRA_ADMIIN_BASEPATH + "/getAllTickets"  })
 		public List<Ticket> getAllTicketDetails() {
 			logger.info(" inside Ticket controller :: get ticket details of all");
 			return ticketService.findAll();
@@ -221,7 +221,7 @@ class TicketController {
 	
 	  @GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllTktDetails",
 	  AuthConstants.INFRA_USER_BASEPATH +"/getAllTktDetails",
-	  AuthConstants.DEVELOPER_BASEPATH + "/getAllTktDetails" }) 
+	  AuthConstants.DEVELOPER_BASEPATH + "/getAllTktDetails",AuthConstants.INFRA_ADMIIN_BASEPATH + "/getAllTktDetails" }) 
 	  public ApiResponse getAllTicketDetails(Pageable pageable) {
 	  logger.info("inside Report controller :: getAllTicket ");
 	  return ticketService.getAllTicketsDetails(pageable); }
@@ -230,7 +230,7 @@ class TicketController {
 		   
 		  @GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getTicketTotalCount",
 				  AuthConstants.INFRA_USER_BASEPATH +"/getTicketTotalCount",
-				  AuthConstants.DEVELOPER_BASEPATH + "/getTicketTotalCount" }) 
+				  AuthConstants.DEVELOPER_BASEPATH + "/getTicketTotalCount",AuthConstants.INFRA_ADMIIN_BASEPATH + "/getTicketTotalCount" }) 
 				  public  ApiResponse getTicketTotalCount(Pageable pageable) {
 						  logger.info("inside ticket controller :: getAllTicket By total count"); 
 						  return ticketService.getTicketStatusCountWithProject(pageable);
@@ -244,7 +244,7 @@ class TicketController {
 		//projectName/status/
 		  @GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getTicketDetails",
 				  AuthConstants.INFRA_USER_BASEPATH +"/getTicketDetails",
-				  AuthConstants.DEVELOPER_BASEPATH + "/getTicketDetails" }) 
+				  AuthConstants.DEVELOPER_BASEPATH + "/getTicketDetails", AuthConstants.INFRA_ADMIIN_BASEPATH + "/getTicketDetails" }) 
 				  public  ApiResponse getTicketDataByProjectNameAndStatus(@RequestParam Map<String, Object> filter,Pageable pageable) {
 						  logger.info("inside ticket controller :: getAllTicket By projectName and status function"); 
 						  
@@ -253,7 +253,7 @@ class TicketController {
 
 		  @GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getTicketCount",
 				  AuthConstants.INFRA_USER_BASEPATH +"/getTicketCount",
-				  AuthConstants.DEVELOPER_BASEPATH + "/getTicketCount" }) 
+				  AuthConstants.DEVELOPER_BASEPATH + "/getTicketCount",AuthConstants.INFRA_ADMIIN_BASEPATH + "/getTicketCount" }) 
 				  public  ApiResponse getTicketCount() {
 						  logger.info("inside ticket controller :: getAllTicket By projectName and status function"); 
 						  
