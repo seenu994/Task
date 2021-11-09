@@ -524,7 +524,7 @@ public class JobServiceImpl implements JobService{
 	public ApiResponse editJobApplication(MultipartFile[] files, String jobAppObj, String jobAppId) {
 		ApiResponse response = new ApiResponse(false);
 		JobApplication jobApp = jobAppRepository.getApplicationById(jobAppId);
-		if(jobApp != null && userDetail.getUserId() == jobApp.getCreatedBy() || userDetail.getUserRole().equals(UserRole.HR_ADMIN)) {
+		if(jobApp != null && userDetail.getUserId().equals(jobApp.getCreatedBy()) || userDetail.getUserRole().equals(UserRole.HR_ADMIN)) {
 			ObjectMapper objectMapper = new ObjectMapper();
 			JobApplication newJobAppObj = null;
 			try {
