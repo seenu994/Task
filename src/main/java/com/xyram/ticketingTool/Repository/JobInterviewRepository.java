@@ -25,4 +25,11 @@ public interface JobInterviewRepository extends CrudRepository<JobInterviews,Lon
 	@Query(value = "SELECT * from ticketdbtool.job_interviews jo where jo.interview_id = :interviewId  ", nativeQuery = true)
 	JobInterviews getById(String interviewId);
 
+	@Query(value = "SELECT jo from JobInterviews jo  ")
+	List<JobInterviews> getList();
+	
+
+
+	
+
 }

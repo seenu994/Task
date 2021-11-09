@@ -1,5 +1,7 @@
 package com.xyram.ticketingTool.ticket.Contoller;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +35,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.xyram.ticketingTool.Repository.UserPermissionRepository;
 import com.xyram.ticketingTool.admin.model.User;
+import com.xyram.ticketingTool.entity.UserPermissions;
 import com.xyram.ticketingTool.enumType.UserRole;
 import com.xyram.ticketingTool.service.UserService;
 import com.xyram.ticketingTool.ticket.Model.JwtRequest;
@@ -59,6 +63,9 @@ public class JwtAuthenticateController {
 	@Autowired
 	private UserService userService;
 	
+	@Autowired
+	UserPermissionRepository permissionRepo;
+	
  
 	@RequestMapping(value = "/authenticate", method = RequestMethod.POST)
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
@@ -68,14 +75,14 @@ public class JwtAuthenticateController {
 		userService.updateUID(authenticationRequest.getUsername(), authenticationRequest.getUid());
 		
 		
-		
 		authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
 		final User userDetails = userDetailsService.getAppUser(authenticationRequest.getUsername().toLowerCase());
 		final String token = jwtTokenUtil.generateToken(userDetails);
 		
 		User appUser = userDetailsService.getAppUser(authenticationRequest.getUsername());
+		List<UserPermissions> permissions = permissionRepo.getByUserId(userDetails.getId());
 		JwtResponse response = new JwtResponse(token, "sessionId",
-				AuthUtil.getBaseResourcePath(userDetails.getUserRole().toString()),userDetails);
+				AuthUtil.getBaseResourcePath(userDetails.getUserRole().toString()),userDetails,permissions);
 
 		return ResponseEntity.ok(response);
 	}

@@ -14,16 +14,16 @@ public class PermissionConfig {
 	public static final int  JOBOFFER_MODULE = 7;
 	public static final int  JOBVENDOR_MODULE = 8;
 	
-	private int NOTHING = 0;
+	private int NOTHING = 1;
 	private int ADD = 2;
 	private int VIEW_SELF = 4;
-	private int VIEW_ALL = VIEW_SELF | 8;
+	private int VIEW_ALL = 8;
 	private int EDIT_SELF = 16;
-	private int EDIT_ALL = (EDIT_SELF | 32);
+	private int EDIT_ALL = 32;
 	private int DELETE_SELF = 64;
-	private int DELETE_ALL = (DELETE_SELF | 128);
+	private int DELETE_ALL = 128;
 	private int STATUS_CHANGE = 256;
-	private int ALL = (ADD | VIEW_ALL | EDIT_ALL | DELETE_ALL | STATUS_CHANGE);
+	private int ALL = 512;
 	
 	private int EMPLOYEES_PERMISSION = NOTHING;
 	private int PROJECTS_PERMISSION = NOTHING;
@@ -35,6 +35,72 @@ public class PermissionConfig {
 	private int JOBVENDORS_PERMISSION = NOTHING;
 	
 	
+	
+	
+	public int getEMPLOYEES_PERMISSION() {
+		return EMPLOYEES_PERMISSION;
+	}
+
+	public void setEMPLOYEES_PERMISSION(int eMPLOYEES_PERMISSION) {
+		EMPLOYEES_PERMISSION = eMPLOYEES_PERMISSION;
+	}
+
+	public int getPROJECTS_PERMISSION() {
+		return PROJECTS_PERMISSION;
+	}
+
+	public void setPROJECTS_PERMISSION(int pROJECTS_PERMISSION) {
+		PROJECTS_PERMISSION = pROJECTS_PERMISSION;
+	}
+
+	public int getTICKETS_PERMISSION() {
+		return TICKETS_PERMISSION;
+	}
+
+	public void setTICKETS_PERMISSION(int tICKETS_PERMISSION) {
+		TICKETS_PERMISSION = tICKETS_PERMISSION;
+	}
+
+	public int getJOBOPENINGS_PERMISSION() {
+		return JOBOPENINGS_PERMISSION;
+	}
+
+	public void setJOBOPENINGS_PERMISSION(int jOBOPENINGS_PERMISSION) {
+		JOBOPENINGS_PERMISSION = jOBOPENINGS_PERMISSION;
+	}
+
+	public int getJOBAPPLICATIONS_PERMISSION() {
+		return JOBAPPLICATIONS_PERMISSION;
+	}
+
+	public void setJOBAPPLICATIONS_PERMISSION(int jOBAPPLICATIONS_PERMISSION) {
+		JOBAPPLICATIONS_PERMISSION = jOBAPPLICATIONS_PERMISSION;
+	}
+
+	public int getJOBINTERVIEWS_PERMISSION() {
+		return JOBINTERVIEWS_PERMISSION;
+	}
+
+	public void setJOBINTERVIEWS_PERMISSION(int jOBINTERVIEWS_PERMISSION) {
+		JOBINTERVIEWS_PERMISSION = jOBINTERVIEWS_PERMISSION;
+	}
+
+	public int getJOBOFFERS_PERMISSION() {
+		return JOBOFFERS_PERMISSION;
+	}
+
+	public void setJOBOFFERS_PERMISSION(int jOBOFFERS_PERMISSION) {
+		JOBOFFERS_PERMISSION = jOBOFFERS_PERMISSION;
+	}
+
+	public int getJOBVENDORS_PERMISSION() {
+		return JOBVENDORS_PERMISSION;
+	}
+
+	public void setJOBVENDORS_PERMISSION(int jOBVENDORS_PERMISSION) {
+		JOBVENDORS_PERMISSION = jOBVENDORS_PERMISSION;
+	}
+
 	public PermissionConfig() {
 		// TODO Auto-generated constructor stub
 	}

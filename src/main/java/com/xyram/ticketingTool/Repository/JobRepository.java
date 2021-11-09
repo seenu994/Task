@@ -43,6 +43,9 @@ public interface JobRepository extends CrudRepository<JobOpenings,Long>,JpaSpeci
     
 	@Query(value = "SELECT * from ticketdbtool.job_openings jo where jo.job_id = :jobOpeningId ", nativeQuery = true)
 	JobOpenings getById(String jobOpeningId);
+
+	@Query(value = "SELECT jo from JobOpenings jo")
+	List<JobOpenings> getList();
 	
 //	public List<JobOpenings> findByCriteria(String employeeName){
 //        return employeeDAO.findAll(new Specification<Employee>() {

@@ -26,9 +26,9 @@ public interface JobService {
 	
 	ApiResponse createJob( JobOpenings jobObj); 
 	
-	ApiResponse getAllJobs(JobOpeningSearchRequest jobOpeningObj); 
+	ApiResponse getAllJobs(String jobOpeningObj); 
 	
-	ApiResponse getAllJobApplications(JobApplicationSearchRequest jobAppSearch);
+	ApiResponse getAllJobApplications(String jobAppSearch);
 	
 	ApiResponse getAllCompanyWingsAndSkills();
 	
@@ -36,7 +36,7 @@ public interface JobService {
 	
 	ApiResponse scheduleJobInterview(JobInterviews schedule, String applicationId); 
 	
-	ApiResponse getAllJobInterviews(JobInterviewsRequest searchObj);
+	ApiResponse getAllJobInterviews(String serachObj);
 
 	ApiResponse getAllJobOpeningsById(String jobOpeningId);
 

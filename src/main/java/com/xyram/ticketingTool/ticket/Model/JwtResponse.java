@@ -2,8 +2,10 @@ package com.xyram.ticketingTool.ticket.Model;
 
 
 import java.io.Serializable;
+import java.util.List;
 
 import com.xyram.ticketingTool.admin.model.User;
+import com.xyram.ticketingTool.entity.UserPermissions;
 
 public class JwtResponse implements Serializable {
 
@@ -12,12 +14,13 @@ public class JwtResponse implements Serializable {
 	private final String sessionId;
 	private final User user;
 	private final String baseResourcePath;
-
-	public JwtResponse(String jwttoken,String sessionId,String baseResourcePath,User user) {
+	private final List<UserPermissions> permissions;
+	public JwtResponse(String jwttoken,String sessionId,String baseResourcePath,User user, List<UserPermissions> permissions) {
 		this.jwttoken = jwttoken;
 		this.sessionId = sessionId;
 		this.user= user;
 		this.baseResourcePath = baseResourcePath;
+		this.permissions = permissions;
 	}
 
 	public String getToken() {
@@ -32,4 +35,10 @@ public class JwtResponse implements Serializable {
 	public String getBaseResourcePath() {
 		return baseResourcePath;
 	}
+
+	public List<UserPermissions> getPermissions() {
+		return permissions;
+	}
+	
+	
 }

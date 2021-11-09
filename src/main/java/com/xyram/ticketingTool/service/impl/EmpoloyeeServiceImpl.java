@@ -33,6 +33,7 @@ import com.xyram.ticketingTool.Repository.EmployeeRepository;
 import com.xyram.ticketingTool.Repository.PermissionRepository;
 import com.xyram.ticketingTool.Repository.ProjectMemberRepository;
 import com.xyram.ticketingTool.Repository.RoleRepository;
+import com.xyram.ticketingTool.Repository.UserPermissionRepository;
 import com.xyram.ticketingTool.Repository.UserRepository;
 import com.xyram.ticketingTool.Repository.VendorRepository;
 import com.xyram.ticketingTool.admin.model.User;
@@ -43,6 +44,7 @@ import com.xyram.ticketingTool.entity.ProjectMembers;
 import com.xyram.ticketingTool.entity.Projects;
 import com.xyram.ticketingTool.entity.Role;
 import com.xyram.ticketingTool.entity.Ticket;
+import com.xyram.ticketingTool.entity.UserPermissions;
 import com.xyram.ticketingTool.enumType.ProjectMembersStatus;
 import com.xyram.ticketingTool.enumType.UserRole;
 import com.xyram.ticketingTool.enumType.UserStatus;
@@ -89,6 +91,9 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	@Autowired
 	PermissionConfig permissionConfig;
 	
+	@Autowired
+	UserPermissionRepository userPermissionConfig;
+	
 	static ChannelSftp channelSftp = null;
 	static Session session = null;
 	static Channel channel = null;
@@ -131,8 +136,17 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				user.setPermission(permission);
 				user.setStatus(UserStatus.ACTIVE);
 				System.out.println(user.getEmail()+"::"+user.getUsername()+"::"+user.getCreatedAt());
-				userRepository.save(user);
-				
+				User newUser = userRepository.save(user);
+				UserPermissions permissions = new UserPermissions();
+				permissions.setEmpModPermission(permissionConfig.getEMPLOYEES_PERMISSION());
+				permissions.setProjectModPermission(permissionConfig.getPROJECTS_PERMISSION());
+				permissions.setTicketModPermission(permissionConfig.getTICKETS_PERMISSION());
+				permissions.setJobOpeningModPermission(permissionConfig.getJOBOPENINGS_PERMISSION());
+				permissions.setJobAppModPermission(permissionConfig.getJOBAPPLICATIONS_PERMISSION());
+				permissions.setJobOfferModPermission(permissionConfig.getJOBOFFERS_PERMISSION());
+				permissions.setJobVendorsModPermission(permissionConfig.getJOBVENDORS_PERMISSION());
+				permissions.setUserId(newUser.getId());
+				userPermissionConfig.save(permissions);
 				employee.setCreatedBy(currentUser.getUserId());
 				employee.setUpdatedBy(currentUser.getUserId());
 				employee.setCreatedAt(new Date());
