@@ -160,6 +160,9 @@ public class JobServiceImpl implements JobService{
 	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("candidateEmail"), "%" + jobAppSearch.getSearchString() + "%")));
 	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobCode"), "%" + jobAppSearch.getSearchString() + "%")));
 	                }
+	                if(userDetail.getUserId()!=null) {
+	                	predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("createdBy"), "%" + userDetail.getUserId() + "%")));
+	                }
 	                return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 				}
 	        });
@@ -281,7 +284,9 @@ public class JobServiceImpl implements JobService{
 	                if(searchObj.getStatus() != null && !searchObj.getStatus().equalsIgnoreCase("ALL")) {
 	                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("status"), searchObj.getStatus())));
 	                }
-	                
+	                if(userDetail.getUserId()!=null) {
+	                	predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("createdBy"), "%" + userDetail.getUserId() + "%")));
+	                }
 //	                if(searchObj.getSearchString() != null && !searchObj.getSearchString().equalsIgnoreCase("")) {
 //	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("candidateName"), "%" + searchObj.getSearchString() + "%")));
 //	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("candidateMobile"), "%" + searchObj.getSearchString() + "%")));

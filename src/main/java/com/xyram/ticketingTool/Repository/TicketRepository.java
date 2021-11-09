@@ -110,7 +110,7 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 			"group by t.ticket_status, p.project_name",nativeQuery=true)
 	Page<Map> getTicketStatusCountWithProject(Pageable pageable);
 	
-	@Query(value=" select d.employee_id, SUM(d.emp_cnt) as emp_cnt from(select c.employee_id, c.emp_cnt from( "
+	@Query(value=" select d.employee_id from(select c.employee_id, c.emp_cnt from( "
 			+ "select e.employee_id, count(e.employee_id) as emp_cnt from ticketdbtool.employee e join ticketdbtool.ticket_assignee t on e.employee_id = t.employee_id "
 			+ "where  ticket_assignee_status = 'ACTIVE' and ticket_id in (select ticket_id from ticketdbtool.ticket_info where ticket_status in ('ASSIGNED','INPROGRESS')) "
 			+ "group by e.employee_id "
@@ -121,7 +121,7 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 			+ "select e.employee_id as emp_id, 0 as emp_cnt from ticketdbtool.employee e "
 			+ "join ticketdbtool.ticket_assignee t on e.employee_id = t.employee_id Join ticketdbtool.ticket_info i on t.ticket_id 	= i.ticket_id "
 			+ "where ticket_assignee_status = 'ACTIVE' and i.ticket_status in ('COMPLETED','CANCELLED'))d "
-			+ "group by employee_id order by emp_cnt limit 1 ",nativeQuery=true)
+			+ " limit 1 ",nativeQuery=true)
 	String getElgibleAssignee();
 	
 	@Query("SELECT distinct new map(a.Id as ticket_id, a.ticketDescription as ticket_description, a.status as ticket_status, a.createdAt as created_at, a.createdBy as created_by, a.lastUpdatedAt as last_updated_at, a.projectId as project_id, b.employeeId as assigneeId, concat(e.firstName,' ', e.lastName) as assigneeName, concat(ee.firstName,' ', ee.lastName) as createdByEmp) "
@@ -142,7 +142,7 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 	@Query(value="SELECT new map(a.Id as ticketId,a.ticketDescription as ticketDescription,a.status as ticketStatus,a.createdAt as createdAt,a.createdBy as createdBy,a.lastUpdatedAt as lastUpdatedAt,p.projectName as projectName,b.Id as ticketAsigneeId,concat(e.firstName,' ', e.lastName) as assignedTo,concat(ee.firstName,' ',ee.lastName) as createdByEmp,DATEDIFF(a.resolvedAt,a.createdAt) as duration) "
 			+ "from Ticket a left join TicketAssignee b ON a.Id = b.ticketId and b.status = 'ACTIVE' " + 
 			"left join Employee e on b.employeeId = e.eId left join Employee ee on a.createdBy = ee.userCredientials.id left join Projects p ON a.projectId = p.pId where (:status is null or a.status = :status)"
-			+ "and  (:projectName is null or p.projectName = :projectName) and  (cast(:parsedFromDate as date) is null or DATE(a.createdAt) >= :parsedFromDate ) and (cast(:parsedToDate as date) is null or DATE(a.createdAt) <= :parsedToDate ) AND (:searchQuery is null OR lower(e.firstName) LIKE %:searchQuery% OR lower(e.lastName) LIKE %:searchQuery%  OR e.eId LIKE %:searchQuery%) ")
+			+ "and  (:projectName is null or p.projectName = :projectName) and  (cast(:parsedFromDate as date) is null or DATE(a.createdAt) >= :parsedFromDate ) and (cast(:parsedToDate as date) is null or DATE(a.createdAt) <= :parsedToDate ) AND (:searchQuery is null OR lower(e.firstName) LIKE %:searchQuery% OR lower(e.lastName) LIKE %:searchQuery%  OR e.eId LIKE %:searchQuery%) ORDER BY a.createdAt DESC ")
 	Page<Map> getTicketDataByStatusProjectName(String projectName, TicketStatus status, Date parsedFromDate,
 			Date parsedToDate, String searchQuery, Pageable pageable);
 
