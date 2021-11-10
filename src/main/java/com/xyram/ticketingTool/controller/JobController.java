@@ -2,6 +2,7 @@ package com.xyram.ticketingTool.controller;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -48,7 +49,7 @@ public class JobController {
 	@Autowired
 	JobService jobService;
 	
-	@PostMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/createJob/{jobId}",AuthConstants.ADMIN_BASEPATH + "/createJob/{jobId}" })
+	@PostMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/editJob/{jobId}",AuthConstants.ADMIN_BASEPATH + "/editJob/{jobId}" })
 	public ApiResponse editJob(@PathVariable String jobId,@RequestBody JobOpenings jobObj) {
 		logger.info("Creating Job");
 		return jobService.editJob(jobId,jobObj);
@@ -61,15 +62,15 @@ public class JobController {
 	} 
 	
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllJobs",AuthConstants.HR_ADMIN_BASEPATH + "/getAllJobs",AuthConstants.DEVELOPER_BASEPATH+ "/getAllJobs", AuthConstants.HR_BASEPATH + "/getAllJobs",AuthConstants.INFRA_ADMIIN_BASEPATH + "/getAllJobs",AuthConstants.INFRA_USER_BASEPATH + "/getAllJobs", AuthConstants.JOB_VENDOR_BASEPATH + "/getAllJobs" })
-	public ApiResponse getAllJobs(@RequestParam(required=false) String jobOpeningObj) {
+	public ApiResponse getAllJobs(@RequestParam Map<String, Object> filter,Pageable pageable) {
 		logger.info("Get All Job");
-		return jobService.getAllJobs(jobOpeningObj);
+		return jobService.getAllJobs(filter,pageable);
 	}
 	
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllJobApplications",AuthConstants.HR_ADMIN_BASEPATH + "/getAllJobApplications",AuthConstants.DEVELOPER_BASEPATH+ "/getAllJobApplications", AuthConstants.HR_BASEPATH + "/getAllJobApplications",AuthConstants.INFRA_ADMIIN_BASEPATH + "/getAllJobApplications",AuthConstants.INFRA_USER_BASEPATH + "/getAllJobApplications", AuthConstants.JOB_VENDOR_BASEPATH + "/getAllJobApplications" })
-	public ApiResponse getAllJobApplications(@RequestParam(required=false) String jobAppSearch) {
+	public ApiResponse getAllJobApplications(@RequestParam Map<String, Object> filter,Pageable pageable) {
 		logger.info("Get All Job");
-		return jobService.getAllJobApplications(jobAppSearch);
+		return jobService.getAllJobApplications(filter,pageable);
 	}
 	
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllCompanyWingsAndSkills",AuthConstants.HR_ADMIN_BASEPATH + "/getAllCompanyWingsAndSkills" })
@@ -125,9 +126,9 @@ public class JobController {
 	
 	
 	@GetMapping(value= {AuthConstants.ADMIN_BASEPATH+"/getAllJobInterviews",AuthConstants.HR_ADMIN_BASEPATH + "/getAllJobInterviews",AuthConstants.DEVELOPER_BASEPATH+ "/getAllJobInterviews", AuthConstants.HR_BASEPATH + "/getAllJobInterviews",AuthConstants.INFRA_ADMIIN_BASEPATH + "/getAllJobInterviews",AuthConstants.INFRA_USER_BASEPATH + "/getAllJobInterviews", AuthConstants.JOB_VENDOR_BASEPATH + "/getAllJobInterviews"})
-	public ApiResponse getAllJobInterviews(@RequestParam(required = false) String serachObj) {
+	public ApiResponse getAllJobInterviews(@RequestParam Map<String, Object> filter,Pageable pageable) {
 		logger.info("Get All Job");
-		return jobService.getAllJobInterviews(serachObj);
+		return jobService.getAllJobInterviews(filter,pageable);
 	}
 	
 	
@@ -135,6 +136,18 @@ public class JobController {
 	public ApiResponse getAllJobOpeningsById(@PathVariable String jobOpeningId) {
 		logger.info("Get JobOpening by id");
 		return jobService.getAllJobOpeningsById(jobOpeningId);
+	}
+	
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllApp/{jobAppId}",AuthConstants.HR_ADMIN_BASEPATH + "/getAllApp/{jobAppId}",AuthConstants.HR_BASEPATH + "/getAllApp/{jobAppId}",AuthConstants.DEVELOPER_BASEPATH + "/getAllApp/{jobAppId}",AuthConstants.JOB_VENDOR_BASEPATH + "/getAllApp/{jobAppId}" })
+	public ApiResponse getAllAppById(@PathVariable String jobAppId) {
+		logger.info("Get JobOpening by id");
+		return jobService.getAllJobAppById(jobAppId);
+	}
+	
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getInterview/{jobInterviewId}",AuthConstants.HR_ADMIN_BASEPATH + "/getInterview/{jobInterviewId}",AuthConstants.HR_BASEPATH + "/getInterview/{jobInterviewId}",AuthConstants.DEVELOPER_BASEPATH + "/getInterview/{jobInterviewId}",AuthConstants.JOB_VENDOR_BASEPATH + "/getInterview/{jobInterviewId}" })
+	public ApiResponse getAllInterviewId(@PathVariable String jobInterviewId) {
+		logger.info("Get JobOpening by id");
+		return jobService.getAllInterviewId(jobInterviewId);
 	}
 	
 	@PutMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/changeJobOpeningStatus/{jobOpeningId}/{status}",AuthConstants.ADMIN_BASEPATH + "/changeJobOpeningStatus/{jobOpeningId}/{status}"})

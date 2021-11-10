@@ -26,9 +26,9 @@ public interface JobService {
 	
 	ApiResponse createJob( JobOpenings jobObj); 
 	
-	ApiResponse getAllJobs(String jobOpeningObj); 
+	ApiResponse getAllJobs(Map<String, Object> filter,Pageable pageable); 
 	
-	ApiResponse getAllJobApplications(String jobAppSearch);
+	ApiResponse getAllJobApplications(Map<String, Object> filter, Pageable pageable);
 	
 	ApiResponse getAllCompanyWingsAndSkills();
 	
@@ -36,7 +36,7 @@ public interface JobService {
 	
 	ApiResponse scheduleJobInterview(JobInterviews schedule, String applicationId); 
 	
-	ApiResponse getAllJobInterviews(String serachObj);
+	ApiResponse getAllJobInterviews(Map<String, Object> filter,Pageable pageable);
 
 	ApiResponse getAllJobOpeningsById(String jobOpeningId);
 
@@ -56,5 +56,10 @@ public interface JobService {
 	ApiResponse changeJobApplicationStatus(String jobApplicationId, JobApplicationStatus jobStatus, String comment);
 
 	ApiResponse editJobApplication(MultipartFile[] files, String jobAppObj, String jobAppId);
+
+	ApiResponse getAllJobAppById(String jobAppId);
+
+	ApiResponse getAllInterviewId(String jobInterviewId);
+
 
 }
