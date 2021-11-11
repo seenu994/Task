@@ -47,112 +47,104 @@ public class PasswordServiceImpl implements PasswordService {
 	UserService userService;
 	@Autowired
 	UserRepository userRepository;
-	
+
 	@Autowired
 	EmployeeRepository employeeRepository;
-	
+
 	@Autowired
 	EmailService emailService;
-	
+
 	@Autowired
 	ForgotPasswordToken tokenRepository;
 
-
 	@Override
-	public  ApiResponse resetPassword(Map passwordRequest) {
-		
-		ApiResponse responseMessage=new ApiResponse(false);
+	public ApiResponse resetPassword(Map passwordRequest) {
+
+		ApiResponse responseMessage = new ApiResponse(false);
 		Map<String, Object> response = new HashMap<>();
 
 		logger.info("Received request for reset password");
 		User user = userRepository.getById((String) passwordRequest.get("userId"));
-		
 
-			String oldPassword = passwordRequest.containsKey("existingPassword")
-					&& !StringUtils.isEmpty(passwordRequest.get("existingPassword"))
-							? passwordRequest.get("existingPassword").toString()
-							: null;
-			String newPassword = passwordRequest.containsKey("newPassword")
-					&& !StringUtils.isEmpty(passwordRequest.get("newPassword"))
-							? passwordRequest.get("newPassword").toString()
-							: null;
+		String oldPassword = passwordRequest.containsKey("existingPassword")
+				&& !StringUtils.isEmpty(passwordRequest.get("existingPassword"))
+						? passwordRequest.get("existingPassword").toString()
+						: null;
+		String newPassword = passwordRequest.containsKey("newPassword")
+				&& !StringUtils.isEmpty(passwordRequest.get("newPassword"))
+						? passwordRequest.get("newPassword").toString()
+						: null;
 
-			if (oldPassword != null && newPassword != null) {
-				if (new BCryptPasswordEncoder().matches(oldPassword, user.getPassword())) {
-					 String encodedPassword = new BCryptPasswordEncoder().encode(newPassword);
-					 user.setPassword(encodedPassword);
-					responseMessage.setSuccess(true);
-					responseMessage.setMessage(ResponseMessages.PASSWORD_RESET);
-					
-
-					return responseMessage;
-				} else {
-					responseMessage.setSuccess(false);
-					responseMessage.setMessage(ResponseMessages.PASSWORD_INCORRECT);
-					
-
-					return responseMessage;
-				}
-			} else {
-				responseMessage.setSuccess(false);
-				responseMessage.setMessage(ResponseMessages.INVALID_PASSWORD+passwordRequest.containsKey("userId"));
-				
+		if (oldPassword != null && newPassword != null) {
+			if (new BCryptPasswordEncoder().matches(oldPassword, user.getPassword())) {
+				String encodedPassword = new BCryptPasswordEncoder().encode(newPassword);
+				user.setPassword(encodedPassword);
+				responseMessage.setSuccess(true);
+				responseMessage.setMessage(ResponseMessages.PASSWORD_RESET);
 
 				return responseMessage;
-				
+			} else {
+				responseMessage.setSuccess(false);
+				responseMessage.setMessage(ResponseMessages.PASSWORD_INCORRECT);
+
+				return responseMessage;
 			}
+		} else {
+			responseMessage.setSuccess(false);
+			responseMessage.setMessage(ResponseMessages.INVALID_PASSWORD + passwordRequest.containsKey("userId"));
+
+			return responseMessage;
+
+		}
 	}
-	/*@Override
-	public ApiResponse forgotPassword(String userName) {
-		ApiResponse response=new ApiResponse(false);
-		User user = userService.getUserByUsername(userName.toLowerCase());
-		if (userName != null && userName.equals(user.getUsername())) {
-			user.setPassword(PasswordUtil.generateRandomPassword());
-			userRepository.save(user);
-			HashMap mailDetails = new HashMap();
-			mailDetails.put("toEmail", user.getUsername());
-			mailDetails.put("subject", user.getUsername() + ", " + "Here's your new PASSWORD");
-			mailDetails.put("message", "Hi " + user.getUsername()
-					+ ", \n\n We received a request to reset the password for your Account. \n\n Here's your new PASSWORD: \n "
-					+ user.getPassword()
-					+ "\n\n Thanks for helping us keep your account secure.,\n Xyram Software Solutions Pvt Ltd.");
-			emailService.sendMail(mailDetails);
-			if (userCache.isPresent("USER", userName.toLowerCase()))
-				userCache.remove("USER", userName.toLowerCase());
 
-			//HashMap message = new HashMap();
-			response.setMessage(ResponseMessages.FORGOT_PASSOWRD);
-			response.setSuccess(true);
-			response.setContent(null);
-			
-			return response;
-
-		}
-
-		else {
-			response.setMessage(ResponseMessages.INVALID_EMAIL_ID);
-			response.setSuccess(false);
-			response.setContent(null);
-			
-			return response;
-		}
-	}*/
+	/*
+	 * @Override public ApiResponse forgotPassword(String userName) { ApiResponse
+	 * response=new ApiResponse(false); User user =
+	 * userService.getUserByUsername(userName.toLowerCase()); if (userName != null
+	 * && userName.equals(user.getUsername())) {
+	 * user.setPassword(PasswordUtil.generateRandomPassword());
+	 * userRepository.save(user); HashMap mailDetails = new HashMap();
+	 * mailDetails.put("toEmail", user.getUsername()); mailDetails.put("subject",
+	 * user.getUsername() + ", " + "Here's your new PASSWORD");
+	 * mailDetails.put("message", "Hi " + user.getUsername() +
+	 * ", \n\n We received a request to reset the password for your Account. \n\n Here's your new PASSWORD: \n "
+	 * + user.getPassword() +
+	 * "\n\n Thanks for helping us keep your account secure.,\n Xyram Software Solutions Pvt Ltd."
+	 * ); emailService.sendMail(mailDetails); if (userCache.isPresent("USER",
+	 * userName.toLowerCase())) userCache.remove("USER", userName.toLowerCase());
+	 * 
+	 * //HashMap message = new HashMap();
+	 * response.setMessage(ResponseMessages.FORGOT_PASSOWRD);
+	 * response.setSuccess(true); response.setContent(null);
+	 * 
+	 * return response;
+	 * 
+	 * }
+	 * 
+	 * else { response.setMessage(ResponseMessages.INVALID_EMAIL_ID);
+	 * response.setSuccess(false); response.setContent(null);
+	 * 
+	 * return response; } }
+	 */
 	@Override
 	public ApiResponse forgotPassword(String userName) {
-		ApiResponse response=new ApiResponse(false);
-	  User user = userService.getUserByUsername(userName);
-		/*if (userCache.isPresent("USER", userName.toLowerCase()))
-			userCache.remove("USER", userName.toLowerCase());*/
-	  
-	  ForgotPasswordKey forgotKeyDetails = new ForgotPasswordKey();
+		ApiResponse response = new ApiResponse(false);
+		User user = userService.getUserByUsername(userName);
+		/*
+		 * if (userCache.isPresent("USER", userName.toLowerCase()))
+		 * userCache.remove("USER", userName.toLowerCase());
+		 */
+
+		ForgotPasswordKey forgotKeyDetails = new ForgotPasswordKey();
 
 		if (user != null) {
-			UserRole userrole = user.getUserRole();
-			System.out.println("  userrole.value() ==================>  " + userrole.value());
+			String userrole = user.getUserRole();
+			System.out.println("  userrole.value() ==================>  " + userrole);
 			String userid = user.getId();
 			String name = null;
-			if (userrole.value() == "DEVELOPER") {
-				System.out.println("  DEVELOPER ==================>  " + userrole.value());
+			if (userrole == "DEVELOPER") {
+				System.out.println("  DEVELOPER ==================>  " + userrole);
 				Employee employee = employeeRepository.getbyUserId(userid);
 				if (employee != null) {
 					name = employee.getFirstName() + " " + employee.getMiddleName() + " " + employee.getLastName();
@@ -160,7 +152,7 @@ public class PasswordServiceImpl implements PasswordService {
 				System.out.println("  name ==================>  " + name);
 			}
 
-			if (userrole.value() == "INFRA_USER") {
+			if (userrole == "INFRA_USER") {
 				Employee employee = employeeRepository.getbyUserId(userid);
 				if (employee != null) {
 					name = employee.getFirstName() + " " + employee.getMiddleName() + " " + employee.getLastName();
@@ -168,10 +160,8 @@ public class PasswordServiceImpl implements PasswordService {
 				System.out.println("  name ==================>  " + name);
 			}
 
-			
-			
-			if (userrole.value() == "INFRA_ADMIN") {
-				System.out.println("  INFRA_ADMIN ==================>  " + userrole.value());
+			if (userrole == "INFRA_ADMIN") {
+				System.out.println("  INFRA_ADMIN ==================>  " + userrole);
 				Employee employee = employeeRepository.getbyUserId(userid);
 				if (employee != null) {
 					name = employee.getFirstName() + " " + employee.getMiddleName() + " " + employee.getLastName();
@@ -179,13 +169,14 @@ public class PasswordServiceImpl implements PasswordService {
 				System.out.println("  name ==================>  " + name);
 			}
 
-			
-			/*if (userrole.toString() == "RPM_ADMIN") {
-				name = "";
-			}*/
+			/*
+			 * if (userrole.toString() == "RPM_ADMIN") { name = ""; }
+			 */
 
-			/*if (userCache.isPresent("USER", userName.toLowerCase()))
-				userCache.remove("USER", userName.toLowerCase());*/
+			/*
+			 * if (userCache.isPresent("USER", userName.toLowerCase()))
+			 * userCache.remove("USER", userName.toLowerCase());
+			 */
 
 			UUID uuid = UUID.randomUUID();
 			String uuidAsString = uuid.toString();
@@ -196,25 +187,25 @@ public class PasswordServiceImpl implements PasswordService {
 				forgotKeyDetails.setResetPasswordToken(uuidAsString);
 				forgotKeyDetails.setUsername(userName);
 				tokenRepository.save(forgotKeyDetails);
-/*
-				if (userCache.isPresent("USER", userName.toLowerCase()))
-					userCache.remove("USER", userName.toLowerCase());*/
+				/*
+				 * if (userCache.isPresent("USER", userName.toLowerCase()))
+				 * userCache.remove("USER", userName.toLowerCase());
+				 */
 
 				HashMap mailDetails = new HashMap();
 				mailDetails.put("toEmail", user.getUsername());
 				mailDetails.put("subject", name + ", " + "Here's your new PASSWORD");
 				mailDetails.put("message", "Hi " + name
 						+ ", \n\n We received a request to reset the password for your Account. \n\n Here's your new PASSWORD Link is: "
-						+  application_url + "/update-password" + "?key=" + uuidAsString
+						+ application_url + "/update-password" + "?key=" + uuidAsString
 						+ "\n\n Thanks for helping us keep your account secure.\n\n Xyram Software Solutions Pvt Ltd.");
 				emailService.sendMail(mailDetails);
 
 				response.setMessage(ResponseMessages.FORGOT_PASSOWRD);
 				response.setSuccess(true);
 				response.setContent(null);
-				
-				return response;
 
+				return response;
 
 			}
 
@@ -222,7 +213,7 @@ public class PasswordServiceImpl implements PasswordService {
 				response.setMessage(ResponseMessages.INVALID_EMAIL_ID);
 				response.setSuccess(false);
 				response.setContent(null);
-				
+
 				return response;
 
 			}
@@ -230,23 +221,23 @@ public class PasswordServiceImpl implements PasswordService {
 			response.setMessage(ResponseMessages.INVALID_EMAIL_ID);
 			response.setSuccess(false);
 			response.setContent(null);
-			
+
 			return response;
 
 		}
 	}
 
-	
 	@Override
 	public User updatePasswordByAccestoken(String accessToken, Map<String, Object> passwordRequest) {
 
-             ForgotPasswordKey token =  tokenRepository.findByAccestoken(accessToken);
-             if(token != null) {
-            	 
-             User user = userService.getUserByUsername(token.getUsername());
-			/*if (userCache.isPresent("USER", user.getUsername().toLowerCase()))
-				userCache.remove("USER", user.getUsername().toLowerCase());
-*/
+		ForgotPasswordKey token = tokenRepository.findByAccestoken(accessToken);
+		if (token != null) {
+
+			User user = userService.getUserByUsername(token.getUsername());
+			/*
+			 * if (userCache.isPresent("USER", user.getUsername().toLowerCase()))
+			 * userCache.remove("USER", user.getUsername().toLowerCase());
+			 */
 			Date now = new Date();
 			long diff = now.getTime() - token.getPasswordUpdatedTime().getTime();
 			// String diffminutes = map.get("minutes");
@@ -265,36 +256,33 @@ public class PasswordServiceImpl implements PasswordService {
 								: null;
 				HashMap<String, String> map = new HashMap<String, String>();
 				if (password.equalsIgnoreCase(repassword)) {
-					//if (new BCryptPasswordEncoder().matches(password, user.getPassword())) {
-						 String encodedPassword = new BCryptPasswordEncoder().encode(password);
-						 user.setPassword(encodedPassword);
-					//user.setPassword(password);
-					
+					// if (new BCryptPasswordEncoder().matches(password, user.getPassword())) {
+					String encodedPassword = new BCryptPasswordEncoder().encode(password);
+					user.setPassword(encodedPassword);
+					// user.setPassword(password);
+
 					UUID uuid = UUID.randomUUID();
 					String uuidAsString = uuid.toString();
 					user.setAccesskey(null);
-					//user.setUniqueDeviceCode(PasswordUtil.generateRandomDeviceCode());
+					// user.setUniqueDeviceCode(PasswordUtil.generateRandomDeviceCode());
 
 				}
-				
+
 				else {
 					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "passwords dont match,please try again");
 					// return map;
 				}
 
-				
-			} 
-			return userRepository.save(user);
-             }
-             
-             else {
-				throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "token has expired");
 			}
+			return userRepository.save(user);
+		}
 
-		
+		else {
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "token has expired");
+		}
+
 	}
 
-	
 	@Override
 	public HashMap<String, String> setPasswordByAccestoken(Map<String, Object> passwordRequest) {
 
@@ -333,39 +321,35 @@ public class PasswordServiceImpl implements PasswordService {
 		return map;
 
 	}
+
 	@Override
 	public HashMap<String, String> checkTokenValid(String key) {
 		HashMap<String, String> map = new HashMap<String, String>();
 		try {
-			ForgotPasswordKey token =  tokenRepository.findByAccestoken(key);
-        if(token != null) {
-			Date createdAt = token.getPasswordUpdatedTime();
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			String currentDateTime = null;
-			Date currentDate = new Date();
-			long diff = currentDate.getTime() - createdAt.getTime();
-			// String diffminutes = map.get("minutes");
-			long diffMinutes1 = diff / (60 * 1000);
+			ForgotPasswordKey token = tokenRepository.findByAccestoken(key);
+			if (token != null) {
+				Date createdAt = token.getPasswordUpdatedTime();
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				String currentDateTime = null;
+				Date currentDate = new Date();
+				long diff = currentDate.getTime() - createdAt.getTime();
+				// String diffminutes = map.get("minutes");
+				long diffMinutes1 = diff / (60 * 1000);
 
-
-			if (diffMinutes1 <= 10) {
-				token.getUsername();
+				if (diffMinutes1 <= 10) {
+					token.getUsername();
 //				
-				map.put("key", "token validation successfull.");
-				return map;
-			} else {
-				throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"Invalid Token");				
+					map.put("key", "token validation successfull.");
+					return map;
+				} else {
+					throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid Token");
+				}
 			}
-		} 
-        return map;
-		}
-        catch (Exception e) {
+			return map;
+		} catch (Exception e) {
 
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token is expired ");
 		}
 	}
 
-	
-
 }
-

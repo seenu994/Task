@@ -66,7 +66,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 	@Autowired
 	EmployeeRepository employeeRepository;
-	
+
 	@Autowired
 	PermissionRepository permissionRepository;
 
@@ -81,20 +81,19 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 	@Autowired
 	ProjectServiceImpl ProjectSerImpl;
-	
+
 	@Autowired
 	ProjectMemberRepository projectMemberRepository;
-	
+
 	@Autowired
 	VendorRepository vendorRepository;
-	
-	
+
 	@Autowired
 	PermissionConfig permissionConfig;
-	
+
 	@Autowired
 	UserPermissionRepository userPermissionConfig;
-	
+
 	static ChannelSftp channelSftp = null;
 	static Session session = null;
 	static Channel channel = null;
@@ -106,9 +105,9 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	public ApiResponse addemployee(Employee employee) {
 
 		ApiResponse response = new ApiResponse(false);
-		
+
 		response = validateEmployee(employee);
-		System.out.println("username::"+currentUser.getName());
+		System.out.println("username::" + currentUser.getName());
 
 		if (response.isSuccess()) {
 			try {
@@ -117,26 +116,22 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				String encodedPassword = new BCryptPasswordEncoder().encode(employee.getPassword());
 				user.setPassword(encodedPassword);
 				// Employee employeere=new Employee();
-			Role role=	roleRepository.getById(employee.getRoleId());
-			if(role!=null)
-			{
-				try {
+				Role role = roleRepository.getById(employee.getRoleId());
+				if (role != null) {
+					try {
 
-				   user.setUserRole(UserRole.toEnum(role.getRoleName()));
-				}
-				catch(Exception e)
-				{
-					throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-							role.getRoleName() + " is not a valid status");
-				}
-			}
-			 else {
+						user.setUserRole(role.getRoleName());
+					} catch (Exception e) {
+						throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+								role.getRoleName() + " is not a valid status");
+					}
+				} else {
 					throw new ResourceNotFoundException("invalid user role ");
 				}
 				Integer permission = permissionConfig.setDefaultPermissions(user.getUserRole().toString());
 				user.setPermission(permission);
 				user.setStatus(UserStatus.ACTIVE);
-				System.out.println(user.getEmail()+"::"+user.getUsername()+"::"+user.getCreatedAt());
+				System.out.println(user.getEmail() + "::" + user.getUsername() + "::" + user.getCreatedAt());
 				User newUser = userRepository.save(user);
 				UserPermissions permissions = new UserPermissions();
 				permissions.setEmpModPermission(permissionConfig.getEMPLOYEES_PERMISSION());
@@ -155,8 +150,8 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				employee.setUserCredientials(user);
 				employee.setProfileUrl("https://covidtest.xyramsoft.com/image/ticket-attachment/user-default-pic.png");
 				Employee employeeNew = employeeRepository.save(employee);
-				
-				//Assigning default project to Developer
+
+				// Assigning default project to Developer
 //				if (employee.getRoleId().equals("R3")) {
 //					System.out.println("Inside employee.getRoleId() - " + employee.getRoleId());
 //					ProjectMembers projectMember = new ProjectMembers();
@@ -199,12 +194,10 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 			response.setSuccess(false);
 		}
-		
-		else if (email!= null) {
+
+		else if (email != null) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "email already exists!!!");
 		}
-
-		
 
 		else {
 			response.setMessage(ResponseMessages.EMPLOYEE_ADDED);
@@ -214,8 +207,6 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 		return response;
 	}
-
-	
 
 	private boolean emailValidation(String email) {
 		Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$",
@@ -284,29 +275,27 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	@Override
 	public ApiResponse editEmployee(String employeeId, Employee employeeRequest) {
 		ApiResponse response = new ApiResponse(false);
-			Employee employee = employeeRepository.getById(employeeId);
-			if (employee != null) {
-				employee.setFirstName(employeeRequest.getFirstName());
-				employee.setLastName(employeeRequest.getLastName());
-				employee.setLastUpdatedAt(new Date());
-				employee.setMiddleName(employeeRequest.getMiddleName());
-				employee.setMobileNumber(employeeRequest.getMobileNumber());
-				employee.setPassword(employeeRequest.getPassword());
-				employee.setRoleId(employeeRequest.getRoleId());
-				employee.setDesignationId(employeeRequest.getDesignationId());
-				employeeRepository.save(employee);
-				response.setSuccess(true);
-				response.setMessage(ResponseMessages.EMPLOYEE_UPDATION);
-				response.setContent(null);
-			}
+		Employee employee = employeeRepository.getById(employeeId);
+		if (employee != null) {
+			employee.setFirstName(employeeRequest.getFirstName());
+			employee.setLastName(employeeRequest.getLastName());
+			employee.setLastUpdatedAt(new Date());
+			employee.setMiddleName(employeeRequest.getMiddleName());
+			employee.setMobileNumber(employeeRequest.getMobileNumber());
+			employee.setPassword(employeeRequest.getPassword());
+			employee.setRoleId(employeeRequest.getRoleId());
+			employee.setDesignationId(employeeRequest.getDesignationId());
+			employeeRepository.save(employee);
+			response.setSuccess(true);
+			response.setMessage(ResponseMessages.EMPLOYEE_UPDATION);
+			response.setContent(null);
+		}
 
-			else {
-				response.setSuccess(false);
-				response.setMessage(ResponseMessages.EMPLOYEE_INVALID);
-				response.setContent(null);
-			}
-
-		
+		else {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.EMPLOYEE_INVALID);
+			response.setContent(null);
+		}
 
 		return response;
 	}
@@ -329,8 +318,8 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			response.setSuccess(false);
 		}
 		return response;
-	} 
-	
+	}
+
 	@Override
 	public ApiResponse searchEmployeeNotAssignedToProject(String projectid, String clientid, String searchString) {
 		ApiResponse response = new ApiResponse(false);
@@ -338,70 +327,67 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		projectRequest.setpId(projectid);
 		projectRequest.setClientId(clientid);
 		ApiResponse projvalres = ProjectSerImpl.validateClientIdProjectId(projectRequest);
-		List<Map> employeeList = employeeRepository.searchEmployeeNotAssignedToProject(projectid,searchString);
+		List<Map> employeeList = employeeRepository.searchEmployeeNotAssignedToProject(projectid, searchString);
 		Map content = new HashMap();
 		content.put("EmployeeList", employeeList);
 		response.setSuccess(true);
 		response.setContent(content);
 		return response;
-	} 
-	
+	}
+
 	@Override
 	public ApiResponse searchInfraUser(String searchString) {
 		ApiResponse response = new ApiResponse(false);
-		List<Map> employeeList = employeeRepository.searchInfraUsersForInfraUser(searchString,currentUser.getUserId());
+		List<Map> employeeList = employeeRepository.searchInfraUsersForInfraUser(searchString, currentUser.getUserId());
 		Map content = new HashMap();
-		if(employeeList.size() > 0) {
+		if (employeeList.size() > 0) {
 			content.put("EmployeeList", employeeList);
 			response.setSuccess(true);
 			response.setContent(content);
-		}else {
+		} else {
 			content.put("EmployeeList", employeeList);
 			response.setSuccess(false);
 			response.setContent(content);
 		}
-		
-		
+
 		return response;
-	} 
-	
+	}
+
 	@Override
 	public ApiResponse searchEmployee(String searchString) {
 		ApiResponse response = new ApiResponse(false);
 		List<Map> employeeList = employeeRepository.searchEmployee(searchString);
 		Map content = new HashMap();
-		if(employeeList.size() > 0) {
+		if (employeeList.size() > 0) {
 			content.put("EmployeeList", employeeList);
 			response.setSuccess(true);
 			response.setContent(content);
-		}else {
+		} else {
 			content.put("EmployeeList", employeeList);
 			response.setSuccess(false);
 			response.setContent(content);
 		}
-		
-		
+
 		return response;
 	}
-	
+
 	@Override
 	public ApiResponse searchInfraUsersForInfraUser(String searchString) {
 		ApiResponse response = new ApiResponse(false);
 //		List<Map> employeeList = employeeRepository.searchInfraUsersForInfraUser(searchString,currentUser.getUserId());
-		List<Map> employeeList = employeeRepository.searchInfraUsersForInfraUser(searchString,currentUser.getUserId());
+		List<Map> employeeList = employeeRepository.searchInfraUsersForInfraUser(searchString, currentUser.getUserId());
 
 		Map content = new HashMap();
-		if(employeeList.size() > 0) {
+		if (employeeList.size() > 0) {
 			content.put("EmployeeList", employeeList);
 			response.setSuccess(true);
 			response.setContent(content);
-		}else {
+		} else {
 			content.put("EmployeeList", employeeList);
 			response.setSuccess(false);
 			response.setContent(content);
 		}
-		
-		
+
 		return response;
 	}
 
@@ -415,8 +401,8 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		response.setSuccess(true);
 		response.setContent(content);
 		return response;
-	} 
-	
+	}
+
 	@Override
 	public ApiResponse getAllPermissions() {
 		List<Map> permissionList = permissionRepository.getAllPermissions();
@@ -440,8 +426,6 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		response.setContent(content);
 		return infraList;
 	}
-	
-	
 
 	@Override
 	public List<Map> getListOfInfraAdmins() {
@@ -482,36 +466,32 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	@Override
 	public ApiResponse updateEmployee(Map employeeRequest) {
 		ApiResponse response = new ApiResponse(true);
-	
+
 		Employee employeeObj = employeeRepository.getbyUserByUserId(currentUser.getUserId());
-			
-			if (employeeObj != null) {
 
-				employeeObj.setFirstName((String) employeeRequest.get("firstName"));
-				employeeObj.setLastName((String) employeeRequest.get("lastName"));
-				//employeeObj.setLastUpdatedAt(new Date());
-				employeeObj.setMiddleName((String) employeeRequest.get("middleName"));
-				employeeObj.setMobileNumber((String) employeeRequest.get("mobileNumber"));
-				
-				
-				
-				employeeRepository.save(employeeObj);
+		if (employeeObj != null) {
 
-				response.setSuccess(true);
-				response.setMessage(ResponseMessages.EMPLOYEE_UPDATION);
-				response.setContent(null);
-				return response;
-			}
+			employeeObj.setFirstName((String) employeeRequest.get("firstName"));
+			employeeObj.setLastName((String) employeeRequest.get("lastName"));
+			// employeeObj.setLastUpdatedAt(new Date());
+			employeeObj.setMiddleName((String) employeeRequest.get("middleName"));
+			employeeObj.setMobileNumber((String) employeeRequest.get("mobileNumber"));
 
-			else {
-				response.setSuccess(false);
-				response.setMessage(ResponseMessages.EMPLOYEE_INVALID);
-				response.setContent(null);
-			
-	
+			employeeRepository.save(employeeObj);
 
-		return response;
-			}
+			response.setSuccess(true);
+			response.setMessage(ResponseMessages.EMPLOYEE_UPDATION);
+			response.setContent(null);
+			return response;
+		}
+
+		else {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.EMPLOYEE_INVALID);
+			response.setContent(null);
+
+			return response;
+		}
 	}
 
 	public ApiResponse getAllProfile() {
@@ -526,125 +506,130 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public ApiResponse updateProfileImage(MultipartFile file,String employeeId) {
+	public ApiResponse updateProfileImage(MultipartFile file, String employeeId) {
 		ApiResponse response = new ApiResponse(true);
-		 byte[] filearray;
-		 try {
-			filearray=file.getBytes();
+		byte[] filearray;
+		try {
+			filearray = file.getBytes();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 //	       System.out.println(file.);
-	       String fileextension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
-	      String filename = getRandomFileName()+fileextension;//constentFile.getOriginalFilename();
-	      
-	      if(addFileAdmin(file,filename)!= null) {
-	    	  Employee employeeObj = employeeRepository.getById(employeeId);
-	    	  employeeObj.setProfileUrl("https://covidtest.xyramsoft.com/image/ticket-attachment/"+filename);
-	    	  employeeRepository.save(employeeObj);
-	    	  response.setSuccess(true);
-				response.setMessage(ResponseMessages.EMPLOYEE_PROFILE_UPDATION);
-				response.setContent(null);
-				return response;
-	      }
-	      
-	      else
-	      {
-	    	  
-	    	  response.setSuccess(false);
-				response.setMessage(ResponseMessages.EMPLOYEE_INVALID);
-				response.setContent(null);
-	      }
-	      
-	      return response;
+		String fileextension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+		String filename = getRandomFileName() + fileextension;// constentFile.getOriginalFilename();
+
+		if (addFileAdmin(file, filename) != null) {
+			Employee employeeObj = employeeRepository.getById(employeeId);
+			employeeObj.setProfileUrl("https://covidtest.xyramsoft.com/image/ticket-attachment/" + filename);
+			employeeRepository.save(employeeObj);
+			response.setSuccess(true);
+			response.setMessage(ResponseMessages.EMPLOYEE_PROFILE_UPDATION);
+			response.setContent(null);
+			return response;
+		}
+
+		else {
+
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.EMPLOYEE_INVALID);
+			response.setContent(null);
+		}
+
+		return response;
 	}
 
 	public String getRandomFileName() {
-	    int leftLimit = 97; // letter 'a'
-	    int rightLimit = 122; // letter 'z'
-	    int targetStringLength = 10;
-	    Random random = new Random();
+		int leftLimit = 97; // letter 'a'
+		int rightLimit = 122; // letter 'z'
+		int targetStringLength = 10;
+		Random random = new Random();
 
-	    String generatedString = random.ints(leftLimit, rightLimit + 1)
-	      .limit(targetStringLength)
-	      .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-	      .toString();
+		String generatedString = random.ints(leftLimit, rightLimit + 1).limit(targetStringLength)
+				.collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append).toString();
 
-	    return generatedString;
+		return generatedString;
 	}
-	public String addFileAdmin(MultipartFile file, String fileName){
+
+	public String addFileAdmin(MultipartFile file, String fileName) {
 		System.out.println("bjsjsjn");
-	    String SFTPHOST = "13.229.55.43"; // SFTP Host Name or SFTP Host IP Address
-	    int SFTPPORT = 22; // SFTP Port Number
-	    String SFTPUSER = "ubuntu"; // User Name
-	    String SFTPPASS = ""; // Password
-	    String SFTPKEY = "/home/ubuntu/tomcat/webapps/Ticket_tool-0.0.1-SNAPSHOT/WEB-INF/classes/Covid-Phast-Prod.ppk";
-	    String SFTPWORKINGDIRAADMIN = "/home/ubuntu/tomcat/webapps/image/ticket-attachment";// Source Directory on SFTP server
-	    String fileNameOriginal = fileName;
-	    try {
-	          JSch jsch = new JSch();
-	        if (SFTPKEY != null && !SFTPKEY.isEmpty()) {
+		String SFTPHOST = "13.229.55.43"; // SFTP Host Name or SFTP Host IP Address
+		int SFTPPORT = 22; // SFTP Port Number
+		String SFTPUSER = "ubuntu"; // User Name
+		String SFTPPASS = ""; // Password
+		String SFTPKEY = "/home/ubuntu/tomcat/webapps/Ticket_tool-0.0.1-SNAPSHOT/WEB-INF/classes/Covid-Phast-Prod.ppk";
+		String SFTPWORKINGDIRAADMIN = "/home/ubuntu/tomcat/webapps/image/ticket-attachment";// Source Directory on SFTP
+																							// server
+		String fileNameOriginal = fileName;
+		try {
+			JSch jsch = new JSch();
+			if (SFTPKEY != null && !SFTPKEY.isEmpty()) {
 				jsch.addIdentity(SFTPKEY);
 			}
-	        session = jsch.getSession(SFTPUSER, SFTPHOST, SFTPPORT);
+			session = jsch.getSession(SFTPUSER, SFTPHOST, SFTPPORT);
 //	        session.setPassword(SFTPPASS);
-	        java.util.Properties config = new java.util.Properties();
-	        config.put("StrictHostKeyChecking", "no");
-	        session.setConfig(config);
-	        session.connect(); // Create SFTP Session
-	        channel = session.openChannel("sftp"); // Open SFTP Channel
-	        channel.connect();
-	        channelSftp = (ChannelSftp) channel;
-	        channelSftp.cd(SFTPWORKINGDIRAADMIN);// Change Directory on SFTP Server
-	        channelSftp.put(file.getInputStream(),fileName);
-	        System.out.println("added");
-	    } catch (Exception ex) {
-	        ex.printStackTrace();
-	    } 
-	        finally {
-	        if (channelSftp != null)
-	            channelSftp.disconnect();
-	        if (channel != null)
-	            channel.disconnect();
-	        if (session != null)
-	            session.disconnect();
-	    }
+			java.util.Properties config = new java.util.Properties();
+			config.put("StrictHostKeyChecking", "no");
+			session.setConfig(config);
+			session.connect(); // Create SFTP Session
+			channel = session.openChannel("sftp"); // Open SFTP Channel
+			channel.connect();
+			channelSftp = (ChannelSftp) channel;
+			channelSftp.cd(SFTPWORKINGDIRAADMIN);// Change Directory on SFTP Server
+			channelSftp.put(file.getInputStream(), fileName);
+			System.out.println("added");
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			if (channelSftp != null)
+				channelSftp.disconnect();
+			if (channel != null)
+				channel.disconnect();
+			if (session != null)
+				session.disconnect();
+		}
 		return fileNameOriginal;
 	}
 
 	@Override
 	public ApiResponse createJobVendor(JobVendorDetails vendorDetails) {
-        ApiResponse response = new ApiResponse(false);
-		
+		ApiResponse response = new ApiResponse(false);
+
 //		response = validateEmployee(vendorDetails);
-		System.out.println("username::"+currentUser.getName());
+		System.out.println("username::" + currentUser.getName());
 
 //		if (response.isSuccess()) {
-			try {
-				User user = new User();
-				user.setUsername(vendorDetails.getEmail());
-				String encodedPassword = new BCryptPasswordEncoder().encode(vendorDetails.getPassword());
-				user.setPassword(encodedPassword);
-				// Employee employeere=new Employee();
-				if (vendorDetails.getRoleId().equals("R6")) {
-					user.setUserRole(UserRole.JOB_VENDOR);
-				}  else {
-					throw new ResourceNotFoundException("invalid user role ");
+		try {
+			User user = new User();
+			user.setUsername(vendorDetails.getEmail());
+			String encodedPassword = new BCryptPasswordEncoder().encode(vendorDetails.getPassword());
+			user.setPassword(encodedPassword);
+			// Employee employeere=new Employee();
+			Role role = roleRepository.getById(vendorDetails.getRoleId());
+			if (role != null) {
+				try {
+
+					user.setUserRole(role.getRoleName());
+				} catch (Exception e) {
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+							role.getRoleName() + " is not a valid status");
 				}
-				user.setStatus(UserStatus.ACTIVE);
-				System.out.println(user.getEmail()+"::"+user.getUsername()+"::"+user.getCreatedAt());
-				userRepository.save(user);
-				
+			} else {
+				throw new ResourceNotFoundException("invalid user role ");
+			}
+			user.setStatus(UserStatus.ACTIVE);
+			System.out.println(user.getEmail() + "::" + user.getUsername() + "::" + user.getCreatedAt());
+			userRepository.save(user);
+
 //				vendorDetails.setCreatedBy(currentUser.getUserId());
 //				vendorDetails.setUpdatedBy(currentUser.getUserId());
 //				vendorDetails.setCreatedAt(new Date());
 //				vendorDetails.setLastUpdatedAt(new Date());
-				vendorDetails.setUserCredientials(user);
-				vendorDetails.setProfileUrl("https://covidtest.xyramsoft.com/image/ticket-attachment/user-default-pic.png");
-				JobVendorDetails vendorNew = vendorRepository.save(vendorDetails);
-				
-				//Assigning default project to Developer
+			vendorDetails.setUserCredientials(user);
+			vendorDetails.setProfileUrl("https://covidtest.xyramsoft.com/image/ticket-attachment/user-default-pic.png");
+			JobVendorDetails vendorNew = vendorRepository.save(vendorDetails);
+
+			// Assigning default project to Developer
 //				if (employee.getRoleId().equals("R3")) {
 //					System.out.println("Inside employee.getRoleId() - " + employee.getRoleId());
 //					ProjectMembers projectMember = new ProjectMembers();
@@ -657,24 +642,24 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 //					projectMember.setEmployeeId(employee.geteId());
 //					projectMemberRepository.save(projectMember);
 //				}
-				response.setSuccess(true);
-				response.setMessage(ResponseMessages.EMPLOYEE_ADDED);
-				Map content = new HashMap();
-				content.put("vendorId", vendorNew.getvId());
-				response.setContent(content);
-			} catch (Exception e) {
-				System.out.println("Error Occured :: " + e.getMessage());
-			}
+			response.setSuccess(true);
+			response.setMessage(ResponseMessages.EMPLOYEE_ADDED);
+			Map content = new HashMap();
+			content.put("vendorId", vendorNew.getvId());
+			response.setContent(content);
+		} catch (Exception e) {
+			System.out.println("Error Occured :: " + e.getMessage());
+		}
 
-			return response;
-}
+		return response;
+	}
 
 	@Override
 	public ApiResponse getEmployeeDetails(String employeeId) {
 		ApiResponse response = new ApiResponse(false);
 		Map employee = employeeRepository.getbyEmpId(employeeId);
 		Map content = new HashMap();
-		content.put("employeeDetails",employee);
+		content.put("employeeDetails", employee);
 		if (employee != null) {
 			response.setSuccess(true);
 			response.setMessage("Employee Retrieved Successfully");
@@ -687,11 +672,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			response.setContent(null);
 		}
 
-	return response;
+		return response;
 	}
 
-
-
 }
-
-		

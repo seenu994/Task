@@ -24,7 +24,7 @@ import com.xyram.ticketingTool.enumType.UserStatus;
 import com.xyram.ticketingTool.ticket.config.JSONObjectUserType;
 import javax.persistence.Lob;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.Type;   
+import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name = "user")
@@ -53,23 +53,20 @@ public class User extends IBaseData {
 	@Enumerated(EnumType.STRING)
 	@Column(name = "userStatus")
 	private UserStatus status;
-	
+
 	@Column(name = "accesskey")
 	private String accesskey;
-	
-	@Column(name="permissions")
+
+	@Column(name = "permissions")
 	private Integer permission;
-	
-	
-	  @Column(name = "reset_password_token")
-	  private String resetPasswordToken;
-	  
-		@Column(unique = true, nullable = true)
-		  private String email;
-		
-	  
-	  
-	  public String getEmail() {
+
+	@Column(name = "reset_password_token")
+	private String resetPasswordToken;
+
+	@Column(unique = true, nullable = true)
+	private String email;
+
+	public String getEmail() {
 		return email;
 	}
 
@@ -77,8 +74,6 @@ public class User extends IBaseData {
 		this.email = email;
 	}
 
-
-	
 	public String getResetPasswordToken() {
 		return resetPasswordToken;
 	}
@@ -99,9 +94,6 @@ public class User extends IBaseData {
 //	@Column(name = "file_name")
 //	@JsonIgnore
 //	private String fileName;
-	
-	
-	
 
 	public String getAccesskey() {
 		return accesskey;
@@ -111,10 +103,8 @@ public class User extends IBaseData {
 		this.accesskey = accesskey;
 	}
 
-	@Enumerated(EnumType.STRING)
-	@Column(name = "TICKETINGTOOL_ADMIN")
-	private UserRole userRole;
-	
+	@Column(name = "user_role")
+	private String userRole;
 
 	public User() {
 
@@ -153,11 +143,11 @@ public class User extends IBaseData {
 		this.username = username;
 	}
 
-	public UserRole getUserRole() {
+	public String getUserRole() {
 		return userRole;
 	}
 
-	public void setUserRole(UserRole userRole) {
+	public void setUserRole(String userRole) {
 		this.userRole = userRole;
 	}
 
@@ -189,7 +179,5 @@ public class User extends IBaseData {
 	public void setPermission(Integer permission) {
 		this.permission = permission;
 	}
-	
-	
 
 }

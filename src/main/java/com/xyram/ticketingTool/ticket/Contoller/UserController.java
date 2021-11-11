@@ -52,7 +52,7 @@ public class UserController {
 			user.setUsername("admin");
 			 String encodedPassword = new BCryptPasswordEncoder().encode("admin");
 			 user.setPassword(encodedPassword);
-			user.setUserRole(UserRole.TICKETINGTOOL_ADMIN);
+			user.setUserRole(UserRole.TICKETINGTOOL_ADMIN.toString());
 			user.setStatus(UserStatus.ACTIVE);
 
 			userRepository.save(user);
