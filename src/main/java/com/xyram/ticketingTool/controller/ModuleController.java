@@ -11,13 +11,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Module;
 import com.xyram.ticketingTool.service.ModuleService;
 import com.xyram.ticketingTool.util.AuthConstants;
 
-@Repository
+@RestController
 @CrossOrigin
 public class ModuleController {
 
