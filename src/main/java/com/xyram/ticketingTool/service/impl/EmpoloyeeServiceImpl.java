@@ -88,6 +88,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	@Autowired
 	VendorRepository vendorRepository;
 	
+	
 	@Autowired
 	PermissionConfig permissionConfig;
 	
@@ -116,20 +117,20 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				String encodedPassword = new BCryptPasswordEncoder().encode(employee.getPassword());
 				user.setPassword(encodedPassword);
 				// Employee employeere=new Employee();
-				
-				System.out.println("RoleId::"+employee.getRoleId());
-				if (employee.getRoleId().equals("R2")) {
-					user.setUserRole(UserRole.INFRA);
-					
-				} else if (employee.getRoleId().equals("R3")) {
-					user.setUserRole(UserRole.DEVELOPER);
-				}else if (employee.getRoleId().equals("R1")) {
-					user.setUserRole(UserRole.TICKETINGTOOL_ADMIN);
-				} else if (employee.getRoleId().equals("R4")) {
-					user.setUserRole(UserRole.HR_ADMIN);
-				} else if (employee.getRoleId().equals("R5")) {
-					user.setUserRole(UserRole.HR);
-				} else {
+			Role role=	roleRepository.getById(employee.getRoleId());
+			if(role!=null)
+			{
+				try {
+
+				   user.setUserRole(UserRole.toEnum(role.getRoleName()));
+				}
+				catch(Exception e)
+				{
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+							role.getRoleName() + " is not a valid status");
+				}
+			}
+			 else {
 					throw new ResourceNotFoundException("invalid user role ");
 				}
 				Integer permission = permissionConfig.setDefaultPermissions(user.getUserRole().toString());
