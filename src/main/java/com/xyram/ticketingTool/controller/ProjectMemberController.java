@@ -47,19 +47,19 @@ class ProjectMemberContoller {
 	ProjectMemberService projectMemberService;
 
 	
-	@PostMapping(value= {AuthConstants.ADMIN_BASEPATH +"/assignProjectToEmployee",AuthConstants.INFRA_ADMIIN_BASEPATH +"/assignProjectToEmployee",AuthConstants.DEVELOPER_BASEPATH +"/assignProjectToEmployee"})
+	@PostMapping(value= {AuthConstants.ADMIN_BASEPATH +"/assignProjectToEmployee",AuthConstants.INFRA_ADMIN_BASEPATH +"/assignProjectToEmployee",AuthConstants.DEVELOPER_BASEPATH +"/assignProjectToEmployee"})
 	public ApiResponse assignProjectToEmployee(@RequestBody Map<Object,Object> request) {
 		logger.info("Received request to add project Members");
 		return  projectMemberService.assignProjectToEmployee(request);
 	}	
 
 	
-	@GetMapping(value= {AuthConstants.ADMIN_BASEPATH +"/getAllProjectMembers",AuthConstants.INFRA_ADMIIN_BASEPATH +"/getAllProjectMembers",AuthConstants.DEVELOPER_BASEPATH +"/getAllProjectMembers",AuthConstants.INFRA_USER_BASEPATH +"/getAllProjectMembers"})
+	@GetMapping(value= {AuthConstants.ADMIN_BASEPATH +"/getAllProjectMembers",AuthConstants.INFRA_ADMIN_BASEPATH +"/getAllProjectMembers",AuthConstants.DEVELOPER_BASEPATH +"/getAllProjectMembers",AuthConstants.INFRA_USER_BASEPATH +"/getAllProjectMembers"})
 	public Page<ProjectMembers> getAllProjectMembers(Pageable pageable) {
 		logger.info("indide ProjectMembersController :: getAllProjectMembers");
 		return projectMemberService.getAllProjectMembers(pageable);
 	}
-	@PostMapping(value= {AuthConstants.ADMIN_BASEPATH +"/unassignProjectToEmployee",AuthConstants.INFRA_ADMIIN_BASEPATH +"/unassignProjectToEmployee",AuthConstants.DEVELOPER_BASEPATH +"/unassignProjectToEmployee"})
+	@PostMapping(value= {AuthConstants.ADMIN_BASEPATH +"/unassignProjectToEmployee",AuthConstants.INFRA_ADMIN_BASEPATH +"/unassignProjectToEmployee",AuthConstants.DEVELOPER_BASEPATH +"/unassignProjectToEmployee"})
 	public ApiResponse unassignProjectToEmployee(@RequestBody ProjectMembers member) {
 		logger.info("Received request to add project Members");
 		return  projectMemberService.unassignProjectToEmployee(member);

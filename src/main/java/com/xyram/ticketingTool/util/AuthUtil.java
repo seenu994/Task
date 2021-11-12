@@ -9,7 +9,11 @@ public interface AuthUtil {
 	String[] NON_SECURE_PATHS = { "/authenticate", "/api/user/createAdmin", "/updatePassword/{accestoken} ",
 			"/forgotPassword/{userName}", "/profile/image/{employeeId}" };
 	String[] ADMIN_PATHS = { "/admin-resource/**" };
-	String[] INFRA_PATHS = { "/infra-resource/**" };
+
+	String[] INFRA_USER_PATHS = { "/infra-resource/**" };
+
+	String[] INFRA_ADMIN_PATHS = { "/infra-admin-resource/**" };
+
 	String[] DEVELOPER_PATHS = { "/developer-resource/**" };
 	String[] HR_ADMIN_PATHS = { "/hr-admin-resource/**" };
 	String[] HR_PATHS = { "/hr-resource/**" };
@@ -22,8 +26,12 @@ public interface AuthUtil {
 
 		case AuthConstants.ROLE_ADMIN:
 			return AuthConstants.ADMIN_BASEPATH;
-		case AuthConstants.ROLE_INFRA:
+		case AuthConstants.ROLE_INFRA_ADMIN:
+			return AuthConstants.INFRA_ADMIN_BASEPATH;
+
+		case AuthConstants.ROLE_INFRA_USER:
 			return AuthConstants.INFRA_USER_BASEPATH;
+
 		case AuthConstants.ROLE_DEVELOPER:
 			return AuthConstants.DEVELOPER_BASEPATH;
 		case AuthConstants.ROLE_HR_ADMIN:

@@ -35,7 +35,7 @@ public class ModuleController {
 
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllModules",
 			AuthConstants.INFRA_USER_BASEPATH + "/getAllModules",
-			AuthConstants.INFRA_ADMIIN_BASEPATH + "/getAllModules",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllModules",
 			AuthConstants.DEVELOPER_BASEPATH + "/getAllModules",
 			AuthConstants.HR_ADMIN_BASEPATH + "/getAllModules",
 			AuthConstants.HR_BASEPATH + "/getAllModules",

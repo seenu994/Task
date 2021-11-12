@@ -79,7 +79,8 @@ public class WebSecurityConfigure extends WebSecurityConfigurerAdapter {
 				// dont authenticate this particular request
 				.authorizeRequests().antMatchers(AuthUtil.NON_SECURE_PATHS).permitAll()
 				.antMatchers(AuthUtil.ADMIN_PATHS).hasRole(AuthConstants.ROLE_ADMIN)
-				.antMatchers(AuthUtil.INFRA_PATHS).hasRole(AuthConstants.ROLE_INFRA)
+				.antMatchers(AuthUtil.INFRA_USER_PATHS).hasRole(AuthConstants.ROLE_INFRA_USER)
+				.antMatchers(AuthUtil.INFRA_ADMIN_PATHS).hasRole(AuthConstants.ROLE_INFRA_ADMIN)
 				.antMatchers(AuthUtil.DEVELOPER_PATHS).hasRole(AuthConstants.ROLE_DEVELOPER)
 				.antMatchers(AuthUtil.HR_ADMIN_PATHS).hasRole(AuthConstants.ROLE_HR_ADMIN)
 				.antMatchers(AuthUtil.HR_PATHS).hasRole(AuthConstants.ROLE_HR)

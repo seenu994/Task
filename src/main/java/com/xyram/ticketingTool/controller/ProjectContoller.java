@@ -44,14 +44,14 @@ class ProjectContoller {
 	@Autowired
 	ProjectService projectService;
 
-	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/createProject",AuthConstants.INFRA_ADMIIN_BASEPATH + "/createProject" })
+	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/createProject",AuthConstants.INFRA_ADMIN_BASEPATH + "/createProject" })
 	public ApiResponse addproject(@RequestBody Projects project) {
 		logger.info("Received request to add project");
 		return projectService.addproject(project);
 	}
 
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllProjects",
-			AuthConstants.INFRA_USER_BASEPATH + "/getAllProjects",AuthConstants.INFRA_ADMIIN_BASEPATH + "/getAllProjects" })
+			AuthConstants.INFRA_USER_BASEPATH + "/getAllProjects",AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllProjects" })
 	public ApiResponse getAllProjects(Pageable pageable) {
 		logger.info("indide ProjectContoller :: getAllProjects");
 		return projectService.getAllProjects(pageable);
@@ -64,20 +64,20 @@ class ProjectContoller {
 	}
 
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editProejct",
-			AuthConstants.INFRA_USER_BASEPATH + "/editProejct",AuthConstants.INFRA_ADMIIN_BASEPATH + "/editProejct"  })
+			AuthConstants.INFRA_USER_BASEPATH + "/editProejct",AuthConstants.INFRA_ADMIN_BASEPATH + "/editProejct"  })
 	public ApiResponse editProject(@RequestBody Projects projectRequest) {
 		logger.info("indide ProjectContoller :: editProejct");
 		return projectService.editEmployee(projectRequest);
 	}
 
-	@GetMapping(value = {AuthConstants.ADMIN_BASEPATH + "/getProjectDetails/{projectId}",AuthConstants.INFRA_ADMIIN_BASEPATH + "/getProjectDetails/{projectId}"})
+	@GetMapping(value = {AuthConstants.ADMIN_BASEPATH + "/getProjectDetails/{projectId}",AuthConstants.INFRA_ADMIN_BASEPATH + "/getProjectDetails/{projectId}"})
 	public Optional<Projects> getProjectDetailsById(@PathVariable String projectId) {
 		return projectService.findById(projectId);
 	}
 
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/searchProject/{searchString}",
 			AuthConstants.INFRA_USER_BASEPATH + "/searchProject/{searchString}",
-			AuthConstants.DEVELOPER_BASEPATH + "/searchProject/{searchString}",AuthConstants.INFRA_ADMIIN_BASEPATH + "/searchProject/{searchString}" })
+			AuthConstants.DEVELOPER_BASEPATH + "/searchProject/{searchString}",AuthConstants.INFRA_ADMIN_BASEPATH + "/searchProject/{searchString}" })
 	public ApiResponse searchProject(@PathVariable String searchString) {
 		logger.info("inside ProjectContoller :: searchProject ");
 		return projectService.searchProject(searchString);
