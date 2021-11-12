@@ -1,0 +1,104 @@
+package com.xyram.ticketingTool.entity;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.Size;
+
+import org.hibernate.annotations.GenericGenerator;
+
+@Entity
+@Table(name = "story_comments")
+public class StoryComments {
+
+	@Id
+	@GeneratedValue(generator = "uuid")
+	@GenericGenerator(name = "uuid", strategy = "uuid")
+	@Size(max = 8)
+	@Column(name = "id")
+	private String id;
+
+	@Column(name = "description")
+	private String description;
+
+	@Column(name = "mention_to")
+	private String mentionTo;
+
+	@Column(name = "commented_date")
+	private Date commentedDate;
+
+	@Column(name = "commented_by")
+	private String commentedBy;
+
+	@Column(name = "story_id")
+	private String  storyId;
+
+	@Column(name = "project_id")
+	private String projectId;
+
+
+	
+	
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getMentionTo() {
+		return mentionTo;
+	}
+
+	public void setMentionTo(String mentionTo) {
+		this.mentionTo = mentionTo;
+	}
+
+	public Date getCommentedDate() {
+		return commentedDate;
+	}
+
+	public void setCommentedDate(Date commentedDate) {
+		this.commentedDate = commentedDate;
+	}
+
+	public String getCommentedBy() {
+		return commentedBy;
+	}
+
+	public void setCommentedBy(String commentedBy) {
+		this.commentedBy = commentedBy;
+	}
+
+	
+	public String getStoryId() {
+		return storyId;
+	}
+
+	public void setStoryId(String storyId) {
+		this.storyId = storyId;
+	}
+
+	public String getProjectId() {
+		return projectId;
+	}
+
+	public void setProjectId(String projectId) {
+		this.projectId = projectId;
+	}
+
+}
