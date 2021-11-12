@@ -28,7 +28,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 
 	@Query("Select distinct new map(e.eId as id,e.email as email,e.firstName as firstName,e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId, "
 			+ "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,d.designationName as designationName,e.profileUrl as profileUrl,e.createdAt as createdAt) from Employee e "
-			+ "JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id ORDER BY e.createdAt DESC")
+			+ "INNER JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id ORDER BY e.createdAt DESC")
 	Page<Map> getAllEmployeeList(Pageable pageable);
 
 	// Select e.`employee_id` as id, e.`frist_name` as firstName, e.`last_name` as
@@ -59,7 +59,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 	List<Map> searchInfraUser(@Param("searchString") String searchString);
 
 	@Query("Select distinct new map(e.eId as id, e.firstName as firstName, e.lastName as lastName) from Employee e "
-			+ "where e.status = 'ACTIVE' and e.email like %:searchString% and e.roleId = 'R2' and e.userCredientials.id != :userId")
+			+ "where e.status = 'ACTIVE' and e.email like %:searchString% and e.roleId = 'R3' and e.userCredientials.id != :userId")
 	List<Map> searchInfraUsersForInfraUser(@Param("searchString") String searchString, @Param("userId") String userId);
 
 //	@Query("Select distinct new map(e.eId as id, e.firstName as firstName, e.lastName as lastName) from Employee e "
