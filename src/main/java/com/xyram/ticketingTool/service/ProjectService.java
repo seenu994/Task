@@ -22,7 +22,9 @@ public interface ProjectService {
 
 	Optional <Projects> findById(String id);
 
-	ApiResponse searchProject(String searchString); 
+	ApiResponse searchProject(String searchString);
+
+	Projects getprojectById(String projectId); 
 
 
 }
