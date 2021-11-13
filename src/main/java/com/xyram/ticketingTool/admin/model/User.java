@@ -21,6 +21,8 @@ import com.xyram.ticketingTool.baseData.model.IBaseData;
 import com.xyram.ticketingTool.enumType.ProjectStatus;
 import com.xyram.ticketingTool.enumType.UserRole;
 import com.xyram.ticketingTool.enumType.UserStatus;
+import com.xyram.ticketingTool.id.generator.IdGenerator;
+import com.xyram.ticketingTool.id.generator.IdPrefix;
 import com.xyram.ticketingTool.ticket.config.JSONObjectUserType;
 import javax.persistence.Lob;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -32,9 +34,9 @@ import org.hibernate.annotations.Type;
 public class User extends IBaseData {
 
 	@Id
-	@GeneratedValue(generator = "uuid")
-	@GenericGenerator(name = "uuid", strategy = "uuid")
-	@Size(max = 8)
+	@IdPrefix(value = "USR_")
+	@GeneratedValue(generator = IdGenerator.ID_GENERATOR)
+	@GenericGenerator(name = IdGenerator.ID_GENERATOR, strategy = "com.xyram.ticketingTool.id.generator.IdGenerator")
 	@Column(name = "user_id")
 	private String id;
 

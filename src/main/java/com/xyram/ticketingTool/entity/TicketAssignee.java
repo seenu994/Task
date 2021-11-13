@@ -27,6 +27,8 @@ import com.xyram.ticketingTool.enumType.ProjectMembersStatus;
 import com.xyram.ticketingTool.enumType.TicketAssigneeStatus;
 import com.xyram.ticketingTool.enumType.TicketStatus;
 import com.xyram.ticketingTool.enumType.UserStatus;
+import com.xyram.ticketingTool.id.generator.IdGenerator;
+import com.xyram.ticketingTool.id.generator.IdPrefix;
 import com.xyram.ticketingTool.ticket.config.JSONObjectUserType;
 
 @Entity
@@ -35,9 +37,9 @@ import com.xyram.ticketingTool.ticket.config.JSONObjectUserType;
 public class TicketAssignee extends AuditModel {
 
 	@Id
-	@GeneratedValue(generator = "uuid")
-	@GenericGenerator(name = "uuid", strategy = "uuid")
-	@Size( max = 8)
+	@IdPrefix(value = "TICA_")
+	@GeneratedValue(generator = IdGenerator.ID_GENERATOR)
+	@GenericGenerator(name = IdGenerator.ID_GENERATOR, strategy = "com.xyram.ticketingTool.id.generator.IdGenerator")
 	@Column(name="ticketAssignee_id")
 	private String Id;
 	
