@@ -49,14 +49,14 @@ public class TicketAssignController {
 	 * 
 	 * 
 	 */
-	@PostMapping(value= {AuthConstants.ADMIN_BASEPATH + "/assignTicketToInfraTeam",AuthConstants.INFRA_USER_BASEPATH + "/assignTicketToInfraTeam",AuthConstants.INFRA_ADMIIN_BASEPATH + "/assignTicketToInfraTeam"})
+	@PostMapping(value= {AuthConstants.ADMIN_BASEPATH + "/assignTicketToInfraTeam",AuthConstants.INFRA_USER_BASEPATH + "/assignTicketToInfraTeam",AuthConstants.INFRA_ADMIN_BASEPATH + "/assignTicketToInfraTeam"})
 //	public Map<String,String> assignTicketToInfraTeam(@RequestBody Map<String, Object> requestMap) {
 	public ApiResponse assignTicketToInfraTeam(@RequestBody TicketAssignee assignee) {
 		logger.info("Received request to assign tickets to infra team");
 		return ticketAssignService.assignTicketToInfraTeam(assignee);
 	}
 	
-	@PostMapping(value= {AuthConstants.ADMIN_BASEPATH + "/reassignTicketToInfraTeam",AuthConstants.INFRA_ADMIIN_BASEPATH + "/reassignTicketToInfraTeam",AuthConstants.INFRA_USER_BASEPATH + "/reassignTicketToInfraTeam"})
+	@PostMapping(value= {AuthConstants.ADMIN_BASEPATH + "/reassignTicketToInfraTeam",AuthConstants.INFRA_ADMIN_BASEPATH + "/reassignTicketToInfraTeam",AuthConstants.INFRA_USER_BASEPATH + "/reassignTicketToInfraTeam"})
 //	public Map<String,String> assignTicketToInfraTeam(@RequestBody Map<String, Object> requestMap) {
 	public ApiResponse reassignTicketToInfraTeam(@RequestBody TicketAssignee assignee) {
 		logger.info("Received request to assign tickets to infra team");

@@ -53,7 +53,7 @@ public class DesignationController {
 
 	
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllDesignation",
-			AuthConstants.INFRA_USER_BASEPATH + "/getAllDesignation", AuthConstants.DEVELOPER_BASEPATH + "/getAllDesignation",AuthConstants.INFRA_ADMIIN_BASEPATH + "/getAllDesignation" })
+			AuthConstants.INFRA_USER_BASEPATH + "/getAllDesignation", AuthConstants.DEVELOPER_BASEPATH + "/getAllDesignation",AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllDesignation" })
 	public ApiResponse getAllDesignation(Pageable pageable) {
 		logger.info("indide Designation Controller :: getAllDesignation");
 		return desiggnaionService.getAllDesignation(pageable);

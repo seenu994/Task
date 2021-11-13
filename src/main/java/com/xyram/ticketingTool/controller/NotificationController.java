@@ -28,7 +28,7 @@ public class NotificationController {
 
 
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/notifications",
-			AuthConstants.INFRA_USER_BASEPATH + "/notifications", AuthConstants.DEVELOPER_BASEPATH + "/notifications",AuthConstants.INFRA_ADMIIN_BASEPATH + "/notifications" })
+			AuthConstants.INFRA_USER_BASEPATH + "/notifications", AuthConstants.DEVELOPER_BASEPATH + "/notifications",AuthConstants.INFRA_ADMIN_BASEPATH + "/notifications" })
 	public ApiResponse getAllNotifications(Pageable pageable) {
 		logger.info("Received request for get all notifications");
 		return notificationService.getAllNotifications(pageable);

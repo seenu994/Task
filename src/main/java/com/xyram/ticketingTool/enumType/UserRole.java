@@ -10,7 +10,8 @@ public enum UserRole {
 	INFRA("INFRA"),
 	HR_ADMIN("HR_ADMIN"),
 	HR("HR"),
-	JOB_VENDOR("JOB_VENDOR");
+	JOB_VENDOR("JOB_VENDOR"),
+	ACCOUNTANT("ACCOUNTANT");
 	
 	
 	
