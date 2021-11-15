@@ -118,7 +118,7 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 			+ "where  ticket_assignee_status = 'ACTIVE' and ticket_id in (select ticket_id from ticketdbtool.ticket_info where ticket_status in ('ASSIGNED','INPROGRESS')) "
 			+ "group by e.employee_id "
 			+ "union "
-			+ "select e.employee_id, 0 as emp_cnt from ticketdbtool.employee e where e.role_id = 'R2' "
+			+ "select e.employee_id, 0 as emp_cnt from ticketdbtool.employee e where e.role_id = 'R3' "
 			+ "and e.employee_id not in (select t.employee_id from ticketdbtool.ticket_assignee t where e.employee_id = t.employee_id)) c "
 			+ "UNION "
 			+ "select e.employee_id as emp_id, 0 as emp_cnt from ticketdbtool.employee e "

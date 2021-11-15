@@ -13,15 +13,17 @@ import org.hibernate.annotations.GenericGenerator;
 
 import com.xyram.ticketingTool.baseData.model.AuditModel;
 import com.xyram.ticketingTool.enumType.NotificationType;
+import com.xyram.ticketingTool.id.generator.IdGenerator;
+import com.xyram.ticketingTool.id.generator.IdPrefix;
 
 @Entity
 @Table(name = "notifications")
 public class Notifications extends AuditModel{
 
 	@Id
-	@GeneratedValue(generator = "uuid")
-	@GenericGenerator(name = "uuid", strategy = "uuid")
-	@Size( max = 4)
+	@IdPrefix(value = "NOT_")
+	@GeneratedValue(generator = IdGenerator.ID_GENERATOR)
+	@GenericGenerator(name = IdGenerator.ID_GENERATOR, strategy = "com.xyram.ticketingTool.id.generator.IdGenerator")
 	@Column(name="notification_id")
 	private String notificationId;
 	

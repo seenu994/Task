@@ -19,6 +19,8 @@ import org.hibernate.annotations.Type;
 
 import com.xyram.ticketingTool.baseData.model.AuditModel;
 import com.xyram.ticketingTool.enumType.TicketStatus;
+import com.xyram.ticketingTool.id.generator.IdGenerator;
+import com.xyram.ticketingTool.id.generator.IdPrefix;
 
 @Entity
 @Table(name = "ticket_info")
@@ -26,9 +28,9 @@ import com.xyram.ticketingTool.enumType.TicketStatus;
 public class Ticket extends AuditModel {
 
 	@Id
-	@GeneratedValue(generator = "uuid",strategy=GenerationType.AUTO)
-	@GenericGenerator(name = "uuid", strategy = "uuid")
-	@Size( max = 8)
+	@IdPrefix(value = "TIC_")
+	@GeneratedValue(generator = IdGenerator.ID_GENERATOR)
+	@GenericGenerator(name = IdGenerator.ID_GENERATOR, strategy = "com.xyram.ticketingTool.id.generator.IdGenerator")
 	@Column(name="ticket_id")
 	private String Id;
 	

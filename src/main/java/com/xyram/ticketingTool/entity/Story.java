@@ -10,6 +10,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Entity
 @Table(name="story")
@@ -33,7 +34,11 @@ public class Story {
 	
 	
 	@Column(name="platform")
-	private String plateform;
+	private String platform;
+	
+	@Column(name="project_id")
+	private String projectId;
+	
 	
 	@Column(name="story_type")
 	private String storyType;
@@ -41,6 +46,10 @@ public class Story {
 	
 	@Column(name="story_label")
 	private String storyLabel;
+	
+	
+	@Column(name="story_status")
+	private String storyStatus;
 	
 	
 	@Column(name="sprint_id")
@@ -59,13 +68,13 @@ public class Story {
 		
 
 
-	public String getPlateform() {
-		return plateform;
+	public String getPlatform() {
+		return platform;
 	}
 
 
 	public void setPlateform(String plateform) {
-		this.plateform = plateform;
+		this.platform = plateform;
 	}
 
 
@@ -167,6 +176,34 @@ public class Story {
 	public void setSprintId(String sprintId) {
 		SprintId = sprintId;
 	}
+
+
+	public String getProjectId() {
+		return projectId;
+	}
+
+
+	public void setProjectId(String projectId) {
+		this.projectId = projectId;
+	}
+
+
+	public void setPlatform(String platform) {
+		this.platform = platform;
+	}
+
+
+	public String getStoryStatus() {
+		return storyStatus;
+	}
+
+
+	public void setStoryStatus(String storyStatus) {
+		this.storyStatus = storyStatus;
+	}
+	
+	
+	
 	
 	
 	

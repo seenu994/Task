@@ -1,13 +1,10 @@
 package com.xyram.ticketingTool.entity;
 
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -15,21 +12,23 @@ import com.xyram.ticketingTool.id.generator.IdGenerator;
 import com.xyram.ticketingTool.id.generator.IdPrefix;
 
 @Entity
-@Table(name = "priority")
-
-public class Priority  {
-
+@Table(name="project_feature")
+public class ProjectFeature {
+	
 	@Id
-	@IdPrefix(value = "PRI_")
+	@IdPrefix(value = "PROF")
 	@GeneratedValue(generator = IdGenerator.ID_GENERATOR)
 	@GenericGenerator(name = IdGenerator.ID_GENERATOR, strategy = "com.xyram.ticketingTool.id.generator.IdGenerator")
-	@Column(name="priority_id")
+	@Column(name="id")
 	private String Id;
-
-	@Column(name = "priority_name")
-	private String designationName;
-
 	
+	
+	@Column(name="project_id")
+	private String projectId;
+	
+	@Column(name="feature_id")
+	private String  featureId;
+
 	public String getId() {
 		return Id;
 	}
@@ -38,11 +37,22 @@ public class Priority  {
 		Id = id;
 	}
 
-	public String getDesignationName() {
-		return designationName;
+	public String getProjectId() {
+		return projectId;
 	}
 
-	public void setDesignationName(String designationName) {
-		this.designationName = designationName;
+	public void setProjectId(String projectId) {
+		this.projectId = projectId;
 	}
+
+	public String getFeatureId() {
+		return featureId;
+	}
+
+	public void setFeatureId(String featureId) {
+		this.featureId = featureId;
+	} 
+
+	
+
 }

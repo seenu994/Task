@@ -17,6 +17,8 @@ import org.hibernate.annotations.GenericGenerator;
 import com.xyram.ticketingTool.baseData.model.AuditModel;
 import com.xyram.ticketingTool.enumType.JobApplicationStatus;
 import com.xyram.ticketingTool.enumType.JobInterviewStatus;
+import com.xyram.ticketingTool.id.generator.IdGenerator;
+import com.xyram.ticketingTool.id.generator.IdPrefix;
 
 
 @Entity
@@ -24,9 +26,9 @@ import com.xyram.ticketingTool.enumType.JobInterviewStatus;
 public class JobApplication extends AuditModel{
 	
 	@Id
-	@GeneratedValue(generator = "uuid")
-	@GenericGenerator(name = "uuid", strategy = "uuid")
-	@Size( max = 8)
+	@IdPrefix(value = "JOBAP_")
+	@GeneratedValue(generator = IdGenerator.ID_GENERATOR)
+	@GenericGenerator(name = IdGenerator.ID_GENERATOR, strategy = "com.xyram.ticketingTool.id.generator.IdGenerator")
 	@Column(name="application_id")
 	private String Id;
 	

@@ -316,7 +316,14 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 		return response;
 
 	}
-}
+	
+	
+	@Override
+	public ProjectMembers  getProjectMembersInProject(String employeeId, String projectId) {
+		
+		return projectMemberRepository.getMemberInProject(employeeId, projectId);
+	}
+	
 
 //	@Override
 //	public ProjectMembers assignProjectToEmployee(Map<String, String> requestMap) {
@@ -358,3 +365,5 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 //		}
 //
 //	}
+	
+}
