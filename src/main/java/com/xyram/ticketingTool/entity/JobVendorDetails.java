@@ -16,15 +16,17 @@ import org.hibernate.annotations.GenericGenerator;
 
 import com.xyram.ticketingTool.admin.model.User;
 import com.xyram.ticketingTool.enumType.UserStatus;
+import com.xyram.ticketingTool.id.generator.IdGenerator;
+import com.xyram.ticketingTool.id.generator.IdPrefix;
 
 @Entity
 @Table(name = "job_vendor_details")
 public class JobVendorDetails {
 	
 	@Id
-	@GeneratedValue(generator = "uuid")
-	@GenericGenerator(name = "uuid", strategy = "uuid")
-	@Size(max = 8)
+	@IdPrefix(value = "VEN_")
+	@GeneratedValue(generator = IdGenerator.ID_GENERATOR)
+	@GenericGenerator(name = IdGenerator.ID_GENERATOR, strategy = "com.xyram.ticketingTool.id.generator.IdGenerator")
 	@Column(name = "vendor_id")
 	private String vId;
 
