@@ -57,12 +57,6 @@ class ProjectContoller {
 		return projectService.getAllProjects(pageable);
 	}
 
-	@GetMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/getAllProjects" })
-	public ApiResponse getAllProjectsByDeveloper(Pageable pageable) {
-		logger.info("indide ProjectContoller :: getAllProjects");
-		return projectService.getAllProjectsByDeveloper(pageable);
-	}
-
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editProejct",
 			AuthConstants.INFRA_USER_BASEPATH + "/editProejct",AuthConstants.INFRA_ADMIN_BASEPATH + "/editProejct"  })
 	public ApiResponse editProject(@RequestBody Projects projectRequest) {

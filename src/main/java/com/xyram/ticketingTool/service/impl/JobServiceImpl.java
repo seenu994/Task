@@ -502,7 +502,9 @@ public class JobServiceImpl implements JobService{
 	public ApiResponse changeJobApplicationStatus(String jobApplicationId, JobApplicationStatus jobStatus,String comment) {
 		ApiResponse response = new ApiResponse(false);
 		JobApplication status= jobAppRepository.getApplicationById(jobApplicationId);
-		if(status != null && userDetail.getUserId() == status.getCreatedBy() || userDetail.getUserRole().equals(UserRole.HR_ADMIN)) {
+		System.out.println(userDetail.getUserRole());
+		if(status != null) {
+			if(userDetail.getUserId().equals(status.getCreatedBy()) || userDetail.getUserRole() == "HR_ADMIN") {
 		if(status!= null) {
 			ApplicationComments appComments = new ApplicationComments();
 			appComments.setApplicationId(jobApplicationId);
@@ -520,11 +522,11 @@ public class JobServiceImpl implements JobService{
 			response.setMessage("Job Application Status Updated Sucessfully");
 			response.setContent(null);
 		}
+			}
 		else {
 			response.setSuccess(false);
 			response.setMessage("Job application Id does Not Exist");
 		}
-		
 		}
 		else
 		{
