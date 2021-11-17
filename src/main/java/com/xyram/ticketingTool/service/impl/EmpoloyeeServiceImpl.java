@@ -150,7 +150,9 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				employee.setUserCredientials(user);
 				employee.setProfileUrl("https://covidtest.xyramsoft.com/image/ticket-attachment/user-default-pic.png");
 				Employee employeeNew = employeeRepository.save(employee);
-
+                 User useredit = userRepository.getById(user.getId());
+                 useredit.setScopeId(employeeNew.geteId());
+                 userRepository.save(useredit);
 				// Assigning default project to Developer
 //				if (employee.getRoleId().equals("R3")) {
 //					System.out.println("Inside employee.getRoleId() - " + employee.getRoleId());

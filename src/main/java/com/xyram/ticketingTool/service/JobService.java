@@ -12,11 +12,13 @@ import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Comments;
 import com.xyram.ticketingTool.entity.JobApplication;
 import com.xyram.ticketingTool.entity.JobInterviews;
+import com.xyram.ticketingTool.entity.JobOffer;
 import com.xyram.ticketingTool.entity.JobOpenings;
 import com.xyram.ticketingTool.entity.ProjectMembers;
 import com.xyram.ticketingTool.entity.Ticket;
 import com.xyram.ticketingTool.enumType.JobApplicationStatus;
 import com.xyram.ticketingTool.enumType.JobInterviewStatus;
+import com.xyram.ticketingTool.enumType.JobOfferStatus;
 import com.xyram.ticketingTool.enumType.JobOpeningStatus;
 import com.xyram.ticketingTool.request.JobApplicationSearchRequest;
 import com.xyram.ticketingTool.request.JobInterviewsRequest;
@@ -60,6 +62,14 @@ public interface JobService {
 	ApiResponse getAllJobAppById(String jobAppId);
 
 	ApiResponse getAllInterviewId(String jobInterviewId);
+
+	ApiResponse createJobOffer(JobOffer jobObj, String jobAppId);
+
+	ApiResponse editJobOffer(JobOffer jobObj, String jobOfferId);
+
+	ApiResponse getAllJobOffer(Pageable pageable);
+
+	ApiResponse changeJobOfferStatus(String jobOfferId, JobOfferStatus status);
 
 
 }
