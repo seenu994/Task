@@ -27,6 +27,10 @@ public interface ProjectMemberRepository extends JpaRepository<ProjectMembers, S
 	@Query("Select distinct p from ProjectMembers p where p.projectId = :projectId and p.employeeId = :employeeId and p.status = 'ACTIVE'")
 	ProjectMembers findByEmployeeIdAndProjectId(String employeeId, String projectId);
 
+	
+
+@Query("select p from ProjectMembers p inner join Employee e on p.employeeId=e.eId  where p.projectId = :projectId and p.employeeId = :employeeId")
+	ProjectMembers getMemberInProject(String employeeId,String projectId);
 }
 /*
  * //

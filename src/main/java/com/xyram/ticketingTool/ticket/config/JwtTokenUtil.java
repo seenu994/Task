@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.util.AuthConstants;
+import com.xyram.ticketingTool.util.AuthUtil;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

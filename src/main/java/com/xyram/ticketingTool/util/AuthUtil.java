@@ -6,8 +6,10 @@ import com.xyram.ticketingTool.exception.TciketExpetion;
 
 public interface AuthUtil {
 
-	String[] NON_SECURE_PATHS = { "/authenticate", "/api/user/createAdmin", "/updatePassword/{accestoken} ",
-			"/forgotPassword/{userName}", "/profile/image/{employeeId}" };
+	String[] NON_SECURE_PATHS = {"/**" ,"/authenticate", "/api/user/createAdmin", "/updatePassword/{accestoken} ",
+			"/forgotPassword/{userName}", "/profile/image/{employeeId}","/swagger-ui/**", "/swagger-resources/**", "/v2/api-docs/**",
+		    "/swagger-ui.html**",
+		    "/webjars/**"};
 	String[] ADMIN_PATHS = { "/admin-resource/**" };
 
 	String[] INFRA_USER_PATHS = { "/infra-resource/**" };

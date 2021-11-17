@@ -16,13 +16,17 @@ public class Feature {
 	@Id
 	@GeneratedValue(generator = "uuid")
 	@GenericGenerator(name = "uuid", strategy = "uuid")
-	@Size(max = 8)
+	@Size(max = 4)
 	@Column(name = "id")
 	private String id;
 
 	@Column(name = "feature_name")
 	private String featureName;
 
+	@Column(name = "feature_id" ,unique = true )
+	private String featureId;
+	
+	
 	@Column(name = "feature_type")
 	private String featureType;
 
@@ -61,4 +65,13 @@ public class Feature {
 		this.featureStatus = featureStatus;
 	}
 
+	public String getFeatureId() {
+		return featureId;
+	}
+
+	public void setFeatureId(String featureId) {
+		this.featureId = featureId;
+	}
+
+	
 }

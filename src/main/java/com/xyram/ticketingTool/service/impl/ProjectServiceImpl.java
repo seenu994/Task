@@ -67,6 +67,8 @@ public class ProjectServiceImpl implements ProjectService {
 			// System.out.println("project.getCreatedBy - " + project.getCreatedBy());
 			// System.out.println("userDetail.getUserId() - " + userDetail.getUserId());
 			Projects projetAdded = projectRepository.save(project);
+			
+			
 
 			response.setSuccess(true);
 			response.setMessage(ResponseMessages.PROJECT_ADDED);
@@ -227,6 +229,9 @@ public class ProjectServiceImpl implements ProjectService {
 		return projectRepository.getProjecById(projectId);
 
 	}
+	
+	
+
 
 	@Override
 	public ApiResponse searchProject(String searchString) {
