@@ -161,6 +161,12 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 			+ "where ticket_status in ('ASSIGNED', 'INPROGRESS', 'REOPEN')"
 			+ "group by ticket_status",nativeQuery = true)
 	List<Map> getTicketCount();
+
+	@Query("SELECT distinct new map(a.Id as ticket_id, a.ticketDescription as ticket_description, a.status as ticket_status, a.createdAt as created_at, a.createdBy as created_by, a.lastUpdatedAt as last_updated_at, "
+			+ "a.priorityId as priority_id, b.employeeId as assigneeId, concat(e.firstName,' ', e.lastName) as assigneeName, concat(ee.firstName,' ', ee.lastName) as createdByEmp) "
+			+ "FROM Ticket a left join Employee ee on a.createdBy = ee.userCredientials left join TicketAssignee b ON a.Id = b.ticketId and b.status = 'ACTIVE' left join Employee e on b.employeeId = e.eId "
+			+ "WHERE ('TICKETINGTOOL_ADMIN' = :roleId and a.status IN ('ASSIGNED','REOPEN')) ORDER BY a.createdAt DESC")
+	Page<Map> getAllTicketsForAdmin(Pageable pageable, String roleId);
 	
 //	@Query("SELECT DISTINCT b FROM Branch b WHERE " + " (:name is null or lower(b.name) LIKE %:name%)"
 //			+ " AND (:contactno is null or lower(b.primaryContactNumber) LIKE %:contactno%)"
