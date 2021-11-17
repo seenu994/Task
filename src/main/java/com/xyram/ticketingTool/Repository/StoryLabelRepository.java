@@ -7,4 +7,5 @@ import com.xyram.ticketingTool.entity.StoryLabel;
 
 public interface StoryLabelRepository extends JpaRepository<StoryLabel, String> {
 
+
 }
