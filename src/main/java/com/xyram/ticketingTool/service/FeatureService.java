@@ -12,4 +12,6 @@ public interface FeatureService {
 
 	List<Feature> getAllFeatureByDefault();
 
+	Feature getFeaturesByFeatureId(String featureId);
+
 }

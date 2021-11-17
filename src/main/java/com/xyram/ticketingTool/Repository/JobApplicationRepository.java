@@ -22,7 +22,7 @@ import com.xyram.ticketingTool.entity.JobOpenings;
 
 public interface JobApplicationRepository extends CrudRepository<JobApplication,Long>,JpaSpecificationExecutor<JobApplication>{
 	
-	@Query(value = "SELECT * from ticketdbtool.job_application ja where ja.application_id = :appId ", nativeQuery = true)
+	@Query(value = "SELECT ja from JobApplication ja where ja.Id = :appId ")
 	JobApplication getApplicationById(String appId);
 
 	@Query(value = "SELECT ja from JobApplication ja")

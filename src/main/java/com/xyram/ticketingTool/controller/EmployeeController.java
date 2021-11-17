@@ -62,7 +62,7 @@ class EmployeeController {
 		return employeeService.createJobVendor(vendorDetails);
 	}
 
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllEmployee",
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllEmployee",AuthConstants.HR_ADMIN_BASEPATH+ "/getAllEmployee",
 			AuthConstants.INFRA_USER_BASEPATH + "/getAllEmployee",AuthConstants.DEVELOPER_BASEPATH + "/getAllEmployee",AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllEmployee" })
 	public ApiResponse getAllEmployee(Pageable pageable) {
 		logger.info("indide CatagoryController :: getAllCatagory");

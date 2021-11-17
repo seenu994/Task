@@ -85,6 +85,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 				
 				currentUser.setUserId((String) jwtTokenUtil.getNamedClaimFromToken(jwtToken, AuthConstants.USER_ID));
 				currentUser.setUserRole((String) jwtTokenUtil.getNamedClaimFromToken(jwtToken, AuthConstants.USER_ROLE));
+				currentUser.setScopeId((String) jwtTokenUtil.getNamedClaimFromToken(jwtToken, AuthConstants.SCOPE_ID));
+				
 			}
 		}
 		chain.doFilter(request, response);

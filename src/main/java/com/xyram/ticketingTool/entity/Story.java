@@ -12,14 +12,17 @@ import javax.validation.constraints.Size;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.xyram.ticketingTool.id.generator.IdGenerator;
+import com.xyram.ticketingTool.id.generator.IdPrefix;
+
 @Entity
 @Table(name="story")
 public class Story {
 	
 	@Id
-	@GeneratedValue(generator = "uuid")
-	@GenericGenerator(name = "uuid", strategy = "uuid")
-	@Size(max = 8)
+	@IdPrefix(value = "STR")
+	@GeneratedValue(generator = IdGenerator.ID_GENERATOR)
+	@GenericGenerator(name = IdGenerator.ID_GENERATOR, strategy = "com.xyram.ticketingTool.id.generator.IdGenerator")
 	@Column(name = "id")
 	private String id;
 	
@@ -48,7 +51,7 @@ public class Story {
 	private String storyLabel;
 	
 	
-	@Column(name="story_status")
+	@Column(name="story_status_id")
 	private String storyStatus;
 	
 	

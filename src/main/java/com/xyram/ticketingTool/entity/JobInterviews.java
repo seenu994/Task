@@ -24,7 +24,6 @@ import com.xyram.ticketingTool.id.generator.IdPrefix;
 
 @Entity
 @Table(name = "job_interviews")
-
 public class JobInterviews extends AuditModel{
 	
 	@Id

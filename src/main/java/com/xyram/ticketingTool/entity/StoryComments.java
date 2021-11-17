@@ -4,8 +4,11 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
@@ -40,6 +43,10 @@ public class StoryComments {
 	@Column(name = "project_id")
 	private String projectId;
 
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="story_attachement_id")
+	private StoryAttachments storyAttachment;
 
 	
 	
@@ -100,5 +107,15 @@ public class StoryComments {
 	public void setProjectId(String projectId) {
 		this.projectId = projectId;
 	}
+
+	public StoryAttachments getStoryAttachment() {
+		return storyAttachment;
+	}
+
+	public void setStoryAttachment(StoryAttachments storyAttachment) {
+		this.storyAttachment = storyAttachment;
+	}
+	
+	
 
 }

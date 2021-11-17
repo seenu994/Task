@@ -64,6 +64,9 @@ public class User extends IBaseData {
 
 	@Column(name = "reset_password_token")
 	private String resetPasswordToken;
+	
+	@Column(name = "scope_id")
+	private String scopeId;
 
 	@Column(unique = true, nullable = true)
 	private String email;
@@ -181,5 +184,15 @@ public class User extends IBaseData {
 	public void setPermission(Integer permission) {
 		this.permission = permission;
 	}
+
+	public String getScopeId() {
+		return scopeId;
+	}
+
+	public void setScopeId(String scopeId) {
+		this.scopeId = scopeId;
+	}
+	
+	
 
 }

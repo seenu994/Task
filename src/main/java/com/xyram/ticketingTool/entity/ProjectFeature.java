@@ -28,6 +28,10 @@ public class ProjectFeature {
 	
 	@Column(name="feature_id")
 	private String  featureId;
+	
+	
+	@Column(name="status")
+	private String status;
 
 	public String getId() {
 		return Id;
@@ -51,8 +55,17 @@ public class ProjectFeature {
 
 	public void setFeatureId(String featureId) {
 		this.featureId = featureId;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	} 
 
+	
 	
 
 }

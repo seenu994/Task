@@ -3,16 +3,20 @@ package com.xyram.ticketingTool.service.impl;
 import java.util.List;
 
 import javax.persistence.criteria.CriteriaBuilder.In;
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.xyram.ticketingTool.Repository.FeatureRepository;
 import com.xyram.ticketingTool.entity.Feature;
 import com.xyram.ticketingTool.service.FeatureService;
 
+@Service
+@Transactional
 public class FeatureServiceImpl implements FeatureService {
 
 	@Autowired
@@ -48,5 +52,12 @@ public class FeatureServiceImpl implements FeatureService {
 
 		return   featureRepository.getAllDefaultFeatures();
 		
+	}
+	
+	@Override
+	public Feature getFeaturesByFeatureId(String featureId)
+	{
+	
+		return featureRepository.getFeaturesByFeatureId(featureId);
 	}
 }

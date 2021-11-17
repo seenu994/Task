@@ -1,11 +1,14 @@
 package com.xyram.ticketingTool.entity;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
@@ -37,6 +40,9 @@ public class StoryAttachments {
 
 	@Column(name = "uploaded_by")
 	private String uploadedBy;
+	
+	@OneToMany(mappedBy = "storyAttachment")
+	private List<StoryComments> storyComment;
 	
 	
 	@Column(name="uploaded_on")

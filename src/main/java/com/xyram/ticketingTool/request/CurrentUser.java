@@ -8,7 +8,7 @@ public class CurrentUser {
 
 	private String userRole;
 	
-	
+	private String scopeId;
 
 	public String getName() {
 		return name;
@@ -35,5 +35,14 @@ public class CurrentUser {
 		this.userRole = userRole;
 	}
 
+	public String getScopeId() {
+		return scopeId;
+	}
+
+	public void setScopeId(String scopeId) {
+		this.scopeId = scopeId;
+	}
+
+	
 	
 }

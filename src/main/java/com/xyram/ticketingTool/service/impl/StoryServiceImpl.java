@@ -7,10 +7,12 @@ import javax.swing.text.html.HTML;
 import javax.transaction.Transactional;
 
 import org.apache.coyote.http11.Http11AprProtocol;
+import org.apache.poi.hssf.record.OldCellRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import org.stringtemplate.v4.compiler.CodeGenerator.region_return;
 import org.stringtemplate.v4.compiler.STParser.mapExpr_return;
 
 import com.xyram.ticketingTool.Repository.StoryRepository;
@@ -22,7 +24,6 @@ import com.xyram.ticketingTool.service.ProjectFeatureService;
 import com.xyram.ticketingTool.service.ProjectMemberService;
 import com.xyram.ticketingTool.service.ProjectService;
 import com.xyram.ticketingTool.service.StoryService;
-
 
 @Service
 @Transactional
@@ -55,14 +56,40 @@ public class StoryServiceImpl implements StoryService {
 			Map projectFeature = projectFeatureService.getFeatureByProjectAndFeatureId(story.getProjectId(),
 					story.getStoryStatus());
 
-			story.setOwner(currentUser.getUserId());
-
+			story.setOwner(currentUser.getScopeId());
+			Integer storyNo = storyRepository.getTotalTicketByprojectId(story.getProjectId()) + 1;
+			story.setStoryNo(storyNo.toString());
 			return storyRepository.save(story);
 
 		} else {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, " project not found " + story.getId());
 
 		}
+
+	}
+	
+	
+	@Override
+	public List<Map> getAllStories(String projectId)
+	{
+		return storyRepository.getAllStories(projectId);
+	}
+
+	@Override
+	public Story changeStoryStatus(String storystatus, String storyId) {
+		Story story = storyRepository.getStoryById(storyId);
+		if (story != null) {
+
+			if (checkFeature(storystatus, story.getProjectId()) != null) {
+
+				return storyRepository.save(story);
+			}
+
+		} else {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, " story not found " + storyId);
+
+		}
+		return story;
 
 	}
 

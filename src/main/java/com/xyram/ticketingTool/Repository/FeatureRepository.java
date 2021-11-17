@@ -13,8 +13,11 @@ public interface FeatureRepository extends JpaRepository<Feature, String> {
 
 	
 	
-	@Query("select f from Feature f where f.featureName='Default' ")
+	@Query("select f from Feature f where f.featureType='Default' ")
 	public List<Feature> getAllDefaultFeatures();
+
+	@Query("select f from Feature f where f.featureId=:featureId")
+	public Feature getFeaturesByFeatureId(String featureId);
 	
 	
 	
