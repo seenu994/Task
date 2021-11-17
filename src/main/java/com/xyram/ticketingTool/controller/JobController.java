@@ -26,9 +26,11 @@ import com.xyram.ticketingTool.entity.Client;
 import com.xyram.ticketingTool.entity.Comments;
 import com.xyram.ticketingTool.entity.JobApplication;
 import com.xyram.ticketingTool.entity.JobInterviews;
+import com.xyram.ticketingTool.entity.JobOffer;
 import com.xyram.ticketingTool.entity.Ticket;
 import com.xyram.ticketingTool.enumType.JobApplicationStatus;
 import com.xyram.ticketingTool.enumType.JobInterviewStatus;
+import com.xyram.ticketingTool.enumType.JobOfferStatus;
 import com.xyram.ticketingTool.enumType.JobOpeningStatus;
 import com.xyram.ticketingTool.request.JobApplicationSearchRequest;
 import com.xyram.ticketingTool.request.JobInterviewsRequest;
@@ -155,5 +157,31 @@ public class JobController {
 		logger.info("Get JobOpening by id");
 		return jobService.changeJobOpeningStatus(jobOpeningId,status);
 	}
+	
+	@PostMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/createJobOffer/{jobAppId}",AuthConstants.ADMIN_BASEPATH + "/createJobOffer/{jobAppId}" })
+	public ApiResponse createJobOffer(@RequestBody JobOffer jobObj,@PathVariable String jobAppId) {
+		logger.info("Creating Job Offers");
+		return jobService.createJobOffer(jobObj,jobAppId);
+	}
+	
+	@PutMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/editJobOffer/{jobOfferId}",AuthConstants.ADMIN_BASEPATH + "/editJobOffer/{jobOfferId}" })
+	public ApiResponse editJobOffer(@RequestBody JobOffer jobObj,@PathVariable String jobOfferId) {
+		logger.info("Creating Job Offers");
+		return jobService.editJobOffer(jobObj,jobOfferId);
+	}
+	
+	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/getAllJobOffer",AuthConstants.ADMIN_BASEPATH + "/getAllJobOffer" })
+	public ApiResponse getAllJobOffer(Pageable pageable) {
+		logger.info("Creating Job Offers");
+		return jobService.getAllJobOffer(pageable);
+	}
+	
+	 @PutMapping(value= {AuthConstants.ADMIN_BASEPATH+"/changeOfferStatus/{jobOfferId}/{status}",AuthConstants.HR_ADMIN_BASEPATH + "/changeOfferStatus/{jobOfferId}/{status}"})
+	  public ApiResponse changeJobOfferStatus(@PathVariable String jobOfferId,@PathVariable JobOfferStatus status)
+	  {
+		  logger.info("change job application status");
+		  return jobService.changeJobOfferStatus(jobOfferId,status);
+	  }
+
 
 }

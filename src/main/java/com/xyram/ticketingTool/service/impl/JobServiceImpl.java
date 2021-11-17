@@ -31,6 +31,7 @@ import com.sun.mail.iap.Response;
 import com.xyram.ticketingTool.Repository.ApplicationCommentsRepository;
 import com.xyram.ticketingTool.Repository.JobApplicationRepository;
 import com.xyram.ticketingTool.Repository.JobInterviewRepository;
+import com.xyram.ticketingTool.Repository.JobOfferRepository;
 import com.xyram.ticketingTool.Repository.JobRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.ApplicationComments;
@@ -39,10 +40,12 @@ import com.xyram.ticketingTool.entity.CompanyWings;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.JobApplication;
 import com.xyram.ticketingTool.entity.JobInterviews;
+import com.xyram.ticketingTool.entity.JobOffer;
 import com.xyram.ticketingTool.entity.JobOpenings;
 import com.xyram.ticketingTool.entity.Ticket;
 import com.xyram.ticketingTool.enumType.JobApplicationStatus;
 import com.xyram.ticketingTool.enumType.JobInterviewStatus;
+import com.xyram.ticketingTool.enumType.JobOfferStatus;
 import com.xyram.ticketingTool.enumType.JobOpeningStatus;
 import com.xyram.ticketingTool.enumType.UserRole;
 import com.xyram.ticketingTool.enumType.UserStatus;
@@ -73,6 +76,9 @@ public class JobServiceImpl implements JobService{
 	
 	@Autowired
 	ApplicationCommentsRepository appRepository;
+	
+	@Autowired
+	JobOfferRepository offerRepository;
 	
 	static ChannelSftp channelSftp = null;
 	static Session session = null;
@@ -502,7 +508,9 @@ public class JobServiceImpl implements JobService{
 	public ApiResponse changeJobApplicationStatus(String jobApplicationId, JobApplicationStatus jobStatus,String comment) {
 		ApiResponse response = new ApiResponse(false);
 		JobApplication status= jobAppRepository.getApplicationById(jobApplicationId);
-		if(status != null && userDetail.getUserId() == status.getCreatedBy() || userDetail.getUserRole().equals(UserRole.HR_ADMIN)) {
+		System.out.println(userDetail.getUserRole());
+		if(status != null) {
+			if(userDetail.getUserId().equals(status.getCreatedBy()) || userDetail.getUserRole() == "HR_ADMIN") {
 		if(status!= null) {
 			ApplicationComments appComments = new ApplicationComments();
 			appComments.setApplicationId(jobApplicationId);
@@ -520,11 +528,11 @@ public class JobServiceImpl implements JobService{
 			response.setMessage("Job Application Status Updated Sucessfully");
 			response.setContent(null);
 		}
+			}
 		else {
 			response.setSuccess(false);
 			response.setMessage("Job application Id does Not Exist");
 		}
-		
 		}
 		else
 		{
@@ -614,6 +622,116 @@ public class JobServiceImpl implements JobService{
 		}
 		return response;
 		
+	}
+
+	@Override
+	public ApiResponse createJobOffer(JobOffer jobObj,String jobAppId) {
+       ApiResponse response = new ApiResponse(false);
+		JobApplication application = jobAppRepository.getApplicationById(jobAppId);
+		if(application.getJobApplicationSatus().equals(JobApplicationStatus.SELECTED)) {
+		jobObj.setCreatedAt(new Date());
+		jobObj.setCreatedBy(userDetail.getUserId());
+		if(offerRepository.save(jobObj) != null) {
+			response.setSuccess(true);
+			response.setMessage("New Job Offer Created");
+		}else {
+			response.setSuccess(false);
+			response.setMessage("New Job Offer Not Created");
+		}
+		}
+		else
+		{
+			response.setSuccess(false);
+			response.setMessage("Cannot Create Job Offer Since Candidate Not selected");
+		}
+		return response;
+	}
+
+	@Override
+	public ApiResponse editJobOffer(JobOffer jobObj, String jobOfferId) {
+		ApiResponse response = new ApiResponse(false);
+		JobOffer jobOffer = offerRepository.getById(jobOfferId);
+		if(jobOffer != null) {
+			jobOffer.setCandidateEmail(jobObj.getCandidateEmail());
+			jobOffer.setCandidateMobile(jobObj.getCandidateMobile());
+			jobOffer.setCandidateName(jobObj.getCandidateName());
+			jobOffer.setDoj(jobObj.getDoj());
+			jobOffer.setJobTitle(jobObj.getJobTitle());
+			jobOffer.setSalary(jobObj.getSalary());
+			jobOffer.setTotalExp(jobObj.getTotalExp());
+			offerRepository.save(jobOffer);
+			response.setSuccess(true);
+			response.setMessage("Job Offers Updated Sucessfully");
+			response.setContent(null);
+		}
+		
+		else
+		{
+			response.setSuccess(false);
+			response.setMessage("Job Offers Id does Not Exist");
+		}
+		
+
+		return response;
+	}
+
+	@Override
+	public ApiResponse getAllJobOffer(Pageable pageable) {
+		ApiResponse response = new ApiResponse(false);
+		Map content = new HashMap();
+//		List<JobInterviews> allList =  jobInterviewRepository.getList();
+		Page<JobOffer> allList =  offerRepository.findAll(new Specification<JobOffer>(){
+				@Override
+				public Predicate toPredicate(Root<JobOffer> root, javax.persistence.criteria.CriteriaQuery<?> query,
+						CriteriaBuilder criteriaBuilder) {
+					// TODO Auto-generated method stub
+					List<Predicate> predicates = new ArrayList<>();
+//	                if(status != null && !status.equalsIgnoreCase("ALL")) {
+//	                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("status"), status)));
+//	                }
+//	                if(userDetail.getUserId()!=null && userDetail.getUserRole() != "HR_ADMIN" && userDetail.getUserRole() != "TICKETINGTOOL_ADMIN") {
+//	                	predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("createdBy"), "%" + userDetail.getUserId() + "%")));
+//	                }
+//	                if(searchObj.getSearchString() != null && !searchObj.getSearchString().equalsIgnoreCase("")) {
+//	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("candidateName"), "%" + searchObj.getSearchString() + "%")));
+//	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("candidateMobile"), "%" + searchObj.getSearchString() + "%")));
+//	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("candidateEmail"), "%" + searchObj.getSearchString() + "%")));
+//	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobCode"), "%" + searchObj.getSearchString() + "%")));
+//	                }
+	                return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+				}
+	        },pageable);
+		
+		content.put("OfferList",allList);
+		if(allList != null) {
+			response.setSuccess(true);
+			response.setMessage("Succesfully retrieved Offers");
+		}
+		else {
+			response.setSuccess(true);
+			response.setMessage("No Records Found");
+		}
+		
+		response.setContent(content);
+		return response;
+	}
+
+	@Override
+	public ApiResponse changeJobOfferStatus(String jobOfferId, JobOfferStatus status) {
+		ApiResponse response = new ApiResponse(false);
+		JobOffer offer= offerRepository.getById(jobOfferId);
+		if(offer!= null) {
+			offer.setStatus(status);
+			offerRepository.save(offer);
+			response.setSuccess(true);
+			response.setMessage("Job Offer Status Updated Sucessfully");
+			response.setContent(null);
+		}else {
+			response.setSuccess(false);
+			response.setMessage("Job Offer Id does Not Exist");
+		}
+		// TODO Auto-generated method stub
+		return response;
 	}
 
 
