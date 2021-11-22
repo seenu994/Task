@@ -55,4 +55,8 @@ public interface EmployeeService {
 
 	ApiResponse getEmployeeDetails(String employeeId);
 
+	ApiResponse getJobVendor();
+
+	ApiResponse getAllEmployeeCurrentMonth(Pageable pageable);
+
 }

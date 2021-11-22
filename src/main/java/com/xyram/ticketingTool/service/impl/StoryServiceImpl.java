@@ -16,10 +16,12 @@ import org.stringtemplate.v4.compiler.CodeGenerator.region_return;
 import org.stringtemplate.v4.compiler.STParser.mapExpr_return;
 
 import com.xyram.ticketingTool.Repository.StoryRepository;
+import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
 import com.xyram.ticketingTool.entity.ProjectMembers;
 import com.xyram.ticketingTool.entity.Projects;
 import com.xyram.ticketingTool.entity.Story;
 import com.xyram.ticketingTool.request.CurrentUser;
+import com.xyram.ticketingTool.request.StoryChangeStatusRequest;
 import com.xyram.ticketingTool.service.ProjectFeatureService;
 import com.xyram.ticketingTool.service.ProjectMemberService;
 import com.xyram.ticketingTool.service.ProjectService;
@@ -70,23 +72,31 @@ public class StoryServiceImpl implements StoryService {
 	
 	
 	@Override
-	public List<Map> getAllStories(String projectId)
+	public IssueTrackerResponse getAllStories(String projectId)
 	{
-		return storyRepository.getAllStories(projectId);
+
+		   IssueTrackerResponse response= new IssueTrackerResponse();   
+		    List<Map> storyList=  storyRepository.getAllStories(projectId);
+		    
+		    response.setContent(storyList);
+			
+		       response.setStatus("success");
+		       
+		       return response;
 	}
 
 	@Override
-	public Story changeStoryStatus(String storystatus, String storyId) {
-		Story story = storyRepository.getStoryById(storyId);
+	public Story changeStoryStatus(StoryChangeStatusRequest storyChangeStatusrequest) {
+		Story story = storyRepository.getStoryById(storyChangeStatusrequest.getStoryId());
 		if (story != null) {
 
-			if (checkFeature(storystatus, story.getProjectId()) != null) {
+			if (checkFeature(storyChangeStatusrequest.getStorystatus(), story.getProjectId()) != null) {
 
 				return storyRepository.save(story);
 			}
 
 		} else {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, " story not found " + storyId);
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, " story not found " + storyChangeStatusrequest.getStoryId());
 
 		}
 		return story;
@@ -140,4 +150,17 @@ public class StoryServiceImpl implements StoryService {
 		}
 
 	}
+	
+	
+	public Story getStoryId(String id )
+	{
+		return storyRepository.findById(id).map(story->{
+			
+			
+			return story;
+		}).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"story not found with "+id ));
+	}
+
+
+	
 }

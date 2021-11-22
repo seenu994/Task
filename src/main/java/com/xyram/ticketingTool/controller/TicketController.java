@@ -52,7 +52,7 @@ class TicketController {
 //	}
 
 	@PostMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/createTickets",AuthConstants.INFRA_ADMIN_BASEPATH + "/createTickets",
-			AuthConstants.INFRA_USER_BASEPATH + "/createTickets" })
+			AuthConstants.INFRA_USER_BASEPATH + "/createTickets",AuthConstants.HR_ADMIN_BASEPATH + "/createTickets" })
 	public ApiResponse createTickets(@RequestPart(name = "files", required = false) MultipartFile[] files,
 			@RequestPart String ticketRequest) {
 		logger.info("Received request to add tickets");
@@ -128,7 +128,7 @@ class TicketController {
 		return ticketService.deleteComment(commentObj);
 	}
 
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllTicket",AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllTicket",
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllTicket",AuthConstants.HR_ADMIN_BASEPATH + "/getAllTicket",AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllTicket",
 			AuthConstants.INFRA_USER_BASEPATH + "/getAllTicket" ,AuthConstants.DEVELOPER_BASEPATH + "/getAllTicket"})
 	public ApiResponse getAllTicket(Pageable pageable) {
 		logger.info("inside Ticket controller :: getAllTicket");
@@ -143,7 +143,7 @@ class TicketController {
 		return ticketService.searchTicket(searchString);
 	}
 
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllTktByStatus/{status}",AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllTktByStatus/{status}",
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllTktByStatus/{status}",AuthConstants.HR_ADMIN_BASEPATH + "/getAllTktByStatus/{status}",AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllTktByStatus/{status}",
 			AuthConstants.INFRA_USER_BASEPATH + "/getAllTktByStatus/{status}",
 			AuthConstants.DEVELOPER_BASEPATH + "/getAllTktByStatus/{status}" })
 	public ApiResponse getAllTicketsByStatus(@PathVariable TicketStatus status,Pageable pageable) {
@@ -151,7 +151,7 @@ class TicketController {
 		return ticketService.getAllTicketsByStatus(status,pageable);
 	}
 	
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllTktByStatus",AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllTktByStatus",
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllTktByStatus",AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllTktByStatus",AuthConstants.HR_ADMIN_BASEPATH + "/getAllTktByStatus",
 			AuthConstants.INFRA_USER_BASEPATH + "/getAllTktByStatus",
 			AuthConstants.DEVELOPER_BASEPATH + "/getAllTktByStatus" })
 	public ApiResponse getAllTicketsByStatusMobile(Pageable pageable) {
@@ -159,7 +159,7 @@ class TicketController {
 		return ticketService.getAllTicketsByStatusMobile(pageable);
 	}
 
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllCompletedTickets",
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllCompletedTickets",AuthConstants.HR_ADMIN_BASEPATH + "/getAllCompletedTickets",
 			AuthConstants.INFRA_USER_BASEPATH + "/getAllCompletedTickets",
 			AuthConstants.DEVELOPER_BASEPATH + "/getAllCompletedTickets",AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllCompletedTickets" })
 	public ApiResponse getAllCompletedTickets(Pageable pageable) {

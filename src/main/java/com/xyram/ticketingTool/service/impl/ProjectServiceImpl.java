@@ -251,4 +251,17 @@ public class ProjectServiceImpl implements ProjectService {
 		return response;
 	}
 
+	@Override
+	public ApiResponse getgenericIssues() {
+
+			List<Map> projectList = projectRepository.getgenericIssues();
+
+		Map content = new HashMap();
+		content.put("projectList", projectList);
+		ApiResponse response = new ApiResponse(true);
+		response.setSuccess(true);
+		response.setContent(content);
+		return response;	
+	}
+
 }

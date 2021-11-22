@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
+import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
 import com.xyram.ticketingTool.entity.ProjectFeature;
 import com.xyram.ticketingTool.entity.ProjectMembers;
 import com.xyram.ticketingTool.request.AssignFeatureRequest;
@@ -37,7 +38,7 @@ public class ProjectFeatureController {
 	
 	@GetMapping(value= {AuthConstants.ADMIN_BASEPATH +"/getAllProjectFeatures/{projectId}"
 			,AuthConstants.DEVELOPER_BASEPATH +"/getAllProjectFeatures/{projectId}"})
-	public List<Map> getAllProjectFeatures(@PathVariable String projectId) {
+	public IssueTrackerResponse getAllProjectFeatures(@PathVariable String projectId) {
 	//	logger.info("indide ProjectMembersController :: getAllProjectMembers");
 		return projectFeatureService.getAllfeatureByProject(projectId);
 	}

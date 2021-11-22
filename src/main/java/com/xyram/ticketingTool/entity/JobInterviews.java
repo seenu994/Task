@@ -70,6 +70,9 @@ public class JobInterviews extends AuditModel{
 	@Column(name="recommendation")
 	private Integer recommendation;
 	
+	@Column(name="interviwer_comments")
+	private String interviewerComments;
+	
 	@ManyToOne(cascade = { CascadeType.ALL })
 	@JoinColumn(name = "application_id")
     private JobApplication jobApplication;
@@ -185,6 +188,14 @@ public class JobInterviews extends AuditModel{
 
 	public void setRateGiven(Integer rateGiven) {
 		this.rateGiven = rateGiven;
+	}
+
+	public String getInterviewerComments() {
+		return interviewerComments;
+	}
+
+	public void setInterviewerComments(String interviewerComments) {
+		this.interviewerComments = interviewerComments;
 	}
 	
 	

@@ -45,14 +45,22 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 	 * SELECT e.* FROM employees_tbl e WHERE e.id NOT IN (SELECT employee_id FROM
 	 * project_assignment_tbl WHERE project_id=1234)
 	 */
-	@Query("Select distinct new map(e.eId as id, e.firstName as firstName, e.lastName as lastName) from Employee e "
-			+ "left join ProjectMembers p ON e.eId = p.employeeId and p.status = 'INACTIVE' and p.projectId = :projectId "
-			+ " Where e.status = 'ACTIVE' and e.email like %:searchString% and e.roleId = 'R4' ")
+//	@Query("Select distinct new map(e.eId as id, e.firstName as firstName, e.lastName as lastName) from Employee e "
+//			+ "inner join ProjectMembers p ON e.eId = p.employeeId and p.status = 'INACTIVE' and p.projectId = :projectId "
+//			+ " Where e.status = 'ACTIVE' and e.email like %:searchString% and e.roleId = 'R4' ")
+//	
+	
+	@Query("Select distinct new map(e.eId as id, e.firstName as firstName, e.lastName as lastName) from Employee e Where"
+			+ " e.status = 'ACTIVE' and e.email like %:searchString% and e.roleId = 'R4' and  e.eId NOT IN("
+			+ "select p.employeeId from ProjectMembers p where p.status = 'ACTIVE' and p.projectId = :projectId )")
+	
+	List<Map> searchEmployeeNotAssignedToProject(@Param("projectId") String projectName,@Param("searchString") String searchString);
+	
 //	@Query("Select distinct new map(e.eId as id, e.firstName as firstName, e.lastName as lastName) "
 //			+ "from Employee e left JOIN ProjectMembers p On e.eId = p.employeeId where e.status = 'ACTIVE' and e.roleId = 'R3' "
 //			+ "and (p.projectId != :projectId and not exists (Select 1 from ProjectMembers p1 where e.eId = p1.employeeId "
 //			+ "and p1.projectId = :projectId)) and e.email like %:searchString%")
-	List<Map> searchEmployeeNotAssignedToProject(@Param("projectId") String projectName,@Param("searchString") String searchString);
+	
 
 	@Query("Select distinct new map(e.eId as id, e.firstName as firstName, e.lastName as lastName) from Employee e "
 			+ "where e.status = 'ACTIVE' and e.email like %:searchString% and e.roleId = 'R3' ")
@@ -128,6 +136,9 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 
 	@Query("SELECT e from Employee e where e.eId = :employeeId")
 	Map getbyEmpId(String employeeId);
+
+	@Query("SELECT e from Employee e where DATE_TRUNC('month', e.createdAt) = DATE_TRUNC('month', CURRENT_DATE)")
+	List<Map> getAllEmployeeCurrentMonth(Pageable pageable);
 
 	
 

@@ -34,6 +34,7 @@ public class StoryVo {
 	@Size(min =2)
 	private String storyType;
 	
+	
 
 	private String storyLabel;
 

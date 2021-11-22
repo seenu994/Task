@@ -677,4 +677,46 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		return response;
 	}
 
+	@Override
+	public ApiResponse getJobVendor() {
+		ApiResponse response = new ApiResponse(false);
+		List<Map> jobVendors = vendorRepository.getJobVendors();
+		Map content = new HashMap();
+		content.put("vendorDetails", jobVendors);
+		if (jobVendors != null) {
+			response.setSuccess(true);
+			response.setMessage("Vendor Retrieved Successfully");
+			response.setContent(content);
+		}
+
+		else {
+			response.setSuccess(false);
+			response.setMessage("Could not retrieve data");
+			response.setContent(null);
+		}
+
+		return response;
+	}
+
+	@Override
+	public ApiResponse getAllEmployeeCurrentMonth(Pageable pageable) {
+		ApiResponse response = new ApiResponse(false);
+		List<Map> employeeList = employeeRepository.getAllEmployeeCurrentMonth(pageable);
+		Map content = new HashMap();
+		content.put("employeeList", employeeList);
+		if (employeeList != null) {
+			response.setSuccess(true);
+			response.setMessage("Employee Retrieved Successfully");
+			response.setContent(content);
+		}
+
+		else {
+			response.setSuccess(false);
+			response.setMessage("Could not retrieve data");
+			response.setContent(null);
+		}
+
+		return response;
+	}
+
 }

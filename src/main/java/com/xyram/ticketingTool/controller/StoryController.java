@@ -11,10 +11,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-
+import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
 import com.xyram.ticketingTool.entity.Sprint;
 import com.xyram.ticketingTool.entity.Story;
 import com.xyram.ticketingTool.modelMapper.StoryMapper;
+import com.xyram.ticketingTool.request.StoryChangeStatusRequest;
 import com.xyram.ticketingTool.service.SprintService;
 import com.xyram.ticketingTool.service.StoryService;
 import com.xyram.ticketingTool.util.AuthConstants;
@@ -37,15 +38,15 @@ public class StoryController {
 	
 	
 	@PostMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/getAllStories/{projectId}" })
-	public List<Map> createStory(@PathVariable String projectId) {
+	public IssueTrackerResponse createStory(@PathVariable String projectId) {
 
 		return storyService.getAllStories(projectId);
 	}
 	
-	
-	public String changeStoryStatus(String storyStatusId ,String storyId )
+	@PostMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/changeStoryStatus" })
+	public Story changeStoryStatus(StoryChangeStatusRequest storyChangeStatusrequest )
 	{
 	
-		return null;
+		return  storyService.changeStoryStatus(storyChangeStatusrequest);
 	}
 }

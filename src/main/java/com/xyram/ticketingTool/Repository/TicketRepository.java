@@ -65,7 +65,7 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 			+ "FROM Ticket a left join Employee ee on a.createdBy = ee.userCredientials left join TicketAssignee b ON a.Id = b.ticketId and b.status = 'ACTIVE' "
 			+ "left join Employee e on b.employeeId = e.eId where  (('INFRA_USER' = :roleId and a.status = :status and b.employeeId  = :createdBy) "
 			+ "OR ('DEVELOPER' = :roleId and a.status = :status  and a.createdBy = :createdBy) "
-			+ "OR ('TICKETINGTOOL_ADMIN' = :roleId and a.status = :status)) ORDER BY a.createdAt DESC")
+			+ "OR ('TICKETINGTOOL_ADMIN' = :roleId and a.status = :status) OR ('HR_ADMIN' = :roleId and a.status = :status and a.createdBy = :createdBy)) ORDER BY a.createdAt DESC")
 	Page<Map> getAllTicketsByStatus(Pageable pageable, @Param("createdBy") String createdBy, @Param("roleId")String roleId, TicketStatus status);
 	
 	@Query("SELECT distinct new map(a.Id as ticket_id, a.ticketDescription as ticket_description, a.status as ticket_status, a.createdAt as created_at, a.createdBy as created_by, a.lastUpdatedAt as last_updated_at, "
@@ -73,7 +73,7 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 			+ "FROM Ticket a left join Employee ee on a.createdBy = ee.userCredientials left join TicketAssignee b ON a.Id = b.ticketId and b.status = 'ACTIVE' "
 			+ "left join Employee e on b.employeeId = e.eId where  (('INFRA_USER' = :roleId and a.status IN ('COMPLETED', 'CANCELLED')  and b.employeeId  = :createdBy) "
 			+ "OR ('DEVELOPER' = :roleId and a.status IN ('COMPLETED', 'CANCELLED')   and a.createdBy = :createdBy) "
-			+ "OR ('TICKETINGTOOL_ADMIN' = :roleId and a.status IN ('COMPLETED', 'CANCELLED'))) ORDER BY a.createdAt DESC")
+			+ "OR ('TICKETINGTOOL_ADMIN' = :roleId and a.status IN ('COMPLETED', 'CANCELLED')) OR ('HR_ADMIN' = :roleId and a.status IN ('COMPLETED', 'CANCELLED'))) ORDER BY a.createdAt DESC")
 	Page<Map> getAllCompletedTickets(Pageable pageable,@Param("createdBy") String createdBy, @Param("roleId")String roleId);
 	
 	
@@ -154,7 +154,7 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 			+ "FROM Ticket a left join Employee ee on a.createdBy = ee.userCredientials left join TicketAssignee b ON a.Id = b.ticketId and b.status = 'ACTIVE' "
 			+ "left join Employee e on b.employeeId = e.eId where  (('INFRA_USER' = :roleId and a.status IN ('ASSIGNED', 'INPROGRESS', 'REOPEN') and b.employeeId  = :createdBy) "
 			+ "OR ('DEVELOPER' = :roleId and a.status IN ('INITIATED', 'ASSIGNED', 'INPROGRESS', 'REOPEN') and a.createdBy = :createdBy) "
-			+ "OR ('TICKETINGTOOL_ADMIN' = :roleId and a.status NOT IN ('COMPLETED', 'CANCELLED'))) ORDER BY a.createdAt DESC")
+			+ "OR ('TICKETINGTOOL_ADMIN' = :roleId and a.status NOT IN ('COMPLETED', 'CANCELLED')) OR ('HR_ADMIN' = :roleId and a.status IN ('INITIATED', 'ASSIGNED', 'INPROGRESS', 'REOPEN'))) ORDER BY a.createdAt DESC")
 	Page<Map> getAllTicketsByStatusMobile(Pageable pageable, @Param("createdBy") String createdBy, @Param("roleId")String roleId);
 
 	@Query(value="select ticket_status as status, count(ticket_status) as count from ticket_info "
