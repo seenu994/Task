@@ -3,7 +3,6 @@ package com.xyram.ticketingTool.util;
 public interface AuthConstants {
 	/** Role Constants */
 	String ROLE_ADMIN = "TICKETINGTOOL_ADMIN";
-	String ROLE_INFRA = "INFRA";
 	String ROLE_INFRA_ADMIN = "INFRA_ADMIN";
 	String ROLE_INFRA_USER="INFRA_USER";
 	String ROLE_DEVELOPER = "DEVELOPER";
