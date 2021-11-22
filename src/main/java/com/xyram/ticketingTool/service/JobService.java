@@ -49,7 +49,7 @@ public interface JobService {
 
 
 
-	ApiResponse changeJobInterviewStatus(String jobInerviewId, JobInterviewStatus status);
+	ApiResponse changeJobInterviewStatus(String jobInerviewId, JobInterviewStatus status, Integer rating, String feedback, String comments);
 
 	ApiResponse editJob(String jobId, JobOpenings jobObj);
 

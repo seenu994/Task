@@ -56,6 +56,13 @@ class ProjectContoller {
 		logger.info("indide ProjectContoller :: getAllProjects");
 		return projectService.getAllProjects(pageable);
 	}
+	
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/genericIssues",AuthConstants.HR_ADMIN_BASEPATH + "/genericIssues",
+			AuthConstants.INFRA_USER_BASEPATH + "/genericIssues",AuthConstants.INFRA_ADMIN_BASEPATH + "/genericIssues", AuthConstants.DEVELOPER_BASEPATH + "/genericIssues" })
+	public ApiResponse getgenericIssues() {
+		logger.info("indide ProjectContoller :: getAllProjects");
+		return projectService.getgenericIssues();
+	}
 
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editProejct",
 			AuthConstants.INFRA_USER_BASEPATH + "/editProejct",AuthConstants.INFRA_ADMIN_BASEPATH + "/editProejct"  })
