@@ -63,6 +63,8 @@ public class Ticket extends AuditModel {
 	@Column(name = "cancelled_at")
 	private Date cancelledAt;
 	
+	@Column(name="type")
+	private String type;
 	
 //	@Column(name = "last_updated_at")
 //	private Date lastUpdatedAt;
@@ -149,6 +151,22 @@ public class Ticket extends AuditModel {
 
 	public void setStatus(TicketStatus status) {
 		this.status = status;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public Date getResolvedAt() {
+		return resolvedAt;
+	}
+
+	public Date getCancelledAt() {
+		return cancelledAt;
 	}
 
 	

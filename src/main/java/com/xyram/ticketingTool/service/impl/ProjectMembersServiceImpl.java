@@ -101,17 +101,24 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 						Employee employeeObj = employeeRepository.getbyUserEmpId(employeeId);
 
 						if (employeeObj != null) {
-							ProjectMembers projectMember = new ProjectMembers();
+							ProjectMembers projectMember = projectMemberRepository.getMemberInProject(employeeId,project.getpId());
+							if(projectMember != null && projectMember.getStatus().equals(ProjectMembersStatus.INACTIVE)) {
+								projectMember.setStatus(ProjectMembersStatus.ACTIVE);
+								projectMemberRepository.save(projectMember);
+							}
+							else
+							{
+							ProjectMembers projectMemberNew = new ProjectMembers();
 
-							projectMember.setCreatedAt(new Date());
-							projectMember.setLastUpdatedAt(new Date());
-							projectMember.setUpdatedBy(user.getUserId());
-							projectMember.setCreatedBy(user.getUserId());
-							projectMember.setStatus(ProjectMembersStatus.ACTIVE);
-							projectMember.setProjectId(project.getpId());
-							projectMember.setEmployeeId(employeeId);
-							projectMemberRepository.save(projectMember);
-
+							projectMemberNew.setCreatedAt(new Date());
+							projectMemberNew.setLastUpdatedAt(new Date());
+							projectMemberNew.setUpdatedBy(user.getUserId());
+							projectMemberNew.setCreatedBy(user.getUserId());
+							projectMemberNew.setStatus(ProjectMembersStatus.ACTIVE);
+							projectMemberNew.setProjectId(project.getpId());
+							projectMemberNew.setEmployeeId(employeeId);
+							projectMemberRepository.save(projectMemberNew);
+							}
 //							List<Map> developerList=	employeeServiceImpl.getListOfDeveloper();
 
 //							for (Map user : developerList) {

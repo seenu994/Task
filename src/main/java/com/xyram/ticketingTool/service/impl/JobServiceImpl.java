@@ -197,7 +197,7 @@ public class JobServiceImpl implements JobService{
 		response.setContent(content);
 		return response;
 	}
-
+	
 	@Override
 	public ApiResponse getAllCompanyWingsAndSkills() {
 		// TODO Auto-generated method stub
@@ -305,8 +305,9 @@ public class JobServiceImpl implements JobService{
 	                if(status != null && !status.equalsIgnoreCase("ALL")) {
 	                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("status"), status)));
 	                }
-	                if(userDetail.getUserId()!=null && userDetail.getUserRole() != "HR_ADMIN" && userDetail.getUserRole() != "TICKETINGTOOL_ADMIN") {
-	                	predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("createdBy"), "%" + userDetail.getUserId() + "%")));
+	                if(userDetail.getUserRole().equals("DEVELOPER")) {
+	                	System.out.println(userDetail.getUserId());
+	                	predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("interviewer"),userDetail.getUserId())));
 	                }
 //	                if(searchObj.getSearchString() != null && !searchObj.getSearchString().equalsIgnoreCase("")) {
 //	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("candidateName"), "%" + searchObj.getSearchString() + "%")));
@@ -458,11 +459,16 @@ public class JobServiceImpl implements JobService{
 	}
 
 	@Override
-	public ApiResponse changeJobInterviewStatus(String jobInerviewId, JobInterviewStatus jobInterviewStatus) {
+	public ApiResponse changeJobInterviewStatus(String jobInerviewId, JobInterviewStatus jobInterviewStatus,Integer rating, String feedback, String comments) {
 		ApiResponse response = new ApiResponse(false);
 		JobInterviews status= jobInterviewRepository.getById(jobInerviewId);
 		if(status!= null && status.getInterviewer() == userDetail.getUserId()) {
 			status.setJobInterviewStatus(jobInterviewStatus);
+			status.setFeedback(feedback);
+			status.setRateGiven(rating);
+			if(comments != null) {
+			status.setInterviewerComments(comments);
+			}
 			jobInterviewRepository.save(status);
 			response.setSuccess(true);
 			response.setMessage("Job Interview Status Updated Sucessfully");
@@ -546,7 +552,7 @@ public class JobServiceImpl implements JobService{
 	}
 
 	@Override
-	public ApiResponse editJobApplication(MultipartFile[] files, String jobAppObj, String jobAppId) {
+	public ApiResponse editJobApplication(MultipartFile[] files,String jobAppObj, String jobAppId) {
 		ApiResponse response = new ApiResponse(false);
 		JobApplication jobApp = jobAppRepository.getApplicationById(jobAppId);
 		if(jobApp != null && userDetail.getUserId().equals(jobApp.getCreatedBy()) || userDetail.getUserRole().equals(UserRole.HR_ADMIN)) {
@@ -561,6 +567,7 @@ public class JobServiceImpl implements JobService{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			if(files != null) {
 			for (MultipartFile constentFile : files) {
 				try {
 				      String fileextension = constentFile.getOriginalFilename().substring(constentFile.getOriginalFilename().lastIndexOf("."));
@@ -571,6 +578,7 @@ public class JobServiceImpl implements JobService{
 				}catch(Exception e) {
 					
 				}
+			}
 			}
 			jobApp.setJobCode(newJobAppObj.getJobCode());
 			jobApp.setJobOpenings(newJobAppObj.getJobOpenings());
@@ -734,6 +742,7 @@ public class JobServiceImpl implements JobService{
 		return response;
 	}
 
+	
 
 	
 

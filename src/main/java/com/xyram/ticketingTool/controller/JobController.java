@@ -113,9 +113,9 @@ public class JobController {
 	
 	
 	  @PutMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/changeJobInterviewStatus/{jobInerviewId}/{status}"})
-	  public ApiResponse changeJobInterviewStatus(@PathVariable String jobInerviewId,@PathVariable JobInterviewStatus status) { 
+	  public ApiResponse changeJobInterviewStatus(@PathVariable String jobInerviewId,@PathVariable JobInterviewStatus status,@RequestParam Integer rating,@RequestParam String feedback,@RequestParam(required=false) String comments) { 
 		  logger.info("Get JobOpening by id");
-	  return  jobService.changeJobInterviewStatus(jobInerviewId,status); 
+	  return  jobService.changeJobInterviewStatus(jobInerviewId,status,rating,feedback,comments); 
 	  }
 	 
 	  
@@ -157,6 +157,7 @@ public class JobController {
 		logger.info("Get JobOpening by id");
 		return jobService.changeJobOpeningStatus(jobOpeningId,status);
 	}
+	
 	
 	@PostMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/createJobOffer/{jobAppId}",AuthConstants.ADMIN_BASEPATH + "/createJobOffer/{jobAppId}" })
 	public ApiResponse createJobOffer(@RequestBody JobOffer jobObj,@PathVariable String jobAppId) {

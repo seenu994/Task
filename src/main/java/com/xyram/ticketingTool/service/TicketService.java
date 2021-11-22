@@ -74,9 +74,6 @@ ApiResponse getAllTicketsByStatusMobile(Pageable pageable);
 ApiResponse getTicketCount();
 
 
-	
-	
-
 }
 		
 
