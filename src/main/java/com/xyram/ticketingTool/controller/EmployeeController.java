@@ -61,12 +61,25 @@ class EmployeeController {
 		logger.info("Received request to add Employee");
 		return employeeService.createJobVendor(vendorDetails);
 	}
+	
+	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/getJobVendor" })
+	public ApiResponse getJobVendor() {
+		logger.info("Received request to add Employee");
+		return employeeService.getJobVendor();
+	}
 
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllEmployee",AuthConstants.HR_ADMIN_BASEPATH+ "/getAllEmployee",
 			AuthConstants.INFRA_USER_BASEPATH + "/getAllEmployee",AuthConstants.DEVELOPER_BASEPATH + "/getAllEmployee",AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllEmployee" })
 	public ApiResponse getAllEmployee(Pageable pageable) {
 		logger.info("indide CatagoryController :: getAllCatagory");
 		return employeeService.getAllEmployee(pageable);
+	}
+	
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllEmployee/currentMonth",AuthConstants.HR_ADMIN_BASEPATH+ "/getAllEmployee/currentMonth",
+			AuthConstants.INFRA_USER_BASEPATH + "/getAllEmployee/currentMonth",AuthConstants.DEVELOPER_BASEPATH + "/getAllEmployee/currentMonth",AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllEmployee/currentMonth" })
+	public ApiResponse getAllEmployeeCurrentMonth(Pageable pageable) {
+		logger.info("indide CatagoryController :: getAllCatagory");
+		return employeeService.getAllEmployeeCurrentMonth(pageable);
 	}
 
 	@PutMapping("/profile/image/{employeeId}")
