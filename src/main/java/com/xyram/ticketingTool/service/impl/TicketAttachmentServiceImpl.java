@@ -74,6 +74,10 @@ static Session session = null;
 static Channel channel = null;
 static String PATHSEPARATOR = "/";
 
+String SFTPKEY = "/home/ubuntu/tomcat/webapps/Ticket_tool-0.0.1-SNAPSHOT/WEB-INF/classes/Covid-Phast-Prod.ppk";
+String SFTPWORKINGDIRAADMIN = "/home/ubuntu/tomcat/webapps/image/ticket-attachment";
+
+
 @Override
 public Map storeImage(MultipartFile[] files,String ticketId) {
 	Map fileMap = new HashMap();
@@ -249,9 +253,7 @@ private String deleteFile(String imagePath) {
     int SFTPPORT = 22; // SFTP Port Number
     String SFTPUSER = "ubuntu"; // User Name
     String SFTPPASS = ""; // Password
-    String SFTPKEY = "/home/ubuntu/tomcat/webapps/Ticket_tool-0.0.1-SNAPSHOT/WEB-INF/classes/Covid-Phast-Prod.ppk";
-//    String SFTPWORKINGDIR = "/home/ubuntu/tomcat-customer/webapps/images/daydrop-images"; 
-    String SFTPWORKINGDIRAADMIN = "/home/ubuntu/tomcat/webapps/image/ticket-attachment";// Source Directory on SFTP server
+    
 //    String fileNameOriginal = file.getOriginalFilename();
 //    String LOCALDIRECTORY = "C:\\daydrop-images"; // Local Target Directory
     try {

@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,7 +38,7 @@ public class StoryController {
 	}
 	
 	
-	@PostMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/getAllStories/{projectId}" })
+	@GetMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/getAllStories/{projectId}" })
 	public IssueTrackerResponse createStory(@PathVariable String projectId) {
 
 		return storyService.getAllStories(projectId);

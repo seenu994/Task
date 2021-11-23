@@ -67,6 +67,12 @@ class EmployeeController {
 		logger.info("Received request to add Employee");
 		return employeeService.getJobVendor();
 	}
+	
+	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/getJobVendor/{vendorId}" })
+	public ApiResponse getJobVendorById(@PathVariable String vendorId) {
+		logger.info("Received request to add Employee");
+		return employeeService.getJobVendorById(vendorId);
+	}
 
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllEmployee",AuthConstants.HR_ADMIN_BASEPATH+ "/getAllEmployee",
 			AuthConstants.INFRA_USER_BASEPATH + "/getAllEmployee",AuthConstants.DEVELOPER_BASEPATH + "/getAllEmployee",AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllEmployee" })

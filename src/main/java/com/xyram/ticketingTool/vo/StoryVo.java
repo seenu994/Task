@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
 public class StoryVo {
 
 	@NotNull(message = "title  is mandatory")
-	@NotEmpty(message = "title should not be  emplty")
+	@NotEmpty(message = "title should not be  empty")
 	@Size(min = 5, max = 100)
 	private String title;
 
@@ -25,12 +25,12 @@ public class StoryVo {
 	private String platform;
 
 	@NotNull(message = "project Id should is mandatory")
-	@NotEmpty(message = "project Id should be not emplty")
+	@NotEmpty(message = "project Id should be not empty")
 	@Size(min = 3)
 	private String projectId;
 
 	@NotNull(message = "storyType should is mandatory")
-	@NotEmpty(message = "storyType should be not emplty")
+	@NotEmpty(message = "storyType should be not empty")
 	@Size(min =2)
 	private String storyType;
 	
