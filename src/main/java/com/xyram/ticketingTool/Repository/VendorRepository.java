@@ -13,4 +13,7 @@ public interface VendorRepository extends JpaRepository<JobVendorDetails,String>
 	@Query("Select jv from JobVendorDetails jv")
 	List<Map> getJobVendors();
 
+	@Query("Select jv from JobVendorDetails jv Where jv.vId = :vendorId")
+	Map getJobVendorById(String vendorId);
+
 }

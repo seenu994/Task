@@ -71,5 +71,7 @@ public interface JobService {
 
 	ApiResponse changeJobOfferStatus(String jobOfferId, JobOfferStatus status);
 
+	ApiResponse getAllJobOfferById(String offerId);
+
 
 }

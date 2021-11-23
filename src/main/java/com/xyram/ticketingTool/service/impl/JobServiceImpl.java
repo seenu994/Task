@@ -108,7 +108,7 @@ public class JobServiceImpl implements JobService{
 		// TODO Auto-generated method stub
 		ApiResponse response = new ApiResponse(false);
 		Map content = new HashMap();
-		String status = filter.containsKey("status") ? ((String) filter.get("status")).toLowerCase() : null;
+		String status = filter.containsKey("status") ? ((String) filter.get("status")) : null;
 		String searchQuery = filter.containsKey("searchstring") ? ((String) filter.get("searchstring")).toLowerCase()
 				: null;
 //		List<Map> allJobs = jobRepository.getAllJobOpenings();
@@ -157,7 +157,7 @@ public class JobServiceImpl implements JobService{
 		// TODO Auto-generated method stub
 		ApiResponse response = new ApiResponse(false);
 		Map content = new HashMap();
-		String status = filter.containsKey("status") ? ((String) filter.get("status")).toLowerCase() : null;
+		String status = filter.containsKey("status") ? ((String) filter.get("status")) : null;
 		String searchQuery = filter.containsKey("searchstring") ? ((String) filter.get("searchstring")).toLowerCase()
 				: null;
 		Page<JobApplication> allList =  jobAppRepository.findAll(new Specification<JobApplication>() {
@@ -295,7 +295,7 @@ public class JobServiceImpl implements JobService{
 		ApiResponse response = new ApiResponse(false);
 		Map content = new HashMap();
 //		List<JobInterviews> allList =  jobInterviewRepository.getList();
-		String status = filter.containsKey("status") ? ((String) filter.get("status")).toLowerCase() : null;
+		String status = filter.containsKey("status") ? ((String) filter.get("status")) : null;
 		Page<JobInterviews> allList =  jobInterviewRepository.findAll(new Specification<JobInterviews>(){
 				@Override
 				public Predicate toPredicate(Root<JobInterviews> root, javax.persistence.criteria.CriteriaQuery<?> query,
@@ -734,6 +734,22 @@ public class JobServiceImpl implements JobService{
 			response.setSuccess(true);
 			response.setMessage("Job Offer Status Updated Sucessfully");
 			response.setContent(null);
+		}else {
+			response.setSuccess(false);
+			response.setMessage("Job Offer Id does Not Exist");
+		}
+		// TODO Auto-generated method stub
+		return response;
+	}
+
+	@Override
+	public ApiResponse getAllJobOfferById(String offerId) {
+		ApiResponse response = new ApiResponse(false);
+		Map offer= offerRepository.getAllJobOfferById(offerId);
+		if(offer!= null) {
+			response.setSuccess(true);
+			response.setMessage(" Offer retrieved Sucessfully");
+			response.setContent(offer);
 		}else {
 			response.setSuccess(false);
 			response.setMessage("Job Offer Id does Not Exist");

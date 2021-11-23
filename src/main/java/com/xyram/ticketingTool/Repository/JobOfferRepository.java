@@ -1,5 +1,7 @@
 package com.xyram.ticketingTool.Repository;
 
+import java.util.Map;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -14,5 +16,8 @@ public interface JobOfferRepository extends CrudRepository<JobOffer,Long>,JpaSpe
 
 	@Query("Select jo from JobOffer jo where jo.Id = :jobOfferId")
 	JobOffer getById(String jobOfferId);
+
+	@Query("Select jo from JobOffer jo where jo.Id = :offerId")
+	Map getAllJobOfferById(String offerId);
 
 }

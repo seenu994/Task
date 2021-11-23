@@ -177,6 +177,12 @@ public class JobController {
 		return jobService.getAllJobOffer(pageable);
 	}
 	
+	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/getAllJobOffer/{offerId}",AuthConstants.ADMIN_BASEPATH + "/getAllJobOffer/{offerId}" })
+	public ApiResponse getAllJobOfferById(@PathVariable String offerId) {
+		logger.info("Creating Job Offers");
+		return jobService.getAllJobOfferById(offerId);
+	}
+	
 	 @PutMapping(value= {AuthConstants.ADMIN_BASEPATH+"/changeOfferStatus/{jobOfferId}/{status}",AuthConstants.HR_ADMIN_BASEPATH + "/changeOfferStatus/{jobOfferId}/{status}"})
 	  public ApiResponse changeJobOfferStatus(@PathVariable String jobOfferId,@PathVariable JobOfferStatus status)
 	  {
