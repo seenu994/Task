@@ -15,16 +15,19 @@ import javax.validation.constraints.Size;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.xyram.ticketingTool.id.generator.IdGenerator;
+import com.xyram.ticketingTool.id.generator.IdPrefix;
+
 @Entity
 @Table(name = "story_attachments")
 public class StoryAttachments {
 
 	@Id
-	@GeneratedValue(generator = "uuid")
-	@GenericGenerator(name = "uuid", strategy = "uuid")
-	@Size(max = 8)
+	@IdPrefix(value = "STR")
+	@GeneratedValue(generator = IdGenerator.ID_GENERATOR)
+	@GenericGenerator(name = IdGenerator.ID_GENERATOR, strategy = "com.xyram.ticketingTool.id.generator.IdGenerator")
 	@Column(name = "id")
-	private String Id;
+	private String id;
 
 	@Column(name = "file_name")
 	private String fileName;
@@ -50,11 +53,11 @@ public class StoryAttachments {
 	
 
 	public String getId() {
-		return Id;
+		return id;
 	}
 
 	public void setId(String id) {
-		Id = id;
+		id = id;
 	}
 
 	public String getFileName() {
