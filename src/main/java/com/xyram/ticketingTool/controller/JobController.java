@@ -113,7 +113,7 @@ public class JobController {
 	
 	
 	  @PutMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/changeJobInterviewStatus/{jobInerviewId}/{status}"})
-	  public ApiResponse changeJobInterviewStatus(@PathVariable String jobInerviewId,@PathVariable JobInterviewStatus status,@RequestParam Integer rating,@RequestParam String feedback,@RequestParam(required=false) String comments) { 
+	  public ApiResponse changeJobInterviewStatus(@PathVariable String jobInerviewId,@PathVariable JobInterviewStatus status,@RequestParam(required=false) Integer rating,@RequestParam(required=false) String feedback,@RequestParam(required=false) String comments) { 
 		  logger.info("Get JobOpening by id");
 	  return  jobService.changeJobInterviewStatus(jobInerviewId,status,rating,feedback,comments); 
 	  }

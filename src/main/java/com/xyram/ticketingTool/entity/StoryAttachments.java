@@ -15,6 +15,7 @@ import javax.validation.constraints.Size;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.xyram.ticketingTool.id.generator.IdGenerator;
 import com.xyram.ticketingTool.id.generator.IdPrefix;
 
@@ -32,9 +33,13 @@ public class StoryAttachments {
 	@Column(name = "file_name")
 	private String fileName;
 
-	@Column(name = "file_path")
-	private String filePath;
+	@Column(name = "file_download_url")
+	private String fileDownloadUrl;
 
+	
+	@Column(name="file_type")
+	private String fileType;
+	
 	@Column(name = "story_id")
 	private String  storyId;
 
@@ -44,6 +49,7 @@ public class StoryAttachments {
 	@Column(name = "uploaded_by")
 	private String uploadedBy;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "storyAttachment")
 	private List<StoryComments> storyComment;
 	
@@ -68,17 +74,18 @@ public class StoryAttachments {
 		this.fileName = fileName;
 	}
 
-	public String getFilePath() {
-		return filePath;
-	}
-
-	public void setFilePath(String filePath) {
-		this.filePath = filePath;
-	}
-
+	
 
 	
 	
+	public String getFileDownloadUrl() {
+		return fileDownloadUrl;
+	}
+
+	public void setFileDownloadUrl(String fileDownloadUrl) {
+		this.fileDownloadUrl = fileDownloadUrl;
+	}
+
 	public String getStoryId() {
 		return storyId;
 	}
@@ -111,8 +118,25 @@ public class StoryAttachments {
 		this.uploadedOn = uploadedOn;
 	}
 
+	public String getFileType() {
+		return fileType;
+	}
+
+	public void setFileType(String fileType) {
+		this.fileType = fileType;
+	}
+
+	public List<StoryComments> getStoryComment() {
+		return storyComment;
+	}
+
+	public void setStoryComment(List<StoryComments> storyComment) {
+		this.storyComment = storyComment;
+	}
+
 	
 	
+
 	
 	
 

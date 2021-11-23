@@ -39,7 +39,7 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 			+ "left join ticketdbtool.ticket_assignee b ON a.ticket_id = b.ticket_id  and b.ticket_assignee_status = 'ACTIVE' "
 			+ "left join ticketdbtool.employee e on b.employee_id = e.employee_id "
 			+ "where a.ticket_description like %:searchString% ", nativeQuery = true)
-	List<Map> searchTicket(@Param("searchString") String searchString );
+	       List<Map> searchTicket(@Param("searchString") String searchString );
 	
 	/*
 	@Query(value = "SELECT a.ticket_id as ticket_id, a.ticket_description as ticket_description , a.ticket_status as ticket_status, a.created_at as created_at, a.created_by as created_by, "
@@ -157,10 +157,15 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 			+ "OR ('TICKETINGTOOL_ADMIN' = :roleId and a.status NOT IN ('COMPLETED', 'CANCELLED')) OR ('HR_ADMIN' = :roleId and a.status IN ('INITIATED', 'ASSIGNED', 'INPROGRESS', 'REOPEN'))) ORDER BY a.createdAt DESC")
 	Page<Map> getAllTicketsByStatusMobile(Pageable pageable, @Param("createdBy") String createdBy, @Param("roleId")String roleId);
 
-	@Query(value="select ticket_status as status, count(ticket_status) as count from ticket_info "
-			+ "where ticket_status in ('ASSIGNED', 'INPROGRESS', 'REOPEN')"
+	@Query(value="select a.ticket_status as status, count(a.ticket_status) as count "
+			+ "FROM ticket_info a "
+			+ "left join ticketdbtool.employee ee on a.created_by = ee.user_id "
+			+ "left join ticketdbtool.ticket_assignee b ON a.ticket_id = b.ticket_id  and b.ticket_assignee_status = 'ACTIVE' "
+			+ "left join ticketdbtool.employee e on b.employee_id = e.employee_id "
+			+ "where ('INFRA_USER' = :roleId and a.ticket_status in ('ASSIGNED', 'INPROGRESS', 'REOPEN')) OR ('DEVELOPER' = :roleId and a.ticket_status in ('ASSIGNED', 'INPROGRESS', 'REOPEN'))"
+			+ "OR ('HR_ADMIN' = :roleId and a.ticket_status in ('ASSIGNED', 'INPROGRESS', 'REOPEN')) OR ('TICKETINGTOOL_ADMIN' = :roleId and a.ticket_status in ('ASSIGNED', 'INPROGRESS', 'REOPEN')) "
 			+ "group by ticket_status",nativeQuery = true)
-	List<Map> getTicketCount();
+	List<Map> getTicketCount(String roleId);
 
 	@Query("SELECT distinct new map(a.Id as ticket_id, a.ticketDescription as ticket_description, a.status as ticket_status, a.createdAt as created_at, a.createdBy as created_by, a.lastUpdatedAt as last_updated_at, "
 			+ "a.priorityId as priority_id, b.employeeId as assigneeId, concat(e.firstName,' ', e.lastName) as assigneeName, concat(ee.firstName,' ', ee.lastName) as createdByEmp) "

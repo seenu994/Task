@@ -3,6 +3,7 @@ package com.xyram.ticketingTool.vo;
 import java.util.Date;
 
 import javax.annotation.Nonnull;
+import javax.mail.Multipart;
 import javax.persistence.Column;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -20,6 +21,8 @@ public class StoryVo {
 	@Size(min = 5, max = 1000)
 	private String storyDescription;
 
+	
+	
 	
 	
 	private String platform;

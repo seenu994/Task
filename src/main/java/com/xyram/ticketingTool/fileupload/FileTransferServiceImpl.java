@@ -1,5 +1,9 @@
 package com.xyram.ticketingTool.fileupload;
 
+
+
+
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -9,6 +13,8 @@ import java.io.OutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
@@ -17,6 +23,7 @@ import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
 
+@Service
 public class FileTransferServiceImpl implements FileTransferService {
 
 	private Logger logger = LoggerFactory.getLogger(FileTransferServiceImpl.class);
@@ -39,44 +46,28 @@ public class FileTransferServiceImpl implements FileTransferService {
 	@Value("${sftp.channelTimeout}")
 	private Integer channelTimeout;
 
-	@Value("${sftp.isKeyAuthRequired}")
+	@Value("${isKeyAuthRequired}")
 	private boolean isKeyAuthRequired;
 
-	@Value("${sftp.isPasswordRequired}")
+	@Value("${isPasswordRequired}")
 	private boolean isPasswordRequired;
 
 	String SFTPKEY = "/home/ubuntu/tomcat/webapps/Ticket_tool-0.0.1-SNAPSHOT/WEB-INF/classes/Covid-Phast-Prod.ppk";
-	String SFTPWORKINGDIRAADMIN = "/home/ubuntu/tomcat/webapps/image/ticket-attachment";
+	String SFTPWORKINGDIRAADMIN = "/home/ubuntu/care365-dev/webapps";
 
 	@Override
-	public boolean uploadFile(String localFilePath, String remoteFilePath) {
+	public boolean uploadFile(MultipartFile file,String path ,String fileName) {
 		ChannelSftp channelSftp = createChannelSftp();
+		String SFTPWORKINGDIR=SFTPWORKINGDIRAADMIN+""+path;
 		try {
-			channelSftp.cd(remoteFilePath);
-			channelSftp.put(localFilePath, remoteFilePath);
+			
+			channelSftp.cd(SFTPWORKINGDIR);
+			channelSftp.put(file.getInputStream(), fileName);
+			
 			return true;
 		} catch (SftpException ex) {
 			logger.error("Error upload file", ex);
-		} finally {
-			disconnectChannelSftp(channelSftp);
-		}
-
-		return false;
-	}
-
-	@Override
-	public boolean downloadFile(String localFilePath, String remoteFilePath) {
-		ChannelSftp channelSftp = createChannelSftp();
-		OutputStream outputStream = null;
-		try {
-			File file = new File(localFilePath);
-			outputStream = new FileOutputStream(file);
-			channelSftp.get(remoteFilePath, outputStream);
-			file.createNewFile();
-			return true;
-		} catch (SftpException | IOException ex) {
-			logger.error("Error download file", ex);
-		} catch (Exception e) {
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
@@ -85,6 +76,28 @@ public class FileTransferServiceImpl implements FileTransferService {
 
 		return false;
 	}
+
+//	@Override
+//	public boolean downloadFile(String localFilePath, remoteFilePath) {
+//		ChannelSftp channelSftp = createChannelSftp();
+//		OutputStream outputStream = null;
+//		try {
+//			File file1 = new File(localFilePath);
+//			outputStream = new FileOutputStream(file1);
+//			channelSftp.get(remoteFilePath, outputStream);
+//			file1.createNewFile();
+//			return true;
+//		} catch (SftpException | IOException ex) {
+//			logger.error("Error download file", ex);
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} finally {
+//			disconnectChannelSftp(channelSftp);
+//		}
+//
+//		return false;
+//	}
 
 	private ChannelSftp createChannelSftp() {
 		try {
@@ -129,4 +142,29 @@ public class FileTransferServiceImpl implements FileTransferService {
 		}
 	}
 
+	
+	
+	@Override
+	public boolean deleteFile(String fileName,String path) {
+		ChannelSftp channelSftp = createChannelSftp();
+		String SFTPWORKINGDIR=SFTPWORKINGDIRAADMIN+""+path;
+		try {
+			channelSftp.cd(SFTPWORKINGDIR); // Change Directory on SFTP Server
+			channelSftp.rm(fileName); // This method removes the file from remote server
+			
+			return true;
+		} catch (SftpException ex) {
+			logger.error("Error upload file", ex);
+		} finally {
+			disconnectChannelSftp(channelSftp);
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean downloadFile(String localFilePath, MultipartFile file) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

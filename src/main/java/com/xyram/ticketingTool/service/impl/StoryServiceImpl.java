@@ -20,11 +20,15 @@ import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
 import com.xyram.ticketingTool.entity.ProjectMembers;
 import com.xyram.ticketingTool.entity.Projects;
 import com.xyram.ticketingTool.entity.Story;
+import com.xyram.ticketingTool.entity.StoryComments;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.request.StoryChangeStatusRequest;
+import com.xyram.ticketingTool.response.StoryDetailsResponse;
 import com.xyram.ticketingTool.service.ProjectFeatureService;
 import com.xyram.ticketingTool.service.ProjectMemberService;
 import com.xyram.ticketingTool.service.ProjectService;
+import com.xyram.ticketingTool.service.StoryAttachmentsService;
+import com.xyram.ticketingTool.service.StoryCommentService;
 import com.xyram.ticketingTool.service.StoryService;
 
 @Service
@@ -36,6 +40,12 @@ public class StoryServiceImpl implements StoryService {
 
 	@Autowired
 	ProjectService projectService;
+
+	@Autowired
+	StoryAttachmentsService storyAttachmentsService;
+
+	@Autowired
+	StoryCommentService storyCommentService;
 
 	@Autowired
 	ProjectFeatureService projectFeatureService;
@@ -69,20 +79,18 @@ public class StoryServiceImpl implements StoryService {
 		}
 
 	}
-	
-	
-	@Override
-	public IssueTrackerResponse getAllStories(String projectId)
-	{
 
-		   IssueTrackerResponse response= new IssueTrackerResponse();   
-		    List<Map> storyList=  storyRepository.getAllStories(projectId);
-		    
-		    response.setContent(storyList);
-			
-		       response.setStatus("success");
-		       
-		       return response;
+	@Override
+	public IssueTrackerResponse getAllStories(String projectId) {
+
+		IssueTrackerResponse response = new IssueTrackerResponse();
+		List<Map> storyList = storyRepository.getAllStories(projectId);
+
+		response.setContent(storyList);
+
+		response.setStatus("success");
+
+		return response;
 	}
 
 	@Override
@@ -96,7 +104,8 @@ public class StoryServiceImpl implements StoryService {
 			}
 
 		} else {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, " story not found " + storyChangeStatusrequest.getStoryId());
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+					" story not found " + storyChangeStatusrequest.getStoryId());
 
 		}
 		return story;
@@ -150,17 +159,36 @@ public class StoryServiceImpl implements StoryService {
 		}
 
 	}
-	
-	
-	public Story getStoryId(String id )
-	{
-		return storyRepository.findById(id).map(story->{
-			
-			
+
+	public Story getStoryId(String id) {
+		return storyRepository.findById(id).map(story -> {
+
 			return story;
-		}).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"story not found with "+id ));
+		}).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "story not found with " + id));
 	}
 
+	@Override
+	public StoryDetailsResponse getStoryDetailsById(String projectId, String storyId) {
+		StoryDetailsResponse storyDetailsResponse = new StoryDetailsResponse();
+		List<Map> storyDetails = storyRepository.getAllStoriesByStoryId(projectId, storyId);
+		List<Map> storyAttachments = storyAttachmentsService.getStoryAttachmentsListByStoryId(storyId);
+		List<Map> storyComments = storyCommentService.getStoryCommentsListByStoryId(storyId);
+		storyDetailsResponse.setStoryAttachments(storyAttachments);
+		storyDetailsResponse.setStoryDetails(storyDetails);
+		storyDetailsResponse.setStoryComments(storyComments);
+		return storyDetailsResponse;
+	}
 
-	
+	@Override
+	public IssueTrackerResponse getAllStoriesBystatus(String projectId, String storyStatusId) {
+		IssueTrackerResponse response = new IssueTrackerResponse();
+		List<Map> storyList = storyRepository.getAllStoriesByStoryStaus(projectId, storyStatusId);
+
+		response.setContent(storyList);
+
+		response.setStatus("success");
+
+		return response;
+	}
+
 }
