@@ -1,6 +1,7 @@
 package com.xyram.ticketingTool.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.criteria.CriteriaBuilder.In;
 import javax.transaction.Transactional;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.xyram.ticketingTool.Repository.FeatureRepository;
+import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
 import com.xyram.ticketingTool.entity.Feature;
 import com.xyram.ticketingTool.service.FeatureService;
 
@@ -48,9 +50,15 @@ public class FeatureServiceImpl implements FeatureService {
 
 	
 	@Override
-	public List<Feature> getAllFeatureByDefault() {
+	public IssueTrackerResponse getAllFeatureByDefault() {
 
-		return   featureRepository.getAllDefaultFeatures();
+       IssueTrackerResponse response= new IssueTrackerResponse();   
+    List<Map> featureList=  featureRepository.getAllDefaultFeatures();
+       response.setContent(featureList);
+	
+       response.setStatus("success");
+       
+       return response;
 		
 	}
 	

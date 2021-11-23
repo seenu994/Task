@@ -14,6 +14,7 @@ import org.stringtemplate.v4.compiler.CodeGenerator.list_return;
 
 import com.xyram.ticketingTool.Repository.FeatureRepository;
 import com.xyram.ticketingTool.Repository.ProjectFeatureRepository;
+import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
 import com.xyram.ticketingTool.entity.Feature;
 import com.xyram.ticketingTool.entity.ProjectFeature;
 import com.xyram.ticketingTool.request.AssignFeatureRequest;
@@ -37,8 +38,12 @@ public class ProjectFeatureServiceImpl implements ProjectFeatureService {
 	}
 
 	@Override
-	public List<Map> getAllfeatureByProject(String projectId) {
-		return projectFeatureRepository.getfeatureAvailableByproject(projectId);
+	public IssueTrackerResponse getAllfeatureByProject(String projectId) {
+
+	       IssueTrackerResponse response= new IssueTrackerResponse();   
+	    List<Map> featureList= projectFeatureRepository.getfeatureAvailableByproject(projectId);
+	    response.setContent(featureList);
+	    return response;
 	}
 
 	@Override

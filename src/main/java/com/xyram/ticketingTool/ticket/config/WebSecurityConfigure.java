@@ -1,6 +1,7 @@
 package com.xyram.ticketingTool.ticket.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -10,6 +11,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.config.web.servlet.AuthorizeRequestsDsl;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,6 +19,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;					
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 
 import com.google.common.collect.ImmutableList;
 import com.xyram.ticketingTool.util.AuthConstants;
@@ -32,6 +35,9 @@ public class WebSecurityConfigure extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private UserDetailsService jwtUserDetailsService;
+	
+	@Value("${prop.swagger.enabled:false}")
+	private boolean enableSwagger;
 
 	@Autowired
 	private JwtRequestFilter jwtRequestFilter;
@@ -48,6 +54,12 @@ public class WebSecurityConfigure extends WebSecurityConfigurerAdapter {
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
+	
+
+
+   
+	
+	
 
 	@Bean
 	@Override
@@ -77,7 +89,8 @@ public class WebSecurityConfigure extends WebSecurityConfigurerAdapter {
 		// We don't need CSRF for this example
 		httpSecurity.csrf().disable()
 				// dont authenticate this particular request
-				.authorizeRequests().antMatchers(AuthUtil.NON_SECURE_PATHS).permitAll()
+		        .authorizeRequests().antMatchers("/swagger-ui/**","/v2/api-docs/**").permitAll()
+				 .antMatchers(AuthUtil.NON_SECURE_PATHS).permitAll()
 				.antMatchers(AuthUtil.ADMIN_PATHS).hasRole(AuthConstants.ROLE_ADMIN)
 				.antMatchers(AuthUtil.INFRA_USER_PATHS).hasRole(AuthConstants.ROLE_INFRA_USER)
 				.antMatchers(AuthUtil.INFRA_ADMIN_PATHS).hasRole(AuthConstants.ROLE_INFRA_ADMIN)
