@@ -1,6 +1,7 @@
 package com.xyram.ticketingTool.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,8 +14,8 @@ public interface FeatureRepository extends JpaRepository<Feature, String> {
 
 	
 	
-	@Query("select f from Feature f where f.featureType='Default' ")
-	public List<Feature> getAllDefaultFeatures();
+	@Query("select new map ( f.featureName as featureName ,f.featureId as featureId) from Feature f where f.featureType='Default' ")
+	public List<Map> getAllDefaultFeatures();
 
 	@Query("select f from Feature f where f.featureId=:featureId")
 	public Feature getFeaturesByFeatureId(String featureId);
