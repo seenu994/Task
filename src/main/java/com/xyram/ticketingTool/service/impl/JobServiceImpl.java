@@ -122,6 +122,7 @@ public class JobServiceImpl implements JobService{
                 if(status != null) {
                     predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("jobStatus"),status)));
                 }
+                
 //                if(jobOpeningObj.getWing() != null && !jobOpeningObj.getWing().equalsIgnoreCase("ALL")) {
 //                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal((root.get("wings").get("Id")), jobOpeningObj.getWing())));
 //                }
@@ -135,6 +136,7 @@ public class JobServiceImpl implements JobService{
                 if(userDetail.getUserRole() == "JOB_VENDOR" ) {
                 	predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("createdBy"), "%" + userDetail.getUserId() + "%")));
                 }
+                query.orderBy(criteriaBuilder.desc(root.get("createdAt")));
                 return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
         },pageable);
@@ -181,6 +183,7 @@ public class JobServiceImpl implements JobService{
 	                if(userDetail.getUserRole() != "HR_ADMIN" && userDetail.getUserRole() != "TICKETINGTOOL_ADMIN") {
 	                	predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("createdBy"), "%" + userDetail.getUserId() + "%")));
 	                }
+	                query.orderBy(criteriaBuilder.desc(root.get("createdAt")));
 	                return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 				}
 	        }, pageable);
@@ -315,6 +318,7 @@ public class JobServiceImpl implements JobService{
 //	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("candidateEmail"), "%" + searchObj.getSearchString() + "%")));
 //	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobCode"), "%" + searchObj.getSearchString() + "%")));
 //	                }
+	                query.orderBy(criteriaBuilder.desc(root.get("createdAt")));
 	                return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 				}
 	        },pageable);
@@ -422,7 +426,6 @@ public class JobServiceImpl implements JobService{
 	}
 
 	@Override
-
 	public ApiResponse editJobInterview( JobInterviews jobInterviewRequest, String interviewId ) {
 		
 		ApiResponse response = new ApiResponse(false);
@@ -706,6 +709,7 @@ public class JobServiceImpl implements JobService{
 //	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("candidateEmail"), "%" + searchObj.getSearchString() + "%")));
 //	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobCode"), "%" + searchObj.getSearchString() + "%")));
 //	                }
+					query.orderBy(criteriaBuilder.desc(root.get("createdAt")));
 	                return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 				}
 	        },pageable);
