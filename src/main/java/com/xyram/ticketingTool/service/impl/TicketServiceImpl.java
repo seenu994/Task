@@ -1274,7 +1274,7 @@ public class TicketServiceImpl implements TicketService {
 
 		List<Map> allTickets ;
 		
-			allTickets = ticketrepository.getTicketCount();
+			allTickets = ticketrepository.getTicketCount(userDetail.getUserRole());
 		
 		if (allTickets != null) {
 			response.setSuccess(true);
