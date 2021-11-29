@@ -180,7 +180,7 @@ public class JobServiceImpl implements JobService{
 	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("candidateEmail"), "%" + searchQuery + "%")));
 	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobCode"), "%" + searchQuery + "%")));
 	                }
-	                if(userDetail.getUserRole() != "HR_ADMIN" && userDetail.getUserRole() != "TICKETINGTOOL_ADMIN") {
+	                if(userDetail.getUserRole().contains("HR_ADMIN") && userDetail.getUserRole().contains("TICKETINGTOOL_ADMIN")) {
 	                	predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("createdBy"), "%" + userDetail.getUserId() + "%")));
 	                }
 	                query.orderBy(criteriaBuilder.desc(root.get("createdAt")));
@@ -750,6 +750,22 @@ public class JobServiceImpl implements JobService{
 	public ApiResponse getAllJobOfferById(String offerId) {
 		ApiResponse response = new ApiResponse(false);
 		Map offer= offerRepository.getAllJobOfferById(offerId);
+		if(offer!= null) {
+			response.setSuccess(true);
+			response.setMessage(" Offer retrieved Sucessfully");
+			response.setContent(offer);
+		}else {
+			response.setSuccess(false);
+			response.setMessage("Job Offer Id does Not Exist");
+		}
+		// TODO Auto-generated method stub
+		return response;
+	}
+
+	@Override
+	public ApiResponse getAllJobCodes() {
+		ApiResponse response = new ApiResponse(false);
+		Map offer= jobRepository.getAllJobCodes();
 		if(offer!= null) {
 			response.setSuccess(true);
 			response.setMessage(" Offer retrieved Sucessfully");
