@@ -1,6 +1,7 @@
 package com.xyram.ticketingTool.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.xyram.ticketingTool.Repository.StoryLabelRepository;
+import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
 import com.xyram.ticketingTool.entity.StoryLabel;
 import com.xyram.ticketingTool.service.StoryLabelService;
 
@@ -18,9 +20,9 @@ public class StoryLabelServiceImpl implements StoryLabelService {
 	StoryLabelRepository storyLabelRepository;
 
 	@Override
-	public StoryLabel createStoryLabel(String id, StoryLabel storylabel) {
+	public StoryLabel createStoryLabel(StoryLabel storylabel) {
 
-		if (storylabel.getProjectid() != null) {
+		if (storylabel.getProjectId() != null) {
 			if (storylabel.getLabelName() != null) {
 				storylabel.setLabelName(storylabel.getLabelName());
 				return storyLabelRepository.save(storylabel);
@@ -29,7 +31,7 @@ public class StoryLabelServiceImpl implements StoryLabelService {
 			}
 
 		} else {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Project id not found");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Project id is mandatory");
 		}
 		// TODO Auto-generated method stub
 
@@ -37,20 +39,36 @@ public class StoryLabelServiceImpl implements StoryLabelService {
 
 	@Override
 	public StoryLabel updateStoryLabel(String id, StoryLabel storylabel) {
-		// TODO Auto-generated method stub
+
 		if (storylabel.getId() != null) {
 			storylabel.setLabelName(storylabel.getLabelName());
 			return storyLabelRepository.save(storylabel);
 		} else {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Project id not found");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, " id not found");
 		}
 	}
 
 	@Override
 	public List<StoryLabel> getStoryLabel() {
 		// TODO Auto-generated method stub
-	return	storyLabelRepository.findAll();
-		
+		return storyLabelRepository.findAll();
+
+	}
+
+	@Override
+	public IssueTrackerResponse getStoryLabelByProjectId(String projectId)
+
+	{
+
+		IssueTrackerResponse response = new IssueTrackerResponse();
+		List<Map> storyLabelList = storyLabelRepository.getStoryLabelByproject(projectId);
+
+		response.setContent(storyLabelList);
+
+		response.setStatus("success");
+
+		return response;
+
 	}
 
 }

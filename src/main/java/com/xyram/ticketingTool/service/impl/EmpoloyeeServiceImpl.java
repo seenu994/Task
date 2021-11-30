@@ -138,6 +138,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				permissions.setProjectModPermission(permissionConfig.getPROJECTS_PERMISSION());
 				permissions.setTicketModPermission(permissionConfig.getTICKETS_PERMISSION());
 				permissions.setJobOpeningModPermission(permissionConfig.getJOBOPENINGS_PERMISSION());
+				permissions.setJobInterviewsModPermission(permissionConfig.getJOBINTERVIEWS_PERMISSION());
 				permissions.setJobAppModPermission(permissionConfig.getJOBAPPLICATIONS_PERMISSION());
 				permissions.setJobOfferModPermission(permissionConfig.getJOBOFFERS_PERMISSION());
 				permissions.setJobVendorsModPermission(permissionConfig.getJOBVENDORS_PERMISSION());

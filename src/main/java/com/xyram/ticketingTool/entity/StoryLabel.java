@@ -27,7 +27,7 @@ public class StoryLabel {
 	private String labelName;
 	
 	@Column(name = "projectId")
-	private String projectid;
+	private String projectId;
 	
 	public String getId() {
 		return Id;
@@ -45,12 +45,14 @@ public class StoryLabel {
 		this.labelName = labelName;
 	}
 
-	public String getProjectid() {
-		return projectid;
+	public String getProjectId() {
+		return projectId;
 	}
 
-	public void setProjectid(String project_id) {
-		this.projectid = projectid;
+	public void setProjectId(String projectId) {
+		this.projectId = projectId;
 	}
+
+
 
 }

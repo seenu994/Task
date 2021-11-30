@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.xyram.ticketingTool.Repository.StoryLabelRepository;
+import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
 import com.xyram.ticketingTool.entity.Platform;
 import com.xyram.ticketingTool.entity.StoryLabel;
 import com.xyram.ticketingTool.service.StoryLabelService;
@@ -25,8 +26,8 @@ public class StoryLabelController {
 	StoryLabelService storyLabelService;
 	
 	@PostMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/createStoryLabel", AuthConstants.ADMIN_BASEPATH + "/createStoryLabel"})
-	public StoryLabel createStoryLabel(@PathVariable String Id,@RequestBody StoryLabel storylabel) {
-		return storyLabelService.createStoryLabel(Id,storylabel);
+	public StoryLabel createStoryLabel(@RequestBody StoryLabel storylabel) {
+		return storyLabelService.createStoryLabel(storylabel);
 	} 
 	
 	@PostMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/editStoryLabel/{Id}",AuthConstants.ADMIN_BASEPATH + "/editStoryLabel/{Id}"})
@@ -34,9 +35,11 @@ public class StoryLabelController {
 		return storyLabelService.updateStoryLabel(Id,storylabel);
 	} 
 
-	@GetMapping(value= {AuthConstants.DEVELOPER_BASEPATH+"/getAllStoryLabel",AuthConstants.ADMIN_BASEPATH+"/getAllStoryLabel"})
-	public List<StoryLabel> getAllPlatform() {
-		return storyLabelService.getStoryLabel();
-	}
 	
+	
+	
+	@GetMapping(value= {AuthConstants.DEVELOPER_BASEPATH+"/getAllStoryLabel/{projectId}"})
+	public IssueTrackerResponse getAllStoryLabelByProject(@PathVariable String projectId) {
+		return storyLabelService.getStoryLabelByProjectId(projectId);
+	}
 }
