@@ -6,6 +6,28 @@ import javax.validation.constraints.NotNull;
 
 public class StoryCommentVo {
 	
+	
+
+
+//	@NotNull(message = "description is mandatory")
+//	@NotEmpty(message = "description should not be  empty")
+	private String description;
+	
+//	@NotNull(message = "storyId is mandatory")
+//	@NotEmpty(message = "storyId should not be  empty")
+	private String  storyId;
+	
+//	@NotNull(message = "projectId is mandatory")
+//	@NotEmpty(message = "projectId should not be  empty")
+	private String projectId;
+	
+	
+	private Multipart Attachments; 
+	
+	private String mentionTo;
+
+	
+	
 	public String getDescription() {
 		return description;
 	}
@@ -44,21 +66,15 @@ public class StoryCommentVo {
 	public void setAttachments(Multipart attachments) {
 		Attachments = attachments;
 	}
+	
+	public String getMentionTo() {
+		return mentionTo;
+	}
 
 
-	@NotNull(message = "description is mandatory")
-	@NotEmpty(message = "description should not be  empty")
-	private String description;
-	
-	@NotNull(message = "storyId is mandatory")
-	@NotEmpty(message = "storyId should not be  empty")
-	private String  storyId;
-	
-	@NotNull(message = "projectId is mandatory")
-	@NotEmpty(message = "projectId should not be  empty")
-	private String projectId;
-	
-	
-	private Multipart Attachments; 
+	public void setMentionTo(String mentionTo) {
+		this.mentionTo = mentionTo;
+	}
+
 
 }

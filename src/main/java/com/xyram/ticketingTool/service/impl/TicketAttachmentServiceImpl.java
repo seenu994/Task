@@ -183,7 +183,7 @@ public void sendPushNotification(String userId, String message, Ticket ticketNew
 
 public String addFileAdmin(MultipartFile file, String fileName){
 	System.out.println("bjsjsjn");
-    String SFTPHOST = "13.229.55.43"; // SFTP Host Name or SFTP Host IP Address
+    String SFTPHOST = "13.229.182.200"; // SFTP Host Name or SFTP Host IP Address
     int SFTPPORT = 22; // SFTP Port Number
     String SFTPUSER = "ubuntu"; // User Name
     String SFTPPASS = ""; // Password
