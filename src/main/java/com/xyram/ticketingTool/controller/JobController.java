@@ -108,6 +108,11 @@ public class JobController {
 		return jobService.scheduleJobInterview(schedule,applicationId);
 	}
 
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/scheduleJobInterview/{applicationId}",AuthConstants.HR_ADMIN_BASEPATH + "/scheduleJobInterview/{applicationId}"  })
+	public ApiResponse getJobInterviewByAppId(@PathVariable String applicationId) {
+		logger.info("Get All Job");
+		return jobService.getJobInterviewByAppId(applicationId);
+	}
 	
 	  @PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editJobInterviewSchedule/{interviewId}",AuthConstants.HR_ADMIN_BASEPATH + "/editJobInterviewSchedule/{interviewId}"  })
 	  public ApiResponse editJobInterviewSchedule(@RequestBody JobInterviews

@@ -175,7 +175,7 @@ class TicketController {
 		return ticketService.inprogressTicket(ticketId);
 	}
 
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getTktDetailsById/{ticketId}",AuthConstants.INFRA_ADMIN_BASEPATH + "/getTktDetailsById/{ticketId}",
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getTktDetailsById/{ticketId}",AuthConstants.HR_ADMIN_BASEPATH + "/getTktDetailsById/{ticketId}",AuthConstants.INFRA_ADMIN_BASEPATH + "/getTktDetailsById/{ticketId}",
 			AuthConstants.INFRA_USER_BASEPATH + "/getTktDetailsById/{ticketId}",
 			AuthConstants.DEVELOPER_BASEPATH + "/getTktDetailsById/{ticketId}" })
 	public ApiResponse getTktDetailsById(@PathVariable String ticketId) {
