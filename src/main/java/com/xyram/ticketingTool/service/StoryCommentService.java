@@ -8,12 +8,15 @@ import com.xyram.ticketingTool.vo.StoryCommentVo;
 
 public interface StoryCommentService {
 
-	StoryComments CreateStoryComment(StoryCommentVo storyComment);
 
 	Map<String, Object> deleteStoryCommentById(String id);
 
 	List<Map> getStoryCommentsListByStoryId(String storyId);
 
 	StoryComments getStoryCommentsById(String id);
+
+	StoryComments createStoryComment(StoryComments storyComment);
+
+	StoryComments updateStoryComment(String id, StoryComments storyCommentRequest);
 
 }

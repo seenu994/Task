@@ -3,40 +3,32 @@ package com.xyram.ticketingTool.controller;
 import java.util.List;
 import java.util.Map;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.xyram.ticketingTool.entity.Platform;
 import com.xyram.ticketingTool.entity.StoryComments;
 import com.xyram.ticketingTool.modelMapper.StoryCommentMapper;
+import com.xyram.ticketingTool.service.StoryAttachmentsService;
 import com.xyram.ticketingTool.service.StoryCommentService;
 import com.xyram.ticketingTool.util.AuthConstants;
+import com.xyram.ticketingTool.vo.StoryAttachmentVo;
 import com.xyram.ticketingTool.vo.StoryCommentVo;
 
 @RestController
-@CrossOrigin
-public class StoryCommentController {
+public class StoryAttachmentController {
 	
 	@Autowired
-	StoryCommentService storyCommentservice;
+	StoryAttachmentsService storyAttachmentsService;
 	
+
 	
-	@Autowired
-	StoryCommentMapper storyCommentMapper;
-	
-	@PostMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/createStoryComment"})
-	public StoryComments CreateStoryComment(@ModelAttribute StoryCommentVo storyCommentVo) {
+	@PostMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/uplaodStoryAttachment"})
+	public List<Map> CreateStoryAttachment(@ModelAttribute StoryAttachmentVo storyAttachmentVo) {
 		
-		return storyCommentservice.createStoryComment(storyCommentMapper.getEntityFromVo(storyCommentVo));
+		return storyAttachmentsService.uploadStoryAttachemet(storyAttachmentVo);
 	} 
 //	
 //	@GetMapping(value = {AuthConstants.DEVELOPER_BASEPATH + "/getListByProjectId/{projectId}"})
@@ -47,22 +39,14 @@ public class StoryCommentController {
 //	@GetMapping(value = {AuthConstants.DEVELOPER_BASEPATH + "/getListByProjectIdAndStoryId/{projectId}/{storyId}"})
 //	public List<Map> getStoryCommentbyprojectIdandStoryId(@PathVariable String projectId,String storyId) {
 //		return storyCommentservice.getStoryCommentbyprojectIdandStoryId(projectId,storyId);
-//	}
+//
+	
+	
+	@PutMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/deleteStoryAttachment{storyAttachmentId}"})
+	public Map<String, Object> deleteStoryComments(String storyAttachmentId)
+	{
+		return storyAttachmentsService.deleteStoryAttachmentById(storyAttachmentId);
+	}
+	
 
-	@PutMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/updateStoryComment{storyCommentId}"})
-	public StoryComments updateStoryComments(String storyCommentId,StoryComments storyComments)
-	{
-		return storyCommentservice.updateStoryComment(storyCommentId, storyComments);
-	}
-	
-	
-	@PutMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/deleteStoryComment{storyCommentId}"})
-	public Map<String, Object> deleteStoryComments(String storyCommentId)
-	{
-		return storyCommentservice.deleteStoryCommentById(storyCommentId);
-	}
-	
-	
-	
-	
 }

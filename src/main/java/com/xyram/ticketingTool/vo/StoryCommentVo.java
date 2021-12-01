@@ -9,16 +9,16 @@ public class StoryCommentVo {
 	
 
 
-//	@NotNull(message = "description is mandatory")
-//	@NotEmpty(message = "description should not be  empty")
+	@NotNull(message = "description is mandatory")
+	@NotEmpty(message = "description should not be  empty")
 	private String description;
 	
-//	@NotNull(message = "storyId is mandatory")
-//	@NotEmpty(message = "storyId should not be  empty")
+	@NotNull(message = "storyId is mandatory")
+	@NotEmpty(message = "storyId should not be  empty")
 	private String  storyId;
 	
-//	@NotNull(message = "projectId is mandatory")
-//	@NotEmpty(message = "projectId should not be  empty")
+	@NotNull(message = "projectId is mandatory")
+	@NotEmpty(message = "projectId should not be  empty")
 	private String projectId;
 	
 	

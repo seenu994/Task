@@ -21,6 +21,7 @@ import com.xyram.ticketingTool.entity.StoryAttachments;
 import com.xyram.ticketingTool.fileupload.FileTransferService;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.StoryAttachmentsService;
+import com.xyram.ticketingTool.vo.StoryAttachmentVo;
 
 @Service
 public class StoryAttachementsServiceImpl  implements StoryAttachmentsService{
@@ -43,30 +44,30 @@ public class StoryAttachementsServiceImpl  implements StoryAttachmentsService{
 	FileTransferService fileUploadService;
 
 	@Override
-	public List<Map> uploadStoryAttachemet(MultipartFile[] file, String storyId) {
+	public List<Map> uploadStoryAttachemet(StoryAttachmentVo storyAttachmentVo) {
 		List<Map> StoryAttachmentList = new ArrayList<>();
 		Map<String, Object> fileUploadedStatus = new HashMap<>();
 		List<Object> fileUploadedList = new ArrayList<>();
 		List<Object> fileUploadfailureList = new ArrayList<>();
         
-		for (MultipartFile prescriptionFile : file) {
+		for (MultipartFile atttachmentFile : storyAttachmentVo.getStoryAttachment()) {
 			 
 			StoryAttachments storyAttachment = new StoryAttachments();
             
-			String fileName = System.currentTimeMillis() + "_" + prescriptionFile.getOriginalFilename();
+			String fileName = System.currentTimeMillis() + "_" + atttachmentFile.getOriginalFilename();
 			if(false) {
-				fileUploadfailureList.add(prescriptionFile.getOriginalFilename());
+				fileUploadfailureList.add(atttachmentFile.getOriginalFilename());
 				continue;
 			}
-			storyAttachment.setFileType(prescriptionFile.getContentType());
+			storyAttachment.setFileType(atttachmentFile.getContentType());
 
 			storyAttachment.setUploadedBy(currentUser.getScopeId());
 			storyAttachment.setUploadedOn(new Date());
-			storyAttachment.setStoryId(storyId);
+			storyAttachment.setStoryId(storyAttachmentVo.getStoryId());
 
 			boolean response = false;
 			try {
-				response = fileUploadService.uploadFile(prescriptionFile, storyAttachmentBaseUrl, fileName);
+				response = fileUploadService.uploadFile(atttachmentFile, storyAttachmentBaseUrl, fileName);
 				storyAttachment.setFileName(fileName);
 				storyAttachment.setFileDownloadUrl(storyAttachmentBaseUrl + "/" + fileName);
 
@@ -79,12 +80,12 @@ public class StoryAttachementsServiceImpl  implements StoryAttachmentsService{
 				storyAttachment.setFileName(fileName);
 				StoryAttachments newStoryAttachments = StoryAttachmentsRespostiory.save(storyAttachment);
 				if (newStoryAttachments != null) {
-					fileUploadedList.add(prescriptionFile.getOriginalFilename());
+					fileUploadedList.add(atttachmentFile.getOriginalFilename());
 				} else {
-					fileUploadfailureList.add(prescriptionFile.getOriginalFilename());
+					fileUploadfailureList.add(atttachmentFile.getOriginalFilename());
 				}
 			} else {
-				fileUploadfailureList.add(prescriptionFile.getOriginalFilename());
+				fileUploadfailureList.add(atttachmentFile.getOriginalFilename());
 			}
 			
 			

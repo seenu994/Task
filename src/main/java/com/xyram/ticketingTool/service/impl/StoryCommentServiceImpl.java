@@ -1,5 +1,6 @@
 package com.xyram.ticketingTool.service.impl;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,8 +11,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 import com.xyram.ticketingTool.Repository.StoryAttachmentsRespostiory;
 import com.xyram.ticketingTool.Repository.StoryCommentRepository;
+import com.xyram.ticketingTool.entity.Platform;
 import com.xyram.ticketingTool.entity.StoryComments;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.entity.StoryComments;
@@ -28,14 +31,37 @@ public class StoryCommentServiceImpl implements StoryCommentService {
 	CurrentUser currentUser;
 
 	@Override
-	public StoryComments CreateStoryComment(StoryCommentVo storyCommentVo) {
+	public StoryComments createStoryComment(StoryComments storyComment) {
 
-		StoryComments storyComment = new StoryComments();
-		storyComment.setDescription(storyCommentVo.getDescription());
-		storyComment.setStoryId(storyCommentVo.getStoryId());
-		storyComment.setProjectId(storyCommentVo.getProjectId());
+	    storyComment.setCommentedBy(currentUser.getScopeId());
+	    storyComment.setCommentedDate(new Date());
 		return storyCommentRepository.save(storyComment);
 	}
+
+	
+	@Override
+	public StoryComments updateStoryComment(String id, StoryComments storyCommentRequest) {
+		
+		return storyCommentRepository.findById(id).map(storyComment->{
+			
+			if(storyComment.getCommentedBy()!=null && storyComment.getCommentedBy().equalsIgnoreCase(currentUser.getScopeId())){
+			if(storyComment.getDescription()!=null)
+			{
+				storyComment.setDescription(storyCommentRequest.getDescription());
+			}
+			
+			
+			
+			}else {
+				throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
+						"You Don't Have permission to perform this Operation");
+			}
+			return storyCommentRepository.save(storyComment);
+			
+		}).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST ,"Story Comment not found with id " + id));
+	}
+	
+	
 	
 
 	@Override
@@ -69,10 +95,10 @@ public class StoryCommentServiceImpl implements StoryCommentService {
 
 				if (status > 0) {
 					
-					reponse.put("message", "Prescription  succesfully deleted for id" + id);
+					reponse.put("message", "Story comments  succesfully deleted for id" + id);
 
 				} else {
-					reponse.put("message", "unable to delete for prescription  id" + id);
+					reponse.put("message", "unable to delete for Story comments  id" + id);
 
 				}
 			} else {
@@ -81,7 +107,7 @@ public class StoryCommentServiceImpl implements StoryCommentService {
 			}
 
 		} else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "prescription not found with id " + id);
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "story comments not found with id " + id);
 		}
 
 		return reponse;
