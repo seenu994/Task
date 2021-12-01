@@ -145,7 +145,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				permissions.setUserId(newUser.getId());
 				userPermissionConfig.save(permissions);
 				employee.setCreatedBy(currentUser.getUserId());
-				employee.setUpdatedBy(currentUser.getUs erId());
+				employee.setUpdatedBy(currentUser.getUserId());
 				employee.setCreatedAt(new Date());
 				employee.setLastUpdatedAt(new Date());
 				employee.setUserCredientials(user);
