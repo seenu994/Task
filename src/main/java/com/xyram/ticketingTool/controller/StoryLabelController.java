@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,9 +31,9 @@ public class StoryLabelController {
 		return storyLabelService.createStoryLabel(storylabel);
 	} 
 	
-	@PostMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/editStoryLabel/{Id}",AuthConstants.ADMIN_BASEPATH + "/editStoryLabel/{Id}"})
-	public StoryLabel updateStoryLabel(@PathVariable String Id,@RequestBody StoryLabel storylabel) {
-		return storyLabelService.updateStoryLabel(Id,storylabel);
+	@PutMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/editStoryLabel/{id}",AuthConstants.ADMIN_BASEPATH + "/editStoryLabel/{id}"})
+	public StoryLabel updateStoryLabel(@PathVariable String id,@RequestBody StoryLabel storylabel) {
+		return storyLabelService.updateStoryLabel(id,storylabel);
 	} 
 
 	
