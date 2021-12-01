@@ -21,8 +21,7 @@ public class StoryCommentVo {
 	@NotEmpty(message = "projectId should not be  empty")
 	private String projectId;
 	
-	
-	private Multipart Attachments; 
+
 	
 	private String mentionTo;
 
@@ -58,15 +57,7 @@ public class StoryCommentVo {
 	}
 
 
-	public Multipart getAttachments() {
-		return Attachments;
-	}
 
-
-	public void setAttachments(Multipart attachments) {
-		Attachments = attachments;
-	}
-	
 	public String getMentionTo() {
 		return mentionTo;
 	}

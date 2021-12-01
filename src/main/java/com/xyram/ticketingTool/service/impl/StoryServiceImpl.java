@@ -24,11 +24,13 @@ import com.xyram.ticketingTool.entity.StoryComments;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.request.StoryChangeStatusRequest;
 import com.xyram.ticketingTool.response.StoryDetailsResponse;
+import com.xyram.ticketingTool.service.PlatformService;
 import com.xyram.ticketingTool.service.ProjectFeatureService;
 import com.xyram.ticketingTool.service.ProjectMemberService;
 import com.xyram.ticketingTool.service.ProjectService;
 import com.xyram.ticketingTool.service.StoryAttachmentsService;
 import com.xyram.ticketingTool.service.StoryCommentService;
+import com.xyram.ticketingTool.service.StoryLabelService;
 import com.xyram.ticketingTool.service.StoryService;
 
 @Service
@@ -51,6 +53,12 @@ public class StoryServiceImpl implements StoryService {
 	ProjectFeatureService projectFeatureService;
 
 	@Autowired
+	StoryLabelService storyLabelService;
+
+	@Autowired
+	PlatformService platformService;
+
+	@Autowired
 	ProjectMemberService projectMemberService;
 
 	@Autowired
@@ -64,7 +72,7 @@ public class StoryServiceImpl implements StoryService {
 
 			checkProjectMemberInProject(story.getProjectId(), story.getAssignTo());
 			CheckplatformExist(story.getPlatform());
-			checkLabel(story.getStoryLabel(), story.getProjectId());
+			checkLabel(story.getStoryLabel());
 			Map projectFeature = projectFeatureService.getFeatureByProjectAndFeatureId(story.getProjectId(),
 					story.getStoryStatus());
 
@@ -128,16 +136,27 @@ public class StoryServiceImpl implements StoryService {
 
 	public boolean CheckplatformExist(String platformId) {
 		if (platformId != null) {
-			return true;
+			if (platformService.getPlatformById(platformId) != null) {
+				return true;
+			} else {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "platform not found with id");
+			}
+
 		} else {
 
 			return true;
 		}
 	}
 
-	public boolean checkLabel(String labelId, String projectId) {
+	public boolean checkLabel(String labelId) {
 		if (labelId != null) {
-			return true;
+
+			if (storyLabelService.getStoryLabelById(labelId) != null) {
+				return true;
+			} else {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Story Label not found with id"+labelId);
+			}
+
 		} else {
 
 			return true;

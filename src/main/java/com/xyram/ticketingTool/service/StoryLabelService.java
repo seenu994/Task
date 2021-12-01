@@ -15,5 +15,7 @@ public interface StoryLabelService {
 	StoryLabel createStoryLabel(StoryLabel storylabel);
 
 	IssueTrackerResponse getStoryLabelByProjectId(String projectId);
+
+	StoryLabel getStoryLabelById(String id);
 	
 }

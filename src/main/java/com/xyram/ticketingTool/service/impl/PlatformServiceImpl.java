@@ -44,7 +44,7 @@ public class PlatformServiceImpl implements PlatformService {
 	}
 
 	@Override
-	public Platform getPlatformbyId(String id) {
+	public Platform getPlatformById(String id) {
 		Platform platform = platformRepository.getById(id);
 
 		if (platform != null) {
