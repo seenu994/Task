@@ -780,6 +780,26 @@ public class JobServiceImpl implements JobService{
 		return response;
 	}
 
+	@Override
+	public ApiResponse getJobInterviewByAppId(String applicationId) {
+		
+		ApiResponse response = new ApiResponse(false);
+		List<Map> jobOpening  = jobInterviewRepository.getInterviewByAppId(applicationId);
+		Map interviews = new HashMap();
+		interviews.put("interviews", jobOpening);
+		if(jobOpening != null) {
+			
+			response.setSuccess(true);
+			response.setMessage("Job Opening Detail");
+			response.setContent(interviews);
+		}else {
+			response.setSuccess(false);
+			response.setMessage("Job Application Not Exist");
+		}
+		return response;
+		
+	}
+
 	
 
 	
