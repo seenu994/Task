@@ -16,7 +16,7 @@ import com.xyram.ticketingTool.id.generator.IdPrefix;
 public class Version {
 	
 	@Id
-	@IdPrefix(value = "STC")
+	@IdPrefix(value = "VER")
 	@GeneratedValue(generator = IdGenerator.ID_GENERATOR)
 	@GenericGenerator(name = IdGenerator.ID_GENERATOR, strategy = "com.xyram.ticketingTool.id.generator.IdGenerator")
 	@Column(name = "id")

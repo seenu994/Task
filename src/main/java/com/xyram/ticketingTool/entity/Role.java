@@ -27,8 +27,7 @@ import com.xyram.ticketingTool.ticket.config.JSONObjectUserType;
 public class Role extends AuditModel {
 
 	@Id
-	@GeneratedValue(generator = "uuid")
-	@GenericGenerator(name = "uuid", strategy = "uuid")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	@Size( max = 8)
 	@Column(name="role_id")
 	private String Id;

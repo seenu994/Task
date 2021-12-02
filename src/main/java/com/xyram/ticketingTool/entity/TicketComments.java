@@ -27,6 +27,8 @@ import com.xyram.ticketingTool.enumType.TicketAssigneeStatus;
 import com.xyram.ticketingTool.enumType.TicketCommentsStatus;
 import com.xyram.ticketingTool.enumType.TicketStatus;
 import com.xyram.ticketingTool.enumType.UserStatus;
+import com.xyram.ticketingTool.id.generator.IdGenerator;
+import com.xyram.ticketingTool.id.generator.IdPrefix;
 import com.xyram.ticketingTool.ticket.config.JSONObjectUserType;
 
 @Entity
@@ -34,7 +36,11 @@ import com.xyram.ticketingTool.ticket.config.JSONObjectUserType;
 //@TypeDefs({ @TypeDef(name = "StringJsonObject", typeClass = JSONObjectUserType.class) })
 public class TicketComments extends AuditModel {
 
+	
 	@Id
+	@IdPrefix(value = "TIC_")
+	@GeneratedValue(generator = IdGenerator.ID_GENERATOR)
+	@GenericGenerator(name = IdGenerator.ID_GENERATOR, strategy = "com.xyram.ticketingTool.id.generator.IdGenerator")
 	@Column(name="ticketComments_id")
 	private String Id;
 	
