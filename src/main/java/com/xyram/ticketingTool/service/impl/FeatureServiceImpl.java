@@ -32,7 +32,7 @@ public class FeatureServiceImpl implements FeatureService {
 
 		Integer totalFeature = featureRepository.getFeatureCount();
 
-		feature.setFeatureId("f" + "" + Integer.toString(totalFeature));
+		feature.setFeatureId("f" + "" + Integer.toString(totalFeature+1));
 
 		if (feature.getFeatureName() == null) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "feature name is mandatory");

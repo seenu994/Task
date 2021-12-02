@@ -23,8 +23,9 @@ import com.xyram.ticketingTool.id.generator.IdPrefix;
 //@TypeDefs({ @TypeDef(name = "StringJsonObject", typeClass = JSONObjectUserType.class) })
 public class TicketAttachment extends AuditModel {
 
+
 	@Id
-	@IdPrefix(value = "TICATT_")
+	@IdPrefix(value = "TIAT_")
 	@GeneratedValue(generator = IdGenerator.ID_GENERATOR)
 	@GenericGenerator(name = IdGenerator.ID_GENERATOR, strategy = "com.xyram.ticketingTool.id.generator.IdGenerator")
 	@Column(name="ticketAttachment_id")
