@@ -56,19 +56,19 @@ class EmployeeController {
 		return employeeService.addemployee(employee);
 	}
 
-	@PostMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/createJobVendor" })
+	@PostMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/createJobVendor",AuthConstants.ADMIN_BASEPATH + "/createJobVendor" })
 	public ApiResponse createJobVendor(@RequestBody JobVendorDetails vendorDetails) {
 		logger.info("Received request to add Employee");
 		return employeeService.createJobVendor(vendorDetails);
 	}
 	
-	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/getJobVendor" })
+	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/getJobVendor",AuthConstants.ADMIN_BASEPATH + "/getJobVendor" })
 	public ApiResponse getJobVendor() {
 		logger.info("Received request to add Employee");
 		return employeeService.getJobVendor();
 	}
 	
-	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/getJobVendor/{vendorId}" })
+	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/getJobVendor/{vendorId}",AuthConstants.ADMIN_BASEPATH + "/getJobVendor/{vendorId}" })
 	public ApiResponse getJobVendorById(@PathVariable String vendorId) {
 		logger.info("Received request to add Employee");
 		return employeeService.getJobVendorById(vendorId);
@@ -114,7 +114,7 @@ class EmployeeController {
 		return employeeService.updateEmployeeStatus(employeeID, userstatus);
 	}
 	
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllEmpByProject/{projectid}/clientId/{clientid}",AuthConstants.DEVELOPER_BASEPATH + "/getAllEmpByProject/{projectid}/clientId/{clientid}",AuthConstants.INFRA_USER_BASEPATH + "/getAllEmpByProject/{projectid}/clientId/{clientid}",AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllEmpByProject/{projectid}/clientId/{clientid}" })
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllEmpByProject/{projectid}/clientId/{clientid}",AuthConstants.HR_ADMIN_BASEPATH + "/getAllEmpByProject/{projectid}/clientId/{clientid}",AuthConstants.DEVELOPER_BASEPATH + "/getAllEmpByProject/{projectid}/clientId/{clientid}",AuthConstants.INFRA_USER_BASEPATH + "/getAllEmpByProject/{projectid}/clientId/{clientid}",AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllEmpByProject/{projectid}/clientId/{clientid}" })
 	public ApiResponse getAllEmpByProject(@PathVariable String projectid, @PathVariable String clientid) {
 		logger.info("inside EmployeeController :: getAllEmpByProject ");
 		return employeeService.getAllEmpByProject(projectid, clientid);

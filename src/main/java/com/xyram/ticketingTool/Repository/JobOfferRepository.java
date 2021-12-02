@@ -17,7 +17,7 @@ public interface JobOfferRepository extends CrudRepository<JobOffer,Long>,JpaSpe
 	@Query("Select jo from JobOffer jo where jo.Id = :jobOfferId")
 	JobOffer getById(String jobOfferId);
 
-	@Query("Select jo from JobOffer jo where jo.Id = :offerId")
+	@Query("Select new map(jo as jobOffers) from JobOffer jo where jo.Id = :offerId")
 	Map getAllJobOfferById(String offerId);
 	
 
