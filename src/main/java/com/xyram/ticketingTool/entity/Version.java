@@ -16,10 +16,40 @@ import com.xyram.ticketingTool.id.generator.IdPrefix;
 public class Version {
 	
 	@Id
-	@IdPrefix(value = "STC")
+	@IdPrefix(value = "STE")
 	@GeneratedValue(generator = IdGenerator.ID_GENERATOR)
 	@GenericGenerator(name = IdGenerator.ID_GENERATOR, strategy = "com.xyram.ticketingTool.id.generator.IdGenerator")
 	@Column(name = "id")
 	private String id;
+
+	@Column(name = "version_name")
+	private String versionName;
+	
+	@Column(name="project_id")
+	private String projectId;
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getVersionName() {
+		return versionName;
+	}
+
+	public void setVersionName(String versionName) {
+		this.versionName = versionName;
+	}
+
+	public String getProjectId() {
+		return projectId;
+	}
+
+	public void setProjectId(String projectId) {
+		this.projectId = projectId;
+	}
 
 }
