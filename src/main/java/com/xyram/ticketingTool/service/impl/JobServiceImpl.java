@@ -111,6 +111,7 @@ public class JobServiceImpl implements JobService{
 		String status = filter.containsKey("status") ? ((String) filter.get("status")) : null;
 		String searchQuery = filter.containsKey("searchstring") ? ((String) filter.get("searchstring")).toLowerCase()
 				: null;
+		String wing = filter.containsKey("wing") ? ((String) filter.get("wing")) : null;
 //		List<Map> allJobs = jobRepository.getAllJobOpenings();
 //		List<JobOpenings> allList =  jobRepository.getList();
 		Page<JobOpenings> allList =  jobRepository.findAll(new Specification<JobOpenings>() {
@@ -123,9 +124,9 @@ public class JobServiceImpl implements JobService{
                     predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("jobStatus"),status)));
                 }
                 
-//                if(jobOpeningObj.getWing() != null && !jobOpeningObj.getWing().equalsIgnoreCase("ALL")) {
-//                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal((root.get("wings").get("Id")), jobOpeningObj.getWing())));
-//                }
+                if(wing != null) {
+                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal((root.get("wings").get("Id")), wing)));
+                }
                 //criteriaBuilder.upper(itemRoot.get("code"), code.toUpperCase()
                 if(searchQuery != null) {
 //                	criteriaBuilder.like(root.get("title"), "%" + keyword + "%")
@@ -162,6 +163,7 @@ public class JobServiceImpl implements JobService{
 		String status = filter.containsKey("status") ? ((String) filter.get("status")) : null;
 		String searchQuery = filter.containsKey("searchstring") ? ((String) filter.get("searchstring")).toLowerCase()
 				: null;
+		String vendor = filter.containsKey("vendor") ? ((String) filter.get("vendor")) : null;
 		Page<JobApplication> allList =  jobAppRepository.findAll(new Specification<JobApplication>() {
 				@Override
 				public Predicate toPredicate(Root<JobApplication> root, javax.persistence.criteria.CriteriaQuery<?> query,
@@ -171,9 +173,9 @@ public class JobServiceImpl implements JobService{
 	                if(status != null) {
 	                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("status"), status)));
 	                }
-//	                if(jobAppSearch.getVendor() != null && !jobAppSearch.getVendor().equalsIgnoreCase("ALL")) {
-//	                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("referredVendor"), jobAppSearch.getVendor())));
-//	                }
+	                if(vendor != null) {
+	                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("referredVendor"), vendor)));
+	                }
 	                if(searchQuery != null) {
 	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("candidateName"), "%" + searchQuery + "%")));
 	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("candidateMobile"), "%" + searchQuery + "%")));
@@ -465,7 +467,7 @@ public class JobServiceImpl implements JobService{
 	public ApiResponse changeJobInterviewStatus(String jobInerviewId, JobInterviewStatus jobInterviewStatus,Integer rating, String feedback, String comments) {
 		ApiResponse response = new ApiResponse(false);
 		JobInterviews status= jobInterviewRepository.getById(jobInerviewId);
-		if(status!= null && status.getInterviewer() == userDetail.getUserId()) {
+		if(status!= null && status.getInterviewer().equals(userDetail.getUserId())) {
 			status.setJobInterviewStatus(jobInterviewStatus);
 			status.setFeedback(feedback);
 			status.setRateGiven(rating);

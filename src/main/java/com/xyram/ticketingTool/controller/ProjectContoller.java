@@ -64,14 +64,14 @@ class ProjectContoller {
 		return projectService.getgenericIssues();
 	}
 
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editProejct",
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editProejct",AuthConstants.HR_ADMIN_BASEPATH + "/editProejct",
 			AuthConstants.INFRA_USER_BASEPATH + "/editProejct",AuthConstants.INFRA_ADMIN_BASEPATH + "/editProejct"  })
 	public ApiResponse editProject(@RequestBody Projects projectRequest) {
 		logger.info("indide ProjectContoller :: editProejct");
 		return projectService.editEmployee(projectRequest);
 	}
 
-	@GetMapping(value = {AuthConstants.ADMIN_BASEPATH + "/getProjectDetails/{projectId}",AuthConstants.INFRA_ADMIN_BASEPATH + "/getProjectDetails/{projectId}"})
+	@GetMapping(value = {AuthConstants.ADMIN_BASEPATH + "/getProjectDetails/{projectId}",AuthConstants.DEVELOPER_BASEPATH + "/getProjectDetails/{projectId}",AuthConstants.HR_ADMIN_BASEPATH + "/getProjectDetails/{projectId}",AuthConstants.INFRA_ADMIN_BASEPATH + "/getProjectDetails/{projectId}"})
 	public Optional<Projects> getProjectDetailsById(@PathVariable String projectId) {
 		return projectService.findById(projectId);
 	}
