@@ -9,11 +9,24 @@ public class IssueTrackerResponse {
 	private List<Map> content;
 	private String  Status;
 	
+	private String message;
+
+	
+	
+	
+	
 	
 
 	
 	
 	
+	
+	public String getMessage() {
+		return message;
+	}
+	public void setMessage(String message) {
+		this.message = message;
+	}
 	public List<Map> getContent() {
 		return content;
 	}

@@ -12,8 +12,10 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.xyram.ticketingTool.Communication.PushNotificationCall;
 import com.xyram.ticketingTool.Communication.PushNotificationRequest;
@@ -22,6 +24,7 @@ import com.xyram.ticketingTool.Repository.NotificationRepository;
 import com.xyram.ticketingTool.Repository.ProjectMemberRepository;
 import com.xyram.ticketingTool.Repository.ProjectRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
+import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.Notifications;
 import com.xyram.ticketingTool.entity.ProjectMembers;
@@ -50,9 +53,9 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 
 	@Autowired
 	ProjectRepository projectRepository;
-	
+
 	@Autowired
-	  NotificationService notificationService;
+	NotificationService notificationService;
 
 	@Autowired
 	EmployeeRepository employeeRepository;
@@ -101,23 +104,23 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 						Employee employeeObj = employeeRepository.getbyUserEmpId(employeeId);
 
 						if (employeeObj != null) {
-							ProjectMembers projectMember = projectMemberRepository.getMemberInProject(employeeId,project.getpId());
-							if(projectMember != null && projectMember.getStatus().equals(ProjectMembersStatus.INACTIVE)) {
+							ProjectMembers projectMember = projectMemberRepository.getMemberInProject(employeeId,
+									project.getpId());
+							if (projectMember != null
+									&& projectMember.getStatus().equals(ProjectMembersStatus.INACTIVE)) {
 								projectMember.setStatus(ProjectMembersStatus.ACTIVE);
 								projectMemberRepository.save(projectMember);
-							}
-							else
-							{
-							ProjectMembers projectMemberNew = new ProjectMembers();
+							} else {
+								ProjectMembers projectMemberNew = new ProjectMembers();
 
-							projectMemberNew.setCreatedAt(new Date());
-							projectMemberNew.setLastUpdatedAt(new Date());
-							projectMemberNew.setUpdatedBy(user.getUserId());
-							projectMemberNew.setCreatedBy(user.getUserId());
-							projectMemberNew.setStatus(ProjectMembersStatus.ACTIVE);
-							projectMemberNew.setProjectId(project.getpId());
-							projectMemberNew.setEmployeeId(employeeId);
-							projectMemberRepository.save(projectMemberNew);
+								projectMemberNew.setCreatedAt(new Date());
+								projectMemberNew.setLastUpdatedAt(new Date());
+								projectMemberNew.setUpdatedBy(user.getUserId());
+								projectMemberNew.setCreatedBy(user.getUserId());
+								projectMemberNew.setStatus(ProjectMembersStatus.ACTIVE);
+								projectMemberNew.setProjectId(project.getpId());
+								projectMemberNew.setEmployeeId(employeeId);
+								projectMemberRepository.save(projectMemberNew);
 							}
 //							List<Map> developerList=	employeeServiceImpl.getListOfDeveloper();
 
@@ -142,7 +145,7 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 							notifications.setCreatedAt(new Date());
 							notifications.setUpdatedBy(user.getUserId());
 							notifications.setLastUpdatedAt(new Date());
-						//	notificationsRepository.save(notifications);
+							// notificationsRepository.save(notifications);
 							notificationService.createNotification(notifications);
 						}
 
@@ -161,12 +164,12 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 				response.setMessage(ResponseMessages.PROJECT_NOTEXIST);
 				response.setContent(null);
 			}
-		}else {
+		} else {
 			response.setSuccess(false);
 			response.setMessage("request Object having problem..");
 			response.setContent(null);
 		}
-		
+
 		return response;
 	}
 
@@ -191,7 +194,8 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 	@Override
 	public ApiResponse unassignProjectToEmployee(ProjectMembers member) {
 		// TODO Auto-generated method stub
-		ProjectMembers projectMembers = projectMemberRepository.findByEmployeeIdAndProjectId(member.getEmployeeId(), member.getProjectId());
+		ProjectMembers projectMembers = projectMemberRepository.findByEmployeeIdAndProjectId(member.getEmployeeId(),
+				member.getProjectId());
 		if (projectMembers != null) {
 			projectMembers.setStatus(ProjectMembersStatus.INACTIVE);
 			projectMemberRepository.save(projectMembers);
@@ -227,7 +231,7 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 				notifications.setCreatedAt(new Date());
 				notifications.setUpdatedBy(user.getUserId());
 				notifications.setLastUpdatedAt(new Date());
-			//	notificationsRepository.save(notifications);
+				// notificationsRepository.save(notifications);
 				notificationService.createNotification(notifications);
 
 				response.setSuccess(true);
@@ -266,8 +270,7 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 
 		if (employeeId != null) {
 			Employee employeeObj = employeeRepository.getbyUserByUserId(employeeId);
-			
-			
+
 			List<Map> projectList = projectMemberRepository.getAllProjectByEmployeeId(employeeObj.geteId());
 			List<Map> allotedProjectList = projectMemberRepository.getAllAllottedProjects();
 //			for(int i=0; i<= allotedProjectList.size();i++) {
@@ -275,10 +278,10 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 //			}
 			List<Map> allProjects = new ArrayList();
 			if (projectList != null && projectList.size() > 0)
-			allProjects.addAll(projectList);
+				allProjects.addAll(projectList);
 			if (allotedProjectList != null && allotedProjectList.size() > 0)
-			allProjects.addAll(allotedProjectList);
-			
+				allProjects.addAll(allotedProjectList);
+
 			if (allProjects != null && allProjects.size() > 0) {
 				Map content = new HashMap();
 				content.put("ProjectList", allProjects);
@@ -323,14 +326,61 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 		return response;
 
 	}
-	
-	
+
 	@Override
-	public ProjectMembers  getProjectMembersInProject(String employeeId, String projectId) {
-		
+	public ProjectMembers getProjectMembersInProject(String employeeId, String projectId) {
+
 		return projectMemberRepository.getMemberInProject(employeeId, projectId);
 	}
-	
+
+	@Override
+	public IssueTrackerResponse makeProjectAdmin(String employeeId, String projectId) {
+		IssueTrackerResponse issueTrackerResponse = new IssueTrackerResponse();
+
+		ProjectMembers projectMembers = projectMemberRepository.getMemberInProject(employeeId, projectId);
+		if (projectMembers != null) {
+			String isadmin = "1";
+			projectMemberRepository.updateProjectAdmin(projectId, isadmin);
+			issueTrackerResponse.setStatus("success");
+			return issueTrackerResponse;
+		} else {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Member not found In the project ");
+		}
+
+	}
+
+	@Override
+	public IssueTrackerResponse removeProjectAdmin(String employeeId, String projectId) {
+
+		IssueTrackerResponse issueTrackerResponse = new IssueTrackerResponse();
+
+		ProjectMembers projectMembers = projectMemberRepository.getMemberInProject(employeeId, projectId);
+		if (projectMembers != null) {
+			String isadmin = "0";
+			projectMemberRepository.updateProjectAdmin(projectId, isadmin);
+			issueTrackerResponse.setStatus("true");
+
+			return issueTrackerResponse;
+		} else {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Member not found In the project ");
+		}
+
+	}
+
+	@Override
+	public IssueTrackerResponse isProjectAdmin(String employeeId, String projectId) {
+		IssueTrackerResponse issueTrackerResponse = new IssueTrackerResponse();
+
+		ProjectMembers projectMembers = projectMemberRepository.checkProjectAdmin(employeeId, projectId);
+		if (projectMembers != null) {
+			issueTrackerResponse.setStatus("true");
+
+			return issueTrackerResponse;
+		} else {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, " Employee is Not A Project Admin ");
+		}
+
+	}
 
 //	@Override
 //	public ProjectMembers assignProjectToEmployee(Map<String, String> requestMap) {
@@ -372,5 +422,5 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 //		}
 //
 //	}
-	
+
 }

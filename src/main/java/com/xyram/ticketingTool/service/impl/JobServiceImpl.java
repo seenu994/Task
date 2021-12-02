@@ -765,17 +765,39 @@ public class JobServiceImpl implements JobService{
 	@Override
 	public ApiResponse getAllJobCodes() {
 		ApiResponse response = new ApiResponse(false);
-		Map offer= jobRepository.getAllJobCodes();
+		List<Map> offer= jobRepository.getAllJobCodes();
+		Map res = new HashMap();
 		if(offer!= null) {
+			res.put("jobcodes", offer);
 			response.setSuccess(true);
 			response.setMessage(" Offer retrieved Sucessfully");
-			response.setContent(offer);
+			response.setContent(res);
 		}else {
 			response.setSuccess(false);
 			response.setMessage("Job Offer Id does Not Exist");
 		}
 		// TODO Auto-generated method stub
 		return response;
+	}
+
+	@Override
+	public ApiResponse getJobInterviewByAppId(String applicationId) {
+		
+		ApiResponse response = new ApiResponse(false);
+		List<Map> jobOpening  = jobInterviewRepository.getInterviewByAppId(applicationId);
+		Map interviews = new HashMap();
+		interviews.put("interviews", jobOpening);
+		if(jobOpening != null) {
+			
+			response.setSuccess(true);
+			response.setMessage("Job Opening Detail");
+			response.setContent(interviews);
+		}else {
+			response.setSuccess(false);
+			response.setMessage("Job Application Not Exist");
+		}
+		return response;
+		
 	}
 
 	
