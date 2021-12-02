@@ -28,7 +28,13 @@ public class FeatureServiceImpl implements FeatureService {
 	public Feature addDefaultFeature(Feature feature) {
 
 		feature.setFeatureType("Default");
-		if (feature.getFeatureName() != null) {
+		feature.setFeatureStatus("ACTIVE");
+
+		Integer totalFeature = featureRepository.getFeatureCount();
+
+		feature.setFeatureId("f" + "" + Integer.toString(totalFeature));
+
+		if (feature.getFeatureName() == null) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "feature name is mandatory");
 		}
 
@@ -40,7 +46,7 @@ public class FeatureServiceImpl implements FeatureService {
 	public Feature addFeature(Feature feature) {
 
 		feature.setFeatureType("spec");
-		if (feature.getFeatureName() != null) {
+		if (feature.getFeatureName() == null) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "feature name is mandatory");
 		}
 
@@ -48,24 +54,22 @@ public class FeatureServiceImpl implements FeatureService {
 
 	}
 
-	
 	@Override
 	public IssueTrackerResponse getAllFeatureByDefault() {
 
-       IssueTrackerResponse response= new IssueTrackerResponse();   
-    List<Map> featureList=  featureRepository.getAllDefaultFeatures();
-       response.setContent(featureList);
-	
-       response.setStatus("success");
-       
-       return response;
-		
+		IssueTrackerResponse response = new IssueTrackerResponse();
+		List<Map> featureList = featureRepository.getAllDefaultFeatures();
+		response.setContent(featureList);
+
+		response.setStatus("success");
+
+		return response;
+
 	}
-	
+
 	@Override
-	public Feature getFeaturesByFeatureId(String featureId)
-	{
-	
+	public Feature getFeaturesByFeatureId(String featureId) {
+
 		return featureRepository.getFeaturesByFeatureId(featureId);
 	}
 }

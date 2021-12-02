@@ -43,6 +43,8 @@ public interface ProjectMemberService {
 
 	IssueTrackerResponse isProjectAdmin(String employeeId, String projectId);
 
+	IssueTrackerResponse getProjectMembersInProject(String projectId);
+
 	//ProjectMembers unassignProjectToEmployee(Map<String, String> requestMap);
 
 }

@@ -99,5 +99,16 @@ class ProjectMemberContoller {
 		return projectMemberService.isProjectAdmin(employeeId, projectId);
 	}
 	
+	
+	
+	@PutMapping(value= {AuthConstants.INFRA_ADMIN_BASEPATH +"/getAllProjectMemberByProject/{projectId}"
+			,AuthConstants.INFRA_USER_BASEPATH +"/getAllProjectMemberByProject/{projectId}",
+			AuthConstants.DEVELOPER_BASEPATH +"/getAllProjectMemberByProject/{projectId}"})
+	public IssueTrackerResponse getAllProjectMemberById(@PathVariable String projectId) {
+		logger.info("indide ProjectMembersController :: MakeProjectAdmin");
+		return projectMemberService.getProjectMembersInProject(projectId);
+	}
+
+	
 }
 	
