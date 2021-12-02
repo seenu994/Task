@@ -26,7 +26,7 @@ public class StoryLabel {
 	@Column(name = "label_name")
 	private String labelName;
 	
-	@Column(name = "projectId")
+	@Column(name = "project_id")
 	private String projectId;
 	
 	public String getId() {

@@ -70,5 +70,15 @@ public class StoryLabelServiceImpl implements StoryLabelService {
 		return response;
 
 	}
+	
+	
+	@Override
+	public StoryLabel getStoryLabelById(String id)
+	{
+		
+		return storyLabelRepository.getStoryLabelById(id);
+	}
+	
+	
 
 }

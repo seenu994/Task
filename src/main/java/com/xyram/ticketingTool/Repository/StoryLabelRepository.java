@@ -14,6 +14,9 @@ public interface StoryLabelRepository extends JpaRepository<StoryLabel, String> 
 	
 	@Query("select new Map(s.id as id ,s.labelName as labelName) from StoryLabel s where s.projectId=:projectId ")
 	List<Map> getStoryLabelByproject(String projectId);
+	
+	@Query("select s from StoryLabel s where s.id=:id ")
+	StoryLabel getStoryLabelById(String id);
 
 
 }

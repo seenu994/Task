@@ -47,7 +47,7 @@ public class PlatformController {
 	
 	@GetMapping(value= {AuthConstants.DEVELOPER_BASEPATH+"/getplatformById/{Id}",AuthConstants.ADMIN_BASEPATH+"/getplatformById/{Id}"})
 	public Platform getPlatformById(@PathVariable String Id) {
-		return platformService.getPlatformbyId(Id);
+		return platformService.getPlatformById(Id);
 	}
 	
 	

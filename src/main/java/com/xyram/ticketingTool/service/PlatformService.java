@@ -15,7 +15,7 @@ public interface PlatformService {
 
 	Platform updatePlatform(String id, Platform platformReq);
 
-	Platform getPlatformbyId(String id);
+	Platform getPlatformById(String id);
 	
 	List<Platform> getAllPlatform();
 
