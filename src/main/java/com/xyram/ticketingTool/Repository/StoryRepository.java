@@ -58,6 +58,7 @@ public interface StoryRepository extends JpaRepository<Story, String> {
     		+ " From Story s left join Projects p on p.pId =s.projectId "
     		+ "left join Feature f on f.featureId=s.storyStatus "
     		+ "left join Employee e1 on e1.eId=s.owner "
-    		+ "left join Employee e2 on e2.eId=s.assignTo where s.projectId=:projectId and s.storyStatus=:storystatusId")
+    		+ "left join Employee e2 on e2.eId=s.assignTo"
+    		+ " where s.projectId=:projectId and s.storyStatus=:storystatusId")
 	List<Map> getAllStoriesByStoryStaus(String projectId ,String storystatusId) ;
 }

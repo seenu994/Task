@@ -51,4 +51,9 @@ public class SprintController {
 		return  sprintService.getLatestSprintByProject(Id);
 	}
 	
+	@PostMapping(value = {AuthConstants.ADMIN_BASEPATH + "/changeStatus/{Id}/{status}"})
+	public Sprint changeStatusBySprintId(@PathVariable String Id,@PathVariable String status) {
+		return  sprintService.changeStatusBySprintId(Id,status);
+	}
+	
 }

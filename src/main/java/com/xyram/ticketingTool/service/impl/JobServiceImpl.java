@@ -1,5 +1,6 @@
 package com.xyram.ticketingTool.service.impl;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -235,6 +236,9 @@ public class JobServiceImpl implements JobService{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (JsonProcessingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -569,6 +573,9 @@ public class JobServiceImpl implements JobService{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (JsonProcessingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
