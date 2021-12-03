@@ -64,7 +64,7 @@ public class ProjectFeatureServiceImpl implements ProjectFeatureService {
 				projectFeature.setFeatureId(feature.getFeatureId());
 				projectFeature.setProjectId(request.getProjectId());
 				projectFeature.setStatus("ACTIVE");
-				if (projectFeatureRepository.hasFeatureAlreadyExist(request.getProjectId(), id) != null) {
+				if (projectFeatureRepository.hasFeatureAlreadyExist(request.getProjectId(), id).isEmpty()) {
 					projectFeatures.add(projectFeature);
 				}
 			} else {
@@ -83,7 +83,7 @@ public class ProjectFeatureServiceImpl implements ProjectFeatureService {
 		
 		for (String id : request.getStoryStatusIds()) {
 
- 			ProjectFeature projectFeature = projectFeatureRepository.hasFeatureAlreadyExist(request.getProjectId(), id);
+ 			ProjectFeature projectFeature = projectFeatureRepository.getProjectFeatureByFeatureIdAndProject(request.getProjectId(), id);
 			
 			if(projectFeature!=null)
 			{

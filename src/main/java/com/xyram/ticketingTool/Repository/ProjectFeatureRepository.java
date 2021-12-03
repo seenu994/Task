@@ -24,7 +24,12 @@ public interface ProjectFeatureRepository extends JpaRepository<ProjectFeature,S
 
 	@Query("select p from ProjectFeature p  where "
 			+ " p.projectId=:projectId and p.featureId=:featureId ")
-	ProjectFeature	 hasFeatureAlreadyExist(String projectId ,String featureId);
+	List<ProjectFeature> hasFeatureAlreadyExist(String projectId ,String featureId);
+	
+	
+	@Query("select p from ProjectFeature p  where "
+			+ " p.projectId=:projectId and p.featureId=:featureId ")
+	ProjectFeature getProjectFeatureByFeatureIdAndProject(String projectId ,String featureId);
 	
 
 }
