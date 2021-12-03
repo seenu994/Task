@@ -21,4 +21,6 @@ public interface SprintService {
 
 	Sprint getLatestSprintByProject(String id);
 
+	Sprint changeStatusBySprintId(String sprintId, String status);
+
 }

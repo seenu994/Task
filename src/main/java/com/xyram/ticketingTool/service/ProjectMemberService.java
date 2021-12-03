@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.stringtemplate.v4.compiler.CodeGenerator.list_return;
 
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
+import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.ProjectMembers;
 
@@ -35,6 +36,14 @@ public interface ProjectMemberService {
 	ApiResponse getAllProjectByEmployeeId();
 
 	ProjectMembers getProjectMembersInProject(String employeeId, String projectId);
+
+	IssueTrackerResponse makeProjectAdmin(String employeeId, String projectId);
+
+	IssueTrackerResponse removeProjectAdmin(String employeeId, String projectId);
+
+	IssueTrackerResponse isProjectAdmin(String employeeId, String projectId);
+
+	IssueTrackerResponse getProjectMembersInProject(String projectId);
 
 	//ProjectMembers unassignProjectToEmployee(Map<String, String> requestMap);
 

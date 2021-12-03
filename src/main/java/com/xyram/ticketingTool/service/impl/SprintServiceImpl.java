@@ -46,10 +46,10 @@ public class SprintServiceImpl implements SprintService {
 	
 	@Override
 	public Sprint editSprint(Sprint sprint,String sId) {
-			
 		Sprint Id = sprintRepository.getById(sId);
 		if(Id !=null) {
-			if(sprint.getSprintStartDate()!=null && sprint.getSprintEndDate()!=null && sprint.getSprintStartDate().before(new Date()) && sprint.getSprintEndDate().before(new Date())) {
+			System.out.println(!sprint.getSprintStartDate().before(new Date()));
+			if(sprint.getSprintStartDate()!=null && sprint.getSprintEndDate()!=null && !sprint.getSprintStartDate().before(new Date())) {
 				Id.setSprintStartDate(sprint.getSprintStartDate());
 				Id.setSprintEndDate(sprint.getSprintEndDate());
 			}else {
@@ -82,6 +82,20 @@ public class SprintServiceImpl implements SprintService {
 			return  sprintRepository.getLatestSprintByProject(projectId);
 		}else {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Project Id is mandatory ");
+		}
+
+	}
+	
+
+	@Override
+	public Sprint changeStatusBySprintId(String sprintId,String status ){
+		
+		if(sprintRepository.getById(sprintId)!=null) {
+			Sprint newSprint = sprintRepository.getById(sprintId);
+			newSprint.setSprintStatus(status);
+			return sprintRepository.save(newSprint);
+		}else {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "SprintId is mandatory ");
 		}
 
 	}

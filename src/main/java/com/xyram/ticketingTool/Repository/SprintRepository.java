@@ -18,4 +18,5 @@ public interface SprintRepository extends JpaRepository<Sprint, String> {
 	@Query(value ="SELECT * from sprint s WHERE s.project_id = :projectId ORDER BY s.sprint_start_date DESC LIMIT 0,1 ",nativeQuery = true)
 	Sprint getLatestSprintByProject(String projectId);
 
+
 }

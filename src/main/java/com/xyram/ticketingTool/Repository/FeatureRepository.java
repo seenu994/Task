@@ -20,6 +20,9 @@ public interface FeatureRepository extends JpaRepository<Feature, String> {
 	@Query("select f from Feature f where f.featureId=:featureId")
 	public Feature getFeaturesByFeatureId(String featureId);
 	
+	@Query("select count(f.id) from Feature f ")
+	public Integer getFeatureCount();
+	
 	
 	
 	

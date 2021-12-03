@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
+import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.ProjectMembers;
 import com.xyram.ticketingTool.entity.Projects;
@@ -28,6 +29,7 @@ import com.xyram.ticketingTool.enumType.UserStatus;
 import com.xyram.ticketingTool.service.EmployeeService;
 import com.xyram.ticketingTool.service.ProjectMemberService;
 import com.xyram.ticketingTool.service.ProjectService;
+import com.xyram.ticketingTool.ticket.Model.AuthConstant;
 import com.xyram.ticketingTool.util.AuthConstants;
 
 import ch.qos.logback.core.pattern.color.ANSIConstants;
@@ -75,6 +77,38 @@ class ProjectMemberContoller {
 	public ApiResponse getAllProjectByEmployeeId() {
 		logger.info("inside ProjectMemberContoller :: getAllProjectByEmployeeId ");
 		return projectMemberService.getAllProjectByEmployeeId();
+		
 	}	
+	
+	
+	@PutMapping(value= {AuthConstants.INFRA_ADMIN_BASEPATH +"/addProjectAdmin",AuthConstants.INFRA_USER_BASEPATH +"/addProjectAdmin"})
+	public IssueTrackerResponse MakeProjectAdmin(@RequestParam String employeeId, @RequestParam String projectId) {
+		logger.info("indide ProjectMembersController :: MakeProjectAdmin");
+		return projectMemberService.makeProjectAdmin(employeeId, projectId);
+	}
+	
+	@PutMapping(value= {AuthConstants.INFRA_ADMIN_BASEPATH +"/removeProjectAdmin",AuthConstants.INFRA_USER_BASEPATH +"/removeProjectAdmin"})
+	public IssueTrackerResponse removeProjectAdmin(@RequestParam String employeeId, @RequestParam String projectId) {
+		logger.info("indide ProjectMembersController :: removeProjectAdmin");
+		return projectMemberService.removeProjectAdmin(employeeId, projectId);
+	}
+
+	@GetMapping(value= {AuthConstants.DEVELOPER_BASEPATH +"/isProjectAdmin",AuthConstants.INFRA_USER_BASEPATH +"/isProjectAdmin"})
+	public IssueTrackerResponse isProjectAdmin(@RequestParam String employeeId, @RequestParam String projectId) {
+		logger.info("indide ProjectMembersController :: MakeProjectAdmin");
+		return projectMemberService.isProjectAdmin(employeeId, projectId);
+	}
+	
+	
+	
+	@GetMapping(value= {AuthConstants.INFRA_ADMIN_BASEPATH +"/getAllProjectMemberByProject/{projectId}"
+			,AuthConstants.INFRA_USER_BASEPATH +"/getAllProjectMemberByProject/{projectId}",
+			AuthConstants.DEVELOPER_BASEPATH +"/getAllProjectMemberByProject/{projectId}"})
+	public IssueTrackerResponse getAllProjectMemberById(@PathVariable String projectId) {
+		logger.info("indide ProjectMembersController :: MakeProjectAdmin");
+		return projectMemberService.getProjectMembersInProject(projectId);
+	}
+
+	
 }
 	

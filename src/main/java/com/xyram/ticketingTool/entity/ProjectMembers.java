@@ -31,7 +31,7 @@ public class ProjectMembers extends AuditModel {
 	@GeneratedValue(generator = IdGenerator.ID_GENERATOR)
 	@GenericGenerator(name = IdGenerator.ID_GENERATOR, strategy = "com.xyram.ticketingTool.id.generator.IdGenerator")
 	@Column(name="projectMember_id")
-	private String Id;
+	private String id;
 	
 	
 	@Enumerated(EnumType.STRING)
@@ -51,14 +51,17 @@ public class ProjectMembers extends AuditModel {
 	
 	@Column(name = "project_id")
 	private  String projectId;
+	
+	@Column(name="is_admin")
+	private String isAdmin;
 
 	
 	public String getId() {
-		return Id;
+		return id;
 	}
 
 	public void setId(String id) {
-		Id = id;
+		id = id;
 	}
 
 	public String getEmployeeId() {
@@ -85,6 +88,17 @@ public class ProjectMembers extends AuditModel {
 		this.status = status;
 	}
 
+	public String getIsAdmin() {
+		return isAdmin;
+	}
+
+	public void setIsAdmin(String isAdmin) {
+		this.isAdmin = isAdmin;
+	}
+
+	
+	
+	
 //	public Employee getEmployee() {
 //		return employee;
 //	}
