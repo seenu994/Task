@@ -3,7 +3,9 @@ package com.xyram.ticketingTool.service.impl;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.xyram.ticketingTool.Repository.VersionRepository;
 import com.xyram.ticketingTool.entity.Version;
@@ -19,8 +21,13 @@ public class VersionServiceImpl implements VersionService{
 	@Override
 	public Version CreateVersion(Version versionBody) {
 
-//		if(versionBody.)
-		return null;
+		if(versionBody.getVersionName()!=null && versionBody.getProjectId()!=null) {
+			return 	versionRepository.save(versionBody);
+			
+		}else {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Version name and project id is mandatory ");
+		}
+		
 	}
 
 	@Override
@@ -42,9 +49,13 @@ public class VersionServiceImpl implements VersionService{
 	}
 
 	@Override
-	public Version getVersionById(String Id) {
-		// TODO Auto-generated method stub
-		return null;
+	public Version getVersionById(String id) {
+		if(id!=null) {
+			return versionRepository.getById(id);
+		}else {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Version Id is mandatory");
+		}
+		
 	}
 
 	

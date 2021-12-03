@@ -86,6 +86,20 @@ public class SprintServiceImpl implements SprintService {
 
 	}
 	
+
+	@Override
+	public Sprint changeStatusBySprintId(String sprintId,String status ){
+		
+		if(sprintRepository.getById(sprintId)!=null) {
+			Sprint newSprint = sprintRepository.getById(sprintId);
+			newSprint.setSprintStatus(status);
+			return sprintRepository.save(newSprint);
+		}else {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "SprintId is mandatory ");
+		}
+
+	}
+	
 	
 	
 }

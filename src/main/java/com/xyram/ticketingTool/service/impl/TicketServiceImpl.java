@@ -269,6 +269,9 @@ public class TicketServiceImpl implements TicketService {
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		/*
 		 * JSONObject json = new JSONObject(ticketRequest); Ticket ticketreq=new
@@ -648,6 +651,9 @@ public class TicketServiceImpl implements TicketService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

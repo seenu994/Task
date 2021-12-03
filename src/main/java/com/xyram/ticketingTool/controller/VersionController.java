@@ -2,6 +2,8 @@ package com.xyram.ticketingTool.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,5 +24,11 @@ public class VersionController {
 	public Version CreateVersion(@RequestBody Version versionBody) {
 		
 		return versionService.CreateVersion(versionBody);
+	} 
+	
+	@GetMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/getVersion/{id}"})
+	public Version getVersionById(@PathVariable String id) {
+		
+		return versionService.getVersionById(id);
 	} 
 }
