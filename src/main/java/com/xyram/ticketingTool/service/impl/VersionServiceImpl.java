@@ -1,5 +1,7 @@
 package com.xyram.ticketingTool.service.impl;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,27 +33,32 @@ public class VersionServiceImpl implements VersionService{
 	}
 
 	@Override
-	public Version editVersion(String id, Version versionBody) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Version> getVersionByProjectId(String Id) {
+		if(Id!= null) {
+			return versionRepository.getByProjectId(Id);
+		}else {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Project Id is required");
+		}
+
 	}
 
 	@Override
-	public Version getVersionByProjectId(String Id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Version deleteVersionByid(String Id) {
-		// TODO Auto-generated method stub
-		return null;
+	public String deleteVersionByid(String Id) {
+		String message = null;
+		if(Id!=null) {
+			versionRepository.deleteById(Id);
+			message = "Deleted Successfully";
+			return message;
+		}else {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Version Id is mandatory");
+		}
+		
 	}
 
 	@Override
 	public Version getVersionById(String id) {
 		if(id!=null) {
-			return versionRepository.getById(id);
+			return versionRepository.getByVersionId(id);
 		}else {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Version Id is mandatory");
 		}

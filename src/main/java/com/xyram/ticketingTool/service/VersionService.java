@@ -1,5 +1,7 @@
 package com.xyram.ticketingTool.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.xyram.ticketingTool.entity.Version;
@@ -9,11 +11,9 @@ public interface VersionService {
 	
 	Version CreateVersion(Version versionBody);
 	
-	Version editVersion(String id, Version versionBody);
+	List<Version> getVersionByProjectId(String Id);
 	
-	Version getVersionByProjectId(String Id);
-	
-	Version deleteVersionByid(String Id);
+	String deleteVersionByid(String Id);
 	
 	Version getVersionById(String id);
 
