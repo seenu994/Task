@@ -28,7 +28,7 @@ public interface JobInterviewRepository extends CrudRepository<JobInterviews,Lon
 	@Query(value = "SELECT jo from JobInterviews jo  ")
 	List<JobInterviews> getList();
 
-	@Query(value = "SELECT * from ticketdbtool.job_interviews jo where jo.interview_id = :jobInterviewId  ", nativeQuery = true)
+	@Query(value = "SELECT new map(jo as jobInterviewDetail) from JobInterviews jo where jo.Id = :jobInterviewId  ")
 	Map getInterviewById(String jobInterviewId);
 
 	@Query(value = "SELECT new map(jo as jobInterviews) from JobInterviews jo where jo.jobApplication.Id = :applicationId  ")
