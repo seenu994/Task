@@ -112,6 +112,7 @@ public class StoryServiceImpl implements StoryService {
 		if (story != null) {
 
 			if (checkFeature(storyChangeStatusrequest.getStorystatus(), story.getProjectId()) != null) {
+				story.setStoryStatus(storyChangeStatusrequest.getStorystatus());
 
 				return storyRepository.save(story);
 			}

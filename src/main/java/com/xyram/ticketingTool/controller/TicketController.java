@@ -135,12 +135,12 @@ class TicketController {
 		return ticketService.getAllTicket(pageable);
 	}
 	
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/searchTicket/{searchString}",AuthConstants.INFRA_ADMIN_BASEPATH+ "/searchTicket/{searchString}",
-			AuthConstants.INFRA_USER_BASEPATH + "/searchTicket/{searchString}" ,
-			AuthConstants.DEVELOPER_BASEPATH + "/searchTicket/{searchString}"})
-	public ApiResponse searchTicket(@PathVariable String searchString) {
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/searchTicket/{searchString}/{status}",AuthConstants.INFRA_ADMIN_BASEPATH+ "/searchTicket/{searchString}/{status}",
+			AuthConstants.INFRA_USER_BASEPATH + "/searchTicket/{searchString}/{status}" ,
+			AuthConstants.DEVELOPER_BASEPATH + "/searchTicket/{searchString}/{status}"})
+	public ApiResponse searchTicket(@PathVariable String searchString,@PathVariable String status) {
 		logger.info("inside Ticket controller :: getAllTicket");
-		return ticketService.searchTicket(searchString);
+		return ticketService.searchTicket(searchString,status);
 	}
 
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllTktByStatus/{status}",AuthConstants.HR_ADMIN_BASEPATH + "/getAllTktByStatus/{status}",AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllTktByStatus/{status}",
