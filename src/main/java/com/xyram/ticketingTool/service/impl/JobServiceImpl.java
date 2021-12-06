@@ -314,7 +314,7 @@ public class JobServiceImpl implements JobService{
 	                if(status != null && !status.equalsIgnoreCase("ALL")) {
 	                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("status"), status)));
 	                }
-	                if(userDetail.getUserRole().equals("DEVELOPER")) {
+	                if(userDetail.getUserRole().equals("DEVELOPER") && userDetail.getUserRole().equals("HR") && userDetail.getUserRole().equals("INFRA_ADMIN") && userDetail.getUserRole().equals("INFRA_USER")) {
 	                	System.out.println(userDetail.getUserId());
 	                	predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("interviewer"),userDetail.getUserId())));
 	                }
