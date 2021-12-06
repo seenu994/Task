@@ -745,5 +745,21 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 		return response;
 	}
+	
+	@Override
+	public ApiResponse getListByAccessToken(){
+		ApiResponse response = new ApiResponse(false);
+		String accessToken = currentUser.getUserId();
+		
+		if(accessToken != null) {
+			Map employee = employeeRepository.getbyAccessToken(accessToken);
+			response.setSuccess(true);
+			response.setMessage("Employee Retrieved Successfully");
+			response.setContent(employee);
+		}else {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Access token is required");
+		}
+		return response;
+	}
 
 }
