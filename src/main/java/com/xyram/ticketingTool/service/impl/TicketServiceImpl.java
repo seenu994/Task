@@ -1252,7 +1252,7 @@ public class TicketServiceImpl implements TicketService {
 		ApiResponse response = new ApiResponse(false);
 
 		Page<Map> allTickets ;
-		if (userDetail.getUserRole().equals("INFRA")) {
+		if (userDetail.getUserRole().equals("INFRA_USER")) {
 			allTickets = ticketrepository.getAllTicketsForInfraUser(pageable, userDetail.getUserId());
 		}else {
 			allTickets = ticketrepository.getAllTicketsByStatusMobile(pageable, userDetail.getUserId(),
