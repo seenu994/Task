@@ -961,8 +961,8 @@ public class TicketServiceImpl implements TicketService {
 		return response;
 	}
 	@Override
-	public ApiResponse searchTicket(String searchString) {
-		List<Map> serachList = ticketrepository.searchTicket(searchString);
+	public ApiResponse searchTicket(String searchString,String status) {
+		List<Map> serachList = ticketrepository.searchTicket(searchString,status);
 		Map content = new HashMap();
 		content.put("serachList", serachList);
 		ApiResponse response = new ApiResponse(true);
