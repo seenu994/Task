@@ -151,13 +151,13 @@ public class JobController {
 		return jobService.getAllJobOpeningsById(jobOpeningId);
 	}
 	
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllApp/{jobAppId}",AuthConstants.HR_ADMIN_BASEPATH + "/getAllApp/{jobAppId}",AuthConstants.HR_BASEPATH + "/getAllApp/{jobAppId}",AuthConstants.DEVELOPER_BASEPATH + "/getAllApp/{jobAppId}",AuthConstants.JOB_VENDOR_BASEPATH + "/getAllApp/{jobAppId}" })
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllApp/{jobAppId}",AuthConstants.INFRA_USER_BASEPATH + "/getAllApp/{jobAppId}",AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllApp/{jobAppId}",AuthConstants.HR_ADMIN_BASEPATH + "/getAllApp/{jobAppId}",AuthConstants.HR_BASEPATH + "/getAllApp/{jobAppId}",AuthConstants.DEVELOPER_BASEPATH + "/getAllApp/{jobAppId}",AuthConstants.JOB_VENDOR_BASEPATH + "/getAllApp/{jobAppId}" })
 	public ApiResponse getAllAppById(@PathVariable String jobAppId) {
 		logger.info("Get JobOpening by id");
 		return jobService.getAllJobAppById(jobAppId);
 	}
 	
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getInterview/{jobInterviewId}",AuthConstants.HR_ADMIN_BASEPATH + "/getInterview/{jobInterviewId}",AuthConstants.HR_BASEPATH + "/getInterview/{jobInterviewId}",AuthConstants.DEVELOPER_BASEPATH + "/getInterview/{jobInterviewId}",AuthConstants.JOB_VENDOR_BASEPATH + "/getInterview/{jobInterviewId}" })
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getInterview/{jobInterviewId}",AuthConstants.INFRA_ADMIN_BASEPATH + "/getInterview/{jobInterviewId}",AuthConstants.INFRA_USER_BASEPATH + "/getInterview/{jobInterviewId}",AuthConstants.HR_ADMIN_BASEPATH + "/getInterview/{jobInterviewId}",AuthConstants.HR_BASEPATH + "/getInterview/{jobInterviewId}",AuthConstants.DEVELOPER_BASEPATH + "/getInterview/{jobInterviewId}",AuthConstants.JOB_VENDOR_BASEPATH + "/getInterview/{jobInterviewId}" })
 	public ApiResponse getAllInterviewId(@PathVariable String jobInterviewId) {
 		logger.info("Get JobOpening by id");
 		return jobService.getAllInterviewId(jobInterviewId);
