@@ -135,7 +135,7 @@ class EmployeeController {
 	
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/searchEmployee/{searchString}",
 			AuthConstants.INFRA_USER_BASEPATH + "/searchEmployee/{searchString}",
-			AuthConstants.DEVELOPER_BASEPATH + "/searchEmployee/{searchString}",AuthConstants.INFRA_ADMIN_BASEPATH + "/searchEmployee/{searchString}"})
+			AuthConstants.DEVELOPER_BASEPATH + "/searchEmployee/{searchString}",AuthConstants.INFRA_ADMIN_BASEPATH + "/searchEmployee/{searchString}",AuthConstants.HR_ADMIN_BASEPATH + "/searchEmployee/{searchString}"})
 	public ApiResponse searchEmployee(@PathVariable String searchString) {
 		logger.info("inside EmployeeController :: searchEmployee ");
 		return employeeService.searchEmployee(searchString);

@@ -961,8 +961,8 @@ public class TicketServiceImpl implements TicketService {
 		return response;
 	}
 	@Override
-	public ApiResponse searchTicket(String searchString) {
-		List<Map> serachList = ticketrepository.searchTicket(searchString);
+	public ApiResponse searchTicket(String searchString,String status) {
+		List<Map> serachList = ticketrepository.searchTicket(searchString,status);
 		Map content = new HashMap();
 		content.put("serachList", serachList);
 		ApiResponse response = new ApiResponse(true);
@@ -1252,7 +1252,7 @@ public class TicketServiceImpl implements TicketService {
 		ApiResponse response = new ApiResponse(false);
 
 		Page<Map> allTickets ;
-		if (userDetail.getUserRole().equals("INFRA")) {
+		if (userDetail.getUserRole().equals("INFRA_USER")) {
 			allTickets = ticketrepository.getAllTicketsForInfraUser(pageable, userDetail.getUserId());
 		}else {
 			allTickets = ticketrepository.getAllTicketsByStatusMobile(pageable, userDetail.getUserId(),

@@ -38,8 +38,8 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 			+ "left join ticketdbtool.employee ee on a.created_by = ee.user_id "
 			+ "left join ticketdbtool.ticket_assignee b ON a.ticket_id = b.ticket_id  and b.ticket_assignee_status = 'ACTIVE' "
 			+ "left join ticketdbtool.employee e on b.employee_id = e.employee_id "
-			+ "where a.ticket_description like %:searchString% ", nativeQuery = true)
-	       List<Map> searchTicket(@Param("searchString") String searchString );
+			+ "where a.ticket_status = :status and a.ticket_description like %:searchString% ", nativeQuery = true)
+	       List<Map> searchTicket(@Param("searchString") String searchString, String status );
 	
 	/*
 	@Query(value = "SELECT a.ticket_id as ticket_id, a.ticket_description as ticket_description , a.ticket_status as ticket_status, a.created_at as created_at, a.created_by as created_by, "
