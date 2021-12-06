@@ -445,13 +445,12 @@ public class JobServiceImpl implements JobService{
 				jbInterviews.setFeedback(jobInterviewRequest.getFeedback());
 				jbInterviews.setInterviewType(jobInterviewRequest.getInterviewType());
 				jbInterviews.setRoundDetails(jobInterviewRequest.getRoundDetails());
+				jbInterviews.setRoundNo(jobInterviewRequest.getRoundNo());
 				jbInterviews.setInterviewLink(jobInterviewRequest.getInterviewLink());
 				jbInterviews.setInterviewer(jobInterviewRequest.getInterviewer());
 				jbInterviews.setInterviewDate(jobInterviewRequest.getInterviewDate());
 				jbInterviews.setRecommendation(jobInterviewRequest.getRecommendation());
 				jbInterviews.setRating(jobInterviewRequest.getRateGiven());
-				
-				
 				jobInterviewRepository.save(jbInterviews);
 				response.setSuccess(true);
 				String msg="Job Interview Updated Successfully";

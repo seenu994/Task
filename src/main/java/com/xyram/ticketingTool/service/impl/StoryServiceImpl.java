@@ -88,6 +88,11 @@ public class StoryServiceImpl implements StoryService {
 
 	}
 
+//	public Story editStoryDetails(String storyId)
+//	{
+//		//return storyRepository.findAllById(storyId).map()
+//	}
+
 	@Override
 	public IssueTrackerResponse getAllStories(String projectId) {
 
@@ -154,7 +159,7 @@ public class StoryServiceImpl implements StoryService {
 			if (storyLabelService.getStoryLabelById(labelId) != null) {
 				return true;
 			} else {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Story Label not found with id"+labelId);
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Story Label not found with id" + labelId);
 			}
 
 		} else {
@@ -189,7 +194,7 @@ public class StoryServiceImpl implements StoryService {
 	@Override
 	public StoryDetailsResponse getStoryDetailsById(String projectId, String storyId) {
 		StoryDetailsResponse storyDetailsResponse = new StoryDetailsResponse();
-		List<Map> storyDetails = storyRepository.getAllStoriesByStoryId(projectId, storyId);
+		Map storyDetails = storyRepository.getAllStoriesByStoryId(projectId, storyId);
 		List<Map> storyAttachments = storyAttachmentsService.getStoryAttachmentsListByStoryId(storyId);
 		List<Map> storyComments = storyCommentService.getStoryCommentsListByStoryId(storyId);
 		storyDetailsResponse.setStoryAttachments(storyAttachments);

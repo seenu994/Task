@@ -11,13 +11,15 @@ import com.xyram.ticketingTool.entity.StoryComments;
 
 public class StoryDetailsResponse {
 
-	private List<Map>  storyDetails;
+	private Map  storyDetails;
 	private List<Map> storyComments;
 	private List<Map> storyAttachments;
-	public List<Map> getStoryDetails() {
+	
+	
+	public Map getStoryDetails() {
 		return storyDetails;
 	}
-	public void setStoryDetails(List<Map> storyDetails) {
+	public void setStoryDetails(Map storyDetails) {
 		this.storyDetails = storyDetails;
 	}
 	public List<Map> getStoryComments() {

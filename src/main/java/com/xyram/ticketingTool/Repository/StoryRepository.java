@@ -39,7 +39,7 @@ public interface StoryRepository extends JpaRepository<Story, String> {
     
     @Query("select   new Map( s.storyNo as storyNo ,s.title as title , p.projectName as projectName,f.featureName as storyStatus,  "
     		+ " s.id as id, s.storyType as storyType,CONCAT(e1.firstName ,' ', e1.lastName) as owner, "
-    		+ "CONCAT(e2.firstName ,' ', e2.lastName) as assignedTo ,sl.labelName as label,pt.platformName as platform) " 
+    		+ "CONCAT(e2.firstName ,' ', e2.lastName) as assignedTo ,s.storyDescription as storyDescription ,sl.labelName as label,pt.platformName as platform) " 
     		+ " From Story s"
     		+ " left join Projects p on p.pId =s.projectId "
     		+ "left join Feature f on f.featureId=s.storyStatus "
@@ -48,7 +48,7 @@ public interface StoryRepository extends JpaRepository<Story, String> {
     		+ "left join StoryLabel sl on sl.projectId=s.projectId "
     		+" left join Platform pt on pt.projectId=s.projectId "
     		+ " where s.id=:storyId and s.projectId =:projectId ")
-  List<Map>  getAllStoriesByStoryId(String projectId ,String storyId);
+  Map  getAllStoriesByStoryId(String projectId ,String storyId);
 
     
     
