@@ -815,11 +815,11 @@ public class JobServiceImpl implements JobService{
 			
 			if(opening!=null) {
 				response.setSuccess(false);
-				response.setMessage("Job Code does not exist");
+				response.setMessage("Job code already exist");
 			}
 		else {
 			response.setSuccess(true);
-			response.setMessage("Job code already exist");
+			response.setMessage("Job Code does not exist");
 		}
 		return response;
 	}
