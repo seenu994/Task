@@ -501,7 +501,7 @@ public class JobServiceImpl implements JobService{
 			jobOpening.setMinExp(jobObj.getMinExp());
 			jobOpening.setSalary(jobObj.getSalary());
 			jobOpening.setTotalOpenings(jobObj.getTotalOpenings());
-			jobOpening.setWings(jobObj.getWings());
+//			jobOpening.setWings(jobObj.getWings());
 			jobRepository.save(jobOpening);
 			response.setSuccess(true);
 			response.setMessage("Job Opening Updated Sucessfully");

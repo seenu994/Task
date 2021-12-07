@@ -201,7 +201,8 @@ public class JobController {
 		  return jobService.changeJobOfferStatus(jobOfferId,status);
 	  }
 	 
-	 @GetMapping( value = {AuthConstants.ADMIN_BASEPATH+"/getJobCodes/{jobCode}"})
+	 @GetMapping( value = {AuthConstants.ADMIN_BASEPATH+"/getJobCodes/{jobCode}",AuthConstants.HR_ADMIN_BASEPATH
+			 +"/getJobCodes/{jobCode}"})
 	 public ApiResponse getJobCode(@PathVariable String jobCode) {
 		 return jobService.getJobCode(jobCode);
 	 }
