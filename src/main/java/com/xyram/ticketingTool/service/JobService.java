@@ -77,5 +77,7 @@ public interface JobService {
 
 	ApiResponse getJobInterviewByAppId(String applicationId);
 
+	ApiResponse getJobCode(String jobCode);
+
 
 }

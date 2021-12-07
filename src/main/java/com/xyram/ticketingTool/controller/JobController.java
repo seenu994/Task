@@ -200,6 +200,10 @@ public class JobController {
 		  logger.info("change job application status");
 		  return jobService.changeJobOfferStatus(jobOfferId,status);
 	  }
-
+	 
+	 @GetMapping( value = {AuthConstants.ADMIN_BASEPATH+"/getJobCodes/{jobCode}"})
+	 public ApiResponse getJobCode(@PathVariable String jobCode) {
+		 return jobService.getJobCode(jobCode);
+	 }
 
 }

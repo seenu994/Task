@@ -49,7 +49,10 @@ public interface JobRepository extends CrudRepository<JobOpenings,Long>,JpaSpeci
 
 	@Query(value = "SELECT new map(jo.jobCode as jobCodes) from JobOpenings jo")
 	List<Map> getAllJobCodes();
+
 	
+	@Query(value ="SELECT j from JobOpenings j WHERE j.jobCode =:jobCode ")
+	JobOpenings getJobCode(String jobCode);
 //	public List<JobOpenings> findByCriteria(String employeeName){
 //        return employeeDAO.findAll(new Specification<Employee>() {
 //            @Override

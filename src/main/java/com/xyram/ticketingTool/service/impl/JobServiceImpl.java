@@ -808,6 +808,22 @@ public class JobServiceImpl implements JobService{
 		
 	}
 
+	@Override
+	public ApiResponse getJobCode(String jobCode) {
+		ApiResponse response = new ApiResponse(false);
+		JobOpenings opening = jobRepository.getJobCode(jobCode);
+			
+			if(opening!=null) {
+				response.setSuccess(false);
+				response.setMessage("Job Code does not exist");
+			}
+		else {
+			response.setSuccess(true);
+			response.setMessage("Job code already exist");
+		}
+		return response;
+	}
+
 	
 
 	
