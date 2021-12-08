@@ -824,6 +824,24 @@ public class JobServiceImpl implements JobService{
 		return response;
 	}
 
+	@Override
+	public ApiResponse getApplicationList(String jobCodeId) {
+		ApiResponse response = new ApiResponse(false);
+		List<Map> jobOpening  = jobAppRepository.getjobOpeningsById(jobCodeId);
+		Map jobAppList = new HashMap();
+		jobAppList.put("jobAppList", jobOpening);
+		if(jobOpening!=null) {
+			response.setSuccess(true);
+			response.setContent(jobAppList);
+			response.setMessage("Job list");
+			
+		}else {
+			response.setSuccess(false);
+			response.setMessage("Job Code Id is Mandatory");
+		}
+		return response;
+	}
+
 	
 
 	
