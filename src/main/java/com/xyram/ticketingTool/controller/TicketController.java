@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -135,12 +136,12 @@ class TicketController {
 		return ticketService.getAllTicket(pageable);
 	}
 	
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/searchTicket/{searchString}/{status}",AuthConstants.INFRA_ADMIN_BASEPATH+ "/searchTicket/{searchString}/{status}",
-			AuthConstants.INFRA_USER_BASEPATH + "/searchTicket/{searchString}/{status}" ,
-			AuthConstants.DEVELOPER_BASEPATH + "/searchTicket/{searchString}/{status}"})
-	public ApiResponse searchTicket(@PathVariable String searchString,@PathVariable String status) {
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/searchTicket",AuthConstants.INFRA_ADMIN_BASEPATH+ "/searchTicket",
+			AuthConstants.INFRA_USER_BASEPATH + "/searchTicket" ,
+			AuthConstants.DEVELOPER_BASEPATH + "/searchTicket",AuthConstants.HR_ADMIN_BASEPATH + "/searchTicket"})
+	public ApiResponse searchTicket(@RequestParam Map<String, Object>filter,Pageable pageable) {
 		logger.info("inside Ticket controller :: getAllTicket");
-		return ticketService.searchTicket(searchString,status);
+		return ticketService.searchTicket(filter,pageable);
 	}
 
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllTktByStatus/{status}",AuthConstants.HR_ADMIN_BASEPATH + "/getAllTktByStatus/{status}",AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllTktByStatus/{status}",

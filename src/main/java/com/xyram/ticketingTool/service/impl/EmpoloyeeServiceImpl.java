@@ -279,15 +279,20 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	public ApiResponse editEmployee(String employeeId, Employee employeeRequest) {
 		ApiResponse response = new ApiResponse(false);
 		Employee employee = employeeRepository.getById(employeeId);
+		User user = userRepository.getById(employee.getUserCredientials().getId());
+		
 		if (employee != null) {
 			employee.setFirstName(employeeRequest.getFirstName());
 			employee.setLastName(employeeRequest.getLastName());
-			employee.setLastUpdatedAt(new Date());
+			employee.setLastUpdatedAt(new Date());;
 			employee.setMiddleName(employeeRequest.getMiddleName());
 			employee.setMobileNumber(employeeRequest.getMobileNumber());
 			employee.setPassword(employeeRequest.getPassword());
 			employee.setRoleId(employeeRequest.getRoleId());
+			Role role = roleRepository.getById(employeeRequest.getRoleId());
 			employee.setDesignationId(employeeRequest.getDesignationId());
+			user.setUserRole(role.getRoleName());
+			userRepository.save(user);
 			employeeRepository.save(employee);
 			response.setSuccess(true);
 			response.setMessage(ResponseMessages.EMPLOYEE_UPDATION);
@@ -738,6 +743,22 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			response.setContent(null);
 		}
 
+		return response;
+	}
+	
+	@Override
+	public ApiResponse getListByAccessToken(){
+		ApiResponse response = new ApiResponse(false);
+		String accessToken = currentUser.getUserId();
+		
+		if(accessToken != null) {
+			Map employee = employeeRepository.getbyAccessToken(accessToken);
+			response.setSuccess(true);
+			response.setMessage("Employee Retrieved Successfully");
+			response.setContent(employee);
+		}else {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Access token is required");
+		}
 		return response;
 	}
 
