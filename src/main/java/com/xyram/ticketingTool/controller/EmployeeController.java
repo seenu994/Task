@@ -166,6 +166,11 @@ class EmployeeController {
 		return employeeService.updateEmployee( employeeRequest);
 	}
 	
-	
+	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/getEmployeeByAccessToken",AuthConstants.ADMIN_BASEPATH + "/getEmployeeByAccessToken",AuthConstants.DEVELOPER_BASEPATH + "/getEmployeeByAccessToken",AuthConstants.HR_BASEPATH + "/getEmployeeByAccessToken",AuthConstants.INFRA_ADMIN_BASEPATH + "/getEmployeeByAccessToken",AuthConstants.INFRA_USER_BASEPATH + "/getEmployeeByAccessToken",
+			AuthConstants.JOB_VENDOR_BASEPATH + "/getEmployeeByAccessToken"})
+	public ApiResponse getListByAccessToken() {
+		logger.info("Received request to add Employee");
+		return employeeService.getListByAccessToken();
+	}
 
 }

@@ -38,7 +38,7 @@ public interface JobRepository extends CrudRepository<JobOpenings,Long>,JpaSpeci
 	@Query(value = "SELECT * from ticketdbtool.job_openings jo where jo.job_code = :jobCode ", nativeQuery = true)
 	JobOpenings getJobOpeningFromCode(String jobCode);
 	
-	@Query(value = "SELECT jo.job_code as jobCode,jo.job_title as jobTitle,jo.job_description as jobDescription,jo.job_skills as jobSkills,jo.total_openings as jobOpenings,jo.filled_positions as jobPositions,jo.min_exp as jobMinExperience,jo.max_exp as jobMaxExperience,jo.wing_id as jobWing,jo.status as jobstatus,jo.salary as jobSalary,jo.created_at as jobCreatedAt,jo.created_by as jobCreatedBy,jo.last_updated_at as jobLastUpdatedAt,jo.updated_by as jobLastUpdatedBy,e.frist_name as name, u.user_role as role from ticketdbtool.job_openings jo join user u ON jo.created_by = u.user_id join employee e ON e.user_id = u.user_id  where jo.job_id = :jobOpeningId ", nativeQuery = true)
+	@Query(value = "SELECT jo.job_code as jobCode,jo.job_title as jobTitle,jo.job_description as jobDescription,jo.job_skills as jobSkills,jo.total_openings as jobOpenings,jo.filled_positions as jobPositions,jo.min_exp as jobMinExperience,jo.max_exp as jobMaxExperience,jo.wing_id as jobWing,jo.status as jobstatus,jo.salary as jobSalary,jo.created_at as jobCreatedAt,jo.created_by as jobCreatedBy,jo.last_updated_at as jobLastUpdatedAt,jo.updated_by as jobLastUpdatedBy,e.frist_name as name, u.user_role as role,w.wing_name as wingName from ticketdbtool.job_openings jo join user u ON jo.created_by = u.user_id join employee e ON e.user_id = u.user_id join company_wings w ON jo.wing_id = w.wing_id  where jo.job_id = :jobOpeningId ", nativeQuery = true)
 	Map getJobOpeningById(String jobOpeningId);
     
 	@Query(value = "SELECT * from ticketdbtool.job_openings jo where jo.job_id = :jobOpeningId ", nativeQuery = true)
@@ -49,7 +49,10 @@ public interface JobRepository extends CrudRepository<JobOpenings,Long>,JpaSpeci
 
 	@Query(value = "SELECT new map(jo.jobCode as jobCodes) from JobOpenings jo")
 	List<Map> getAllJobCodes();
+
 	
+	@Query(value ="SELECT j from JobOpenings j WHERE j.jobCode =:jobCode ")
+	JobOpenings getJobCode(String jobCode);
 //	public List<JobOpenings> findByCriteria(String employeeName){
 //        return employeeDAO.findAll(new Specification<Employee>() {
 //            @Override

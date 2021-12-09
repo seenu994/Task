@@ -61,4 +61,6 @@ public interface EmployeeService {
 
 	ApiResponse getJobVendorById(String vendorId);
 
+	ApiResponse getListByAccessToken();
+
 }

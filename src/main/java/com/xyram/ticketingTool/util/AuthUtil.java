@@ -6,7 +6,7 @@ import com.xyram.ticketingTool.exception.TciketExpetion;
 
 public interface AuthUtil {
 
-	String[] NON_SECURE_PATHS = {"/authenticate", "/api/user/createAdmin", "/updatePassword/{accestoken} ",
+	String[] NON_SECURE_PATHS = {"/**","/authenticate", "/api/user/createAdmin", "/updatePassword/{accestoken} ",
 			"/forgotPassword/{userName}", "/profile/image/{employeeId}"
 			,"/swagger-ui/**", "/configuration/**", "/swagger-resources/**","/v2/api-docs", "/webjars/**",
 	};

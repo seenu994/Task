@@ -30,4 +30,8 @@ public interface JobApplicationRepository extends CrudRepository<JobApplication,
 
 	@Query(value = "SELECT * from ticketdbtool.job_application ja where ja.application_id = :jobAppId ", nativeQuery = true)
 	Map getAppById(String jobAppId);
+	
+	@Query(value ="SELECT * from job_application j where j.job_code=:jobCodeId",nativeQuery=true)
+	 List<Map> getjobOpeningsById(String jobCodeId);
+
 }

@@ -314,7 +314,7 @@ public class JobServiceImpl implements JobService{
 	                if(status != null && !status.equalsIgnoreCase("ALL")) {
 	                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("status"), status)));
 	                }
-	                if(userDetail.getUserRole().equals("DEVELOPER")) {
+	                if(userDetail.getUserRole().equals("DEVELOPER") && userDetail.getUserRole().equals("HR") && userDetail.getUserRole().equals("INFRA_ADMIN") && userDetail.getUserRole().equals("INFRA_USER")) {
 	                	System.out.println(userDetail.getUserId());
 	                	predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("interviewer"),userDetail.getUserId())));
 	                }
@@ -501,7 +501,7 @@ public class JobServiceImpl implements JobService{
 			jobOpening.setMinExp(jobObj.getMinExp());
 			jobOpening.setSalary(jobObj.getSalary());
 			jobOpening.setTotalOpenings(jobObj.getTotalOpenings());
-			jobOpening.setWings(jobObj.getWings());
+//			jobOpening.setWings(jobObj.getWings());
 			jobRepository.save(jobOpening);
 			response.setSuccess(true);
 			response.setMessage("Job Opening Updated Sucessfully");
@@ -806,6 +806,40 @@ public class JobServiceImpl implements JobService{
 		}
 		return response;
 		
+	}
+
+	@Override
+	public ApiResponse getJobCode(String jobCode) {
+		ApiResponse response = new ApiResponse(false);
+		JobOpenings opening = jobRepository.getJobCode(jobCode);
+			
+			if(opening!=null) {
+				response.setSuccess(false);
+				response.setMessage("Job code already exist");
+			}
+		else {
+			response.setSuccess(true);
+			response.setMessage("Job Code does not exist");
+		}
+		return response;
+	}
+
+	@Override
+	public ApiResponse getApplicationList(String jobCodeId) {
+		ApiResponse response = new ApiResponse(false);
+		List<Map> jobOpening  = jobAppRepository.getjobOpeningsById(jobCodeId);
+		Map jobAppList = new HashMap();
+		jobAppList.put("jobAppList", jobOpening);
+		if(jobOpening!=null) {
+			response.setSuccess(true);
+			response.setContent(jobAppList);
+			response.setMessage("Job list");
+			
+		}else {
+			response.setSuccess(false);
+			response.setMessage("Job Code Id is Mandatory");
+		}
+		return response;
 	}
 
 	
