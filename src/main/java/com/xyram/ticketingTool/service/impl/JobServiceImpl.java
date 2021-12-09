@@ -650,7 +650,7 @@ public class JobServiceImpl implements JobService{
 		if(application.getJobApplicationSatus().equals(JobApplicationStatus.SELECTED)) {
 		jobObj.setCreatedAt(new Date());
 		jobObj.setCreatedBy(userDetail.getUserId());
-		jobObj.setApplicationId(jobAppId);
+		jobObj.setApplicationId(application);
 		if(offerRepository.save(jobObj) != null) {
 			response.setSuccess(true);
 			response.setMessage("New Job Offer Created");
@@ -758,11 +758,13 @@ public class JobServiceImpl implements JobService{
 	@Override
 	public ApiResponse getAllJobOfferById(String offerId) {
 		ApiResponse response = new ApiResponse(false);
-		Map offer= offerRepository.getAllJobOfferById(offerId);
+		List<JobOffer> offer= offerRepository.getAllJobOfferById(offerId);
 		if(offer!= null) {
+			Map content = new HashMap();
+			content.put("offer", offer);
 			response.setSuccess(true);
 			response.setMessage(" Offer retrieved Sucessfully");
-			response.setContent(offer);
+			response.setContent(content);
 		}else {
 			response.setSuccess(false);
 			response.setMessage("Job Offer Id does Not Exist");
