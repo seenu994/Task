@@ -1,6 +1,7 @@
 package com.xyram.ticketingTool.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,7 +16,7 @@ public interface VersionRepository extends JpaRepository<Version, String> {
 	Version getByVersionId(String id);
 
 	
-	@Query("Select v from Version v where v.projectId=:id")
-	 List<Version> getByProjectId(String id);
+	@Query("Select new map(v.id as id ,v.versionName as versionName) from Version v where v.projectId=:id")
+	 List<Map> getByProjectId(String id);
 
 }
