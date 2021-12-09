@@ -961,10 +961,10 @@ public class TicketServiceImpl implements TicketService {
 		return response;
 	}
 	@Override
-	public ApiResponse searchTicket(Map<String, Object>filter,Pageable pageable) {
+	public ApiResponse searchTicket(Map<String, Object>filter) {
 		String searchString = filter.containsKey("searchString") ? ((String) filter.get("searchString")).toLowerCase():null;
 		String priority = filter.containsKey("priority") ? ((String) filter.get("priority")).toLowerCase():null;
-		List<Map> serachList = ticketrepository.searchTicket(searchString,priority,pageable);
+		List<Map> serachList = ticketrepository.searchTicket(searchString,priority);
 		Map content = new HashMap();
 		content.put("serachList", serachList);
 		ApiResponse response = new ApiResponse(true);

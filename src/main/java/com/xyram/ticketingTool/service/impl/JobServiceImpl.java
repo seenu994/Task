@@ -650,6 +650,7 @@ public class JobServiceImpl implements JobService{
 		if(application.getJobApplicationSatus().equals(JobApplicationStatus.SELECTED)) {
 		jobObj.setCreatedAt(new Date());
 		jobObj.setCreatedBy(userDetail.getUserId());
+		jobObj.setApplicationId(jobAppId);
 		if(offerRepository.save(jobObj) != null) {
 			response.setSuccess(true);
 			response.setMessage("New Job Offer Created");

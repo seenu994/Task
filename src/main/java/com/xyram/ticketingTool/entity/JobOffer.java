@@ -47,6 +47,9 @@ public class JobOffer extends AuditModel {
 	@Column(name="job_title")
 	private String jobTitle;
 	
+	@Column(name="application_id")
+	private String applicationId;
+	
 	@Column(name="salary")
 	private double salary;
 	
@@ -135,6 +138,14 @@ public class JobOffer extends AuditModel {
 
 	public void setStatus(JobOfferStatus status) {
 		this.status = status;
+	}
+
+	public String getApplicationId() {
+		return applicationId;
+	}
+
+	public void setApplicationId(String applicationId) {
+		this.applicationId = applicationId;
 	}
 	
 	

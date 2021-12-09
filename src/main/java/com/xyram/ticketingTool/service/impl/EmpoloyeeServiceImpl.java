@@ -684,10 +684,10 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	@Override
 	public ApiResponse getJobVendor() {
 		ApiResponse response = new ApiResponse(false);
-		List<Map> jobVendors = vendorRepository.getJobVendors();
+		List<JobVendorDetails> jobVendors = vendorRepository.getJobVendors();
 		Map content = new HashMap();
-		content.put("vendorDetails", jobVendors);
-		if (jobVendors != null) {
+		content.put("jobVendors", jobVendors);
+		if (content != null) {
 			response.setSuccess(true);
 			response.setMessage("Vendor Retrieved Successfully");
 			response.setContent(content);
