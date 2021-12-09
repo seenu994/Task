@@ -12,7 +12,7 @@ import com.xyram.ticketingTool.entity.Sprint;
 @Repository
 public interface SprintRepository extends JpaRepository<Sprint, String> {
 
-	@Query("SELECT s from Sprint s WHERE s.project.pId = :projectId ")
+	@Query("SELECT new map(s.Id as id,s.sprintStartDate as sprintStartDate,s.sprintGoals as sprintGoals,s.sprintName as sprintName,s.sprintEndDate as sprintEndDate,s.sprintStatus as sprintStatus,s.sprintExtendedCount as sprintExtendedCount,s.sprintExtendedBy as sprintExtendedBy) from Sprint s WHERE s.project.pId = :projectId ")
 	List<Map> getByprojectId(String projectId);
 
 	@Query(value ="SELECT * from sprint s WHERE s.project_id = :projectId ORDER BY s.sprint_start_date DESC LIMIT 0,1 ",nativeQuery = true)

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
+import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
 import com.xyram.ticketingTool.entity.JobOpenings;
 import com.xyram.ticketingTool.entity.Platform;
 import com.xyram.ticketingTool.entity.Sprint;
@@ -41,7 +42,7 @@ public class SprintController {
 	}
 	
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getSprintprojectId/{Id}"})
-	public  List<Map> getSprintByProject(@PathVariable String Id) {
+	public  IssueTrackerResponse getSprintByProject(@PathVariable String Id) {
 		
 		return sprintService.getSprintByProject(Id);
 	}

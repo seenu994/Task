@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import com.xyram.ticketingTool.Repository.SprintRepository;
+import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
 import com.xyram.ticketingTool.entity.Projects;
 import com.xyram.ticketingTool.entity.Sprint;
 import com.xyram.ticketingTool.service.ProjectService;
@@ -65,10 +66,15 @@ public class SprintServiceImpl implements SprintService {
 	}
 	
 	@Override
-	public List<Map> getSprintByProject(String projectId){
-		
+	public IssueTrackerResponse getSprintByProject(String projectId){
+		IssueTrackerResponse response = new IssueTrackerResponse();
 		if(sprintRepository.getById(projectId)!=null) {
-			return (List<Map>) sprintRepository.getByprojectId(projectId);
+			
+			response.setContent(sprintRepository.getByprojectId(projectId));
+
+			response.setStatus("success");
+			return response;
+			
 		}else {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Project Id is mandatory ");
 		}
