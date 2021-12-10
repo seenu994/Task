@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,7 @@ import com.xyram.ticketingTool.enumType.JobApplicationStatus;
 import com.xyram.ticketingTool.enumType.JobInterviewStatus;
 import com.xyram.ticketingTool.enumType.JobOfferStatus;
 import com.xyram.ticketingTool.enumType.JobOpeningStatus;
+import com.xyram.ticketingTool.request.InterviewRoundReviewRequest;
 import com.xyram.ticketingTool.request.JobApplicationSearchRequest;
 import com.xyram.ticketingTool.request.JobInterviewsRequest;
 import com.xyram.ticketingTool.request.JobOpeningSearchRequest;
@@ -123,10 +126,22 @@ public class JobController {
 	 
 	
 	
-	  @PutMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/changeJobInterviewStatus/{jobInerviewId}/{status}"})
-	  public ApiResponse changeJobInterviewStatus(@PathVariable String jobInerviewId,@PathVariable JobInterviewStatus status,@RequestParam(required=false) Integer rating,@RequestParam(required=false) String feedback,@RequestParam(required=false) String comments) { 
+	  @PutMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/changeJobInterviewStatus/{jobInerviewId}/{status}",
+			  AuthConstants.HR_ADMIN_BASEPATH + "/changeJobInterviewStatus/{jobInerviewId}/{status}" ,
+			  AuthConstants.HR_BASEPATH + "/changeJobInterviewStatus/{jobInerviewId}/{status}"})
+	  public ApiResponse changeJobInterviewStatus(@PathVariable String jobInerviewId,@PathVariable String status,@RequestParam(required=false) Integer rating,@RequestParam(required=false) String feedback,@RequestParam(required=false) String comments) { 
 		  logger.info("Get JobOpening by id");
 	  return  jobService.changeJobInterviewStatus(jobInerviewId,status,rating,feedback,comments); 
+	  }
+	  
+	  
+
+	  @PutMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/updateJobInterviewFeedback/{jobInerviewId}",
+			  AuthConstants.HR_ADMIN_BASEPATH + "/updateJobInterviewFeedback/{jobInerviewId}" ,
+			  AuthConstants.HR_BASEPATH + "/updateJobInterviewFeedback/{jobInerviewId}"})
+	  public ApiResponse changeJobInterviewStatus(@PathVariable String jobInerviewId,@RequestBody @Valid InterviewRoundReviewRequest request) { 
+		  logger.info("Get JobOpening by id");
+	  return  jobService.updateInterviewRoundStatus(jobInerviewId, request);
 	  }
 	 
 	  

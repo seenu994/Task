@@ -2,12 +2,15 @@ package com.xyram.ticketingTool.entity;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -47,6 +50,10 @@ public class JobOffer extends AuditModel {
 	@Column(name="job_title")
 	private String jobTitle;
 	
+	@ManyToOne(cascade = { CascadeType.ALL })
+	@JoinColumn(name = "application_id")
+	private JobApplication applicationId;
+	
 	@Column(name="salary")
 	private double salary;
 	
@@ -56,6 +63,18 @@ public class JobOffer extends AuditModel {
 	@Enumerated(EnumType.STRING)
 	@Column(name="status")
 	private JobOfferStatus status = JobOfferStatus.OFFERED;
+
+	
+	@Column(name="comments")
+	private String comments;
+	
+	public String getComments() {
+		return comments;
+	}
+
+	public void setComments(String comments) {
+		this.comments = comments;
+	}
 
 	public String getId() {
 		return Id;
@@ -136,6 +155,16 @@ public class JobOffer extends AuditModel {
 	public void setStatus(JobOfferStatus status) {
 		this.status = status;
 	}
+
+	public JobApplication getApplicationId() {
+		return applicationId;
+	}
+
+	public void setApplicationId(JobApplication applicationId) {
+		this.applicationId = applicationId;
+	}
+
+	
 	
 	
 

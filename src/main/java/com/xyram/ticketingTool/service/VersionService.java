@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
 import com.xyram.ticketingTool.entity.Version;
 
 @Service
@@ -11,7 +12,7 @@ public interface VersionService {
 	
 	Version CreateVersion(Version versionBody);
 	
-	List<Version> getVersionByProjectId(String Id);
+	IssueTrackerResponse getVersionByProjectId(String Id);
 	
 	String deleteVersionByid(String Id);
 	

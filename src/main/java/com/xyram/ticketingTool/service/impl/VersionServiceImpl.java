@@ -1,6 +1,7 @@
 package com.xyram.ticketingTool.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.transaction.Transactional;
 
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.xyram.ticketingTool.Repository.VersionRepository;
+import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
 import com.xyram.ticketingTool.entity.Version;
 import com.xyram.ticketingTool.service.VersionService;
 
@@ -33,12 +35,21 @@ public class VersionServiceImpl implements VersionService{
 	}
 
 	@Override
-	public List<Version> getVersionByProjectId(String Id) {
+	public IssueTrackerResponse getVersionByProjectId(String Id) {
+		IssueTrackerResponse response = new IssueTrackerResponse();
 		if(Id!= null) {
-			return versionRepository.getByProjectId(Id);
+			
+			List<Map> versionList = versionRepository.getByProjectId(Id);
+
+			response.setContent(versionList);
+
+			response.setStatus("success");
+			
+			
 		}else {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Project Id is required");
 		}
+		return response;
 
 	}
 

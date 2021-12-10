@@ -77,11 +77,12 @@ public class JobInterviews extends AuditModel{
 	@JoinColumn(name = "application_id")
     private JobApplication jobApplication;
 	
-	@Enumerated(EnumType.STRING)
+
 	@Column(name="status")
-	private JobInterviewStatus jobInterviewStatus = JobInterviewStatus.SCHEDULED;
+	private String jobInterviewStatus ;
 	
 
+	
 
 	@Column(name="rating")
 	private Integer rateGiven;
@@ -174,13 +175,7 @@ public class JobInterviews extends AuditModel{
 		this.jobApplication = jobApplication;
 	}
 
-	public JobInterviewStatus getJobInterviewStatus() {
-		return jobInterviewStatus;
-	}
-
-	public void setJobInterviewStatus(JobInterviewStatus jobInterviewStatus) {
-		this.jobInterviewStatus = jobInterviewStatus;
-	}
+	
 
 	public Integer getRateGiven() {
 		return rateGiven;
@@ -196,6 +191,14 @@ public class JobInterviews extends AuditModel{
 
 	public void setInterviewerComments(String interviewerComments) {
 		this.interviewerComments = interviewerComments;
+	}
+
+	public String getJobInterviewStatus() {
+		return jobInterviewStatus;
+	}
+
+	public void setJobInterviewStatus(String jobInterviewStatus) {
+		this.jobInterviewStatus = jobInterviewStatus;
 	}
 	
 	

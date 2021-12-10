@@ -20,36 +20,30 @@ import com.xyram.ticketingTool.enumType.JobApplicationStatus;
 import com.xyram.ticketingTool.enumType.JobInterviewStatus;
 import com.xyram.ticketingTool.enumType.JobOfferStatus;
 import com.xyram.ticketingTool.enumType.JobOpeningStatus;
+import com.xyram.ticketingTool.request.InterviewRoundReviewRequest;
 import com.xyram.ticketingTool.request.JobApplicationSearchRequest;
 import com.xyram.ticketingTool.request.JobInterviewsRequest;
 import com.xyram.ticketingTool.request.JobOpeningSearchRequest;
 
 public interface JobService {
-	
-	ApiResponse createJob( JobOpenings jobObj); 
-	
-	ApiResponse getAllJobs(Map<String, Object> filter,Pageable pageable); 
-	
+
+	ApiResponse createJob(JobOpenings jobObj);
+
+	ApiResponse getAllJobs(Map<String, Object> filter, Pageable pageable);
+
 	ApiResponse getAllJobApplications(Map<String, Object> filter, Pageable pageable);
-	
+
 	ApiResponse getAllCompanyWingsAndSkills();
-	
-	ApiResponse createJobApplication(MultipartFile[] files, String jobAppObj,String jobCode);
-	
-	ApiResponse scheduleJobInterview(JobInterviews schedule, String applicationId); 
-	
-	ApiResponse getAllJobInterviews(Map<String, Object> filter,Pageable pageable);
+
+	ApiResponse createJobApplication(MultipartFile[] files, String jobAppObj, String jobCode);
+
+	ApiResponse scheduleJobInterview(JobInterviews schedule, String applicationId);
+
+	ApiResponse getAllJobInterviews(Map<String, Object> filter, Pageable pageable);
 
 	ApiResponse getAllJobOpeningsById(String jobOpeningId);
 
-	ApiResponse changeJobOpeningStatus(String jobOpeningId,JobOpeningStatus jobOpeningStatus);
-	
-
-
-
-
-
-	ApiResponse changeJobInterviewStatus(String jobInerviewId, JobInterviewStatus status, Integer rating, String feedback, String comments);
+	ApiResponse changeJobOpeningStatus(String jobOpeningId, JobOpeningStatus jobOpeningStatus);
 
 	ApiResponse editJob(String jobId, JobOpenings jobObj);
 
@@ -81,5 +75,9 @@ public interface JobService {
 
 	ApiResponse getApplicationList(String jobCodeId);
 
+	ApiResponse changeJobInterviewStatus(String jobInerviewId, String jobInterviewStatus, Integer rating,
+			String feedback, String comments);
+
+	ApiResponse updateInterviewRoundStatus(String jobInerviewId, InterviewRoundReviewRequest request);
 
 }

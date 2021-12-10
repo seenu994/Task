@@ -665,7 +665,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	@Override
 	public ApiResponse getEmployeeDetails(String employeeId) {
 		ApiResponse response = new ApiResponse(false);
-		Map employee = employeeRepository.getbyEmpId(employeeId);
+		List<Map> employee = employeeRepository.getbyEmpId(employeeId);
 		Map content = new HashMap();
 		content.put("employeeDetails", employee);
 		if (employee != null) {
@@ -686,10 +686,10 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	@Override
 	public ApiResponse getJobVendor() {
 		ApiResponse response = new ApiResponse(false);
-		List<Map> jobVendors = vendorRepository.getJobVendors();
+		List<JobVendorDetails> jobVendors = vendorRepository.getJobVendors();
 		Map content = new HashMap();
-		content.put("vendorDetails", jobVendors);
-		if (jobVendors != null) {
+		content.put("jobVendors", jobVendors);
+		if (content != null) {
 			response.setSuccess(true);
 			response.setMessage("Vendor Retrieved Successfully");
 			response.setContent(content);

@@ -51,6 +51,7 @@ import com.xyram.ticketingTool.enumType.JobOpeningStatus;
 import com.xyram.ticketingTool.enumType.UserRole;
 import com.xyram.ticketingTool.enumType.UserStatus;
 import com.xyram.ticketingTool.request.CurrentUser;
+import com.xyram.ticketingTool.request.InterviewRoundReviewRequest;
 import com.xyram.ticketingTool.request.JobApplicationSearchRequest;
 import com.xyram.ticketingTool.request.JobInterviewsRequest;
 import com.xyram.ticketingTool.request.JobOpeningSearchRequest;
@@ -280,10 +281,12 @@ public class JobServiceImpl implements JobService{
 		if(jobApp != null) {
 			schedule.setCreatedAt(new Date());
 			schedule.setCreatedBy(userDetail.getUserId());
-			schedule.setJobInterviewStatus(JobInterviewStatus.SCHEDULED);
+			schedule.setJobInterviewStatus("SCHEDULED");
 			schedule.setJobApplication(jobApp);
+			
+			schedule.setInterviewer(applicationId);
 			if(jobInterviewRepository.save(schedule) != null) {
-				schedule.setJobInterviewStatus(JobInterviewStatus.SCHEDULED);
+				schedule.setJobInterviewStatus("SCHEDULED");
 				jobAppRepository.save(jobApp);
 				response.setSuccess(true);
 				response.setMessage("Interview Scheduled");
@@ -467,10 +470,10 @@ public class JobServiceImpl implements JobService{
 	}
 
 	@Override
-	public ApiResponse changeJobInterviewStatus(String jobInerviewId, JobInterviewStatus jobInterviewStatus,Integer rating, String feedback, String comments) {
+	public ApiResponse changeJobInterviewStatus(String jobInerviewId, String jobInterviewStatus,Integer rating, String feedback, String comments) {
 		ApiResponse response = new ApiResponse(false);
 		JobInterviews status= jobInterviewRepository.getById(jobInerviewId);
-		if(status!= null && status.getInterviewer().equals(userDetail.getUserId())) {
+		if(status!= null) {
 			status.setJobInterviewStatus(jobInterviewStatus);
 			status.setFeedback(feedback);
 			status.setRateGiven(rating);
@@ -488,6 +491,32 @@ public class JobServiceImpl implements JobService{
 		// TODO Auto-generated method stub
 		return response;
 	}
+	
+	@Override
+	public ApiResponse updateInterviewRoundStatus(String jobInerviewId ,InterviewRoundReviewRequest request) {
+		ApiResponse response = new ApiResponse(false);
+		JobInterviews status= jobInterviewRepository.getById(jobInerviewId);
+		if(status!= null) {
+			
+			status.setJobInterviewStatus(request.getJobInterviewStatus());
+
+			status.setFeedback(request.getFeedback());
+
+			
+			jobInterviewRepository.save(status);
+			response.setSuccess(true);
+			response.setMessage("Job Interview Status Updated Sucessfully");
+			response.setContent(null);
+		}else {
+			response.setSuccess(false);
+			response.setMessage("Job Interview Id does Not Exist");
+		}
+		// TODO Auto-generated method stub
+		return response;
+	}
+	
+	
+	
 	public ApiResponse editJob(String jobId, JobOpenings jobObj) {
 		ApiResponse response = new ApiResponse(false);
 		JobOpenings jobOpening = jobRepository.getById(jobId);
@@ -650,6 +679,7 @@ public class JobServiceImpl implements JobService{
 		if(application.getJobApplicationSatus().equals(JobApplicationStatus.SELECTED)) {
 		jobObj.setCreatedAt(new Date());
 		jobObj.setCreatedBy(userDetail.getUserId());
+		jobObj.setApplicationId(application);
 		if(offerRepository.save(jobObj) != null) {
 			response.setSuccess(true);
 			response.setMessage("New Job Offer Created");
@@ -757,11 +787,13 @@ public class JobServiceImpl implements JobService{
 	@Override
 	public ApiResponse getAllJobOfferById(String offerId) {
 		ApiResponse response = new ApiResponse(false);
-		Map offer= offerRepository.getAllJobOfferById(offerId);
+		List<JobOffer> offer= offerRepository.getAllJobOfferById(offerId);
 		if(offer!= null) {
+			Map content = new HashMap();
+			content.put("offer", offer);
 			response.setSuccess(true);
 			response.setMessage(" Offer retrieved Sucessfully");
-			response.setContent(offer);
+			response.setContent(content);
 		}else {
 			response.setSuccess(false);
 			response.setMessage("Job Offer Id does Not Exist");

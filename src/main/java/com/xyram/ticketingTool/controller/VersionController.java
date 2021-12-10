@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
 import com.xyram.ticketingTool.entity.Version;
 import com.xyram.ticketingTool.service.VersionService;
 import com.xyram.ticketingTool.util.AuthConstants;
@@ -36,7 +38,7 @@ public class VersionController {
 	} 
 	
 	@GetMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/getVersionByProjectId/{id}"})
-	public List<Version> getVersionByProjectId(@PathVariable String id) {
+	public IssueTrackerResponse getVersionByProjectId(@PathVariable String id) {
 		
 		return versionService.getVersionByProjectId(id);
 	} 

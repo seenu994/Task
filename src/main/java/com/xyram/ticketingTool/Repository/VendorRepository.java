@@ -11,7 +11,7 @@ import com.xyram.ticketingTool.entity.JobVendorDetails;
 public interface VendorRepository extends JpaRepository<JobVendorDetails,String> {
 
 	@Query("Select jv from JobVendorDetails jv")
-	List<Map> getJobVendors();
+	List<JobVendorDetails> getJobVendors();
 
 	@Query("Select jv from JobVendorDetails jv Where jv.vId = :vendorId")
 	Map getJobVendorById(String vendorId);

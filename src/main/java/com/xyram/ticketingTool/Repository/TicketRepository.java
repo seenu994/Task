@@ -44,7 +44,7 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 			+ " (:searchString is null "
 			+ " OR lower(a.ticket_description) LIKE %:searchString%  "
 			+ " OR   lower(a.ticket_id) LIKE %:searchString%) ", nativeQuery = true)
-	       List<Map> searchTicket(@Param("searchString") String searchString, String priority, Pageable pageable );
+	       List<Map> searchTicket( String searchString, String priority );
 	
 	/*
 	@Query(value = "SELECT a.ticket_id as ticket_id, a.ticket_description as ticket_description , a.ticket_status as ticket_status, a.created_at as created_at, a.created_by as created_by, "

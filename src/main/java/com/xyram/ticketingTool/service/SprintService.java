@@ -3,6 +3,8 @@ package com.xyram.ticketingTool.service;
 import java.util.List;
 import java.util.Map;
 
+import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
+
 //import java.util.Map;
 
 //import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
@@ -17,7 +19,7 @@ public interface SprintService {
 
 	Sprint editSprint(Sprint sprint,String sId);
 
-	List<Map> getSprintByProject(String projectId);
+	IssueTrackerResponse getSprintByProject(String projectId);
 
 	Sprint getLatestSprintByProject(String id);
 
