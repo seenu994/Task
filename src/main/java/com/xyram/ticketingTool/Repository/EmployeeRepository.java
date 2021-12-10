@@ -26,7 +26,7 @@ import com.xyram.ticketingTool.entity.Employee;
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, String> {
 
-	@Query("Select distinct new map(e.eId as id,e.email as email,e.firstName as firstName,e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId, "
+	@Query("Select distinct new map(e.eId as id,e.email as email,e. profileUrl as profileUrl , e.firstName as firstName,e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId, "
 			+ "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,d.designationName as designationName,e.profileUrl as profileUrl,e.createdAt as createdAt) from Employee e "
 			+ "INNER JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id ORDER BY e.createdAt DESC")
 	Page<Map> getAllEmployeeList(Pageable pageable);
@@ -135,7 +135,12 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 	String filterByEmail(String email);
 
 	@Query("SELECT e from Employee e where e.eId = :employeeId")
-	List<Map> getbyEmpId(String employeeId);
+	List<Employee> getbyEmpId(String employeeId);
+	
+	@Query("Select new map(e.eId as id,e.email as email,e.firstName as firstName,e. profileUrl as profileUrl, e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId, "
+			+ "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,d.designationName as designationName) from Employee e  "
+			+ "JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id where e.id=:id")
+	Map getEmployeeBYId(String id);
 
 	@Query("SELECT e from Employee e where DATE_TRUNC('month', e.createdAt) = DATE_TRUNC('month', CURRENT_DATE)")
 	List<Map> getAllEmployeeCurrentMonth(Pageable pageable);

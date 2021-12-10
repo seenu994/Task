@@ -63,4 +63,6 @@ public interface EmployeeService {
 
 	ApiResponse getListByAccessToken();
 
+	ApiResponse getEmployeeDetailsById(String employeeId);
+
 }

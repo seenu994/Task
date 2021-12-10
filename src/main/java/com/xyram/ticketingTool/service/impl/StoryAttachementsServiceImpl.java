@@ -91,8 +91,8 @@ public class StoryAttachementsServiceImpl  implements StoryAttachmentsService{
 			
 			
 		}
-		fileUploadedStatus.put("perscriptionsUploaded", fileUploadedList);
-		fileUploadedStatus.put("perscriptionsUploadFailure", fileUploadfailureList);
+		fileUploadedStatus.put("storyAttachementsUploaded", fileUploadedList);
+		fileUploadedStatus.put("storyAttachementsUploadFailure", fileUploadfailureList);
 		StoryAttachmentList.add(fileUploadedStatus);
 
 		return StoryAttachmentList;
