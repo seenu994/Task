@@ -135,7 +135,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 	String filterByEmail(String email);
 
 	@Query("SELECT e from Employee e where e.eId = :employeeId")
-	List<Map> getbyEmpId(String employeeId);
+	List<Employee> getbyEmpId(String employeeId);
 
 	@Query("SELECT e from Employee e where DATE_TRUNC('month', e.createdAt) = DATE_TRUNC('month', CURRENT_DATE)")
 	List<Map> getAllEmployeeCurrentMonth(Pageable pageable);

@@ -665,7 +665,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	@Override
 	public ApiResponse getEmployeeDetails(String employeeId) {
 		ApiResponse response = new ApiResponse(false);
-		List<Map> employee = employeeRepository.getbyEmpId(employeeId);
+		List<Employee> employee = employeeRepository.getbyEmpId(employeeId);
 		Map content = new HashMap();
 		content.put("employeeDetails", employee);
 		if (employee != null) {
