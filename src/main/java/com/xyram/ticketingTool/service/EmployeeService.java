@@ -65,4 +65,6 @@ public interface EmployeeService {
 
 	ApiResponse getEmployeeDetailsById(String employeeId);
 
+	ApiResponse editJobVendor(String vendorId, JobVendorDetails vendorRequest);
+
 }

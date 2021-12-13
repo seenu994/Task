@@ -786,4 +786,24 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		return response;
 	}
 
+	@Override
+	public ApiResponse editJobVendor(String vendorId, JobVendorDetails vendorRequest) {
+		// TODO Auto-generated method stub
+		ApiResponse response = new ApiResponse(false);
+		JobVendorDetails vendor = vendorRepository.getById(vendorId);
+		if(vendor!=null) {
+			vendor.setName(vendorRequest.getName());
+			vendor.setEmail(vendorRequest.getEmail());
+			vendor.setMobileNumber(vendorRequest.getMobileNumber());
+			response.setSuccess(true);
+			response.setMessage("Edit successful");
+		
+		}else {
+			response.setSuccess(false);
+			response.setMessage("Vendor Id is required");
+			response.setContent(null);
+		}
+		return response;
+	}
+
 }
