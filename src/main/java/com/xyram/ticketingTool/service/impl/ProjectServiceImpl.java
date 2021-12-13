@@ -220,8 +220,8 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
-	public Optional<Projects> findById(String id) {
-		return projectRepository.findById(id);
+	public List<Projects> findById(String id) {
+		return projectRepository.getByProjectClietName(id);
 	}
 
 	@Override

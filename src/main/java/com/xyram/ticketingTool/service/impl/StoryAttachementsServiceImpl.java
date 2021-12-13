@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.xyram.ticketingTool.Repository.StoryAttachmentsRespostiory;
+import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
 import com.xyram.ticketingTool.entity.StoryAttachments;
 import com.xyram.ticketingTool.fileupload.FileTransferService;
 import com.xyram.ticketingTool.request.CurrentUser;
@@ -44,7 +45,16 @@ public class StoryAttachementsServiceImpl  implements StoryAttachmentsService{
 	FileTransferService fileUploadService;
 
 	@Override
-	public List<Map> uploadStoryAttachemet(StoryAttachmentVo storyAttachmentVo) {
+	public IssueTrackerResponse uploadStoryAttachemet(StoryAttachmentVo storyAttachmentVo) {
+		
+		IssueTrackerResponse response = new IssueTrackerResponse();
+		
+
+
+		response.setStatus("success");
+		
+		
+	
 		List<Map> StoryAttachmentList = new ArrayList<>();
 		Map<String, Object> fileUploadedStatus = new HashMap<>();
 		List<Object> fileUploadedList = new ArrayList<>();
@@ -65,9 +75,9 @@ public class StoryAttachementsServiceImpl  implements StoryAttachmentsService{
 			storyAttachment.setUploadedOn(new Date());
 			storyAttachment.setStoryId(storyAttachmentVo.getStoryId());
 
-			boolean response = false;
+			boolean succesResponse = false;
 			try {
-				response = fileUploadService.uploadFile(atttachmentFile, storyAttachmentBaseUrl, fileName);
+				succesResponse = fileUploadService.uploadFile(atttachmentFile, storyAttachmentBaseUrl, fileName);
 				storyAttachment.setFileName(fileName);
 				storyAttachment.setFileDownloadUrl(storyAttachmentBaseUrl + "/" + fileName);
 
@@ -76,7 +86,7 @@ public class StoryAttachementsServiceImpl  implements StoryAttachmentsService{
 				logger.info(e.toString());
 			}
 			
-			if (response) {
+			if (succesResponse) {
 				storyAttachment.setFileName(fileName);
 				StoryAttachments newStoryAttachments = StoryAttachmentsRespostiory.save(storyAttachment);
 				if (newStoryAttachments != null) {
@@ -93,9 +103,13 @@ public class StoryAttachementsServiceImpl  implements StoryAttachmentsService{
 		}
 		fileUploadedStatus.put("storyAttachementsUploaded", fileUploadedList);
 		fileUploadedStatus.put("storyAttachementsUploadFailure", fileUploadfailureList);
+		
 		StoryAttachmentList.add(fileUploadedStatus);
 
-		return StoryAttachmentList;
+
+
+		response.setContent(StoryAttachmentList);
+		return response;
 	}
 
 	public String getpersciptionBucket(String patientId) {
@@ -140,10 +154,10 @@ public class StoryAttachementsServiceImpl  implements StoryAttachmentsService{
 				if (status > 0) {
 					// ss3StorageService.deleteFile(filename, bucketName);
 					fileUploadService.deleteFile(storyAttachment.getFileName(), storyAttachmentBaseUrl);
-					reponse.put("message", "Prescription  succesfully deleted for id" + storyAttachmentId);
+					reponse.put("message", "Story Attachements  succesfully deleted for id" + storyAttachmentId);
 
 				} else {
-					reponse.put("message", "unable to delete for prescription  id" + storyAttachmentId);
+					reponse.put("message", "unable to delete for Story Attachements  id" + storyAttachmentId);
 
 				}
 			} else {

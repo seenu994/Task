@@ -99,7 +99,7 @@ class TicketController {
 		return ticketService.reopenTicket(ticketId, commentObj);
 	}
 
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/addComment",
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/addComment",AuthConstants.HR_ADMIN_BASEPATH + "/addComment",
 			AuthConstants.DEVELOPER_BASEPATH + "/addComment", 
 			AuthConstants.INFRA_USER_BASEPATH + "/addComment",AuthConstants.INFRA_ADMIN_BASEPATH + "/addComment" })
 	public ApiResponse addComment(@RequestBody Comments commentObj) {

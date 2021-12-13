@@ -162,7 +162,7 @@ public class JobServiceImpl implements JobService{
 		// TODO Auto-generated method stub
 		ApiResponse response = new ApiResponse(false);
 		Map content = new HashMap();
-		String status = filter.containsKey("status") ? ((String) filter.get("status")) : null;
+		JobApplicationStatus status = filter.containsKey("status") ? ((JobApplicationStatus) filter.get("status")) : null;
 		String searchQuery = filter.containsKey("searchstring") ? ((String) filter.get("searchstring")).toLowerCase()
 				: null;
 		String vendor = filter.containsKey("vendor") ? ((String) filter.get("vendor")) : null;
@@ -173,7 +173,7 @@ public class JobServiceImpl implements JobService{
 					// TODO Auto-generated method stub
 					List<Predicate> predicates = new ArrayList<>();
 	                if(status != null) {
-	                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("status"), status)));
+	                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("jobApplicationSatus"), status)));
 	                }
 	                if(vendor != null) {
 	                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("referredVendor"), vendor)));

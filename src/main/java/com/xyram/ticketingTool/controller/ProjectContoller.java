@@ -72,7 +72,7 @@ class ProjectContoller {
 	}
 
 	@GetMapping(value = {AuthConstants.ADMIN_BASEPATH + "/getProjectDetails/{projectId}",AuthConstants.DEVELOPER_BASEPATH + "/getProjectDetails/{projectId}",AuthConstants.HR_ADMIN_BASEPATH + "/getProjectDetails/{projectId}",AuthConstants.INFRA_ADMIN_BASEPATH + "/getProjectDetails/{projectId}"})
-	public Optional<Projects> getProjectDetailsById(@PathVariable String projectId) {
+	public List<Projects> getProjectDetailsById(@PathVariable String projectId) {
 		return projectService.findById(projectId);
 	}
 

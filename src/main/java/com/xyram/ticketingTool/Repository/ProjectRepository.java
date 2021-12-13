@@ -54,6 +54,10 @@ public interface ProjectRepository extends JpaRepository<Projects, String> {
 	@Query("SELECT p.pId from Projects p  WHERE p.allotToAll= 1")
 	List<Map> getgenericIssues();
 
+	@Query("Select distinct new map(e.pId as id,e.projectName as PName,e.projectDescritpion as projectDescritpion,e.clientId as clientId,c.clientName as clientname,e.inHouse as inHouse,"
+			+ "e.status as status) from Projects e join Client c ON e.clientId = c.Id where e.pId = :id")
+	List<Projects> getByProjectClietName(String id);
+
 
 
 

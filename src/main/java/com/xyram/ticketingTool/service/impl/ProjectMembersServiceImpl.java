@@ -34,6 +34,7 @@ import com.xyram.ticketingTool.enumType.NotificationType;
 import com.xyram.ticketingTool.enumType.ProjectMembersStatus;
 import com.xyram.ticketingTool.exception.ResourceNotFoundException;
 import com.xyram.ticketingTool.request.CurrentUser;
+import com.xyram.ticketingTool.response.ProjectAdminResponse;
 import com.xyram.ticketingTool.service.NotificationService;
 import com.xyram.ticketingTool.service.ProjectMemberService;
 import com.xyram.ticketingTool.util.ResponseMessages;
@@ -385,17 +386,18 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 	}
 
 	@Override
-	public IssueTrackerResponse isProjectAdmin(String employeeId, String projectId) {
-		IssueTrackerResponse issueTrackerResponse = new IssueTrackerResponse();
+	public ProjectAdminResponse isProjectAdmin(String employeeId, String projectId) {
+		ProjectAdminResponse projectAdminResponse = new ProjectAdminResponse();
 
 		ProjectMembers projectMembers = projectMemberRepository.checkProjectAdmin(employeeId, projectId);
 		if (projectMembers != null) {
-			issueTrackerResponse.setStatus("true");
+			projectAdminResponse.setStatus("true");
+			projectAdminResponse.setAdmin(true);
 
-			return issueTrackerResponse;
+			return projectAdminResponse;
 		} else {
-			issueTrackerResponse.setStatus("false");
-			return issueTrackerResponse;
+			projectAdminResponse.setAdmin(false);
+			return projectAdminResponse;
 
 		}
 
