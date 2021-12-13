@@ -222,8 +222,7 @@ public class JobController {
 		 return jobService.getJobCode(jobCode);
 	 }
 	 
-	 @GetMapping( value = {AuthConstants.ADMIN_BASEPATH+"/getApplicationList/{jobCodeId}",AuthConstants.HR_ADMIN_BASEPATH
-			 +"/getApplicationList/{jobCode}"})
+	 @GetMapping( value = {AuthConstants.ADMIN_BASEPATH+"/getApplicationList/{jobCodeId}",AuthConstants.HR_ADMIN_BASEPATH+"/getApplicationList/{jobCodeId}"})
 	 public ApiResponse getApplicationList(@PathVariable String jobCodeId) {
 		 return jobService.getApplicationList(jobCodeId);
 	 }

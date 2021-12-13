@@ -34,7 +34,7 @@ public class StoryCommentController {
 	StoryCommentMapper storyCommentMapper;
 	
 	@PostMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/createStoryComment"})
-	public StoryComments CreateStoryComment(@RequestBody StoryCommentVo storyCommentVo) {
+	public StoryComments CreateStoryComment(@RequestBody @Valid StoryCommentVo storyCommentVo) {
 		
 		return storyCommentservice.createStoryComment(storyCommentMapper.getEntityFromVo(storyCommentVo));
 	} 
@@ -49,15 +49,15 @@ public class StoryCommentController {
 //		return storyCommentservice.getStoryCommentbyprojectIdandStoryId(projectId,storyId);
 //	}
 
-	@PutMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/updateStoryComment{storyCommentId}"})
-	public StoryComments updateStoryComments(String storyCommentId,StoryComments storyComments)
+	@PutMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/updateStoryComment/{storyCommentId}"})
+	public StoryComments updateStoryComments( @PathVariable String storyCommentId, @RequestBody StoryComments storyComments)
 	{
 		return storyCommentservice.updateStoryComment(storyCommentId, storyComments);
 	}
 	
 	
-	@PutMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/deleteStoryComment{storyCommentId}"})
-	public Map<String, Object> deleteStoryComments(String storyCommentId)
+	@PutMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/deleteStoryComment/{storyCommentId}"})
+	public Map<String, Object> deleteStoryComments(@PathVariable String storyCommentId)
 	{
 		return storyCommentservice.deleteStoryCommentById(storyCommentId);
 	}
