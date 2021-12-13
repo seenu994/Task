@@ -179,5 +179,12 @@ class EmployeeController {
 		logger.info("Received request to add Employee");
 		return employeeService.getListByAccessToken();
 	}
+	
+//	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editJobVendor/{vendorId}",AuthConstants.INFRA_ADMIN_BASEPATH + "/editJobVendor/{vendorId}",
+//			AuthConstants.DEVELOPER_BASEPATH + "/editJobVendor/{vendorId}" })
+//	public ApiResponse editJobVendor(@RequestBody Vendor employeeRequest, @PathVariable String employeeId) {
+//		logger.info("indide ProductController :: getAllemployee");
+//		return employeeService.editJobVendor(employeeId, employeeRequest);
+//	}
 
 }
