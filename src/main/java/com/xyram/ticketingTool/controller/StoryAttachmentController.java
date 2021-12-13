@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
 import com.xyram.ticketingTool.entity.StoryComments;
 import com.xyram.ticketingTool.modelMapper.StoryCommentMapper;
 import com.xyram.ticketingTool.service.StoryAttachmentsService;
@@ -26,7 +27,7 @@ public class StoryAttachmentController {
 
 	
 	@PostMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/uplaodStoryAttachment"})
-	public List<Map> CreateStoryAttachment(@ModelAttribute StoryAttachmentVo storyAttachmentVo) {
+	public IssueTrackerResponse CreateStoryAttachment(@ModelAttribute StoryAttachmentVo storyAttachmentVo) {
 		
 		return storyAttachmentsService.uploadStoryAttachemet(storyAttachmentVo);
 	} 

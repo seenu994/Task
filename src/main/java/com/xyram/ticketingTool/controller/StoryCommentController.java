@@ -34,7 +34,7 @@ public class StoryCommentController {
 	StoryCommentMapper storyCommentMapper;
 	
 	@PostMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/createStoryComment"})
-	public StoryComments CreateStoryComment(@RequestBody StoryCommentVo storyCommentVo) {
+	public StoryComments CreateStoryComment(@RequestBody @Valid StoryCommentVo storyCommentVo) {
 		
 		return storyCommentservice.createStoryComment(storyCommentMapper.getEntityFromVo(storyCommentVo));
 	} 
