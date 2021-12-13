@@ -394,7 +394,9 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 
 			return issueTrackerResponse;
 		} else {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, " Employee is Not A Project Admin ");
+			issueTrackerResponse.setStatus("false");
+			return issueTrackerResponse;
+
 		}
 
 	}
