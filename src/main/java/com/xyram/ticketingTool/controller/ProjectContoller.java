@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
+import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.Projects;
 import com.xyram.ticketingTool.enumType.UserStatus;
@@ -72,7 +73,7 @@ class ProjectContoller {
 	}
 
 	@GetMapping(value = {AuthConstants.ADMIN_BASEPATH + "/getProjectDetails/{projectId}",AuthConstants.DEVELOPER_BASEPATH + "/getProjectDetails/{projectId}",AuthConstants.HR_ADMIN_BASEPATH + "/getProjectDetails/{projectId}",AuthConstants.INFRA_ADMIN_BASEPATH + "/getProjectDetails/{projectId}"})
-	public List<Map> getProjectDetailsById(@PathVariable String projectId) {
+	public IssueTrackerResponse getProjectDetailsById(@PathVariable String projectId) {
 		return projectService.findById(projectId);
 	}
 
