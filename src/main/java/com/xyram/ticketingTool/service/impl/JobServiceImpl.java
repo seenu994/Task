@@ -278,6 +278,12 @@ public class JobServiceImpl implements JobService{
 		// TODO Auto-generated method stub
 		ApiResponse response = new ApiResponse(false);
 		JobApplication jobApp  = jobAppRepository.getApplicationById(applicationId);
+		List<JobInterviews> jobOpening  = jobInterviewRepository.getInterviewByAppListId(applicationId);
+//		for(JobInterviews interview:jobOpening) {
+//			
+//			interview.getRoundNo()
+//		}
+		
 		if(jobApp != null) {
 			schedule.setCreatedAt(new Date());
 			schedule.setCreatedBy(userDetail.getUserId());
