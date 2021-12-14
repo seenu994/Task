@@ -36,6 +36,7 @@ import com.xyram.ticketingTool.Repository.RoleRepository;
 import com.xyram.ticketingTool.Repository.UserPermissionRepository;
 import com.xyram.ticketingTool.Repository.UserRepository;
 import com.xyram.ticketingTool.Repository.VendorRepository;
+import com.xyram.ticketingTool.Repository.VendorTypeRepository;
 import com.xyram.ticketingTool.admin.model.User;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Employee;
@@ -45,6 +46,7 @@ import com.xyram.ticketingTool.entity.Projects;
 import com.xyram.ticketingTool.entity.Role;
 import com.xyram.ticketingTool.entity.Ticket;
 import com.xyram.ticketingTool.entity.UserPermissions;
+import com.xyram.ticketingTool.entity.VendorType;
 import com.xyram.ticketingTool.enumType.ProjectMembersStatus;
 import com.xyram.ticketingTool.enumType.UserRole;
 import com.xyram.ticketingTool.enumType.UserStatus;
@@ -93,6 +95,9 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 	@Autowired
 	UserPermissionRepository userPermissionConfig;
+	
+	@Autowired
+	VendorTypeRepository vendorRepo;
 
 	static ChannelSftp channelSftp = null;
 	static Session session = null;
@@ -803,6 +808,27 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			response.setMessage("Vendor Id is required");
 			response.setContent(null);
 		}
+		return response;
+	}
+
+	@Override
+	public ApiResponse getJobVendorType() {
+		ApiResponse response = new ApiResponse(false);
+		List<VendorType> jobVendors = vendorRepo.getJobVendorType();
+		Map content = new HashMap();
+		content.put("jobVendorType", jobVendors);
+		if (content != null) {
+			response.setSuccess(true);
+			response.setMessage("VendorType Retrieved Successfully");
+			response.setContent(content);
+		}
+
+		else {
+			response.setSuccess(false);
+			response.setMessage("Could not retrieve data");
+			response.setContent(null);
+		}
+
 		return response;
 	}
 

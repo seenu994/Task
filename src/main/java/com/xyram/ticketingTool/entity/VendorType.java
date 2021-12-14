@@ -25,4 +25,24 @@ public class VendorType extends AuditModel {
 
 	@Column(name = "vendor_type")
 	private String vendorType;
+
+	public String getvId() {
+		return vId;
+	}
+
+	public void setvId(String vId) {
+		this.vId = vId;
+	}
+
+	public String getVendorType() {
+		return vendorType;
+	}
+
+	public void setVendorType(String vendorType) {
+		this.vendorType = vendorType;
+	}
+	
+	
+	
+	
 }
