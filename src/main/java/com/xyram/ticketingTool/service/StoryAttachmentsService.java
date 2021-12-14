@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
 import com.xyram.ticketingTool.entity.StoryAttachments;
 import com.xyram.ticketingTool.vo.StoryAttachmentVo;
 
@@ -17,6 +18,6 @@ public interface StoryAttachmentsService {
 
 	Map<String, Object> deleteStoryAttachmentById(String storyAttachmentId);
 
-	List<Map> uploadStoryAttachemet(StoryAttachmentVo storyAttachmentVo);
+	IssueTrackerResponse uploadStoryAttachemet(StoryAttachmentVo storyAttachmentVo);
 
 }
