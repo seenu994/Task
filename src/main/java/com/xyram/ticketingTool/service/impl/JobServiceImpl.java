@@ -475,12 +475,17 @@ public class JobServiceImpl implements JobService{
 	public ApiResponse changeJobInterviewStatus(String jobInerviewId, String jobInterviewStatus,Integer rating, String feedback, String comments) {
 		ApiResponse response = new ApiResponse(false);
 		JobInterviews status= jobInterviewRepository.getById(jobInerviewId);
+		JobApplication application = jobAppRepository.getApplicationById(status.getJobApplication().getId());
 		if(status!= null) {
 			status.setJobInterviewStatus(jobInterviewStatus);
 			status.setFeedback(feedback);
 			status.setRateGiven(rating);
 			if(comments != null) {
 			status.setInterviewerComments(comments);
+			if(jobInterviewStatus.equals("SELECTED")) {
+				application.setJobApplicationSatus(JobApplicationStatus.SELECTED);	
+				jobAppRepository.save(application);
+			}
 			}
 			jobInterviewRepository.save(status);
 			response.setSuccess(true);
