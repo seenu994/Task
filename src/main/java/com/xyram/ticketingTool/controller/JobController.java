@@ -46,7 +46,6 @@ import com.xyram.ticketingTool.entity.JobOpenings;
 
 @RestController
 @CrossOrigin
-
 public class JobController {
 	
 	private final Logger logger = LoggerFactory.getLogger(JobController.class);
