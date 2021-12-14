@@ -226,5 +226,12 @@ public class JobController {
 	 public ApiResponse getApplicationList(@PathVariable String jobCodeId) {
 		 return jobService.getApplicationList(jobCodeId);
 	 }
+	 
+	 @GetMapping( value = {AuthConstants.HR_ADMIN_BASEPATH+"/getRoundDetails/{appId}/{roundNo}"})
+	 public ApiResponse getRoundDetails(@PathVariable String appId,@PathVariable Integer roundNo) {
+		 return jobService.getRoundDetails(appId,roundNo);
+	 }
+	 
+	 
 
 }

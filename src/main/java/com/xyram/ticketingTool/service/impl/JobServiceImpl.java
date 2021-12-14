@@ -278,6 +278,8 @@ public class JobServiceImpl implements JobService{
 		// TODO Auto-generated method stub
 		ApiResponse response = new ApiResponse(false);
 		JobApplication jobApp  = jobAppRepository.getApplicationById(applicationId);
+		List<JobInterviews> jobOpening  = jobInterviewRepository.getInterviewByAppListId(applicationId);
+		
 		if(jobApp != null) {
 			schedule.setCreatedAt(new Date());
 			schedule.setCreatedBy(userDetail.getUserId());
@@ -871,6 +873,24 @@ public class JobServiceImpl implements JobService{
 			response.setSuccess(false);
 			response.setMessage("Job Code Id is Mandatory");
 		}
+		return response;
+	}
+
+	@Override
+	public ApiResponse getRoundDetails(String appId, Integer roundNo) {
+		ApiResponse response = new ApiResponse(false);
+		JobInterviews interviewObj = jobInterviewRepository.getInterviewByAppIdRound(appId);
+		if(interviewObj!= null && interviewObj.getRoundNo().equals(roundNo)) {
+			response.setSuccess(false);
+			response.setMessage("Round Already Exists");	
+		}
+		
+		else
+		{
+			response.setSuccess(true);
+			response.setMessage("Round does not exists");
+		}
+		
 		return response;
 	}
 
