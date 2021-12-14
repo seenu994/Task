@@ -9,17 +9,20 @@ public class JwtRequest implements Serializable {
 	private String username;
 	private String password;
 	private String uid;
+	private String osType;
+	private String deviceId;
 
 	// need default constructor for JSON Parsing
 	public JwtRequest() {
 
 	}
 
-	public JwtRequest(String username, String password, String uid) {
+	public JwtRequest(String username, String password, String uid,String osType,String deviceId) {
 		this.setUsername(username);
 		this.setPassword(password);
 		this.setUid(uid);
-
+        this.setOsType(osType);
+        this.setDeviceId(deviceId);
 	}
 
 	public String getUsername() {
@@ -46,4 +49,21 @@ public class JwtRequest implements Serializable {
 		this.uid = uid;
 	}
 
+	public String getOsType() {
+		return osType;
+	}
+
+	public void setOsType(String osType) {
+		this.osType = osType;
+	}
+
+	public String getDeviceId() {
+		return deviceId;
+	}
+
+	public void setDeviceId(String deviceId) {
+		this.deviceId = deviceId;
+	}
+
+	
 }

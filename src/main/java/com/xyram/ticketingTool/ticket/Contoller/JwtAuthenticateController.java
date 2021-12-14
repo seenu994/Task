@@ -72,7 +72,7 @@ public class JwtAuthenticateController {
 
 		//authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
 		User user = new User();
-		userService.updateUID(authenticationRequest.getUsername(), authenticationRequest.getUid());
+		userService.updateUID(authenticationRequest.getUsername(), authenticationRequest.getUid(),authenticationRequest.getOsType(),authenticationRequest.getDeviceId());
 		
 		
 		authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());

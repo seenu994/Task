@@ -24,8 +24,8 @@ public interface UserRepository extends JpaRepository<User, String> {
 
 	@Transactional
 	@Modifying(clearAutomatically = true)
-	@Query("update User  u set u.uid = :uid WHERE u.username=:username")
-	int updateUid(@Param("username") String username, @Param("uid") String uid);
+	@Query("update User  u set u.uid = :uid,u.osType = :osType,u.deviceId = :deviceId WHERE u.username=:username ")
+	int updateUid(@Param("username") String username, @Param("uid") String uid, @Param("osType") String osType,@Param("deviceId") String deviceId);
 
 	// Object findByUserId(String string);
 
