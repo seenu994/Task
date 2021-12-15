@@ -132,9 +132,9 @@ public class JobServiceImpl implements JobService{
                 //criteriaBuilder.upper(itemRoot.get("code"), code.toUpperCase()
                 if(searchQuery != null) {
 //                	criteriaBuilder.like(root.get("title"), "%" + keyword + "%")
-                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobTitle"), "%" + searchQuery + "%")));
-                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobDescription"), "%" + searchQuery + "%")));
-                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobCode"), "%" + searchQuery + "%")));
+                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobTitle"), searchQuery)));
+                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobDescription"), searchQuery)));
+                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobCode"), searchQuery)));
                 }
                 if(userDetail.getUserRole() == "JOB_VENDOR" ) {
                 	predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("createdBy"), "%" + userDetail.getUserId() + "%")));
@@ -162,9 +162,11 @@ public class JobServiceImpl implements JobService{
 		// TODO Auto-generated method stub
 		ApiResponse response = new ApiResponse(false);
 		Map content = new HashMap();
-		JobApplicationStatus status = filter.containsKey("status") ? ((JobApplicationStatus) filter.get("status")) : null;
+		String status = filter.containsKey("status") ? ((String) filter.get("status")) : null;
+		
 		String searchQuery = filter.containsKey("searchstring") ? ((String) filter.get("searchstring")).toLowerCase()
 				: null;
+		JobApplicationStatus statusApp =null;
 		String vendor = filter.containsKey("vendor") ? ((String) filter.get("vendor")) : null;
 		Page<JobApplication> allList =  jobAppRepository.findAll(new Specification<JobApplication>() {
 				@Override
@@ -173,16 +175,16 @@ public class JobServiceImpl implements JobService{
 					// TODO Auto-generated method stub
 					List<Predicate> predicates = new ArrayList<>();
 	                if(status != null) {
-	                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("jobApplicationSatus"), status)));
+	                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("jobApplicationSatus"),statusApp.valueOf(status))));
 	                }
 	                if(vendor != null) {
 	                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("referredVendor"),vendor)));
 	                }
 	                if(searchQuery != null) {
-	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("candidateName"), "%" + searchQuery + "%")));
-	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("candidateMobile"), "%" + searchQuery + "%")));
-	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("candidateEmail"), "%" + searchQuery + "%")));
-	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobCode"), "%" + searchQuery + "%")));
+	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("candidateName"),searchQuery)));
+	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("candidateMobile"), searchQuery)));
+	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("candidateEmail"),searchQuery)));
+	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobCode"), searchQuery)));
 	                }
 	                if(userDetail.getUserRole().contains("HR_ADMIN") && userDetail.getUserRole().contains("TICKETINGTOOL_ADMIN")) {
 	                	predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("createdBy"), "%" + userDetail.getUserId() + "%")));
