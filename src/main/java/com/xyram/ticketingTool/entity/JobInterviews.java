@@ -77,7 +77,7 @@ public class JobInterviews extends AuditModel{
 	@JoinColumn(name = "application_id")
     private JobApplication jobApplication;
 	
-
+     
 	@Column(name="status")
 	private String jobInterviewStatus ;
 	

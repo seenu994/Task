@@ -114,6 +114,7 @@ public class JobServiceImpl implements JobService{
 		String searchQuery = filter.containsKey("searchstring") ? ((String) filter.get("searchstring")).toLowerCase()
 				: null;
 		String wing = filter.containsKey("wing") ? ((String) filter.get("wing")) : null;
+		JobOpeningStatus statusApp =null;
 //		List<Map> allJobs = jobRepository.getAllJobOpenings();
 //		List<JobOpenings> allList =  jobRepository.getList();
 		Page<JobOpenings> allList =  jobRepository.findAll(new Specification<JobOpenings>() {
@@ -123,7 +124,7 @@ public class JobServiceImpl implements JobService{
 				// TODO Auto-generated method stub
 				List<Predicate> predicates = new ArrayList<>();
                 if(status != null) {
-                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("jobStatus"),status)));
+                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("jobStatus"), statusApp.valueOf(status))));
                 }
                 
                 if(wing != null) {
@@ -312,6 +313,9 @@ public class JobServiceImpl implements JobService{
 		Map content = new HashMap();
 //		List<JobInterviews> allList =  jobInterviewRepository.getList();
 		String status = filter.containsKey("status") ? ((String) filter.get("status")) : null;
+		String searchQuery = filter.containsKey("searchstring") ? ((String) filter.get("searchstring")).toLowerCase()
+				: null;
+		JobInterviews statusApp =null;
 		Page<JobInterviews> allList =  jobInterviewRepository.findAll(new Specification<JobInterviews>(){
 				@Override
 				public Predicate toPredicate(Root<JobInterviews> root, javax.persistence.criteria.CriteriaQuery<?> query,
@@ -319,11 +323,16 @@ public class JobServiceImpl implements JobService{
 					// TODO Auto-generated method stub
 					List<Predicate> predicates = new ArrayList<>();
 	                if(status != null && !status.equalsIgnoreCase("ALL")) {
-	                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("status"), status)));
+	                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("jobInterviewStatus"),status)));
 	                }
 	                if(userDetail.getUserRole().equals("DEVELOPER") && userDetail.getUserRole().equals("HR") && userDetail.getUserRole().equals("INFRA_ADMIN") && userDetail.getUserRole().equals("INFRA_USER")) {
 	                	System.out.println(userDetail.getUserId());
 	                	predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("interviewer"),userDetail.getUserId())));
+	                }
+	                if(searchQuery != null) {
+//	                	criteriaBuilder.like(root.get("title"), "%" + keyword + "%")
+	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("candidateName"), searchQuery)));
+	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobCode"), searchQuery)));
 	                }
 //	                if(searchObj.getSearchString() != null && !searchObj.getSearchString().equalsIgnoreCase("")) {
 //	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("candidateName"), "%" + searchObj.getSearchString() + "%")));
