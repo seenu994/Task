@@ -127,7 +127,7 @@ public class JobServiceImpl implements JobService{
                 }
                 
                 if(wing != null) {
-                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal((root.get("wings").get("Id")), wing)));
+                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal((root.get("wings").get("wingName")), wing)));
                 }
                 //criteriaBuilder.upper(itemRoot.get("code"), code.toUpperCase()
                 if(searchQuery != null) {
@@ -176,7 +176,7 @@ public class JobServiceImpl implements JobService{
 	                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("jobApplicationSatus"), status)));
 	                }
 	                if(vendor != null) {
-	                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("referredVendor"), vendor)));
+	                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("referredVendor"),vendor)));
 	                }
 	                if(searchQuery != null) {
 	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("candidateName"), "%" + searchQuery + "%")));
