@@ -32,6 +32,7 @@ import com.jcraft.jsch.Session;
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
 import com.xyram.ticketingTool.Repository.PermissionRepository;
 import com.xyram.ticketingTool.Repository.ProjectMemberRepository;
+import com.xyram.ticketingTool.Repository.RoleMasterRepository;
 import com.xyram.ticketingTool.Repository.RoleRepository;
 import com.xyram.ticketingTool.Repository.UserPermissionRepository;
 import com.xyram.ticketingTool.Repository.UserRepository;
@@ -44,6 +45,7 @@ import com.xyram.ticketingTool.entity.JobVendorDetails;
 import com.xyram.ticketingTool.entity.ProjectMembers;
 import com.xyram.ticketingTool.entity.Projects;
 import com.xyram.ticketingTool.entity.Role;
+import com.xyram.ticketingTool.entity.RoleMasterTable;
 import com.xyram.ticketingTool.entity.Ticket;
 import com.xyram.ticketingTool.entity.UserPermissions;
 import com.xyram.ticketingTool.entity.VendorType;
@@ -95,6 +97,9 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 	@Autowired
 	UserPermissionRepository userPermissionConfig;
+	
+	@Autowired
+	RoleMasterRepository masterRepo;
 	
 	@Autowired
 	VendorTypeRepository vendorRepo;
@@ -228,7 +233,6 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	public ApiResponse getAllEmployee(Pageable pageable) {
 		Page<Map> employeeList = employeeRepository.getAllEmployeeList(pageable);
 		Map content = new HashMap();
-
 		content.put("employeeList", employeeList);
 		ApiResponse response = new ApiResponse(true);
 		response.setSuccess(true);
@@ -692,8 +696,10 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	public ApiResponse getEmployeeDetailsById(String employeeId) {
 		ApiResponse response = new ApiResponse(false);
 		Map employee = employeeRepository.getEmployeeBYId(employeeId);
+		List<Employee> reportees = employeeRepository.getReortingList(employeeId);
 		Map content = new HashMap();
 		content.put("employeeDetails", employee);
+		content.put("reportees", reportees);
 		if (employee != null) {
 			response.setSuccess(true);
 			response.setMessage("Employee Retrieved Successfully");
@@ -826,6 +832,91 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		else {
 			response.setSuccess(false);
 			response.setMessage("Could not retrieve data");
+			response.setContent(null);
+		}
+
+		return response;
+	}
+
+	@Override
+	public ApiResponse getEmployeeByReportingId(String reportingId) {
+		ApiResponse response = new ApiResponse(false);
+		List<Employee> reportees = employeeRepository.getReortingList(reportingId);
+		Map content = new HashMap();
+		content.put("reportees", reportees);
+		if (content != null) {
+			response.setSuccess(true);
+			response.setMessage("Reportees Retrieved Successfully");
+			response.setContent(content);
+		}
+
+		else {
+			response.setSuccess(false);
+			response.setMessage("Could not retrieve data");
+			response.setContent(null);
+		}
+
+		return response;
+	}
+
+	@Override
+	public ApiResponse getInfraEmployee() {
+		ApiResponse response = new ApiResponse(false);
+		List<Employee> infraUsers = employeeRepository.getInfraEmployee();
+		Map content = new HashMap();
+		content.put("infraUsers", infraUsers);
+		if (content != null) {
+			response.setSuccess(true);
+			response.setMessage("infraUsers Retrieved Successfully");
+			response.setContent(content);
+		}
+
+		else {
+			response.setSuccess(false);
+			response.setMessage("Could not retrieve data");
+			response.setContent(null);
+		}
+
+		return response;
+	}
+
+	@Override
+	public ApiResponse getAllRolePermissions(String roleId) {
+		ApiResponse response = new ApiResponse(false);
+		List<RoleMasterTable> rolePermissions = masterRepo.getAllRolePermissions(roleId);
+		Map content = new HashMap();
+		content.put("rolePermission", rolePermissions);
+		if (content != null) {
+			response.setSuccess(true);
+			response.setMessage("infraUsers Retrieved Successfully");
+			response.setContent(content);
+		}
+
+		else {
+			response.setSuccess(false);
+			response.setMessage("Could not retrieve data");
+			response.setContent(null);
+		}
+
+		return response;
+	}
+
+	@Override
+	public ApiResponse updateRolePermissions(String roleId,String modules,RoleMasterTable request) {
+		ApiResponse response = new ApiResponse(false);
+		RoleMasterTable rolePermissions = masterRepo.updateRolePermissions(roleId,modules);
+		List<UserPermissions> permissionUser = userPermissionConfig.getByRole(roleId);
+		if (rolePermissions != null) {
+			rolePermissions.setModules(request.getModules());
+			rolePermissions.setPermissions(request.getPermissions());
+			  masterRepo.save(rolePermissions);
+			response.setSuccess(true);
+			response.setMessage("Permissions Updated Successfully");
+		}
+
+		else {
+			response.setSuccess(false);
+			response.setMessage("Could not update data");
 			response.setContent(null);
 		}
 

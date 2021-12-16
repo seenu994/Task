@@ -22,11 +22,13 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.xyram.ticketingTool.Repository.RoleMasterRepository;
 import com.xyram.ticketingTool.Repository.UserRepository;
 import com.xyram.ticketingTool.admin.model.User;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.JobVendorDetails;
+import com.xyram.ticketingTool.entity.RoleMasterTable;
 import com.xyram.ticketingTool.enumType.UserRole;
 import com.xyram.ticketingTool.enumType.UserStatus;
 import com.xyram.ticketingTool.service.EmployeeService;
@@ -49,6 +51,9 @@ class EmployeeController {
 
 	@Autowired
 	UserRepository userRepository;
+	
+	@Autowired
+	RoleMasterRepository masterrepo;
 
 	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/createEmployee",AuthConstants.HR_ADMIN_BASEPATH + "/createEmployee",AuthConstants.INFRA_ADMIN_BASEPATH + "/createEmployee" })
 	public ApiResponse addemployee(@RequestBody Employee employee) {
@@ -190,6 +195,33 @@ class EmployeeController {
 	public ApiResponse editJobVendor(@RequestBody JobVendorDetails vendorRequest, @PathVariable String vendorId) {
 		logger.info("indide ProductController :: getAllemployee");
 		return employeeService.editJobVendor(vendorId, vendorRequest);
+	}
+	
+	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/getEmployeeByReportingId/{reportingId}",AuthConstants.ADMIN_BASEPATH + "/getEmployeeByReportingId/{reportingId}",AuthConstants.DEVELOPER_BASEPATH + "/getEmployeeByReportingId/{reportingId}",AuthConstants.HR_BASEPATH + "/getEmployeeByReportingId/{reportingId}",AuthConstants.INFRA_ADMIN_BASEPATH + "/getEmployeeByReportingId/{reportingId}",AuthConstants.INFRA_USER_BASEPATH + "/getEmployeeByReportingId/{reportingId}",
+			AuthConstants.JOB_VENDOR_BASEPATH + "/getEmployeeByReportingId/{reportingId}"})
+	public ApiResponse getEmployeeByReportingId(@PathVariable String reportingId) {
+		logger.info("Received request to add Employee");
+		return employeeService.getEmployeeByReportingId(reportingId);
+	}
+	
+
+	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/getInfraEmployee",AuthConstants.ADMIN_BASEPATH + "/getInfraEmployee",AuthConstants.DEVELOPER_BASEPATH + "/getInfraEmployee",AuthConstants.HR_BASEPATH + "/getInfraEmployee",AuthConstants.INFRA_ADMIN_BASEPATH + "/getInfraEmployee",AuthConstants.INFRA_USER_BASEPATH + "/getInfraEmployee",
+			AuthConstants.JOB_VENDOR_BASEPATH + "/getInfraEmployee}"})
+	public ApiResponse getInfraEmployee() {
+		logger.info("Received request to add Employee");
+		return employeeService.getInfraEmployee();
+	}
+	
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllRolePermissions/{roleId}"})
+	public ApiResponse getAllRolePermissions(@PathVariable String roleId) {
+		logger.info("Received request to add Employee");
+		return employeeService.getAllRolePermissions(roleId);
+	}
+	
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/updateRolePermissions/{roleId}/{module}"})
+	public ApiResponse updateRolePermissions(@PathVariable String roleId,@PathVariable String modules,@RequestBody RoleMasterTable request) {
+		logger.info("Received request to add Employee");
+		return employeeService.updateRolePermissions(roleId,modules,request);
 	}
 
 }

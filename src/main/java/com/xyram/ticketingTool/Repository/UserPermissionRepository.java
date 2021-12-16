@@ -14,4 +14,7 @@ public interface UserPermissionRepository extends JpaRepository<UserPermissions,
 	@Query("Select u from UserPermissions u where u.userId = :id")
 	List<UserPermissions> getByUserId(String id);
 
+	@Query("Select u from UserPermissions u JOIN Employee ur ON u.userId = ur.userCredientials where ur.roleId = :roleId")
+	List<UserPermissions> getByRole(String roleId);
+
 }

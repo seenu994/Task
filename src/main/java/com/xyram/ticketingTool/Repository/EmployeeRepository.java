@@ -27,8 +27,8 @@ import com.xyram.ticketingTool.entity.Employee;
 public interface EmployeeRepository extends JpaRepository<Employee, String> {
 
 	@Query("Select distinct new map(e.eId as id,e.email as email,e. profileUrl as profileUrl , e.firstName as firstName,e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId, "
-			+ "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,d.designationName as designationName,e.profileUrl as profileUrl,e.createdAt as createdAt) from Employee e "
-			+ "INNER JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id ORDER BY e.createdAt DESC")
+			+ "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,d.designationName as designationName,e.profileUrl as profileUrl,e.createdAt as createdAt,e.reportingTo as reportingTo,ee.firstName as ReporterName,e.eId as ReporetorId) from Employee e "
+			+ "INNER JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id left JOIN Employee ee ON e.eId = ee.reportingTo ORDER BY e.createdAt DESC")
 	Page<Map> getAllEmployeeList(Pageable pageable);
 
 	// Select e.`employee_id` as id, e.`frist_name` as firstName, e.`last_name` as
@@ -38,7 +38,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 	// and p.`project_id` = '2c9fab1f7c3eebc6017c4073c8770010'
 
 	@Query("Select distinct new map(e.eId as id, e.firstName as firstName, e.lastName as lastName) "
-			+ "from Employee e left JOIN ProjectMembers p On e.eId = p.employeeId where p.status = 'ACTIVE' and e.status = 'ACTIVE' and e.roleId = 'R4' and p.projectId = :projectId")
+			+ "from Employee e left JOIN ProjectMembers p On e.eId = p.employeeId where p.status = 'ACTIVE' and e.status = 'ACTIVE' and p.projectId = :projectId")
 	List<Map> getAllEmpByProject(@Param("projectId") String projectId);
 
 	/*
@@ -73,7 +73,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 //	@Query("Select distinct new map(e.eId as id, e.firstName as firstName, e.lastName as lastName) from Employee e "
 //			+ "where e.status = 'ACTIVE' and e.email like %:searchString% ")
 	@Query("Select new map(e.eId as id,e.email as email,e.firstName as firstName,e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId, "
-			+ "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,d.designationName as designationName) from Employee e "
+			+ "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,d.designationName as designationName,e.profileUrl as profileUrl) from Employee e "
 			+ "JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id where e.email like %:searchString%")
 	List<Map> searchEmployee(@Param("searchString") String searchString);
 
@@ -138,7 +138,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 	List<Employee> getbyEmpId(String employeeId);
 	
 	@Query("Select new map(e.eId as id,e.email as email,e.firstName as firstName,e. profileUrl as profileUrl, e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId, "
-			+ "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,d.designationName as designationName) from Employee e  "
+			+ "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,d.designationName as designationName,e.reportingTo as reportingTo) from Employee e  "
 			+ "JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id where e.id=:id")
 	Map getEmployeeBYId(String id);
 
@@ -147,6 +147,17 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 
 	@Query("SELECT new map(e as employeeDetails) from Employee e where e.userCredientials.id = :accessToken")
 	Map getbyAccessToken(String accessToken);
+
+	@Query("SELECT e from Employee e where e.reportingTo = :reportingId")
+	List<Employee> getReortingList(String reportingId);
+
+   @Query("Select e from Employee e "
+			+ "INNER JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id ORDER BY e.createdAt DESC")
+	List<Employee> employeeListForReporting();
+
+   @Query("Select e from Employee e "
+			+ "INNER JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id WHERE r.roleName = 'INFRA_USER' ORDER BY e.createdAt DESC")
+List<Employee> getInfraEmployee();
 
 	
 

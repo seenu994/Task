@@ -68,7 +68,7 @@ class ProjectMemberContoller {
 		return  projectMemberService.unassignProjectToEmployee(member);
 	}
 
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllProjectByEmployeeId/{EmployeeId}",AuthConstants.DEVELOPER_BASEPATH + "/getAllProjectByEmployeeId/{EmployeeId}",AuthConstants.INFRA_USER_BASEPATH + "/getAllProjectByEmployeeId/{EmployeeId}",AuthConstants.HR_ADMIN_BASEPATH + "/getAllProjectByEmployeeId/{EmployeeId}" })
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllProjectByEmployeeId/{EmployeeId}",AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllProjectByEmployeeId/{EmployeeId}",AuthConstants.DEVELOPER_BASEPATH + "/getAllProjectByEmployeeId/{EmployeeId}",AuthConstants.INFRA_USER_BASEPATH + "/getAllProjectByEmployeeId/{EmployeeId}",AuthConstants.HR_ADMIN_BASEPATH + "/getAllProjectByEmployeeId/{EmployeeId}" })
 	public ApiResponse getAllProjectByEmployeeId(@PathVariable String EmployeeId) {
 		logger.info("inside ProjectMemberContoller :: getAllProjectByEmployeeId ");
 		return projectMemberService.getAllProjectByEmployeeId(EmployeeId);

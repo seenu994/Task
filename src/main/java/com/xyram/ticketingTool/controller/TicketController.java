@@ -109,7 +109,7 @@ class TicketController {
 		return ticketService.addComment(commentObj);
 	}
 
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editComment",
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editComment",AuthConstants.HR_ADMIN_BASEPATH + "/editComment",
 			AuthConstants.DEVELOPER_BASEPATH + "/editComment", 
 			AuthConstants.INFRA_USER_BASEPATH + "/editComment",AuthConstants.INFRA_ADMIN_BASEPATH + "/editComment" })
 	public ApiResponse editComment(@RequestBody Comments commentObj) {
