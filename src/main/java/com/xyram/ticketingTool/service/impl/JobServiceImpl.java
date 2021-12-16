@@ -514,8 +514,11 @@ public class JobServiceImpl implements JobService{
 	public ApiResponse updateInterviewRoundStatus(String jobInerviewId ,InterviewRoundReviewRequest request) {
 		ApiResponse response = new ApiResponse(false);
 		JobInterviews status= jobInterviewRepository.getById(jobInerviewId);
+		JobApplication applicationdetails = jobAppRepository.getApplicationById(status.getJobApplication().getId());
+		
 		if(status!= null) {
-			
+			applicationdetails.setJobApplicationSatus(JobApplicationStatus.SELECTED);
+			jobAppRepository.save(applicationdetails);
 			status.setJobInterviewStatus(request.getJobInterviewStatus());
 
 			status.setFeedback(request.getFeedback());

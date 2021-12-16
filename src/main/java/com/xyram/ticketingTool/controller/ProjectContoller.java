@@ -72,7 +72,7 @@ class ProjectContoller {
 		return projectService.editEmployee(projectRequest);
 	}
 
-	@GetMapping(value = {AuthConstants.ADMIN_BASEPATH + "/getProjectDetails/{projectId}",AuthConstants.DEVELOPER_BASEPATH + "/getProjectDetails/{projectId}",AuthConstants.HR_ADMIN_BASEPATH + "/getProjectDetails/{projectId}",AuthConstants.INFRA_ADMIN_BASEPATH + "/getProjectDetails/{projectId}"})
+	@GetMapping(value = {AuthConstants.ADMIN_BASEPATH + "/getProjectDetails/{projectId}",AuthConstants.DEVELOPER_BASEPATH + "/getProjectDetails/{projectId}",AuthConstants.HR_ADMIN_BASEPATH + "/getProjectDetails/{projectId}",AuthConstants.INFRA_ADMIN_BASEPATH + "/getProjectDetails/{projectId}",AuthConstants.INFRA_USER_BASEPATH + "/getProjectDetails/{projectId}"})
 	public IssueTrackerResponse getProjectDetailsById(@PathVariable String projectId) {
 		return projectService.findById(projectId);
 	}

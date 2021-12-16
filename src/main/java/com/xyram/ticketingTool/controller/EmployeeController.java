@@ -113,8 +113,8 @@ class EmployeeController {
 		logger.info("indide ProductController :: getAllemployee");
 		return employeeService.getEmployeeDetails(employeeId);
 	}
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getEmployeeDetails/{employeeId}",AuthConstants.INFRA_ADMIN_BASEPATH + "/getEmployee/{employeeId}",
-			AuthConstants.DEVELOPER_BASEPATH + "/getEmployeeDetails/{employeeId}" })
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getEmployeeDetails/{employeeId}",AuthConstants.INFRA_ADMIN_BASEPATH + "/getEmployeeDetails/{employeeId}",
+			AuthConstants.DEVELOPER_BASEPATH + "/getEmployeeDetails/{employeeId}" ,AuthConstants.INFRA_USER_BASEPATH + "/getEmployeeDetails/{employeeId}",AuthConstants.HR_ADMIN_BASEPATH + "/getEmployeeDetails/{employeeId}",AuthConstants.HR_BASEPATH + "/getEmployeeDetails/{employeeId}",})
 	public ApiResponse getEmployeeDetailsById(@PathVariable String employeeId) {
 		logger.info("indide ProductController :: getAllemployee");
 		return employeeService.getEmployeeDetailsById(employeeId);

@@ -19,7 +19,7 @@ import com.xyram.ticketingTool.enumType.TicketStatus;
 public interface TicketService {
 
 	 
-	ApiResponse createTickets(MultipartFile[] files, String ticketRequest);
+	ApiResponse createTickets(MultipartFile[] files, String ticketRequest, String assignee);
 	
 	ApiResponse getAllTicketsByStatus(TicketStatus status, Pageable pageable);
 	

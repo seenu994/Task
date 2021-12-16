@@ -55,9 +55,9 @@ class TicketController {
 	@PostMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/createTickets",AuthConstants.INFRA_ADMIN_BASEPATH + "/createTickets",
 			AuthConstants.INFRA_USER_BASEPATH + "/createTickets",AuthConstants.HR_ADMIN_BASEPATH + "/createTickets" })
 	public ApiResponse createTickets(@RequestPart(name = "files", required = false) MultipartFile[] files,
-			@RequestPart String ticketRequest) {
+			@RequestPart String ticketRequest,@RequestPart(name = "assignee", required = false) String assignee) {
 		logger.info("Received request to add tickets");
-		return ticketService.createTickets(files, ticketRequest);
+		return ticketService.createTickets(files, ticketRequest,assignee);
 	}
 
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/cancelTicket/{ticketId}",AuthConstants.INFRA_ADMIN_BASEPATH + "/cancelTicket/{ticketId}",
