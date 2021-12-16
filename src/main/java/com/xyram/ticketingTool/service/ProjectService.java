@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
+import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.Projects;
 
@@ -22,7 +23,7 @@ public interface ProjectService {
 	ApiResponse getAllProjectsByDeveloper(Pageable pageable);
 	
 
-	List<Map> findById(String id);
+	IssueTrackerResponse findById(String id);
 
 	ApiResponse searchProject(String searchString);
 

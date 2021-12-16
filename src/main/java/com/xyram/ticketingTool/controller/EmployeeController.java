@@ -68,6 +68,12 @@ class EmployeeController {
 		return employeeService.getJobVendor();
 	}
 	
+	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/getJobVendorType",AuthConstants.ADMIN_BASEPATH + "/getJobVendorType" })
+	public ApiResponse getJobVendorType() {
+		logger.info("Received request to add Employee");
+		return employeeService.getJobVendorType();
+	}
+	
 	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/getJobVendor/{vendorId}",AuthConstants.ADMIN_BASEPATH + "/getJobVendor/{vendorId}" })
 	public ApiResponse getJobVendorById(@PathVariable String vendorId) {
 		logger.info("Received request to add Employee");
@@ -107,8 +113,8 @@ class EmployeeController {
 		logger.info("indide ProductController :: getAllemployee");
 		return employeeService.getEmployeeDetails(employeeId);
 	}
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getEmployeeDetails/{employeeId}",AuthConstants.INFRA_ADMIN_BASEPATH + "/getEmployee/{employeeId}",
-			AuthConstants.DEVELOPER_BASEPATH + "/getEmployeeDetails/{employeeId}" })
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getEmployeeDetails/{employeeId}",AuthConstants.INFRA_ADMIN_BASEPATH + "/getEmployeeDetails/{employeeId}",
+			AuthConstants.DEVELOPER_BASEPATH + "/getEmployeeDetails/{employeeId}" ,AuthConstants.INFRA_USER_BASEPATH + "/getEmployeeDetails/{employeeId}",AuthConstants.HR_ADMIN_BASEPATH + "/getEmployeeDetails/{employeeId}",AuthConstants.HR_BASEPATH + "/getEmployeeDetails/{employeeId}",})
 	public ApiResponse getEmployeeDetailsById(@PathVariable String employeeId) {
 		logger.info("indide ProductController :: getAllemployee");
 		return employeeService.getEmployeeDetailsById(employeeId);
@@ -180,11 +186,10 @@ class EmployeeController {
 		return employeeService.getListByAccessToken();
 	}
 	
-//	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editJobVendor/{vendorId}",AuthConstants.INFRA_ADMIN_BASEPATH + "/editJobVendor/{vendorId}",
-//			AuthConstants.DEVELOPER_BASEPATH + "/editJobVendor/{vendorId}" })
-//	public ApiResponse editJobVendor(@RequestBody Vendor employeeRequest, @PathVariable String employeeId) {
-//		logger.info("indide ProductController :: getAllemployee");
-//		return employeeService.editJobVendor(employeeId, employeeRequest);
-//	}
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editJobVendor/{vendorId}",AuthConstants.HR_ADMIN_BASEPATH + "/editJobVendor/{vendorId}" })
+	public ApiResponse editJobVendor(@RequestBody JobVendorDetails vendorRequest, @PathVariable String vendorId) {
+		logger.info("indide ProductController :: getAllemployee");
+		return employeeService.editJobVendor(vendorId, vendorRequest);
+	}
 
 }

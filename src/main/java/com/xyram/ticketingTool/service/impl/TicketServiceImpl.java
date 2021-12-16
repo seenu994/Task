@@ -257,7 +257,7 @@ public class TicketServiceImpl implements TicketService {
 	}
 
 	@Override
-	public ApiResponse createTickets(MultipartFile[] files, String ticketRequest) {
+	public ApiResponse createTickets(MultipartFile[] files, String ticketRequest,String assigneeId) {
 		ApiResponse response = new ApiResponse(false);
 		ObjectMapper objectMapper = new ObjectMapper();
 		Ticket ticketreq = null;
@@ -285,7 +285,9 @@ public class TicketServiceImpl implements TicketService {
 			response.setContent(null);
 			return response;
 		} else {
-			ticketreq.setCreatedBy(userDetail.getUserId());
+			if(ticketreq.getCreatedBy() == null) {
+				ticketreq.setCreatedBy(userDetail.getUserId());
+			}
 			ticketreq.setCreatedAt(new Date());
 			ticketreq.setUpdatedBy(userDetail.getUserId());
 			ticketreq.setLastUpdatedAt(new Date());
@@ -340,7 +342,39 @@ public class TicketServiceImpl implements TicketService {
 			content.put("ticketId", tickets.getId());
 
 			response.setContent(content);
-			
+			if(assigneeId != null) {
+				Employee employeeObj = employeeRepository.getById(assigneeId);
+				TicketAssignee assignee = new TicketAssignee();
+				assignee.setEmployeeId(assigneeId);
+				assignee.setTicketId(tickets.getId());
+				assignee.setCreatedAt(new Date());
+				assignee.setCreatedBy(userDetail.getUserId());
+				assignee.setStatus(TicketAssigneeStatus.ACTIVE);
+				
+				tickets.setStatus(TicketStatus.ASSIGNED);
+				ticketrepository.save(tickets);
+				ticketAssigneeRepository.save(assignee);
+//					
+				Map request = new HashMap<>();
+				request.put("uid", employeeObj.getUserCredientials().getUid());
+				request.put("title", "TICKET_ASSIGNED");
+				request.put("body","Ticket Assigned - " + tickets.getTicketDescription() );
+				pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 13, NotificationType.TICKET_ASSIGNED.toString()));
+//				
+				//Inserting Notifications Details
+				notifications.setNotificationDesc("Ticket Assigned - " + tickets.getTicketDescription());
+				notifications.setNotificationType(NotificationType.TICKET_ASSIGNED);
+				notifications.setSenderId(userDetail.getUserId());
+				notifications.setReceiverId(userDetail.getUserId());
+				notifications.setSeenStatus(false);
+				notifications.setCreatedBy(userDetail.getUserId());
+				notifications.setCreatedAt(new Date());
+				notifications.setUpdatedBy(userDetail.getUserId());
+				notifications.setLastUpdatedAt(new Date());
+			//	notificationsRepository.save(notifications);
+				notificationService.createNotification(notifications);
+				
+			}
 			String assignEmployeeId = ticketrepository.getElgibleAssignee();
 //			Ticket ticketObj = ticketRepository.getById(assignee.getTicketId());
 			if (assignEmployeeId != null) {

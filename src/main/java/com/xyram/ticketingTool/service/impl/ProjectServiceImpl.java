@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
 import com.xyram.ticketingTool.Repository.ProjectRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
+import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.Projects;
 import com.xyram.ticketingTool.entity.Role;
@@ -220,8 +221,16 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
-	public List<Map> findById(String id) {
-		return projectRepository.getByProjectClietName(id);
+	public IssueTrackerResponse findById(String id) {
+		IssueTrackerResponse response = new IssueTrackerResponse();
+		
+		List<Map> projectDetails = projectRepository.getByProjectClietName(id);
+		response.setContent(projectDetails);
+
+		response.setStatus("success");
+
+		return response;
+		
 	}
 
 	@Override

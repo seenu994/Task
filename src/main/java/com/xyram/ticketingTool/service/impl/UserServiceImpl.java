@@ -27,10 +27,10 @@ public class UserServiceImpl  implements UserService  {
 	}
 
 	@Override
-	public int updateUID(String username, String uid) {
+	public int updateUID(String username, String uid, String osType,String deviceId) {
 
 		
-		return userRepository.updateUid(username, uid);
+		return userRepository.updateUid(username, uid,osType,deviceId);
 
 	}
 }

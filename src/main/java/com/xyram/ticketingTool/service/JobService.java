@@ -80,4 +80,6 @@ public interface JobService {
 
 	ApiResponse updateInterviewRoundStatus(String jobInerviewId, InterviewRoundReviewRequest request);
 
+	ApiResponse getRoundDetails(String appId, Integer roundNo);
+
 }

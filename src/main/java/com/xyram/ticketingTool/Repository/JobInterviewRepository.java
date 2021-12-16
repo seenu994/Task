@@ -33,6 +33,12 @@ public interface JobInterviewRepository extends CrudRepository<JobInterviews,Lon
 
 	@Query(value = "SELECT new map(jo as jobInterviews) from JobInterviews jo where jo.jobApplication.Id = :applicationId  ")
 	List<Map> getInterviewByAppId(String applicationId);
+
+	@Query(value = "SELECT jo as jobInterviews from JobInterviews jo where jo.jobApplication.Id = :applicationId  ")
+	List<JobInterviews> getInterviewByAppListId(String applicationId);
+
+	@Query(value = "SELECT jo as jobInterviews from JobInterviews jo where jo.jobApplication.Id = :appId  ")
+	JobInterviews getInterviewByAppIdRound(String appId);
 	
 
 

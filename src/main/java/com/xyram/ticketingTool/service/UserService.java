@@ -7,7 +7,7 @@ public interface UserService {
 
 User getUserByUsername(String lowerCase);
 
-int updateUID(String username, String uid);
+int updateUID(String username, String uid, String osType, String deviceId);
 
 
 }
