@@ -46,7 +46,6 @@ import com.xyram.ticketingTool.entity.JobOpenings;
 
 @RestController
 @CrossOrigin
-
 public class JobController {
 	
 	private final Logger logger = LoggerFactory.getLogger(JobController.class);
@@ -222,10 +221,17 @@ public class JobController {
 		 return jobService.getJobCode(jobCode);
 	 }
 	 
-	 @GetMapping( value = {AuthConstants.ADMIN_BASEPATH+"/getApplicationList/{jobCodeId}",AuthConstants.HR_ADMIN_BASEPATH
-			 +"/getApplicationList/{jobCode}"})
+	 @GetMapping( value = {AuthConstants.ADMIN_BASEPATH+"/getApplicationList/{jobCodeId}",AuthConstants.HR_ADMIN_BASEPATH+"/getApplicationList/{jobCodeId}"})
 	 public ApiResponse getApplicationList(@PathVariable String jobCodeId) {
 		 return jobService.getApplicationList(jobCodeId);
 	 }
+	 
+	 @GetMapping( value = {AuthConstants.HR_ADMIN_BASEPATH+"/getRoundDetails/{appId}/{roundNo}"})
+	 public ApiResponse getRoundDetails(@PathVariable String appId,@PathVariable Integer roundNo) {
+		 return jobService.getRoundDetails(appId,roundNo);
+	 }
+	 
+	 
+	 
 
 }

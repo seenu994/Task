@@ -51,7 +51,7 @@ public interface ProjectRepository extends JpaRepository<Projects, String> {
 			+ "e.status as status) from Projects e join Client c ON e.clientId = c.Id where e.projectName like %:searchString% and e.status != 'INACTIVE'")
 	List<Map> searchProject(@Param("searchString") String searchString);
 
-	@Query("SELECT p.pId from Projects p  WHERE p.allotToAll= 1")
+	@Query("SELECT new map(p as others) from Projects p  WHERE p.allotToAll= 1")
 	List<Map> getgenericIssues();
 
 	@Query("Select distinct new map(e.pId as id,e.projectName as PName,e.projectDescritpion as projectDescritpion,e.clientId as clientId,c.clientName as clientname,e.inHouse as inHouse,"

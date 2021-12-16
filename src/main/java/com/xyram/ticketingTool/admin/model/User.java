@@ -68,9 +68,31 @@ public class User extends IBaseData {
 	@Column(name = "scope_id")
 	private String scopeId;
 
+	public String getOsType() {
+		return osType;
+	}
+
+	public void setOsType(String osType) {
+		this.osType = osType;
+	}
+
+	public String getDeviceId() {
+		return deviceId;
+	}
+
+	public void setDeviceId(String deviceId) {
+		this.deviceId = deviceId;
+	}
+
 	@Column(unique = true, nullable = true)
 	private String email;
-
+	
+	@Column(name="os_type")
+	private String osType;
+	
+	@Column(name="device_id")
+	private String deviceId;
+	
 	public String getEmail() {
 		return email;
 	}

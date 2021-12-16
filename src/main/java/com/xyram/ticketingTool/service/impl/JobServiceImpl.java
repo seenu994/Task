@@ -114,6 +114,7 @@ public class JobServiceImpl implements JobService{
 		String searchQuery = filter.containsKey("searchstring") ? ((String) filter.get("searchstring")).toLowerCase()
 				: null;
 		String wing = filter.containsKey("wing") ? ((String) filter.get("wing")) : null;
+		JobOpeningStatus statusApp =null;
 //		List<Map> allJobs = jobRepository.getAllJobOpenings();
 //		List<JobOpenings> allList =  jobRepository.getList();
 		Page<JobOpenings> allList =  jobRepository.findAll(new Specification<JobOpenings>() {
@@ -123,18 +124,18 @@ public class JobServiceImpl implements JobService{
 				// TODO Auto-generated method stub
 				List<Predicate> predicates = new ArrayList<>();
                 if(status != null) {
-                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("jobStatus"),status)));
+                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("jobStatus"), statusApp.valueOf(status))));
                 }
                 
                 if(wing != null) {
-                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal((root.get("wings").get("Id")), wing)));
+                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal((root.get("wings").get("wingName")), wing)));
                 }
                 //criteriaBuilder.upper(itemRoot.get("code"), code.toUpperCase()
                 if(searchQuery != null) {
 //                	criteriaBuilder.like(root.get("title"), "%" + keyword + "%")
-                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobTitle"), "%" + searchQuery + "%")));
-                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobDescription"), "%" + searchQuery + "%")));
-                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobCode"), "%" + searchQuery + "%")));
+                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobTitle"), searchQuery)));
+                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobDescription"), searchQuery)));
+                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobCode"), searchQuery)));
                 }
                 if(userDetail.getUserRole() == "JOB_VENDOR" ) {
                 	predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("createdBy"), "%" + userDetail.getUserId() + "%")));
@@ -162,9 +163,11 @@ public class JobServiceImpl implements JobService{
 		// TODO Auto-generated method stub
 		ApiResponse response = new ApiResponse(false);
 		Map content = new HashMap();
-		JobApplicationStatus status = filter.containsKey("status") ? ((JobApplicationStatus) filter.get("status")) : null;
+		String status = filter.containsKey("status") ? ((String) filter.get("status")) : null;
+		
 		String searchQuery = filter.containsKey("searchstring") ? ((String) filter.get("searchstring")).toLowerCase()
 				: null;
+		JobApplicationStatus statusApp =null;
 		String vendor = filter.containsKey("vendor") ? ((String) filter.get("vendor")) : null;
 		Page<JobApplication> allList =  jobAppRepository.findAll(new Specification<JobApplication>() {
 				@Override
@@ -173,16 +176,16 @@ public class JobServiceImpl implements JobService{
 					// TODO Auto-generated method stub
 					List<Predicate> predicates = new ArrayList<>();
 	                if(status != null) {
-	                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("jobApplicationSatus"), status)));
+	                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("jobApplicationSatus"),statusApp.valueOf(status))));
 	                }
 	                if(vendor != null) {
-	                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("referredVendor"), vendor)));
+	                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("referredVendor"),vendor)));
 	                }
 	                if(searchQuery != null) {
-	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("candidateName"), "%" + searchQuery + "%")));
-	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("candidateMobile"), "%" + searchQuery + "%")));
-	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("candidateEmail"), "%" + searchQuery + "%")));
-	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobCode"), "%" + searchQuery + "%")));
+	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("candidateName"),searchQuery)));
+	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("candidateMobile"), searchQuery)));
+	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("candidateEmail"),searchQuery)));
+	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobCode"), searchQuery)));
 	                }
 	                if(userDetail.getUserRole().contains("HR_ADMIN") && userDetail.getUserRole().contains("TICKETINGTOOL_ADMIN")) {
 	                	predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("createdBy"), "%" + userDetail.getUserId() + "%")));
@@ -278,6 +281,8 @@ public class JobServiceImpl implements JobService{
 		// TODO Auto-generated method stub
 		ApiResponse response = new ApiResponse(false);
 		JobApplication jobApp  = jobAppRepository.getApplicationById(applicationId);
+		List<JobInterviews> jobOpening  = jobInterviewRepository.getInterviewByAppListId(applicationId);
+		
 		if(jobApp != null) {
 			schedule.setCreatedAt(new Date());
 			schedule.setCreatedBy(userDetail.getUserId());
@@ -308,6 +313,9 @@ public class JobServiceImpl implements JobService{
 		Map content = new HashMap();
 //		List<JobInterviews> allList =  jobInterviewRepository.getList();
 		String status = filter.containsKey("status") ? ((String) filter.get("status")) : null;
+		String searchQuery = filter.containsKey("searchstring") ? ((String) filter.get("searchstring")).toLowerCase()
+				: null;
+		JobInterviews statusApp =null;
 		Page<JobInterviews> allList =  jobInterviewRepository.findAll(new Specification<JobInterviews>(){
 				@Override
 				public Predicate toPredicate(Root<JobInterviews> root, javax.persistence.criteria.CriteriaQuery<?> query,
@@ -315,11 +323,16 @@ public class JobServiceImpl implements JobService{
 					// TODO Auto-generated method stub
 					List<Predicate> predicates = new ArrayList<>();
 	                if(status != null && !status.equalsIgnoreCase("ALL")) {
-	                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("status"), status)));
+	                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("jobInterviewStatus"),status)));
 	                }
 	                if(userDetail.getUserRole().equals("DEVELOPER") && userDetail.getUserRole().equals("HR") && userDetail.getUserRole().equals("INFRA_ADMIN") && userDetail.getUserRole().equals("INFRA_USER")) {
 	                	System.out.println(userDetail.getUserId());
 	                	predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("interviewer"),userDetail.getUserId())));
+	                }
+	                if(searchQuery != null) {
+//	                	criteriaBuilder.like(root.get("title"), "%" + keyword + "%")
+	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("candidateName"), searchQuery)));
+	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobCode"), searchQuery)));
 	                }
 //	                if(searchObj.getSearchString() != null && !searchObj.getSearchString().equalsIgnoreCase("")) {
 //	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("candidateName"), "%" + searchObj.getSearchString() + "%")));
@@ -473,12 +486,17 @@ public class JobServiceImpl implements JobService{
 	public ApiResponse changeJobInterviewStatus(String jobInerviewId, String jobInterviewStatus,Integer rating, String feedback, String comments) {
 		ApiResponse response = new ApiResponse(false);
 		JobInterviews status= jobInterviewRepository.getById(jobInerviewId);
+		JobApplication application = jobAppRepository.getApplicationById(status.getJobApplication().getId());
 		if(status!= null) {
 			status.setJobInterviewStatus(jobInterviewStatus);
 			status.setFeedback(feedback);
 			status.setRateGiven(rating);
 			if(comments != null) {
 			status.setInterviewerComments(comments);
+			if(jobInterviewStatus.equals("SELECTED")) {
+				application.setJobApplicationSatus(JobApplicationStatus.SELECTED);	
+				jobAppRepository.save(application);
+			}
 			}
 			jobInterviewRepository.save(status);
 			response.setSuccess(true);
@@ -496,8 +514,11 @@ public class JobServiceImpl implements JobService{
 	public ApiResponse updateInterviewRoundStatus(String jobInerviewId ,InterviewRoundReviewRequest request) {
 		ApiResponse response = new ApiResponse(false);
 		JobInterviews status= jobInterviewRepository.getById(jobInerviewId);
+		JobApplication applicationdetails = jobAppRepository.getApplicationById(status.getJobApplication().getId());
+		
 		if(status!= null) {
-			
+			applicationdetails.setJobApplicationSatus(JobApplicationStatus.SELECTED);
+			jobAppRepository.save(applicationdetails);
 			status.setJobInterviewStatus(request.getJobInterviewStatus());
 
 			status.setFeedback(request.getFeedback());
@@ -871,6 +892,24 @@ public class JobServiceImpl implements JobService{
 			response.setSuccess(false);
 			response.setMessage("Job Code Id is Mandatory");
 		}
+		return response;
+	}
+
+	@Override
+	public ApiResponse getRoundDetails(String appId, Integer roundNo) {
+		ApiResponse response = new ApiResponse(false);
+		JobInterviews interviewObj = jobInterviewRepository.getInterviewByAppIdRound(appId);
+		if(interviewObj!= null && interviewObj.getRoundNo().equals(roundNo)) {
+			response.setSuccess(false);
+			response.setMessage("Round Already Exists");	
+		}
+		
+		else
+		{
+			response.setSuccess(true);
+			response.setMessage("Round does not exists");
+		}
+		
 		return response;
 	}
 

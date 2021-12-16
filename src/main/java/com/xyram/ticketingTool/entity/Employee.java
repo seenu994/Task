@@ -65,6 +65,9 @@ public class Employee extends AuditModel {
 	
 	@Column(name="profile_pic_url")
 	private String profileUrl;
+	
+	@Column(name="reporting_to")
+	private String reportingTo;
 
 	public String geteId() {
 		return eId;
@@ -160,6 +163,14 @@ public class Employee extends AuditModel {
 
 	public void setProfileUrl(String profileUrl) {
 		this.profileUrl = profileUrl;
+	}
+
+	public String getReportingTo() {
+		return reportingTo;
+	}
+
+	public void setReportingTo(String reportingTo) {
+		this.reportingTo = reportingTo;
 	}
 
 	
