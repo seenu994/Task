@@ -218,10 +218,15 @@ class EmployeeController {
 		return employeeService.getAllRolePermissions(roleId);
 	}
 	
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/updateRolePermissions/{roleId}/{module}"})
-	public ApiResponse updateRolePermissions(@PathVariable String roleId,@PathVariable String modules,@RequestBody RoleMasterTable request) {
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/updateRolePermissions"})
+	public ApiResponse updateRolePermissions(@RequestParam String roleId,@RequestParam String modules,@RequestBody RoleMasterTable request) {
 		logger.info("Received request to add Employee");
 		return employeeService.updateRolePermissions(roleId,modules,request);
 	}
+//	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/updateRolePermissions"})
+//	public ApiResponse updateRolePermissions(@RequestBody RoleMasterTable request) {
+//		logger.info("Received request to add Employee");
+//		return employeeService.updateRolePermissions(null,null,request);
+//	}
 
 }

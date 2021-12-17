@@ -29,7 +29,7 @@ public class RoleMasterTable {
 	private String modules;
 	
 	@Column(name="permissions")
-	private String permissions;
+	private Integer permissions;
 
 	public String getId() {
 		return Id;
@@ -47,11 +47,13 @@ public class RoleMasterTable {
 		this.modules = modules;
 	}
 
-	public String getPermissions() {
+	
+
+	public Integer getPermissions() {
 		return permissions;
 	}
 
-	public void setPermissions(String permissions) {
+	public void setPermissions(Integer permissions) {
 		this.permissions = permissions;
 	}
 

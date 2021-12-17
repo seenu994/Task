@@ -108,6 +108,10 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	static Session session = null;
 	static Channel channel = null;
 	static String PATHSEPARATOR = "/";
+	
+	
+	
+	
 
 //	private static Map<String, com.xyram.ticketingTool.admin.model.User> userCache = new HashMap<>();
 
@@ -906,8 +910,51 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		ApiResponse response = new ApiResponse(false);
 		RoleMasterTable rolePermissions = masterRepo.updateRolePermissions(roleId,modules);
 		List<UserPermissions> permissionUser = userPermissionConfig.getByRole(roleId);
+		List<String> permissionRole = userPermissionConfig.getDetailsyRole(roleId);
+		
+		for(UserPermissions permissions:permissionUser) {
+			if(modules.equals("EMPLOYEES_PERMISSION")) {
+				permissions.setEmpModPermission(request.getPermissions());
+				userPermissionConfig.save(permissions);
+			}
+			
+			else if(modules.equals("PROJECTS_PERMISSION")) {
+				permissions.setProjectModPermission(request.getPermissions());
+				userPermissionConfig.save(permissions);
+			}
+			
+            else if(modules.equals("TICKETS_PERMISSION")) {
+            	permissions.setTicketModPermission(request.getPermissions());
+				userPermissionConfig.save(permissions);
+			}
+			
+            else if(modules.equals("JOBOPENINGS_PERMISSION")) {
+            	permissions.setJobOpeningModPermission(request.getPermissions());
+				userPermissionConfig.save(permissions);
+			}
+			
+            else if(modules.equals("JOBAPPLICATIONS_PERMISSION")) {
+            	permissions.setJobAppModPermission(request.getPermissions());
+				userPermissionConfig.save(permissions);
+			}
+			
+            else if(modules.equals("JOBINTERVIEWS_PERMISSION")) {
+            	permissions.setJobInterviewsModPermission(request.getPermissions());
+				userPermissionConfig.save(permissions);
+			}
+			
+            else if(modules.equals("JOBOFFERS_PERMISSION")) {
+            	permissions.setJobOfferModPermission(request.getPermissions());
+				userPermissionConfig.save(permissions);
+             }
+			
+            else if(modules.equals("JOBVENDORS_PERMISSION")) {
+            	permissions.setJobVendorsModPermission(request.getPermissions());
+				userPermissionConfig.save(permissions);
+             }
+		}
 		if (rolePermissions != null) {
-			rolePermissions.setModules(request.getModules());
+//			rolePermissions.setModules(request.getModules());
 			rolePermissions.setPermissions(request.getPermissions());
 			  masterRepo.save(rolePermissions);
 			response.setSuccess(true);
