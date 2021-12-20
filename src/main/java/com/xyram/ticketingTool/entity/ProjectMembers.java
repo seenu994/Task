@@ -30,7 +30,7 @@ public class ProjectMembers extends AuditModel {
 	@IdPrefix(value = "PROM_")
 	@GeneratedValue(generator = IdGenerator.ID_GENERATOR)
 	@GenericGenerator(name = IdGenerator.ID_GENERATOR, strategy = "com.xyram.ticketingTool.id.generator.IdGenerator")
-	@Column(name="projectMember_id")
+	@Column(name="project_member_id")
 	private String id;
 	
 	

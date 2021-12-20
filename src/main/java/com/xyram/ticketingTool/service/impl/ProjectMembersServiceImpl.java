@@ -358,7 +358,7 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 		ProjectMembers projectMembers = projectMemberRepository.getMemberInProject(employeeId, projectId);
 		if (projectMembers != null) {
 			String isadmin = "1";
-			projectMemberRepository.updateProjectAdmin(projectId, isadmin);
+			projectMemberRepository.updateProjectAdmin(projectMembers.getId(), isadmin);
 			issueTrackerResponse.setStatus("success");
 			return issueTrackerResponse;
 		} else {
@@ -375,7 +375,7 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 		ProjectMembers projectMembers = projectMemberRepository.getMemberInProject(employeeId, projectId);
 		if (projectMembers != null) {
 			String isadmin = "0";
-			projectMemberRepository.updateProjectAdmin(projectId, isadmin);
+			projectMemberRepository.updateProjectAdmin(projectMembers.getId(), isadmin);
 			issueTrackerResponse.setStatus("true");
 
 			return issueTrackerResponse;

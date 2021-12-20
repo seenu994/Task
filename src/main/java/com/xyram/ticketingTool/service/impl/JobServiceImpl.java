@@ -187,8 +187,8 @@ public class JobServiceImpl implements JobService{
 	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("candidateEmail"),searchQuery)));
 	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobCode"), searchQuery)));
 	                }
-	                if(userDetail.getUserRole().contains("HR_ADMIN") && userDetail.getUserRole().contains("TICKETINGTOOL_ADMIN")) {
-	                	predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("createdBy"), "%" + userDetail.getUserId() + "%")));
+	                if(userDetail.getUserRole() != "HR_ADMIN" && userDetail.getUserRole() != "TICKETINGTOOL_ADMIN") {
+	                	predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("createdBy"), userDetail.getUserId())));
 	                }
 	                query.orderBy(criteriaBuilder.desc(root.get("createdAt")));
 	                return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
