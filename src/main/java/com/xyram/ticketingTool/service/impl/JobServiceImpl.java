@@ -424,7 +424,7 @@ public class JobServiceImpl implements JobService{
 			response.setContent(jobOpening);
 		}else {
 			response.setSuccess(false);
-			response.setMessage("Job Application Not Exist");
+			response.setMessage("Job jobOpeningId Not Exist");
 		}
 		return response;
 	}
