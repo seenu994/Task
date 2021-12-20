@@ -102,7 +102,7 @@ public class ProjectServiceImpl implements ProjectService {
 		Page<Map> projectList;
 
 //		if (userDetail.getUserRole().equalsIgnoreCase("DEVELOPER")) {
-			projectList = projectRepository.getAllProjectByEmployee(pageable);
+			projectList = projectRepository.getAllProjectByDeveloper(pageable,userDetail.getScopeId());
 //		} else
 //		projectList = projectRepository.getAllProjectsList(pageable);
 
