@@ -355,6 +355,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			employee.setMiddleName(employeeRequest.getMiddleName());
 			employee.setMobileNumber(employeeRequest.getMobileNumber());
 			employee.setPassword(employeeRequest.getPassword());
+			employee.setReportingTo(employeeRequest.getReportingTo());
 			employee.setRoleId(employeeRequest.getRoleId());
 			Role role = roleRepository.getById(employeeRequest.getRoleId());
 			employee.setDesignationId(employeeRequest.getDesignationId());
@@ -754,7 +755,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	public ApiResponse getEmployeeDetailsById(String employeeId) {
 		ApiResponse response = new ApiResponse(false);
 		Map employee = employeeRepository.getEmployeeBYId(employeeId);
-		List<Employee> reportees = employeeRepository.getReortingList(employeeId);
+		List<Map> reportees = employeeRepository.getReortingList(employeeId);
 		Map content = new HashMap();
 		content.put("employeeDetails", employee);
 		content.put("reportees", reportees);
@@ -896,22 +897,24 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	@Override
 	public ApiResponse getEmployeeByReportingId(String reportingId) {
 		ApiResponse response = new ApiResponse(false);
-		List<Employee> reportees = employeeRepository.getReortingList(reportingId);
-		Map content = new HashMap();
-		content.put("reportees", reportees);
-		if (content != null) {
-			response.setSuccess(true);
-			response.setMessage("Reportees Retrieved Successfully");
-			response.setContent(content);
-		}
-
-		else {
-			response.setSuccess(false);
-			response.setMessage("Could not retrieve data");
-			response.setContent(null);
-		}
-
-		return response;
+//		List<Map> reportees = employeeRepository.getReortingList(reportingId);
+//		Map content = new HashMap();
+//		content.put("reportees", reportees);
+//		if (content != null) {
+//			response.setSuccess(true);
+//			response.setMessage("Reportees Retrieved Successfully");
+//			response.setContent(content);
+//		}
+//
+//		else {
+//			response.setSuccess(false);
+//			response.setMessage("Could not retrieve data");
+//			response.setContent(null);
+//		}
+//
+//		return response;
+		
+		return null;
 	}
 
 	@Override

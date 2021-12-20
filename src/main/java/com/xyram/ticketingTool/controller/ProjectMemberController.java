@@ -94,7 +94,7 @@ class ProjectMemberContoller {
 		return projectMemberService.removeProjectAdmin(employeeId, projectId);
 	}
 
-	@GetMapping(value= {AuthConstants.DEVELOPER_BASEPATH +"/isProjectAdmin",AuthConstants.INFRA_USER_BASEPATH +"/isProjectAdmin"})
+	@GetMapping(value= {AuthConstants.DEVELOPER_BASEPATH +"/isProjectAdmin",AuthConstants.INFRA_USER_BASEPATH +"/isProjectAdmin",AuthConstants.INFRA_ADMIN_BASEPATH +"/isProjectAdmin"})
 	public ProjectAdminResponse isProjectAdmin(@RequestParam String employeeId, @RequestParam String projectId) {
 		logger.info("indide ProjectMembersController :: MakeProjectAdmin");
 		return projectMemberService.isProjectAdmin(employeeId, projectId);

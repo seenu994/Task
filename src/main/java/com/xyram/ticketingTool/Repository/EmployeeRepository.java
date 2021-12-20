@@ -145,8 +145,8 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 	@Query("SELECT new map(e as employeeDetails) from Employee e where e.userCredientials.id = :accessToken")
 	Map getbyAccessToken(String accessToken);
 
-	@Query("SELECT e from Employee e where e.reportingTo = :reportingId")
-	List<Employee> getReortingList(String reportingId);
+	@Query("SELECT new map(CONCAT(e.firstName ,' ', e.lastName) as ReporterName,e.eId as Id,e.profileUrl as profileUrl) from Employee e where e.reportingTo = :reportingId")
+	List<Map> getReortingList(String reportingId);
 
 	@Query("Select e from Employee e "
 			+ "INNER JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id ORDER BY e.createdAt DESC")

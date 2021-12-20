@@ -6,7 +6,9 @@ import java.util.Optional;
 public enum UserStatus {
 	ACTIVE("ACTIVE"),
 
-	INACTIVE("INACTIVE");
+	INACTIVE("INACTIVE"),
+	
+	OFFLINE("OFFLINE");
 
 	private String value;
 
