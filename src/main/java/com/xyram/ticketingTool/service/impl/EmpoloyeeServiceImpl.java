@@ -224,7 +224,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 					String name = null;
 
 				HashMap mailDetails = new HashMap();
-				mailDetails.put("toEmail", useredit.getEmail());
+				mailDetails.put("toEmail", employee.getEmail());
 				mailDetails.put("subject", name + ", " + "Here's your new PASSWORD");
 				mailDetails.put("message", "Hi " + name
 						+ ", \n\n We received a request to reset the password for your Account. \n\n Here's your new PASSWORD Link is: "
