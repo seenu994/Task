@@ -633,8 +633,8 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		int SFTPPORT = 22; // SFTP Port Number
 		String SFTPUSER = "ubuntu"; // User Name
 		String SFTPPASS = ""; // Password
-		String SFTPKEY = "/home/ubuntu/tomcat/webapps/Ticket_tool-0.0.1-SNAPSHOT/WEB-INF/classes/Covid-Phast-Prod.ppk";
-		String SFTPWORKINGDIRAADMIN = "/home/ubuntu/tomcat/webapps/image/ticket-attachment";// Source Directory on SFTP
+		String SFTPKEY = "/home/ubuntu/tomcat-be/webapps/Ticket_tool-0.0.1-SNAPSHOT/WEB-INF/classes/Covid-Phast-Prod.ppk";
+		String SFTPWORKINGDIRAADMIN = "/home/ubuntu/tomcat-be/webapps/image/ticket-attachment";// Source Directory on SFTP
 																							// server
 		String fileNameOriginal = fileName;
 		try {
