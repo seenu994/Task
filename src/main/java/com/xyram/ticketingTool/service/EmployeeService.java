@@ -78,4 +78,6 @@ public interface EmployeeService {
 
 	ApiResponse updateRolePermissions(String roleId, String modules, RoleMasterTable request);
 
+	ApiResponse updateOfflineStatus(String infraUserId);
+
 }

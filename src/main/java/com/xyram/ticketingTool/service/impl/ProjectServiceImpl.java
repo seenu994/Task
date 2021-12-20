@@ -101,10 +101,11 @@ public class ProjectServiceImpl implements ProjectService {
 
 		Page<Map> projectList;
 
-//		if (userDetail.getUserRole().equalsIgnoreCase("DEVELOPER")) {
+	if (userDetail.getUserRole().equalsIgnoreCase("TICKETINGTOOL_ADMIN") || userDetail.getUserRole().equalsIgnoreCase("INFRA_ADMIN")) {
+		projectList = projectRepository.getAllProjectsList(pageable);
+			
+		} else
 			projectList = projectRepository.getAllProjectByDeveloper(pageable,userDetail.getScopeId());
-//		} else
-//		projectList = projectRepository.getAllProjectsList(pageable);
 
 		Map content = new HashMap();
 		content.put("projectList", projectList);

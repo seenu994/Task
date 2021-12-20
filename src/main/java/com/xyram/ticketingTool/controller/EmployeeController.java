@@ -228,5 +228,10 @@ class EmployeeController {
 //		logger.info("Received request to add Employee");
 //		return employeeService.updateRolePermissions(null,null,request);
 //	}
+	
+	@PutMapping(value = { AuthConstants.INFRA_USER_BASEPATH +"/updateOfflineStatus/{infraUserId}",AuthConstants.INFRA_ADMIN_BASEPATH +"/updateOfflineStatus/{infraUserId}"})
+	public ApiResponse updateOfflineStatus(@PathVariable String infraUserId) {
+		return employeeService.updateOfflineStatus(infraUserId);
+	}
 
 }
