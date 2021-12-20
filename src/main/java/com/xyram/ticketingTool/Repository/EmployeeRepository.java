@@ -9,6 +9,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.transaction.Transactional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,11 +20,8 @@ import org.springframework.stereotype.Repository;
 
 import com.xyram.ticketingTool.entity.Employee;
 
-
-
-
-
 @Repository
+@Transactional
 public interface EmployeeRepository extends JpaRepository<Employee, String> {
 
 	@Query("Select distinct new map(e.eId as id,e.email as email,e. profileUrl as profileUrl , e.firstName as firstName,e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId, "
@@ -50,18 +48,18 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 //			+ "inner join ProjectMembers p ON e.eId = p.employeeId and p.status = 'INACTIVE' and p.projectId = :projectId "
 //			+ " Where e.status = 'ACTIVE' and e.email like %:searchString% and e.roleId = 'R4' ")
 //	
-	
+
 	@Query("Select distinct new map(e.eId as id, e.firstName as firstName, e.lastName as lastName) from Employee e Where"
 			+ " e.status = 'ACTIVE' and e.email like %:searchString%  and  e.eId NOT IN("
 			+ "select p.employeeId from ProjectMembers p where p.status = 'ACTIVE' and p.projectId = :projectId )")
-	
-	List<Map> searchEmployeeNotAssignedToProject(@Param("projectId") String projectName,@Param("searchString") String searchString);
-	
+
+	List<Map> searchEmployeeNotAssignedToProject(@Param("projectId") String projectName,
+			@Param("searchString") String searchString);
+
 //	@Query("Select distinct new map(e.eId as id, e.firstName as firstName, e.lastName as lastName) "
 //			+ "from Employee e left JOIN ProjectMembers p On e.eId = p.employeeId where e.status = 'ACTIVE' and e.roleId = 'R3' "
 //			+ "and (p.projectId != :projectId and not exists (Select 1 from ProjectMembers p1 where e.eId = p1.employeeId "
 //			+ "and p1.projectId = :projectId)) and e.email like %:searchString%")
-	
 
 	@Query("Select distinct new map(e.eId as id, e.firstName as firstName, e.lastName as lastName) from Employee e "
 			+ "where e.status = 'ACTIVE' and e.email like %:searchString% and e.roleId = 'R3' ")
@@ -119,13 +117,11 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 	Employee getbyUserEmpId(String employeeId);
 
 	@Query(value = "SELECT concat(e.frist_name,' ', e.last_name) as assigneeName FROM employee e WHERE e.user_id = :userId", nativeQuery = true)
-	String getEmpName(String  userId);
-	//String userid;
+	String getEmpName(String userId);
+	// String userid;
 
 	@Query("SELECT DISTINCT b FROM Employee b WHERE b.userCredientials.id = :userId")
 	Employee getbyUserByUserId(String userId);
-     
-	
 
 	@Query("Select new map(e.eId as id,e.email as email,e.firstName as firstName,e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId, "
 			+ "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,d.designationName as designationName) from Employee e  "
@@ -137,7 +133,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 
 	@Query("SELECT e from Employee e where e.eId = :employeeId")
 	List<Employee> getbyEmpId(String employeeId);
-	
+
 	@Query("Select new map(e.eId as id,e.email as email,e.firstName as firstName,e. profileUrl as profileUrl, e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId, "
 			+ "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,d.designationName as designationName,e.reportingTo as reportingTo,CONCAT(ee.firstName ,' ', ee.lastName) as ReporterName,ee.profileUrl as ReporterURL) from Employee e left join Employee ee On ee.eId = e.reportingTo  "
 			+ "JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id where e.id=:id")
@@ -152,15 +148,26 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 	@Query("SELECT e from Employee e where e.reportingTo = :reportingId")
 	List<Employee> getReortingList(String reportingId);
 
-   @Query("Select e from Employee e "
+	@Query("Select e from Employee e "
 			+ "INNER JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id ORDER BY e.createdAt DESC")
 	List<Employee> employeeListForReporting();
 
-   @Query("Select e from Employee e "
+	@Query("Select e from Employee e "
 			+ "INNER JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id WHERE r.roleName = 'INFRA_USER' ORDER BY e.createdAt DESC")
-List<Employee> getInfraEmployee();
+	List<Employee> getInfraEmployee();
+
+	@Query("Select distinct new map(e.eId as id,e.userCredientials.uid as uid,e.email as email,e. profileUrl as profileUrl , e.firstName as firstName,e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId, "
+			+ "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,d.designationName as designationName,e.profileUrl as profileUrl,e.createdAt as createdAt,e.reportingTo as reportingTo,CONCAT(ee.firstName ,' ', ee.lastName) as ReporterName) from Employee e "
+			+ "left JOIN Employee ee ON ee.eId = e.reportingTo "
+			+ "INNER JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id ORDER BY e.createdAt DESC")
+	List<Map> getAllEmployeeListNotify();
 
 	
 
+	@Query("Select new map(e.eId as id,e.email as email,e.userCredientials.uid as uid,e.firstName as firstName,e. profileUrl as profileUrl, e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId, "
+			+ "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,d.designationName as designationName,e.reportingTo as reportingTo,CONCAT(ee.firstName ,' ', ee.lastName) as ReporterName,ee.profileUrl as ReporterURL) from Employee e left join Employee ee On ee.eId = e.reportingTo  "
+			+ "JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id where e.eId=:reportingTo")
+	
+	List<Map> getEmployeeBYReportingToId(String reportingTo);
 
 }
