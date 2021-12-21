@@ -1035,9 +1035,9 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
                 if(currentUser.getUserRole().equals("INFRA_ADMIN") || employee.getUserCredientials().getUserRole().equals("INFRA_USER")) {
 				employee.setStatus(UserStatus.OFFLINE);
 				employeeRepository.save(employee);
-				User user = userRepository.getById(employee.getUserCredientials().getId());
-				user.setStatus(UserStatus.OFFLINE);
-				userRepository.save(user);
+//				User user = userRepository.getById(employee.getUserCredientials().getId());
+//				user.setStatus(UserStatus.OFFLINE);
+//				userRepository.save(user);
 
 				// Employee employeere=new Employee();z
 
