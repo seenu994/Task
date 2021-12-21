@@ -106,7 +106,7 @@ class EmployeeController {
 	}
 	
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editEmployee/{employeeId}",AuthConstants.INFRA_ADMIN_BASEPATH + "/editEmployee/{employeeId}",
-			AuthConstants.DEVELOPER_BASEPATH + "/editEmployee/{employeeId}" })
+			AuthConstants.DEVELOPER_BASEPATH + "/editEmployee/{employeeId}",AuthConstants.HR_ADMIN_BASEPATH + "/editEmployee/{employeeId}"})
 	public ApiResponse editEmployee(@RequestBody Employee employeeRequest, @PathVariable String employeeId) {
 		logger.info("indide ProductController :: getAllemployee");
 		return employeeService.editEmployee(employeeId, employeeRequest);

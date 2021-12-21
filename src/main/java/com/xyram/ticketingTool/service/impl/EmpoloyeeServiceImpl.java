@@ -192,6 +192,8 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				User useredit = userRepository.getById(user.getId());
 				useredit.setScopeId(employeeNew.geteId());
 				userRepository.save(useredit);
+				
+				// sending notification starts here..!
 				List<Map> EmployeeList = employeeRepository.getEmployeeBYReportingToId(employee.getReportingTo());
 				Employee emp = new Employee();
 
@@ -232,7 +234,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 						+ "\n\n Thanks for helping us keep your account secure.\n\n Xyram Software Solutions Pvt Ltd.");
 				emailService.sendMail(mailDetails);
 				}
-				
+				// end of the notification part...!
 
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.EMPLOYEE_ADDED);

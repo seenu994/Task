@@ -3,12 +3,6 @@ package com.xyram.ticketingTool.Repository;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.transaction.Transactional;
 
 import org.springframework.data.domain.Page;
@@ -162,12 +156,35 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 			+ "INNER JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id ORDER BY e.createdAt DESC")
 	List<Map> getAllEmployeeListNotify();
 
-	
-
 	@Query("Select new map(e.eId as id,e.email as email,e.userCredientials.uid as uid,e.firstName as firstName,e. profileUrl as profileUrl, e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId, "
 			+ "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,d.designationName as designationName,e.reportingTo as reportingTo,CONCAT(ee.firstName ,' ', ee.lastName) as ReporterName,ee.profileUrl as ReporterURL) from Employee e left join Employee ee On ee.eId = e.reportingTo  "
-			+ "JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id where e.eId=:reportingTo")
-	
+			+ "JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id  where e.eId=:reportingTo")
+
 	List<Map> getEmployeeBYReportingToId(String reportingTo);
+
+	/*
+	 * @Query("Select new map(e.eId as id,e.email as email,e.userCredientials.uid as uid,e.firstName as firstName,e. profileUrl as profileUrl, e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId, "
+	 * +
+	 * "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,d.designationName as designationName,e.reportingTo as reportingTo,CONCAT(ee.firstName ,' ', ee.lastName) as ReporterName,ee.profileUrl as ReporterURL) from Employee e left join Employee ee On ee.eId = e.reportingTo  "
+	 * +
+	 * "JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id JOIN CurrentUser c On e.eId=c.userId  where c.userId=:userId"
+	 * ) List<Map> getEmployeeBYReportingToIds(String userId);
+	 */
+	@Query(value="select * from employee",nativeQuery=true)
+	List<Employee> getAllEmployeeNotification();
+
+	/*
+	 * @Query("Select new map(e.eId as id,e.email as email,e.firstName as firstName,e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId, "
+	 * +
+	 * "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,d.designationName as designationName) from Employee e  "
+	 * +
+	 * "JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id where e.eId= :userId"
+	 * )
+	 */
+
+	/*
+	 * @Query("Select new map(c.eID as userId) from  Employee c JOIN CurrentUser e on c.eId=e.userId where c.userId=:userId"
+	 * ) List<Map> getAllEmployeeUserUidList(String userId);
+	 */
 
 }
