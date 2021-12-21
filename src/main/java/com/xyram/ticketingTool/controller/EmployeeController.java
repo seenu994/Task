@@ -55,7 +55,7 @@ class EmployeeController {
 	@Autowired
 	RoleMasterRepository masterrepo;
 
-	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/	",AuthConstants.HR_ADMIN_BASEPATH + "/createEmployee",AuthConstants.INFRA_ADMIN_BASEPATH + "/createEmployee" })
+	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/createEmployee",AuthConstants.HR_ADMIN_BASEPATH + "/createEmployee",AuthConstants.INFRA_ADMIN_BASEPATH + "/createEmployee" })
 	public ApiResponse addemployee(@RequestBody Employee employee) {
 		logger.info("Received request to add Employee");
 		return employeeService.addemployee(employee);
