@@ -75,6 +75,7 @@ import com.xyram.ticketingTool.enumType.NotificationType;
 import com.xyram.ticketingTool.enumType.TicketAssigneeStatus;
 import com.xyram.ticketingTool.enumType.TicketStatus;
 import com.xyram.ticketingTool.enumType.UserRole;
+import com.xyram.ticketingTool.enumType.UserStatus;
 import com.xyram.ticketingTool.exception.ResourceNotFoundException;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.request.JobOpeningSearchRequest;
@@ -349,6 +350,7 @@ public class TicketServiceImpl implements TicketService {
 			response.setContent(content);
 			if(assigneeId != null) {
 				Employee employeeObj = employeeRepository.getById(assigneeId);
+				if(employeeObj.getStatus() != UserStatus.OFFLINE) {
 				TicketAssignee assignee = new TicketAssignee();
 				assignee.setEmployeeId(assigneeId);
 				assignee.setTicketId(tickets.getId());
@@ -359,6 +361,7 @@ public class TicketServiceImpl implements TicketService {
 				tickets.setStatus(TicketStatus.ASSIGNED);
 				ticketrepository.save(tickets);
 				ticketAssigneeRepository.save(assignee);
+				}
 //					
 //				Map request = new HashMap<>();
 //				request.put("uid", employeeObj.getUserCredientials().getUid());

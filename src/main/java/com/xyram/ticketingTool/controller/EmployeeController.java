@@ -55,7 +55,7 @@ class EmployeeController {
 	@Autowired
 	RoleMasterRepository masterrepo;
 
-	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/	",AuthConstants.HR_ADMIN_BASEPATH + "/createEmployee",AuthConstants.INFRA_ADMIN_BASEPATH + "/createEmployee" })
+	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/createEmployee",AuthConstants.HR_ADMIN_BASEPATH + "/createEmployee",AuthConstants.INFRA_ADMIN_BASEPATH + "/createEmployee" })
 	public ApiResponse addemployee(@RequestBody Employee employee) {
 		logger.info("Received request to add Employee");
 		return employeeService.addemployee(employee);
@@ -228,5 +228,10 @@ class EmployeeController {
 //		logger.info("Received request to add Employee");
 //		return employeeService.updateRolePermissions(null,null,request);
 //	}
+	
+	@PutMapping(value = { AuthConstants.INFRA_USER_BASEPATH +"/updateOfflineStatus/{infraUserId}",AuthConstants.INFRA_ADMIN_BASEPATH +"/updateOfflineStatus/{infraUserId}"})
+	public ApiResponse updateOfflineStatus(@PathVariable String infraUserId) {
+		return employeeService.updateOfflineStatus(infraUserId);
+	}
 
 }

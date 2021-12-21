@@ -63,6 +63,7 @@ import com.xyram.ticketingTool.exception.ResourceNotFoundException;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.EmployeeService;
 import com.xyram.ticketingTool.service.NotificationService;
+import com.xyram.ticketingTool.service.TicketAttachmentService;
 import com.xyram.ticketingTool.ticket.config.PermissionConfig;
 import com.xyram.ticketingTool.util.ResponseMessages;
 
@@ -128,6 +129,8 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	@Autowired
 	EmailService emailService;
 
+	@Autowired
+	TicketAttachmentService attachmentService;
 	
 	@Value("${APPLICATION_URL}")
 	private String application_url;
@@ -635,8 +638,8 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		int SFTPPORT = 22; // SFTP Port Number
 		String SFTPUSER = "ubuntu"; // User Name
 		String SFTPPASS = ""; // Password
-		String SFTPKEY = "/home/ubuntu/tomcat/webapps/Ticket_tool-0.0.1-SNAPSHOT/WEB-INF/classes/Covid-Phast-Prod.ppk";
-		String SFTPWORKINGDIRAADMIN = "/home/ubuntu/tomcat/webapps/image/ticket-attachment";// Source Directory on SFTP
+		String SFTPKEY = "/home/ubuntu/tomcat-be/webapps/Ticket_tool-0.0.1-SNAPSHOT/WEB-INF/classes/Covid-Phast-Prod.ppk";
+		String SFTPWORKINGDIRAADMIN = "/home/ubuntu/tomcat-be/webapps/image/ticket-attachment";// Source Directory on SFTP
 																							// server
 		String fileNameOriginal = fileName;
 		try {
@@ -1022,6 +1025,43 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			response.setMessage("Could not update data");
 			response.setContent(null);
 		}
+
+		return response;
+	}
+
+	@Override
+	public ApiResponse updateOfflineStatus(String infraUserId) {
+		ApiResponse response = new ApiResponse(false);
+			Employee employee = employeeRepository.getById(infraUserId);
+			if (employee != null) {
+                if(currentUser.getUserRole().equals("INFRA_ADMIN") || employee.getUserCredientials().getUserRole().equals("INFRA_USER")) {
+				employee.setStatus(UserStatus.OFFLINE);
+				employeeRepository.save(employee);
+//				User user = userRepository.getById(employee.getUserCredientials().getId());
+//				user.setStatus(UserStatus.OFFLINE);
+//				userRepository.save(user);
+
+				// Employee employeere=new Employee();z
+
+				response.setSuccess(true);
+				response.setMessage(ResponseMessages.STATUS_UPDATE);
+				response.setContent(null);
+                }
+                
+                else
+                {
+                	response.setSuccess(false);
+    				response.setMessage("Please send valid employee id ");
+    				response.setContent(null);	
+                }
+			}
+			
+			else
+			{
+				response.setSuccess(false);
+				response.setMessage("Invalid Employee Id");
+				response.setContent(null);	
+			}
 
 		return response;
 	}
