@@ -71,5 +71,6 @@ public interface JobRepository extends CrudRepository<JobOpenings,Long>,JpaSpeci
 //            }
 //        });
 //	}
-
-}
+	@Query(value = "SELECT  cw.wing_name FROM ticketdbtool.company_wings cw", nativeQuery = true)
+	Map GetJobWingName();
+	}

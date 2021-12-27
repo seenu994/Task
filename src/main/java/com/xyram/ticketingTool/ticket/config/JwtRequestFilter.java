@@ -95,13 +95,5 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 		chain.doFilter(request, response);
 	}
 
-	@Override
-	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-		return Arrays.asList(AuthUtil.NON_SECURE_PATHS)
-				.stream()
-				.map(url -> new AntPathMatcher().match(url, request.getServletPath()))
-				.reduce(Boolean::logicalOr)
-				.get();
-	}
 }
 

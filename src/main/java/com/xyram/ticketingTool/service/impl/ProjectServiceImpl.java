@@ -97,11 +97,14 @@ public class ProjectServiceImpl implements ProjectService {
 
 	@Override
 	public ApiResponse getAllProjects(Pageable pageable) {
-		// Page<Map> projectList = projectRepository.getAllProjectLsit(pageable);
-
+		/*
+		 * // Page<Map> projectList = projectRepository.getAllProjectLsit(pageable);
+		 */
 		Page<Map> projectList;
-
-	if (userDetail.getUserRole().equalsIgnoreCase("TICKETINGTOOL_ADMIN") || userDetail.getUserRole().equalsIgnoreCase("INFRA_ADMIN")) {
+		
+		System.out.println(userDetail.getUserRole());
+	if ( userDetail.getUserRole()!=null && userDetail.getUserRole().equalsIgnoreCase("TICKETINGTOOL_ADMIN") 
+			|| userDetail.getUserRole().equalsIgnoreCase("INFRA_ADMIN")) {
 		projectList = projectRepository.getAllProjectsList(pageable);
 			
 		} else

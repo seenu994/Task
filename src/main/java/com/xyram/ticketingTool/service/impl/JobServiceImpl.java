@@ -41,6 +41,7 @@ import com.xyram.ticketingTool.Repository.UserRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.email.EmailService;
 import com.xyram.ticketingTool.entity.ApplicationComments;
+import com.xyram.ticketingTool.entity.CompanyWings;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.JobApplication;
 import com.xyram.ticketingTool.entity.JobInterviews;
@@ -91,11 +92,10 @@ public class JobServiceImpl implements JobService {
 	UserRepository userRepo;
 	@Autowired
 	EmailService emailService;
-	
-	
+
 	@Autowired
 	EmployeeRepository employeeRepository;
-	
+
 	@Autowired
 	EmpoloyeeServiceImpl employeeServiceImpl;
 
@@ -122,49 +122,49 @@ public class JobServiceImpl implements JobService {
 			for (Employee employeeNotification : EmployeeList) {
 				Map request = new HashMap<>();
 				request.put("eId", employeeNotification.geteId());
-				
-				request.put("uid",employeeNotification.getUserCredientials().getUid());
+
+				request.put("uid", employeeNotification.getUserCredientials().getUid());
 				request.put("title", "job CREATED");
 				request.put("body", " job Created - " + emp.getFirstName());
 				pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 12,
 						NotificationType.EMPLOYEE_CREATED.toString()));
-			
-			
-			// inserting notification details
-			Notifications notifications = new Notifications();
-			notifications.setNotificationDesc("job created - " + emp.getFirstName());
-			notifications.setNotificationType(NotificationType.JOB_CREATED);
-			notifications.setSenderId(emp.getReportingTo());
-			notifications.setReceiverId(userDetail.getUserId());
-			notifications.setSeenStatus(false);
-			notifications.setCreatedBy(userDetail.getUserId());
-			notifications.setCreatedAt(new Date());
-			notifications.setUpdatedBy(userDetail.getUserId());
-			notifications.setLastUpdatedAt(new Date());
 
-			notificationService.createNotification(notifications);
-			UUID uuid = UUID.randomUUID();
-			String uuidAsString = uuid.toString();
-			if (emp != null) {
-				String name = null;
+				// inserting notification details
+				Notifications notifications = new Notifications();
+				notifications.setNotificationDesc("job created - " + emp.getFirstName());
+				notifications.setNotificationType(NotificationType.JOB_CREATED);
+				notifications.setSenderId(emp.getReportingTo());
+				notifications.setReceiverId(userDetail.getUserId());
+				notifications.setSeenStatus(false);
+				notifications.setCreatedBy(userDetail.getUserId());
+				notifications.setCreatedAt(new Date());
+				notifications.setUpdatedBy(userDetail.getUserId());
+				notifications.setLastUpdatedAt(new Date());
 
-				HashMap mailDetails = new HashMap();
-				mailDetails.put("toEmail", employeeNotification.getEmail());
-				mailDetails.put("subject", name + ", " + "Here's your new PASSWORD");
-				mailDetails.put("message", "Hi " + name
-						+ ", \n\n We received a request to reset the password for your Account. \n\n Here's your new PASSWORD Link is: "
-						+ application_url + "/update-password" + "?key=" + uuidAsString
-						+ "\n\n Thanks for helping us keep your account secure.\n\n Xyram Software Solutions Pvt Ltd.");
-				emailService.sendMail(mailDetails);
+				notificationService.createNotification(notifications);
+				UUID uuid = UUID.randomUUID();
+				String uuidAsString = uuid.toString();
+				if (emp != null) {
+					String name = null;
+
+					HashMap mailDetails = new HashMap();
+					mailDetails.put("toEmail", employeeNotification.getEmail());
+					mailDetails.put("subject", name + ", " + "Here's your new PASSWORD");
+					mailDetails.put("message", "Hi " + name
+							+ ", \n\n We received a request to reset the password for your Account. \n\n Here's your new PASSWORD Link is: "
+							+ application_url + "/update-password" + "?key=" + uuidAsString
+							+ "\n\n Thanks for helping us keep your account secure.\n\n Xyram Software Solutions Pvt Ltd.");
+					emailService.sendMail(mailDetails);
+				}
+
+				response.setSuccess(true);
+				response.setMessage("New Job Opening Created");
 			}
-
-			response.setSuccess(true);
-			response.setMessage("New Job Opening Created");
-		}} else {
+		} else {
 			response.setSuccess(false);
 			response.setMessage("New Job Opening Not Created");
 		}
-		
+
 		return response;
 	}
 
@@ -330,50 +330,46 @@ public class JobServiceImpl implements JobService {
 			jobAppObj.setCreatedBy(userDetail.getUserId());
 			jobAppObj.setJobApplicationSatus(JobApplicationStatus.APPLIED);
 			if (jobAppRepository.save(jobAppObj) != null) {
-				Employee empObj=new Employee();
-				List<Map> EmployeeByRole = employeeRepository.getListOfALlEmployee();
-				
-
-				for (Map employeeNotification : EmployeeByRole) {
-					Map request = new HashMap<>();
-					request.put("id", employeeNotification.get("id"));
-					request.put("uid", employeeNotification.get("uid"));
-					request.put("title", "JOB CREATED");
-					request.put("body", " job Created - ");
-					pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 12,
-							NotificationType.EMPLOYEE_CREATED.toString()));
-
-				
-				// inserting notification details
-				Notifications notifications = new Notifications();
-				notifications.setNotificationDesc("job created - " + empObj.getFirstName());
-				notifications.setNotificationType(NotificationType.JOB_APPLOCATION_CREATED);
-				notifications.setSenderId(empObj.getReportingTo());
-				notifications.setReceiverId(userDetail.getUserId());
-				notifications.setSeenStatus(false);
-				notifications.setCreatedBy(userDetail.getUserId());
-				notifications.setCreatedAt(new Date());
-				notifications.setUpdatedBy(userDetail.getUserId());
-				notifications.setLastUpdatedAt(new Date());
-
-				notificationService.createNotification(notifications);
-				UUID uuid = UUID.randomUUID();
-				String uuidAsString = uuid.toString();
-				if(empObj!=null) {
-					String name = null;
-
-				HashMap mailDetails = new HashMap();
-				mailDetails.put("toEmail",employeeNotification.get("email"));
-				mailDetails.put("subject", name + ", " + "Here's your new PASSWORD");
-				mailDetails.put("message", "Hi " + name
-						+ ", \n\n We received a request to reset the password for your Account. \n\n Here's your new PASSWORD Link is: "
-						+ application_url + "/update-password" + "?key=" + uuidAsString
-						+ "\n\n Thanks for helping us keep your account secure.\n\n Xyram Software Solutions Pvt Ltd.");
-				emailService.sendMail(mailDetails);
-				}
+				/*
+				 * Employee empObj=new Employee(); List<Map> EmployeeByRole =
+				 * employeeRepository.getEmployeeByRole();
+				 * 
+				 * 
+				 * for (Map employeeNotification : EmployeeByRole) { Map request = new
+				 * HashMap<>(); request.put("employeeId",
+				 * employeeNotification.get("employeeId")); request.put("uid",
+				 * employeeNotification.get("uid")); request.put("title", "EMPLOYEE CREATED");
+				 * request.put("body", " employee Created - " + empObj.getRoleId());
+				 * pushNotificationCall.restCallToNotification(pushNotificationRequest.
+				 * PushNotification(request, 12, NotificationType.EMPLOYEE_CREATED.toString()));
+				 * 
+				 * } // inserting notification details Notifications notifications = new
+				 * Notifications(); notifications.setNotificationDesc("employee created - " +
+				 * empObj.getFirstName());
+				 * notifications.setNotificationType(NotificationType.JOB_APPLOCATION_CREATED);
+				 * notifications.setSenderId(empObj.getReportingTo());
+				 * notifications.setReceiverId(userDetail.getUserId());
+				 * notifications.setSeenStatus(false);
+				 * notifications.setCreatedBy(userDetail.getUserId());
+				 * notifications.setCreatedAt(new Date());
+				 * notifications.setUpdatedBy(userDetail.getUserId());
+				 * notifications.setLastUpdatedAt(new Date());
+				 * 
+				 * notificationService.createNotification(notifications); /* UUID uuid =
+				 * UUID.randomUUID(); String uuidAsString = uuid.toString(); if(empObj!=null) {
+				 * String name = null;
+				 * 
+				 * HashMap mailDetails = new HashMap(); mailDetails.put("toEmail",
+				 * empObj.getEmail()); mailDetails.put("subject", name + ", " +
+				 * "Here's your new PASSWORD"); mailDetails.put("message", "Hi " + name +
+				 * ", \n\n We received a request to reset the password for your Account. \n\n Here's your new PASSWORD Link is: "
+				 * + application_url + "/update-password" + "?key=" + uuidAsString +
+				 * "\n\n Thanks for helping us keep your account secure.\n\n Xyram Software Solutions Pvt Ltd."
+				 * ); emailService.sendMail(mailDetails); }
+				 */
 				response.setSuccess(true);
 				response.setMessage("New Job Application Created");
-			} }else {
+			} else {
 				response.setSuccess(false);
 				response.setMessage("New Job Application Not Created");
 			}
@@ -656,6 +652,11 @@ public class JobServiceImpl implements JobService {
 			jobOpening.setMinExp(jobObj.getMinExp());
 			jobOpening.setSalary(jobObj.getSalary());
 			jobOpening.setTotalOpenings(jobObj.getTotalOpenings());
+
+			jobOpening.setWings(jobObj.getWings());
+			
+			jobOpening.setFilledPositions(jobObj.getFilledPositions());
+
 //			jobOpening.setWings(jobObj.getWings());
 			jobRepository.save(jobOpening);
 			response.setSuccess(true);
@@ -748,6 +749,7 @@ public class JobServiceImpl implements JobService {
 			jobApp.setCandidateMobile(newJobAppObj.getCandidateMobile());
 			jobApp.setCandidateName(newJobAppObj.getCandidateName());
 			jobApp.setExpectedSalary(newJobAppObj.getExpectedSalary());
+
 			if (jobAppRepository.save(jobApp) != null) {
 				response.setSuccess(true);
 				response.setMessage(" Job Application Updated");

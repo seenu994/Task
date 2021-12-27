@@ -83,7 +83,7 @@ public class JobController {
 		return jobService.getAllJobApplications(filter,pageable);
 	}
 	
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllCompanyWingsAndSkills",AuthConstants.HR_ADMIN_BASEPATH + "/getAllCompanyWingsAndSkills" })
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllCompanyWingsAndSkills",AuthConstants.HR_ADMIN_BASEPATH + "/getAllCompanyWingsAndSkills", AuthConstants.DEVELOPER_BASEPATH + "/getAllCompanyWingsAndSkills" })
 	public ApiResponse getAllCompanyWingsAndSkills() {
 		logger.info("Get All Wings & Skills");
 		return jobService.getAllCompanyWingsAndSkills();
