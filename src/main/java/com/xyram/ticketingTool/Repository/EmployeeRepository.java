@@ -170,8 +170,23 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 	 * "JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id JOIN CurrentUser c On e.eId=c.userId  where c.userId=:userId"
 	 * ) List<Map> getEmployeeBYReportingToIds(String userId);
 	 */
-	@Query(value="select * from employee",nativeQuery=true)
+	@Query(value = "select * from employee", nativeQuery = true)
 	List<Employee> getAllEmployeeNotification();
+
+	@Query(value = "SELECT e.employee_id as employeeId, e.frist_name as firstname, e.last_name as lastname, u.uid as uid"
+			+ " FROM employee e inner join user u on u.user_id=e.user_id  "
+
+			+ "where  e.role_id = 'R5' and  e.role_id = 'R6'", nativeQuery = true)
+
+	List<Map> getEmployeeByRole();
+
+	
+	@Query("Select distinct new map(e.eId as id,e.email as email,e. profileUrl as profileUrl,e.userCredientials.uid as uid,e.firstName as firstName,e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId, "
+			+ "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,d.designationName as designationName,e.profileUrl as profileUrl,e.createdAt as createdAt,e.reportingTo as reportingTo,CONCAT(ee.firstName ,' ', ee.lastName) as ReporterName) from Employee e "
+			+ "left JOIN Employee ee ON ee.eId = e.reportingTo "
+			+ "INNER JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id ORDER BY e.createdAt DESC")
+
+	List<Map> getAllEmployeeLists();
 
 	/*
 	 * @Query("Select new map(e.eId as id,e.email as email,e.firstName as firstName,e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId, "

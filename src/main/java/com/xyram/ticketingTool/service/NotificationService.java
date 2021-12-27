@@ -1,8 +1,5 @@
 package com.xyram.ticketingTool.service;
 
-import javax.management.Notification;
-
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.xyram.ticketingTool.apiresponses.ApiResponse;

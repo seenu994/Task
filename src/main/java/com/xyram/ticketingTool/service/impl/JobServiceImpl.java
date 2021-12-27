@@ -14,7 +14,6 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 
-import org.hibernate.criterion.CriteriaQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -30,11 +29,9 @@ import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
-import com.sun.mail.iap.Response;
 import com.xyram.ticketingTool.Communication.PushNotificationCall;
 import com.xyram.ticketingTool.Communication.PushNotificationRequest;
 import com.xyram.ticketingTool.Repository.ApplicationCommentsRepository;
-
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
 import com.xyram.ticketingTool.Repository.JobApplicationRepository;
 import com.xyram.ticketingTool.Repository.JobInterviewRepository;
@@ -44,27 +41,19 @@ import com.xyram.ticketingTool.Repository.UserRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.email.EmailService;
 import com.xyram.ticketingTool.entity.ApplicationComments;
-import com.xyram.ticketingTool.entity.Client;
-import com.xyram.ticketingTool.entity.CompanyWings;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.JobApplication;
 import com.xyram.ticketingTool.entity.JobInterviews;
 import com.xyram.ticketingTool.entity.JobOffer;
 import com.xyram.ticketingTool.entity.JobOpenings;
 import com.xyram.ticketingTool.entity.Notifications;
-import com.xyram.ticketingTool.entity.Ticket;
 import com.xyram.ticketingTool.enumType.JobApplicationStatus;
-import com.xyram.ticketingTool.enumType.JobInterviewStatus;
 import com.xyram.ticketingTool.enumType.JobOfferStatus;
 import com.xyram.ticketingTool.enumType.JobOpeningStatus;
 import com.xyram.ticketingTool.enumType.NotificationType;
 import com.xyram.ticketingTool.enumType.UserRole;
-import com.xyram.ticketingTool.enumType.UserStatus;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.request.InterviewRoundReviewRequest;
-import com.xyram.ticketingTool.request.JobApplicationSearchRequest;
-import com.xyram.ticketingTool.request.JobInterviewsRequest;
-import com.xyram.ticketingTool.request.JobOpeningSearchRequest;
 import com.xyram.ticketingTool.service.JobService;
 import com.xyram.ticketingTool.service.NotificationService;
 import com.xyram.ticketingTool.util.ResponseMessages;
@@ -341,6 +330,47 @@ public class JobServiceImpl implements JobService {
 			jobAppObj.setCreatedBy(userDetail.getUserId());
 			jobAppObj.setJobApplicationSatus(JobApplicationStatus.APPLIED);
 			if (jobAppRepository.save(jobAppObj) != null) {
+				Employee empObj=new Employee();
+				List<Map> EmployeeByRole = employeeRepository.getAllEmployeeLists();
+				
+
+				for (Map employeeNotification : EmployeeByRole) {
+					Map request = new HashMap<>();
+					request.put("id", employeeNotification.get("id"));
+					request.put("uid", employeeNotification.get("uid"));
+					request.put("title", "EMPLOYEE CREATED");
+					request.put("body", " employee Created - " + empObj.getRoleId());
+					pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 12,
+							NotificationType.EMPLOYEE_CREATED.toString()));
+
+				}
+				// inserting notification details
+				Notifications notifications = new Notifications();
+				notifications.setNotificationDesc("employee created - " + empObj.getFirstName());
+				notifications.setNotificationType(NotificationType.JOB_APPLOCATION_CREATED);
+				notifications.setSenderId(empObj.getReportingTo());
+				notifications.setReceiverId(userDetail.getUserId());
+				notifications.setSeenStatus(false);
+				notifications.setCreatedBy(userDetail.getUserId());
+				notifications.setCreatedAt(new Date());
+				notifications.setUpdatedBy(userDetail.getUserId());
+				notifications.setLastUpdatedAt(new Date());
+
+				notificationService.createNotification(notifications);
+				UUID uuid = UUID.randomUUID();
+				String uuidAsString = uuid.toString();
+				if(empObj!=null) {
+					String name = null;
+
+				HashMap mailDetails = new HashMap();
+				mailDetails.put("toEmail", empObj.getEmail());
+				mailDetails.put("subject", name + ", " + "Here's your new PASSWORD");
+				mailDetails.put("message", "Hi " + name
+						+ ", \n\n We received a request to reset the password for your Account. \n\n Here's your new PASSWORD Link is: "
+						+ application_url + "/update-password" + "?key=" + uuidAsString
+						+ "\n\n Thanks for helping us keep your account secure.\n\n Xyram Software Solutions Pvt Ltd.");
+				emailService.sendMail(mailDetails);
+				}
 				response.setSuccess(true);
 				response.setMessage("New Job Application Created");
 			} else {
