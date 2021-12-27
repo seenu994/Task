@@ -55,6 +55,7 @@ import com.xyram.ticketingTool.Communication.PushNotificationRequest;
 import com.xyram.ticketingTool.Repository.CommentRepository;
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
 import com.xyram.ticketingTool.Repository.NotificationRepository;
+import com.xyram.ticketingTool.Repository.ProjectMemberRepository;
 import com.xyram.ticketingTool.Repository.ProjectRepository;
 import com.xyram.ticketingTool.Repository.TicketAssignRepository;
 import com.xyram.ticketingTool.Repository.TicketRepository;
@@ -65,6 +66,7 @@ import com.xyram.ticketingTool.entity.Comments;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.JobOpenings;
 import com.xyram.ticketingTool.entity.Notifications;
+import com.xyram.ticketingTool.entity.ProjectMembers;
 import com.xyram.ticketingTool.entity.Projects;
 import com.xyram.ticketingTool.entity.Ticket;
 import com.xyram.ticketingTool.entity.TicketAssignee;
@@ -73,6 +75,7 @@ import com.xyram.ticketingTool.enumType.NotificationType;
 import com.xyram.ticketingTool.enumType.TicketAssigneeStatus;
 import com.xyram.ticketingTool.enumType.TicketStatus;
 import com.xyram.ticketingTool.enumType.UserRole;
+import com.xyram.ticketingTool.enumType.UserStatus;
 import com.xyram.ticketingTool.exception.ResourceNotFoundException;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.request.JobOpeningSearchRequest;
@@ -130,6 +133,9 @@ public class TicketServiceImpl implements TicketService {
 
 	@Autowired
 	TicketAssignRepository ticketAssigneeRepository;
+	
+	@Autowired
+	ProjectMemberRepository memberRepo;
 
 	/*
 	 * @Autowired TicketCommentServiceImpl commentService;
@@ -344,6 +350,7 @@ public class TicketServiceImpl implements TicketService {
 			response.setContent(content);
 			if(assigneeId != null) {
 				Employee employeeObj = employeeRepository.getById(assigneeId);
+				if(employeeObj.getStatus() != UserStatus.OFFLINE) {
 				TicketAssignee assignee = new TicketAssignee();
 				assignee.setEmployeeId(assigneeId);
 				assignee.setTicketId(tickets.getId());
@@ -354,12 +361,13 @@ public class TicketServiceImpl implements TicketService {
 				tickets.setStatus(TicketStatus.ASSIGNED);
 				ticketrepository.save(tickets);
 				ticketAssigneeRepository.save(assignee);
+				}
 //					
-				Map request = new HashMap<>();
-				request.put("uid", employeeObj.getUserCredientials().getUid());
-				request.put("title", "TICKET_ASSIGNED");
-				request.put("body","Ticket Assigned - " + tickets.getTicketDescription() );
-				pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 13, NotificationType.TICKET_ASSIGNED.toString()));
+//				Map request = new HashMap<>();
+//				request.put("uid", employeeObj.getUserCredientials().getUid());
+//				request.put("title", "TICKET_ASSIGNED");
+//				request.put("body","Ticket Assigned - " + tickets.getTicketDescription() );
+//				pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 13, NotificationType.TICKET_ASSIGNED.toString()));
 //				
 				//Inserting Notifications Details
 				notifications.setNotificationDesc("Ticket Assigned - " + tickets.getTicketDescription());

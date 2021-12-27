@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Random;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,6 +17,7 @@ import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -29,30 +31,39 @@ import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
+import com.xyram.ticketingTool.Communication.PushNotificationCall;
+import com.xyram.ticketingTool.Communication.PushNotificationRequest;
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
 import com.xyram.ticketingTool.Repository.PermissionRepository;
 import com.xyram.ticketingTool.Repository.ProjectMemberRepository;
+import com.xyram.ticketingTool.Repository.RoleMasterRepository;
 import com.xyram.ticketingTool.Repository.RoleRepository;
 import com.xyram.ticketingTool.Repository.UserPermissionRepository;
 import com.xyram.ticketingTool.Repository.UserRepository;
 import com.xyram.ticketingTool.Repository.VendorRepository;
-
+import com.xyram.ticketingTool.Repository.VendorTypeRepository;
 import com.xyram.ticketingTool.admin.model.User;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
+import com.xyram.ticketingTool.email.EmailService;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.JobVendorDetails;
+import com.xyram.ticketingTool.entity.Notifications;
 import com.xyram.ticketingTool.entity.ProjectMembers;
 import com.xyram.ticketingTool.entity.Projects;
 import com.xyram.ticketingTool.entity.Role;
+import com.xyram.ticketingTool.entity.RoleMasterTable;
 import com.xyram.ticketingTool.entity.Ticket;
 import com.xyram.ticketingTool.entity.UserPermissions;
-
+import com.xyram.ticketingTool.entity.VendorType;
+import com.xyram.ticketingTool.enumType.NotificationType;
 import com.xyram.ticketingTool.enumType.ProjectMembersStatus;
 import com.xyram.ticketingTool.enumType.UserRole;
 import com.xyram.ticketingTool.enumType.UserStatus;
 import com.xyram.ticketingTool.exception.ResourceNotFoundException;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.EmployeeService;
+import com.xyram.ticketingTool.service.NotificationService;
+import com.xyram.ticketingTool.service.TicketAttachmentService;
 import com.xyram.ticketingTool.ticket.config.PermissionConfig;
 import com.xyram.ticketingTool.util.ResponseMessages;
 
@@ -63,7 +74,7 @@ import com.xyram.ticketingTool.util.ResponseMessages;
  */
 
 @Service
-@Transactional
+
 public class EmpoloyeeServiceImpl implements EmployeeService {
 
 	@Autowired
@@ -95,9 +106,34 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 	@Autowired
 	UserPermissionRepository userPermissionConfig;
+
+	@Autowired
+	RoleMasterRepository masterRepo;
+
+	@Autowired
+	VendorTypeRepository vendorRepo;
+
+	@Autowired
+	EmpoloyeeServiceImpl employeeServiceImpl;
+	@Autowired
+	PushNotificationCall pushNotificationCall;
+	@Autowired
+	PushNotificationRequest pushNotificationRequest;
+
+	@Autowired
+	CurrentUser userDetail;
+
+	@Autowired
+	NotificationService notificationService;
 	
-//	@Autowired
-//	VendorTypeRepository vendorRepo;
+	@Autowired
+	EmailService emailService;
+
+	@Autowired
+	TicketAttachmentService attachmentService;
+	
+	@Value("${APPLICATION_URL}")
+	private String application_url;
 
 	static ChannelSftp channelSftp = null;
 	static Session session = null;
@@ -156,22 +192,53 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				employee.setUserCredientials(user);
 				employee.setProfileUrl("https://covidtest.xyramsoft.com/image/ticket-attachment/user-default-pic.png");
 				Employee employeeNew = employeeRepository.save(employee);
-                 User useredit = userRepository.getById(user.getId());
-                 useredit.setScopeId(employeeNew.geteId());
-                 userRepository.save(useredit);
-				// Assigning default project to Developer
-//				if (employee.getRoleId().equals("R3")) {
-//					System.out.println("Inside employee.getRoleId() - " + employee.getRoleId());
-//					ProjectMembers projectMember = new ProjectMembers();
-//					projectMember.setCreatedAt(new Date());
-//					projectMember.setLastUpdatedAt(new Date());
-//					projectMember.setUpdatedBy(currentUser.getUserId());
-//					projectMember.setCreatedBy(currentUser.getUserId());
-//					projectMember.setStatus(ProjectMembersStatus.ACTIVE);
-//					projectMember.setProjectId("2c9fab1f7bbeee88017bbf22f0af0002");
-//					projectMember.setEmployeeId(employee.geteId());
-//					projectMemberRepository.save(projectMember);
-//				}
+				User useredit = userRepository.getById(user.getId());
+				useredit.setScopeId(employeeNew.geteId());
+				userRepository.save(useredit);
+				
+				// sending notification starts here..!
+				List<Map> EmployeeList = employeeRepository.getEmployeeBYReportingToId(employee.getReportingTo());
+				Employee emp = new Employee();
+
+				for (Map employeeNotification : EmployeeList) {
+					Map request = new HashMap<>();
+					request.put("id", employeeNotification.get("id"));
+					request.put("uid", employeeNotification.get("uid"));
+					request.put("title", "EMPLOYEE CREATED");
+					request.put("body", " employee Created - " + emp.getFirstName());
+					pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 12,
+							NotificationType.EMPLOYEE_CREATED.toString()));
+
+				}
+				// inserting notification details
+				Notifications notifications = new Notifications();
+				notifications.setNotificationDesc("employee created - " + emp.getFirstName());
+				notifications.setNotificationType(NotificationType.EMPLOYEE_CREATED);
+				notifications.setSenderId(emp.getReportingTo());
+				notifications.setReceiverId(userDetail.getUserId());
+				notifications.setSeenStatus(false);
+				notifications.setCreatedBy(userDetail.getUserId());
+				notifications.setCreatedAt(new Date());
+				notifications.setUpdatedBy(userDetail.getUserId());
+				notifications.setLastUpdatedAt(new Date());
+
+				notificationService.createNotification(notifications);
+				UUID uuid = UUID.randomUUID();
+				String uuidAsString = uuid.toString();
+				if(emp!=null) {
+					String name = null;
+
+				HashMap mailDetails = new HashMap();
+				mailDetails.put("toEmail", employee.getEmail());
+				mailDetails.put("subject", name + ", " + "Here's your new PASSWORD");
+				mailDetails.put("message", "Hi " + name
+						+ ", \n\n We received a request to reset the password for your Account. \n\n Here's your new PASSWORD Link is: "
+						+ application_url + "/update-password" + "?key=" + uuidAsString
+						+ "\n\n Thanks for helping us keep your account secure.\n\n Xyram Software Solutions Pvt Ltd.");
+				emailService.sendMail(mailDetails);
+				}
+				// end of the notification part...!
+
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.EMPLOYEE_ADDED);
 				Map content = new HashMap();
@@ -228,7 +295,6 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	public ApiResponse getAllEmployee(Pageable pageable) {
 		Page<Map> employeeList = employeeRepository.getAllEmployeeList(pageable);
 		Map content = new HashMap();
-
 		content.put("employeeList", employeeList);
 		ApiResponse response = new ApiResponse(true);
 		response.setSuccess(true);
@@ -285,14 +351,16 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		ApiResponse response = new ApiResponse(false);
 		Employee employee = employeeRepository.getById(employeeId);
 		User user = userRepository.getById(employee.getUserCredientials().getId());
-		
+
 		if (employee != null) {
 			employee.setFirstName(employeeRequest.getFirstName());
 			employee.setLastName(employeeRequest.getLastName());
-			employee.setLastUpdatedAt(new Date());;
+			employee.setLastUpdatedAt(new Date());
+			;
 			employee.setMiddleName(employeeRequest.getMiddleName());
 			employee.setMobileNumber(employeeRequest.getMobileNumber());
 			employee.setPassword(employeeRequest.getPassword());
+			employee.setReportingTo(employeeRequest.getReportingTo());
 			employee.setRoleId(employeeRequest.getRoleId());
 			Role role = roleRepository.getById(employeeRequest.getRoleId());
 			employee.setDesignationId(employeeRequest.getDesignationId());
@@ -570,8 +638,8 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		int SFTPPORT = 22; // SFTP Port Number
 		String SFTPUSER = "ubuntu"; // User Name
 		String SFTPPASS = ""; // Password
-		String SFTPKEY = "/home/ubuntu/tomcat/webapps/Ticket_tool-0.0.1-SNAPSHOT/WEB-INF/classes/Covid-Phast-Prod.ppk";
-		String SFTPWORKINGDIRAADMIN = "/home/ubuntu/tomcat/webapps/image/ticket-attachment";// Source Directory on SFTP
+		String SFTPKEY = "/home/ubuntu/tomcat-be/webapps/Ticket_tool-0.0.1-SNAPSHOT/WEB-INF/classes/Covid-Phast-Prod.ppk";
+		String SFTPWORKINGDIRAADMIN = "/home/ubuntu/tomcat-be/webapps/image/ticket-attachment";// Source Directory on SFTP
 																							// server
 		String fileNameOriginal = fileName;
 		try {
@@ -692,8 +760,10 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	public ApiResponse getEmployeeDetailsById(String employeeId) {
 		ApiResponse response = new ApiResponse(false);
 		Map employee = employeeRepository.getEmployeeBYId(employeeId);
+		List<Map> reportees = employeeRepository.getReortingList(employeeId);
 		Map content = new HashMap();
 		content.put("employeeDetails", employee);
+		content.put("reportees", reportees);
 		if (employee != null) {
 			response.setSuccess(true);
 			response.setMessage("Employee Retrieved Successfully");
@@ -709,9 +779,6 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		return response;
 	}
 
-	
-	
-	
 	@Override
 	public ApiResponse getJobVendor() {
 		ApiResponse response = new ApiResponse(false);
@@ -757,7 +824,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	@Override
 	public ApiResponse getJobVendorById(String vendorId) {
 		ApiResponse response = new ApiResponse(false);
-	    Map employee = vendorRepository.getJobVendorById(vendorId);
+		Map employee = vendorRepository.getJobVendorById(vendorId);
 		Map content = new HashMap();
 		content.put("employee", employee);
 		if (employee != null) {
@@ -774,18 +841,18 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 		return response;
 	}
-	
+
 	@Override
-	public ApiResponse getListByAccessToken(){
+	public ApiResponse getListByAccessToken() {
 		ApiResponse response = new ApiResponse(false);
 		String accessToken = currentUser.getUserId();
-		
-		if(accessToken != null) {
+
+		if (accessToken != null) {
 			Map employee = employeeRepository.getbyAccessToken(accessToken);
 			response.setSuccess(true);
 			response.setMessage("Employee Retrieved Successfully");
 			response.setContent(employee);
-		}else {
+		} else {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Access token is required");
 		}
 		return response;
@@ -796,14 +863,14 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		// TODO Auto-generated method stub
 		ApiResponse response = new ApiResponse(false);
 		JobVendorDetails vendor = vendorRepository.getById(vendorId);
-		if(vendor!=null) {
+		if (vendor != null) {
 			vendor.setName(vendorRequest.getName());
 			vendor.setEmail(vendorRequest.getEmail());
 			vendor.setMobileNumber(vendorRequest.getMobileNumber());
 			response.setSuccess(true);
 			response.setMessage("Edit successful");
-		
-		}else {
+
+		} else {
 			response.setSuccess(false);
 			response.setMessage("Vendor Id is required");
 			response.setContent(null);
@@ -814,12 +881,33 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	@Override
 	public ApiResponse getJobVendorType() {
 		ApiResponse response = new ApiResponse(false);
-//		List<VendorType> jobVendors = VendorRepository.getJobVendorType();
+		List<VendorType> jobVendors = vendorRepo.getJobVendorType();
+		Map content = new HashMap();
+		content.put("jobVendorType", jobVendors);
+		if (content != null) {
+			response.setSuccess(true);
+			response.setMessage("VendorType Retrieved Successfully");
+			response.setContent(content);
+		}
+
+		else {
+			response.setSuccess(false);
+			response.setMessage("Could not retrieve data");
+			response.setContent(null);
+		}
+
+		return response;
+	}
+
+	@Override
+	public ApiResponse getEmployeeByReportingId(String reportingId) {
+		ApiResponse response = new ApiResponse(false);
+//		List<Map> reportees = employeeRepository.getReortingList(reportingId);
 //		Map content = new HashMap();
-//		content.put("jobVendorType", jobVendors);
+//		content.put("reportees", reportees);
 //		if (content != null) {
 //			response.setSuccess(true);
-//			response.setMessage("VendorType Retrieved Successfully");
+//			response.setMessage("Reportees Retrieved Successfully");
 //			response.setContent(content);
 //		}
 //
@@ -828,6 +916,152 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 //			response.setMessage("Could not retrieve data");
 //			response.setContent(null);
 //		}
+//
+//		return response;
+		
+		return null;
+	}
+
+	@Override
+	public ApiResponse getInfraEmployee() {
+		ApiResponse response = new ApiResponse(false);
+		List<Employee> infraUsers = employeeRepository.getInfraEmployee();
+		Map content = new HashMap();
+		content.put("infraUsers", infraUsers);
+		if (content != null) {
+			response.setSuccess(true);
+			response.setMessage("infraUsers Retrieved Successfully");
+			response.setContent(content);
+		}
+
+		else {
+			response.setSuccess(false);
+			response.setMessage("Could not retrieve data");
+			response.setContent(null);
+		}
+
+		return response;
+	}
+
+	@Override
+	public ApiResponse getAllRolePermissions(String roleId) {
+		ApiResponse response = new ApiResponse(false);
+		List<RoleMasterTable> rolePermissions = masterRepo.getAllRolePermissions(roleId);
+		Map content = new HashMap();
+		content.put("rolePermission", rolePermissions);
+		if (content != null) {
+			response.setSuccess(true);
+			response.setMessage("infraUsers Retrieved Successfully");
+			response.setContent(content);
+		}
+
+		else {
+			response.setSuccess(false);
+			response.setMessage("Could not retrieve data");
+			response.setContent(null);
+		}
+
+		return response;
+	}
+
+	@Override
+	public ApiResponse updateRolePermissions(String roleId, String modules, RoleMasterTable request) {
+		ApiResponse response = new ApiResponse(false);
+		RoleMasterTable rolePermissions = masterRepo.updateRolePermissions(roleId, modules);
+		List<UserPermissions> permissionUser = userPermissionConfig.getByRole(roleId);
+		List<String> permissionRole = userPermissionConfig.getDetailsyRole(roleId);
+
+		for (UserPermissions permissions : permissionUser) {
+			if (modules.equals("EMPLOYEES_PERMISSION")) {
+				permissions.setEmpModPermission(request.getPermissions());
+				userPermissionConfig.save(permissions);
+			}
+
+			else if (modules.equals("PROJECTS_PERMISSION")) {
+				permissions.setProjectModPermission(request.getPermissions());
+				userPermissionConfig.save(permissions);
+			}
+
+			else if (modules.equals("TICKETS_PERMISSION")) {
+				permissions.setTicketModPermission(request.getPermissions());
+				userPermissionConfig.save(permissions);
+			}
+
+			else if (modules.equals("JOBOPENINGS_PERMISSION")) {
+				permissions.setJobOpeningModPermission(request.getPermissions());
+				userPermissionConfig.save(permissions);
+			}
+
+			else if (modules.equals("JOBAPPLICATIONS_PERMISSION")) {
+				permissions.setJobAppModPermission(request.getPermissions());
+				userPermissionConfig.save(permissions);
+			}
+
+			else if (modules.equals("JOBINTERVIEWS_PERMISSION")) {
+				permissions.setJobInterviewsModPermission(request.getPermissions());
+				userPermissionConfig.save(permissions);
+			}
+
+			else if (modules.equals("JOBOFFERS_PERMISSION")) {
+				permissions.setJobOfferModPermission(request.getPermissions());
+				userPermissionConfig.save(permissions);
+			}
+
+			else if (modules.equals("JOBVENDORS_PERMISSION")) {
+				permissions.setJobVendorsModPermission(request.getPermissions());
+				userPermissionConfig.save(permissions);
+			}
+		}
+		if (rolePermissions != null) {
+//			rolePermissions.setModules(request.getModules());
+			rolePermissions.setPermissions(request.getPermissions());
+			masterRepo.save(rolePermissions);
+			response.setSuccess(true);
+			response.setMessage("Permissions Updated Successfully");
+		}
+
+		else {
+			response.setSuccess(false);
+			response.setMessage("Could not update data");
+			response.setContent(null);
+		}
+
+		return response;
+	}
+
+	@Override
+	public ApiResponse updateOfflineStatus(String infraUserId) {
+		ApiResponse response = new ApiResponse(false);
+			Employee employee = employeeRepository.getById(infraUserId);
+			if (employee != null) {
+                if(currentUser.getUserRole().equals("INFRA_ADMIN") || employee.getUserCredientials().getUserRole().equals("INFRA_USER")) {
+				employee.setStatus(UserStatus.OFFLINE);
+				employeeRepository.save(employee);
+//				User user = userRepository.getById(employee.getUserCredientials().getId());
+//				user.setStatus(UserStatus.OFFLINE);
+//				userRepository.save(user);
+
+				// Employee employeere=new Employee();z
+
+				response.setSuccess(true);
+				response.setMessage(ResponseMessages.STATUS_UPDATE);
+				response.setContent(null);
+                }
+                
+                else
+                {
+                	response.setSuccess(false);
+    				response.setMessage("Please send valid employee id ");
+    				response.setContent(null);	
+                }
+			}
+			
+			else
+			{
+				response.setSuccess(false);
+				response.setMessage("Invalid Employee Id");
+				response.setContent(null);	
+			}
 
 		return response;
 	}

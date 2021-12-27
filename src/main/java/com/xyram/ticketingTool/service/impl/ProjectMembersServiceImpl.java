@@ -6,10 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.Session;
 import com.xyram.ticketingTool.Communication.PushNotificationCall;
 import com.xyram.ticketingTool.Communication.PushNotificationRequest;
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
@@ -25,6 +30,7 @@ import com.xyram.ticketingTool.Repository.ProjectMemberRepository;
 import com.xyram.ticketingTool.Repository.ProjectRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
+import com.xyram.ticketingTool.email.EmailService;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.Notifications;
 import com.xyram.ticketingTool.entity.ProjectMembers;
@@ -78,6 +84,20 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 
 	@Autowired
 	PushNotificationRequest pushNotificationRequest;
+
+	@Autowired
+	CurrentUser userDetail;
+
+	@Autowired
+	EmailService emailService;
+
+	@Value("${APPLICATION_URL}")
+	private String application_url;
+
+	static ChannelSftp channelSftp = null;
+	static Session session = null;
+	static Channel channel = null;
+	static String PATHSEPARATOR = "/";
 
 	@Override
 	public ProjectMembers addprojectMember(ProjectMembers projectMembers) {
@@ -149,7 +169,20 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 							// notificationsRepository.save(notifications);
 							notificationService.createNotification(notifications);
 						}
+						UUID uuid = UUID.randomUUID();
+						String uuidAsString = uuid.toString();
+						if (employeeObj != null) {
+							String name = null;
 
+							HashMap mailDetails = new HashMap();
+							mailDetails.put("toEmail", employeeObj.getEmail());
+							mailDetails.put("subject", name + ", " + "Here's your new PASSWORD");
+							mailDetails.put("message", "Hi " + name
+									+ ", \n\n We received a request to reset the password for your Account. \n\n Here's your new PASSWORD Link is: "
+									+ application_url + "/update-password" + "?key=" + uuidAsString
+									+ "\n\n Thanks for helping us keep your account secure.\n\n Xyram Software Solutions Pvt Ltd.");
+							emailService.sendMail(mailDetails);
+						}
 					}
 					response.setSuccess(true);
 					response.setMessage(ResponseMessages.PROJECT_MEMBERS_ADDED);
@@ -337,7 +370,6 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 	@Override
 	public IssueTrackerResponse getProjectMembersInProject(String projectId) {
 
-
 		IssueTrackerResponse response = new IssueTrackerResponse();
 		List<Map> projectMemberList = projectMemberRepository.getMemberByProject(projectId);
 
@@ -349,8 +381,6 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 
 	}
 
-	
-	
 	@Override
 	public IssueTrackerResponse makeProjectAdmin(String employeeId, String projectId) {
 		IssueTrackerResponse issueTrackerResponse = new IssueTrackerResponse();
@@ -358,7 +388,7 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 		ProjectMembers projectMembers = projectMemberRepository.getMemberInProject(employeeId, projectId);
 		if (projectMembers != null) {
 			String isadmin = "1";
-			projectMemberRepository.updateProjectAdmin(projectId, isadmin);
+			projectMemberRepository.updateProjectAdmin(projectMembers.getId(), isadmin);
 			issueTrackerResponse.setStatus("success");
 			return issueTrackerResponse;
 		} else {
@@ -375,7 +405,7 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 		ProjectMembers projectMembers = projectMemberRepository.getMemberInProject(employeeId, projectId);
 		if (projectMembers != null) {
 			String isadmin = "0";
-			projectMemberRepository.updateProjectAdmin(projectId, isadmin);
+			projectMemberRepository.updateProjectAdmin(projectMembers.getId(), isadmin);
 			issueTrackerResponse.setStatus("true");
 
 			return issueTrackerResponse;

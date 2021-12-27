@@ -34,7 +34,7 @@ public interface ProjectMemberRepository extends JpaRepository<ProjectMembers, S
 			+ " where p.projectId = :projectId and p.employeeId = :employeeId and  p.status='ACTIVE' ")
 	ProjectMembers getMemberInProject(String employeeId, String projectId);
 
-	@Query("select new map( p.id as id , e.eId as employeeId ,CONCAT(e.firstName ,' ', e.lastName) as employeeName) from ProjectMembers p inner join Employee e on p.employeeId=e.eId "
+	@Query("select new map( p.id as id , e.eId as employeeId ,CONCAT(e.firstName ,' ', e.lastName) as employeeName,p.isAdmin as isAdmin) from ProjectMembers p inner join Employee e on p.employeeId=e.eId "
 			+ " where p.projectId = :projectId  and  p.status='ACTIVE' ")
 	List<Map> getMemberByProject(String projectId);
 
@@ -44,7 +44,7 @@ public interface ProjectMemberRepository extends JpaRepository<ProjectMembers, S
 
 	@Transactional
 	@Modifying(clearAutomatically = true)
-	@Query("update ProjectMembers p set p.isAdmin=:isAdmin  where p.id=:projectMemberId ")
+	@Query(value="update project_members p set p.is_admin=:isAdmin  where p.project_member_id=:projectMemberId ",nativeQuery = true)
 	Integer updateProjectAdmin(String projectMemberId, String isAdmin);
 }
 /*

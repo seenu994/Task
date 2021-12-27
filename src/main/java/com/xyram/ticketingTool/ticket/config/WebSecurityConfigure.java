@@ -70,11 +70,12 @@ public class WebSecurityConfigure extends WebSecurityConfigurerAdapter {
 	public CorsConfigurationSource corsConfigurationSource() {
 		final CorsConfiguration configuration = new CorsConfiguration();
 		configuration.setAllowedOrigins(ImmutableList.of("*"));
-		configuration.setAllowedMethods(ImmutableList.of("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH"));
+		configuration.setAllowedMethods(ImmutableList.of("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH" ,"OPTIONS"));
+				
 		// setAllowCredentials(true) is important, otherwise:
 		// The value of the 'Access-Control-Allow-Origin' header in the response must
 		// not be the wildcard '*' when the request's credentials mode is 'include'.
-		configuration.setAllowCredentials(true);
+		configuration.setAllowCredentials(false);
 		// setAllowedHeaders is important! Without it, OPTIONS preflight request
 		// will fail with 403 Invalid CORS request
 		configuration.setAllowedHeaders(ImmutableList.of("*"));
@@ -87,7 +88,7 @@ public class WebSecurityConfigure extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 		// We don't need CSRF for this example
-		httpSecurity.csrf().disable()
+		httpSecurity.csrf().disable().cors().and()
 				// dont authenticate this particular request
 		        .authorizeRequests()
 				 .antMatchers(AuthUtil.NON_SECURE_PATHS).permitAll()

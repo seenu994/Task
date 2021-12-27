@@ -32,7 +32,7 @@ public class InterviewRoundReviewRequest {
 
 	public String getFeedback() {
 		return feedback;
-	}
+	}	
 
 	public void setFeedback(String feedback) {
 		this.feedback = feedback;

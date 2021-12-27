@@ -68,7 +68,7 @@ class ProjectMemberContoller {
 		return  projectMemberService.unassignProjectToEmployee(member);
 	}
 
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllProjectByEmployeeId/{EmployeeId}",AuthConstants.DEVELOPER_BASEPATH + "/getAllProjectByEmployeeId/{EmployeeId}",AuthConstants.INFRA_USER_BASEPATH + "/getAllProjectByEmployeeId/{EmployeeId}",AuthConstants.HR_ADMIN_BASEPATH + "/getAllProjectByEmployeeId/{EmployeeId}" })
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllProjectByEmployeeId/{EmployeeId}",AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllProjectByEmployeeId/{EmployeeId}",AuthConstants.DEVELOPER_BASEPATH + "/getAllProjectByEmployeeId/{EmployeeId}",AuthConstants.INFRA_USER_BASEPATH + "/getAllProjectByEmployeeId/{EmployeeId}",AuthConstants.HR_ADMIN_BASEPATH + "/getAllProjectByEmployeeId/{EmployeeId}" })
 	public ApiResponse getAllProjectByEmployeeId(@PathVariable String EmployeeId) {
 		logger.info("inside ProjectMemberContoller :: getAllProjectByEmployeeId ");
 		return projectMemberService.getAllProjectByEmployeeId(EmployeeId);
@@ -94,7 +94,7 @@ class ProjectMemberContoller {
 		return projectMemberService.removeProjectAdmin(employeeId, projectId);
 	}
 
-	@GetMapping(value= {AuthConstants.DEVELOPER_BASEPATH +"/isProjectAdmin",AuthConstants.INFRA_USER_BASEPATH +"/isProjectAdmin"})
+	@GetMapping(value= {AuthConstants.DEVELOPER_BASEPATH +"/isProjectAdmin",AuthConstants.INFRA_USER_BASEPATH +"/isProjectAdmin",AuthConstants.INFRA_ADMIN_BASEPATH +"/isProjectAdmin"})
 	public ProjectAdminResponse isProjectAdmin(@RequestParam String employeeId, @RequestParam String projectId) {
 		logger.info("indide ProjectMembersController :: MakeProjectAdmin");
 		return projectMemberService.isProjectAdmin(employeeId, projectId);

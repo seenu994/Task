@@ -83,8 +83,8 @@ class TicketController {
 		return ticketService.onHoldTicket(ticketId);
 	}
 
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editTicket/{ticketId}",
-			AuthConstants.DEVELOPER_BASEPATH + "/editTicket/{ticketId}",AuthConstants.INFRA_ADMIN_BASEPATH + "/editTicket/{ticketId}" })
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editTicket/{ticketId}",AuthConstants.HR_ADMIN_BASEPATH + "/editTicket/{ticketId}",AuthConstants.INFRA_USER_BASEPATH + "/editTicket/{ticketId}",
+			AuthConstants.HR_BASEPATH + "/editTicket/{ticketId}",AuthConstants.DEVELOPER_BASEPATH + "/editTicket/{ticketId}",AuthConstants.INFRA_ADMIN_BASEPATH + "/editTicket/{ticketId}" })
 	public ApiResponse editTicket(@RequestPart(name = "files", required = false) MultipartFile[] files,@PathVariable String ticketId, @RequestPart String ticketRequest) {
 //		logger.info("Recive request to edit ticket by id:" + ticketRequest.getId());
 		return ticketService.editTicket(files,ticketId, ticketRequest);
@@ -109,7 +109,7 @@ class TicketController {
 		return ticketService.addComment(commentObj);
 	}
 
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editComment",
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editComment",AuthConstants.HR_ADMIN_BASEPATH + "/editComment",
 			AuthConstants.DEVELOPER_BASEPATH + "/editComment", 
 			AuthConstants.INFRA_USER_BASEPATH + "/editComment",AuthConstants.INFRA_ADMIN_BASEPATH + "/editComment" })
 	public ApiResponse editComment(@RequestBody Comments commentObj) {
@@ -119,7 +119,7 @@ class TicketController {
 		return ticketService.editComment(commentObj);
 	}
 
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/deleteComment",
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/deleteComment",AuthConstants.HR_ADMIN_BASEPATH + "/deleteComment",
 			AuthConstants.DEVELOPER_BASEPATH + "/deleteComment", 
 			AuthConstants.INFRA_USER_BASEPATH + "/deleteComment",AuthConstants.INFRA_ADMIN_BASEPATH + "/deleteComment" })
 	public ApiResponse deleteComment(@RequestBody Comments commentObj) {
