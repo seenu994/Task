@@ -331,22 +331,22 @@ public class JobServiceImpl implements JobService {
 			jobAppObj.setJobApplicationSatus(JobApplicationStatus.APPLIED);
 			if (jobAppRepository.save(jobAppObj) != null) {
 				Employee empObj=new Employee();
-				List<Map> EmployeeByRole = employeeRepository.getAllEmployeeLists();
+				List<Map> EmployeeByRole = employeeRepository.getListOfALlEmployee();
 				
 
 				for (Map employeeNotification : EmployeeByRole) {
 					Map request = new HashMap<>();
 					request.put("id", employeeNotification.get("id"));
 					request.put("uid", employeeNotification.get("uid"));
-					request.put("title", "EMPLOYEE CREATED");
-					request.put("body", " employee Created - " + empObj.getRoleId());
+					request.put("title", "JOB CREATED");
+					request.put("body", " job Created - ");
 					pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 12,
 							NotificationType.EMPLOYEE_CREATED.toString()));
 
-				}
+				
 				// inserting notification details
 				Notifications notifications = new Notifications();
-				notifications.setNotificationDesc("employee created - " + empObj.getFirstName());
+				notifications.setNotificationDesc("job created - " + empObj.getFirstName());
 				notifications.setNotificationType(NotificationType.JOB_APPLOCATION_CREATED);
 				notifications.setSenderId(empObj.getReportingTo());
 				notifications.setReceiverId(userDetail.getUserId());
@@ -363,7 +363,7 @@ public class JobServiceImpl implements JobService {
 					String name = null;
 
 				HashMap mailDetails = new HashMap();
-				mailDetails.put("toEmail", empObj.getEmail());
+				mailDetails.put("toEmail",employeeNotification.get("email"));
 				mailDetails.put("subject", name + ", " + "Here's your new PASSWORD");
 				mailDetails.put("message", "Hi " + name
 						+ ", \n\n We received a request to reset the password for your Account. \n\n Here's your new PASSWORD Link is: "
@@ -373,7 +373,7 @@ public class JobServiceImpl implements JobService {
 				}
 				response.setSuccess(true);
 				response.setMessage("New Job Application Created");
-			} else {
+			} }else {
 				response.setSuccess(false);
 				response.setMessage("New Job Application Not Created");
 			}
