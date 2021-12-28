@@ -1066,4 +1066,15 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		return response;
 	}
 
+	@Override
+	public ApiResponse getAllEmployeeList() {
+		List<Map> employeeList = employeeRepository.getAllEmployee();
+		Map content = new HashMap();
+		content.put("employeeList", employeeList);
+		ApiResponse response = new ApiResponse(true);
+		response.setSuccess(true);
+		response.setContent(content);
+		return response;
+	}
+
 }

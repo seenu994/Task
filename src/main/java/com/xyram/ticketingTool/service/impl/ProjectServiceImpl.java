@@ -103,8 +103,8 @@ public class ProjectServiceImpl implements ProjectService {
 		Page<Map> projectList;
 		
 		System.out.println(userDetail.getUserRole());
-	if ( userDetail.getUserRole()!=null && userDetail.getUserRole().equalsIgnoreCase("TICKETINGTOOL_ADMIN") 
-			|| userDetail.getUserRole().equalsIgnoreCase("INFRA_ADMIN")) {
+	if ( userDetail.getUserRole()!=null && (userDetail.getUserRole().equalsIgnoreCase("TICKETINGTOOL_ADMIN") 
+			|| userDetail.getUserRole().equalsIgnoreCase("INFRA_ADMIN"))) {
 		projectList = projectRepository.getAllProjectsList(pageable);
 			
 		} else
@@ -275,6 +275,29 @@ public class ProjectServiceImpl implements ProjectService {
 		response.setSuccess(true);
 		response.setContent(content);
 		return response;	
+	}
+
+	@Override
+	public ApiResponse getAllProjectList() {
+		/*
+		 * // Page<Map> projectList = projectRepository.getAllProjectLsit(pageable);
+		 */
+		List<Map> projectList;
+		
+		System.out.println(userDetail.getUserRole());
+	if ( userDetail.getUserRole()!=null && (userDetail.getUserRole().equalsIgnoreCase("TICKETINGTOOL_ADMIN") 
+			|| userDetail.getUserRole().equalsIgnoreCase("INFRA_ADMIN"))) {
+		projectList = projectRepository.getAllProject();
+			
+		} else
+			projectList = projectRepository.getAllProjectByDeveloperList(userDetail.getScopeId());
+
+		Map content = new HashMap();
+		content.put("projectList", projectList);
+		ApiResponse response = new ApiResponse(true);
+		response.setSuccess(true);
+		response.setContent(content);
+		return response;
 	}
 
 }

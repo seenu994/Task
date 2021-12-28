@@ -330,6 +330,7 @@ public class JobServiceImpl implements JobService {
 			jobAppObj.setCreatedBy(userDetail.getUserId());
 			jobAppObj.setJobApplicationSatus(JobApplicationStatus.APPLIED);
 			if (jobAppRepository.save(jobAppObj) != null) {
+				
 				/*
 				 * Employee empObj=new Employee(); List<Map> EmployeeByRole =
 				 * employeeRepository.getEmployeeByRole();
@@ -355,8 +356,8 @@ public class JobServiceImpl implements JobService {
 				 * notifications.setUpdatedBy(userDetail.getUserId());
 				 * notifications.setLastUpdatedAt(new Date());
 				 * 
-				 * notificationService.createNotification(notifications); /* UUID uuid =
-				 * UUID.randomUUID(); String uuidAsString = uuid.toString(); if(empObj!=null) {
+				 * notificationService.createNotification(notifications); UUID uuid
+				 * =UUID.randomUUID(); String uuidAsString = uuid.toString(); if(empObj!=null) {
 				 * String name = null;
 				 * 
 				 * HashMap mailDetails = new HashMap(); mailDetails.put("toEmail",
@@ -367,6 +368,7 @@ public class JobServiceImpl implements JobService {
 				 * "\n\n Thanks for helping us keep your account secure.\n\n Xyram Software Solutions Pvt Ltd."
 				 * ); emailService.sendMail(mailDetails); }
 				 */
+				 
 				response.setSuccess(true);
 				response.setMessage("New Job Application Created");
 			} else {
@@ -387,7 +389,7 @@ public class JobServiceImpl implements JobService {
 		JobApplication jobApp = jobAppRepository.getApplicationById(applicationId);
 		List<JobInterviews> jobOpening = jobInterviewRepository.getInterviewByAppListId(applicationId);
 
-		if (jobApp != null) {
+		if (jobApp != null && jobOpening!=null ) {
 			schedule.setCreatedAt(new Date());
 			schedule.setCreatedBy(userDetail.getUserId());
 			schedule.setJobInterviewStatus("SCHEDULED");
@@ -945,14 +947,14 @@ public class JobServiceImpl implements JobService {
 		List<Map> jobOpening = jobInterviewRepository.getInterviewByAppId(applicationId);
 		Map interviews = new HashMap();
 		interviews.put("interviews", jobOpening);
-		if (jobOpening != null) {
-
+		if (jobOpening.isEmpty()) {
+			response.setSuccess(false);
+			response.setMessage("Job Application Not Exist");
+			
+		} else {
 			response.setSuccess(true);
 			response.setMessage("Job Opening Detail");
 			response.setContent(interviews);
-		} else {
-			response.setSuccess(false);
-			response.setMessage("Job Application Not Exist");
 		}
 		return response;
 

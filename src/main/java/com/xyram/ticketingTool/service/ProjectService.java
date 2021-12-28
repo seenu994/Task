@@ -29,7 +29,9 @@ public interface ProjectService {
 
 	Projects getprojectById(String projectId);
 
-	ApiResponse getgenericIssues(); 
+	ApiResponse getgenericIssues();
+
+	ApiResponse getAllProjectList(); 
 
 
 }

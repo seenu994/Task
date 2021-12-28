@@ -233,5 +233,11 @@ class EmployeeController {
 	public ApiResponse updateOfflineStatus(@PathVariable String infraUserId) {
 		return employeeService.updateOfflineStatus(infraUserId);
 	}
-
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllEmployeeList",AuthConstants.HR_ADMIN_BASEPATH+ "/getAllEmployeeList",
+			AuthConstants.INFRA_USER_BASEPATH + "/getAllEmployeeList",AuthConstants.DEVELOPER_BASEPATH + "/getAllEmployeeList",AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllEmployeeList" })
+	public ApiResponse getAllEmployeeList() {
+		logger.info("indide CatagoryController :: getAllCatagory");
+		return employeeService.getAllEmployeeList();
+	}
+	
 }

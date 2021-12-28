@@ -80,4 +80,6 @@ public interface EmployeeService {
 
 	ApiResponse updateOfflineStatus(String infraUserId);
 
+	ApiResponse getAllEmployeeList();
+
 }

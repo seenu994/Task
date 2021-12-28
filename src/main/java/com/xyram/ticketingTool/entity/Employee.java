@@ -24,10 +24,17 @@ import com.xyram.ticketingTool.id.generator.IdPrefix;
 @Table(name = "employee")
 public class Employee extends AuditModel {
 
+	/*
+	 * @Id
+	 * 
+	 * @IdPrefix(value = "EMP_")
+	 * 
+	 * @GeneratedValue(generator = IdGenerator.ID_GENERATOR)
+	 * 
+	 * @GenericGenerator(name = IdGenerator.ID_GENERATOR, strategy =
+	 * "com.xyram.ticketingTool.id.generator.IdGenerator")
+	 */
 	@Id
-	@IdPrefix(value = "EMP_")
-	@GeneratedValue(generator = IdGenerator.ID_GENERATOR)
-	@GenericGenerator(name = IdGenerator.ID_GENERATOR, strategy = "com.xyram.ticketingTool.id.generator.IdGenerator")
 	@Column(name = "employee_id")
 	private String eId;
 

@@ -84,5 +84,10 @@ class ProjectContoller {
 		logger.info("inside ProjectContoller :: searchProject ");
 		return projectService.searchProject(searchString);
 	}
-
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllProjectList",AuthConstants.HR_ADMIN_BASEPATH + "/getAllProjectList",
+			AuthConstants.INFRA_USER_BASEPATH + "/getAllProjectList",AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllProjectList", AuthConstants.DEVELOPER_BASEPATH + "/getAllProjectList" })
+	public ApiResponse getAllProjectList() {
+		logger.info("indide ProjectContoller :: getAllProjects");
+		return projectService.getAllProjectList();
+	}
 }

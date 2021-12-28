@@ -44,7 +44,7 @@ public class JobApplication extends AuditModel{
 	@Column(name="total_exp")
 	private Integer totalExp;
 	
-	@Column(name="relevant_exp")
+	@Column(name="relevant_exp")				
 	private Integer relevantExp;
 	
 	@Column(name="referred_employee")

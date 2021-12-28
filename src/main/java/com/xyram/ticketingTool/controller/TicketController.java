@@ -60,7 +60,7 @@ class TicketController {
 		return ticketService.createTickets(files, ticketRequest,assignee);
 	}
 
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/cancelTicket/{ticketId}",AuthConstants.INFRA_ADMIN_BASEPATH + "/cancelTicket/{ticketId}",
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/cancelTicket/{ticketId}",AuthConstants.HR_ADMIN_BASEPATH + "/cancelTicket/{ticketId}", AuthConstants.INFRA_ADMIN_BASEPATH + "/cancelTicket/{ticketId}",
 			AuthConstants.DEVELOPER_BASEPATH + "/cancelTicket/{ticketId}",
 			AuthConstants.INFRA_USER_BASEPATH + "/cancelTicket/{ticketId}" })
 	public ApiResponse cancelTicket(@PathVariable String ticketId) {
@@ -254,7 +254,7 @@ class TicketController {
 
 		  @GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getTicketCount",
 				  AuthConstants.INFRA_USER_BASEPATH +"/getTicketCount",
-				  AuthConstants.DEVELOPER_BASEPATH + "/getTicketCount",AuthConstants.INFRA_ADMIN_BASEPATH + "/getTicketCount" }) 
+				  AuthConstants.DEVELOPER_BASEPATH + "/getTicketCount",AuthConstants.INFRA_ADMIN_BASEPATH + "/getTicketCount",AuthConstants.HR_ADMIN_BASEPATH + "/getTicketCount" }) 
 				  public  ApiResponse getTicketCount() {
 						  logger.info("inside ticket controller :: getAllTicket By projectName and status function"); 
 						  

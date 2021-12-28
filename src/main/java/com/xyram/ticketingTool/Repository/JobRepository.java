@@ -73,4 +73,8 @@ public interface JobRepository extends CrudRepository<JobOpenings,Long>,JpaSpeci
 //	}
 	@Query(value = "SELECT  cw.wing_name FROM ticketdbtool.company_wings cw", nativeQuery = true)
 	Map GetJobWingName();
+	/*
+	 * @Query("select new map(jo.createdBy as createdBy) from JobApplication jo left join Employee e On jo.createdBy=e.eId and e.userCredientials.uid as uid where jo.createdBy=e.eId "
+	 * ) List<Map> getCreadtedBy();
+	 */
 	}
