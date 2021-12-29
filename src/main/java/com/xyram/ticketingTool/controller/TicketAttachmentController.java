@@ -53,7 +53,7 @@ public class TicketAttachmentController {
 	 * 
 	 */
 	
-	@PostMapping(value= {AuthConstants.ADMIN_BASEPATH +"/addImage/{ticketId}",AuthConstants.DEVELOPER_BASEPATH +"/addImage/{ticketId}",AuthConstants.INFRA_USER_BASEPATH +"/addImage/{ticketId}",AuthConstants.INFRA_ADMIN_BASEPATH +"/addImage/{ticketId}"})
+	@PostMapping(value= {AuthConstants.ADMIN_BASEPATH +"/addImage/{ticketId}",AuthConstants.DEVELOPER_BASEPATH +"/addImage/{ticketId}",AuthConstants.HR_ADMIN_BASEPATH +"/addImage/{ticketId}",AuthConstants.INFRA_USER_BASEPATH +"/addImage/{ticketId}",AuthConstants.INFRA_ADMIN_BASEPATH +"/addImage/{ticketId}"})
 	public Map storeImage(@RequestPart(name = "files", required = true) MultipartFile[] files,@PathVariable String ticketId) {
 		logger.info("indide TicketAttachmentController :: addImage");
 		return ticketAttachmentService.storeImage(files,ticketId);

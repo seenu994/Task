@@ -125,13 +125,13 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 	@Autowired
 	NotificationService notificationService;
-	
+
 	@Autowired
 	EmailService emailService;
 
 	@Autowired
 	TicketAttachmentService attachmentService;
-	
+
 	@Value("${APPLICATION_URL}")
 	private String application_url;
 
@@ -195,7 +195,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				User useredit = userRepository.getById(user.getId());
 				useredit.setScopeId(employeeNew.geteId());
 				userRepository.save(useredit);
-				
+
 				// sending notification starts here..!
 				List<Map> EmployeeList = employeeRepository.getEmployeeBYReportingToId(employee.getReportingTo());
 				Employee emp = new Employee();
@@ -225,17 +225,17 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				notificationService.createNotification(notifications);
 				UUID uuid = UUID.randomUUID();
 				String uuidAsString = uuid.toString();
-				if(emp!=null) {
+				if (emp != null) {
 					String name = null;
 
-				HashMap mailDetails = new HashMap();
-				mailDetails.put("toEmail", employee.getEmail());
-				mailDetails.put("subject", name + ", " + "Here's your new PASSWORD");
-				mailDetails.put("message", "Hi " + name
-						+ ", \n\n We received a request to reset the password for your Account. \n\n Here's your new PASSWORD Link is: "
-						+ application_url + "/update-password" + "?key=" + uuidAsString
-						+ "\n\n Thanks for helping us keep your account secure.\n\n Xyram Software Solutions Pvt Ltd.");
-				emailService.sendMail(mailDetails);
+					HashMap mailDetails = new HashMap();
+					mailDetails.put("toEmail", employee.getEmail());
+					mailDetails.put("subject", name + ", " + "Here's your new PASSWORD");
+					mailDetails.put("message", "Hi " + name
+							+ ", \n\n We received a request to reset the password for your Account. \n\n Here's your new PASSWORD Link is: "
+							+ application_url + "/update-password" + "?key=" + uuidAsString
+							+ "\n\n Thanks for helping us keep your account secure.\n\n Xyram Software Solutions Pvt Ltd.");
+					emailService.sendMail(mailDetails);
 				}
 				// end of the notification part...!
 
@@ -587,8 +587,10 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public ApiResponse updateProfileImage(MultipartFile file, String employeeId) {
+	public ApiResponse updateProfileImage(MultipartFile file, String userId) {
+
 		ApiResponse response = new ApiResponse(true);
+
 		byte[] filearray;
 		try {
 			filearray = file.getBytes();
@@ -601,16 +603,18 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		String filename = getRandomFileName() + fileextension;// constentFile.getOriginalFilename();
 
 		if (addFileAdmin(file, filename) != null) {
-			Employee employeeObj = employeeRepository.getById(employeeId);
-			employeeObj.setProfileUrl("https://covidtest.xyramsoft.com/image/ticket-attachment/" + filename);
-			employeeRepository.save(employeeObj);
-			response.setSuccess(true);
-			response.setMessage(ResponseMessages.EMPLOYEE_PROFILE_UPDATION);
-			response.setContent(null);
-			return response;
-		}
 
-		else {
+			Employee employeeObj= employeeRepository.getbyUserByUserId(userId);
+			if (employeeObj != null) {
+		      //employeeObj=new Employee();
+				employeeObj.setProfileUrl("https://covidtest.xyramsoft.com/image/ticket-attachment/" + filename);
+				employeeRepository.save(employeeObj);
+				response.setSuccess(true);
+				response.setMessage(ResponseMessages.EMPLOYEE_PROFILE_UPDATION);
+				response.setContent(null);
+				return response;
+			}
+		} else {
 
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.EMPLOYEE_INVALID);
@@ -639,8 +643,9 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		String SFTPUSER = "ubuntu"; // User Name
 		String SFTPPASS = ""; // Password
 		String SFTPKEY = "/home/ubuntu/tomcat-be/webapps/Ticket_tool-0.0.1-SNAPSHOT/WEB-INF/classes/Covid-Phast-Prod.ppk";
-		String SFTPWORKINGDIRAADMIN = "/home/ubuntu/tomcat-be/webapps/image/ticket-attachment";// Source Directory on SFTP
-																							// server
+		String SFTPWORKINGDIRAADMIN = "/home/ubuntu/tomcat-be/webapps/image/ticket-attachment";// Source Directory on
+																								// SFTP
+																								// server
 		String fileNameOriginal = fileName;
 		try {
 			JSch jsch = new JSch();
@@ -918,7 +923,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 //		}
 //
 //		return response;
-		
+
 		return null;
 	}
 
@@ -1032,9 +1037,10 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	@Override
 	public ApiResponse updateOfflineStatus(String infraUserId) {
 		ApiResponse response = new ApiResponse(false);
-			Employee employee = employeeRepository.getById(infraUserId);
-			if (employee != null) {
-                if(currentUser.getUserRole().equals("INFRA_ADMIN") || employee.getUserCredientials().getUserRole().equals("INFRA_USER")) {
+		Employee employee = employeeRepository.getById(infraUserId);
+		if (employee != null) {
+			if (currentUser.getUserRole().equals("INFRA_ADMIN")
+					|| employee.getUserCredientials().getUserRole().equals("INFRA_USER")) {
 				employee.setStatus(UserStatus.OFFLINE);
 				employeeRepository.save(employee);
 //				User user = userRepository.getById(employee.getUserCredientials().getId());
@@ -1046,22 +1052,20 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.STATUS_UPDATE);
 				response.setContent(null);
-                }
-                
-                else
-                {
-                	response.setSuccess(false);
-    				response.setMessage("Please send valid employee id ");
-    				response.setContent(null);	
-                }
 			}
-			
-			else
-			{
+
+			else {
 				response.setSuccess(false);
-				response.setMessage("Invalid Employee Id");
-				response.setContent(null);	
+				response.setMessage("Please send valid employee id ");
+				response.setContent(null);
 			}
+		}
+
+		else {
+			response.setSuccess(false);
+			response.setMessage("Invalid Employee Id");
+			response.setContent(null);
+		}
 
 		return response;
 	}
@@ -1077,4 +1081,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		return response;
 	}
 
+	
+	
+	
 }

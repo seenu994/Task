@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.transaction.Transactional;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -196,6 +197,12 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 			+ "INNER JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id ORDER BY e.createdAt DESC")
 
 	List<Map> getAllEmployee();
+
+	@Query("select e from Employee e left join User u On e.eId=u.id where e.eId= :employeeId ")
+	Employee getByEmpId(String employeeId);
+
+	@Query("select e from User e  where e.id= :userId ")
+	Employee getEmployeeByUSerId(String userId);
 
 	/*
 	 * @Query("Select new map(e.eId as id,e.email as email,e.firstName as firstName,e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId, "

@@ -50,11 +50,11 @@ public interface EmployeeService {
 
 	ApiResponse getAllProfile();
 
-	ApiResponse updateProfileImage(MultipartFile file, String employeeId);
+	//ApiResponse updateProfileImage(MultipartFile file, String employeeId);
 
 	ApiResponse createJobVendor(JobVendorDetails vendorDetails);
 
-	ApiResponse getEmployeeDetails(String employeeId);
+	//ApiResponse getEmployeeDetails(Employee employeeId);
 
 	ApiResponse getJobVendor();
 
@@ -81,5 +81,11 @@ public interface EmployeeService {
 	ApiResponse updateOfflineStatus(String infraUserId);
 
 	ApiResponse getAllEmployeeList();
+
+	ApiResponse updateProfileImage(MultipartFile file, String userId);
+
+	ApiResponse getEmployeeDetails(String employeeId);
+
+	//ApiResponse updateProfileImage(MultipartFile file, String employeeId);
 
 }

@@ -100,9 +100,9 @@ class EmployeeController {
 	}
 
 	@PutMapping("/profile/image/{employeeId}")
-	public ApiResponse updateProfileImage(@RequestPart(name = "file", required = true) MultipartFile file,@PathVariable String employeeId) {
+	public ApiResponse updateProfileImage(@RequestPart(name = "file", required = true) MultipartFile file,@PathVariable String userId) {
 		logger.info("Received request for update doctor profile");
-		return employeeService.updateProfileImage(file,employeeId);
+		return employeeService.updateProfileImage(file,userId);
 	}
 	
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editEmployee/{employeeId}",AuthConstants.INFRA_ADMIN_BASEPATH + "/editEmployee/{employeeId}",
@@ -234,7 +234,7 @@ class EmployeeController {
 		return employeeService.updateOfflineStatus(infraUserId);
 	}
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllEmployeeList",AuthConstants.HR_ADMIN_BASEPATH+ "/getAllEmployeeList",
-			AuthConstants.INFRA_USER_BASEPATH + "/getAllEmployeeList",AuthConstants.DEVELOPER_BASEPATH + "/getAllEmployeeList",AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllEmployeeList" })
+			AuthConstants.INFRA_USER_BASEPATH + "/getAllEmployeeList",AuthConstants.DEVELOPER_BASEPATH + "/getAllEmployeeList",AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllEmployee" })
 	public ApiResponse getAllEmployeeList() {
 		logger.info("indide CatagoryController :: getAllCatagory");
 		return employeeService.getAllEmployeeList();
