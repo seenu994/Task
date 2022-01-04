@@ -3,6 +3,7 @@ package com.xyram.ticketingTool;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,6 +14,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.context.annotation.RequestScope;
+
+import com.xyram.ticketingTool.ticket.config.PermissionConfig;
 
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -32,10 +35,14 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableAutoConfiguration
 @Configuration
 public class TicketToolApplication extends SpringBootServletInitializer {
+	@Autowired
+	PermissionConfig permissionConfig;
 	
 	 public static final String AUTHORIZATION_HEADER = "Authorization";
 
 	public static void main(String[] args) {
+		
+		
 		SpringApplication.run(TicketToolApplication.class, args);
 
 	}

@@ -39,7 +39,7 @@ public class StoryLabelController {
 	
 	
 	
-	@GetMapping(value= {AuthConstants.DEVELOPER_BASEPATH+"/getAllStoryLabel/{projectId}"})
+	@GetMapping(value= {AuthConstants.ADMIN_BASEPATH+"/getAllStoryLabel/{projectId}",AuthConstants.DEVELOPER_BASEPATH+"/getAllStoryLabel/{projectId}"})
 	public IssueTrackerResponse getAllStoryLabelByProject(@PathVariable String projectId) {
 		return storyLabelService.getStoryLabelByProjectId(projectId);
 	}

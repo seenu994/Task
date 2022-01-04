@@ -96,5 +96,5 @@ public interface ResponseMessages {
 	String EMPLOYEE_PROFILE_UPDATION = "Profile Updated Successfully";
 	String SCHEDULEINIERVIEW_UPDATED = "ScheduleInterview Updated Successfully";
 	String SCHEDULEINIERVIEW_INVALID = "Invalid interview Id";
-
+	String TICKET_CREATED = "Ticket created successfully";
 }

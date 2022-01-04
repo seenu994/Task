@@ -156,7 +156,7 @@ public class PermissionConfig {
 	
 	public Integer setDefaultPermissions(String role) {
 		
-		Integer access = 0;
+		Integer access = null ;
 		switch(role) {
 			case "TICKETINGTOOL_ADMIN":
 				this.EMPLOYEES_PERMISSION = ALL;
@@ -253,8 +253,9 @@ public class PermissionConfig {
 				this.ACCOUNTS_PERMISSION = (ADD | VIEW_ALL | EDIT_SELF | DELETE_SELF | STATUS_CHANGE);
 			break;
 		}
-		
 		return access;
+		
+	
 	}
 	
 	

@@ -8,6 +8,8 @@ import com.xyram.ticketingTool.entity.Role;
 
 public interface RoleService {
  ApiResponse getAllRole(Pageable pageable) ;
+
+Integer getAllRolePermission(String roleName);
 		
 
 }

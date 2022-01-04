@@ -55,5 +55,11 @@ public class RoleController {
 		logger.info("indide Role Controller :: getAllRole");
 		return roleService.getAllRole(pageable);
 	}
+	
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllRole/{roleName}"})
+	public Integer getAllRolePermission(@PathVariable String roleName) {
+		logger.info("indide Role Controller :: getAllRole");
+		return roleService.getAllRolePermission(roleName);
+	}
 }
 	

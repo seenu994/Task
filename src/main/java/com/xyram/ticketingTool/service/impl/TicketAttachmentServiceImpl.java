@@ -149,7 +149,7 @@ public void sendPushNotification(String userId, String message, Ticket ticketNew
 	Employee employeeObj = employeeRepository.getById(userId);
 	if(employeeObj != null) {
 		Map request=	new HashMap<>();
-		request.put("id",userDetail.getUserId());
+		//request.put("id",userDetail.getUserId());
 		request.put("uid", employeeObj.getUserCredientials().getUid());
 		request.put("title", title);
 		request.put("body",message + ticketNewRequest.getTicketDescription() );

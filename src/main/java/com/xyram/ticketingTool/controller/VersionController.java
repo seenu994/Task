@@ -25,7 +25,7 @@ public class VersionController {
 	VersionService versionService;
 	
 	
-	@PostMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/createVersion"})
+	@PostMapping(value = {AuthConstants.ADMIN_BASEPATH + "/createVersion",AuthConstants.DEVELOPER_BASEPATH + "/createVersion"})
 	public Version CreateVersion(@RequestBody Version versionBody) {
 		
 		return versionService.CreateVersion(versionBody);
@@ -37,7 +37,7 @@ public class VersionController {
 		return versionService.getVersionById(id);
 	} 
 	
-	@GetMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/getVersionByProjectId/{id}"})
+	@GetMapping(value = {AuthConstants.ADMIN_BASEPATH + "/getVersionByProjectId/{id}", AuthConstants.DEVELOPER_BASEPATH + "/getVersionByProjectId/{id}"})
 	public IssueTrackerResponse getVersionByProjectId(@PathVariable String id) {
 		
 		return versionService.getVersionByProjectId(id);

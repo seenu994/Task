@@ -278,7 +278,7 @@ public class TicketServiceImpl implements TicketService {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}	
 		/*
 		 * JSONObject json = new JSONObject(ticketRequest); Ticket ticketreq=new
 		 * Ticket();
@@ -431,7 +431,7 @@ public class TicketServiceImpl implements TicketService {
 			
 			}else {
 				response.setSuccess(false);
-				response.setMessage(ResponseMessages.TICKET_NOT_EXIST);
+				response.setMessage(ResponseMessages.TICKET_CREATED);
 				response.setContent(null);
 			}
 			
@@ -461,6 +461,8 @@ public class TicketServiceImpl implements TicketService {
 						sendPushNotification(ticketAssigneeRepository.getAssigneeIdForDeveloper(ticketNewRequest.getId(),employee.geteId()),
 								"Ticket Cancelled By User -", ticketNewRequest, "TICKET_CANCELLED", 16);
 					}
+					
+			
 				} else {
 					if (ticketNewRequest.getStatus().equals(TicketStatus.ASSIGNED)
 							|| ticketNewRequest.getStatus().equals(TicketStatus.INPROGRESS)) {
