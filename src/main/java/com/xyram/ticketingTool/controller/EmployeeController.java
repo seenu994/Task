@@ -99,7 +99,7 @@ class EmployeeController {
 		return employeeService.getAllEmployeeCurrentMonth(pageable);
 	}
 
-	@PutMapping("/profile/image/{employeeId}")
+	@PutMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/profile/image/{employeeId}"})
 	public ApiResponse updateProfileImage(@RequestPart(name = "file", required = true) MultipartFile file,@PathVariable String userId) {
 		logger.info("Received request for update doctor profile");
 		return employeeService.updateProfileImage(file,userId);
@@ -234,7 +234,7 @@ class EmployeeController {
 		return employeeService.updateOfflineStatus(infraUserId);
 	}
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllEmployeeList",AuthConstants.HR_ADMIN_BASEPATH+ "/getAllEmployeeList",
-			AuthConstants.INFRA_USER_BASEPATH + "/getAllEmployeeList",AuthConstants.DEVELOPER_BASEPATH + "/getAllEmployeeList",AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllEmployee" })
+			AuthConstants.INFRA_USER_BASEPATH + "/getAllEmployeeList",AuthConstants.DEVELOPER_BASEPATH + "/getAllEmployeeList",AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllEmployeeList" })
 	public ApiResponse getAllEmployeeList() {
 		logger.info("indide CatagoryController :: getAllCatagory");
 		return employeeService.getAllEmployeeList();
