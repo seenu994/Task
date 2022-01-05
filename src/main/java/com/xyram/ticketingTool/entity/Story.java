@@ -66,6 +66,9 @@ public class Story {
 	private String assignTo;
 	
 	
+	@Column(name="version")
+	private String version ;
+	
 	@Column(name="created_on")
 	private Date createdOn;
 		
@@ -203,6 +206,16 @@ public class Story {
 
 	public void setStoryStatus(String storyStatus) {
 		this.storyStatus = storyStatus;
+	}
+
+
+	public String getVersion() {
+		return version;
+	}
+
+
+	public void setVersion(String version) {
+		this.version = version;
 	}
 	
 	

@@ -79,6 +79,7 @@ public class StoryServiceImpl implements StoryService {
 			story.setOwner(currentUser.getScopeId());
 			Integer storyNo = storyRepository.getTotalTicketByprojectId(story.getProjectId()) + 1;
 			story.setStoryNo(storyNo.toString());
+			
 			return storyRepository.save(story);
 
 		} else {

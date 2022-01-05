@@ -415,7 +415,21 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		response.setContent(content);
 		return response;
 	}
+	@Override
+	public ApiResponse searchEmployeeNotAssignedToByProject(String projectid, String searchString) {
 
+		ApiResponse response = new ApiResponse(false);
+		Projects projectRequest = new Projects();
+		projectRequest.setpId(projectid);
+		
+		ApiResponse projvalres = ProjectSerImpl.validateProjectId(projectRequest);
+		List<Map> employeeList = employeeRepository.searchEmployeeNotAssignedToProject(projectid, searchString);
+		Map content = new HashMap();
+		content.put("EmployeeList", employeeList);
+		response.setSuccess(true);
+		response.setContent(content);
+		return response;
+	}
 	@Override
 	public ApiResponse searchInfraUser(String searchString) {
 		ApiResponse response = new ApiResponse(false);
@@ -604,9 +618,9 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 		if (addFileAdmin(file, filename) != null) {
 
-			Employee employeeObj= employeeRepository.getbyUserByUserId(userId);
+			Employee employeeObj = employeeRepository.getbyUserByUserId(userId);
 			if (employeeObj != null) {
-		      //employeeObj=new Employee();
+				// employeeObj=new Employee();
 				employeeObj.setProfileUrl("https://covidtest.xyramsoft.com/image/ticket-attachment/" + filename);
 				employeeRepository.save(employeeObj);
 				response.setSuccess(true);
@@ -1082,6 +1096,5 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	}
 
 	
-	
-	
+
 }

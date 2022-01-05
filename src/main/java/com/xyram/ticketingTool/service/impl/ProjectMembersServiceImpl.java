@@ -140,7 +140,19 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 								projectMemberNew.setCreatedBy(user.getUserId());
 								projectMemberNew.setStatus(ProjectMembersStatus.ACTIVE);
 								projectMemberNew.setProjectId(project.getpId());
+								boolean employeeValidate = projectMemberRepository.findb(projectMemberNew.getEmployeeId());
+								if (employeeValidate == true) {
+
 								projectMemberNew.setEmployeeId(employeeId);
+								}
+								else
+								{
+									response.setSuccess(false);
+									response.setMessage("employee id already exists");
+									
+									return response;
+
+								}
 								projectMemberRepository.save(projectMemberNew);
 							}
 //							List<Map> developerList=	employeeServiceImpl.getListOfDeveloper();

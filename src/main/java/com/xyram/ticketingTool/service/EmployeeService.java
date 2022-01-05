@@ -86,6 +86,8 @@ public interface EmployeeService {
 
 	ApiResponse getEmployeeDetails(String employeeId);
 
+	ApiResponse searchEmployeeNotAssignedToByProject(String projectid, String searchString);
+
 	//ApiResponse updateProfileImage(MultipartFile file, String employeeId);
 
 }

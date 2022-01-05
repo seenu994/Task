@@ -44,8 +44,11 @@ public interface ProjectMemberRepository extends JpaRepository<ProjectMembers, S
 
 	@Transactional
 	@Modifying(clearAutomatically = true)
-	@Query(value="update project_members p set p.is_admin=:isAdmin  where p.project_member_id=:projectMemberId ",nativeQuery = true)
+	@Query(value = "update project_members p set p.is_admin=:isAdmin  where p.project_member_id=:projectMemberId ", nativeQuery = true)
 	Integer updateProjectAdmin(String projectMemberId, String isAdmin);
+
+	@Query("select count(e)>0 from ProjectMembers e where e. employeeId=:employeeId")
+	boolean findb(String employeeId);
 }
 /*
  * //

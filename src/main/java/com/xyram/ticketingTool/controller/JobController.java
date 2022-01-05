@@ -96,7 +96,7 @@ public class JobController {
 		return jobService.createJobApplication(files,jobAppObj,jobCode);
 	}
 	
-	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editJobApplication/{jobAppId}",AuthConstants.HR_ADMIN_BASEPATH + "/editJobApplication/{jobAppId}",AuthConstants.DEVELOPER_BASEPATH+ "/editJobApplication/{jobAppId}", AuthConstants.HR_BASEPATH + "/editJobApplication/{jobAppId}",AuthConstants.INFRA_ADMIN_BASEPATH + "/editJobApplication/{jobAppId}",AuthConstants.INFRA_USER_BASEPATH + "/createJobApplication/{jobCode}", AuthConstants.JOB_VENDOR_BASEPATH + "/createJobApplication/{jobCode}"  })
+	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editJobApplication/{jobAppId}",AuthConstants.HR_ADMIN_BASEPATH + "/editJobApplication/{jobAppId}",AuthConstants.DEVELOPER_BASEPATH+ "/editJobApplication/{jobAppId}", AuthConstants.HR_BASEPATH + "/editJobApplication/{jobAppId}",AuthConstants.INFRA_ADMIN_BASEPATH + "/editJobApplication/{jobAppId}",AuthConstants.INFRA_USER_BASEPATH + "/editJobApplication/{jobAppId}", AuthConstants.JOB_VENDOR_BASEPATH + "/createJobApplication/{jobCode}"  })
 	public ApiResponse editJobApplication(@RequestPart(name = "files", required = false) MultipartFile[] files,@RequestPart String jobAppObj,
 			@PathVariable String jobAppId) {
 		logger.info("Creating Job Application");
@@ -221,7 +221,7 @@ public class JobController {
 		 return jobService.getJobCode(jobCode);
 	 }
 	 
-	 @GetMapping( value = {AuthConstants.ADMIN_BASEPATH+"/getApplicationList/{jobCodeId}",AuthConstants.HR_ADMIN_BASEPATH+"/getApplicationList/{jobCodeId}"})
+	 @GetMapping( value = {AuthConstants.DEVELOPER_BASEPATH +"/getApplicationList/{jobCodeId}",AuthConstants.ADMIN_BASEPATH+"/getApplicationList/{jobCodeId}",AuthConstants.HR_ADMIN_BASEPATH+"/getApplicationList/{jobCodeId}"})
 	 public ApiResponse getApplicationList(@PathVariable String jobCodeId) {
 		 return jobService.getApplicationList(jobCodeId);
 	 }

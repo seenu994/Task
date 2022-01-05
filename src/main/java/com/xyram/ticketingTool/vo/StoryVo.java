@@ -50,6 +50,8 @@ public class StoryVo {
 	@NotEmpty(message = "assignTo should be not null")
 	@Size(min = 5, max = 50)
 	private String assignTo;
+	
+	private String version;
 
 	public String getTitle() {
 		return title;
@@ -113,6 +115,14 @@ public class StoryVo {
 
 	public void setAssignTo(String assignTo) {
 		this.assignTo = assignTo;
+	}
+
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
 	}
 
 	
