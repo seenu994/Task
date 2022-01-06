@@ -688,7 +688,8 @@ public class TicketServiceImpl implements TicketService {
 	public ApiResponse editTicket(MultipartFile[] files, String ticketId, String ticketRequest) {
 
 		ApiResponse response = new ApiResponse(false);
-		Ticket ticketObj = ticketrepository.getById(ticketId);
+		Ticket ticketObj=null;
+		 ticketObj = ticketrepository.getById(ticketId);
 		Employee employee = employeeRepository.getbyUserByUserId(userDetail.getUserId());
 		ObjectMapper objectMapper = new ObjectMapper();
 		Ticket ticketreq = null;
@@ -716,7 +717,8 @@ public class TicketServiceImpl implements TicketService {
 				ticketObj.setUpdatedBy(userDetail.getUserId());
 				
 				ticketObj.setLastUpdatedAt(new Date());
-				ticketrepository.save(ticketObj);
+				
+				ticketrepository.saveAndFlush(ticketObj);
 
 				// Inserting Ticket history details
 				TicketStatusHistory tktStatusHist = new TicketStatusHistory();
