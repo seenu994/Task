@@ -30,6 +30,11 @@ public class ProjectFeature {
 	private String  featureId;
 	
 	
+	@Column(name="feature_name")
+	private String featureName;
+	
+	
+	
 	@Column(name="status")
 	private String status;
 
@@ -63,7 +68,18 @@ public class ProjectFeature {
 
 	public void setStatus(String status) {
 		this.status = status;
-	} 
+	}
+
+	public String getFeatureName() {
+		return featureName;
+	}
+
+	public void setFeatureName(String featureName) {
+		this.featureName = featureName;
+	}
+	
+	
+	
 
 	
 	

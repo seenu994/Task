@@ -15,4 +15,6 @@ public interface FeatureService {
 
 	Feature getFeaturesByFeatureId(String featureId);
 
+	Feature updateFeatureByFeatureId(String featureId, Feature featureRequest);
+
 }

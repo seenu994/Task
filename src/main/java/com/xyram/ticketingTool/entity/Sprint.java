@@ -25,7 +25,7 @@ public class Sprint extends AuditModel {
 	@GeneratedValue(generator = IdGenerator.ID_GENERATOR)
 	@GenericGenerator(name = IdGenerator.ID_GENERATOR, strategy = "com.xyram.ticketingTool.id.generator.IdGenerator")
 	@Column(name = "sprint_id")
-	private String Id;
+	private String id;
 
 	@Column(name = "sprint_start_date")
 	private Date sprintStartDate;
@@ -53,12 +53,14 @@ public class Sprint extends AuditModel {
 	@JoinColumn(name = "project_id")
 	private Projects project;
 
+	
+
 	public String getId() {
-		return Id;
+		return id;
 	}
 
 	public void setId(String id) {
-		Id = id;
+		this.id = id;
 	}
 
 	public Date getSprintStartDate() {

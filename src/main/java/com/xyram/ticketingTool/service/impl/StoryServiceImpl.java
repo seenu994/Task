@@ -15,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 import org.stringtemplate.v4.compiler.CodeGenerator.region_return;
 import org.stringtemplate.v4.compiler.STParser.mapExpr_return;
 
+import com.microsoft.schemas.office.excel.STObjectType;
 import com.xyram.ticketingTool.Repository.StoryRepository;
 import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
 import com.xyram.ticketingTool.entity.ProjectMembers;
@@ -79,7 +80,7 @@ public class StoryServiceImpl implements StoryService {
 			story.setOwner(currentUser.getScopeId());
 			Integer storyNo = storyRepository.getTotalTicketByprojectId(story.getProjectId()) + 1;
 			story.setStoryNo(storyNo.toString());
-			
+
 			return storyRepository.save(story);
 
 		} else {
@@ -89,10 +90,33 @@ public class StoryServiceImpl implements StoryService {
 
 	}
 
-//	public Story editStoryDetails(String storyId)
-//	{
-//		//return storyRepository.findAllById(storyId).map()
-//	}
+	@Override
+	public Story editStoryDetails(String storyId, Story storyRequest) {
+		return storyRepository.findById(storyId).map(story -> {
+			if (storyRequest.getStoryDescription() != null) {
+				story.setStoryDescription(storyRequest.getStoryDescription());
+
+			}
+			if (storyRequest.getStoryLabel() != null) {
+				checkLabel(story.getStoryLabel());
+				story.setStoryDescription(storyRequest.getStoryDescription());
+			}
+			if (storyRequest.getStoryType() != null) {
+				story.setStoryType(storyRequest.getStoryType());
+			}
+			if (storyRequest.getAssignTo() != null) {
+				checkProjectMemberInProject(story.getProjectId(), story.getAssignTo());
+				story.setAssignTo(storyRequest.getAssignTo());
+			}
+			if (storyRequest.getPlatform() != null) {
+				CheckplatformExist(story.getPlatform());
+				story.setPlatform(storyRequest.getPlatform());
+			}
+			return storyRepository.save(story);
+
+		}).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "story not found with " + storyId));
+
+	}
 
 	@Override
 	public IssueTrackerResponse getAllStories(String projectId) {
@@ -208,6 +232,8 @@ public class StoryServiceImpl implements StoryService {
 	@Override
 	public IssueTrackerResponse getAllStoriesBystatus(String projectId, String storyStatusId) {
 		IssueTrackerResponse response = new IssueTrackerResponse();
+		
+	
 		List<Map> storyList = storyRepository.getAllStoriesByStoryStaus(projectId, storyStatusId);
 
 		response.setContent(storyList);

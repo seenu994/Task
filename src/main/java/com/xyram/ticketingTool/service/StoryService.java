@@ -21,4 +21,7 @@ public interface StoryService {
 
 	StoryDetailsResponse getStoryDetailsById(String projectId, String storyId);
 
+
+	Story editStoryDetails(String storyId, Story storyRequest);
+
 }

@@ -56,7 +56,7 @@ public class Story {
 	
 	
 	@Column(name="sprint_id")
-	private String  SprintId;
+	private String  sprintId;
 	
 	@Column(name="owner")
 	private String owner;
@@ -174,13 +174,16 @@ public class Story {
 	}
 
 
+
+
+
 	public String getSprintId() {
-		return SprintId;
+		return sprintId;
 	}
 
 
 	public void setSprintId(String sprintId) {
-		SprintId = sprintId;
+		this.sprintId = sprintId;
 	}
 
 

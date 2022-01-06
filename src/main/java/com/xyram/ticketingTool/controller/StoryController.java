@@ -56,12 +56,23 @@ public class StoryController {
 	}
 	
 	
+	@GetMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/updateStory/{storyId}", AuthConstants.INFRA_ADMIN_BASEPATH + "/updateStory/{storyId}" })
+	public Story updateStory(@PathVariable String storyId, @RequestParam Story story) {
+
+		return storyService.editStoryDetails(storyId,story);
+	}
+	
+	
+	
 	@GetMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/getAllStories", AuthConstants.ADMIN_BASEPATH + "/getAllStories" })
 	public IssueTrackerResponse getStoryDetailsByStoryStatus(@RequestParam String projectId,@RequestParam String storyStatusId ) {
 
 		return storyService.getAllStoriesBystatus(projectId, storyStatusId);
+	
 
 	}
+	
+
 	
 	@PostMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/changeStoryStatus" })
 	public Story changeStoryStatus(StoryChangeStatusRequest storyChangeStatusrequest )

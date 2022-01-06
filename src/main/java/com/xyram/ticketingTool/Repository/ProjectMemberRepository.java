@@ -49,6 +49,8 @@ public interface ProjectMemberRepository extends JpaRepository<ProjectMembers, S
 
 	@Query("select count(e)>0 from ProjectMembers e where e. employeeId=:employeeId")
 	boolean findb(String employeeId);
+	@Query("select p from ProjectMembers p where p.projectId= :projectId and p.employeeId= :employeeId")
+	ProjectMembers getProjectMemberByEmployeeId(String projectId, String employeeId);
 }
 /*
  * //

@@ -17,6 +17,7 @@ import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
 import com.xyram.ticketingTool.entity.ProjectFeature;
 import com.xyram.ticketingTool.entity.ProjectMembers;
 import com.xyram.ticketingTool.request.AssignFeatureRequest;
+import com.xyram.ticketingTool.request.ProjectFeatureRequest;
 import com.xyram.ticketingTool.service.ProjectFeatureService;
 import com.xyram.ticketingTool.service.ProjectMemberService;
 import com.xyram.ticketingTool.util.AuthConstants;
@@ -43,4 +44,11 @@ public class ProjectFeatureController {
 		return projectFeatureService.getAllfeatureByProject(projectId);
 	}
 
+	
+	
+	@PostMapping(value= {AuthConstants.ADMIN_BASEPATH +"/addProjectFeature",AuthConstants.DEVELOPER_BASEPATH +"/addProjectFeature"})
+	public ProjectFeature assignProjectToEmployee(@RequestBody ProjectFeatureRequest projectFeatureRequest) {
+	//	logger.info("Received request to add project Members");
+		return  projectFeatureService.addNewProjectFeature(projectFeatureRequest);
+	}	
 }
