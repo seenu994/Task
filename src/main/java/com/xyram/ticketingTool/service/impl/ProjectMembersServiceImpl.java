@@ -125,11 +125,20 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 						Employee employeeObj = employeeRepository.getbyUserEmpId(employeeId);
 
 						if (employeeObj != null) {
-							ProjectMembers projectMember = projectMemberRepository.getMemberInProject(employeeId,
-									project.getpId());
-							if (projectMember != null
-									&& projectMember.getStatus().equals(ProjectMembersStatus.INACTIVE)) {
+							
+							ProjectMembers projectMember=null;
+				
+								projectMember = projectMemberRepository.getMemberInProject(employeeId,
+										project.getpId());
+							
+                              
+							if (projectMember != null) {
+								if(projectMember.getStatus().equals(ProjectMembersStatus.INACTIVE))
+								{
 								projectMember.setStatus(ProjectMembersStatus.ACTIVE);
+								projectMemberRepository.save(projectMember);
+								}
+								
 								projectMemberRepository.save(projectMember);
 							} else {
 								ProjectMembers projectMemberNew = new ProjectMembers();
@@ -140,19 +149,7 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 								projectMemberNew.setCreatedBy(user.getUserId());
 								projectMemberNew.setStatus(ProjectMembersStatus.ACTIVE);
 								projectMemberNew.setProjectId(project.getpId());
-								boolean employeeValidate = projectMemberRepository.findb(projectMemberNew.getEmployeeId());
-								if (employeeValidate == true) {
-
-								projectMemberNew.setEmployeeId(employeeId);
-								}
-								else
-								{
-									response.setSuccess(false);
-									response.setMessage("employee id already exists");
-									
-									return response;
-
-								}
+								
 								projectMemberRepository.save(projectMemberNew);
 							}
 //							List<Map> developerList=	employeeServiceImpl.getListOfDeveloper();
