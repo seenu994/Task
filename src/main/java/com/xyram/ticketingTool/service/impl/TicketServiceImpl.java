@@ -1013,7 +1013,17 @@ public class TicketServiceImpl implements TicketService {
 	public ApiResponse searchTicket(Map<String, Object>filter) {
 		String searchString = filter.containsKey("searchString") ? ((String) filter.get("searchString")).toLowerCase():null;
 		String priority = filter.containsKey("priority") ? ((String) filter.get("priority")).toLowerCase():null;
-		List<Map> serachList = ticketrepository.searchTicket(searchString,priority);
+		
+		List<Map> serachList = null;
+		if(userDetail.getUserRole().equals("INFRA_ADMIN") || userDetail.getUserRole().equals("TICKETINGTOOL_ADMIN")) {
+			serachList = ticketrepository.searchAllTicket(searchString,priority);
+		}
+		else if(userDetail.getUserRole().equals("INFRA_USER")) {
+			serachList = ticketrepository.searchSelfAssignedTicket(searchString,priority,userDetail.getUserId());
+		}else {
+			serachList = ticketrepository.searchSelfTicket(searchString,priority,userDetail.getUserId());
+		}
+		
 		Map content = new HashMap();
 		content.put("serachList", serachList);
 		ApiResponse response = new ApiResponse(true);
