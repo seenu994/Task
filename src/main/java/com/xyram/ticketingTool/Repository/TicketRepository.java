@@ -57,7 +57,7 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 			+ "  (:priority is null or lower(p.priority_id) LIKE %:priority%) AND "
 			+ " (:searchString is null "
 			+ " OR lower(a.ticket_description) LIKE %:searchString%  "
-			+ " OR   lower(a.ticket_id) LIKE %:searchString%) AND a.created_by=:employeeId ", nativeQuery = true)
+			+ " OR   lower(a.ticket_id) LIKE %:searchString%) AND a.created_by= :employeeId ", nativeQuery = true)
 	       List<Map> searchSelfTicket( String searchString, String priority, String employeeId );
 	
 	@Query(value = "SELECT a.ticket_id as ticket_id, a.ticket_description as ticket_description, a.ticket_status as ticket_status, a.created_at as created_at, a.last_updated_at as last_updated_at, "
@@ -71,7 +71,7 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 			+ "  (:priority is null or lower(p.priority_id) LIKE %:priority%) AND "
 			+ " (:searchString is null "
 			+ " OR lower(a.ticket_description) LIKE %:searchString%  "
-			+ " OR   lower(a.ticket_id) LIKE %:searchString%) AND b.employee_id:=employeeId", nativeQuery = true)
+			+ " OR   lower(a.ticket_id) LIKE %:searchString%) AND b.employee_id= :employeeId", nativeQuery = true)
 	       List<Map> searchSelfAssignedTicket( String searchString, String priority, String employeeId );
 	/*
 	@Query(value = "SELECT a.ticket_id as ticket_id, a.ticket_description as ticket_description , a.ticket_status as ticket_status, a.created_at as created_at, a.created_by as created_by, "

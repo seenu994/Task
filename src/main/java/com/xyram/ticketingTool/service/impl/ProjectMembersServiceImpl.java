@@ -121,25 +121,23 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 
 					List<String> employeeIds = (List<String>) request.get("employeeId");
 
+					Integer duplicateRecords = 0;
 					for (String employeeId : employeeIds) {
 						Employee employeeObj = employeeRepository.getbyUserEmpId(employeeId);
 
 						if (employeeObj != null) {
-							
-							ProjectMembers projectMember=null;
-				
-								projectMember = projectMemberRepository.getMemberInProject(employeeId,
-										project.getpId());
-							
-                              
+
+							ProjectMembers projectMember = null;
+
+							projectMember = projectMemberRepository.getMemberInProject(employeeId, project.getpId());
+
 							if (projectMember != null) {
-								if(projectMember.getStatus().equals(ProjectMembersStatus.INACTIVE))
-								{
+
 								projectMember.setStatus(ProjectMembersStatus.ACTIVE);
 								projectMemberRepository.save(projectMember);
-								}
+								duplicateRecords++;
+								break;
 								
-								projectMemberRepository.save(projectMember);
 							} else {
 								ProjectMembers projectMemberNew = new ProjectMembers();
 
@@ -149,7 +147,7 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 								projectMemberNew.setCreatedBy(user.getUserId());
 								projectMemberNew.setStatus(ProjectMembersStatus.ACTIVE);
 								projectMemberNew.setProjectId(project.getpId());
-								
+
 								projectMemberRepository.save(projectMemberNew);
 							}
 //							List<Map> developerList=	employeeServiceImpl.getListOfDeveloper();
@@ -194,7 +192,8 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 						}
 					}
 					response.setSuccess(true);
-					response.setMessage(ResponseMessages.PROJECT_MEMBERS_ADDED);
+					response.setMessage(ResponseMessages.PROJECT_MEMBERS_ADDED + "  number of duplicate records: "
+							+ duplicateRecords);
 					response.setContent(null);
 
 				} else {
