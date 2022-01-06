@@ -146,37 +146,43 @@ public String getRandomFileName() {
 
 public void sendPushNotification(String userId, String message, Ticket ticketNewRequest, String title, int notiType) {
 	
-	Employee employeeObj = employeeRepository.getById(userId);
+	Employee employeeObj = employeeRepository.getbyUserByUserId(userId);
 	if(employeeObj != null) {
-		Map request=	new HashMap<>();
-		//request.put("id",userDetail.getUserId());
-		request.put("uid", employeeObj.getUserCredientials().getUid());
-		request.put("title", title);
-		request.put("body",message + ticketNewRequest.getTicketDescription() );
-		Notifications notifications2 = new Notifications();
-
-		if (userDetail.getUserRole().equalsIgnoreCase("DEVELOPER")) {
-			pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, notiType, NotificationType.ATTACHMENT_ADDED_BY_DEV.toString()));
-			notifications2.setNotificationType(NotificationType.ATTACHMENT_ADDED_BY_DEV);
-
-		}else if (userDetail.getUserRole().equalsIgnoreCase("TICKETINGTOOL_ADMIN")) {
-			pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, notiType, NotificationType.ATTACHMENT_ADDED_BY_ADMIN.toString()));
-			notifications2.setNotificationType(NotificationType.ATTACHMENT_ADDED_BY_ADMIN);
-
-		}else {
-			pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, notiType, NotificationType.ATTACHMENT_ADDED_BY_INFRA_USER.toString()));
-			notifications2.setNotificationType(NotificationType.ATTACHMENT_ADDED_BY_INFRA_USER);
-		}
 		
-		notifications2.setNotificationDesc(message + ticketNewRequest.getTicketDescription());
-		notifications2.setSenderId(userDetail.getUserId());
-		notifications2.setReceiverId(userId);
-		notifications2.setSeenStatus(false);
-		notifications2.setCreatedBy(userDetail.getUserId());
-		notifications2.setCreatedAt(new Date());
-		notifications2.setUpdatedBy(userDetail.getUserId());
-		notifications2.setLastUpdatedAt(new Date());
-		notificationsRepository.save(notifications2);
+		if(employeeObj.getUserCredientials() != null) {
+			if(employeeObj.getUserCredientials().getUid() != null) {
+				Map request=	new HashMap<>();
+				request.put("id",userDetail.getUserId());
+				request.put("uid", employeeObj.getUserCredientials().getUid());
+				request.put("title", title);
+				request.put("body",message + ticketNewRequest.getTicketDescription() );
+				Notifications notifications2 = new Notifications();
+		
+				if (userDetail.getUserRole().equalsIgnoreCase("DEVELOPER")) {
+					pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, notiType, NotificationType.ATTACHMENT_ADDED_BY_DEV.toString()));
+					notifications2.setNotificationType(NotificationType.ATTACHMENT_ADDED_BY_DEV);
+		
+				}else if (userDetail.getUserRole().equalsIgnoreCase("TICKETINGTOOL_ADMIN")) {
+					pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, notiType, NotificationType.ATTACHMENT_ADDED_BY_ADMIN.toString()));
+					notifications2.setNotificationType(NotificationType.ATTACHMENT_ADDED_BY_ADMIN);
+		
+				}else {
+					pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, notiType, NotificationType.ATTACHMENT_ADDED_BY_INFRA_USER.toString()));
+					notifications2.setNotificationType(NotificationType.ATTACHMENT_ADDED_BY_INFRA_USER);
+				}
+				
+				notifications2.setNotificationDesc(message + ticketNewRequest.getTicketDescription());
+				notifications2.setSenderId(userDetail.getUserId());
+				notifications2.setReceiverId(userId);
+				notifications2.setSeenStatus(false);
+				notifications2.setCreatedBy(userDetail.getUserId());
+				notifications2.setCreatedAt(new Date());
+				notifications2.setUpdatedBy(userDetail.getUserId());
+				notifications2.setLastUpdatedAt(new Date());
+				notificationsRepository.save(notifications2);
+			}
+			
+		}
 	}
 	
 }

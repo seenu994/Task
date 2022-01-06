@@ -83,12 +83,23 @@ public class JobController {
 		return jobService.getAllJobApplications(filter,pageable);
 	}
 	
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllCompanyWingsAndSkills",AuthConstants.HR_ADMIN_BASEPATH + "/getAllCompanyWingsAndSkills", AuthConstants.DEVELOPER_BASEPATH + "/getAllCompanyWingsAndSkills" })
-	public ApiResponse getAllCompanyWingsAndSkills() {
-		logger.info("Get All Wings & Skills");
-		return jobService.getAllCompanyWingsAndSkills();
-	}
 	
+	  @GetMapping(value = { AuthConstants.ADMIN_BASEPATH +
+	  "/getAllCompanyWingsAndSkills",AuthConstants.HR_ADMIN_BASEPATH +
+	  "/getAllCompanyWingsAndSkills", AuthConstants.INFRA_ADMIN_BASEPATH +
+	  "/getAllCompanyWingsAndSkills", AuthConstants.INFRA_USER_BASEPATH +
+	  "/getAllCompanyWingsAndSkills", AuthConstants.HR_BASEPATH +
+	  "/getAllCompanyWingsAndSkills", AuthConstants.DEVELOPER_BASEPATH +
+	  "/getAllCompanyWingsAndSkills" }) public ApiResponse
+	  getAllCompanyWingsAndSkills() { logger.info("Get All Wings & Skills"); return
+	  jobService.getAllCompanyWingsAndSkills(); }
+	 
+
+	/*
+	 * @GetMapping(value = { "/getAllCompanyWingsAndSkills" }) public ApiResponse
+	 * getAllCompanyWingsAndSkills() { logger.info("Get All Wings & Skills"); return
+	 * jobService.getAllCompanyWingsAndSkills(); }
+	 */
 	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/createJobApplication/{jobCode}",AuthConstants.HR_ADMIN_BASEPATH + "/createJobApplication/{jobCode}",AuthConstants.DEVELOPER_BASEPATH+ "/createJobApplication/{jobCode}", AuthConstants.HR_BASEPATH + "/createJobApplication/{jobCode}",AuthConstants.INFRA_ADMIN_BASEPATH + "/createJobApplication/{jobCode}",AuthConstants.INFRA_USER_BASEPATH + "/createJobApplication/{jobCode}", AuthConstants.JOB_VENDOR_BASEPATH + "/createJobApplication/{jobCode}" })
 	public ApiResponse createJobApplication(@RequestPart(name = "files", required = false) MultipartFile[] files,@RequestPart String jobAppObj,
 			@PathVariable String jobCode) {

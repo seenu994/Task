@@ -195,6 +195,7 @@ public class JobServiceImpl implements JobService {
 					predicates
 							.add(criteriaBuilder.and(criteriaBuilder.equal((root.get("wings").get("wingName")), wing)));
 				}
+				
 				// criteriaBuilder.upper(itemRoot.get("code"), code.toUpperCase()
 				if (searchQuery != null) {
 //                	criteriaBuilder.like(root.get("title"), "%" + keyword + "%")
@@ -202,9 +203,11 @@ public class JobServiceImpl implements JobService {
 					predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobDescription"), searchQuery)));
 					predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobCode"), searchQuery)));
 				}
-				if (userDetail.getUserRole() == "JOB_VENDOR") {
+				System.out.println(userDetail.getUserRole().equals("JOB_VENDOR"));
+				if (userDetail.getUserRole().equals("JOB_VENDOR")) {
+					
 					predicates.add(criteriaBuilder
-							.and(criteriaBuilder.like(root.get("createdBy"), "%" + userDetail.getUserId() + "%")));
+							.and(criteriaBuilder.equal(root.get("vendor_view"), 1)));
 				}
 				query.orderBy(criteriaBuilder.desc(root.get("createdAt")));
 				return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));

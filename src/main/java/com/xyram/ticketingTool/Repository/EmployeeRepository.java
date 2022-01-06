@@ -48,7 +48,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 			+ " e.status = 'ACTIVE' and e.email like %:searchString%  and  e.eId NOT IN("
 			+ "select p.employeeId from ProjectMembers p where p.status = 'ACTIVE' and p.projectId = :projectId )")
 
-	List<Map> searchEmployeeNotAssignedToProject(@Param("projectId") String projectName,
+	List<Map> searchEmployeeNotAssignedToProject(@Param("projectId") String projectId,
 			@Param("searchString") String searchString);
 
 //	@Query("Select distinct new map(e.eId as id, e.firstName as firstName, e.lastName as lastName) "

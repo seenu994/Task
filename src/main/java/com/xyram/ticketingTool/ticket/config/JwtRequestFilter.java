@@ -81,7 +81,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 //			    ctx.addZuulRequestHeader(AuthConstants.NAME, (String) jwtTokenUtil.getNamedClaimFromToken(jwtToken, AuthConstants.NAME));
 //			    ctx.addZuulRequestHeader(AuthConstants.USER_ID, (String) jwtTokenUtil.getNamedClaimFromToken(jwtToken, AuthConstants.USER_ID));
 //			    ctx.addZuulRequestHeader(AuthConstants.USER_ROLE, (String) jwtTokenUtil.getNamedClaimFromToken(jwtToken, AuthConstants.USER_ROLE));
-//			    ctx.addZuulRequestHeader(AuthConstants.USER_SCOPE, (String) jwtTokenUtil.getNamedClaimFromToken(jwtToken, AuthConstants.USER_SCOPE));
+//			    ctx.addZuulRequestHeader(AuthConst	ants.USER_SCOPE, (String) jwtTokenUtil.getNamedClaimFromToken(jwtToken, AuthConstants.USER_SCOPE));
 //			    ctx.addZuulRequestHeader(AuthConstants.SCOPE_ID, (String) jwtTokenUtil.getNamedClaimFromToken(jwtToken, AuthConstants.SCOPE_ID));
 				
 				currentUser.setName((String) jwtTokenUtil.getNamedClaimFromToken(jwtToken, AuthConstants.NAME));

@@ -80,7 +80,7 @@ public class JobOpenings extends AuditModel{
 	private Integer jobSalary;
 	
 	@Column(name="vendor_view")
-	private Integer vendor_view = 1;
+	private Integer vendor_view = 0;
 
 	public String getId() {
 		return Id;

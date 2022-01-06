@@ -147,6 +147,7 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 								projectMemberNew.setCreatedBy(user.getUserId());
 								projectMemberNew.setStatus(ProjectMembersStatus.ACTIVE);
 								projectMemberNew.setProjectId(project.getpId());
+								projectMemberNew.setEmployeeId(employeeObj.geteId());
 
 								projectMemberRepository.save(projectMemberNew);
 							}
