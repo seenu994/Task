@@ -31,7 +31,7 @@ public interface ProjectMemberRepository extends JpaRepository<ProjectMembers, S
 	ProjectMembers findByEmployeeIdAndProjectId(String employeeId, String projectId);
 
 	@Query("select p from ProjectMembers p inner join Employee e on p.employeeId=e.eId "
-			+ " where p.projectId = :projectId and p.employeeId = :employeeId and  p.status='ACTIVE' ")
+			+ " where p.projectId = :projectId and p.employeeId = :employeeId ")
 	ProjectMembers getMemberInProject(String employeeId, String projectId);
 
 	@Query("select new map( p.id as id , e.eId as employeeId ,CONCAT(e.firstName ,' ', e.lastName) as employeeName,p.isAdmin as isAdmin) from ProjectMembers p inner join Employee e on p.employeeId=e.eId "
