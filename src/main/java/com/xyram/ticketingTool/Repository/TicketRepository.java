@@ -44,8 +44,35 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 			+ " (:searchString is null "
 			+ " OR lower(a.ticket_description) LIKE %:searchString%  "
 			+ " OR   lower(a.ticket_id) LIKE %:searchString%) ", nativeQuery = true)
-	       List<Map> searchTicket( String searchString, String priority );
+	       List<Map> searchAllTicket( String searchString, String priority );
 	
+	@Query(value = "SELECT a.ticket_id as ticket_id, a.ticket_description as ticket_description, a.ticket_status as ticket_status, a.created_at as created_at, a.last_updated_at as last_updated_at, "
+			+ "a.created_by as created_by, a.priority_id as priority_id, b.employee_id as assigneeId, concat(e.frist_name,' ', e.last_name) as assigneeName, concat(ee.frist_name,' ', ee.last_name) as createdByEmp "
+			+ "FROM ticketdbtool.ticket_info a "
+			+ "left join ticketdbtool.employee ee on a.created_by = ee.user_id "
+			+ "left join ticketdbtool.ticket_assignee b ON a.ticket_id = b.ticket_id  and b.ticket_assignee_status = 'ACTIVE' "
+			+ "left join ticketdbtool.employee e on b.employee_id = e.employee_id "
+			+ "left join ticketdbtool.priority p on a.priority_id = p.priority_id "
+			+ "where"
+			+ "  (:priority is null or lower(p.priority_id) LIKE %:priority%) AND "
+			+ " (:searchString is null "
+			+ " OR lower(a.ticket_description) LIKE %:searchString%  "
+			+ " OR   lower(a.ticket_id) LIKE %:searchString%) AND a.created_by=:employeeId ", nativeQuery = true)
+	       List<Map> searchSelfTicket( String searchString, String priority, String employeeId );
+	
+	@Query(value = "SELECT a.ticket_id as ticket_id, a.ticket_description as ticket_description, a.ticket_status as ticket_status, a.created_at as created_at, a.last_updated_at as last_updated_at, "
+			+ "a.created_by as created_by, a.priority_id as priority_id, b.employee_id as assigneeId, concat(e.frist_name,' ', e.last_name) as assigneeName, concat(ee.frist_name,' ', ee.last_name) as createdByEmp "
+			+ "FROM ticketdbtool.ticket_info a "
+			+ "left join ticketdbtool.employee ee on a.created_by = ee.user_id "
+			+ "left join ticketdbtool.ticket_assignee b ON a.ticket_id = b.ticket_id  and b.ticket_assignee_status = 'ACTIVE' "
+			+ "left join ticketdbtool.employee e on b.employee_id = e.employee_id "
+			+ "left join ticketdbtool.priority p on a.priority_id = p.priority_id "
+			+ "where"
+			+ "  (:priority is null or lower(p.priority_id) LIKE %:priority%) AND "
+			+ " (:searchString is null "
+			+ " OR lower(a.ticket_description) LIKE %:searchString%  "
+			+ " OR   lower(a.ticket_id) LIKE %:searchString%) AND b.employee_id:=employeeId", nativeQuery = true)
+	       List<Map> searchSelfAssignedTicket( String searchString, String priority, String employeeId );
 	/*
 	@Query(value = "SELECT a.ticket_id as ticket_id, a.ticket_description as ticket_description , a.ticket_status as ticket_status, a.created_at as created_at, a.created_by as created_by, "
 			+ "a.priority_id as priority_id, b.employee_id as assigneeId, concat(e.frist_name, ' ', e.last_name) as assigneeName, concat(ee.frist_name, ' ', ee.last_name) as createdByEmp "
