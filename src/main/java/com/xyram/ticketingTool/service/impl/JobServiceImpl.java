@@ -194,7 +194,7 @@ public class JobServiceImpl implements JobService {
 		ApiResponse response = new ApiResponse(false);
 		Map content = new HashMap();
 		String status = filter.containsKey("status") ? ((String) filter.get("status")) : null;
-		String searchQuery = filter.containsKey("searchstring") ? ((String) filter.get("searchstring")).toLowerCase()
+		String searchQuery = filter.containsKey("searchstring") ? ((String) filter.get("searchstring"))
 				: null;
 		String wing = filter.containsKey("wing") ? ((String) filter.get("wing")) : null;
 		JobOpeningStatus statusApp = null;
@@ -219,9 +219,9 @@ public class JobServiceImpl implements JobService {
 				// criteriaBuilder.upper(itemRoot.get("code"), code.toUpperCase()
 				if (searchQuery != null) {
 //                	criteriaBuilder.like(root.get("title"), "%" + keyword + "%")
-					predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobTitle"), searchQuery)));
-					predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobDescription"), searchQuery)));
-					predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobCode"), searchQuery)));
+					predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobTitle"), "%"+searchQuery+"%")));
+					predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobDescription"), "%"+searchQuery+"%")));
+					predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobCode"), "%"+searchQuery+"%")));
 				}
 				System.out.println(userDetail.getUserRole().equals("JOB_VENDOR"));
 				if (userDetail.getUserRole().equals("JOB_VENDOR")) {
