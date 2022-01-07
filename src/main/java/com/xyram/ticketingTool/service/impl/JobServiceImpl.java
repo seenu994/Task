@@ -685,8 +685,22 @@ public class JobServiceImpl implements JobService {
 			jobOpening.setMinExp(jobObj.getMinExp());
 			jobOpening.setSalary(jobObj.getSalary());
 			jobOpening.setTotalOpenings(jobObj.getTotalOpenings());
+			
+			if (jobObj.getWings() != null && jobObj.getWings().getId() != null) {
+				CompanyWings wing = companyWingsRepository.getById(jobObj.getWings().getId());
+				if (wing != null)
+					
+				{
+					jobOpening.setWings(wing);
+				}
+				
+				else
+				{
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Wing does not exist");
+				}
+			}
 
-			jobOpening.setWings(jobObj.getWings());
+//			jobOpening.setWings(jobObj.getWings());
 
 			jobOpening.setFilledPositions(jobObj.getFilledPositions());
 
