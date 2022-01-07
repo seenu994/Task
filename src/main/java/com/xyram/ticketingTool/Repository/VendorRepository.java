@@ -13,7 +13,7 @@ public interface VendorRepository extends JpaRepository<JobVendorDetails,String>
 	@Query("Select jv from JobVendorDetails jv")
 	List<JobVendorDetails> getJobVendors();
 	
-	@Query("Select jv from JobVendorDetails jv where jv.name LIKE%?1% ")
+	@Query("Select jv from JobVendorDetails jv where jv.name LIKE %:vendorName% ")
 	List<JobVendorDetails> serachJobVendors(String vendorName);
 
 	@Query("Select jv from JobVendorDetails jv Where jv.vId = :vendorId")

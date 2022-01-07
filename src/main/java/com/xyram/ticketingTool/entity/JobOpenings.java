@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
@@ -18,6 +19,7 @@ import com.xyram.ticketingTool.id.generator.IdPrefix;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 
 @Entity
 @Table(name = "job_openings")
@@ -68,7 +70,7 @@ public class JobOpenings extends AuditModel{
 	@Column(name="max_exp")
 	private Integer maxExp;
 	
-	@OneToOne(cascade = { CascadeType.MERGE })
+	@OneToOne(cascade = {  CascadeType.ALL})
 	@JoinColumn(name = "wing_id")
     private CompanyWings wings;
 	

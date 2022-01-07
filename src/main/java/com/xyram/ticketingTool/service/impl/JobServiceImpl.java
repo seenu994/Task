@@ -19,8 +19,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -32,6 +34,7 @@ import com.jcraft.jsch.Session;
 import com.xyram.ticketingTool.Communication.PushNotificationCall;
 import com.xyram.ticketingTool.Communication.PushNotificationRequest;
 import com.xyram.ticketingTool.Repository.ApplicationCommentsRepository;
+import com.xyram.ticketingTool.Repository.CompanyWingsRepository;
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
 import com.xyram.ticketingTool.Repository.JobApplicationRepository;
 import com.xyram.ticketingTool.Repository.JobInterviewRepository;
@@ -48,6 +51,7 @@ import com.xyram.ticketingTool.entity.JobInterviews;
 import com.xyram.ticketingTool.entity.JobOffer;
 import com.xyram.ticketingTool.entity.JobOpenings;
 import com.xyram.ticketingTool.entity.Notifications;
+import com.xyram.ticketingTool.entity.Projects;
 import com.xyram.ticketingTool.enumType.JobApplicationStatus;
 import com.xyram.ticketingTool.enumType.JobOfferStatus;
 import com.xyram.ticketingTool.enumType.JobOpeningStatus;
@@ -98,6 +102,8 @@ public class JobServiceImpl implements JobService {
 
 	@Autowired
 	EmpoloyeeServiceImpl employeeServiceImpl;
+	@Autowired
+	CompanyWingsRepository companyWingsRepository;
 
 	@Value("${APPLICATION_URL}")
 	private String application_url;
@@ -112,6 +118,20 @@ public class JobServiceImpl implements JobService {
 		// TODO Auto-generated method stub
 		ApiResponse response = new ApiResponse(false);
 
+		// Projects project = projectRepository.getById(ticketreq.getProjectId());
+		if (jobObj.getWings() != null && jobObj.getWings().getId() != null) {
+			CompanyWings wing = companyWingsRepository.getById(jobObj.getWings().getId());
+			if (wing != null)
+				
+			{
+				jobObj.setWings(wing);
+			}
+			
+			else
+			{
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Wing does not exist");
+			}
+		} 
 		jobObj.setCreatedAt(new Date());
 		jobObj.setCreatedBy(userDetail.getUserId());
 		jobObj.setJobStatus(JobOpeningStatus.VACANT);
@@ -120,14 +140,14 @@ public class JobServiceImpl implements JobService {
 
 			List<Employee> EmployeeList = employeeRepository.getAllEmployeeNotification();
 			for (Employee employeeNotification : EmployeeList) {
-				Map request = new HashMap<>();
-				request.put("eId", employeeNotification.geteId());
-
-				request.put("uid", employeeNotification.getUserCredientials().getUid());
-				request.put("title", "job CREATED");
-				request.put("body", " job Created - " + emp.getFirstName());
-				pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 12,
-						NotificationType.EMPLOYEE_CREATED.toString()));
+//				Map request = new HashMap<>();
+//				request.put("eId", employeeNotification.geteId());
+//
+//				request.put("uid", employeeNotification.getUserCredientials().getUid());
+//				request.put("title", "job CREATED");
+//				request.put("body", " job Created - " + emp.getFirstName());
+//				pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 12,
+//						NotificationType.EMPLOYEE_CREATED.toString()));
 
 				// inserting notification details
 				Notifications notifications = new Notifications();
@@ -144,18 +164,18 @@ public class JobServiceImpl implements JobService {
 				notificationService.createNotification(notifications);
 				UUID uuid = UUID.randomUUID();
 				String uuidAsString = uuid.toString();
-				if (emp != null) {
-					String name = null;
-
-					HashMap mailDetails = new HashMap();
-					mailDetails.put("toEmail", employeeNotification.getEmail());
-					mailDetails.put("subject", name + ", " + "Here's your new PASSWORD");
-					mailDetails.put("message", "Hi " + name
-							+ ", \n\n We received a request to reset the password for your Account. \n\n Here's your new PASSWORD Link is: "
-							+ application_url + "/update-password" + "?key=" + uuidAsString
-							+ "\n\n Thanks for helping us keep your account secure.\n\n Xyram Software Solutions Pvt Ltd.");
-					emailService.sendMail(mailDetails);
-				}
+//				if (emp != null) {
+//					String name = null;
+//
+//					HashMap mailDetails = new HashMap();
+//					mailDetails.put("toEmail", employeeNotification.getEmail());
+//					mailDetails.put("subject", name + ", " + "Here's your new PASSWORD");
+//					mailDetails.put("message", "Hi " + name
+//							+ ", \n\n We received a request to reset the password for your Account. \n\n Here's your new PASSWORD Link is: "
+//							+ application_url + "/update-password" + "?key=" + uuidAsString
+//							+ "\n\n Thanks for helping us keep your account secure.\n\n Xyram Software Solutions Pvt Ltd.");
+//					emailService.sendMail(mailDetails);
+//				}
 
 				response.setSuccess(true);
 				response.setMessage("New Job Opening Created");
@@ -195,7 +215,7 @@ public class JobServiceImpl implements JobService {
 					predicates
 							.add(criteriaBuilder.and(criteriaBuilder.equal((root.get("wings").get("wingName")), wing)));
 				}
-				
+
 				// criteriaBuilder.upper(itemRoot.get("code"), code.toUpperCase()
 				if (searchQuery != null) {
 //                	criteriaBuilder.like(root.get("title"), "%" + keyword + "%")
@@ -205,9 +225,8 @@ public class JobServiceImpl implements JobService {
 				}
 				System.out.println(userDetail.getUserRole().equals("JOB_VENDOR"));
 				if (userDetail.getUserRole().equals("JOB_VENDOR")) {
-					
-					predicates.add(criteriaBuilder
-							.and(criteriaBuilder.equal(root.get("vendor_view"), 1)));
+
+					predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("vendor_view"), 1)));
 				}
 				query.orderBy(criteriaBuilder.desc(root.get("createdAt")));
 				return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
@@ -331,13 +350,11 @@ public class JobServiceImpl implements JobService {
 			boolean Emailvalidate = jobAppRepository.findb(jobAppObj.getCandidateEmail());
 			if (Emailvalidate == false) {
 
-			jobAppObj.setJobCode(jobCode);
-			jobAppObj.setJobOpenings(jobOpening);
-			jobAppObj.setCreatedAt(new Date());
-			jobAppObj.setCreatedBy(userDetail.getUserId());
-			jobAppObj.setJobApplicationSatus(JobApplicationStatus.APPLIED);
-			
-			
+				jobAppObj.setJobCode(jobCode);
+				jobAppObj.setJobOpenings(jobOpening);
+				jobAppObj.setCreatedAt(new Date());
+				jobAppObj.setCreatedBy(userDetail.getUserId());
+				jobAppObj.setJobApplicationSatus(JobApplicationStatus.APPLIED);
 
 				if (jobAppRepository.save(jobAppObj) != null) {
 
@@ -381,7 +398,7 @@ public class JobServiceImpl implements JobService {
 
 					response.setSuccess(true);
 					response.setMessage("New Job Application Created");
-				}else {
+				} else {
 					response.setSuccess(false);
 					response.setMessage("New Job Application Not Created");
 				}
@@ -395,7 +412,6 @@ public class JobServiceImpl implements JobService {
 		}
 		return response;
 	}
-
 
 	@Override
 	public ApiResponse scheduleJobInterview(JobInterviews schedule, String applicationId) {

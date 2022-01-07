@@ -18,6 +18,8 @@ public interface VersionService {
 	
 	Version getVersionById(String id);
 
+	Version updateVersion(String versionId, Version versionRequest);
+
 	
 
 }
