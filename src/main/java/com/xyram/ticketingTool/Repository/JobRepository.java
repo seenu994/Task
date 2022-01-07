@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-
+import com.xyram.ticketingTool.entity.CompanyWings;
 import com.xyram.ticketingTool.entity.JobOpenings;
 
 
@@ -77,4 +77,6 @@ public interface JobRepository extends CrudRepository<JobOpenings,Long>,JpaSpeci
 	 * @Query("select new map(jo.createdBy as createdBy) from JobApplication jo left join Employee e On jo.createdBy=e.eId and e.userCredientials.uid as uid where jo.createdBy=e.eId "
 	 * ) List<Map> getCreadtedBy();
 	 */
+	@Query(value = "SELECT cw.wing_id, cw.wing_name FROM ticketdbtool.company_wings cw", nativeQuery = true)
+	CompanyWings getWingById(String id);
 	}

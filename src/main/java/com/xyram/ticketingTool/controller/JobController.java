@@ -1,9 +1,6 @@
 package com.xyram.ticketingTool.controller;
 
-import java.util.Date;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -11,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,25 +20,15 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
-import com.xyram.ticketingTool.entity.Client;
-import com.xyram.ticketingTool.entity.Comments;
-import com.xyram.ticketingTool.entity.JobApplication;
 import com.xyram.ticketingTool.entity.JobInterviews;
 import com.xyram.ticketingTool.entity.JobOffer;
-import com.xyram.ticketingTool.entity.Ticket;
+import com.xyram.ticketingTool.entity.JobOpenings;
 import com.xyram.ticketingTool.enumType.JobApplicationStatus;
-import com.xyram.ticketingTool.enumType.JobInterviewStatus;
 import com.xyram.ticketingTool.enumType.JobOfferStatus;
 import com.xyram.ticketingTool.enumType.JobOpeningStatus;
 import com.xyram.ticketingTool.request.InterviewRoundReviewRequest;
-import com.xyram.ticketingTool.request.JobApplicationSearchRequest;
-import com.xyram.ticketingTool.request.JobInterviewsRequest;
-import com.xyram.ticketingTool.request.JobOpeningSearchRequest;
-import com.xyram.ticketingTool.service.JobService;
-import com.xyram.ticketingTool.service.TicketService;
 import com.xyram.ticketingTool.service.JobService;
 import com.xyram.ticketingTool.util.AuthConstants;
-import com.xyram.ticketingTool.entity.JobOpenings;
 
 @RestController
 @CrossOrigin
