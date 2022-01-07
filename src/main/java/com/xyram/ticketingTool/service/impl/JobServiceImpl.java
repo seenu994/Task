@@ -219,9 +219,14 @@ public class JobServiceImpl implements JobService {
 				// criteriaBuilder.upper(itemRoot.get("code"), code.toUpperCase()
 				if (searchQuery != null) {
 //                	criteriaBuilder.like(root.get("title"), "%" + keyword + "%")
-					predicates.add(criteriaBuilder.or(criteriaBuilder.like(root.get("jobTitle"), "%"+searchQuery+"%")));
-					predicates.add(criteriaBuilder.or(criteriaBuilder.like(root.get("jobDescription"), "%"+searchQuery+"%")));
-					predicates.add(criteriaBuilder.or(criteriaBuilder.like(root.get("jobCode"), "%"+searchQuery+"%")));
+					predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("jobTitle")), "%"+searchQuery.toLowerCase()+"%"));
+					predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("jobDescription")), "%"+searchQuery.toLowerCase()+"%"));
+					predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("jobCode")), "%"+searchQuery.toLowerCase()+"%"));
+
+//					predicates.add(criteriaBuilder.like(root.get("jobDescription"), "%"+searchQuery+"%"));
+//					predicates.add(criteriaBuilder.like(root.get("jobCode"), "%"+searchQuery+"%"));
+//					predicates.add(criteriaBuilder.or(criteriaBuilder.like(root.get("jobDescription"), "%"+searchQuery+"%")));
+//					predicates.add(criteriaBuilder.or(criteriaBuilder.like(root.get("jobCode"), "%"+searchQuery+"%")));
 				}
 				System.out.println(userDetail.getUserRole().equals("JOB_VENDOR"));
 				if (userDetail.getUserRole().equals("JOB_VENDOR")) {
