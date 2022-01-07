@@ -28,7 +28,7 @@ public class NotificationController {
 
 	} 
 	
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getNotificationCount",
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getNotificationCount", AuthConstants.INFRA_ADMIN_BASEPATH + "/getNotificationCount",
 			AuthConstants.INFRA_USER_BASEPATH + "/getNotificationCount", AuthConstants.DEVELOPER_BASEPATH + "/getNotificationCount", AuthConstants.HR_ADMIN_BASEPATH + "/getNotificationCount" })
 	public ApiResponse getNotificationCount() {
 		logger.info("Received request for getNotificationCount");

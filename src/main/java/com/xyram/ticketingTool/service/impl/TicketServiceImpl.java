@@ -1012,10 +1012,10 @@ public class TicketServiceImpl implements TicketService {
 	@Override
 	public ApiResponse searchTicket(Map<String, Object>filter) {
 		String searchString = filter.containsKey("searchString") ? ((String) filter.get("searchString")).toLowerCase():null;
-		String priority = filter.containsKey("priority") ? ((String) filter.get("priority")).toLowerCase():null;
+		String priority = filter.containsKey("priority") ? ((String) filter.get("priority")):null;
 		
 		List<Map> serachList = null;
-		if(userDetail.getUserRole().equals("INFRA_ADMIN") || userDetail.getUserRole().equals("TICKETINGTOOL_ADMIN")) {
+		if(userDetail.getUserRole().equals("INFRA_ADMIN	") || userDetail.getUserRole().equals("TICKETINGTOOL_ADMIN")) {
 			serachList = ticketrepository.searchAllTicket(searchString,priority);
 		}
 		else if(userDetail.getUserRole().equals("INFRA_USER")) {
@@ -1023,15 +1023,18 @@ public class TicketServiceImpl implements TicketService {
 		}else {
 			serachList = ticketrepository.searchSelfTicket(searchString,priority,userDetail.getUserId());
 		}
+		ApiResponse response = new ApiResponse(true);
 		
 		Map content = new HashMap();
 		content.put("serachList", serachList);
-		ApiResponse response = new ApiResponse(true);
+		//ApiResponse response = new ApiResponse(true);
 		response.setMessage(ResponseMessages.TICKET_LIST);
 		response.setSuccess(true);
 		response.setContent(content);
+		
 		return response;
 	}
+	
 	
 
 	@Override

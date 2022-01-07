@@ -88,6 +88,8 @@ public interface EmployeeService {
 
 	ApiResponse searchEmployeeNotAssignedToByProject(String projectid, String searchString);
 
+	ApiResponse serachJobVendor(String vendorName);
+
 	//ApiResponse updateProfileImage(MultipartFile file, String employeeId);
 
 }
