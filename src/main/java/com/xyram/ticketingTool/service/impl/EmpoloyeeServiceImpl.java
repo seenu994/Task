@@ -818,6 +818,27 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 		return response;
 	}
+	
+	@Override
+	public ApiResponse serachJobVendor(String vendorName) {
+		ApiResponse response = new ApiResponse(false);
+		List<JobVendorDetails> jobVendors = vendorRepository.serachJobVendors(vendorName);
+		Map content = new HashMap();
+		content.put("jobVendors", jobVendors);
+		if (content != null) {
+			response.setSuccess(true);
+			response.setMessage("Vendor Retrieved Successfully");
+			response.setContent(content);
+		}
+
+		else {
+			response.setSuccess(false);
+			response.setMessage("Could not retrieve data");
+			response.setContent(null);
+		}
+
+		return response;
+	}
 
 	@Override
 	public ApiResponse getAllEmployeeCurrentMonth(Pageable pageable) {

@@ -148,6 +148,8 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 								projectMemberNew.setStatus(ProjectMembersStatus.ACTIVE);
 								projectMemberNew.setProjectId(project.getpId());
 
+								projectMemberNew.setEmployeeId(employeeObj.geteId());
+
 								projectMemberRepository.save(projectMemberNew);
 							}
 //							List<Map> developerList=	employeeServiceImpl.getListOfDeveloper();

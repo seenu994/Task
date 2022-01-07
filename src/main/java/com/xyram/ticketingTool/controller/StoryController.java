@@ -57,7 +57,7 @@ public class StoryController {
 	
 	
 	@GetMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/updateStory/{storyId}", AuthConstants.INFRA_ADMIN_BASEPATH + "/updateStory/{storyId}" })
-	public Story updateStory(@PathVariable String storyId, @RequestParam Story story) {
+	public Story updateStory(@PathVariable String storyId, @RequestBody Story story) {
 
 		return storyService.editStoryDetails(storyId,story);
 	}
