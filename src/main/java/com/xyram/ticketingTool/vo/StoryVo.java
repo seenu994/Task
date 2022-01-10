@@ -39,6 +39,9 @@ public class StoryVo {
 	
 	
 
+	private String sprintId;
+	
+
 	private String storyLabel;
 
 	@NotNull(message = "story Status should is mandatory")
@@ -125,6 +128,17 @@ public class StoryVo {
 		this.version = version;
 	}
 
+	public String getSprintId() {
+		return sprintId;
+	}
+
+	public void setSprintId(String sprintId) {
+		this.sprintId = sprintId;
+	}
+
+	
+	
+	
 	
 	
 }

@@ -1,5 +1,6 @@
 package com.xyram.ticketingTool.service.impl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -77,9 +78,11 @@ public class StoryServiceImpl implements StoryService {
 			Map projectFeature = projectFeatureService.getFeatureByProjectAndFeatureId(story.getProjectId(),
 					story.getStoryStatus());
 
+			
 			story.setOwner(currentUser.getScopeId());
 			Integer storyNo = storyRepository.getTotalTicketByprojectId(story.getProjectId()) + 1;
 			story.setStoryNo(storyNo.toString());
+			story.setCreatedOn(new Date());
 
 			return storyRepository.save(story);
 
@@ -99,7 +102,7 @@ public class StoryServiceImpl implements StoryService {
 			}
 			if (storyRequest.getStoryLabel() != null) {
 				checkLabel(story.getStoryLabel());
-				story.setStoryDescription(storyRequest.getStoryDescription());
+				story.setStoryLabel(story.getStoryLabel());
 			}
 			if (storyRequest.getStoryType() != null) {
 				story.setStoryType(storyRequest.getStoryType());

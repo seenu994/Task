@@ -53,7 +53,7 @@ public class FileTransferServiceImpl implements FileTransferService {
 	private boolean isPasswordRequired;
 
 	String SFTPKEY = "/home/ubuntu/tomact-be/webapps/Ticket_tool-0.0.1-SNAPSHOT/WEB-INF/classes/Covid-Phast-Prod.ppk";
-	String SFTPWORKINGDIRAADMIN = "/home/ubuntu/tomcat/webapps";
+	String SFTPWORKINGDIRAADMIN = "/home/ubuntu/tomcat-be/webapps/";
 
 	@Override
 	public boolean uploadFile(MultipartFile file,String path ,String fileName) {

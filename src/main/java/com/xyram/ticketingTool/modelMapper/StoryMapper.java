@@ -38,6 +38,7 @@ public class StoryMapper {
 				map().setStoryStatus(source.getStoryStatus());
 				map().setAssignTo(source.getAssignTo());
 				map().setPlatform(source.getPlatform());
+				map().setSprintId(source.getSprintId());
 
 			}
 		};

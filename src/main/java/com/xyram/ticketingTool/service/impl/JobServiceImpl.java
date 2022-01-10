@@ -219,9 +219,9 @@ public class JobServiceImpl implements JobService {
 				// criteriaBuilder.upper(itemRoot.get("code"), code.toUpperCase()
 				if (searchQuery != null) {
 //                	criteriaBuilder.like(root.get("title"), "%" + keyword + "%")
-					predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("jobTitle")), "%"+searchQuery.toLowerCase()+"%"));
-					predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("jobDescription")), "%"+searchQuery.toLowerCase()+"%"));
-					predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("jobCode")), "%"+searchQuery.toLowerCase()+"%"));
+					//predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("jobTitle")), "%"+searchQuery.toLowerCase()+"%"));
+					predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("jobDescription")), "%"+searchQuery+"%")); 
+					//predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("jobCode")), "%"+searchQuery.toLowerCase()+"%"));
 
 //					predicates.add(criteriaBuilder.like(root.get("jobDescription"), "%"+searchQuery+"%"));
 //					predicates.add(criteriaBuilder.like(root.get("jobCode"), "%"+searchQuery+"%"));
@@ -429,9 +429,12 @@ public class JobServiceImpl implements JobService {
 			schedule.setCreatedAt(new Date());
 			schedule.setCreatedBy(userDetail.getUserId());
 			schedule.setJobInterviewStatus("SCHEDULED");
-			schedule.setJobApplication(jobApp);
-
-			schedule.setInterviewer(applicationId);
+			schedule.setJobApplication(jobApp);		
+           Employee empObj = employeeRepository.getByEmpId(schedule.getInterviewer());
+           if(empObj!=null) {
+        	   schedule.setInterviewerName(empObj.getFirstName());
+           }
+//			schedule.setInterviewer(emp);
 			if (jobInterviewRepository.save(schedule) != null) {
 				schedule.setJobInterviewStatus("SCHEDULED");
 				jobAppRepository.save(jobApp);
@@ -467,12 +470,12 @@ public class JobServiceImpl implements JobService {
 				if (status != null && !status.equalsIgnoreCase("ALL")) {
 					predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("jobInterviewStatus"), status)));
 				}
-				if (userDetail.getUserRole().equals("DEVELOPER") && userDetail.getUserRole().equals("HR")
-						&& userDetail.getUserRole().equals("INFRA_ADMIN")
-						&& userDetail.getUserRole().equals("INFRA_USER")) {
+				if (userDetail.getUserRole().equals("DEVELOPER") || userDetail.getUserRole().equals("HR")
+						|| userDetail.getUserRole().equals("INFRA_ADMIN")
+						|| userDetail.getUserRole().equals("INFRA_USER")) {
 					System.out.println(userDetail.getUserId());
 					predicates.add(
-							criteriaBuilder.and(criteriaBuilder.like(root.get("interviewer"), userDetail.getUserId())));
+							criteriaBuilder.and(criteriaBuilder.equal(root.get("interviewer"),userDetail.getScopeId())));
 				}
 				if (searchQuery != null) {
 //	                	criteriaBuilder.like(root.get("title"), "%" + keyword + "%")
@@ -994,6 +997,15 @@ public class JobServiceImpl implements JobService {
 	public ApiResponse getJobInterviewByAppId(String applicationId) {
 
 		ApiResponse response = new ApiResponse(false);
+		/*
+		 * if (userDetail.getUserRole().equals("DEVELOPER") ||
+		 * userDetail.getUserRole().equals("INFRA_ADMIN") ||
+		 * userDetail.getUserRole().equals("INFRA_USER")) {
+		 * 
+		 * }
+		 */
+		
+		
 		List<Map> jobOpening = jobInterviewRepository.getInterviewByAppId(applicationId);
 		Map interviews = new HashMap();
 		interviews.put("interviews", jobOpening);
