@@ -360,6 +360,7 @@ public class JobServiceImpl implements JobService {
 				jobAppObj.setCreatedAt(new Date());
 				jobAppObj.setCreatedBy(userDetail.getUserId());
 				jobAppObj.setJobApplicationSatus(JobApplicationStatus.APPLIED);
+				jobAppObj.setReferredEmployeeId(userDetail.getScopeId());
 
 				if (jobAppRepository.save(jobAppObj) != null) {
 

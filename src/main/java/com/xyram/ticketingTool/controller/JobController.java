@@ -122,7 +122,7 @@ public class JobController {
 	 
 	
 	
-	  @PutMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/changeJobInterviewStatus/{jobInerviewId}/{status}",
+	  @PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/changeJobInterviewStatus/{jobInerviewId}/{status}", AuthConstants.DEVELOPER_BASEPATH + "/changeJobInterviewStatus/{jobInerviewId}/{status}",
 			  AuthConstants.HR_ADMIN_BASEPATH + "/changeJobInterviewStatus/{jobInerviewId}/{status}" ,
 			  AuthConstants.HR_BASEPATH + "/changeJobInterviewStatus/{jobInerviewId}/{status}"})
 	  public ApiResponse changeJobInterviewStatus(@PathVariable String jobInerviewId,@PathVariable String status,@RequestParam(required=false) Integer rating,@RequestParam(required=false) String feedback,@RequestParam(required=false) String comments) { 
