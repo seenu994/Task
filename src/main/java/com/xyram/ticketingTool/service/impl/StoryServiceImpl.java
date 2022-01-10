@@ -102,7 +102,7 @@ public class StoryServiceImpl implements StoryService {
 			}
 			if (storyRequest.getStoryLabel() != null) {
 				checkLabel(story.getStoryLabel());
-				story.setStoryLabel(story.getStoryLabel());
+				story.setStoryLabel(storyRequest.getStoryLabel());
 			}
 			if (storyRequest.getStoryType() != null) {
 				story.setStoryType(storyRequest.getStoryType());

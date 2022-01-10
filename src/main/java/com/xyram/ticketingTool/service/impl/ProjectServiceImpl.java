@@ -17,15 +17,19 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
+import com.xyram.ticketingTool.Repository.FeatureRepository;
 import com.xyram.ticketingTool.Repository.ProjectRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
 import com.xyram.ticketingTool.entity.Employee;
+import com.xyram.ticketingTool.entity.Feature;
+import com.xyram.ticketingTool.entity.ProjectFeature;
 import com.xyram.ticketingTool.entity.Projects;
 import com.xyram.ticketingTool.entity.Role;
 import com.xyram.ticketingTool.enumType.UserRole;
 import com.xyram.ticketingTool.exception.ResourceNotFoundException;
 import com.xyram.ticketingTool.request.CurrentUser;
+import com.xyram.ticketingTool.service.ProjectFeatureService;
 import com.xyram.ticketingTool.service.ProjectService;
 import com.xyram.ticketingTool.util.ResponseMessages;
 
@@ -48,7 +52,13 @@ public class ProjectServiceImpl implements ProjectService {
 
 	@Autowired
 	EmployeeRepository employeeRepository;
-
+	
+	@Autowired
+	FeatureRepository featureRepository;
+	
+    @Autowired
+	ProjectFeatureService projectFeatureService;
+	
 	@Override
 	public ApiResponse addproject(Projects project) {
 		ApiResponse response = validateClientId(project);
@@ -69,6 +79,18 @@ public class ProjectServiceImpl implements ProjectService {
 			// System.out.println("userDetail.getUserId() - " + userDetail.getUserId());
 			Projects projetAdded = projectRepository.save(project);
 			
+			if(projetAdded!=null)
+			{
+			List<Feature> features=	featureRepository.getDefaultFeatures();
+			
+			features.forEach(feature->{
+			      ProjectFeature projectFeature =new ProjectFeature();
+			      projectFeature.setFeatureId(feature.getFeatureId());
+			      projectFeature.setProjectId(projetAdded.getpId());
+			      projectFeatureService.addProjectFeature(projectFeature);
+			});
+			}
+			
 			
 
 			response.setSuccess(true);
@@ -76,6 +98,10 @@ public class ProjectServiceImpl implements ProjectService {
 			Map<String, String> content = new HashMap<String, String>();
 			content.put("projectId", projetAdded.getpId());
 			response.setContent(content);
+			
+			
+			
+			
 			return response;
 		}
 		return response;

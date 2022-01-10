@@ -37,6 +37,8 @@ public class ProjectFeatureServiceImpl implements ProjectFeatureService {
 
 	@Override
 	public ProjectFeature addProjectFeature(ProjectFeature projectFeature) {
+		
+		projectFeature.setStatus("Active");
 
 		return projectFeatureRepository.save(projectFeature);
 	}
@@ -53,23 +55,19 @@ public class ProjectFeatureServiceImpl implements ProjectFeatureService {
 	@Override
 	public ProjectFeature addNewProjectFeature(ProjectFeatureRequest ProjectFeatureRequest) {
 
+		ProjectFeature projectFeature = new ProjectFeature();
+		projectFeature.setProjectId(ProjectFeatureRequest.getProjectId());
+		projectFeature.setStatus("ACTIVE");
+		ProjectFeature prFeature= projectFeatureRepository.save(projectFeature);
 		Feature feature = new Feature();
 		feature.setFeatureName(ProjectFeatureRequest.getFeatureName());
-
+	
 		Feature response = featureService.addFeature(feature);
-		Object ProjectFeature;
-		ProjectFeature projectFeature = null;
-		if (response != null) {
+		prFeature.setFeatureId(response.getFeatureId());
+		return prFeature;
 
-			projectFeature = new ProjectFeature();
 
-			projectFeature.setProjectId(ProjectFeatureRequest.getProjectId());
-			projectFeature.setFeatureId(response.getId());
-			projectFeature.setStatus("ACTIVE");
-
-			return projectFeatureRepository.save(projectFeature);
-		}
-		return projectFeature;
+		
 	}
 
 //	public ProjectFeature updateProjectFeature(String featureId, ProjectFeatureRequest projectFeatureRequest) {
@@ -103,6 +101,9 @@ public class ProjectFeatureServiceImpl implements ProjectFeatureService {
 	public Map getFeatureByProjectAndFeatureId(String projectId, String featureId) {
 		return projectFeatureRepository.getFeatureAvailable(featureId, projectId);
 	}
+	
+	
+	
 
 	@Override
 	public List<ProjectFeature> assignFeatureToProject(AssignFeatureRequest request)

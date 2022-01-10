@@ -28,6 +28,7 @@ public class SprintServiceImpl implements SprintService {
 	ProjectService projectService;
 	@Override
 	public Sprint createSprint(Sprint sprint) {
+		sprint.setSprintStatus("ACTIVE");
 		if (sprint.getProject() != null && sprint.getProject().getpId() != null) {
 			Projects project = projectService.getprojectById(sprint.getProject().getpId());
 			if (project != null) {
