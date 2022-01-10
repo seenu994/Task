@@ -997,14 +997,31 @@ public class JobServiceImpl implements JobService {
 	public ApiResponse getJobInterviewByAppId(String applicationId) {
 
 		ApiResponse response = new ApiResponse(false);
-		/*
-		 * if (userDetail.getUserRole().equals("DEVELOPER") ||
-		 * userDetail.getUserRole().equals("INFRA_ADMIN") ||
-		 * userDetail.getUserRole().equals("INFRA_USER")) {
-		 * 
-		 * }
-		 */
-		
+		List<Predicate> predicates = new ArrayList<>();
+		  if (userDetail.getUserRole().equals("DEVELOPER") ||
+		  userDetail.getUserRole().equals("INFRA_ADMIN") ||
+		  userDetail.getUserRole().equals("INFRA_USER")) {
+		  
+		  
+		  System.out.println(userDetail.getUserId());
+		  List<Map> jobInterviewsObj=jobInterviewRepository.getInterviwerByScopeID(userDetail.getScopeId());
+		  Map interviews = new HashMap();
+		  interviews.put("interviews", jobInterviewsObj);
+			if (jobInterviewsObj.isEmpty()) {
+				response.setSuccess(false);
+				response.setMessage("Job Application Not Exist");
+
+			} else {
+				response.setSuccess(true);
+				response.setMessage("Job Opening Detail");
+				response.setContent(interviews);
+			}
+			return response;
+
+		}else
+		{
+			if  (userDetail.getUserRole().equals("HR_ADMIN") || userDetail.getUserRole().equals("TICKETINGTOOL_ADMIN"))
+			{
 		
 		List<Map> jobOpening = jobInterviewRepository.getInterviewByAppId(applicationId);
 		Map interviews = new HashMap();
@@ -1019,7 +1036,9 @@ public class JobServiceImpl implements JobService {
 			response.setContent(interviews);
 		}
 		return response;
-
+			}
+		}
+		return response;
 	}
 
 	@Override
