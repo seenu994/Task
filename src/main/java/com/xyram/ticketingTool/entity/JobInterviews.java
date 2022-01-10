@@ -51,6 +51,9 @@ public class JobInterviews extends AuditModel{
 	
 	@Column(name="interviewer")
 	private String interviewer;
+	
+	@Column(name="interviewer_name")
+	private String interviewerName;
 
 	@Column(name="round_details")
 	private String roundDetails;
@@ -199,6 +202,14 @@ public class JobInterviews extends AuditModel{
 
 	public void setJobInterviewStatus(String jobInterviewStatus) {
 		this.jobInterviewStatus = jobInterviewStatus;
+	}
+
+	public String getInterviewerName() {
+		return interviewerName;
+	}
+
+	public void setInterviewerName(String interviewerName) {
+		this.interviewerName = interviewerName;
 	}
 	
 	
