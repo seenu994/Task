@@ -24,6 +24,7 @@ public class StoryMapper {
 
 		ModelMapper StoryModelMapper = new ModelMapper();
 
+		StoryModelMapper.getConfiguration().setAmbiguityIgnored(true);
 		Story story = null;
 
 		PropertyMap<StoryVo, Story> storyVoToEntityPropertyMap = new PropertyMap<StoryVo, Story>() {
