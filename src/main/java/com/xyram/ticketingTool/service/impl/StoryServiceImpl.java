@@ -122,10 +122,20 @@ public class StoryServiceImpl implements StoryService {
 	}
 
 	@Override
-	public IssueTrackerResponse getAllStories(String projectId) {
+	public IssueTrackerResponse getAllStories(String projectId, Map<String ,Object> filter) {
 
 		IssueTrackerResponse response = new IssueTrackerResponse();
-		List<Map> storyList = storyRepository.getAllStories(projectId);
+		String issue=null;
+		String searchString = filter.containsKey("searchString") ? ((String) filter.get("searchString")).toLowerCase() : null;
+		String assignTo = filter.containsKey("assignTo") ? ((String) filter.get("assignTo")).toLowerCase() : null;
+		String platform = filter.containsKey("platform") ? ((String) filter.get("platform")).toLowerCase() : null;
+		String storyStatus = filter.containsKey("storyStatus") ? ((String) filter.get("storyStatus")).toLowerCase() : null;
+		String storyType = filter.containsKey("storyType") ? ((String) filter.get("storyType")).toLowerCase() : null;
+		
+		
+		
+		
+		List<Map> storyList = storyRepository.getAllStories(projectId, searchString);
 
 		response.setContent(storyList);
 
@@ -181,6 +191,26 @@ public class StoryServiceImpl implements StoryService {
 			return true;
 		}
 	}
+	
+	@Override
+	public IssueTrackerResponse  storySearch(String projectId, Map<String , Object> filter)
+	{
+		String searchString = filter.containsKey("searchString") ? ((String) filter.get("searchString")).toLowerCase() : null;
+		String assignTo = filter.containsKey("assignTo") ? ((String) filter.get("assignTo")).toLowerCase() : null;
+		String platform = filter.containsKey("platform") ? ((String) filter.get("platform")).toLowerCase() : null;
+		String storyStatus = filter.containsKey("storyStatus") ? ((String) filter.get("storyStatus")).toLowerCase() : null;
+		String storyType = filter.containsKey("storyType") ? ((String) filter.get("storyType")).toLowerCase() : null;
+		String storyLabel = filter.containsKey("storyLabel") ? ((String) filter.get("storyLabel")).toLowerCase() : null;
+		
+		IssueTrackerResponse response = new IssueTrackerResponse();
+		 
+		List<Map> stories = storyRepository.getStoryTesting(projectId ,searchString, assignTo, platform, storyStatus, storyType,storyLabel);
+		response.setContent(stories);
+
+		response.setStatus("success");;
+		return response;
+	}
+	
 
 	public boolean checkLabel(String labelId) {
 		if (labelId != null) {
@@ -245,5 +275,6 @@ public class StoryServiceImpl implements StoryService {
 
 		return response;
 	}
+
 
 }

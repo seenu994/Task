@@ -12,8 +12,6 @@ public interface StoryService {
 
 	Story createStory(Story story);
 
-
-	IssueTrackerResponse getAllStories(String projectId );
 	IssueTrackerResponse getAllStoriesBystatus(String projectId ,String storyStatusId );
 
 	Story changeStoryStatus(StoryChangeStatusRequest storyChangeStatusrequest);
@@ -23,5 +21,10 @@ public interface StoryService {
 
 
 	Story editStoryDetails(String storyId, Story storyRequest);
+
+
+	IssueTrackerResponse getAllStories(String projectId, Map<String, Object> filter);
+
+	IssueTrackerResponse storySearch(String projectId, Map<String, Object> filter);
 
 }

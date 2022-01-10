@@ -68,6 +68,10 @@ public class JobApplication extends AuditModel{
 	@JoinColumn(name = "job_id")
     private JobOpenings jobOpenings;
 	
+	@Column(name="referred_employee_id")
+	private String referredEmployeeId;
+	
+	
 	@Enumerated(EnumType.STRING)
 	@Column(name="status")
 	private JobApplicationStatus jobApplicationSatus = JobApplicationStatus.SUBMITTED;
@@ -175,6 +179,14 @@ public class JobApplication extends AuditModel{
 
 	public void setJobOpenings(JobOpenings jobOpenings) {
 		this.jobOpenings = jobOpenings;
+	}
+
+	public String getReferredEmployeeId() {
+		return referredEmployeeId;
+	}
+
+	public void setReferredEmployeeId(String referredEmployeeId) {
+		this.referredEmployeeId = referredEmployeeId;
 	}
 
 
