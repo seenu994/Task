@@ -1,40 +1,21 @@
 
 package com.xyram.ticketingTool.service.impl;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
-import java.util.Set;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import javax.security.auth.message.callback.PrivateKeyCallback.Request;
 import javax.transaction.Transactional;
 
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -42,14 +23,6 @@ import org.springframework.web.server.ResponseStatusException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.Element;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.Phrase;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
 import com.xyram.ticketingTool.Communication.PushNotificationCall;
 import com.xyram.ticketingTool.Communication.PushNotificationRequest;
 import com.xyram.ticketingTool.Repository.CommentRepository;
@@ -64,9 +37,7 @@ import com.xyram.ticketingTool.Repository.UserRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Comments;
 import com.xyram.ticketingTool.entity.Employee;
-import com.xyram.ticketingTool.entity.JobOpenings;
 import com.xyram.ticketingTool.entity.Notifications;
-import com.xyram.ticketingTool.entity.ProjectMembers;
 import com.xyram.ticketingTool.entity.Projects;
 import com.xyram.ticketingTool.entity.Ticket;
 import com.xyram.ticketingTool.entity.TicketAssignee;
@@ -76,13 +47,10 @@ import com.xyram.ticketingTool.enumType.TicketAssigneeStatus;
 import com.xyram.ticketingTool.enumType.TicketStatus;
 import com.xyram.ticketingTool.enumType.UserRole;
 import com.xyram.ticketingTool.enumType.UserStatus;
-import com.xyram.ticketingTool.exception.ResourceNotFoundException;
 import com.xyram.ticketingTool.request.CurrentUser;
-import com.xyram.ticketingTool.request.JobOpeningSearchRequest;
 import com.xyram.ticketingTool.service.NotificationService;
 import com.xyram.ticketingTool.service.TicketAttachmentService;
 import com.xyram.ticketingTool.service.TicketService;
-import com.xyram.ticketingTool.util.PdfUtil;
 import com.xyram.ticketingTool.util.ResponseMessages;
 
 /**
@@ -464,10 +432,12 @@ public class TicketServiceImpl implements TicketService {
 					
 			
 				} else {
-					if (ticketNewRequest.getStatus().equals(TicketStatus.ASSIGNED)
+					TicketAssignee ticketAssigneObj=new TicketAssignee();
+					TicketAssignee ticket=ticketAssigneeRepository.getDuplicateTickate(ticketAssigneObj.getTicketId());
+					if ( ticketAssigneObj.getStatus().equals(TicketAssigneeStatus.INACTIVE) ||ticketNewRequest.getStatus().equals(TicketStatus.ASSIGNED)
 							|| ticketNewRequest.getStatus().equals(TicketStatus.INPROGRESS)) {
 						// Change userDetail.getUserId() to Ticket Assignee
-						sendPushNotification(ticketAssigneeRepository.getAssigneeId(ticketNewRequest.getId()),
+						sendPushNotification(ticketAssigneeRepository.getAssigneeId(ticket),
 								"Ticket Cancelled By Admin - ", ticketNewRequest, "TICKET_CANCELLED", 17);
 
 					}

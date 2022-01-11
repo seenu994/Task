@@ -720,6 +720,18 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			user.setStatus(UserStatus.ACTIVE);
 			System.out.println(user.getEmail() + "::" + user.getUsername() + "::" + user.getCreatedAt());
 			userRepository.save(user);
+			UserPermissions permissions = new UserPermissions();
+			permissions.setEmpModPermission(permissionConfig.getEMPLOYEES_PERMISSION());
+			permissions.setProjectModPermission(permissionConfig.getPROJECTS_PERMISSION());
+			permissions.setTicketModPermission(permissionConfig.getTICKETS_PERMISSION());
+			permissions.setJobOpeningModPermission(permissionConfig.getJOBOPENINGS_PERMISSION());
+			permissions.setJobInterviewsModPermission(permissionConfig.getJOBINTERVIEWS_PERMISSION());
+			permissions.setJobAppModPermission(permissionConfig.getJOBAPPLICATIONS_PERMISSION());
+			permissions.setJobOfferModPermission(permissionConfig.getJOBOFFERS_PERMISSION());
+			permissions.setJobVendorsModPermission(permissionConfig.getJOBVENDORS_PERMISSION());
+			permissions.setUserId(user.getId());
+			userPermissionConfig.save(permissions);
+			
 
 //				vendorDetails.setCreatedBy(currentUser.getUserId());
 //				vendorDetails.setUpdatedBy(currentUser.getUserId());

@@ -360,6 +360,19 @@ public class JobServiceImpl implements JobService {
 				jobAppObj.setCreatedAt(new Date());
 				jobAppObj.setCreatedBy(userDetail.getUserId());
 				jobAppObj.setJobApplicationSatus(JobApplicationStatus.APPLIED);
+				Employee empObj=employeeRepository.getEmployeeNameByScoleID(userDetail.getScopeId());
+				
+				if(empObj!=null)	
+				{
+				
+				jobAppObj.setReferredEmployee(empObj.getFirstName()+"" +empObj.getLastName());
+				}
+				else
+				{
+					response.setMessage("scope id not exsists");
+					return response;
+				}
+
 				jobAppObj.setReferredEmployeeId(userDetail.getScopeId());
 
 				if (jobAppRepository.save(jobAppObj) != null) {

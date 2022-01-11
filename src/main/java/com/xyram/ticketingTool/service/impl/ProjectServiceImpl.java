@@ -135,15 +135,25 @@ public class ProjectServiceImpl implements ProjectService {
 			
 		} else
 			projectList = projectRepository.getAllProjectByDeveloper(pageable,userDetail.getScopeId());
+if (projectList!=null) {
+	
 
-		Map content = new HashMap();
+		Map content = new HashMap<>();
 		content.put("projectList", projectList);
 		ApiResponse response = new ApiResponse(true);
 		response.setSuccess(true);
 		response.setContent(content);
 		return response;
 	}
+	else
+	{
+		ApiResponse response = new ApiResponse(true);
+	
+		response.setMessage("project list is empty");
 
+return response;
+	}
+	}
 	public Projects getProjectById(String projectId) {
 
 		return projectRepository.findById(projectId).map(project -> {
