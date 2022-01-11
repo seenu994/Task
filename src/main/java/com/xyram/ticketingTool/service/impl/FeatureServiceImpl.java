@@ -89,6 +89,8 @@ public class FeatureServiceImpl implements FeatureService {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, " feature  not found with id" + featureId);
 		}
 	}
+	
+	
 
 	@Override
 	public Feature getFeaturesByFeatureId(String featureId) {

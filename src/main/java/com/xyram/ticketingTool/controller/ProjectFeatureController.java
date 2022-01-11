@@ -43,6 +43,14 @@ public class ProjectFeatureController {
 	//	logger.info("indide ProjectMembersController :: getAllProjectMembers");
 		return projectFeatureService.getAllfeatureByProject(projectId);
 	}
+	
+	@GetMapping(value= {AuthConstants.ADMIN_BASEPATH +"/updateProjectFeature/{featureId}"
+			,AuthConstants.DEVELOPER_BASEPATH +"/updateProjectFeature/{featureId}"})
+	public ProjectFeature getAllProjectFeatures(@PathVariable String featureId ,@RequestBody ProjectFeature projectFeature) {
+	//	logger.info("indide ProjectMembersController :: getAllProjectMembers");
+		return projectFeatureService.updateProjectFeature(featureId, projectFeature);
+	}
+
 
 	
 	
