@@ -60,5 +60,7 @@ public interface ProjectRepository extends JpaRepository<Projects, String> {
 			+ " p.inHouse as inHouse, p.status as status) from Projects "
 			+ " p left join  ProjectMembers e On  p.pId=e.projectId where e.status = 'ACTIVE' and e.employeeId = :employeeId ")
 	List<Map> getAllProjectByDeveloperList(String employeeId);
+	@Query("Select distinct new map(p.pId as projectId,p.projectName as projectName) from Projects p where p.allotToAll = 1")
+	List<Map> getAllAllottedProjects();
 
 }

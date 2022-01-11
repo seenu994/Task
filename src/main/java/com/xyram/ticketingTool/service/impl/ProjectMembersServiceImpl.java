@@ -316,7 +316,7 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 			Employee employeeObj = employeeRepository.getbyUserByUserId(employeeId);
 
 			List<Map> projectList = projectMemberRepository.getAllProjectByEmployeeId(employeeObj.geteId());
-			List<Map> allotedProjectList = projectMemberRepository.getAllAllottedProjects();
+			List<Map> allotedProjectList = projectRepository.getAllAllottedProjects();
 //			for(int i=0; i<= allotedProjectList.size();i++) {
 //				projectList.add(allotedProjectList[i]);
 //			}
