@@ -5,6 +5,8 @@ import java.util.Map;
 
 import javax.transaction.Transactional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -51,7 +53,11 @@ public interface ProjectMemberRepository extends JpaRepository<ProjectMembers, S
 	boolean findb(String employeeId);
 	@Query("select p from ProjectMembers p where p.projectId= :projectId and p.employeeId= :employeeId")
 	ProjectMembers getProjectMemberByEmployeeId(String projectId, String employeeId);
-}
+	@Query("Select distinct new map(p.pId as id,p.projectName as PName, p.projectDescritpion as projectDescritpion, p.clientId as clientId, "
+			+ " p.inHouse as inHouse, p.status as status) from ProjectMembers "
+			+ " e left join  Projects p On e.projectId = p.pId where e.status = 'ACTIVE' and e.employeeId = :scopeId ")
+	 Page<Map> getAllProjectByDeveloper(Pageable pageable, String scopeId) ;
+	 }
 /*
  * //
  * ("Select new map(e.eId as id, e.firstName as firstName, e.lastName as lastName, case when p.projectId = :projectId then 1 else 0 end as projectAssignedStatus) "

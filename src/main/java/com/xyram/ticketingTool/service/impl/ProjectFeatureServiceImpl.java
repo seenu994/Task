@@ -37,7 +37,7 @@ public class ProjectFeatureServiceImpl implements ProjectFeatureService {
 
 	@Override
 	public ProjectFeature addProjectFeature(ProjectFeature projectFeature) {
-		
+
 		projectFeature.setStatus("Active");
 
 		return projectFeatureRepository.save(projectFeature);
@@ -58,52 +58,50 @@ public class ProjectFeatureServiceImpl implements ProjectFeatureService {
 		ProjectFeature projectFeature = new ProjectFeature();
 		projectFeature.setProjectId(ProjectFeatureRequest.getProjectId());
 		projectFeature.setStatus("ACTIVE");
-		ProjectFeature prFeature= projectFeatureRepository.save(projectFeature);
+		ProjectFeature prFeature = projectFeatureRepository.save(projectFeature);
 		Feature feature = new Feature();
 		feature.setFeatureName(ProjectFeatureRequest.getFeatureName());
-	
+
 		Feature response = featureService.addFeature(feature);
 		prFeature.setFeatureId(response.getFeatureId());
 		return prFeature;
 
-
-		
 	}
 
-//	public ProjectFeature updateProjectFeature(String featureId, ProjectFeatureRequest projectFeatureRequest) {
-//
-//		
-//		return projectFeatureRepository.getProjectFeatureByFeatureIdAndPrjId(featureId, projectFeatureRequest.getProjectId())
-//				.map(projectFeature->{
-//					fi
-//					return projectFeature;
-//				}).orElseThrow(()->throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"project feature not  with id"+featureId));
-//		Feature feature = new Feature();
-//		feature.setFeatureName(ProjectFeatureRequest.getFeatureName());
+	@Override
+	public ProjectFeature updateProjectFeature(String featureId, ProjectFeature projectFeatureRequest) {
 
-//		Feature response = featureService.addFeature(feature);
-//		Object ProjectFeature;
-//		ProjectFeature projectFeature =null;
-//		if (response != null) {
-//
-//			projectFeature= new ProjectFeature();
-//			
-//			projectFeature.setProjectId(ProjectFeatureRequest.getProjectId());
-//			projectFeature.setFeatureId(response.getId());
-//			projectFeature.setStatus("ACTIVE");
-//
-//			return projectFeatureRepository.save(projectFeature);
-//		}
-//		return projectFeature;
+		
+		if (projectFeatureRequest.getProjectId()==null)
+		{
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST ,"project is mandatory");
+		}
+		
+		return projectFeatureRepository.getProjectFeatureByFeatureIdAndPrjId(featureId, projectFeatureRequest.getProjectId())
+				.map(projectFeature->{		
+					if(projectFeatureRequest.getStatus()!=null)
+						
+					{
+			             projectFeature.setStatus(projectFeatureRequest.getStatus());
+					}	
+					Feature feature = new Feature();
+			
+					feature.setFeatureName(projectFeatureRequest.getFeatureName());
+					featureService.updateFeatureByFeatureId(featureId, feature);
+				
+					return projectFeatureRepository.save(projectFeature);
+				}).orElseThrow(()->new ResponseStatusException(HttpStatus.BAD_REQUEST,"feature not found with id "));
+	
+	
+	}
+	
+
 	///
 
 	@Override
 	public Map getFeatureByProjectAndFeatureId(String projectId, String featureId) {
 		return projectFeatureRepository.getFeatureAvailable(featureId, projectId);
 	}
-	
-	
-	
 
 	@Override
 	public List<ProjectFeature> assignFeatureToProject(AssignFeatureRequest request)

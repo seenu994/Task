@@ -22,4 +22,6 @@ public interface ProjectFeatureService {
 
 	ProjectFeature addNewProjectFeature(ProjectFeatureRequest ProjectFeatureRequest);
 
+	ProjectFeature updateProjectFeature(String featureId, ProjectFeature projectFeatureRequest);
+
 }

@@ -122,16 +122,15 @@ public class JobServiceImpl implements JobService {
 		if (jobObj.getWings() != null && jobObj.getWings().getId() != null) {
 			CompanyWings wing = companyWingsRepository.getById(jobObj.getWings().getId());
 			if (wing != null)
-				
+
 			{
 				jobObj.setWings(wing);
 			}
-			
-			else
-			{
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Wing does not exist");
+
+			else {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wing does not exist");
 			}
-		} 
+		}
 		jobObj.setCreatedAt(new Date());
 		jobObj.setCreatedBy(userDetail.getUserId());
 		jobObj.setJobStatus(JobOpeningStatus.VACANT);
@@ -194,8 +193,7 @@ public class JobServiceImpl implements JobService {
 		ApiResponse response = new ApiResponse(false);
 		Map content = new HashMap();
 		String status = filter.containsKey("status") ? ((String) filter.get("status")) : null;
-		String searchQuery = filter.containsKey("searchstring") ? ((String) filter.get("searchstring"))
-				: null;
+		String searchQuery = filter.containsKey("searchstring") ? ((String) filter.get("searchstring")) : null;
 		String wing = filter.containsKey("wing") ? ((String) filter.get("wing")) : null;
 		JobOpeningStatus statusApp = null;
 //		List<Map> allJobs = jobRepository.getAllJobOpenings();
@@ -219,9 +217,12 @@ public class JobServiceImpl implements JobService {
 				// criteriaBuilder.upper(itemRoot.get("code"), code.toUpperCase()
 				if (searchQuery != null) {
 //                	criteriaBuilder.like(root.get("title"), "%" + keyword + "%")
-					//predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("jobTitle")), "%"+searchQuery.toLowerCase()+"%"));
-					predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("jobDescription")), "%"+searchQuery+"%")); 
-					//predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("jobCode")), "%"+searchQuery.toLowerCase()+"%"));
+					// predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("jobTitle")),
+					// "%"+searchQuery.toLowerCase()+"%"));
+					predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("jobDescription")),
+							"%" + searchQuery + "%"));
+					// predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("jobCode")),
+					// "%"+searchQuery.toLowerCase()+"%"));
 
 //					predicates.add(criteriaBuilder.like(root.get("jobDescription"), "%"+searchQuery+"%"));
 //					predicates.add(criteriaBuilder.like(root.get("jobCode"), "%"+searchQuery+"%"));
@@ -280,11 +281,22 @@ public class JobServiceImpl implements JobService {
 					predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("candidateEmail"), searchQuery)));
 					predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobCode"), searchQuery)));
 				}
-				if (userDetail.getUserRole() != "HR_ADMIN" && userDetail.getUserRole() != "TICKETINGTOOL_ADMIN") {
+				if (userDetail.getUserRole().equals("DEVELOPER")==true) {
+						predicates.add(
+							criteriaBuilder.and(criteriaBuilder.like(root.get("createdBy"), userDetail.getUserId())));}
+				if (userDetail.getUserRole().equals("INFRA_USER")==true) {
 					predicates.add(
-							criteriaBuilder.and(criteriaBuilder.like(root.get("createdBy"), userDetail.getUserId())));
-				}
-				query.orderBy(criteriaBuilder.desc(root.get("createdAt")));
+						criteriaBuilder.and(criteriaBuilder.like(root.get("createdBy"), userDetail.getUserId())));}
+				if (userDetail.getUserRole().equals("INFRA_ADMIN")==true) {
+					predicates.add(
+						criteriaBuilder.and(criteriaBuilder.like(root.get("createdBy"), userDetail.getUserId())));}
+				if (userDetail.getUserRole().equals("HR")==true) {
+					predicates.add(
+						criteriaBuilder.and(criteriaBuilder.like(root.get("createdBy"), userDetail.getUserId())));}
+				
+				else
+				{
+				query.orderBy(criteriaBuilder.desc(root.get("createdAt")));}
 				return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
 		}, pageable);
@@ -360,6 +372,16 @@ public class JobServiceImpl implements JobService {
 				jobAppObj.setCreatedAt(new Date());
 				jobAppObj.setCreatedBy(userDetail.getUserId());
 				jobAppObj.setJobApplicationSatus(JobApplicationStatus.APPLIED);
+				Employee empObj = employeeRepository.getEmployeeNameByScoleID(userDetail.getScopeId());
+
+				if (empObj != null) {
+
+					jobAppObj.setReferredEmployee(empObj.getFirstName() + "" + empObj.getLastName());
+				} else {
+					response.setMessage("scope id not exsists");
+					return response;
+				}
+
 				jobAppObj.setReferredEmployeeId(userDetail.getScopeId());
 
 				if (jobAppRepository.save(jobAppObj) != null) {
@@ -430,11 +452,11 @@ public class JobServiceImpl implements JobService {
 			schedule.setCreatedAt(new Date());
 			schedule.setCreatedBy(userDetail.getUserId());
 			schedule.setJobInterviewStatus("SCHEDULED");
-			schedule.setJobApplication(jobApp);		
-           Employee empObj = employeeRepository.getByEmpId(schedule.getInterviewer());
-           if(empObj!=null) {
-        	   schedule.setInterviewerName(empObj.getFirstName());
-           }
+			schedule.setJobApplication(jobApp);
+			Employee empObj = employeeRepository.getByEmpId(schedule.getInterviewer());
+			if (empObj != null) {
+				schedule.setInterviewerName(empObj.getFirstName());
+			}
 //			schedule.setInterviewer(emp);
 			if (jobInterviewRepository.save(schedule) != null) {
 				schedule.setJobInterviewStatus("SCHEDULED");
@@ -475,8 +497,8 @@ public class JobServiceImpl implements JobService {
 						|| userDetail.getUserRole().equals("INFRA_ADMIN")
 						|| userDetail.getUserRole().equals("INFRA_USER")) {
 					System.out.println(userDetail.getUserId());
-					predicates.add(
-							criteriaBuilder.and(criteriaBuilder.equal(root.get("interviewer"),userDetail.getScopeId())));
+					predicates.add(criteriaBuilder
+							.and(criteriaBuilder.equal(root.get("interviewer"), userDetail.getScopeId())));
 				}
 				if (searchQuery != null) {
 //	                	criteriaBuilder.like(root.get("title"), "%" + keyword + "%")
@@ -694,18 +716,17 @@ public class JobServiceImpl implements JobService {
 			jobOpening.setMinExp(jobObj.getMinExp());
 			jobOpening.setSalary(jobObj.getSalary());
 			jobOpening.setTotalOpenings(jobObj.getTotalOpenings());
-			
+
 			if (jobObj.getWings() != null && jobObj.getWings().getId() != null) {
 				CompanyWings wing = companyWingsRepository.getById(jobObj.getWings().getId());
 				if (wing != null)
-					
+
 				{
 					jobOpening.setWings(wing);
 				}
-				
-				else
-				{
-					throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Wing does not exist");
+
+				else {
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wing does not exist");
 				}
 			}
 
@@ -999,15 +1020,13 @@ public class JobServiceImpl implements JobService {
 
 		ApiResponse response = new ApiResponse(false);
 		List<Predicate> predicates = new ArrayList<>();
-		  if (userDetail.getUserRole().equals("DEVELOPER") ||
-		  userDetail.getUserRole().equals("INFRA_ADMIN") ||
-		  userDetail.getUserRole().equals("INFRA_USER")) {
-		  
-		  
-		  System.out.println(userDetail.getUserId());
-		  List<Map> jobInterviewsObj=jobInterviewRepository.getInterviwerByScopeID(userDetail.getScopeId());
-		  Map interviews = new HashMap();
-		  interviews.put("interviews", jobInterviewsObj);
+		if (userDetail.getUserRole().equals("DEVELOPER") || userDetail.getUserRole().equals("INFRA_ADMIN")
+				|| userDetail.getUserRole().equals("INFRA_USER")) {
+
+			System.out.println(userDetail.getUserId());
+			List<Map> jobInterviewsObj = jobInterviewRepository.getInterviwerByScopeID(userDetail.getScopeId());
+			Map interviews = new HashMap();
+			interviews.put("interviews", jobInterviewsObj);
 			if (jobInterviewsObj.isEmpty()) {
 				response.setSuccess(false);
 				response.setMessage("Job Application Not Exist");
@@ -1019,24 +1038,22 @@ public class JobServiceImpl implements JobService {
 			}
 			return response;
 
-		}else
-		{
-			if  (userDetail.getUserRole().equals("HR_ADMIN") || userDetail.getUserRole().equals("TICKETINGTOOL_ADMIN"))
-			{
-		
-		List<Map> jobOpening = jobInterviewRepository.getInterviewByAppId(applicationId);
-		Map interviews = new HashMap();
-		interviews.put("interviews", jobOpening);
-		if (jobOpening.isEmpty()) {
-			response.setSuccess(false);
-			response.setMessage("Job Application Not Exist");
-
 		} else {
-			response.setSuccess(true);
-			response.setMessage("Job Opening Detail");
-			response.setContent(interviews);
-		}
-		return response;
+			if (userDetail.getUserRole().equals("HR_ADMIN") || userDetail.getUserRole().equals("TICKETINGTOOL_ADMIN")) {
+
+				List<Map> jobOpening = jobInterviewRepository.getInterviewByAppId(applicationId);
+				Map interviews = new HashMap();
+				interviews.put("interviews", jobOpening);
+				if (jobOpening.isEmpty()) {
+					response.setSuccess(false);
+					response.setMessage("Job Application Not Exist");
+
+				} else {
+					response.setSuccess(true);
+					response.setMessage("Job Opening Detail");
+					response.setContent(interviews);
+				}
+				return response;
 			}
 		}
 		return response;

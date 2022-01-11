@@ -18,7 +18,7 @@ public interface ProjectFeatureRepository extends JpaRepository<ProjectFeature,S
 	Map getFeatureAvailable(String featureId,String projectId);
 	
 	@Query("select new map ( f.featureName as featureName ,f.featureId as featureId, f.featureType as featureType )  from ProjectFeature p inner join Feature f on f.featureId=p.featureId  where "
-			+ " p.projectId=:projectId order by f.featureId asc  ")
+			+ " p.projectId=:projectId  and p.status ='ACTIVE' order by f.featureId asc  ")
 	List<Map> getfeatureAvailableByproject(String projectId );
 	
 	
@@ -34,7 +34,7 @@ public interface ProjectFeatureRepository extends JpaRepository<ProjectFeature,S
 	
 	
 	@Query("select p from ProjectFeature p  where "
-			+ " p.projectId=:projectId and p.featureId=:featureId ")
+			+ " p.projectId=:projectId and p.featureId=:featureId")
 	ProjectFeature getProjectFeatureByFeatureIdAndProject(String projectId ,String featureId);
 	
 

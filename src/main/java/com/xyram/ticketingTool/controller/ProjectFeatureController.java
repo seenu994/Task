@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -43,6 +44,14 @@ public class ProjectFeatureController {
 	//	logger.info("indide ProjectMembersController :: getAllProjectMembers");
 		return projectFeatureService.getAllfeatureByProject(projectId);
 	}
+	
+	@PutMapping(value= {AuthConstants.ADMIN_BASEPATH +"/updateProjectFeature/{featureId}"
+			,AuthConstants.DEVELOPER_BASEPATH +"/updateProjectFeature/{featureId}"})
+	public ProjectFeature getAllProjectFeatures(@PathVariable String featureId ,@RequestBody ProjectFeature projectFeature) {
+	//	logger.info("indide ProjectMembersController :: getAllProjectMembers");
+		return projectFeatureService.updateProjectFeature(featureId, projectFeature);
+	}
+
 
 	
 	

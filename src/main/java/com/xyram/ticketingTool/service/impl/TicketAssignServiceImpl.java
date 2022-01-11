@@ -114,6 +114,10 @@ public class TicketAssignServiceImpl implements TicketAssignService {
 		Ticket ticketObj = ticketRepository.getById(assignee.getTicketId());
 		if (ticketObj != null) {
 			Employee employeeObj = employeeRepository.getById(assignee.getEmployeeId());
+			String EmployeeValidate = ticketAssignRepository.getAssigneeIdForDevelopers(assignee.getEmployeeId(), assignee.getTicketId());
+			if (EmployeeValidate==null) {
+
+				
 			if (employeeObj != null) {
 				assignee.setCreatedAt(new Date());
 				assignee.setCreatedBy(userDetail.getUserId());
@@ -168,5 +172,6 @@ public class TicketAssignServiceImpl implements TicketAssignService {
 		return response;
 
 	}
-
+		return response;
+	}
 }
