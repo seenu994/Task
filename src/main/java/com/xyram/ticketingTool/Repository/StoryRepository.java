@@ -81,7 +81,9 @@ public interface StoryRepository extends JpaRepository<Story, String> {
 			+ " OR  CONCAT(e1.frist_name ,' ', e1.last_name) LIKE %:searchString% "
 			+ " OR  CONCAT(e2.frist_name ,' ', e2.last_name) LIKE %:searchString% "
 			+ " OR s.title LIKE %:searchString% " + " OR pt.platform_name LIKE %:searchString% "
-			+ " OR feature_name LIKE %:searchString% "
+			+ " OR f.feature_name LIKE %:searchString% "
+			+ " OR s.story_no LIKE %:searchString% "
+			+ " OR sl.label_name  LIKE %:searchString% "
 			+ "  OR s.story_description Like %:searchString% )", nativeQuery = true)
 	public List<Map> getStoryTesting(String projectId, String searchString, String assignTo, String platform,
 			String storyStatus, String storyType, String storyLabel);
