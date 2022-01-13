@@ -33,7 +33,9 @@ public class StoryCommentController {
 	@Autowired
 	StoryCommentMapper storyCommentMapper;
 	
-	@PostMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/createStoryComment"})
+	@PostMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/createStoryComment",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/createStoryComment" ,
+			AuthConstants.ROLE_INFRA_USER + "/createStoryComment" })
 	public StoryComments CreateStoryComment(@RequestBody @Valid StoryCommentVo storyCommentVo) {
 		
 		return storyCommentservice.createStoryComment(storyCommentMapper.getEntityFromVo(storyCommentVo));

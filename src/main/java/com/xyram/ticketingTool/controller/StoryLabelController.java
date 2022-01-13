@@ -26,7 +26,10 @@ public class StoryLabelController {
 	@Autowired 
 	StoryLabelService storyLabelService;
 	
-	@PostMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/createStoryLabel", AuthConstants.ADMIN_BASEPATH + "/createStoryLabel"})
+	@PostMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/createStoryLabel",
+			AuthConstants.ADMIN_BASEPATH + "/createStoryLabel",
+			 AuthConstants.INFRA_ADMIN_BASEPATH + "/createStoryLabel",
+			 AuthConstants.INFRA_USER_BASEPATH + "/createStoryLabel"})
 	public StoryLabel createStoryLabel(@RequestBody StoryLabel storylabel) {
 		return storyLabelService.createStoryLabel(storylabel);
 	} 
@@ -39,7 +42,10 @@ public class StoryLabelController {
 	
 	
 	
-	@GetMapping(value= {AuthConstants.ADMIN_BASEPATH+"/getAllStoryLabel/{projectId}",AuthConstants.DEVELOPER_BASEPATH+"/getAllStoryLabel/{projectId}"})
+	@GetMapping(value= {AuthConstants.ADMIN_BASEPATH+"/getAllStoryLabel/{projectId}",
+			AuthConstants.DEVELOPER_BASEPATH+"/getAllStoryLabel/{projectId}",
+			 AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllStoryLabel/{projectId}",
+			 AuthConstants.INFRA_USER_BASEPATH + "/getAllStoryLabel/{projectId}"})
 	public IssueTrackerResponse getAllStoryLabelByProject(@PathVariable String projectId) {
 		return storyLabelService.getStoryLabelByProjectId(projectId);
 	}

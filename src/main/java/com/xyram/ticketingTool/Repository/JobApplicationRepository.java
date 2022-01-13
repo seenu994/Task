@@ -32,4 +32,10 @@ public interface JobApplicationRepository
 	@Query("select count(e)>0 from JobApplication e where e. candidateEmail=:candidateEmail")
 	boolean findb(String candidateEmail);
 
+	
+	@Query(value = "SELECT ja from JobApplication ja left join Employee e  where e.eId=:referredEmployeeId")
+	
+	JobApplication getEmployeeNameByScoleId(String referredEmployeeId);
+
 }
+

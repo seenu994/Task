@@ -35,21 +35,29 @@ public class StoryController {
 	@Autowired
 	private StoryMapper storyMapper;
 
-	@PostMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/CreateStory" })
+	@PostMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/CreateStory",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/CreateStory",
+			AuthConstants.INFRA_USER_BASEPATH + "/CreateStory",})
 	public Story createStory( @Valid @RequestBody StoryVo storyVo) {
 
 		return storyService.createStory(storyMapper.getEntityFromVo(storyVo));
 	}
 	
 	
-	@GetMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/getAllStories/{projectId}", AuthConstants.ADMIN_BASEPATH + "/getAllStories/{projectId}" })
+	@GetMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/getAllStories/{projectId}", 
+			AuthConstants.ADMIN_BASEPATH + "/getAllStories/{projectId}",
+			 AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllStories/{projectId}",
+			 AuthConstants.INFRA_USER_BASEPATH + "/getAllStories/{projectId}"})
 	public IssueTrackerResponse createStory(@PathVariable String projectId, @RequestParam Map<String,Object> filter) {
 
 		return storyService.getAllStories(projectId,filter);
 	}
 	
 	
-	@GetMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/getStoryDetails", AuthConstants.ADMIN_BASEPATH + "/getStoryDetails" })
+	@GetMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/getStoryDetails"
+			, AuthConstants.ADMIN_BASEPATH + "/getStoryDetails",
+			 AuthConstants.INFRA_ADMIN_BASEPATH + "/getStoryDetails",
+			 AuthConstants.INFRA_USER_BASEPATH + "/getStoryDetails"})
 	public StoryDetailsResponse getStoryDetails(@RequestParam String projectId,@RequestParam String storyId ) {
 
 		return storyService.getStoryDetailsById(projectId, storyId);
@@ -57,7 +65,10 @@ public class StoryController {
 	}
 	
 	
-	@GetMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/storySearch/{projectId}", AuthConstants.ADMIN_BASEPATH + "/getStoryDetails" })
+	@GetMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/storySearch/{projectId}", 
+			AuthConstants.ADMIN_BASEPATH + "/getStoryDetails" ,
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/getStoryDetails",
+			AuthConstants.INFRA_USER_BASEPATH + "/getStoryDetails"})
 	public IssueTrackerResponse getStoryDetails(@PathVariable String projectId, @RequestParam Map<String , Object> filter ) {
 
 		return storyService.storySearch(projectId,filter);
@@ -68,7 +79,10 @@ public class StoryController {
 	
 	
 	
-	@PutMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/updateStory/{storyId}", AuthConstants.INFRA_ADMIN_BASEPATH + "/updateStory/{storyId}" })
+	@PutMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/updateStory/{storyId}",
+			AuthConstants.ADMIN_BASEPATH +"/updateStory/{storyId}" ,
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/updateStory/{storyId}",
+			AuthConstants.INFRA_USER_BASEPATH + "/updateStory/{storyId}"})
 	public Story updateStory(@PathVariable String storyId, @RequestBody Story story) {
 
 		return storyService.editStoryDetails(storyId,story);
@@ -76,17 +90,22 @@ public class StoryController {
 	
 	
 	
-	@GetMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/getAllStories", AuthConstants.ADMIN_BASEPATH + "/getAllStories" })
+	@GetMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/getAllStories",
+			AuthConstants.ADMIN_BASEPATH + "/getAllStories",
+			AuthConstants.INFRA_USER_BASEPATH + "/getAllStories",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllStories",})
 	public IssueTrackerResponse getStoryDetailsByStoryStatus(@RequestParam String projectId,@RequestParam String storyStatusId ) {
 
 		return storyService.getAllStoriesBystatus(projectId, storyStatusId);
 	
 
 	}
-	
 
 	
-	@PostMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/changeStoryStatus" })
+	@PostMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/changeStoryStatus" ,
+			AuthConstants.ADMIN_BASEPATH + "/changeStoryStatus",
+			AuthConstants.INFRA_USER_BASEPATH + "/changeStoryStatus",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/changeStoryStatus"})
 	public Story changeStoryStatus(StoryChangeStatusRequest storyChangeStatusrequest )
 	{
 	

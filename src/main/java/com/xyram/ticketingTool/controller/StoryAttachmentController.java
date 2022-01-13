@@ -26,7 +26,9 @@ public class StoryAttachmentController {
 	
 
 	
-	@PostMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/uplaodStoryAttachment"})
+	@PostMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/uplaodStoryAttachment",
+			 AuthConstants.INFRA_ADMIN_BASEPATH + "/uplaodStoryAttachment",
+			 AuthConstants.INFRA_USER_BASEPATH+ "/uplaodStoryAttachment",})
 	public IssueTrackerResponse CreateStoryAttachment(@ModelAttribute StoryAttachmentVo storyAttachmentVo) {
 		
 		return storyAttachmentsService.uploadStoryAttachemet(storyAttachmentVo);
@@ -43,7 +45,9 @@ public class StoryAttachmentController {
 //
 	
 	
-	@PutMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/deleteStoryAttachment{storyAttachmentId}"})
+	@PutMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/deleteStoryAttachment{storyAttachmentId}",
+			AuthConstants.INFRA_ADMIN_BASEPATH+ "/deleteStoryAttachment{storyAttachmentId}",
+			AuthConstants.INFRA_USER_BASEPATH + "/deleteStoryAttachment{storyAttachmentId}"})
 	public Map<String, Object> deleteStoryComments(String storyAttachmentId)
 	{
 		return storyAttachmentsService.deleteStoryAttachmentById(storyAttachmentId);

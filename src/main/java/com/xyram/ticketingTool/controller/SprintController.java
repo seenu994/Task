@@ -47,12 +47,22 @@ public class SprintController {
 		return sprintService.getSprintByProject(Id);
 	}
 	
-	@GetMapping(value = {AuthConstants.DEVELOPER_BASEPATH + "/getlatestSprintByproject/{Id}",AuthConstants.ADMIN_BASEPATH + "/getlatestSprintByproject/{Id}",AuthConstants.INFRA_ADMIN_BASEPATH + "/getlatestSprintByproject/{Id}",AuthConstants.INFRA_USER_BASEPATH + "/getlatestSprintByproject/{Id}",AuthConstants.HR_ADMIN_BASEPATH + "/getlatestSprintByproject/{Id}",AuthConstants.HR_BASEPATH + "/getlatestSprintByproject/{Id}"})
+	@GetMapping(value = {AuthConstants.DEVELOPER_BASEPATH + "/getlatestSprintByproject/{Id}",
+			AuthConstants.ADMIN_BASEPATH + "/getlatestSprintByproject/{Id}",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/getlatestSprintByproject/{Id}"
+			,AuthConstants.INFRA_USER_BASEPATH + "/getlatestSprintByproject/{Id}"
+			,AuthConstants.HR_ADMIN_BASEPATH + "/getlatestSprintByproject/{Id}"
+			,AuthConstants.HR_BASEPATH + "/getlatestSprintByproject/{Id}"})
 	public Sprint getLatestSprint(@PathVariable String Id) {
 		return  sprintService.getLatestSprintByProject(Id);
 	}
 	
-	@PostMapping(value = {AuthConstants.DEVELOPER_BASEPATH + "/changeStatus/{Id}/{status}",AuthConstants.ADMIN_BASEPATH + "/changeStatus/{Id}/{status}",AuthConstants.INFRA_ADMIN_BASEPATH + "/changeStatus/{Id}/{status}",AuthConstants.INFRA_USER_BASEPATH + "/changeStatus/{Id}/{status}",AuthConstants.HR_ADMIN_BASEPATH + "/changeStatus/{Id}/{status}",AuthConstants.HR_BASEPATH + "/changeStatus/{Id}/{status}"})
+	@PostMapping(value = {AuthConstants.DEVELOPER_BASEPATH + "/changeStatus/{Id}/{status}",
+			AuthConstants.ADMIN_BASEPATH + "/changeStatus/{Id}/{status}"
+			,AuthConstants.INFRA_ADMIN_BASEPATH + "/changeStatus/{Id}/{status}"
+			,AuthConstants.INFRA_USER_BASEPATH + "/changeStatus/{Id}/{status}"
+			,AuthConstants.HR_ADMIN_BASEPATH + "/changeStatus/{Id}/{status}"
+			,AuthConstants.HR_BASEPATH + "/changeStatus/{Id}/{status}"})
 	public Sprint changeStatusBySprintId(@PathVariable String Id,@PathVariable String status) {
 		return  sprintService.changeStatusBySprintId(Id,status);
 	}

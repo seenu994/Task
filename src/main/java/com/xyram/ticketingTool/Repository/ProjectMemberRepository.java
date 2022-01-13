@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.xyram.ticketingTool.entity.ProjectMembers;
@@ -18,7 +19,7 @@ import com.xyram.ticketingTool.entity.ProjectMembers;
 public interface ProjectMemberRepository extends JpaRepository<ProjectMembers, String> {
 
 	@Query("Select distinct new map(e.projectId as projectId,p.projectName as projectName) from ProjectMembers "
-			+ "e left join  Projects p On e.projectId = p.pId where e.status = 'ACTIVE' and e.employeeId = :employeeId ")
+			+ "e left join  Projects p On e.projectId = p.pId  where e.status = 'ACTIVE' and e.employeeId = :employeeId ")
 	List<Map> getAllProjectByEmployeeId(String employeeId);
 
 	@Query("Select distinct new map(p.pId as projectId,p.projectName as projectName) from Projects p where p.allotToAll = 1")
@@ -40,6 +41,7 @@ public interface ProjectMemberRepository extends JpaRepository<ProjectMembers, S
 			+ " where p.projectId = :projectId  and  p.status='ACTIVE' ")
 	List<Map> getMemberByProject(String projectId);
 
+
 	@Query("select p from ProjectMembers p inner join Employee e on p.employeeId=e.eId "
 			+ " where p.projectId = :projectId and p.employeeId = :employeeId and  p.status='ACTIVE' and p.isAdmin='1' ")
 	ProjectMembers checkProjectAdmin(String employeeId, String projectId);
@@ -57,6 +59,11 @@ public interface ProjectMemberRepository extends JpaRepository<ProjectMembers, S
 			+ " p.inHouse as inHouse, p.status as status) from ProjectMembers "
 			+ " e left join  Projects p On e.projectId = p.pId where e.status = 'ACTIVE' and e.employeeId = :scopeId ")
 	 Page<Map> getAllProjectByDeveloper(Pageable pageable, String scopeId) ;
+	@Query("select new map( p.id as id , e.eId as employeeId ,CONCAT(e.firstName ,' ', e.lastName) as employeeName,r.roleName as roleName,p.projectId as projectId,p.createdAt as createdAt,p.createdBy as createdBy,p.lastUpdatedAt as lastUpdatedAt,p.UpdatedBy as UpdatedBy,d.designationName as designationName,p.isAdmin as isAdmin) from ProjectMembers p left join Employee e on p.employeeId=e.eId left join Projects pr On p.id=pr.pId left join Role r On e.roleId=r.Id left join Designation d On e.designationId=d.Id where e.firstName like %:searchString% and p.projectId=:projectId")
+	
+	List<Map> searchProjectMembersByProjectId(@Param("projectId") String projectId,
+			@Param("searchString") String searchString);
+
 	 }
 /*
  * //

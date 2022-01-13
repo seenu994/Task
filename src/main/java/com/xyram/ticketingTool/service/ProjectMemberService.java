@@ -46,6 +46,10 @@ public interface ProjectMemberService {
 
 	IssueTrackerResponse getProjectMembersInProject(String projectId);
 
+	ApiResponse projectMemberService(String projectid, String searchString);
+
+	ApiResponse searchProjectMembersByProjectId(String projectid, String searchString);
+
 	//ProjectMembers unassignProjectToEmployee(Map<String, String> requestMap);
 
 }

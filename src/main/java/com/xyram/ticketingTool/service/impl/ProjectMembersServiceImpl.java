@@ -313,10 +313,16 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 		ApiResponse response = new ApiResponse(false);
 
 		if (employeeId != null) {
-			Employee employeeObj = employeeRepository.getbyUserByUserId(employeeId);
-
+			Employee employeeObj = employeeRepository.getbyUserEmpId(employeeId);
+			if(employeeObj!=null)
+			{
 			List<Map> projectList = projectMemberRepository.getAllProjectByEmployeeId(employeeObj.geteId());
+			
+				response.setMessage("employee object not exists");
+			
+			
 			List<Map> allotedProjectList = projectRepository.getAllAllottedProjects();
+			
 //			for(int i=0; i<= allotedProjectList.size();i++) {
 //				projectList.add(allotedProjectList[i]);
 //			}
@@ -332,7 +338,7 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 				response.setSuccess(true);
 				response.setContent(content);
 				response.setMessage(ResponseMessages.PROJECT_LIST);
-			} else {
+			} }else {
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.PROJECT_NOT_ASSIGNED);
 			}
@@ -441,6 +447,32 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 
 		}
 
+	}
+
+	@Override
+	public ApiResponse projectMemberService(String projectid, String searchString) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ApiResponse searchProjectMembersByProjectId(String projectid, String searchString) {
+		
+			ApiResponse response = new ApiResponse(false);
+			ProjectMembers projectMembersObj=new ProjectMembers();
+			List<Map>  member = projectMemberRepository.getMemberByProject( projectid);
+			if(member!=null) {
+				
+			
+		
+			List<Map> employeeSearch = projectMemberRepository.searchProjectMembersByProjectId(projectid, searchString);
+			Map content = new HashMap();
+			content.put("EmployeeList", employeeSearch);
+			response.setSuccess(true);
+			response.setContent(content);
+			return response;
+		}
+			return response;
 	}
 
 //	@Override

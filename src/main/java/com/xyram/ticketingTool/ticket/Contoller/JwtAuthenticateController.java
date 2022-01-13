@@ -46,7 +46,6 @@ import com.xyram.ticketingTool.ticket.Service.JwtUserDetailsService;
 import com.xyram.ticketingTool.ticket.config.JwtTokenUtil;
 import com.xyram.ticketingTool.util.AuthUtil;
 
-@SuppressWarnings("unused")
 @RestController
 @CrossOrigin
 public class JwtAuthenticateController {

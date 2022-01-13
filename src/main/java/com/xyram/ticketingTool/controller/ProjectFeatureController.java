@@ -31,7 +31,10 @@ public class ProjectFeatureController {
 	ProjectFeatureService projectFeatureService;
 
 	
-	@PostMapping(value= {AuthConstants.ADMIN_BASEPATH +"assignFeaturesToProject",AuthConstants.DEVELOPER_BASEPATH +"/assignFeaturesToProject"})
+	@PostMapping(value= {AuthConstants.ADMIN_BASEPATH +"assignFeaturesToProject",
+			AuthConstants.DEVELOPER_BASEPATH +"/assignFeaturesToProject",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/assignFeaturesToProject",
+			 AuthConstants.INFRA_USER_BASEPATH + "/assignFeaturesToProject"})
 	public List<ProjectFeature> assignProjectToEmployee(@RequestBody AssignFeatureRequest request) {
 	//	logger.info("Received request to add project Members");
 		return  projectFeatureService.assignFeatureToProject(request);
@@ -39,14 +42,18 @@ public class ProjectFeatureController {
 
 	
 	@GetMapping(value= {AuthConstants.ADMIN_BASEPATH +"/getAllProjectFeatures/{projectId}"
-			,AuthConstants.DEVELOPER_BASEPATH +"/getAllProjectFeatures/{projectId}"})
+			,AuthConstants.DEVELOPER_BASEPATH +"/getAllProjectFeatures/{projectId}",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllProjectFeatures/{projectId}",
+			 AuthConstants.INFRA_USER_BASEPATH + "/getAllProjectFeatures/{projectId}"})
 	public IssueTrackerResponse getAllProjectFeatures(@PathVariable String projectId) {
 	//	logger.info("indide ProjectMembersController :: getAllProjectMembers");
 		return projectFeatureService.getAllfeatureByProject(projectId);
 	}
 	
 	@PutMapping(value= {AuthConstants.ADMIN_BASEPATH +"/updateProjectFeature/{featureId}"
-			,AuthConstants.DEVELOPER_BASEPATH +"/updateProjectFeature/{featureId}"})
+			,AuthConstants.DEVELOPER_BASEPATH +"/updateProjectFeature/{featureId}",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/updateProjectFeature/{featureId}",
+			 AuthConstants.INFRA_USER_BASEPATH + "/updateProjectFeature/{featureId}"})
 	public ProjectFeature getAllProjectFeatures(@PathVariable String featureId ,@RequestBody ProjectFeature projectFeature) {
 	//	logger.info("indide ProjectMembersController :: getAllProjectMembers");
 		return projectFeatureService.updateProjectFeature(featureId, projectFeature);
@@ -55,7 +62,10 @@ public class ProjectFeatureController {
 
 	
 	
-	@PostMapping(value= {AuthConstants.ADMIN_BASEPATH +"/addProjectFeature",AuthConstants.DEVELOPER_BASEPATH +"/addProjectFeature"})
+	@PostMapping(value= {AuthConstants.ADMIN_BASEPATH +"/addProjectFeature",
+			AuthConstants.DEVELOPER_BASEPATH +"/addProjectFeature",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/addProjectFeature",
+			 AuthConstants.INFRA_USER_BASEPATH + "/addProjectFeature"})
 	public ProjectFeature assignProjectToEmployee(@RequestBody ProjectFeatureRequest projectFeatureRequest) {
 	//	logger.info("Received request to add project Members");
 		return  projectFeatureService.addNewProjectFeature(projectFeatureRequest);

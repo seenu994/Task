@@ -52,7 +52,7 @@ public interface ProjectRepository extends JpaRepository<Projects, String> {
 			+ "e.status as status) from Projects e join Client c ON e.clientId = c.Id where e.pId = :id")
 	List<Map> getByProjectClietName(String id);
 
-	@Query("Select distinct new map(e.pId as id,e.projectName as projectName,e.projectDescritpion as projectDescritpion,e.clientId as clientId,e.inHouse as inHouse,"
+	@Query("Select distinct new map(e.pId as id,e.projectName as PName,e.projectDescritpion as projectDescritpion,e.clientId as clientId,e.inHouse as inHouse,"
 			+ "e.status as status) from Projects e where e.status != 'INACTIVE'")
 	List<Map> getAllProject();
 
@@ -60,7 +60,8 @@ public interface ProjectRepository extends JpaRepository<Projects, String> {
 			+ " p.inHouse as inHouse, p.status as status) from Projects "
 			+ " p left join  ProjectMembers e On  p.pId=e.projectId where e.status = 'ACTIVE' and e.employeeId = :employeeId ")
 	List<Map> getAllProjectByDeveloperList(String employeeId);
-	@Query("Select distinct new map(p.pId as projectId,p.projectName as projectName) from Projects p where p.allotToAll = 1")
+	
+	@Query("Select distinct new map(p.pId as projectId,p.projectName as PName) from Projects p where p.allotToAll = 1")
 	List<Map> getAllAllottedProjects();
 
 }
