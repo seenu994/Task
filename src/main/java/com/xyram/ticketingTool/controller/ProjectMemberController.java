@@ -110,6 +110,18 @@ class ProjectMemberContoller {
 		return projectMemberService.getProjectMembersInProject(projectId);
 	}
 
-	
+	@GetMapping(value = {
+			AuthConstants.ADMIN_BASEPATH
+					+ "/searchProjectMembersByProjectId/{projectid}/searchString/{searchString}",
+			AuthConstants.DEVELOPER_BASEPATH
+					+ "/searchProjectMembersByProjectId/{projectid}/searchString/{searchString}",
+			AuthConstants.INFRA_ADMIN_BASEPATH
+					+ "/searchProjectMembersByProjectId/{projectid}/searchString/{searchString}" })
+	public ApiResponse searchEmployeeNotAssignedToByProject(@PathVariable String projectid,
+			@PathVariable String searchString) {
+		logger.info("inside EmployeeController :: searchProjectMembersByProjectId ");
+		return projectMemberService.searchProjectMembersByProjectId(projectid, searchString);
+	}
+
 }
 	

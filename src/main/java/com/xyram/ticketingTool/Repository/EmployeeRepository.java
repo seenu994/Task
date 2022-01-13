@@ -115,8 +115,8 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 	String getEmpName(String userId);
 	// String userid;
 
-	@Query("SELECT DISTINCT b FROM Employee b WHERE b.userCredientials.id = :userId")
-	Employee getbyUserByUserId(String userId);
+	@Query("SELECT DISTINCT b FROM Employee b WHERE b.userCredientials.id = :employeeId")
+	Employee getbyUserByUserId(String employeeId);
 
 	@Query("Select new map(e.eId as id,e.email as email,e.firstName as firstName,e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId, "
 			+ "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,d.designationName as designationName) from Employee e  "
@@ -205,9 +205,16 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 	Employee getEmployeeByUSerId(String userId);
 
 	
-	@Query("SELECT e from Employee e where e.eId = :scopeId")
-	Employee getEmployeeNameByScoleID(String scopeId);
+	@Query("SELECT e from Employee e  left join JobApplication j On e.eId= j.referredEmployeeId where e.eId = :geteId")
+	Employee getEmployeeNameByScoleID(String geteId);
+	@Query("SELECT e from Employee e  left join JobApplication j On e.eId= j.referredEmployeeId where j.referredEmployeeId = :scopeId")
 
+
+	
+
+	Employee getEmployeeNameByScolgeIds(String scopeId);
+
+	
 	/*
 	 * @Query("Select new map(e.eId as id,e.email as email,e.firstName as firstName,e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId, "
 	 * +

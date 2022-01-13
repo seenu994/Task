@@ -153,7 +153,7 @@ public class TicketServiceImpl implements TicketService {
 		// TODO Auto-generated method stub
 		ApiResponse response = new ApiResponse(false);
 
-		Page<Map> allTickets = ticketrepository.getAllCompletedTickets(pageable,userDetail.getUserId(),
+		Page<Map> allTickets = ticketrepository.getAllCompletedTickets(pageable,userDetail.getUserId(),userDetail.getUserId(),
 				userDetail.getUserRole());
 		
 		if (allTickets != null) {

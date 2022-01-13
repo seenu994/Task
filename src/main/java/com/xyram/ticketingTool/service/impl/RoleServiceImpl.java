@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import com.xyram.ticketingTool.Repository.RoleRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
-import com.xyram.ticketingTool.entity.Role;
 import com.xyram.ticketingTool.service.RoleService;
 import com.xyram.ticketingTool.ticket.config.PermissionConfig;
 

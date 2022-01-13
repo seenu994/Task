@@ -14,11 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.xyram.ticketingTool.entity.CompanyWings;
 import com.xyram.ticketingTool.entity.JobOpenings;
 
-
 @Repository
 @Transactional
-public interface JobRepository extends CrudRepository<JobOpenings,Long>,JpaSpecificationExecutor<JobOpenings>{
-	
+public interface JobRepository extends CrudRepository<JobOpenings, Long>, JpaSpecificationExecutor<JobOpenings> {
+
 //	@Query(value = "SELECT a.ticket_id as ticket_id, a.ticket_description as ticket_description, a.ticket_status as ticket_status, a.created_at as created_at, a.last_updated_at as last_updated_at, "
 //			+ "a.created_by as created_by, a.priority_id as priority_id, b.employee_id as assigneeId, concat(e.frist_name,' ', e.last_name) as assigneeName, concat(ee.frist_name,' ', ee.last_name) as createdByEmp "
 //			+ "FROM ticketdbtool.ticket a "
@@ -28,16 +27,16 @@ public interface JobRepository extends CrudRepository<JobOpenings,Long>,JpaSpeci
 //			+ "where a.ticket_description like %:searchString% ", nativeQuery = true)
 	@Query(value = "SELECT * FROM ticketdbtool.job_openings jo", nativeQuery = true)
 	List<Map> getAllJobOpenings();
-	
+
 	@Query(value = "SELECT cw.wing_id, cw.wing_name FROM ticketdbtool.company_wings cw", nativeQuery = true)
 	List<Map> getAllCompanyWings();
-	
+
 	@Query(value = "SELECT ts.skill_id, ts.skill_name FROM ticketdbtool.tech_skils ts", nativeQuery = true)
 	List<Map> getAllTechSkills();
-	
+
 	@Query(value = "SELECT * from ticketdbtool.job_openings jo where jo.job_code = :jobCode ", nativeQuery = true)
 	JobOpenings getJobOpeningFromCode(String jobCode);
-	
+
 	@Query(value = "SELECT jo.job_code as jobCode,jo.job_title as jobTitle,jo.job_description as jobDescription"
 			+ ",jo.job_skills as jobSkills,jo.total_openings as jobOpenings,jo.filled_positions as jobPositions,"
 			+ "jo.min_exp as jobMinExperience,jo.max_exp as jobMaxExperience,jo.wing_id as jobWing,jo.status as jobstatus,"
@@ -46,7 +45,7 @@ public interface JobRepository extends CrudRepository<JobOpenings,Long>,JpaSpeci
 			+ "w.wing_name as wingName from ticketdbtool.job_openings jo left join user u ON jo.created_by = u.user_id"
 			+ " left join employee e ON e.user_id = u.user_id left join company_wings w ON jo.wing_id = w.wing_id  where jo.job_id = :jobOpeningId ", nativeQuery = true)
 	Map getJobOpeningById(String jobOpeningId);
-    
+
 	@Query(value = "SELECT * from ticketdbtool.job_openings jo where jo.job_id = :jobOpeningId ", nativeQuery = true)
 	JobOpenings getById(String jobOpeningId);
 
@@ -56,9 +55,9 @@ public interface JobRepository extends CrudRepository<JobOpenings,Long>,JpaSpeci
 	@Query(value = "SELECT new map(jo.jobCode as jobCodes) from JobOpenings jo")
 	List<Map> getAllJobCodes();
 
-	
-	@Query(value ="SELECT j from JobOpenings j WHERE j.jobCode =:jobCode ")
+	@Query(value = "SELECT j from JobOpenings j WHERE j.jobCode =:jobCode ")
 	JobOpenings getJobCode(String jobCode);
+
 //	public List<JobOpenings> findByCriteria(String employeeName){
 //        return employeeDAO.findAll(new Specification<Employee>() {
 //            @Override
@@ -73,10 +72,15 @@ public interface JobRepository extends CrudRepository<JobOpenings,Long>,JpaSpeci
 //	}
 	@Query(value = "SELECT  cw.wing_name FROM ticketdbtool.company_wings cw", nativeQuery = true)
 	Map GetJobWingName();
+
 	/*
 	 * @Query("select new map(jo.createdBy as createdBy) from JobApplication jo left join Employee e On jo.createdBy=e.eId and e.userCredientials.uid as uid where jo.createdBy=e.eId "
 	 * ) List<Map> getCreadtedBy();
 	 */
 	@Query(value = "SELECT cw.wing_id, cw.wing_name FROM ticketdbtool.company_wings cw", nativeQuery = true)
 	CompanyWings getWingById(String id);
-	}
+
+	@Query("select count(j)>0 from JobOpenings j where j. jobCode= :jobCode")
+
+	boolean findb(String jobCode);
+}
