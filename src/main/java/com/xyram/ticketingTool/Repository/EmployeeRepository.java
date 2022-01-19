@@ -207,12 +207,13 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 	
 	@Query("SELECT e from Employee e  left join JobApplication j On e.eId= j.referredEmployeeId where e.eId = :geteId")
 	Employee getEmployeeNameByScoleID(String geteId);
-	@Query("SELECT e from Employee e  left join JobApplication j On e.eId= j.referredEmployeeId where j.referredEmployeeId = :scopeId")
-
+	
+	
+	@Query("SELECT e from Employee e  where e.eId = :referredEmployeeId")
 
 	
 
-	Employee getEmployeeNameByScolgeIds(String scopeId);
+	Employee getEmployeeNameByScoleId(String referredEmployeeId);
 
 	
 	/*

@@ -35,7 +35,6 @@ public interface JobApplicationRepository
 	
 	@Query(value = "SELECT ja from JobApplication ja left join Employee e  where e.eId=:referredEmployeeId")
 	
-	JobApplication getEmployeeNameByScoleId(String referredEmployeeId);
+	List<JobApplication> getEmployeeNameByScoleId(String referredEmployeeId);
 
 }
-

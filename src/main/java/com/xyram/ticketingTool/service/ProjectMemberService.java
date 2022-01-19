@@ -12,6 +12,7 @@ import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.ProjectMembers;
 import com.xyram.ticketingTool.response.ProjectAdminResponse;
+import com.xyram.ticketingTool.response.ProjectMemberresponse;
 
 import antlr.collections.List;
 
@@ -49,6 +50,8 @@ public interface ProjectMemberService {
 	ApiResponse projectMemberService(String projectid, String searchString);
 
 	ApiResponse searchProjectMembersByProjectId(String projectid, String searchString);
+
+	ProjectMemberresponse isProjectMember(String employeeId, String projectId);
 
 	//ProjectMembers unassignProjectToEmployee(Map<String, String> requestMap);
 

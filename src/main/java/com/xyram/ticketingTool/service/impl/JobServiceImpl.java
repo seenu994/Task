@@ -131,9 +131,21 @@ public class JobServiceImpl implements JobService {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wing does not exist");
 			}
 		}
+		jobObj.setUpdatedBy(userDetail.getUserId());
 		jobObj.setCreatedAt(new Date());
 		jobObj.setCreatedBy(userDetail.getUserId());
 		jobObj.setJobStatus(JobOpeningStatus.VACANT);
+		boolean jobCodeValidate = jobRepository.findb(jobObj.getJobCode());
+		if (jobCodeValidate == false) {
+
+			jobObj.setJobCode(jobObj.getJobCode());
+
+		} else {
+			response.setMessage("job code =" + jobObj.getJobCode() + " is already exists");
+
+			return response;
+
+		}
 		if (jobRepository.save(jobObj) != null) {
 			Employee emp = new Employee();
 
@@ -219,8 +231,8 @@ public class JobServiceImpl implements JobService {
 //                	criteriaBuilder.like(root.get("title"), "%" + keyword + "%")
 					// predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("jobTitle")),
 					// "%"+searchQuery.toLowerCase()+"%"));
-					predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("jobDescription")),
-							"%" + searchQuery + "%"));
+					predicates.add(
+							criteriaBuilder.like(criteriaBuilder.lower(root.get("jobTitle")), "%" + searchQuery + "%"));
 					// predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("jobCode")),
 					// "%"+searchQuery.toLowerCase()+"%"));
 
@@ -258,8 +270,7 @@ public class JobServiceImpl implements JobService {
 		Map content = new HashMap();
 		String status = filter.containsKey("status") ? ((String) filter.get("status")) : null;
 
-		String searchQuery = filter.containsKey("searchstring") ? ((String) filter.get("searchstring")).toLowerCase()
-				: null;
+		String searchQuery = filter.containsKey("searchstring") ? ((String) filter.get("searchstring")) : null;
 		JobApplicationStatus statusApp = null;
 		String vendor = filter.containsKey("vendor") ? ((String) filter.get("vendor")) : null;
 		Page<JobApplication> allList = jobAppRepository.findAll(new Specification<JobApplication>() {
@@ -276,27 +287,39 @@ public class JobServiceImpl implements JobService {
 					predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("referredVendor"), vendor)));
 				}
 				if (searchQuery != null) {
-					predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("candidateName"), searchQuery)));
-					predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("candidateMobile"), searchQuery)));
-					predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("candidateEmail"), searchQuery)));
-					predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobCode"), searchQuery)));
+					predicates.add(
+							criteriaBuilder.like(criteriaBuilder.lower(root.get("candidateEmail")), "%" + searchQuery + "%"));
+					
+					/*
+					 * predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get(
+					 * "candidateMobile"), searchQuery)));
+					 * predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get(
+					 * "candidateEmail"), searchQuery)));
+					 * 
+					 * predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobCode"),
+					 * searchQuery)));
+					 */
 				}
-				if (userDetail.getUserRole().equals("DEVELOPER")==true) {
-						predicates.add(
-							criteriaBuilder.and(criteriaBuilder.like(root.get("createdBy"), userDetail.getUserId())));}
-				if (userDetail.getUserRole().equals("INFRA_USER")==true) {
+				if (userDetail.getUserRole().equals("DEVELOPER") == true) {
 					predicates.add(
-						criteriaBuilder.and(criteriaBuilder.like(root.get("createdBy"), userDetail.getUserId())));}
-				if (userDetail.getUserRole().equals("INFRA_ADMIN")==true) {
+							criteriaBuilder.and(criteriaBuilder.like(root.get("createdBy"), userDetail.getUserId())));
+				}
+				if (userDetail.getUserRole().equals("INFRA_USER") == true) {
 					predicates.add(
-						criteriaBuilder.and(criteriaBuilder.like(root.get("createdBy"), userDetail.getUserId())));}
-				if (userDetail.getUserRole().equals("HR")==true) {
+							criteriaBuilder.and(criteriaBuilder.like(root.get("createdBy"), userDetail.getUserId())));
+				}
+				if (userDetail.getUserRole().equals("INFRA_ADMIN") == true) {
 					predicates.add(
-						criteriaBuilder.and(criteriaBuilder.like(root.get("createdBy"), userDetail.getUserId())));}
-				
-				else
-				{
-				query.orderBy(criteriaBuilder.desc(root.get("createdAt")));}
+							criteriaBuilder.and(criteriaBuilder.like(root.get("createdBy"), userDetail.getUserId())));
+				}
+				if (userDetail.getUserRole().equals("HR") == true) {
+					predicates.add(
+							criteriaBuilder.and(criteriaBuilder.like(root.get("createdBy"), userDetail.getUserId())));
+				}
+
+				else {
+					query.orderBy(criteriaBuilder.desc(root.get("createdAt")));
+				}
 				return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
 		}, pageable);
@@ -368,21 +391,40 @@ public class JobServiceImpl implements JobService {
 			if (Emailvalidate == false) {
 
 				jobAppObj.setJobCode(jobCode);
-				jobAppObj.setJobOpenings(jobOpening);
+				if (jobAppObj.getJobOpenings()!=null && jobAppObj.getJobOpenings().getId()!=null) {
+					JobOpenings empObj = jobRepository.getJobOpeningsById(jobAppObj.getJobOpenings().getId());
+
+					if (empObj != null) {
+
+						jobAppObj.setJobOpenings(empObj);
+					} else {
+						response.setMessage("job oprning id not exsists");
+						return response;
+					}
+
+				}
+				else {
+					  throw new ResponseStatusException(HttpStatus.BAD_GATEWAY,"job opening id is mandatory");
+				}
+
+				//jobAppObj.setJobOpenings(jobOpening);
 				jobAppObj.setCreatedAt(new Date());
 				jobAppObj.setCreatedBy(userDetail.getUserId());
 				jobAppObj.setJobApplicationSatus(JobApplicationStatus.APPLIED);
-				Employee empObj = employeeRepository.getEmployeeNameByScoleID(userDetail.getScopeId());
+				Employee empObi = new Employee();
 
-				if (empObj != null) {
+				if (jobAppObj.getReferredEmployeeId() != null) {
+					Employee empObj = employeeRepository.getEmployeeNameByScoleId(jobAppObj.getReferredEmployeeId());
 
-					jobAppObj.setReferredEmployee(empObj.getFirstName() + "" + empObj.getLastName());
-				} else {
-					response.setMessage("scope id not exsists");
-					return response;
+					if (empObj != null) {
+
+						jobAppObj.setReferredEmployee(empObj.getFirstName() + "" + empObj.getLastName());
+					} else {
+						response.setMessage("employee id not exsists");
+						return response;
+					}
+
 				}
-
-				jobAppObj.setReferredEmployeeId(userDetail.getScopeId());
 
 				if (jobAppRepository.save(jobAppObj) != null) {
 
@@ -707,8 +749,10 @@ public class JobServiceImpl implements JobService {
 		ApiResponse response = new ApiResponse(false);
 		JobOpenings jobOpening = jobRepository.getById(jobId);
 		if (jobOpening != null) {
-			jobOpening.setJobCode(jobObj.getJobCode());
+			jobOpening.setUpdatedBy(userDetail.getUserId());
+
 			jobOpening.setJobDescription(jobObj.getJobDescription());
+			jobOpening.setJobCode(jobObj.getJobCode());
 			jobOpening.setJobSkills(jobObj.getJobSkills());
 			jobOpening.setJobTitle(jobObj.getJobTitle());
 			jobOpening.setLastUpdatedAt(new Date());
@@ -820,8 +864,31 @@ public class JobServiceImpl implements JobService {
 					}
 				}
 			}
-			jobApp.setJobCode(newJobAppObj.getJobCode());
-			jobApp.setJobOpenings(newJobAppObj.getJobOpenings());
+			
+			JobOpenings jobs=jobRepository.getJobCodeValidation(newJobAppObj.getJobCode());
+				if(jobs!=null) {
+			
+			jobApp.setJobCode(jobs.getJobCode());
+				}
+				else {
+					response.setMessage("job code not valid");
+					return response;
+				}
+				
+				if (newJobAppObj.getJobCode()!=null) {
+					JobOpenings empObj = jobRepository.getJobCode(newJobAppObj.getJobCode());
+
+					if (empObj != null) {
+
+						jobApp.setJobOpenings(empObj);
+					} else {
+						response.setMessage("employee id not exsists");
+						return response;
+					}
+
+				}
+			
+			
 			jobApp.setCandidateEmail(newJobAppObj.getCandidateEmail());
 			jobApp.setCandidateMobile(newJobAppObj.getCandidateMobile());
 			jobApp.setCandidateName(newJobAppObj.getCandidateName());

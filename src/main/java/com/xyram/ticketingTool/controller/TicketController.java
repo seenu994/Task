@@ -52,7 +52,7 @@ class TicketController {
 //		return ticketService.getAllTicketsByStatus(statusId);
 //	}
 
-	@PostMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/createTickets",AuthConstants.INFRA_ADMIN_BASEPATH + "/createTickets",
+	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH	 + "/createTickets",AuthConstants.DEVELOPER_BASEPATH + "/createTickets",AuthConstants.INFRA_ADMIN_BASEPATH + "/createTickets",
 			AuthConstants.INFRA_USER_BASEPATH + "/createTickets",AuthConstants.HR_ADMIN_BASEPATH + "/createTickets" })
 	public ApiResponse createTickets(@RequestPart(name = "files", required = false) MultipartFile[] files,
 			@RequestPart String ticketRequest,@RequestPart(name = "assignee", required = false) String assignee) {

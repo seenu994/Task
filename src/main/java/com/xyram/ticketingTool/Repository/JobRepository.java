@@ -83,4 +83,13 @@ public interface JobRepository extends CrudRepository<JobOpenings, Long>, JpaSpe
 	@Query("select count(j)>0 from JobOpenings j where j. jobCode= :jobCode")
 
 	boolean findb(String jobCode);
+
+	@Query(value = "SELECT j from JobOpenings j WHERE j.jobCode =:jobCode ")
+	JobOpenings getJobCodeValidation(String jobCode);
+  
+	@Query(value = "SELECT j from JobOpenings j WHERE j.id =:id ")
+	JobOpenings getJobOpeningsById(String id);
+
+	
+	
 }

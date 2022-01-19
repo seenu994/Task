@@ -27,6 +27,7 @@ import com.xyram.ticketingTool.entity.ProjectMembers;
 import com.xyram.ticketingTool.entity.Projects;
 import com.xyram.ticketingTool.enumType.UserStatus;
 import com.xyram.ticketingTool.response.ProjectAdminResponse;
+import com.xyram.ticketingTool.response.ProjectMemberresponse;
 import com.xyram.ticketingTool.service.EmployeeService;
 import com.xyram.ticketingTool.service.ProjectMemberService;
 import com.xyram.ticketingTool.service.ProjectService;
@@ -123,6 +124,11 @@ class ProjectMemberContoller {
 			@PathVariable String searchString) {
 		logger.info("inside EmployeeController :: searchProjectMembersByProjectId ");
 		return projectMemberService.searchProjectMembersByProjectId(projectid, searchString);
+	}
+	@GetMapping(value= {AuthConstants.DEVELOPER_BASEPATH +"/isProjectMember",AuthConstants.INFRA_USER_BASEPATH +"/isProjectMember",AuthConstants.INFRA_ADMIN_BASEPATH +"/isProjectMember"})
+	public ProjectMemberresponse isProjectMember(@RequestParam String employeeId, @RequestParam String projectId) {
+		logger.info("indide ProjectMembersController :: MakeProjectAdmin");
+		return projectMemberService.isProjectMember(employeeId, projectId);
 	}
 
 }
