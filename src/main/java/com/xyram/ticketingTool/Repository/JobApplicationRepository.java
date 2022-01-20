@@ -28,6 +28,9 @@ public interface JobApplicationRepository
 
 	@Query(value = "SELECT * from job_application j where j.job_code=:jobCodeId", nativeQuery = true)
 	List<Map> getjobOpeningsById(String jobCodeId);
+	
+	@Query(value = "SELECT j from JobApplication j where j.jobCode=:jobCodeId")
+	List<JobApplication> getjobOpeningsCode(String jobCodeId);
 
 	@Query("select count(e)>0 from JobApplication e where e. candidateEmail=:candidateEmail")
 	boolean findb(String candidateEmail);
