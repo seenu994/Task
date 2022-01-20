@@ -85,7 +85,7 @@ public class JobOpenings extends AuditModel{
 	private Integer vendor_view = 0;
 	
 	@Column(name="notify_vendor")
-	private boolean notifyVendor;
+	private boolean notifyVendor = false;
 
 	public String getId() {
 		return Id;
