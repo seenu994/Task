@@ -750,9 +750,9 @@ public class JobServiceImpl implements JobService {
 		JobOpenings jobOpening = jobRepository.getById(jobId);
 		if (jobOpening != null) {
 			jobOpening.setUpdatedBy(userDetail.getUserId());
-
 			jobOpening.setJobDescription(jobObj.getJobDescription());
 			jobOpening.setJobCode(jobObj.getJobCode());
+			jobOpening.setFilledPositions(jobObj.getFilledPositions());
 			jobOpening.setJobSkills(jobObj.getJobSkills());
 			jobOpening.setJobTitle(jobObj.getJobTitle());
 			jobOpening.setLastUpdatedAt(new Date());
