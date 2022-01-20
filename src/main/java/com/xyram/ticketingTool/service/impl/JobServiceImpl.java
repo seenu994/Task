@@ -425,6 +425,10 @@ public class JobServiceImpl implements JobService {
 					}
 
 				}
+				
+				if(userDetail.getUserRole().equals("JOB_VENDOR")) {
+					jobAppObj.setReferredVendor(userDetail.getScopeId());
+				}
 
 				if (jobAppRepository.save(jobAppObj) != null) {
 
