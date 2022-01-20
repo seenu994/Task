@@ -3,6 +3,8 @@ package com.xyram.ticketingTool.Repository;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -13,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.xyram.ticketingTool.entity.CompanyWings;
 import com.xyram.ticketingTool.entity.JobOpenings;
+import com.xyram.ticketingTool.enumType.JobOpeningStatus;
 
 @Repository
 @Transactional
@@ -28,6 +31,9 @@ public interface JobRepository extends CrudRepository<JobOpenings, Long>, JpaSpe
 	@Query(value = "SELECT * FROM ticketdbtool.job_openings jo", nativeQuery = true)
 	List<Map> getAllJobOpenings();
 
+	
+	
+	
 	@Query(value = "SELECT cw.wing_id, cw.wing_name FROM ticketdbtool.company_wings cw", nativeQuery = true)
 	List<Map> getAllCompanyWings();
 
@@ -89,6 +95,25 @@ public interface JobRepository extends CrudRepository<JobOpenings, Long>, JpaSpe
   
 	@Query(value = "SELECT j from JobOpenings j WHERE j.id =:id ")
 	JobOpenings getJobOpeningsById(String id);
+
+
+
+	@Query(value = " SELECT j from JobOpenings j left join j.wings as w  where"
+			+ " (:wing is null or  lower(w.wingName)=:wing ) and "
+			+ "(:status is null or j.jobStatus=:status) and "
+			+ "(:userRole is null  or ((:userRole='JOB_VENDOR' and j.vendor_view=:notify ) Or (:userRole!='JOB_VENDOR' )))and "
+			+ " (:searchString is null  "
+			+ " Or lower(j.jobTitle) LIKE %:searchString% "
+			+ " Or lower(j.jobSkills) LIKE %:searchString% "
+			+"  Or lower(j.jobCode) Like %:searchString%"
+			+"  Or lower(w.wingName) Like %:searchString%"
+			+"  Or lower(j.jobDescription) Like %:searchString%"
+			+ " Or lower(j.jobCode) LIKE %:searchString%)")		
+	Page<JobOpenings> getAllOpenings(String searchString, JobOpeningStatus status, String wing, String userRole,
+			Integer notify, Pageable pageable);
+	
+	
+	
 
 	
 	
