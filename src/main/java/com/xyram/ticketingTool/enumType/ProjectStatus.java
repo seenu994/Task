@@ -6,7 +6,8 @@ import java.util.Optional;
 public enum ProjectStatus {
 	INDEVELOPMENT("INDEVELOPMENT"),
 	INPRODUCTION("INPRODUCTION"),
-	INACTIVE("INACTIVE");
+	INACTIVE("INACTIVE"),
+	ACTIVE("ACTIVE");
 
 	private String value;
 
