@@ -118,7 +118,7 @@ public class JobServiceImpl implements JobService {
 	public ApiResponse createJob(JobOpenings jobObj) {
 		// TODO Auto-generated method stub
 		ApiResponse response = new ApiResponse(false);
-
+ 
 		// Projects project = projectRepository.getById(ticketreq.getProjectId());
 		if (jobObj.getWings() != null && jobObj.getWings().getId() != null) {
 			CompanyWings wing = companyWingsRepository.getById(jobObj.getWings().getId());
@@ -142,7 +142,7 @@ public class JobServiceImpl implements JobService {
 			jobObj.setJobCode(jobObj.getJobCode());
 
 		} else {
-			response.setMessage("job code =" + jobObj.getJobCode() + " is already exists");
+			response.setMessage("job code =" + jobObj.getJobCode() + "  already exists");
 
 			return response;
 
@@ -516,7 +516,7 @@ public class JobServiceImpl implements JobService {
 			boolean Emailvalidate = jobAppRepository.findb(jobAppObj.getCandidateEmail());
 			if (Emailvalidate == false) {
 
-				jobAppObj.setJobCode(jobCode);
+				//jobAppObj.setJobCode(jobCode);
 				if (jobAppObj.getJobOpenings()!=null && jobAppObj.getJobOpenings().getId()!=null) {
 					JobOpenings empObj = jobRepository.getJobOpeningsById(jobAppObj.getJobOpenings().getId());
 
@@ -550,6 +550,10 @@ public class JobServiceImpl implements JobService {
 						return response;
 					}
 
+				}
+				
+				if(userDetail.getUserRole().equals("JOB_VENDOR")) {
+					jobAppObj.setReferredVendor(userDetail.getScopeId());
 				}
 
 				if (jobAppRepository.save(jobAppObj) != null) {
@@ -848,9 +852,31 @@ public class JobServiceImpl implements JobService {
 		JobOpenings jobOpening = jobRepository.getById(jobId);
 		if (jobOpening != null) {
 			jobOpening.setUpdatedBy(userDetail.getUserId());
-
 			jobOpening.setJobDescription(jobObj.getJobDescription());
+			if(jobOpening.getJobCode().equals(jobObj.getJobCode())) {
 			jobOpening.setJobCode(jobObj.getJobCode());
+			}
+			else
+			{
+				boolean jobCodeValidate = jobRepository.findb(jobObj.getJobCode());
+				if (jobCodeValidate == false) {
+
+					List<JobApplication> jobApp = jobAppRepository.getjobOpeningsCode(jobOpening.getJobCode());
+					for(JobApplication newApp:jobApp) {
+						newApp.setJobCode(jobObj.getJobCode());
+						jobAppRepository.save(newApp);
+					}
+					jobOpening.setJobCode(jobObj.getJobCode());
+
+				} else {
+					response.setMessage("job code =" + jobObj.getJobCode() + "  already exists");
+
+					return response;
+
+				}
+				
+			}
+			jobOpening.setFilledPositions(jobObj.getFilledPositions());
 			jobOpening.setJobSkills(jobObj.getJobSkills());
 			jobOpening.setJobTitle(jobObj.getJobTitle());
 			jobOpening.setLastUpdatedAt(new Date());

@@ -121,9 +121,7 @@ public class TicketServiceImpl implements TicketService {
 		ApiResponse response = new ApiResponse(false);
 
 		Page<Map> allTickets ;
-		if (userDetail.getUserRole().equals("INFRA_USER")) {
-			allTickets = ticketrepository.getAllTicketsForInfraUser(pageable, userDetail.getUserId());
-		}else if(userDetail.getUserRole().equals("TICKETINGTOOL_ADMIN") && status.equals(TicketStatus.ASSIGNED)) {
+		 if(userDetail.getUserRole().equals("TICKETINGTOOL_ADMIN") && status.equals(TicketStatus.ASSIGNED)) {
 		allTickets = ticketrepository.getAllTicketsForAdmin(pageable,userDetail.getUserRole());
 		}
 		
@@ -153,7 +151,7 @@ public class TicketServiceImpl implements TicketService {
 		// TODO Auto-generated method stub
 		ApiResponse response = new ApiResponse(false);
 
-		Page<Map> allTickets = ticketrepository.getAllCompletedTickets(pageable,userDetail.getUserId(),userDetail.getUserId(),
+		Page<Map> allTickets = ticketrepository.getAllCompletedTickets(pageable,userDetail.getUserId(),
 				userDetail.getUserRole());
 		
 		if (allTickets != null) {
