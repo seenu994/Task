@@ -800,7 +800,7 @@ public class JobServiceImpl implements JobService {
 		JobApplication status = jobAppRepository.getApplicationById(jobApplicationId);
 		System.out.println(userDetail.getUserRole());
 		if (status != null) {
-			if (userDetail.getUserId().equals(status.getCreatedBy()) || userDetail.getUserRole() == "HR_ADMIN") {
+			if (userDetail.getUserId().equals(status.getCreatedBy()) || userDetail.getUserRole() == "HR_ADMIN" ||userDetail.getUserRole() == "TICKETINGTOOL_ADMIN") {
 				if (status != null) {
 					ApplicationComments appComments = new ApplicationComments();
 					appComments.setApplicationId(jobApplicationId);
