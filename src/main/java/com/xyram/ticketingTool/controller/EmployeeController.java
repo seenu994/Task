@@ -70,21 +70,21 @@ class EmployeeController {
 		return employeeService.createJobVendor(vendorDetails);
 	}
 
-	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/getJobVendor",
-			AuthConstants.ADMIN_BASEPATH + "/getJobVendor" })
+	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/getJobVendor", AuthConstants.DEVELOPER_BASEPATH + "/getJobVendor", AuthConstants.HR_BASEPATH + "/getJobVendor",
+			 AuthConstants.INFRA_ADMIN_BASEPATH + "/getJobVendor", AuthConstants.INFRA_USER_BASEPATH + "/getJobVendor",AuthConstants.ADMIN_BASEPATH + "/getJobVendor" })
 	public ApiResponse getJobVendor() {
 		logger.info("Received request to add Employee");
 		return employeeService.getJobVendor();
 	}
 	
-	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/searchJobVendors/{vendorName}",
+	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/searchJobVendors/{vendorName}",AuthConstants.HR_BASEPATH + "/searchJobVendors/{vendorName}",AuthConstants.DEVELOPER_BASEPATH + "/searchJobVendors/{vendorName}",AuthConstants.INFRA_ADMIN_BASEPATH + "/searchJobVendors/{vendorName}",AuthConstants.INFRA_USER_BASEPATH+ "/searchJobVendors/{vendorName}",
 			AuthConstants.ADMIN_BASEPATH + "/searchJobVendors/{vendorName}" })
 	public ApiResponse searchJobVendors(@PathVariable String vendorName) {
 		logger.info("Received request to search job Vendor");
 		return employeeService.serachJobVendor(vendorName);
 	}
 
-	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/getJobVendorType",
+	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/getJobVendorType",AuthConstants.HR_BASEPATH + "/getJobVendorType",AuthConstants.INFRA_ADMIN_BASEPATH + "/getJobVendorType",AuthConstants.INFRA_USER_BASEPATH + "/getJobVendorType",AuthConstants.DEVELOPER_BASEPATH + "/getJobVendorType",
 			AuthConstants.ADMIN_BASEPATH + "/getJobVendorType" })
 	public ApiResponse getJobVendorType() {
 		logger.info("Received request to add Employee");
