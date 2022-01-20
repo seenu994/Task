@@ -61,7 +61,7 @@ public interface JobService {
 
 	ApiResponse editJobOffer(JobOffer jobObj, String jobOfferId);
 
-	ApiResponse getAllJobOffer(Pageable pageable);
+
 
 	ApiResponse changeJobOfferStatus(String jobOfferId, JobOfferStatus status);
 
@@ -81,5 +81,11 @@ public interface JobService {
 	ApiResponse updateInterviewRoundStatus(String jobInerviewId, InterviewRoundReviewRequest request);
 
 	ApiResponse getRoundDetails(String appId, Integer roundNo);
+
+	ApiResponse getAllJobApplication(Map<String, Object> filter, Pageable pageable);
+
+	ApiResponse getAllJobsOpening(Map<String, Object> filter, Pageable pageable);
+
+	ApiResponse getAllJobOffer(Map<String, Object> filter, Pageable pageable);
 
 }
