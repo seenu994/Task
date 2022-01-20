@@ -75,6 +75,12 @@ public class Employee extends AuditModel {
 	
 	@Column(name="reporting_to")
 	private String reportingTo;
+	
+	@Column(name="location")
+	private String location;
+	
+	@Column(name="position")
+	private String position;
 
 	public String geteId() {
 		return eId;
@@ -178,6 +184,22 @@ public class Employee extends AuditModel {
 
 	public void setReportingTo(String reportingTo) {
 		this.reportingTo = reportingTo;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	public String getPosition() {
+		return position;
+	}
+
+	public void setPosition(String position) {
+		this.position = position;
 	}
 
 	

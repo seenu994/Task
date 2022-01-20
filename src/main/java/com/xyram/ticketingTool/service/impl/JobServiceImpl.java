@@ -390,7 +390,7 @@ public class JobServiceImpl implements JobService {
 			boolean Emailvalidate = jobAppRepository.findb(jobAppObj.getCandidateEmail());
 			if (Emailvalidate == false) {
 
-				jobAppObj.setJobCode(jobCode);
+				//jobAppObj.setJobCode(jobCode);
 				if (jobAppObj.getJobOpenings()!=null && jobAppObj.getJobOpenings().getId()!=null) {
 					JobOpenings empObj = jobRepository.getJobOpeningsById(jobAppObj.getJobOpenings().getId());
 
