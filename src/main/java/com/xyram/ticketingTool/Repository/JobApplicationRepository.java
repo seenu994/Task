@@ -31,6 +31,9 @@ public interface JobApplicationRepository
 
 	@Query(value = "SELECT * from job_application j where j.job_code=:jobCodeId", nativeQuery = true)
 	List<Map> getjobOpeningsById(String jobCodeId);
+	
+	@Query(value = "SELECT j from JobApplication j where j.jobCode=:jobCodeId")
+	List<JobApplication> getjobOpeningsCode(String jobCodeId);
 
 	@Query("select count(e)>0 from JobApplication e where e. candidateEmail=:candidateEmail")
 	boolean findb(String candidateEmail);
@@ -50,6 +53,7 @@ public interface JobApplicationRepository
 			+ " OR (ja.createdBy=:userId)) and "
 			+ " (:searchString is null  "
 			+ " Or lower(ja.candidateEmail) LIKE %:searchString% "
+			+ " or lower(jobApplicationSatus)  LIKE %:searchString% "
 			+ " Or lower(ja.candidateMobile) LIKE %:searchString% "
 			+"  Or lower(ja.referredEmployee) Like %:searchString%"
 			+"  Or lower(ja.candidateName) Like %:searchString%"

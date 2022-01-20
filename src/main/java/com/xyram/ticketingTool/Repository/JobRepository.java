@@ -86,14 +86,13 @@ public interface JobRepository extends CrudRepository<JobOpenings, Long>, JpaSpe
 	@Query(value = "SELECT cw.wing_id, cw.wing_name FROM ticketdbtool.company_wings cw", nativeQuery = true)
 	CompanyWings getWingById(String id);
 
-	@Query("select count(j)>0 from JobOpenings j where j. jobCode= :jobCode")
-
+	@Query("select count(j)>0 from JobOpenings j where j.jobCode= :jobCode")
 	boolean findb(String jobCode);
 
 	@Query(value = "SELECT j from JobOpenings j WHERE j.jobCode =:jobCode ")
 	JobOpenings getJobCodeValidation(String jobCode);
   
-	@Query(value = "SELECT j from JobOpenings j WHERE j.id =:id ")
+	@Query(value = "SELECT j from JobOpenings j WHERE j.Id =:id ")
 	JobOpenings getJobOpeningsById(String id);
 
 

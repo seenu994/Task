@@ -33,6 +33,7 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 import com.xyram.ticketingTool.Communication.PushNotificationCall;
 import com.xyram.ticketingTool.Communication.PushNotificationRequest;
+import com.xyram.ticketingTool.Repository.CompanyWingsRepository;
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
 import com.xyram.ticketingTool.Repository.PermissionRepository;
 import com.xyram.ticketingTool.Repository.ProjectMemberRepository;
@@ -45,6 +46,7 @@ import com.xyram.ticketingTool.Repository.VendorTypeRepository;
 import com.xyram.ticketingTool.admin.model.User;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.email.EmailService;
+import com.xyram.ticketingTool.entity.CompanyWings;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.JobVendorDetails;
 import com.xyram.ticketingTool.entity.Notifications;
@@ -132,6 +134,9 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	@Autowired
 	TicketAttachmentService attachmentService;
 
+	@Autowired
+	CompanyWingsRepository wingRepo;
+	
 	@Value("${APPLICATION_URL}")
 	private String application_url;
 
@@ -361,7 +366,15 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			employee.setMobileNumber(employeeRequest.getMobileNumber());
 			employee.setPassword(employeeRequest.getPassword());
 			employee.setReportingTo(employeeRequest.getReportingTo());
-			employee.setRoleId(employeeRequest.getRoleId());
+			employee.setLocation(employeeRequest.getLocation());
+			employee.setPosition(employeeRequest.getPosition());
+			CompanyWings wingObj=new CompanyWings();
+	CompanyWings wing=wingRepo.getWingById(employeeRequest.getWings().getId());
+	if(wing!=null)
+	{
+			employee.setWings(wing);
+	}
+		employee.setRoleId(employeeRequest.getRoleId());
 			Role role = roleRepository.getById(employeeRequest.getRoleId());
 			employee.setDesignationId(employeeRequest.getDesignationId());
 			user.setUserRole(role.getRoleName());
