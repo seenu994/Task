@@ -11,6 +11,7 @@ import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.Projects;
+import com.xyram.ticketingTool.enumType.ProjectStatus;
 
 public interface ProjectService {
 
@@ -31,7 +32,9 @@ public interface ProjectService {
 
 	ApiResponse getgenericIssues();
 
-	ApiResponse getAllProjectList(); 
+	ApiResponse getAllProjectList();
+
+	ApiResponse updateProjectStatus(String projectId, ProjectStatus projectStatus); 
 
 
 }

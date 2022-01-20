@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
 import com.xyram.ticketingTool.Repository.FeatureRepository;
 import com.xyram.ticketingTool.Repository.ProjectRepository;
+import com.xyram.ticketingTool.admin.model.User;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
 import com.xyram.ticketingTool.entity.Employee;
@@ -26,7 +27,9 @@ import com.xyram.ticketingTool.entity.Feature;
 import com.xyram.ticketingTool.entity.ProjectFeature;
 import com.xyram.ticketingTool.entity.Projects;
 import com.xyram.ticketingTool.entity.Role;
+import com.xyram.ticketingTool.enumType.ProjectStatus;
 import com.xyram.ticketingTool.enumType.UserRole;
+import com.xyram.ticketingTool.enumType.UserStatus;
 import com.xyram.ticketingTool.exception.ResourceNotFoundException;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.ProjectFeatureService;
@@ -335,5 +338,46 @@ return response;
 		response.setContent(content);
 		return response;
 	}
+	private ApiResponse validateStatus(ProjectStatus projectStatus) {
+		ApiResponse response = new ApiResponse(false);
+		if (projectStatus == ProjectStatus.ACTIVE || projectStatus == ProjectStatus.INACTIVE || projectStatus == ProjectStatus.INDEVELOPMENT ||projectStatus == ProjectStatus.INPRODUCTION){
+			response.setMessage(ResponseMessages.STATUS_UPDATE);
+			response.setSuccess(true);
+		}
+
+		else {
+			response.setMessage("project status is invalid");
+			response.setSuccess(false);
+
+		}
+
+		return response;
+	}
+	@Override
+	public ApiResponse updateProjectStatus(String projectId, ProjectStatus projectStatus) {
+		
+			ApiResponse response = validateStatus(projectStatus);
+			if (response.isSuccess()) {
+				Projects projects = projectRepository.getById(projectId);
+				if (projects != null) {
+
+					projects.setStatus(projectStatus);
+					projectRepository.save(projects);
+					
+
+					// Employee employeere=new Employee();z
+
+					response.setSuccess(true);
+					response.setMessage(ResponseMessages.STATUS_UPDATE);
+					response.setContent(null);
+				}
+			} else {
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.PROJECT_ID_VALID);
+				response.setContent(null);
+			}
+
+			return response;
+		}
 
 }
