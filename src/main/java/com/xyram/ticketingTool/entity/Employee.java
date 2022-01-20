@@ -81,7 +81,11 @@ public class Employee extends AuditModel {
 	
 	@Column(name="position")
 	private String position;
-
+	
+	@OneToOne(cascade = {  CascadeType.ALL})
+	@JoinColumn(name = "wing_id")
+    private CompanyWings wings;
+	
 	public String geteId() {
 		return eId;
 	}
@@ -200,6 +204,14 @@ public class Employee extends AuditModel {
 
 	public void setPosition(String position) {
 		this.position = position;
+	}
+
+	public CompanyWings getWings() {
+		return wings;
+	}
+
+	public void setWings(CompanyWings wings) {
+		this.wings = wings;
 	}
 
 	

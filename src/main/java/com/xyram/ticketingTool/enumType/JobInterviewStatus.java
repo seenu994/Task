@@ -15,7 +15,7 @@ public enum JobInterviewStatus {
 	CANDIDATE_NOT_ATTENDED("CANDIDATE_NOT_ATTENDED"),
 	DEAFULT("DEAFULT"),
 	INITIAED("INITIAED");
-	
+		
 	
 	
 	private String value;
