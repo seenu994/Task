@@ -3,6 +3,8 @@ package com.xyram.ticketingTool.Repository;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.Column;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -43,6 +45,7 @@ public interface JobApplicationRepository
 	
 	List<JobApplication> getEmployeeNameByScoleId(String referredEmployeeId);
 	
+
 	
 
 	@Query(value = "SELECT ja from JobApplication ja left join ja.jobOpenings as jo where"
@@ -53,6 +56,7 @@ public interface JobApplicationRepository
 			+ " OR (ja.createdBy=:userId)) and "
 			+ " (:searchString is null  "
 			+ " Or lower(ja.candidateEmail) LIKE %:searchString% "
+			+ " or lower(str(ja.jobApplicationSatus))  LIKE %:searchString% "
 			+ " Or lower(ja.candidateMobile) LIKE %:searchString% "
 			+"  Or lower(ja.referredEmployee) Like %:searchString%"
 			+"  Or lower(ja.candidateName) Like %:searchString%"
