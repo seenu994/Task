@@ -79,7 +79,7 @@ public class JobOpenings extends AuditModel{
 	private JobOpeningStatus jobStatus = JobOpeningStatus.VACANT;
 	
 	@Column(name="salary")
-	private Integer jobSalary;
+	private double jobSalary;
 	
 	@Column(name="vendor_view")
 	private Integer vendor_view = 0;
@@ -99,12 +99,9 @@ public class JobOpenings extends AuditModel{
 		return jobTitle;
 	}
 
-	public Integer getSalary() {
-		return jobSalary;
-	}
 
-	public void setSalary(Integer salary) {
-		this.jobSalary = salary;
+	public void setJobSalary(double jobSalary) {
+		this.jobSalary = jobSalary;
 	}
 
 	public void setJobTitle(String jobTitle) {
@@ -183,14 +180,9 @@ public class JobOpenings extends AuditModel{
 		this.jobCode = jobCode;
 	}
 
-	public Integer getJobSalary() {
-		return jobSalary;
-	}
+	
 
-	public void setJobSalary(Integer jobSalary) {
-		this.jobSalary = jobSalary;
-	}
-
+	
 	public Integer getVendor_view() {
 		return vendor_view;
 	}
@@ -205,6 +197,10 @@ public class JobOpenings extends AuditModel{
 
 	public void setNotifyVendor(boolean notifyVendor) {
 		this.notifyVendor = notifyVendor;
+	}
+
+	public double getJobSalary() {
+		return jobSalary;
 	}
 
 	

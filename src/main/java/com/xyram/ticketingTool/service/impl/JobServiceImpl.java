@@ -884,7 +884,7 @@ public class JobServiceImpl implements JobService {
 			jobOpening.setLastUpdatedAt(new Date());
 			jobOpening.setMaxExp(jobObj.getMaxExp());
 			jobOpening.setMinExp(jobObj.getMinExp());
-			jobOpening.setSalary(jobObj.getSalary());
+			jobOpening.setJobSalary(jobObj.getJobSalary());
 			jobOpening.setTotalOpenings(jobObj.getTotalOpenings());
 			jobOpening.setJobStatus(jobObj.getJobStatus());
 
