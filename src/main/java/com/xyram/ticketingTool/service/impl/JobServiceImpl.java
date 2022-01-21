@@ -485,7 +485,7 @@ public class JobServiceImpl implements JobService {
 		// TODO Auto-generated method stub
 		ApiResponse response = new ApiResponse(false);
 		JobOpenings jobOpening = jobRepository.getJobOpeningFromCode(jobCode);
-		if (jobOpening != null) {
+		if (jobOpening != null && jobOpening.getJobStatus().equals("VACANT") && (jobOpening.getFilledPositions()!=jobOpening.getTotalOpenings())) {
 			ObjectMapper objectMapper = new ObjectMapper();
 			JobApplication jobAppObj = null;
 			try {
