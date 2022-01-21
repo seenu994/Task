@@ -20,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -199,6 +200,96 @@ public class JobServiceImpl implements JobService {
 		return response;
 	}
 
+
+	@Override
+	public ApiResponse getAllJobsOpening(Map<String, Object> filter, Pageable pageable) {
+		// TODO Auto-generated method stub
+		ApiResponse response = new ApiResponse(false);
+		Map content = new HashMap();
+		String status = filter.containsKey("status") ? ((String) filter.get("status")) : null;
+		Boolean notify = filter.containsKey("notify") ? ((Boolean) filter.get("notify")) : true;
+	
+		String wing = filter.containsKey("wing") ? ((String) filter.get("wing")).toLowerCase() : null;
+		JobOpeningStatus statusApp = null;
+	
+		String searchString = filter.containsKey("searchString") ? ((String) filter.get("searchString")).toLowerCase() : null;
+	
+		try {
+			statusApp =status!=null ? JobOpeningStatus.toEnum(status):null;
+		}
+		catch (Exception e) {
+		   throw new ResponseStatusException(HttpStatus.BAD_GATEWAY ,"Invalid Status Passed ");
+		}
+		
+		Page<JobOpenings> allList=jobRepository.getAllOpenings(searchString,statusApp, wing,userDetail.getUserRole(), 1,pageable);
+		
+////		List<Map> allJobs = jobRepository.getAllJobOpenings();
+////		List<JobOpenings> allList =  jobRepository.getList();
+//		Page<JobOpenings> allList = jobRepository.findAll(new Specification<JobOpenings>() {
+//			@Override
+//			public Predicate toPredicate(Root<JobOpenings> root, javax.persistence.criteria.CriteriaQuery<?> query,
+//					CriteriaBuilder criteriaBuilder) {
+//				// TODO Auto-generated method stub
+//				List<Predicate> predicates = new ArrayList<>();
+//				if (status != null) {
+//					predicates.add(criteriaBuilder
+//							.and(criteriaBuilder.equal(root.get("jobStatus"), statusApp.valueOf(status))));
+//				}
+//
+//				if (wing != null) {
+//					predicates
+//							.add(criteriaBuilder.and(criteriaBuilder.equal((root.get("wings").get("wingName")), wing)));
+//				}
+//
+//				// criteriaBuilder.upper(itemRoot.get("code"), code.toUpperCase()
+//				if (searchQuery != null) {
+////                	criteriaBuilder.like(root.get("title"), "%" + keyword + "%")
+//					// predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("jobTitle")),
+//					// "%"+searchQuery.toLowerCase()+"%"));
+//					predicates.add(
+//							criteriaBuilder.like(criteriaBuilder.lower(root.get("jobTitle")), "%" + searchQuery + "%"));
+//					// predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("jobCode")),
+//					// "%"+searchQuery.toLowerCase()+"%"));
+//
+////					predicates.add(criteriaBuilder.like(root.get("jobDescription"), "%"+searchQuery+"%"));
+////					predicates.add(criteriaBuilder.like(root.get("jobCode"), "%"+searchQuery+"%"));
+////					predicates.add(criteriaBuilder.or(criteriaBuilder.like(root.get("jobDescription"), "%"+searchQuery+"%")));
+////					predicates.add(criteriaBuilder.or(criteriaBuilder.like(root.get("jobCode"), "%"+searchQuery+"%")));
+//				}
+//				System.out.println(userDetail.getUserRole().equals("JOB_VENDOR"));
+//				if (userDetail.getUserRole().equals("JOB_VENDOR")) {
+//
+//					predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("vendor_view"), 1)));
+//				}
+//				query.orderBy(criteriaBuilder.desc(root.get("createdAt")));
+//				return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+//			}
+//		}, pageable);
+		content.put("jobsList", allList);
+		if (allList != null) {
+			response.setSuccess(true);
+			response.setMessage("Succesfully retrieved Jobs");
+		} else {
+			response.setSuccess(true);
+			response.setMessage("No Records Found");
+		}
+
+		response.setContent(content);
+		return response;
+	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	@Override
 	public ApiResponse getAllJobs(Map<String, Object> filter, Pageable pageable) {
 		// TODO Auto-generated method stub
@@ -323,6 +414,41 @@ public class JobServiceImpl implements JobService {
 				return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
 		}, pageable);
+		content.put("jobAppList", allList);
+		if (allList != null) {
+			response.setSuccess(true);
+			response.setMessage("Succesfully retrieved Jobs");
+		} else {
+			response.setSuccess(true);
+			response.setMessage("No Records Found");
+		}
+
+		response.setContent(content);
+		return response;
+	}
+	
+	
+	@Override
+	public ApiResponse getAllJobApplication(Map<String, Object> filter, Pageable pageable) {
+		// TODO Auto-generated method stub
+		ApiResponse response = new ApiResponse(false);
+		Map content = new HashMap();
+		String status = filter.containsKey("status") ? ((String) filter.get("status")) : null;
+
+		String searchString = filter.containsKey("searchString") ? ((String) filter.get("searchString")).toLowerCase() : null;
+		JobApplicationStatus statusApp = null;
+		String vendor = filter.containsKey("vendor") ? ((String) filter.get("vendor")).toLowerCase() : null;
+		
+		
+		try {
+			statusApp =status!=null ? JobApplicationStatus.toEnum(status):null;
+		}
+		catch (Exception e) {
+		   throw new ResponseStatusException(HttpStatus.BAD_GATEWAY ,"Invalid Status Passed ");
+		}
+
+	Page<JobApplication> allList=	jobAppRepository.getAllApllication(searchString, statusApp, vendor, userDetail.getUserRole(), userDetail.getUserId(),
+				pageable);
 		content.put("jobAppList", allList);
 		if (allList != null) {
 			response.setSuccess(true);
@@ -527,40 +653,12 @@ public class JobServiceImpl implements JobService {
 		Map content = new HashMap();
 //		List<JobInterviews> allList =  jobInterviewRepository.getList();
 		String status = filter.containsKey("status") ? ((String) filter.get("status")) : null;
-		String searchQuery = filter.containsKey("searchstring") ? ((String) filter.get("searchstring")).toLowerCase()
+		String searchQuery = filter.containsKey("searchString") ? ((String) filter.get("searchString")).toLowerCase()
 				: null;
 		JobInterviews statusApp = null;
-		Page<JobInterviews> allList = jobInterviewRepository.findAll(new Specification<JobInterviews>() {
-			@Override
-			public Predicate toPredicate(Root<JobInterviews> root, javax.persistence.criteria.CriteriaQuery<?> query,
-					CriteriaBuilder criteriaBuilder) {
-				// TODO Auto-generated method stub
-				List<Predicate> predicates = new ArrayList<>();
-				if (status != null && !status.equalsIgnoreCase("ALL")) {
-					predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("jobInterviewStatus"), status)));
-				}
-				if (userDetail.getUserRole().equals("DEVELOPER") || userDetail.getUserRole().equals("HR")
-						|| userDetail.getUserRole().equals("INFRA_ADMIN")
-						|| userDetail.getUserRole().equals("INFRA_USER")) {
-					System.out.println(userDetail.getUserId());
-					predicates.add(criteriaBuilder
-							.and(criteriaBuilder.equal(root.get("interviewer"), userDetail.getScopeId())));
-				}
-				if (searchQuery != null) {
-//	                	criteriaBuilder.like(root.get("title"), "%" + keyword + "%")
-					predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("candidateName"), searchQuery)));
-					predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobCode"), searchQuery)));
-				}
-//	                if(searchObj.getSearchString() != null && !searchObj.getSearchString().equalsIgnoreCase("")) {
-//	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("candidateName"), "%" + searchObj.getSearchString() + "%")));
-//	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("candidateMobile"), "%" + searchObj.getSearchString() + "%")));
-//	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("candidateEmail"), "%" + searchObj.getSearchString() + "%")));
-//	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobCode"), "%" + searchObj.getSearchString() + "%")));
-//	                }
-				query.orderBy(criteriaBuilder.desc(root.get("createdAt")));
-				return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
-			}
-		}, pageable);
+		Page<JobInterviews> allList = jobInterviewRepository.getAllJobInterview(searchQuery, userDetail.getUserRole(),
+				userDetail.getScopeId(), pageable);
+			
 
 		content.put("InterviewList", allList);
 		if (allList != null) {
@@ -826,7 +924,7 @@ public class JobServiceImpl implements JobService {
 		JobApplication status = jobAppRepository.getApplicationById(jobApplicationId);
 		System.out.println(userDetail.getUserRole());
 		if (status != null) {
-			if (userDetail.getUserId().equals(status.getCreatedBy()) || userDetail.getUserRole() == "HR_ADMIN") {
+			if (userDetail.getUserId().equals(status.getCreatedBy()) || userDetail.getUserRole() == "HR_ADMIN" ||userDetail.getUserRole() == "TICKETINGTOOL_ADMIN") {
 				if (status != null) {
 					ApplicationComments appComments = new ApplicationComments();
 					appComments.setApplicationId(jobApplicationId);
@@ -1014,32 +1112,13 @@ public class JobServiceImpl implements JobService {
 	}
 
 	@Override
-	public ApiResponse getAllJobOffer(Pageable pageable) {
+	public ApiResponse getAllJobOffer(Map<String, Object> filter,Pageable pageable) {
 		ApiResponse response = new ApiResponse(false);
 		Map content = new HashMap();
+		String searchString = filter.containsKey("searchString") ? ((String) filter.get("searchString")).toLowerCase() : null;
 //		List<JobInterviews> allList =  jobInterviewRepository.getList();
-		Page<JobOffer> allList = offerRepository.findAll(new Specification<JobOffer>() {
-			@Override
-			public Predicate toPredicate(Root<JobOffer> root, javax.persistence.criteria.CriteriaQuery<?> query,
-					CriteriaBuilder criteriaBuilder) {
-				// TODO Auto-generated method stub
-				List<Predicate> predicates = new ArrayList<>();
-//	                if(status != null && !status.equalsIgnoreCase("ALL")) {
-//	                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("status"), status)));
-//	                }
-//	                if(userDetail.getUserId()!=null && userDetail.getUserRole() != "HR_ADMIN" && userDetail.getUserRole() != "TICKETINGTOOL_ADMIN") {
-//	                	predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("createdBy"), "%" + userDetail.getUserId() + "%")));
-//	                }
-//	                if(searchObj.getSearchString() != null && !searchObj.getSearchString().equalsIgnoreCase("")) {
-//	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("candidateName"), "%" + searchObj.getSearchString() + "%")));
-//	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("candidateMobile"), "%" + searchObj.getSearchString() + "%")));
-//	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("candidateEmail"), "%" + searchObj.getSearchString() + "%")));
-//	                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("jobCode"), "%" + searchObj.getSearchString() + "%")));
-//	                }
-				query.orderBy(criteriaBuilder.desc(root.get("createdAt")));
-				return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
-			}
-		}, pageable);
+		Page<JobOffer> allList = offerRepository.getAllJobOffer(searchString, userDetail.getUserRole(), pageable);
+			
 
 		content.put("OfferList", allList);
 		if (allList != null) {

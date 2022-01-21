@@ -54,7 +54,7 @@ public class JobController {
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllJobs",AuthConstants.HR_ADMIN_BASEPATH + "/getAllJobs",AuthConstants.DEVELOPER_BASEPATH+ "/getAllJobs", AuthConstants.HR_BASEPATH + "/getAllJobs",AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllJobs",AuthConstants.INFRA_USER_BASEPATH + "/getAllJobs", AuthConstants.JOB_VENDOR_BASEPATH + "/getAllJobs" })
 	public ApiResponse getAllJobs(@RequestParam Map<String, Object> filter,Pageable pageable) {
 		logger.info("Get All Job");
-		return jobService.getAllJobs(filter,pageable);
+		return jobService.getAllJobsOpening(filter, pageable);
 	}
 	
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllJobCodes",AuthConstants.HR_ADMIN_BASEPATH + "/getAllJobCodes",AuthConstants.DEVELOPER_BASEPATH+ "/getAllJobCodes", AuthConstants.HR_BASEPATH + "/getAllJobCodes",AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllJobCodes",AuthConstants.INFRA_USER_BASEPATH + "/getAllJobCodes", AuthConstants.JOB_VENDOR_BASEPATH + "/getAllJobCodes" })
@@ -63,11 +63,20 @@ public class JobController {
 		return jobService.getAllJobCodes();
 	}
 	
+//	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllJobApplications",AuthConstants.HR_ADMIN_BASEPATH + "/getAllJobApplications",AuthConstants.DEVELOPER_BASEPATH+ "/getAllJobApplications", AuthConstants.HR_BASEPATH + "/getAllJobApplications",AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllJobApplications",AuthConstants.INFRA_USER_BASEPATH + "/getAllJobApplications", AuthConstants.JOB_VENDOR_BASEPATH + "/getAllJobApplications" })
+//	public ApiResponse getAllJobApplications(@RequestParam Map<String, Object> filter,Pageable pageable) {
+//		logger.info("Get All Job");
+//		return jobService.getAllJobApplications(filter,pageable);
+//	}
+//	
+//	
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllJobApplications",AuthConstants.HR_ADMIN_BASEPATH + "/getAllJobApplications",AuthConstants.DEVELOPER_BASEPATH+ "/getAllJobApplications", AuthConstants.HR_BASEPATH + "/getAllJobApplications",AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllJobApplications",AuthConstants.INFRA_USER_BASEPATH + "/getAllJobApplications", AuthConstants.JOB_VENDOR_BASEPATH + "/getAllJobApplications" })
 	public ApiResponse getAllJobApplications(@RequestParam Map<String, Object> filter,Pageable pageable) {
 		logger.info("Get All Job");
-		return jobService.getAllJobApplications(filter,pageable);
+		return jobService.getAllJobApplication(filter,pageable);
 	}
+	
+	
 	
 	
 	  @GetMapping(value = { AuthConstants.ADMIN_BASEPATH +
@@ -194,9 +203,9 @@ public class JobController {
 	}
 	
 	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/getAllJobOffer",AuthConstants.ADMIN_BASEPATH + "/getAllJobOffer" })
-	public ApiResponse getAllJobOffer(Pageable pageable) {
+	public ApiResponse getAllJobOffer(@RequestParam Map<String,Object> filter ,Pageable pageable) {
 		logger.info("Creating Job Offers");
-		return jobService.getAllJobOffer(pageable);
+		return jobService.getAllJobOffer(filter,pageable);
 	}
 	
 	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/getAllJobOffer/{offerId}",AuthConstants.ADMIN_BASEPATH + "/getAllJobOffer/{offerId}" })

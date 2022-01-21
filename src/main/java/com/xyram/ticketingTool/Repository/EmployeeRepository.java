@@ -204,18 +204,13 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 	@Query("select e from User e  where e.id= :userId ")
 	Employee getEmployeeByUSerId(String userId);
 
-	
 	@Query("SELECT e from Employee e  left join JobApplication j On e.eId= j.referredEmployeeId where e.eId = :geteId")
 	Employee getEmployeeNameByScoleID(String geteId);
-	
-	
-	@Query("SELECT e from Employee e  where e.eId = :referredEmployeeId")
 
-	
+	@Query("SELECT e from Employee e  where e.eId = :referredEmployeeId")
 
 	Employee getEmployeeNameByScoleId(String referredEmployeeId);
 
-	
 	/*
 	 * @Query("Select new map(e.eId as id,e.email as email,e.firstName as firstName,e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId, "
 	 * +

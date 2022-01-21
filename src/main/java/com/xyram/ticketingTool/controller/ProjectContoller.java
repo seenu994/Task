@@ -23,6 +23,7 @@ import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.Projects;
+import com.xyram.ticketingTool.enumType.ProjectStatus;
 import com.xyram.ticketingTool.enumType.UserStatus;
 import com.xyram.ticketingTool.service.EmployeeService;
 import com.xyram.ticketingTool.service.ProjectService;
@@ -89,5 +90,11 @@ class ProjectContoller {
 	public ApiResponse getAllProjectList() {
 		logger.info("indide ProjectContoller :: getAllProjects");
 		return projectService.getAllProjectList();
+	}
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/updateProjectStatus/{ProjectId}/status/{projectStatus}",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/updateProjectStatus/{ProjectId}/status/{projectStatus}", AuthConstants.INFRA_USER_BASEPATH + "/updateProjectStatus/{ProjectId}/status/{projectStatus}", })
+	public ApiResponse updateProjectStatus(@PathVariable String ProjectId, @PathVariable ProjectStatus projectStatus) {
+		logger.info("Received request to change proejct status to: " + projectStatus + "for projectId: " + ProjectId);
+		return projectService.updateProjectStatus(ProjectId, projectStatus);
 	}
 }
