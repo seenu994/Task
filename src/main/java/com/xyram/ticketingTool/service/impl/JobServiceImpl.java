@@ -485,7 +485,7 @@ public class JobServiceImpl implements JobService {
 		// TODO Auto-generated method stub
 		ApiResponse response = new ApiResponse(false);
 		JobOpenings jobOpening = jobRepository.getJobOpeningFromCode(jobCode);
-		if (jobOpening != null) {
+		if (jobOpening != null && jobOpening.getJobStatus().equals("VACANT") && (jobOpening.getFilledPositions()!=jobOpening.getTotalOpenings())) {
 			ObjectMapper objectMapper = new ObjectMapper();
 			JobApplication jobAppObj = null;
 			try {
@@ -778,6 +778,7 @@ public class JobServiceImpl implements JobService {
 			jbInterviews.setInterviewDate(jobInterviewRequest.getInterviewDate());
 			jbInterviews.setRecommendation(jobInterviewRequest.getRecommendation());
 			jbInterviews.setRating(jobInterviewRequest.getRateGiven());
+			jbInterviews.setJobInterviewStatus(jobInterviewRequest.getJobInterviewStatus());
 			jobInterviewRepository.save(jbInterviews);
 			response.setSuccess(true);
 			String msg = "Job Interview Updated Successfully";
@@ -884,6 +885,7 @@ public class JobServiceImpl implements JobService {
 			jobOpening.setMinExp(jobObj.getMinExp());
 			jobOpening.setSalary(jobObj.getSalary());
 			jobOpening.setTotalOpenings(jobObj.getTotalOpenings());
+			jobOpening.setJobStatus(jobObj.getJobStatus());
 
 			if (jobObj.getWings() != null && jobObj.getWings().getId() != null) {
 				CompanyWings wing = companyWingsRepository.getById(jobObj.getWings().getId());
@@ -1104,6 +1106,7 @@ public class JobServiceImpl implements JobService {
 			jobOffer.setJobTitle(jobObj.getJobTitle());
 			jobOffer.setSalary(jobObj.getSalary());
 			jobOffer.setTotalExp(jobObj.getTotalExp());
+			jobObj.setStatus(jobObj.getStatus());
 			offerRepository.save(jobOffer);
 			response.setSuccess(true);
 			response.setMessage("Job Offers Updated Sucessfully");
