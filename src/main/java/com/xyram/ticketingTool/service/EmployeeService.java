@@ -56,7 +56,7 @@ public interface EmployeeService {
 
 	//ApiResponse getEmployeeDetails(Employee employeeId);
 
-	ApiResponse getJobVendor();
+	ApiResponse getJobVendor(Pageable pageable);
 
 	ApiResponse getAllEmployeeCurrentMonth(Pageable pageable);
 

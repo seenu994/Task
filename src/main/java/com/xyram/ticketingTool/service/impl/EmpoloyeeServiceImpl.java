@@ -819,9 +819,9 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public ApiResponse getJobVendor() {
+	public ApiResponse getJobVendor(Pageable pageable) {
 		ApiResponse response = new ApiResponse(false);
-		List<JobVendorDetails> jobVendors = vendorRepository.getJobVendors();
+		Page<JobVendorDetails> jobVendors = vendorRepository.getJobVendors(pageable);
 		Map content = new HashMap();
 		content.put("jobVendors", jobVendors);
 		if (content != null) {
