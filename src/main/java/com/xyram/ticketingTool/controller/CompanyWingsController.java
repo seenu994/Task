@@ -34,8 +34,8 @@ import com.xyram.ticketingTool.util.AuthConstants;
 			AuthConstants.INFRA_USER_BASEPATH + "/getAllWing",
 			AuthConstants.DEVELOPER_BASEPATH + "/getAllWing",
 			AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllWing" })
-	public ApiResponse getAllWing() {
+	public ApiResponse getAllWing(Map<String, Object> filter) {
 		logger.info("indide CatagoryController :: getAllWing");
-		return companyWingService.getAllWing();
+		return companyWingService.getAllWing(filter);
 	}
 }
