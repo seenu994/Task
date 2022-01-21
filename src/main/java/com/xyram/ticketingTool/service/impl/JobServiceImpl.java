@@ -854,6 +854,7 @@ public class JobServiceImpl implements JobService {
 		if (jobOpening != null) {
 			jobOpening.setUpdatedBy(userDetail.getUserId());
 			jobOpening.setJobDescription(jobObj.getJobDescription());
+			jobOpening.setNotifyVendor(jobObj.isNotifyVendor());
 			if(jobOpening.getJobCode().equals(jobObj.getJobCode())) {
 			jobOpening.setJobCode(jobObj.getJobCode());
 			}
