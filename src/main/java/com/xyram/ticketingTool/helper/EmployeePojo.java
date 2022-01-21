@@ -2,11 +2,12 @@ package com.xyram.ticketingTool.helper;
 
 
 import com.poiji.annotation.ExcelCellName;
+import com.xyram.ticketingTool.baseData.model.AuditModel;
 
-public class EmployeePojo {
+public class EmployeePojo extends AuditModel  {
 
 
-	@ExcelCellName("employeeId")
+	@ExcelCellName("eId")
 	private String eId;
 	
 	@ExcelCellName("password")
@@ -26,9 +27,14 @@ public class EmployeePojo {
 	@ExcelCellName("roleId")
 	private String roleId;
 	
+	@ExcelCellName("mobile_number")
+	private String mobileNumber;
 	
 	@ExcelCellName("status")
 	private String status;
+	
+	@ExcelCellName("profileUrl")
+	private String profileUrl;
 	
 	
 	@ExcelCellName("designationId")
@@ -153,6 +159,22 @@ public class EmployeePojo {
 
 	public void setWing_id(String wing_id) {
 		this.wing_id = wing_id;
+	}
+
+	public String getMobileNumber() {
+		return mobileNumber;
+	}
+
+	public void setMobileNumber(String mobileNumber) {
+		this.mobileNumber = mobileNumber;
+	}
+
+	public String getProfileUrl() {
+		return profileUrl;
+	}
+
+	public void setProfileUrl(String profileUrl) {
+		this.profileUrl = profileUrl;
 	}
 	
 }

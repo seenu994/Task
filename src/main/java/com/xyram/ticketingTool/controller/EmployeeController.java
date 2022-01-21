@@ -153,7 +153,7 @@ class EmployeeController {
 		return employeeService.getEmployeeDetailsById(employeeId);
 	}
 
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/updateEmployeeStatus/{employeeID}/status/{userstatus}",
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/updateEmployeeStatus/{employeeID}/status/{userstatus}",AuthConstants.INFRA_USER_BASEPATH + "/updateEmployeeStatus/{employeeID}/status/{userstatus}",
 			AuthConstants.INFRA_ADMIN_BASEPATH + "/updateEmployeeStatus/{employeeID}/status/{userstatus}" })
 	public ApiResponse updateEmployeeStatus(@PathVariable String employeeID, @PathVariable UserStatus userstatus) {
 		logger.info("Received request to change category status to: " + userstatus + "for employeeId: " + employeeID);
