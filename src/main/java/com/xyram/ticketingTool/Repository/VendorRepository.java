@@ -3,6 +3,8 @@ package com.xyram.ticketingTool.Repository;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -11,7 +13,7 @@ import com.xyram.ticketingTool.entity.JobVendorDetails;
 public interface VendorRepository extends JpaRepository<JobVendorDetails,String> {
 
 	@Query("Select jv from JobVendorDetails jv")
-	List<JobVendorDetails> getJobVendors();
+	Page<JobVendorDetails> getJobVendors(Pageable pageable);
 	
 	@Query("Select jv from JobVendorDetails jv where jv.name LIKE %:vendorName% ")
 	List<JobVendorDetails> serachJobVendors(String vendorName);
