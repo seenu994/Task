@@ -90,6 +90,8 @@ public interface EmployeeService {
 
 	ApiResponse serachJobVendor(String vendorName);
 
+	Map<String, Object> employeeBulkUpload(MultipartFile file);
+
 	//ApiResponse updateProfileImage(MultipartFile file, String employeeId);
 
 }

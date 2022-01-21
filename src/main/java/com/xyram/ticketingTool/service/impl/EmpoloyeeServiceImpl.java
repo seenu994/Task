@@ -52,11 +52,13 @@ import com.xyram.ticketingTool.entity.VendorType;
 import com.xyram.ticketingTool.enumType.NotificationType;
 import com.xyram.ticketingTool.enumType.UserStatus;
 import com.xyram.ticketingTool.exception.ResourceNotFoundException;
+import com.xyram.ticketingTool.helper.EmployeePojo;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.EmployeeService;
 import com.xyram.ticketingTool.service.NotificationService;
 import com.xyram.ticketingTool.service.TicketAttachmentService;
 import com.xyram.ticketingTool.ticket.config.PermissionConfig;
+import com.xyram.ticketingTool.util.BulkUploadExcelUtil;
 import com.xyram.ticketingTool.util.ResponseMessages;
 
 /**
@@ -1137,6 +1139,36 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		return response;
 	}
 
-	
+	@Override
+	public Map<String, Object> employeeBulkUpload(MultipartFile file) {
+		
+			Map<String, Object> response = new HashMap<>();
+
+			if (BulkUploadExcelUtil.hasEmployeeHeader(file)) {
+
+				List<EmployeePojo> employeeList = null;
+				try {
+					employeeList =BulkUploadExcelUtil.excelToEmployeePojo(file.getInputStream());
+				} catch (IOException e) {
+
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "", e);
+				}
+
+
+				for (EmployeePojo EmployeeData : employeeList) {
+					Employee emp=employeeRepository.getAllEmployy();
+					emp.setCreatedAt(null);
+					//employeeRepository.sav(EmployeeData);
+					response.put("success", "Blocks are updated successfully");
+					}
+				}
+			 else {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "header data passed in xls is invalid ");
+			}
+
+			return response;
+		}
+
+		
 
 }

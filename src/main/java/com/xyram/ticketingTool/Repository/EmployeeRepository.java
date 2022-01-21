@@ -14,6 +14,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.xyram.ticketingTool.entity.Employee;
+import com.xyram.ticketingTool.helper.EmployeePojo;
 
 @Repository
 @Transactional
@@ -210,6 +211,10 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 	@Query("SELECT e from Employee e  where e.eId = :referredEmployeeId")
 
 	Employee getEmployeeNameByScoleId(String referredEmployeeId);
+	@Query("SELECT e from Employee e ")
+	Employee getAllEmployy();
+
+	
 
 	/*
 	 * @Query("Select new map(e.eId as id,e.email as email,e.firstName as firstName,e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId, "

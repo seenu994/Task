@@ -318,4 +318,11 @@ class EmployeeController {
 		logger.info("inside EmployeeController :: searchEmployeeNotAssignedToProject ");
 		return employeeService.searchEmployeeNotAssignedToByProject(projectid, searchString);
 	}
+	@PostMapping(value = {
+			AuthConstants.ADMIN_BASEPATH+ "/employeeBulkUpload",AuthConstants.INFRA_ADMIN_BASEPATH+ "/employeeBulkUpload"})
+	public Map<String, Object> employeeBulkUpload(MultipartFile file) {
+		logger.info("Received request for get all employeeBulkUpload");
+		return employeeService.employeeBulkUpload(file);
+	}
+
 }
