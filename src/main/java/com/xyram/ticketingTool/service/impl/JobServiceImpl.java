@@ -958,8 +958,8 @@ public class JobServiceImpl implements JobService {
 	public ApiResponse editJobApplication(MultipartFile[] files, String jobAppObj, String jobAppId) {
 		ApiResponse response = new ApiResponse(false);
 		JobApplication jobApp = jobAppRepository.getApplicationById(jobAppId);
-		if (jobApp != null && userDetail.getUserId().equals(jobApp.getCreatedBy())
-				|| userDetail.getUserRole().equals(UserRole.HR_ADMIN)) {
+		if (jobApp != null && userDetail.getUserId()==(jobApp.getCreatedBy())
+				|| userDetail.getUserRole().equals("HR_ADMIN")) {
 			ObjectMapper objectMapper = new ObjectMapper();
 			JobApplication newJobAppObj = null;
 			try {
@@ -988,11 +988,17 @@ public class JobServiceImpl implements JobService {
 					}
 				}
 			}
+			JobOpenings empObj = jobRepository.getJobCode(newJobAppObj.getJobCode());
 			
-			JobOpenings jobs=jobRepository.getJobCodeValidation(newJobAppObj.getJobCode());
-				if(jobs!=null) {
+			if(empObj.getJobCode().equals(newJobAppObj.getJobCode())) {
+				jobApp.setJobCode(newJobAppObj.getJobCode());
+				}
+				else
+				{
+					boolean jobCodeValidate = jobRepository.findb(newJobAppObj.getJobCode());
+					if (jobCodeValidate == false) {
 			
-			jobApp.setJobCode(jobs.getJobCode());
+		         	jobApp.setJobCode(newJobAppObj.getJobCode());
 				}
 				else {
 					response.setMessage("job code not valid");
@@ -1000,7 +1006,6 @@ public class JobServiceImpl implements JobService {
 				}
 				
 				if (newJobAppObj.getJobCode()!=null) {
-					JobOpenings empObj = jobRepository.getJobCode(newJobAppObj.getJobCode());
 
 					if (empObj != null) {
 
@@ -1011,13 +1016,14 @@ public class JobServiceImpl implements JobService {
 					}
 
 				}
+				}
 			
 			
 			jobApp.setCandidateEmail(newJobAppObj.getCandidateEmail());
 			jobApp.setCandidateMobile(newJobAppObj.getCandidateMobile());
 			jobApp.setCandidateName(newJobAppObj.getCandidateName());
 			jobApp.setExpectedSalary(newJobAppObj.getExpectedSalary());
-
+            jobApp.setJobApplicationSatus(newJobAppObj.getJobApplicationSatus());
 			if (jobAppRepository.save(jobApp) != null) {
 				response.setSuccess(true);
 				response.setMessage(" Job Application Updated");
@@ -1025,7 +1031,8 @@ public class JobServiceImpl implements JobService {
 				response.setSuccess(false);
 				response.setMessage(" Job Application Not Updated");
 			}
-		} else {
+		}
+		else {
 			response.setSuccess(false);
 			response.setMessage("Job Application Id Not Exist");
 		}
