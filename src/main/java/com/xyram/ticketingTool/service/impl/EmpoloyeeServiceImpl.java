@@ -192,6 +192,11 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				userPermissionConfig.save(permissions);
 				employee.setCreatedBy(currentUser.getUserId());
 				employee.setUpdatedBy(currentUser.getUserId());
+				CompanyWings wing=wingRepo.getWingById(employee.getWings().getId());
+				if(wing!=null)
+				{
+						employee.setWings(wing);
+				}
 				employee.setCreatedAt(new Date());
 				employee.setLastUpdatedAt(new Date());
 				employee.setUserCredientials(user);
@@ -824,9 +829,9 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public ApiResponse getJobVendor() {
+	public ApiResponse getJobVendor(Pageable pageable) {
 		ApiResponse response = new ApiResponse(false);
-		List<JobVendorDetails> jobVendors = vendorRepository.getJobVendors();
+		Page<JobVendorDetails> jobVendors = vendorRepository.getJobVendors(pageable);
 		Map content = new HashMap();
 		content.put("jobVendors", jobVendors);
 		if (content != null) {

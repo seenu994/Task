@@ -1,6 +1,9 @@
 package com.xyram.ticketingTool.Repository;
 
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -11,4 +14,7 @@ public interface CompanyWingsRepository extends JpaRepository<CompanyWings, Stri
 	@Query(value = "SELECT j from CompanyWings j WHERE j.Id = :id ")
 	
 	CompanyWings getWingById(String id);
+
+	@Query("Select new map(e.Id as wing_id,e.wingName as wing_name)from CompanyWings e ")
+	List<Map> getAllWing();
 }
