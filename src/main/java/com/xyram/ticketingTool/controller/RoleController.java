@@ -40,9 +40,9 @@ public class RoleController {
 
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllRole",AuthConstants.HR_BASEPATH + "/getAllRole",AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllRole",
 			AuthConstants.INFRA_USER_BASEPATH + "/getAllRole" ,AuthConstants.DEVELOPER_BASEPATH + "/getAllRole",AuthConstants.HR_ADMIN_BASEPATH + "/getAllRole"})
-	public ApiResponse getAllRole(Pageable pageable) {
+	public ApiResponse getAllRole() {
 		logger.info("indide Role Controller :: getAllRole");
-		return roleService.getAllRole(pageable);
+		return roleService.getAllRole();
 	}
 	
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllRole/{roleName}"})
