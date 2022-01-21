@@ -6,7 +6,7 @@ import com.xyram.ticketingTool.apiresponses.ApiResponse;
 
 public interface RoleService {
 	
- ApiResponse getAllRole(Pageable pageable) ;
+ ApiResponse getAllRole() ;
 
 Integer getAllRolePermission(String roleName);
 		

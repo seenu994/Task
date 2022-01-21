@@ -2,6 +2,7 @@ package com.xyram.ticketingTool.service.impl;
 
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +32,8 @@ public class RoleServiceImpl implements RoleService {
 	
 
 	@Override
-	public ApiResponse getAllRole(Pageable pageable) {
-       Page<Map> roleList =   roleRepository.getAllRoleList(pageable);
+	public ApiResponse getAllRole() {
+       List<Map> roleList =   roleRepository.getAllRoleList();
        Map content = new HashMap();
        content.put("roleList", roleList);
        ApiResponse response = new ApiResponse(true);

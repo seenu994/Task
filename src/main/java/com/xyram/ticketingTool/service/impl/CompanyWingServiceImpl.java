@@ -22,8 +22,9 @@ public class CompanyWingServiceImpl implements CompanyWingService  {
 CompanyWingsRepository wingRepo;
 
 @Override
-public ApiResponse getAllWing() {
-	List<Map> wingList = wingRepo.getAllWing();
+public ApiResponse getAllWing(Map<String,Object> filter) {
+String searchString=filter.containsKey("searchString") ? filter.get("searchString").toString().toLowerCase():null;
+	List<Map> wingList = wingRepo.getAllWing(searchString);
 	Map content = new HashMap();
 	content.put("wingList", wingList);
 	ApiResponse response = new ApiResponse(true);

@@ -117,7 +117,8 @@ class EmployeeController {
 		return employeeService.getAllEmployeeCurrentMonth(pageable);
 	}
 
-	@PutMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/profile/image/{employeeId}" })
+	@PutMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/profile/image/{employeeId}",AuthConstants.HR_ADMIN_BASEPATH + "/profile/image/{employeeId}",
+			AuthConstants.HR_BASEPATH + "/profile/image/{employeeId}",AuthConstants.INFRA_USER_BASEPATH + "/profile/image/{employeeId}",AuthConstants.DEVELOPER_BASEPATH + "/profile/image/{employeeId}",AuthConstants.ADMIN_BASEPATH + "/profile/image/{employeeId}"})
 	public ApiResponse updateProfileImage(@RequestPart(name = "file", required = true) MultipartFile file,
 			@PathVariable String userId) {
 		logger.info("Received request for update doctor profile");
@@ -223,7 +224,7 @@ class EmployeeController {
 		return employeeService.getAllPermissions();
 	}
 
-	@PutMapping(value = { AuthConstants.INFRA_USER_BASEPATH + "/updateProfile",AuthConstants.HR_ADMIN_BASEPATH + "/updateProfile",
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/updateProfile",AuthConstants.INFRA_USER_BASEPATH + "/updateProfile",AuthConstants.HR_ADMIN_BASEPATH + "/updateProfile",
 			AuthConstants.HR_BASEPATH + "/updateProfile",AuthConstants.DEVELOPER_BASEPATH + "/updateProfile",
 			AuthConstants.INFRA_ADMIN_BASEPATH + "/updateProfile" })
 	public ApiResponse editEmployee(@RequestBody Map employeeRequest) {
