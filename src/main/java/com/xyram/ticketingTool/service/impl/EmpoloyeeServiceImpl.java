@@ -927,6 +927,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			vendor.setName(vendorRequest.getName());
 			vendor.setEmail(vendorRequest.getEmail());
 			vendor.setMobileNumber(vendorRequest.getMobileNumber());
+			vendorRepository.save(vendor);
 			response.setSuccess(true);
 			response.setMessage("Edit successful");
 
