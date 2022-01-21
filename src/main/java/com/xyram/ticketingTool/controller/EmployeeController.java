@@ -224,7 +224,7 @@ class EmployeeController {
 		return employeeService.getAllPermissions();
 	}
 
-	@PutMapping(value = { AuthConstants.INFRA_USER_BASEPATH + "/updateProfile",AuthConstants.HR_ADMIN_BASEPATH + "/updateProfile",
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/updateProfile",AuthConstants.INFRA_USER_BASEPATH + "/updateProfile",AuthConstants.HR_ADMIN_BASEPATH + "/updateProfile",
 			AuthConstants.HR_BASEPATH + "/updateProfile",AuthConstants.DEVELOPER_BASEPATH + "/updateProfile",
 			AuthConstants.INFRA_ADMIN_BASEPATH + "/updateProfile" })
 	public ApiResponse editEmployee(@RequestBody Map employeeRequest) {
