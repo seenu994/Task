@@ -107,7 +107,10 @@ public interface JobRepository extends CrudRepository<JobOpenings, Long>, JpaSpe
 			+"  Or lower(j.jobCode) Like %:searchString%"
 			+"  Or lower(w.wingName) Like %:searchString%"
 			+"  Or lower(j.jobDescription) Like %:searchString%"
-			+ " Or lower(j.jobCode) LIKE %:searchString%) ORDER BY j.createdAt DESC")		
+			+"  Or lower(j.jobCode) Like %:searchString%"
+			+"  Or str(j.jobSalary) Like %:searchString%"
+			+"  Or lower(j.maxExp) Like %:searchString%"
+			+ " Or lower(j.minExp) LIKE %:searchString%) ORDER BY j.createdAt DESC")		
 	Page<JobOpenings> getAllOpenings(String searchString, JobOpeningStatus status, String wing, String userRole,
 			Integer notify, Pageable pageable);
 	
