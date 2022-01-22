@@ -35,8 +35,6 @@ public interface JobService {
 
 	ApiResponse getAllCompanyWingsAndSkills();
 
-	ApiResponse createJobApplication(MultipartFile[] files, String jobAppObj, String jobCode);
-
 	ApiResponse scheduleJobInterview(JobInterviews schedule, String applicationId);
 
 	ApiResponse getAllJobInterviews(Map<String, Object> filter, Pageable pageable);
@@ -87,5 +85,7 @@ public interface JobService {
 	ApiResponse getAllJobsOpening(Map<String, Object> filter, Pageable pageable);
 
 	ApiResponse getAllJobOffer(Map<String, Object> filter, Pageable pageable);
+
+	ApiResponse createJobApplication(MultipartFile[] files, String jobAppString);
 
 }

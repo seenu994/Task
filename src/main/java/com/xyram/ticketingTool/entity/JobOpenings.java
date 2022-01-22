@@ -12,6 +12,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.GenericGenerator;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.xyram.ticketingTool.baseData.model.AuditModel;
 import com.xyram.ticketingTool.enumType.JobOpeningStatus;
 import com.xyram.ticketingTool.id.generator.IdGenerator;
@@ -46,6 +48,7 @@ public class JobOpenings extends AuditModel{
 	@Column(name="job_id")
 	private String Id;
 	
+	@JsonIgnore
 	@Column(name="job_code")
 	private String jobCode;
 	

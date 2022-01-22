@@ -95,7 +95,7 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 	@Query("SELECT distinct new map(a.Id as ticket_id, a.ticketDescription as ticket_description, a.status as ticket_status, a.createdAt as created_at, a.createdBy as created_by, a.lastUpdatedAt as last_updated_at, "
 			+ "a.priorityId as priority_id, b.employeeId as assigneeId, concat(e.firstName,' ', e.lastName) as assigneeName, concat(ee.firstName,' ', ee.lastName) as createdByEmp) "
 			+ "FROM Ticket a left join Employee ee on a.createdBy = ee.userCredientials left join TicketAssignee b ON a.Id = b.ticketId and b.status = 'ACTIVE' "
-			+ "left join Employee e on b.employeeId = e.eId where  (('INFRA_USER' = :roleId and a.status = :status and b.employeeId  = :createdBy) "
+			+ "left join Employee e on b.employeeId = e.eId where  (('INFRA_USER' = :roleId and a.status = :status and e.userCredientials.id = :createdBy) "
 			+ "OR ('DEVELOPER' = :roleId and a.status = :status  and a.createdBy = :createdBy) "
 			+ "OR ('TICKETINGTOOL_ADMIN' = :roleId and a.status = :status) OR ('HR_ADMIN' = :roleId and a.status = :status and a.createdBy = :createdBy) OR ('INFRA_ADMIN' = :roleId and a.status = :status)) ORDER BY a.createdAt DESC")
 	Page<Map> getAllTicketsByStatus(Pageable pageable, @Param("createdBy") String createdBy, @Param("roleId")String roleId, TicketStatus status);

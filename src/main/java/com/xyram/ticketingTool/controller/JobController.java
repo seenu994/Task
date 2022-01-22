@@ -95,11 +95,12 @@ public class JobController {
 	 * getAllCompanyWingsAndSkills() { logger.info("Get All Wings & Skills"); return
 	 * jobService.getAllCompanyWingsAndSkills(); }
 	 */
-	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/createJobApplication/{jobCode}",AuthConstants.HR_ADMIN_BASEPATH + "/createJobApplication/{jobCode}",AuthConstants.DEVELOPER_BASEPATH+ "/createJobApplication/{jobCode}", AuthConstants.HR_BASEPATH + "/createJobApplication/{jobCode}",AuthConstants.INFRA_ADMIN_BASEPATH + "/createJobApplication/{jobCode}",AuthConstants.INFRA_USER_BASEPATH + "/createJobApplication/{jobCode}", AuthConstants.JOB_VENDOR_BASEPATH + "/createJobApplication/{jobCode}" })
-	public ApiResponse createJobApplication(@RequestPart(name = "files", required = false) MultipartFile[] files,@RequestPart String jobAppObj,
-			@PathVariable String jobCode) {
+	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/createJobApplication",AuthConstants.HR_ADMIN_BASEPATH + "/createJobApplication",AuthConstants.DEVELOPER_BASEPATH+ "/createJobApplication", AuthConstants.HR_BASEPATH + "/createJobApplication",AuthConstants.INFRA_ADMIN_BASEPATH + "/createJobApplication",AuthConstants.INFRA_USER_BASEPATH + "/createJobApplication", AuthConstants.JOB_VENDOR_BASEPATH + "/createJobApplication" })
+	public ApiResponse createJobApplication(@RequestPart(name = "files", required = false) 
+	MultipartFile[] files,@RequestPart String jobAppObj
+		) {
 		logger.info("Creating Job Application");
-		return jobService.createJobApplication(files,jobAppObj,jobCode);
+		return jobService.createJobApplication(files,jobAppObj);
 	}
 	
 	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editJobApplication/{jobAppId}",AuthConstants.HR_ADMIN_BASEPATH + "/editJobApplication/{jobAppId}",AuthConstants.DEVELOPER_BASEPATH+ "/editJobApplication/{jobAppId}", AuthConstants.HR_BASEPATH + "/editJobApplication/{jobAppId}",AuthConstants.INFRA_ADMIN_BASEPATH + "/editJobApplication/{jobAppId}",AuthConstants.INFRA_USER_BASEPATH + "/editJobApplication/{jobAppId}", AuthConstants.JOB_VENDOR_BASEPATH + "/createJobApplication/{jobCode}"  })

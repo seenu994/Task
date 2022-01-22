@@ -687,6 +687,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			channelSftp = (ChannelSftp) channel;
 			channelSftp.cd(SFTPWORKINGDIRAADMIN);// Change Directory on SFTP Server
 			channelSftp.put(file.getInputStream(), fileName);
+			channelSftp.getSession().setTimeout(15000);
 			System.out.println("added");
 		} catch (Exception ex) {
 			ex.printStackTrace();

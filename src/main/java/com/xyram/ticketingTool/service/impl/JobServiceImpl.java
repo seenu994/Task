@@ -1,6 +1,7 @@
 package com.xyram.ticketingTool.service.impl;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -58,8 +59,10 @@ import com.xyram.ticketingTool.enumType.JobOfferStatus;
 import com.xyram.ticketingTool.enumType.JobOpeningStatus;
 import com.xyram.ticketingTool.enumType.NotificationType;
 import com.xyram.ticketingTool.enumType.UserRole;
+import com.xyram.ticketingTool.fileupload.FileTransferService;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.request.InterviewRoundReviewRequest;
+import com.xyram.ticketingTool.service.FileService;
 import com.xyram.ticketingTool.service.JobService;
 import com.xyram.ticketingTool.service.NotificationService;
 import com.xyram.ticketingTool.util.ResponseMessages;
@@ -92,6 +95,10 @@ public class JobServiceImpl implements JobService {
 
 	@Autowired
 	NotificationService notificationService;
+	
+	
+	@Autowired
+	FileTransferService fileTransferService;
 
 	@Autowired
 	UserRepository userRepo;
@@ -108,6 +115,9 @@ public class JobServiceImpl implements JobService {
 
 	@Value("${APPLICATION_URL}")
 	private String application_url;
+	
+	@Value("${resume-base-url}")
+	private String attachmentUrl;
 
 	static ChannelSftp channelSftp = null;
 	static Session session = null;
@@ -480,12 +490,11 @@ public class JobServiceImpl implements JobService {
 	}
 
 	@Override
-	public ApiResponse createJobApplication(MultipartFile[] files, String jobAppString, String jobCode) {
+	public ApiResponse createJobApplication(MultipartFile[] files, String jobAppString) {
 		// TODO Auto-generated method stub
 		// TODO Auto-generated method stub
 		ApiResponse response = new ApiResponse(false);
-		JobOpenings jobOpening = jobRepository.getJobOpeningFromCode(jobCode);
-		if (jobOpening != null &&jobOpening.getFilledPositions()!=jobOpening.getTotalOpenings() && jobOpening.getJobStatus().equals(JobOpeningStatus.VACANT)) {
+		
 			ObjectMapper objectMapper = new ObjectMapper();
 			JobApplication jobAppObj = null;
 			try {
@@ -501,30 +510,42 @@ public class JobServiceImpl implements JobService {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			if(files.length>0) {
 			for (MultipartFile constentFile : files) {
 				try {
 					String fileextension = constentFile.getOriginalFilename()
 							.substring(constentFile.getOriginalFilename().lastIndexOf("."));
 					String filename = getRandomFileName() + fileextension;// constentFile.getOriginalFilename();
-					if (addFileAdmin(constentFile, filename) != null) {
+					
+					if (fileTransferService.uploadFile(constentFile, attachmentUrl, filename)) {
 						jobAppObj.setResumePath(filename);
 					}
 				} catch (Exception e) {
 
 				}
-			}
+			}}
 			boolean Emailvalidate = jobAppRepository.findb(jobAppObj.getCandidateEmail());
 			if (Emailvalidate == false) {
 
 				//jobAppObj.setJobCode(jobCode);
 				if (jobAppObj.getJobOpenings()!=null && jobAppObj.getJobOpenings().getId()!=null) {
-					JobOpenings empObj = jobRepository.getJobOpeningsById(jobAppObj.getJobOpenings().getId());
+				
+					JobOpenings jobOpening = jobRepository.getJobOpeningsById(jobAppObj.getJobOpenings().getId());
 
-					if (empObj != null) {
-
-						jobAppObj.setJobOpenings(empObj);
+					if (jobOpening != null) {
+                        if (jobOpening.getFilledPositions()<=jobOpening.getTotalOpenings()
+                        		&& jobOpening.getJobStatus()!=null &&jobOpening.getJobStatus().equals(JobOpeningStatus.VACANT))
+                        		{
+                        	jobAppObj.setJobOpenings(jobOpening);
+                        		}
+                        else {
+                        	throw new  ResponseStatusException(HttpStatus.BAD_REQUEST ,"sorry  no vacant  job opening right now");
+                        }
+						
+						
+						
 					} else {
-						response.setMessage("job oprning id not exsists");
+						response.setMessage("job opening id not exsists");
 						return response;
 					}
 
@@ -552,7 +573,7 @@ public class JobServiceImpl implements JobService {
 
 				}
 				
-				if(userDetail.getUserRole().equals("JOB_VENDOR")) {
+				if(userDetail.getUserRole()!=null  && userDetail.getUserRole().equals("JOB_VENDOR")) {
 					jobAppObj.setReferredVendor(userDetail.getScopeId());
 				}
 
@@ -606,12 +627,9 @@ public class JobServiceImpl implements JobService {
 				response.setSuccess(false);
 				response.setMessage("email already exists");
 			}
-		} else {
-			response.setSuccess(false);
-			response.setMessage("Job Code Not Exist");
-		}
-		return response;
-	}
+			return response;
+		} 
+
 
 	@Override
 	public ApiResponse scheduleJobInterview(JobInterviews schedule, String applicationId) {
@@ -691,17 +709,18 @@ public class JobServiceImpl implements JobService {
 		String SFTPHOST = "13.229.182.200"; // SFTP Host Name or SFTP Host IP Address
 		int SFTPPORT = 22; // SFTP Port Number
 		String SFTPUSER = "ubuntu"; // User Name
-		String SFTPPASS = ""; // Password
-		String SFTPKEY = "/home/ubuntu/tomcat/webapps/Ticket_tool-0.0.1-SNAPSHOT/WEB-INF/classes/Covid-Phast-Prod.ppk";
+		String SFTPPASS = "bhargav@456"; // Password
+		String SFTPKEY = "/Ticket_tool/src/main/resources/Covid-Phast-Prod.ppk";
 		String SFTPWORKINGDIRAADMIN = "/home/ubuntu/tomcat/webapps/image/resumes";// Source Directory on SFTP server
 		String fileNameOriginal = fileName;
 		try {
 			JSch jsch = new JSch();
 			if (SFTPKEY != null && !SFTPKEY.isEmpty()) {
-				jsch.addIdentity(SFTPKEY);
+				jsch.addIdentity(this.getClass().getResource("/Ticket_tool/src/main/resources/Covid-Phast-Prod.ppk").getFile());
 			}
 			session = jsch.getSession(SFTPUSER, SFTPHOST, SFTPPORT);
-//	        session.setPassword(SFTPPASS);
+			
+				session.setPassword(SFTPPASS);
 			java.util.Properties config = new java.util.Properties();
 			config.put("StrictHostKeyChecking", "no");
 			session.setConfig(config);
@@ -978,13 +997,16 @@ public class JobServiceImpl implements JobService {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			catch (Exception e) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, " invalid job application Object ");
+			}
 			if (files != null) {
 				for (MultipartFile constentFile : files) {
 					try {
 						String fileextension = constentFile.getOriginalFilename()
 								.substring(constentFile.getOriginalFilename().lastIndexOf("."));
 						String filename = getRandomFileName() + fileextension;// constentFile.getOriginalFilename();
-						if (addFileAdmin(constentFile, filename) != null) {
+						if (fileTransferService.uploadFile(constentFile, attachmentUrl, filename)) {
 							jobApp.setResumePath(filename);
 						}
 					} catch (Exception e) {
@@ -992,35 +1014,32 @@ public class JobServiceImpl implements JobService {
 					}
 				}
 			}
-			JobOpenings empObj = jobRepository.getJobCode(newJobAppObj.getJobCode());
+			//jobAppObj.setJobCode(jobCode);
+			if (newJobAppObj.getJobOpenings()!=null && newJobAppObj.getJobOpenings().getId()!=null) {
 			
-			if(empObj.getJobCode().equals(newJobAppObj.getJobCode())) {
-				jobApp.setJobCode(newJobAppObj.getJobCode());
-				}
-				else
-				{
-					boolean jobCodeValidate = jobRepository.findb(newJobAppObj.getJobCode());
-					if (jobCodeValidate == false) {
-			
-		         	jobApp.setJobCode(newJobAppObj.getJobCode());
-				}
-				else {
-					response.setMessage("job code not valid");
+				JobOpenings jobOpening = jobRepository.getJobOpeningsById(newJobAppObj.getJobOpenings().getId());
+
+				if (jobOpening != null) {
+                    if (jobOpening.getFilledPositions()>=jobOpening.getTotalOpenings()
+                    		&& jobOpening.getJobStatus()!=null &&jobOpening.getJobStatus().equals(JobOpeningStatus.VACANT))
+                    		{
+                    	jobApp.setJobOpenings(jobOpening);
+                    		}
+                    else {
+                    	throw new  ResponseStatusException(HttpStatus.BAD_REQUEST ,"sorry  no vacant  job opening right now");
+                    }
+					
+					
+					
+				} else {
+					response.setMessage("job opening id not exsists");
 					return response;
 				}
+			}
+			
+			else {
 				
-				if (newJobAppObj.getJobCode()!=null) {
-
-					if (empObj != null) {
-
-						jobApp.setJobOpenings(empObj);
-					} else {
-						response.setMessage("employee id not exsists");
-						return response;
-					}
-
-				}
-				}
+			}
 			
 			
 			jobApp.setCandidateEmail(newJobAppObj.getCandidateEmail());
