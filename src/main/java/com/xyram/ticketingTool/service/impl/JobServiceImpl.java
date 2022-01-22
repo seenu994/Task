@@ -1,6 +1,7 @@
 package com.xyram.ticketingTool.service.impl;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -691,17 +692,18 @@ public class JobServiceImpl implements JobService {
 		String SFTPHOST = "13.229.182.200"; // SFTP Host Name or SFTP Host IP Address
 		int SFTPPORT = 22; // SFTP Port Number
 		String SFTPUSER = "ubuntu"; // User Name
-		String SFTPPASS = ""; // Password
-		String SFTPKEY = "/home/ubuntu/tomcat/webapps/Ticket_tool-0.0.1-SNAPSHOT/WEB-INF/classes/Covid-Phast-Prod.ppk";
+		String SFTPPASS = "bhargav@456"; // Password
+		String SFTPKEY = "/Ticket_tool/src/main/resources/Covid-Phast-Prod.ppk";
 		String SFTPWORKINGDIRAADMIN = "/home/ubuntu/tomcat/webapps/image/resumes";// Source Directory on SFTP server
 		String fileNameOriginal = fileName;
 		try {
 			JSch jsch = new JSch();
 			if (SFTPKEY != null && !SFTPKEY.isEmpty()) {
-				jsch.addIdentity(SFTPKEY);
+				jsch.addIdentity(this.getClass().getResource("/Ticket_tool/src/main/resources/Covid-Phast-Prod.ppk").getFile());
 			}
 			session = jsch.getSession(SFTPUSER, SFTPHOST, SFTPPORT);
-//	        session.setPassword(SFTPPASS);
+			
+				session.setPassword(SFTPPASS);
 			java.util.Properties config = new java.util.Properties();
 			config.put("StrictHostKeyChecking", "no");
 			session.setConfig(config);
