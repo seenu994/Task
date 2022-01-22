@@ -624,6 +624,7 @@ public class JobServiceImpl implements JobService {
 			schedule.setCreatedAt(new Date());
 			schedule.setCreatedBy(userDetail.getUserId());
 			schedule.setJobInterviewStatus("SCHEDULED");
+			schedule.setRoundNo(schedule.getRoundNo());
 			schedule.setJobApplication(jobApp);
 			Employee empObj = employeeRepository.getByEmpId(schedule.getInterviewer());
 			if (empObj != null) {
