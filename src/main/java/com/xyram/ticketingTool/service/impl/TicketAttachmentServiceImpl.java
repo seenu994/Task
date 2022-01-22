@@ -286,6 +286,7 @@ private String deleteFile(String imagePath) {
         channelSftp.cd(SFTPWORKINGDIRAADMIN);// Change Directory on SFTP Server
 //      File f = new File(fileName);
       channelSftp.rm(imagePath);
+      channelSftp.getSession().setTimeout(15000);
         System.out.println("added");
 //        recursiveFolderUpload(LOCALDIRECTORY, SFTPWORKINGDIR);
     } catch (Exception ex) {
