@@ -485,7 +485,7 @@ public class JobServiceImpl implements JobService {
 		// TODO Auto-generated method stub
 		ApiResponse response = new ApiResponse(false);
 		JobOpenings jobOpening = jobRepository.getJobOpeningFromCode(jobCode);
-		if (jobOpening != null && jobOpening.getJobStatus().equals("VACANT") && (jobOpening.getFilledPositions()!=jobOpening.getTotalOpenings())) {
+		if (jobOpening != null &&jobOpening.getFilledPositions()!=jobOpening.getTotalOpenings() && jobOpening.getJobStatus().equals(JobOpeningStatus.VACANT)) {
 			ObjectMapper objectMapper = new ObjectMapper();
 			JobApplication jobAppObj = null;
 			try {
@@ -624,6 +624,7 @@ public class JobServiceImpl implements JobService {
 			schedule.setCreatedAt(new Date());
 			schedule.setCreatedBy(userDetail.getUserId());
 			schedule.setJobInterviewStatus("SCHEDULED");
+			schedule.setRoundNo(schedule.getRoundNo());
 			schedule.setJobApplication(jobApp);
 			Employee empObj = employeeRepository.getByEmpId(schedule.getInterviewer());
 			if (empObj != null) {
@@ -854,6 +855,7 @@ public class JobServiceImpl implements JobService {
 		if (jobOpening != null) {
 			jobOpening.setUpdatedBy(userDetail.getUserId());
 			jobOpening.setJobDescription(jobObj.getJobDescription());
+			jobOpening.setNotifyVendor(jobObj.isNotifyVendor());
 			if(jobOpening.getJobCode().equals(jobObj.getJobCode())) {
 			jobOpening.setJobCode(jobObj.getJobCode());
 			}
@@ -883,7 +885,7 @@ public class JobServiceImpl implements JobService {
 			jobOpening.setLastUpdatedAt(new Date());
 			jobOpening.setMaxExp(jobObj.getMaxExp());
 			jobOpening.setMinExp(jobObj.getMinExp());
-			jobOpening.setSalary(jobObj.getSalary());
+			jobOpening.setJobSalary(jobObj.getJobSalary());
 			jobOpening.setTotalOpenings(jobObj.getTotalOpenings());
 			jobOpening.setJobStatus(jobObj.getJobStatus());
 

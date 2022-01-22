@@ -39,7 +39,7 @@ public class JobInterviews extends AuditModel{
   `interviewer` varchar(255) DEFAULT NULL,
   `round_no` varchar(255) DEFAULT NULL,
   `round_details` varchar(255) DEFAULT NULL,
-  `interview_date` datetime DEFAULT NULL,
+  `interview_date` datetime DEFAULT NULL,śr̥
   `interview_type` varchar(255) DEFAULT NULL,
   `interview_link` varchar(255) DEFAULT NULL,
   `feedback` varchar(255) DEFAULT NULL,

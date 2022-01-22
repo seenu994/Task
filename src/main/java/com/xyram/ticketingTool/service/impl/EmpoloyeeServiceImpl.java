@@ -52,11 +52,13 @@ import com.xyram.ticketingTool.entity.VendorType;
 import com.xyram.ticketingTool.enumType.NotificationType;
 import com.xyram.ticketingTool.enumType.UserStatus;
 import com.xyram.ticketingTool.exception.ResourceNotFoundException;
+import com.xyram.ticketingTool.helper.EmployeePojo;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.EmployeeService;
 import com.xyram.ticketingTool.service.NotificationService;
 import com.xyram.ticketingTool.service.TicketAttachmentService;
 import com.xyram.ticketingTool.ticket.config.PermissionConfig;
+import com.xyram.ticketingTool.util.BulkUploadExcelUtil;
 import com.xyram.ticketingTool.util.ResponseMessages;
 
 /**
@@ -126,7 +128,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 	@Autowired
 	CompanyWingsRepository wingRepo;
-	
+
 	@Value("${APPLICATION_URL}")
 	private String application_url;
 
@@ -182,10 +184,9 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				userPermissionConfig.save(permissions);
 				employee.setCreatedBy(currentUser.getUserId());
 				employee.setUpdatedBy(currentUser.getUserId());
-				CompanyWings wing=wingRepo.getWingById(employee.getWings().getId());
-				if(wing!=null)
-				{
-						employee.setWings(wing);
+				CompanyWings wing = wingRepo.getWingById(employee.getWings().getId());
+				if (wing != null) {
+					employee.setWings(wing);
 				}
 				employee.setCreatedAt(new Date());
 				employee.setLastUpdatedAt(new Date());
@@ -363,13 +364,12 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			employee.setReportingTo(employeeRequest.getReportingTo());
 			employee.setLocation(employeeRequest.getLocation());
 			employee.setPosition(employeeRequest.getPosition());
-			CompanyWings wingObj=new CompanyWings();
-	CompanyWings wing=wingRepo.getWingById(employeeRequest.getWings().getId());
-	if(wing!=null)
-	{
-			employee.setWings(wing);
-	}
-		employee.setRoleId(employeeRequest.getRoleId());
+			CompanyWings wingObj = new CompanyWings();
+			CompanyWings wing = wingRepo.getWingById(employeeRequest.getWings().getId());
+			if (wing != null) {
+				employee.setWings(wing);
+			}
+			employee.setRoleId(employeeRequest.getRoleId());
 			Role role = roleRepository.getById(employeeRequest.getRoleId());
 			employee.setDesignationId(employeeRequest.getDesignationId());
 			user.setUserRole(role.getRoleName());
@@ -423,13 +423,14 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		response.setContent(content);
 		return response;
 	}
+
 	@Override
 	public ApiResponse searchEmployeeNotAssignedToByProject(String projectid, String searchString) {
 
 		ApiResponse response = new ApiResponse(false);
 		Projects projectRequest = new Projects();
 		projectRequest.setpId(projectid);
-		
+
 		ApiResponse projvalres = ProjectSerImpl.validateProjectId(projectRequest);
 		List<Map> employeeList = employeeRepository.searchEmployeeNotAssignedToProject(projectid, searchString);
 		Map content = new HashMap();
@@ -438,6 +439,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		response.setContent(content);
 		return response;
 	}
+
 	@Override
 	public ApiResponse searchInfraUser(String searchString) {
 		ApiResponse response = new ApiResponse(false);
@@ -739,7 +741,6 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			permissions.setJobVendorsModPermission(permissionConfig.getJOBVENDORS_PERMISSION());
 			permissions.setUserId(user.getId());
 			userPermissionConfig.save(permissions);
-			
 
 //				vendorDetails.setCreatedBy(currentUser.getUserId());
 //				vendorDetails.setUpdatedBy(currentUser.getUserId());
@@ -838,7 +839,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 		return response;
 	}
-	
+
 	@Override
 	public ApiResponse serachJobVendor(String vendorName) {
 		ApiResponse response = new ApiResponse(false);
@@ -1137,6 +1138,53 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		return response;
 	}
 
-	
+	@Override
+	public Map<String, Object> employeeBulkUpload(MultipartFile file) {
+
+		Map<String, Object> response = new HashMap<>();
+
+		if (BulkUploadExcelUtil.hasEmployeeHeader(file)) {
+
+			List<EmployeePojo> employeeList = null;
+			try {
+				employeeList = BulkUploadExcelUtil.excelToEmployeePojo(file.getInputStream());
+			} catch (IOException e) {
+
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "", e);
+			}
+
+			for (EmployeePojo employeeData : employeeList) {
+				Employee emp = new Employee();
+				emp.setCreatedAt(new Date());
+				emp.setCreatedBy(userDetail.getUserId());
+				emp.seteId(employeeData.geteId());
+				emp.setDesignationId(employeeData.getDesignationId());
+				emp.setEmail(employeeData.getEmail());
+				emp.setFirstName(employeeData.getFirstName());
+				emp.setLastName(employeeData.getLastName());
+				emp.setLastUpdatedAt(new Date());
+				emp.setLocation(employeeData.getLocation());
+				emp.setMiddleName(employeeData.getMiddleName());
+				emp.setMobileNumber(employeeData.getMobileNumber());
+				emp.setPassword(employeeData.getPassword());
+				emp.setPosition(employeeData.getPosition());
+				emp.setProfileUrl(employeeData.getProfileUrl());
+				emp.setReportingTo(employeeData.getReportingTo());
+				emp.setRoleId(employeeData.getRoleId());
+				emp.setUpdatedBy(userDetail.getUserId());
+				CompanyWings wing = wingRepo.getWingByIds(employeeData.getWing_id());
+				if (wing != null) {
+
+					emp.setWings(wing);
+				}
+				employeeRepository.save(emp);
+				response.put("success", "Blocks are updated successfully");
+			}
+		} else {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "header data passed in xls is invalid ");
+		}
+
+		return response;
+	}
 
 }

@@ -153,7 +153,7 @@ class EmployeeController {
 		return employeeService.getEmployeeDetailsById(employeeId);
 	}
 
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/updateEmployeeStatus/{employeeID}/status/{userstatus}",
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/updateEmployeeStatus/{employeeID}/status/{userstatus}",AuthConstants.INFRA_USER_BASEPATH + "/updateEmployeeStatus/{employeeID}/status/{userstatus}",
 			AuthConstants.INFRA_ADMIN_BASEPATH + "/updateEmployeeStatus/{employeeID}/status/{userstatus}" })
 	public ApiResponse updateEmployeeStatus(@PathVariable String employeeID, @PathVariable UserStatus userstatus) {
 		logger.info("Received request to change category status to: " + userstatus + "for employeeId: " + employeeID);
@@ -224,7 +224,7 @@ class EmployeeController {
 		return employeeService.getAllPermissions();
 	}
 
-	@PutMapping(value = { AuthConstants.INFRA_USER_BASEPATH + "/updateProfile",AuthConstants.HR_ADMIN_BASEPATH + "/updateProfile",
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/updateProfile",AuthConstants.INFRA_USER_BASEPATH + "/updateProfile",AuthConstants.HR_ADMIN_BASEPATH + "/updateProfile",
 			AuthConstants.HR_BASEPATH + "/updateProfile",AuthConstants.DEVELOPER_BASEPATH + "/updateProfile",
 			AuthConstants.INFRA_ADMIN_BASEPATH + "/updateProfile" })
 	public ApiResponse editEmployee(@RequestBody Map employeeRequest) {
@@ -319,4 +319,11 @@ class EmployeeController {
 		logger.info("inside EmployeeController :: searchEmployeeNotAssignedToProject ");
 		return employeeService.searchEmployeeNotAssignedToByProject(projectid, searchString);
 	}
+	@PostMapping(value = {
+			AuthConstants.ADMIN_BASEPATH+ "/employeeBulkUpload",AuthConstants.INFRA_ADMIN_BASEPATH+ "/employeeBulkUpload"})
+	public Map<String, Object> employeeBulkUpload(MultipartFile file) {
+		logger.info("Received request for get all employeeBulkUpload");
+		return employeeService.employeeBulkUpload(file);
+	}
+
 }
