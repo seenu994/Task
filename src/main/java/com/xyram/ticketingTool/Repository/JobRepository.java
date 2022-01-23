@@ -58,7 +58,7 @@ public interface JobRepository extends CrudRepository<JobOpenings, Long>, JpaSpe
 	@Query(value = "SELECT jo from JobOpenings jo")
 	List<JobOpenings> getList();
 
-	@Query(value = "SELECT new map(jo.jobCode as jobCodes) from JobOpenings jo")
+	@Query(value = "SELECT new map(jo.jobCode as jobCodes,jo.Id as  id ) from JobOpenings jo")
 	List<Map> getAllJobCodes();
 
 	@Query(value = "SELECT j from JobOpenings j WHERE j.jobCode =:jobCode ")
