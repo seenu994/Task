@@ -55,6 +55,11 @@ public interface ProjectRepository extends JpaRepository<Projects, String> {
 	@Query("Select distinct new map(e.pId as id,e.projectName as PName,e.projectDescritpion as projectDescritpion,e.clientId as clientId,e.inHouse as inHouse,"
 			+ "e.status as status) from Projects e where e.status != 'INACTIVE'")
 	List<Map> getAllProject();
+	
+	@Query("Select distinct new map(e.pId as id,e.projectName as PName,e.projectDescritpion as projectDescritpion,e.clientId as clientId,e.inHouse as inHouse,"
+			+ "e.status as status) from Projects e")
+	List<Map> getAllProjectforAdmin();
+
 
 	@Query("Select distinct new map(p.pId as id,p.projectName as PName, p.projectDescritpion as projectDescritpion, p.clientId as clientId, "
 			+ " p.inHouse as inHouse, p.status as status) from Projects "

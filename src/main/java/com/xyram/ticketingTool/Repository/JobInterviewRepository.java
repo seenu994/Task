@@ -46,7 +46,8 @@ public interface JobInterviewRepository
 	List<Map> getInterviwerByScopeID(String scopeId);
 
 	@Query(value = "SELECT ji from JobInterviews ji left join ji.jobApplication as ja "
-			+ " left join ja.jobOpenings as jo where "
+			+ " left join ja.jobOpenings as jo where"
+			+ " (:status is null Or ji.jobInterviewStatus= :status) "
 			+ " (:userRole is null  or ((:userRole ='HR_ADMIN') " + " OR (:userRole ='TICKETINGTOOL_ADMIN') "
 			+ " OR (ji.interviewer=:userId))) and " 
 			+ " (:searchString is null  "
@@ -57,7 +58,7 @@ public interface JobInterviewRepository
 			+ "  Or lower(ja.candidateMobile) LIKE %:searchString% "
 			+ "  Or lower(ja.candidateName) LIKE %:searchString% "
 			+ "  Or lower(jo.jobCode) LIKE %:searchString%)")
-	Page<JobInterviews> getAllJobInterview(String searchString, 
+	Page<JobInterviews> getAllJobInterview(String searchString, String status,
 			String userRole, String userId, Pageable pageable);
 
 }
