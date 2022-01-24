@@ -12,8 +12,9 @@ import com.xyram.ticketingTool.entity.JobVendorDetails;
 
 public interface VendorRepository extends JpaRepository<JobVendorDetails,String> {
 
-	@Query("Select jv from JobVendorDetails jv")
-	Page<JobVendorDetails> getJobVendors(Pageable pageable);
+	@Query("Select jv from JobVendorDetails jv  Where "
+			+ "(:searchString is null or jv.name LIKE %:searchString% )")
+	Page<JobVendorDetails> getJobVendors(String searchString, Pageable pageable);
 	
 	@Query("Select jv from JobVendorDetails jv where jv.name LIKE %:vendorName% ")
 	List<JobVendorDetails> serachJobVendors(String vendorName);

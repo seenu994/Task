@@ -12,6 +12,8 @@ import org.springframework.stereotype.Repository;
 
 import com.xyram.ticketingTool.entity.Projects;
 
+
+
 @Repository
 public interface ProjectRepository extends JpaRepository<Projects, String> {
 
@@ -68,5 +70,8 @@ public interface ProjectRepository extends JpaRepository<Projects, String> {
 	
 	@Query("Select distinct new map(p.pId as projectId,p.projectName as PName) from Projects p where p.allotToAll = 1")
 	List<Map> getAllAllottedProjects();
+
+	@Query("Select distinct new map(p.pId as projectId,p.projectName as PName) from Projects p ")
+	Page<Map> getAllForAdmins(Pageable pageable);
 
 }

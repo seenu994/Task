@@ -72,9 +72,9 @@ class EmployeeController {
 
 	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/getJobVendor", AuthConstants.DEVELOPER_BASEPATH + "/getJobVendor", AuthConstants.HR_BASEPATH + "/getJobVendor",
 			 AuthConstants.INFRA_ADMIN_BASEPATH + "/getJobVendor", AuthConstants.INFRA_USER_BASEPATH + "/getJobVendor",AuthConstants.ADMIN_BASEPATH + "/getJobVendor" })
-	public ApiResponse getJobVendor(Pageable pageable) {
+	public ApiResponse getJobVendor( @RequestParam Map<String ,Object> filter,Pageable pageable) {
 		logger.info("Received request to add Employee");
-		return employeeService.getJobVendor(pageable);
+		return employeeService.getJobVendor(filter,pageable);
 	}
 	
 	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/searchJobVendors/{vendorName}",AuthConstants.HR_BASEPATH + "/searchJobVendors/{vendorName}",AuthConstants.DEVELOPER_BASEPATH + "/searchJobVendors/{vendorName}",AuthConstants.INFRA_ADMIN_BASEPATH + "/searchJobVendors/{vendorName}",AuthConstants.INFRA_USER_BASEPATH+ "/searchJobVendors/{vendorName}",

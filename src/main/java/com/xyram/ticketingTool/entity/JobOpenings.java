@@ -47,8 +47,7 @@ public class JobOpenings extends AuditModel{
 	@GenericGenerator(name = IdGenerator.ID_GENERATOR, strategy = "com.xyram.ticketingTool.id.generator.IdGenerator")
 	@Column(name="job_id")
 	private String Id;
-	
-	@JsonIgnore
+
 	@Column(name="job_code")
 	private String jobCode;
 	
