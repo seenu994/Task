@@ -132,10 +132,13 @@ public class ProjectServiceImpl implements ProjectService {
 		Page<Map> projectList;
 		
 		System.out.println(userDetail.getUserRole());
-	
-		projectList = projectRepository.getAllProjectsList(pageable);
 			
-		
+		if ( userDetail.getUserRole()!=null && (userDetail.getUserRole().equalsIgnoreCase("TICKETINGTOOL_ADMIN") 
+				|| userDetail.getUserRole().equalsIgnoreCase("INFRA_ADMIN"))) {
+			projectList = projectRepository.getAllForAdmins(pageable);
+				
+			} else
+				projectList = projectRepository.getAllProjectsList(pageable);
 if (projectList!=null) {
 	
 
