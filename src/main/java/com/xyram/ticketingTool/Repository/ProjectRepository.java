@@ -71,7 +71,8 @@ public interface ProjectRepository extends JpaRepository<Projects, String> {
 	@Query("Select distinct new map(p.pId as projectId,p.projectName as PName) from Projects p where p.allotToAll = 1")
 	List<Map> getAllAllottedProjects();
 
-	@Query("Select distinct new map(p.pId as projectId,p.projectName as PName) from Projects p ")
+	@Query("Select distinct new map(p.pId as id, p.projectName as PName, p.projectDescritpion as projectDescritpion, p.clientId as clientId, c.clientName as clientname, "
+			+"p.inHouse as inHouse, p.status as status,p.createdAt as createdAt) from Projects p join Client c ON p.clientId = c.Id ")
 	Page<Map> getAllForAdmins(Pageable pageable);
 
 }
