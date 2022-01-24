@@ -53,8 +53,6 @@ public class Sprint extends AuditModel {
 	@JoinColumn(name = "project_id")
 	private Projects project;
 
-	
-
 	public String getId() {
 		return id;
 	}
