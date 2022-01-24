@@ -125,7 +125,6 @@ public class JobServiceImpl implements JobService {
 
 	@Override
 	public ApiResponse createJob(JobOpenings jobObj) {
-		// TODO Auto-generated method stub
 		ApiResponse response = new ApiResponse(false);
 
 		// Projects project = projectRepository.getById(ticketreq.getProjectId());
@@ -161,14 +160,14 @@ public class JobServiceImpl implements JobService {
 
 			List<Employee> EmployeeList = employeeRepository.getAllEmployeeNotification();
 			for (Employee employeeNotification : EmployeeList) {
-
-				Map request = new HashMap<>();
-				request.put("eId", employeeNotification.geteId());
-				request.put("uid", employeeNotification.getUserCredientials().getUid());
-				request.put("title", "job CREATED");
-				request.put("body", " job Created - " + emp.getFirstName());
-				pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 12, //
-						NotificationType.EMPLOYEE_CREATED.toString()));
+//				Map request = new HashMap<>();
+//				request.put("eId", employeeNotification.geteId());
+//
+//				request.put("uid", employeeNotification.getUserCredientials().getUid());
+//				request.put("title", "job CREATED");
+//				request.put("body", " job Created - " + emp.getFirstName());
+//				pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 12,
+//						NotificationType.EMPLOYEE_CREATED.toString()));
 
 				// inserting notification details
 				Notifications notifications = new Notifications();
@@ -574,7 +573,7 @@ public class JobServiceImpl implements JobService {
 					pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 12,
 							NotificationType.EMPLOYEE_CREATED.toString()));
 
-				}
+				} // inserting notification details
 				Notifications notifications = new Notifications();
 				notifications.setNotificationDesc("employee created - " + empObj.getFirstName());
 				notifications.setNotificationType(NotificationType.JOB_APPLOCATION_CREATED);
@@ -659,8 +658,8 @@ public class JobServiceImpl implements JobService {
 		String searchQuery = filter.containsKey("searchString") ? ((String) filter.get("searchString")).toLowerCase()
 				: null;
 		JobInterviews statusApp = null;
-		Page<JobInterviews> allList = jobInterviewRepository.getAllJobInterview(searchQuery, userDetail.getUserRole(),
-				userDetail.getScopeId(), pageable);
+		Page<JobInterviews> allList = jobInterviewRepository.getAllJobInterview(searchQuery, status,
+				userDetail.getUserRole(), userDetail.getScopeId(), pageable);
 
 		content.put("InterviewList", allList);
 		if (allList != null) {
