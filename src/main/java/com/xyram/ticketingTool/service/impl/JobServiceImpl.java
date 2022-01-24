@@ -95,8 +95,7 @@ public class JobServiceImpl implements JobService {
 
 	@Autowired
 	NotificationService notificationService;
-	
-	
+
 	@Autowired
 	FileTransferService fileTransferService;
 
@@ -115,7 +114,7 @@ public class JobServiceImpl implements JobService {
 
 	@Value("${APPLICATION_URL}")
 	private String application_url;
-	
+
 	@Value("${resume-base-url}")
 	private String attachmentUrl;
 
@@ -128,7 +127,7 @@ public class JobServiceImpl implements JobService {
 	public ApiResponse createJob(JobOpenings jobObj) {
 		// TODO Auto-generated method stub
 		ApiResponse response = new ApiResponse(false);
- 
+
 		// Projects project = projectRepository.getById(ticketreq.getProjectId());
 		if (jobObj.getWings() != null && jobObj.getWings().getId() != null) {
 			CompanyWings wing = companyWingsRepository.getById(jobObj.getWings().getId());
@@ -162,14 +161,14 @@ public class JobServiceImpl implements JobService {
 
 			List<Employee> EmployeeList = employeeRepository.getAllEmployeeNotification();
 			for (Employee employeeNotification : EmployeeList) {
-//				Map request = new HashMap<>();
-//				request.put("eId", employeeNotification.geteId());
-//
-//				request.put("uid", employeeNotification.getUserCredientials().getUid());
-//				request.put("title", "job CREATED");
-//				request.put("body", " job Created - " + emp.getFirstName());
-//				pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 12,
-//						NotificationType.EMPLOYEE_CREATED.toString()));
+
+				Map request = new HashMap<>();
+				request.put("eId", employeeNotification.geteId());
+				request.put("uid", employeeNotification.getUserCredientials().getUid());
+				request.put("title", "job CREATED");
+				request.put("body", " job Created - " + emp.getFirstName());
+				pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 12, //
+						NotificationType.EMPLOYEE_CREATED.toString()));
 
 				// inserting notification details
 				Notifications notifications = new Notifications();
@@ -210,7 +209,6 @@ public class JobServiceImpl implements JobService {
 		return response;
 	}
 
-
 	@Override
 	public ApiResponse getAllJobsOpening(Map<String, Object> filter, Pageable pageable) {
 		// TODO Auto-generated method stub
@@ -218,21 +216,22 @@ public class JobServiceImpl implements JobService {
 		Map content = new HashMap();
 		String status = filter.containsKey("status") ? ((String) filter.get("status")) : null;
 		Boolean notify = filter.containsKey("notify") ? ((Boolean) filter.get("notify")) : true;
-	
+
 		String wing = filter.containsKey("wing") ? ((String) filter.get("wing")).toLowerCase() : null;
 		JobOpeningStatus statusApp = null;
-	
-		String searchString = filter.containsKey("searchString") ? ((String) filter.get("searchString")).toLowerCase() : null;
-	
+
+		String searchString = filter.containsKey("searchString") ? ((String) filter.get("searchString")).toLowerCase()
+				: null;
+
 		try {
-			statusApp =status!=null ? JobOpeningStatus.toEnum(status):null;
+			statusApp = status != null ? JobOpeningStatus.toEnum(status) : null;
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Invalid Status Passed ");
 		}
-		catch (Exception e) {
-		   throw new ResponseStatusException(HttpStatus.BAD_GATEWAY ,"Invalid Status Passed ");
-		}
-		
-		Page<JobOpenings> allList=jobRepository.getAllOpenings(searchString,statusApp, wing,userDetail.getUserRole(), 1,pageable);
-		
+
+		Page<JobOpenings> allList = jobRepository.getAllOpenings(searchString, statusApp, wing,
+				userDetail.getUserRole(), 1, pageable);
+
 ////		List<Map> allJobs = jobRepository.getAllJobOpenings();
 ////		List<JobOpenings> allList =  jobRepository.getList();
 //		Page<JobOpenings> allList = jobRepository.findAll(new Specification<JobOpenings>() {
@@ -288,18 +287,6 @@ public class JobServiceImpl implements JobService {
 		return response;
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	@Override
 	public ApiResponse getAllJobs(Map<String, Object> filter, Pageable pageable) {
 		// TODO Auto-generated method stub
@@ -388,9 +375,9 @@ public class JobServiceImpl implements JobService {
 					predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("referredVendor"), vendor)));
 				}
 				if (searchQuery != null) {
-					predicates.add(
-							criteriaBuilder.like(criteriaBuilder.lower(root.get("candidateEmail")), "%" + searchQuery + "%"));
-					
+					predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("candidateEmail")),
+							"%" + searchQuery + "%"));
+
 					/*
 					 * predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get(
 					 * "candidateMobile"), searchQuery)));
@@ -436,8 +423,7 @@ public class JobServiceImpl implements JobService {
 		response.setContent(content);
 		return response;
 	}
-	
-	
+
 	@Override
 	public ApiResponse getAllJobApplication(Map<String, Object> filter, Pageable pageable) {
 		// TODO Auto-generated method stub
@@ -445,20 +431,19 @@ public class JobServiceImpl implements JobService {
 		Map content = new HashMap();
 		String status = filter.containsKey("status") ? ((String) filter.get("status")) : null;
 
-		String searchString = filter.containsKey("searchString") ? ((String) filter.get("searchString")).toLowerCase() : null;
+		String searchString = filter.containsKey("searchString") ? ((String) filter.get("searchString")).toLowerCase()
+				: null;
 		JobApplicationStatus statusApp = null;
 		String vendor = filter.containsKey("vendor") ? ((String) filter.get("vendor")).toLowerCase() : null;
-		
-		
+
 		try {
-			statusApp =status!=null ? JobApplicationStatus.toEnum(status):null;
-		}
-		catch (Exception e) {
-		   throw new ResponseStatusException(HttpStatus.BAD_GATEWAY ,"Invalid Status Passed ");
+			statusApp = status != null ? JobApplicationStatus.toEnum(status) : null;
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Invalid Status Passed ");
 		}
 
-	Page<JobApplication> allList=	jobAppRepository.getAllApllication(searchString, statusApp, vendor, userDetail.getUserRole(), userDetail.getUserId(),
-				pageable);
+		Page<JobApplication> allList = jobAppRepository.getAllApllication(searchString, statusApp, vendor,
+				userDetail.getUserRole(), userDetail.getUserId(), pageable);
 		content.put("jobAppList", allList);
 		if (allList != null) {
 			response.setSuccess(true);
@@ -494,142 +479,141 @@ public class JobServiceImpl implements JobService {
 		// TODO Auto-generated method stub
 		// TODO Auto-generated method stub
 		ApiResponse response = new ApiResponse(false);
-		
-			ObjectMapper objectMapper = new ObjectMapper();
-			JobApplication jobAppObj = null;
-			try {
 
-				jobAppObj = objectMapper.readValue(jobAppString, JobApplication.class);
-			} catch (JsonMappingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (JsonProcessingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			if(files.length>0) {
+		ObjectMapper objectMapper = new ObjectMapper();
+		JobApplication jobAppObj = null;
+		try {
+
+			jobAppObj = objectMapper.readValue(jobAppString, JobApplication.class);
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (files.length > 0) {
 			for (MultipartFile constentFile : files) {
 				try {
 					String fileextension = constentFile.getOriginalFilename()
 							.substring(constentFile.getOriginalFilename().lastIndexOf("."));
 					String filename = getRandomFileName() + fileextension;// constentFile.getOriginalFilename();
-					
+
 					if (fileTransferService.uploadFile(constentFile, attachmentUrl, filename)) {
 						jobAppObj.setResumePath(filename);
 					}
 				} catch (Exception e) {
 
 				}
-			}}
-			boolean Emailvalidate = jobAppRepository.findb(jobAppObj.getCandidateEmail());
-			if (Emailvalidate == false) {
+			}
+		}
+		boolean Emailvalidate = jobAppRepository.findb(jobAppObj.getCandidateEmail());
+		if (Emailvalidate == false) {
 
-				//jobAppObj.setJobCode(jobCode);
-				if (jobAppObj.getJobOpenings()!=null && jobAppObj.getJobOpenings().getId()!=null) {
-				
-					JobOpenings jobOpening = jobRepository.getJobOpeningsById(jobAppObj.getJobOpenings().getId());
+			// jobAppObj.setJobCode(jobCode);
+			if (jobAppObj.getJobOpenings() != null && jobAppObj.getJobOpenings().getId() != null) {
 
-					if (jobOpening != null) {
-                        if (jobOpening.getFilledPositions()<=jobOpening.getTotalOpenings()
-                        		&& jobOpening.getJobStatus()!=null &&jobOpening.getJobStatus().equals(JobOpeningStatus.VACANT))
-                        		{
-                        	jobAppObj.setJobOpenings(jobOpening);
-                        		}
-                        else {
-                        	throw new  ResponseStatusException(HttpStatus.BAD_REQUEST ,"sorry  no vacant  job opening right now");
-                        }
-						
-						
-						
+				JobOpenings jobOpening = jobRepository.getJobOpeningsById(jobAppObj.getJobOpenings().getId());
+
+				if (jobOpening != null) {
+					if (jobOpening.getFilledPositions() <= jobOpening.getTotalOpenings()
+							&& jobOpening.getJobStatus() != null
+							&& jobOpening.getJobStatus().equals(JobOpeningStatus.VACANT)) {
+						jobAppObj.setJobOpenings(jobOpening);
 					} else {
-						response.setMessage("job opening id not exsists");
-						return response;
+						throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+								"sorry  no vacant  job opening right now");
 					}
 
-				}
-				else {
-					  throw new ResponseStatusException(HttpStatus.BAD_GATEWAY,"job opening id is mandatory");
-				}
-
-				//jobAppObj.setJobOpenings(jobOpening);
-				jobAppObj.setCreatedAt(new Date());
-				jobAppObj.setCreatedBy(userDetail.getUserId());
-				jobAppObj.setJobApplicationSatus(JobApplicationStatus.APPLIED);
-				Employee empObi = new Employee();
-
-				if (jobAppObj.getReferredEmployeeId() != null) {
-					Employee empObj = employeeRepository.getEmployeeNameByScoleId(jobAppObj.getReferredEmployeeId());
-
-					if (empObj != null) {
-
-						jobAppObj.setReferredEmployee(empObj.getFirstName() + "" + empObj.getLastName());
-					} else {
-						response.setMessage("employee id not exsists");
-						return response;
-					}
-
-				}
-				
-				if(userDetail.getUserRole()!=null  && userDetail.getUserRole().equals("JOB_VENDOR")) {
-					jobAppObj.setReferredVendor(userDetail.getScopeId());
-				}
-
-				if (jobAppRepository.save(jobAppObj) != null) {
-
-					/*
-					 * Employee empObj=new Employee(); List<Map> EmployeeByRole =
-					 * employeeRepository.getEmployeeByRole();
-					 * 
-					 * 
-					 * for (Map employeeNotification : EmployeeByRole) { Map request = new
-					 * HashMap<>(); request.put("employeeId",
-					 * employeeNotification.get("employeeId")); request.put("uid",
-					 * employeeNotification.get("uid")); request.put("title", "EMPLOYEE CREATED");
-					 * request.put("body", " employee Created - " + empObj.getRoleId());
-					 * pushNotificationCall.restCallToNotification(pushNotificationRequest.
-					 * PushNotification(request, 12, NotificationType.EMPLOYEE_CREATED.toString()));
-					 * 
-					 * } // inserting notification details Notifications notifications = new
-					 * Notifications(); notifications.setNotificationDesc("employee created - " +
-					 * empObj.getFirstName());
-					 * notifications.setNotificationType(NotificationType.JOB_APPLOCATION_CREATED);
-					 * notifications.setSenderId(empObj.getReportingTo());
-					 * notifications.setReceiverId(userDetail.getUserId());
-					 * notifications.setSeenStatus(false);
-					 * notifications.setCreatedBy(userDetail.getUserId());
-					 * notifications.setCreatedAt(new Date());
-					 * notifications.setUpdatedBy(userDetail.getUserId());
-					 * notifications.setLastUpdatedAt(new Date());
-					 * 
-					 * notificationService.createNotification(notifications); UUID uuid
-					 * =UUID.randomUUID(); String uuidAsString = uuid.toString(); if(empObj!=null) {
-					 * String name = null;
-					 * 
-					 * HashMap mailDetails = new HashMap(); mailDetails.put("toEmail",
-					 * empObj.getEmail()); mailDetails.put("subject", name + ", " +
-					 * "Here's your new PASSWORD"); mailDetails.put("message", "Hi " + name +
-					 * ", \n\n We received a request to reset the password for your Account. \n\n Here's your new PASSWORD Link is: "
-					 * + application_url + "/update-password" + "?key=" + uuidAsString +
-					 * "\n\n Thanks for helping us keep your account secure.\n\n Xyram Software Solutions Pvt Ltd."
-					 * ); emailService.sendMail(mailDetails); }
-					 */
-
-					response.setSuccess(true);
-					response.setMessage("New Job Application Created");
 				} else {
-					response.setSuccess(false);
-					response.setMessage("New Job Application Not Created");
+					response.setMessage("job opening id not exsists");
+					return response;
 				}
+
+			} else {
+				throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "job opening id is mandatory");
+			}
+
+			// jobAppObj.setJobOpenings(jobOpening);
+			jobAppObj.setCreatedAt(new Date());
+			jobAppObj.setCreatedBy(userDetail.getUserId());
+			jobAppObj.setJobApplicationSatus(JobApplicationStatus.APPLIED);
+			Employee empObi = new Employee();
+
+			if (jobAppObj.getReferredEmployeeId() != null) {
+				Employee empObj = employeeRepository.getEmployeeNameByScoleId(jobAppObj.getReferredEmployeeId());
+
+				if (empObj != null) {
+
+					jobAppObj.setReferredEmployee(empObj.getFirstName() + "" + empObj.getLastName());
+				} else {
+					response.setMessage("employee id not exsists");
+					return response;
+				}
+
+			}
+
+			if (userDetail.getUserRole() != null && userDetail.getUserRole().equals("JOB_VENDOR")) {
+				jobAppObj.setReferredVendor(userDetail.getScopeId());
+			}
+
+			if (jobAppRepository.save(jobAppObj) != null) {
+
+				Employee empObj = new Employee();
+				List<Map> EmployeeByRole = employeeRepository.getEmployeeByRole();
+
+				for (Map employeeNotification : EmployeeByRole) {
+					Map request = new HashMap<>();
+					request.put("employeeId", employeeNotification.get("employeeId"));
+					request.put("uid", employeeNotification.get("uid"));
+					request.put("title", "EMPLOYEE CREATED");
+					request.put("body", " employee Created - " + empObj.getRoleId());
+					pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 12,
+							NotificationType.EMPLOYEE_CREATED.toString()));
+
+				}
+				Notifications notifications = new Notifications();
+				notifications.setNotificationDesc("employee created - " + empObj.getFirstName());
+				notifications.setNotificationType(NotificationType.JOB_APPLOCATION_CREATED);
+				notifications.setSenderId(empObj.getReportingTo());
+				notifications.setReceiverId(userDetail.getUserId());
+				notifications.setSeenStatus(false);
+				notifications.setCreatedBy(userDetail.getUserId());
+				notifications.setCreatedAt(new Date());
+				notifications.setUpdatedBy(userDetail.getUserId());
+				notifications.setLastUpdatedAt(new Date());
+
+				notificationService.createNotification(notifications);
+				UUID uuid = UUID.randomUUID();
+				String uuidAsString = uuid.toString();
+				if (empObj != null) {
+					String name = null;
+
+					HashMap mailDetails = new HashMap();
+					mailDetails.put("toEmail", empObj.getEmail());
+					mailDetails.put("subject", name + ", " + "Here's your new PASSWORD");
+					mailDetails.put("message", "Hi " + name
+							+ ", \n\n We received a request to reset the password for your Account. \n\n Here's your new PASSWORD Link is: "
+							+ application_url + "/update-password" + "?key=" + uuidAsString
+							+ "\n\n Thanks for helping us keep your account secure.\n\n Xyram Software Solutions Pvt Ltd.");
+					emailService.sendMail(mailDetails);
+				}
+
+				response.setSuccess(true);
+				response.setMessage("New Job Application Created");
 			} else {
 				response.setSuccess(false);
-				response.setMessage("email already exists");
+				response.setMessage("New Job Application Not Created");
 			}
-			return response;
-		} 
-
+		} else {
+			response.setSuccess(false);
+			response.setMessage("email already exists");
+		}
+		return response;
+	}
 
 	@Override
 	public ApiResponse scheduleJobInterview(JobInterviews schedule, String applicationId) {
@@ -677,7 +661,6 @@ public class JobServiceImpl implements JobService {
 		JobInterviews statusApp = null;
 		Page<JobInterviews> allList = jobInterviewRepository.getAllJobInterview(searchQuery, userDetail.getUserRole(),
 				userDetail.getScopeId(), pageable);
-			
 
 		content.put("InterviewList", allList);
 		if (allList != null) {
@@ -716,11 +699,12 @@ public class JobServiceImpl implements JobService {
 		try {
 			JSch jsch = new JSch();
 			if (SFTPKEY != null && !SFTPKEY.isEmpty()) {
-				jsch.addIdentity(this.getClass().getResource("/Ticket_tool/src/main/resources/Covid-Phast-Prod.ppk").getFile());
+				jsch.addIdentity(
+						this.getClass().getResource("/Ticket_tool/src/main/resources/Covid-Phast-Prod.ppk").getFile());
 			}
 			session = jsch.getSession(SFTPUSER, SFTPHOST, SFTPPORT);
-			
-				session.setPassword(SFTPPASS);
+
+			session.setPassword(SFTPPASS);
 			java.util.Properties config = new java.util.Properties();
 			config.put("StrictHostKeyChecking", "no");
 			session.setConfig(config);
@@ -875,16 +859,14 @@ public class JobServiceImpl implements JobService {
 			jobOpening.setUpdatedBy(userDetail.getUserId());
 			jobOpening.setJobDescription(jobObj.getJobDescription());
 			jobOpening.setNotifyVendor(jobObj.isNotifyVendor());
-			if(jobOpening.getJobCode().equals(jobObj.getJobCode())) {
-			jobOpening.setJobCode(jobObj.getJobCode());
-			}
-			else
-			{
+			if (jobOpening.getJobCode().equals(jobObj.getJobCode())) {
+				jobOpening.setJobCode(jobObj.getJobCode());
+			} else {
 				boolean jobCodeValidate = jobRepository.findb(jobObj.getJobCode());
 				if (jobCodeValidate == false) {
 
 					List<JobApplication> jobApp = jobAppRepository.getjobOpeningsCode(jobOpening.getJobCode());
-					for(JobApplication newApp:jobApp) {
+					for (JobApplication newApp : jobApp) {
 						newApp.setJobCode(jobObj.getJobCode());
 						jobAppRepository.save(newApp);
 					}
@@ -896,7 +878,7 @@ public class JobServiceImpl implements JobService {
 					return response;
 
 				}
-				
+
 			}
 			jobOpening.setFilledPositions(jobObj.getFilledPositions());
 			jobOpening.setJobSkills(jobObj.getJobSkills());
@@ -947,7 +929,8 @@ public class JobServiceImpl implements JobService {
 		JobApplication status = jobAppRepository.getApplicationById(jobApplicationId);
 		System.out.println(userDetail.getUserRole());
 		if (status != null) {
-			if (userDetail.getUserId().equals(status.getCreatedBy()) || userDetail.getUserRole() == "HR_ADMIN" ||userDetail.getUserRole() == "TICKETINGTOOL_ADMIN") {
+			if (userDetail.getUserId().equals(status.getCreatedBy()) || userDetail.getUserRole() == "HR_ADMIN"
+					|| userDetail.getUserRole() == "TICKETINGTOOL_ADMIN") {
 				if (status != null) {
 					ApplicationComments appComments = new ApplicationComments();
 					appComments.setApplicationId(jobApplicationId);
@@ -981,7 +964,7 @@ public class JobServiceImpl implements JobService {
 	public ApiResponse editJobApplication(MultipartFile[] files, String jobAppObj, String jobAppId) {
 		ApiResponse response = new ApiResponse(false);
 		JobApplication jobApp = jobAppRepository.getApplicationById(jobAppId);
-		if (jobApp != null && userDetail.getUserId()==(jobApp.getCreatedBy())
+		if (jobApp != null && userDetail.getUserId() == (jobApp.getCreatedBy())
 				|| userDetail.getUserRole().equals("HR_ADMIN")) {
 			ObjectMapper objectMapper = new ObjectMapper();
 			JobApplication newJobAppObj = null;
@@ -996,8 +979,7 @@ public class JobServiceImpl implements JobService {
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, " invalid job application Object ");
 			}
 			if (files != null) {
@@ -1014,39 +996,36 @@ public class JobServiceImpl implements JobService {
 					}
 				}
 			}
-			//jobAppObj.setJobCode(jobCode);
-			if (newJobAppObj.getJobOpenings()!=null && newJobAppObj.getJobOpenings().getId()!=null) {
-			
+			// jobAppObj.setJobCode(jobCode);
+			if (newJobAppObj.getJobOpenings() != null && newJobAppObj.getJobOpenings().getId() != null) {
+
 				JobOpenings jobOpening = jobRepository.getJobOpeningsById(newJobAppObj.getJobOpenings().getId());
 
 				if (jobOpening != null) {
-                    if (jobOpening.getFilledPositions()>=jobOpening.getTotalOpenings()
-                    		&& jobOpening.getJobStatus()!=null &&jobOpening.getJobStatus().equals(JobOpeningStatus.VACANT))
-                    		{
-                    	jobApp.setJobOpenings(jobOpening);
-                    		}
-                    else {
-                    	throw new  ResponseStatusException(HttpStatus.BAD_REQUEST ,"sorry  no vacant  job opening right now");
-                    }
-					
-					
-					
+					if (jobOpening.getFilledPositions() >= jobOpening.getTotalOpenings()
+							&& jobOpening.getJobStatus() != null
+							&& jobOpening.getJobStatus().equals(JobOpeningStatus.VACANT)) {
+						jobApp.setJobOpenings(jobOpening);
+					} else {
+						throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+								"sorry  no vacant  job opening right now");
+					}
+
 				} else {
 					response.setMessage("job opening id not exsists");
 					return response;
 				}
 			}
-			
+
 			else {
-				
+
 			}
-			
-			
+
 			jobApp.setCandidateEmail(newJobAppObj.getCandidateEmail());
 			jobApp.setCandidateMobile(newJobAppObj.getCandidateMobile());
 			jobApp.setCandidateName(newJobAppObj.getCandidateName());
 			jobApp.setExpectedSalary(newJobAppObj.getExpectedSalary());
-            jobApp.setJobApplicationSatus(newJobAppObj.getJobApplicationSatus());
+			jobApp.setJobApplicationSatus(newJobAppObj.getJobApplicationSatus());
 			if (jobAppRepository.save(jobApp) != null) {
 				response.setSuccess(true);
 				response.setMessage(" Job Application Updated");
@@ -1054,8 +1033,7 @@ public class JobServiceImpl implements JobService {
 				response.setSuccess(false);
 				response.setMessage(" Job Application Not Updated");
 			}
-		}
-		else {
+		} else {
 			response.setSuccess(false);
 			response.setMessage("Job Application Id Not Exist");
 		}
@@ -1143,13 +1121,13 @@ public class JobServiceImpl implements JobService {
 	}
 
 	@Override
-	public ApiResponse getAllJobOffer(Map<String, Object> filter,Pageable pageable) {
+	public ApiResponse getAllJobOffer(Map<String, Object> filter, Pageable pageable) {
 		ApiResponse response = new ApiResponse(false);
 		Map content = new HashMap();
-		String searchString = filter.containsKey("searchString") ? ((String) filter.get("searchString")).toLowerCase() : null;
+		String searchString = filter.containsKey("searchString") ? ((String) filter.get("searchString")).toLowerCase()
+				: null;
 //		List<JobInterviews> allList =  jobInterviewRepository.getList();
 		Page<JobOffer> allList = offerRepository.getAllJobOffer(searchString, userDetail.getUserRole(), pageable);
-			
 
 		content.put("OfferList", allList);
 		if (allList != null) {
