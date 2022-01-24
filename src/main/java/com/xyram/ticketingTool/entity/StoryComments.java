@@ -28,7 +28,7 @@ public class StoryComments {
 	@Column(name = "id")
 	private String id;
 
-	@Column(name = "description")
+	@Column(name = "description",length = 2000)
 	private String description;
 
 	@Column(name = "mention_to")
