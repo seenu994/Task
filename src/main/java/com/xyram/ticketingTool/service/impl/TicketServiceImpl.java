@@ -250,7 +250,6 @@ public class TicketServiceImpl implements TicketService {
 		 * Ticket();
 		 */
 		Projects project = projectRepository.getById(ticketreq.getProjectId());
-
 		if (project == null) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.PROJECT_NOTEXIST);
@@ -315,7 +314,7 @@ public class TicketServiceImpl implements TicketService {
 
 			response.setContent(content);
 			if(assigneeId != null) {
-				Employee employeeObj = employeeRepository.getById(assigneeId);
+				Employee employeeObj = employeeRepository.getByEmpId(assigneeId);
 				if(employeeObj.getStatus() != UserStatus.OFFLINE) {
 				TicketAssignee assignee = new TicketAssignee();
 				assignee.setEmployeeId(assigneeId);

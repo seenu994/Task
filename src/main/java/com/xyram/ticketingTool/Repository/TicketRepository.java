@@ -193,7 +193,7 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 			+ "left join ticketdbtool.ticket_assignee b ON a.ticket_id = b.ticket_id  and b.ticket_assignee_status = 'ACTIVE' "
 			+ "left join ticketdbtool.employee e on b.employee_id = e.employee_id "
 			+ "where ('INFRA_USER' = :roleId and a.ticket_status in ('ASSIGNED', 'INPROGRESS', 'REOPEN') and e.user_id = :createdBy) OR ('DEVELOPER' = :roleId and a.ticket_status in ('ASSIGNED', 'INPROGRESS', 'REOPEN') and a.created_by = :createdBy)"
-			+ "OR ('HR_ADMIN' = :roleId and a.ticket_status in ('ASSIGNED', 'INPROGRESS', 'REOPEN') and a.created_by = :createdBy) OR ('TICKETINGTOOL_ADMIN' = :roleId and a.ticket_status in ('ASSIGNED', 'INPROGRESS', 'REOPEN')) "
+			+ "OR ('HR_ADMIN' = :roleId and a.ticket_status in ('ASSIGNED', 'INPROGRESS', 'REOPEN') and a.created_by = :createdBy) OR ('TICKETINGTOOL_ADMIN' = :roleId and a.ticket_status in ('ASSIGNED', 'INPROGRESS', 'REOPEN')) OR ('INFRA_ADMIN' = :roleId and a.ticket_status in ('ASSIGNED', 'INPROGRESS', 'REOPEN')) "
 			+ "group by ticket_status",nativeQuery = true)
 	List<Map> getTicketCount(String roleId, @Param("createdBy") String createdBy);
 

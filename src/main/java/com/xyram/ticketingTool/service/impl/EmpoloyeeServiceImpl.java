@@ -357,7 +357,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			employee.setFirstName(employeeRequest.getFirstName());
 			employee.setLastName(employeeRequest.getLastName());
 			employee.setLastUpdatedAt(new Date());
-			;
+
 			employee.setMiddleName(employeeRequest.getMiddleName());
 			employee.setMobileNumber(employeeRequest.getMobileNumber());
 			employee.setPassword(employeeRequest.getPassword());
@@ -1155,6 +1155,40 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			}
 
 			for (EmployeePojo employeeData : employeeList) {
+				User user=new User();
+			user.setCreatedAt(new Date());
+				user.setUsername(employeeData.getEmail());
+				String encodedPassword = new BCryptPasswordEncoder().encode(employeeData.getPassword());
+				user.setPassword(encodedPassword);
+				// Employee employeere=new Employee();
+				Role role = roleRepository.getById(employeeData.getRoleId());
+				if (role != null) {
+					try {
+
+						user.setUserRole(role.getRoleName());
+					} catch (Exception e) {
+						throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+								role.getRoleName() + " is not a valid status");
+					}
+				} else {
+					throw new ResourceNotFoundException("invalid user role ");
+				}
+				Integer permission = permissionConfig.setDefaultPermissions(user.getUserRole().toString());
+				user.setPermission(permission);
+				user.setStatus(UserStatus.ACTIVE);
+				System.out.println(user.getEmail() + "::" + user.getUsername() + "::" + user.getCreatedAt());
+				User newUser = userRepository.save(user);
+				UserPermissions permissions = new UserPermissions();
+				permissions.setEmpModPermission(permissionConfig.getEMPLOYEES_PERMISSION());
+				permissions.setProjectModPermission(permissionConfig.getPROJECTS_PERMISSION());
+				permissions.setTicketModPermission(permissionConfig.getTICKETS_PERMISSION());
+				permissions.setJobOpeningModPermission(permissionConfig.getJOBOPENINGS_PERMISSION());
+				permissions.setJobInterviewsModPermission(permissionConfig.getJOBINTERVIEWS_PERMISSION());
+				permissions.setJobAppModPermission(permissionConfig.getJOBAPPLICATIONS_PERMISSION());
+				permissions.setJobOfferModPermission(permissionConfig.getJOBOFFERS_PERMISSION());
+				permissions.setJobVendorsModPermission(permissionConfig.getJOBVENDORS_PERMISSION());
+				permissions.setUserId(newUser.getId());
+				userPermissionConfig.save(permissions);
 				Employee emp = new Employee();
 				emp.setCreatedAt(new Date());
 				emp.setCreatedBy(userDetail.getUserId());
@@ -1173,6 +1207,11 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				emp.setReportingTo(employeeData.getReportingTo());
 				emp.setRoleId(employeeData.getRoleId());
 				emp.setUpdatedBy(userDetail.getUserId());
+/*				User use = userRepository.getUserByIds(employeeData.getUserId());
+				if (use != null) {
+*/					emp.setUserCredientials(user);
+				
+				//emp.setUserCredientials(employeeData.getUserId());
 				CompanyWings wing = wingRepo.getWingByIds(employeeData.getWing_id());
 				if (wing != null) {
 
