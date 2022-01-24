@@ -56,7 +56,7 @@ public interface EmployeeService {
 
 	//ApiResponse getEmployeeDetails(Employee employeeId);
 
-	ApiResponse getJobVendor(Pageable pageable);
+
 
 	ApiResponse getAllEmployeeCurrentMonth(Pageable pageable);
 
@@ -91,6 +91,8 @@ public interface EmployeeService {
 	ApiResponse serachJobVendor(String vendorName);
 
 	Map<String, Object> employeeBulkUpload(MultipartFile file);
+
+	ApiResponse getJobVendor(Map<String, Object> filter, Pageable pageable);
 
 	//ApiResponse updateProfileImage(MultipartFile file, String employeeId);
 
