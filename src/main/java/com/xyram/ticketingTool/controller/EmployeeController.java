@@ -302,7 +302,8 @@ class EmployeeController {
 			AuthConstants.HR_ADMIN_BASEPATH + "/getAllEmployeeList",
 			AuthConstants.INFRA_USER_BASEPATH + "/getAllEmployeeList",
 			AuthConstants.DEVELOPER_BASEPATH + "/getAllEmployeeList",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllEmployeeList" })
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllEmployeeList",
+			AuthConstants.HR_BASEPATH + "/getAllEmployeeList"})
 	public ApiResponse getAllEmployeeList() {
 		logger.info("indide CatagoryController :: getAllCatagory");
 		return employeeService.getAllEmployeeList();

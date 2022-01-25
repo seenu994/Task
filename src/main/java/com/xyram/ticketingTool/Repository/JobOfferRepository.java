@@ -31,7 +31,7 @@ public interface JobOfferRepository extends CrudRepository<JobOffer, Long>, JpaS
 			+ "  Or lower(jo.jobTitle) LIKE %:searchString% " + "  Or lower(jo.doj) Like %:searchString%)")
 	Page<JobOffer> getAllJobOffer(String searchString, String userRole, Pageable pageable);
 
-	@Query(value = " Select jo from JobOffer jo   where  jo.applicationId.referredVendor = :name "
+	@Query(value = " Select jo from JobOffer jo   where  jo.applicationId.referredVendor = :name and "
 			+ " (:searchString is null  " + "  Or lower(jo.candidateEmail) LIKE %:searchString% "
 			+ "  Or lower(jo.candidateMobile) LIKE %:searchString% "
 			+ "  Or lower(jo.candidateName) Like %:searchString%" + "  Or lower(jo.status)  Like %:searchString%"

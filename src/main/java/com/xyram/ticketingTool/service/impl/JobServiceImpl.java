@@ -140,7 +140,14 @@ public class JobServiceImpl implements JobService {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wing does not exist");
 			}
 		}
-		jobObj.setUpdatedBy(userDetail.getUserId());
+		if(userDetail.getUserRole().equals("HR_ADMIN")) {
+			Employee employeeDetails = employeeRepository.getByEmpId(userDetail.getScopeId());
+			jobObj.setUpdatedBy(employeeDetails.getFirstName());
+			}
+			else
+			{
+				jobObj.setUpdatedBy(userDetail.getName());
+			}
 		jobObj.setCreatedAt(new Date());
 		jobObj.setCreatedBy(userDetail.getUserId());
 		jobObj.setJobStatus(JobOpeningStatus.VACANT);
@@ -854,7 +861,7 @@ public class JobServiceImpl implements JobService {
 		ApiResponse response = new ApiResponse(false);
 		JobOpenings jobOpening = jobRepository.getById(jobId);
 		if (jobOpening != null) {
-			if(userDetail.getUserRole() != "TICKETINGTOOL_ADMIN") {
+			if(userDetail.getUserRole().equals("HR_ADMIN")) {
 			Employee employeeDetails = employeeRepository.getByEmpId(userDetail.getScopeId());
 			jobOpening.setUpdatedBy(employeeDetails.getFirstName());
 			}
@@ -1084,6 +1091,12 @@ public class JobServiceImpl implements JobService {
 			jobObj.setCreatedAt(new Date());
 			jobObj.setCreatedBy(userDetail.getUserId());
 			jobObj.setApplicationId(application);
+			jobObj.setCandidateEmail(application.getCandidateEmail());
+			jobObj.setCandidateName(application.getCandidateName());
+			jobObj.setCandidateMobile(application.getCandidateMobile());
+			jobObj.setJobCode(application.getJobCode());
+			jobObj.setTotalExp(application.getTotalExp());
+			jobObj.setJobTitle(application.getJobOpenings().getJobTitle());
 			if (offerRepository.save(jobObj) != null) {
 				response.setSuccess(true);
 				response.setMessage("New Job Offer Created");
@@ -1103,13 +1116,8 @@ public class JobServiceImpl implements JobService {
 		ApiResponse response = new ApiResponse(false);
 		JobOffer jobOffer = offerRepository.getById(jobOfferId);
 		if (jobOffer != null) {
-			jobOffer.setCandidateEmail(jobObj.getCandidateEmail());
-			jobOffer.setCandidateMobile(jobObj.getCandidateMobile());
-			jobOffer.setCandidateName(jobObj.getCandidateName());
 			jobOffer.setDoj(jobObj.getDoj());
-			jobOffer.setJobTitle(jobObj.getJobTitle());
 			jobOffer.setSalary(jobObj.getSalary());
-			jobOffer.setTotalExp(jobObj.getTotalExp());
 			jobObj.setStatus(jobObj.getStatus());
 			offerRepository.save(jobOffer);
 			response.setSuccess(true);
