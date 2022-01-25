@@ -1097,6 +1097,8 @@ public class JobServiceImpl implements JobService {
 			jobObj.setJobCode(application.getJobCode());
 			jobObj.setTotalExp(application.getTotalExp());
 			jobObj.setJobTitle(application.getJobOpenings().getJobTitle());
+			application.setJobApplicationSatus(JobApplicationStatus.RELEASED_OFFER);
+			jobAppRepository.save(application);
 			if (offerRepository.save(jobObj) != null) {
 				response.setSuccess(true);
 				response.setMessage("New Job Offer Created");
