@@ -145,7 +145,7 @@ class TicketController {
 	}
 
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllTktByStatus/{status}",AuthConstants.HR_ADMIN_BASEPATH + "/getAllTktByStatus/{status}",AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllTktByStatus/{status}",
-			AuthConstants.INFRA_USER_BASEPATH + "/getAllTktByStatus/{status}",
+			AuthConstants.INFRA_USER_BASEPATH + "/getAllTktByStatus/{status}",AuthConstants.HR_BASEPATH + "/getAllTktByStatus/{status}",
 			AuthConstants.DEVELOPER_BASEPATH + "/getAllTktByStatus/{status}" })
 	public ApiResponse getAllTicketsByStatus(@PathVariable TicketStatus status,Pageable pageable) {
 		logger.info("inside Ticket controller :: getAllTicket");
@@ -161,7 +161,7 @@ class TicketController {
 	}
 
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllCompletedTickets",AuthConstants.HR_ADMIN_BASEPATH + "/getAllCompletedTickets",
-			AuthConstants.INFRA_USER_BASEPATH + "/getAllCompletedTickets",
+			AuthConstants.INFRA_USER_BASEPATH + "/getAllCompletedTickets",AuthConstants.HR_BASEPATH + "/getAllCompletedTickets",
 			AuthConstants.DEVELOPER_BASEPATH + "/getAllCompletedTickets",AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllCompletedTickets" })
 	public ApiResponse getAllCompletedTickets(Pageable pageable) {
 		logger.info("inside Ticket controller :: getAllTicket");

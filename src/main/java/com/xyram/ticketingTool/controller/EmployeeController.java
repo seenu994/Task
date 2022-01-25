@@ -100,6 +100,7 @@ class EmployeeController {
 
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllEmployee",
 			AuthConstants.HR_ADMIN_BASEPATH + "/getAllEmployee", AuthConstants.INFRA_USER_BASEPATH + "/getAllEmployee",
+			AuthConstants.HR_BASEPATH + "/getAllEmployee",
 			AuthConstants.DEVELOPER_BASEPATH + "/getAllEmployee",
 			AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllEmployee" })
 	public ApiResponse getAllEmployee(Pageable pageable) {
@@ -118,7 +119,7 @@ class EmployeeController {
 	}
 
 	@PutMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/profile/image/{employeeId}",AuthConstants.HR_ADMIN_BASEPATH + "/profile/image/{employeeId}",
-			AuthConstants.HR_BASEPATH + "/profile/image/{employeeId}",AuthConstants.INFRA_USER_BASEPATH + "/profile/image/{employeeId}",AuthConstants.DEVELOPER_BASEPATH + "/profile/image/{employeeId}",AuthConstants.ADMIN_BASEPATH + "/profile/image/{employeeId}"})
+			AuthConstants.HR_BASEPATH + "/profile/image/{employeeId}",AuthConstants.INFRA_USER_BASEPATH + "/profile/image/{employeeId}",AuthConstants.DEVELOPER_BASEPATH + "/profile/image/{employeeId}",AuthConstants.ADMIN_BASEPATH + "/profile/image/{employeeId}",AuthConstants.JOB_VENDOR_BASEPATH + "/profile/image/{employeeId}"})
 	public ApiResponse updateProfileImage(@RequestPart(name = "file", required = true) MultipartFile file,
 			@PathVariable String userId) {
 		logger.info("Received request for update doctor profile");

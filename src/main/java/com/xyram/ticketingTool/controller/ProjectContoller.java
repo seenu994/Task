@@ -52,7 +52,7 @@ class ProjectContoller {
 		return projectService.addproject(project);
 	}
 
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllProjects",AuthConstants.HR_ADMIN_BASEPATH + "/getAllProjects",
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllProjects",AuthConstants.HR_BASEPATH + "/getAllProjects",AuthConstants.HR_ADMIN_BASEPATH + "/getAllProjects",
 			AuthConstants.INFRA_USER_BASEPATH + "/getAllProjects",AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllProjects", AuthConstants.DEVELOPER_BASEPATH + "/getAllProjects" })
 	public ApiResponse getAllProjects(Pageable pageable) {
 		logger.info("indide ProjectContoller :: getAllProjects");
@@ -60,7 +60,7 @@ class ProjectContoller {
 	}
 	
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/genericIssues",AuthConstants.HR_ADMIN_BASEPATH + "/genericIssues",
-			AuthConstants.INFRA_USER_BASEPATH + "/genericIssues",AuthConstants.INFRA_ADMIN_BASEPATH + "/genericIssues", AuthConstants.DEVELOPER_BASEPATH + "/genericIssues" })
+			AuthConstants.INFRA_USER_BASEPATH + "/genericIssues",AuthConstants.HR_BASEPATH + "/genericIssues",AuthConstants.INFRA_ADMIN_BASEPATH + "/genericIssues", AuthConstants.DEVELOPER_BASEPATH + "/genericIssues" })
 	public ApiResponse getgenericIssues() {
 		logger.info("indide ProjectContoller :: getAllProjects");
 		return projectService.getgenericIssues();
