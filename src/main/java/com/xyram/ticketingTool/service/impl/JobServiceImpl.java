@@ -853,7 +853,14 @@ public class JobServiceImpl implements JobService {
 		ApiResponse response = new ApiResponse(false);
 		JobOpenings jobOpening = jobRepository.getById(jobId);
 		if (jobOpening != null) {
-			jobOpening.setUpdatedBy(userDetail.getName());
+			if(userDetail.getUserRole() != "TICKETINGTOOL_ADMIN") {
+			Employee employeeDetails = employeeRepository.getByEmpId(userDetail.getScopeId());
+			jobOpening.setUpdatedBy(employeeDetails.getFirstName());
+			}
+			else
+			{
+				jobOpening.setUpdatedBy(userDetail.getName());
+			}
 			jobOpening.setJobDescription(jobObj.getJobDescription());
 			jobOpening.setNotifyVendor(jobObj.isNotifyVendor());
 			if (jobOpening.getJobCode().equals(jobObj.getJobCode())) {
