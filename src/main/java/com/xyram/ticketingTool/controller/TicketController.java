@@ -253,7 +253,7 @@ class TicketController {
 				  }
 
 		  @GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getTicketCount",
-				  AuthConstants.INFRA_USER_BASEPATH +"/getTicketCount",
+				  AuthConstants.INFRA_USER_BASEPATH +"/getTicketCount",AuthConstants.HR_BASEPATH +"/getTicketCount",
 				  AuthConstants.DEVELOPER_BASEPATH + "/getTicketCount",AuthConstants.INFRA_ADMIN_BASEPATH + "/getTicketCount",AuthConstants.HR_ADMIN_BASEPATH + "/getTicketCount" }) 
 				  public  ApiResponse getTicketCount() {
 						  logger.info("inside ticket controller :: getAllTicket By projectName and status function"); 
