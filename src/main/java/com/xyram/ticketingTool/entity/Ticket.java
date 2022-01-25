@@ -10,12 +10,18 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 import java.util.Date;
 
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import com.xyram.ticketingTool.baseData.model.AuditModel;
 import com.xyram.ticketingTool.enumType.TicketStatus;
@@ -25,7 +31,7 @@ import com.xyram.ticketingTool.id.generator.IdPrefix;
 @Entity
 @Table(name = "ticket_info")
 //@TypeDefs({ @TypeDef(name = "StringJsonObject", typeClass = JSONObjectUserType.class) })
-public class Ticket extends AuditModel {
+public class Ticket{
 
 	@Id
 	@IdPrefix(value = "TIC_")
@@ -45,8 +51,6 @@ public class Ticket extends AuditModel {
 	@Column(name = "project_id")
 	private String projectId;
 	
-	@Column(name = "created_by")
-	private String createdBy;
 	
 //	@OneToOne(cascade = { CascadeType.MERGE})
 	
@@ -65,6 +69,25 @@ public class Ticket extends AuditModel {
 	
 	@Column(name="type")
 	private String type;
+	
+	@CreatedDate
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "created_at")
+    private Date createdAt;
+	
+	@CreatedBy
+	@Column(name = "created_by")
+	private String createdBy;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@LastModifiedDate
+	@Column(name = "last_updated_at")
+	private Date lastUpdatedAt;
+
+	@Column(name = "updated_by")
+	@LastModifiedBy
+	private String UpdatedBy;
+
 	
 //	@Column(name = "last_updated_at")
 //	private Date lastUpdatedAt;
@@ -104,9 +127,7 @@ public class Ticket extends AuditModel {
 
 	
 
-	public String getCreatedBy() {
-		return createdBy;
-	}
+	
 	
 //	public Date getLast_updated_at() {
 //		return lastUpdatedAt;
@@ -140,10 +161,6 @@ public class Ticket extends AuditModel {
 		this.priorityId = priorityId;
 	}
 
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-
 	
 	public TicketStatus getStatus() {
 		return status;
@@ -169,6 +186,39 @@ public class Ticket extends AuditModel {
 		return cancelledAt;
 	}
 
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public Date getLastUpdatedAt() {
+		return lastUpdatedAt;
+	}
+
+	public void setLastUpdatedAt(Date lastUpdatedAt) {
+		this.lastUpdatedAt = lastUpdatedAt;
+	}
+
+	public String getUpdatedBy() {
+		return UpdatedBy;
+	}
+
+	public void setUpdatedBy(String updatedBy) {
+		UpdatedBy = updatedBy;
+	}
+
+	
 	
 }
 	

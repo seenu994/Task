@@ -40,7 +40,8 @@ public interface ProjectMemberRepository extends JpaRepository<ProjectMembers, S
 	@Query("select new map( p.id as id , e.eId as employeeId ,CONCAT(e.firstName ,' ', e.lastName) as employeeName,e.userCredientials.id as userId,p.isAdmin as isAdmin) "
 			+ "from ProjectMembers p inner join Employee e on p.employeeId=e.eId "
 			+ " where p.projectId = :projectId  and  p.status='ACTIVE'"
-			+ "and (:userRole is null or ((lower(:userRole)!='developer') or (p.employeeId=:scopeId)))")
+			+ " and (:userRole is null or ((lower(:userRole)!='infra_admin') "
+			+ "Or  (lower(:userRole)!='ticketingtool_admin')) or (p.employeeId=:scopeId))")
 	List<Map> getAllMemberByProject(String projectId, String  userRole,String scopeId);
 	
 	@Query("select new map( p.id as id , e.eId as employeeId ,CONCAT(e.firstName ,' ', e.lastName) as employeeName,p.isAdmin as isAdmin) "
