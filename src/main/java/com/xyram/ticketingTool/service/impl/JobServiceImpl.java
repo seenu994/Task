@@ -853,7 +853,7 @@ public class JobServiceImpl implements JobService {
 		ApiResponse response = new ApiResponse(false);
 		JobOpenings jobOpening = jobRepository.getById(jobId);
 		if (jobOpening != null) {
-			jobOpening.setUpdatedBy(userDetail.getUserId());
+			jobOpening.setUpdatedBy(userDetail.getName());
 			jobOpening.setJobDescription(jobObj.getJobDescription());
 			jobOpening.setNotifyVendor(jobObj.isNotifyVendor());
 			if (jobOpening.getJobCode().equals(jobObj.getJobCode())) {
