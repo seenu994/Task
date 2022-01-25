@@ -556,7 +556,8 @@ public class JobServiceImpl implements JobService {
 			}
 
 			if (userDetail.getUserRole() != null && userDetail.getUserRole().equals("JOB_VENDOR")) {
-				jobAppObj.setReferredVendor(userDetail.getScopeId());
+				Employee employeeDetails = employeeRepository.getByEmpId(userDetail.getScopeId());
+				jobAppObj.setReferredVendor(employeeDetails.getFirstName());
 			}
 
 			if (jobAppRepository.save(jobAppObj) != null) {
@@ -1128,10 +1129,15 @@ public class JobServiceImpl implements JobService {
 	public ApiResponse getAllJobOffer(Map<String, Object> filter, Pageable pageable) {
 		ApiResponse response = new ApiResponse(false);
 		Map content = new HashMap();
+		Page<JobOffer> allList = null;
 		String searchString = filter.containsKey("searchString") ? ((String) filter.get("searchString")).toLowerCase()
 				: null;
+		if(userDetail.getUserRole().equals("JOB_VENDOR")) {
+			Employee employeeDetails = employeeRepository.getByEmpId(userDetail.getScopeId());
+			allList = offerRepository.getAllJobOfferVendors(searchString,employeeDetails.getFirstName(), pageable);
+		}
 //		List<JobInterviews> allList =  jobInterviewRepository.getList();
-		Page<JobOffer> allList = offerRepository.getAllJobOffer(searchString, userDetail.getUserRole(), pageable);
+		 allList = offerRepository.getAllJobOffer(searchString, userDetail.getUserRole(), pageable);
 
 		content.put("OfferList", allList);
 		if (allList != null) {
