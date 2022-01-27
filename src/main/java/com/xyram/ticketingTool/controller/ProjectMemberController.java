@@ -1,6 +1,5 @@
 package com.xyram.ticketingTool.controller;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -50,86 +49,101 @@ class ProjectMemberContoller {
 	@Autowired
 	ProjectMemberService projectMemberService;
 
-	
-	@PostMapping(value= {AuthConstants.ADMIN_BASEPATH +"/assignProjectToEmployee",AuthConstants.INFRA_ADMIN_BASEPATH +"/assignProjectToEmployee",AuthConstants.DEVELOPER_BASEPATH +"/assignProjectToEmployee"})
-	public ApiResponse assignProjectToEmployee(@RequestBody Map<Object,Object> request) {
+	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/assignProjectToEmployee",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/assignProjectToEmployee",
+			AuthConstants.DEVELOPER_BASEPATH + "/assignProjectToEmployee" })
+	public ApiResponse assignProjectToEmployee(@RequestBody Map<Object, Object> request) {
 		logger.info("Received request to add project Members");
-		return  projectMemberService.assignProjectToEmployee(request);
-	}	
+		return projectMemberService.assignProjectToEmployee(request);
+	}
 
-	
-	@GetMapping(value= {AuthConstants.ADMIN_BASEPATH +"/getAllProjectMembers",AuthConstants.INFRA_ADMIN_BASEPATH +"/getAllProjectMembers",AuthConstants.DEVELOPER_BASEPATH +"/getAllProjectMembers",AuthConstants.INFRA_USER_BASEPATH +"/getAllProjectMembers"})
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllProjectMembers",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllProjectMembers",
+			AuthConstants.DEVELOPER_BASEPATH + "/getAllProjectMembers",
+			AuthConstants.INFRA_USER_BASEPATH + "/getAllProjectMembers" })
 	public Page<ProjectMembers> getAllProjectMembers(Pageable pageable) {
 		logger.info("indide ProjectMembersController :: getAllProjectMembers");
 		return projectMemberService.getAllProjectMembers(pageable);
 	}
-	@PostMapping(value= {AuthConstants.ADMIN_BASEPATH +"/unassignProjectToEmployee",AuthConstants.INFRA_ADMIN_BASEPATH +"/unassignProjectToEmployee",AuthConstants.DEVELOPER_BASEPATH +"/unassignProjectToEmployee"})
+
+	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/unassignProjectToEmployee",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/unassignProjectToEmployee",
+			AuthConstants.DEVELOPER_BASEPATH + "/unassignProjectToEmployee" })
 	public ApiResponse unassignProjectToEmployee(@RequestBody ProjectMembers member) {
 		logger.info("Received request to add project Members");
-		return  projectMemberService.unassignProjectToEmployee(member);
+		return projectMemberService.unassignProjectToEmployee(member);
 	}
 
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllProjectByEmployeeId/{EmployeeId}",AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllProjectByEmployeeId/{EmployeeId}",AuthConstants.DEVELOPER_BASEPATH + "/getAllProjectByEmployeeId/{EmployeeId}",AuthConstants.INFRA_USER_BASEPATH + "/getAllProjectByEmployeeId/{EmployeeId}",AuthConstants.HR_ADMIN_BASEPATH + "/getAllProjectByEmployeeId/{EmployeeId}" })
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllProjectByEmployeeId/{EmployeeId}",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllProjectByEmployeeId/{EmployeeId}",
+			AuthConstants.DEVELOPER_BASEPATH + "/getAllProjectByEmployeeId/{EmployeeId}",
+			AuthConstants.INFRA_USER_BASEPATH + "/getAllProjectByEmployeeId/{EmployeeId}",
+			AuthConstants.HR_ADMIN_BASEPATH + "/getAllProjectByEmployeeId/{EmployeeId}" })
 	public ApiResponse getAllProjectByEmployeeId(@PathVariable String EmployeeId) {
 		logger.info("inside ProjectMemberContoller :: getAllProjectByEmployeeId ");
 		return projectMemberService.getAllProjectByEmployeeId(EmployeeId);
 	}
-	
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/	",AuthConstants.DEVELOPER_BASEPATH + "/getAllProjectByEmployeeId",AuthConstants.INFRA_USER_BASEPATH + "/getAllProjectByEmployeeId" })
+
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/	",
+			AuthConstants.DEVELOPER_BASEPATH + "/getAllProjectByEmployeeId",
+			AuthConstants.INFRA_USER_BASEPATH + "/getAllProjectByEmployeeId" })
 	public ApiResponse getAllProjectByEmployeeId() {
 		logger.info("inside ProjectMemberContoller :: getAllProjectByEmployeeId ");
 		return projectMemberService.getAllProjectByEmployeeId();
-		
-	}	
-	
-	
-	@PutMapping(value= {AuthConstants.INFRA_ADMIN_BASEPATH +"/addProjectAdmin",AuthConstants.INFRA_USER_BASEPATH +"/addProjectAdmin"})
+
+	}
+
+	@PutMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/addProjectAdmin",
+			AuthConstants.INFRA_USER_BASEPATH + "/addProjectAdmin" })
 	public IssueTrackerResponse MakeProjectAdmin(@RequestParam String employeeId, @RequestParam String projectId) {
 		logger.info("indide ProjectMembersController :: MakeProjectAdmin");
 		return projectMemberService.makeProjectAdmin(employeeId, projectId);
 	}
-	
-	@PutMapping(value= {AuthConstants.INFRA_ADMIN_BASEPATH +"/removeProjectAdmin",AuthConstants.INFRA_USER_BASEPATH +"/removeProjectAdmin"})
+
+	@PutMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/removeProjectAdmin",
+			AuthConstants.INFRA_USER_BASEPATH + "/removeProjectAdmin" })
 	public IssueTrackerResponse removeProjectAdmin(@RequestParam String employeeId, @RequestParam String projectId) {
 		logger.info("indide ProjectMembersController :: removeProjectAdmin");
 		return projectMemberService.removeProjectAdmin(employeeId, projectId);
 	}
 
-	@GetMapping(value= {AuthConstants.DEVELOPER_BASEPATH +"/isProjectAdmin",AuthConstants.INFRA_USER_BASEPATH +"/isProjectAdmin",AuthConstants.INFRA_ADMIN_BASEPATH +"/isProjectAdmin"})
+	@GetMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/isProjectAdmin",
+			AuthConstants.INFRA_USER_BASEPATH + "/isProjectAdmin",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/isProjectAdmin" })
 	public ProjectAdminResponse isProjectAdmin(@RequestParam String employeeId, @RequestParam String projectId) {
 		logger.info("indide ProjectMembersController :: MakeProjectAdmin");
 		return projectMemberService.isProjectAdmin(employeeId, projectId);
 	}
-	
-	
-	
-	@GetMapping(value= { AuthConstants.ADMIN_BASEPATH +"/getAllProjectMemberByProject/{projectId}",AuthConstants.INFRA_ADMIN_BASEPATH +"/getAllProjectMemberByProject/{projectId}"
-			,AuthConstants.INFRA_USER_BASEPATH +"/getAllProjectMemberByProject/{projectId}",
-			AuthConstants.DEVELOPER_BASEPATH +"/getAllProjectMemberByProject/{projectId}"})
+
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllProjectMemberByProject/{projectId}",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllProjectMemberByProject/{projectId}",
+			AuthConstants.INFRA_USER_BASEPATH + "/getAllProjectMemberByProject/{projectId}",
+			AuthConstants.DEVELOPER_BASEPATH + "/getAllProjectMemberByProject/{projectId}" })
 	public IssueTrackerResponse getAllProjectMemberById(@PathVariable String projectId) {
 		logger.info("indide ProjectMembersController :: MakeProjectAdmin");
 		return projectMemberService.getProjectMembersInProject(projectId);
 	}
 
 	@GetMapping(value = {
-			AuthConstants.ADMIN_BASEPATH
-					+ "/searchProjectMembersByProjectId/{projectid}/searchString/{searchString}",
+			AuthConstants.ADMIN_BASEPATH + "/searchProjectMembersByProjectId/{projectid}/searchString/{searchString}",
 			AuthConstants.DEVELOPER_BASEPATH
 					+ "/searchProjectMembersByProjectId/{projectid}/searchString/{searchString}",
 			AuthConstants.INFRA_ADMIN_BASEPATH
 					+ "/searchProjectMembersByProjectId/{projectid}/searchString/{searchString}",
-					AuthConstants.INFRA_USER_BASEPATH
-					+ "/searchProjectMembersByProjectId/{projectid}/searchString/{searchString}"})
+			AuthConstants.INFRA_USER_BASEPATH
+					+ "/searchProjectMembersByProjectId/{projectid}/searchString/{searchString}" })
 	public ApiResponse searchEmployeeNotAssignedToByProject(@PathVariable String projectid,
 			@PathVariable String searchString) {
 		logger.info("inside EmployeeController :: searchProjectMembersByProjectId ");
 		return projectMemberService.searchProjectMembersByProjectId(projectid, searchString);
 	}
-	@GetMapping(value= {AuthConstants.DEVELOPER_BASEPATH +"/isProjectMember",AuthConstants.INFRA_USER_BASEPATH +"/isProjectMember",AuthConstants.INFRA_ADMIN_BASEPATH +"/isProjectMember"})
+
+	@GetMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/isProjectMember",
+			AuthConstants.INFRA_USER_BASEPATH + "/isProjectMember",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/isProjectMember"})
 	public ProjectMemberresponse isProjectMember(@RequestParam String employeeId, @RequestParam String projectId) {
 		logger.info("indide ProjectMembersController :: MakeProjectAdmin");
 		return projectMemberService.isProjectMember(employeeId, projectId);
 	}
 
 }
-	

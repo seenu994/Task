@@ -159,7 +159,7 @@ class TicketController {
 			AuthConstants.INFRA_USER_BASEPATH + "/getAllSupportTickets",
 			AuthConstants.HR_BASEPATH + "/getAllSupportTickets",
 			AuthConstants.DEVELOPER_BASEPATH + "/getAllSupportTickets" })
-	public ApiResponse getAllSupportTickets(Map<String,Object> filter ,Pageable pageable) {
+	public ApiResponse getAllSupportTickets(@RequestParam Map<String,Object> filter ,Pageable pageable) {
 		logger.info("inside Ticket controller :: getAllTicket");
 		return ticketService.getAllSupporytTickets(filter,pageable);
 	}

@@ -40,7 +40,8 @@ public class EmployeePojo extends AuditModel  {
 	@ExcelCellName("designationId")
 	private String designationId;
 	
-	
+	@ExcelCellName("user_id")
+	private String userId;
 	
 	
 	@ExcelCellName("reportingTo")
@@ -175,6 +176,14 @@ public class EmployeePojo extends AuditModel  {
 
 	public void setProfileUrl(String profileUrl) {
 		this.profileUrl = profileUrl;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 	
 }

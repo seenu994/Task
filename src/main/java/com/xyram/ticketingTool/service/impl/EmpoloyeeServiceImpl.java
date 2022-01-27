@@ -357,7 +357,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			employee.setFirstName(employeeRequest.getFirstName());
 			employee.setLastName(employeeRequest.getLastName());
 			employee.setLastUpdatedAt(new Date());
-			;
+
 			employee.setMiddleName(employeeRequest.getMiddleName());
 			employee.setMobileNumber(employeeRequest.getMobileNumber());
 			employee.setPassword(employeeRequest.getPassword());
@@ -750,6 +750,49 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			vendorDetails.setUserCredientials(user);
 			vendorDetails.setProfileUrl("https://covidtest.xyramsoft.com/image/ticket-attachment/user-default-pic.png");
 			JobVendorDetails vendorNew = vendorRepository.save(vendorDetails);
+if(vendorNew!=null)
+{
+	Employee empObj = new Employee();
+	List<Employee> EmployeeByRole = employeeRepository.getVendorNotification();
+
+	for (Employee employeeNotification : EmployeeByRole) {
+		Map request = new HashMap<>();
+		request.put("id", employeeNotification.geteId());
+		request.put("uid", employeeNotification.getUserCredientials().getUid());
+		request.put("title", "JOB_VENDOR_CREATED");
+		request.put("body", "JOB_VENDOR_CREATED - " + employeeNotification.getRoleId());
+		pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 12,
+				NotificationType.JOB_VENDOR_CREATED.toString()));
+
+	 // inserting notification details	
+	Notifications notifications = new Notifications();
+	notifications.setNotificationDesc("JOB_VENDOR_CREATED - " + employeeNotification.getFirstName());
+	notifications.setNotificationType(NotificationType.JOB_VENDOR_CREATED);
+	notifications.setSenderId(empObj.getReportingTo());
+	notifications.setReceiverId(userDetail.getUserId());
+	notifications.setSeenStatus(false);
+	notifications.setCreatedBy(userDetail.getUserId());
+	notifications.setCreatedAt(new Date());
+	notifications.setUpdatedBy(userDetail.getUserId());
+	notifications.setLastUpdatedAt(new Date());
+
+	notificationService.createNotification(notifications);
+	UUID uuid = UUID.randomUUID();
+	String uuidAsString = uuid.toString();
+	if (employeeNotification != null) {
+		String name = null;
+
+		HashMap mailDetails = new HashMap();
+		mailDetails.put("toEmail", employeeNotification.getEmail());
+		mailDetails.put("subject", name + ", " + "Here's your new PASSWORD");
+		mailDetails.put("message", "Hi " + name
+				+ ", \n\n We received a request to reset the password for your Account. \n\n Here's your new PASSWORD Link is: "
+				+ application_url + "/update-password" + "?key=" + uuidAsString
+				+ "\n\n Thanks for helpRing us keep your account secure.\n\n Xyram Software Solutions Pvt Ltd.");
+		emailService.sendMail(mailDetails);
+	}
+	}
+
 
 			// Assigning default project to Developer
 //				if (employee.getRoleId().equals("R3")) {
@@ -769,7 +812,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			Map content = new HashMap();
 			content.put("vendorId", vendorNew.getvId());
 			response.setContent(content);
-		} catch (Exception e) {
+		}} catch (Exception e) {
 			System.out.println("Error Occured :: " + e.getMessage());
 		}
 
@@ -927,6 +970,46 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		ApiResponse response = new ApiResponse(false);
 		JobVendorDetails vendor = vendorRepository.getById(vendorId);
 		if (vendor != null) {
+			Employee empObj = new Employee();
+		List<Employee> EmployeeByRole = employeeRepository.getVendorNotification();
+
+		for (Employee employeeNotification : EmployeeByRole) {
+			Map request = new HashMap<>();
+			request.put("id", employeeNotification.geteId());
+			request.put("uid", employeeNotification.getUserCredientials().getUid());
+			request.put("title", "JOB_VENDOR_EDITED");
+			request.put("body", "JOB_VENDOR_EDITED - " + employeeNotification.getRoleId());
+			pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 12,
+					NotificationType.JOB_VENDOR_CREATED.toString()));
+
+		 // inserting notification details	
+		Notifications notifications = new Notifications();
+		notifications.setNotificationDesc("JOB_VENDOR_CREATED - " + employeeNotification.getFirstName());
+		notifications.setNotificationType(NotificationType.JOB_VENDOR_EDITED);
+		notifications.setSenderId(empObj.getReportingTo());
+		notifications.setReceiverId(userDetail.getUserId());
+		notifications.setSeenStatus(false);
+		notifications.setCreatedBy(userDetail.getUserId());
+		notifications.setCreatedAt(new Date());
+		notifications.setUpdatedBy(userDetail.getUserId());
+		notifications.setLastUpdatedAt(new Date());
+
+		notificationService.createNotification(notifications);
+		UUID uuid = UUID.randomUUID();
+		String uuidAsString = uuid.toString();
+		if (employeeNotification != null) {
+			String name = null;
+
+			HashMap mailDetails = new HashMap();
+			mailDetails.put("toEmail", employeeNotification.getEmail());
+			mailDetails.put("subject", name + ", " + "Here's your new PASSWORD");
+			mailDetails.put("message", "Hi " + name
+					+ ", \n\n We received a request to reset the password for your Account. \n\n Here's your new PASSWORD Link is: "
+					+ application_url + "/update-password" + "?key=" + uuidAsString
+					+ "\n\n Thanks for helpRing us keep your account secure.\n\n Xyram Software Solutions Pvt Ltd.");
+			emailService.sendMail(mailDetails);
+		}
+		}
 			vendor.setName(vendorRequest.getName());
 			vendor.setEmail(vendorRequest.getEmail());
 			vendor.setMobileNumber(vendorRequest.getMobileNumber());
@@ -1156,6 +1239,40 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			}
 
 			for (EmployeePojo employeeData : employeeList) {
+				User user=new User();
+			user.setCreatedAt(new Date());
+				user.setUsername(employeeData.getEmail());
+				String encodedPassword = new BCryptPasswordEncoder().encode(employeeData.getPassword());
+				user.setPassword(encodedPassword);
+				// Employee employeere=new Employee();
+				Role role = roleRepository.getById(employeeData.getRoleId());
+				if (role != null) {
+					try {
+
+						user.setUserRole(role.getRoleName());
+					} catch (Exception e) {
+						throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+								role.getRoleName() + " is not a valid status");
+					}
+				} else {
+					throw new ResourceNotFoundException("invalid user role ");
+				}
+				Integer permission = permissionConfig.setDefaultPermissions(user.getUserRole().toString());
+				user.setPermission(permission);
+				user.setStatus(UserStatus.ACTIVE);
+				System.out.println(user.getEmail() + "::" + user.getUsername() + "::" + user.getCreatedAt());
+				User newUser = userRepository.save(user);
+				UserPermissions permissions = new UserPermissions();
+				permissions.setEmpModPermission(permissionConfig.getEMPLOYEES_PERMISSION());
+				permissions.setProjectModPermission(permissionConfig.getPROJECTS_PERMISSION());
+				permissions.setTicketModPermission(permissionConfig.getTICKETS_PERMISSION());
+				permissions.setJobOpeningModPermission(permissionConfig.getJOBOPENINGS_PERMISSION());
+				permissions.setJobInterviewsModPermission(permissionConfig.getJOBINTERVIEWS_PERMISSION());
+				permissions.setJobAppModPermission(permissionConfig.getJOBAPPLICATIONS_PERMISSION());
+				permissions.setJobOfferModPermission(permissionConfig.getJOBOFFERS_PERMISSION());
+				permissions.setJobVendorsModPermission(permissionConfig.getJOBVENDORS_PERMISSION());
+				permissions.setUserId(newUser.getId());
+				userPermissionConfig.save(permissions);
 				Employee emp = new Employee();
 				emp.setCreatedAt(new Date());
 				emp.setCreatedBy(userDetail.getUserId());
@@ -1174,6 +1291,11 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				emp.setReportingTo(employeeData.getReportingTo());
 				emp.setRoleId(employeeData.getRoleId());
 				emp.setUpdatedBy(userDetail.getUserId());
+/*				User use = userRepository.getUserByIds(employeeData.getUserId());
+				if (use != null) {
+*/					emp.setUserCredientials(user);
+				
+				//emp.setUserCredientials(employeeData.getUserId());
 				CompanyWings wing = wingRepo.getWingByIds(employeeData.getWing_id());
 				if (wing != null) {
 

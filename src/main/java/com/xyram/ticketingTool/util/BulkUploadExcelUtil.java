@@ -41,7 +41,7 @@ public class BulkUploadExcelUtil {
 
 
 public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-public static List<String> EmployeeHeader = Arrays.asList("eId", "password", "email","firstName","lastName","middleName","roleId","status","designationId","reportingTo","location","position","wing_id","profileUrl","mobileNumber");
+public static List<String> EmployeeHeader = Arrays.asList("eId", "password", "email","firstName","lastName","middleName","roleId","status","userId","wing_id","designationId","reportingTo","location","position","user_id","profileUrl","mobileNumber");
 //public static List<String> ApartmentWingHeader = Arrays.asList("Wings", "Apartment Name");
 
 public static boolean hasEmployeeFormat(MultipartFile file) {
