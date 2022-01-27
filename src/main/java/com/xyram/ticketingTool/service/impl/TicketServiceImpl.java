@@ -1294,7 +1294,7 @@ public class TicketServiceImpl implements TicketService {
 		ApiResponse response = new ApiResponse(false);
 
 		Page<Map> allTickets ;
-		if (userDetail.getUserRole().equals("INFRA_USER")) {
+		if (userDetail.getUserRole()!=null && userDetail.getUserRole() .equals("INFRA_USER")) {
 			allTickets = ticketrepository.getAllTicketsForInfraUser(pageable, userDetail.getUserId());
 		}else {
 			allTickets = ticketrepository.getAllTicketsByStatusMobile(pageable, userDetail.getUserId(),
@@ -1340,6 +1340,51 @@ public class TicketServiceImpl implements TicketService {
 		} else {
 			response.setSuccess(false);
 			response.setMessage("Count Not found");
+			response.setContent(null);
+		}
+
+		return response;
+	}
+
+	@Override
+	public ApiResponse getAllSupporytTickets(Map<String, Object> filter, Pageable pageable) {
+		ApiResponse response = new ApiResponse(false);
+		
+		
+
+		Page<Map> allTickets=null;
+		
+		
+		String status = filter.containsKey("ticketStatus") ? ((String) filter.get("ticketStatus")) :null;
+		
+		
+		TicketStatus ticketStatus=null;
+		try {
+			ticketStatus = status != null ? TicketStatus.toEnum(status) : null;
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Invalid Status Passed ");
+		}
+		
+		
+		 if(userDetail.getUserRole().equals("TICKETINGTOOL_ADMIN") ||userDetail.getUserRole().equalsIgnoreCase("INFRA_ADMIN") ) {
+		allTickets = ticketrepository.getAllTicketsForAdmin(pageable,userDetail.getUserRole(),ticketStatus);
+		}
+		
+		else
+		{
+			allTickets = ticketrepository.getAllTicketsByStatus(pageable, userDetail.getUserId(),
+					userDetail.getUserRole(),ticketStatus);
+		}
+		
+		if (allTickets != null) {
+			response.setSuccess(true);
+			response.setMessage(ResponseMessages.TICKET_EXIST+" ROLE :: "+userDetail.getUserRole());
+			Map<String, Page<Map>> content = new HashMap<String, Page<Map>>();
+			content.put("tickets", allTickets);
+			response.setContent(content);
+		} else {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.TICKET_NOT_EXIST);
 			response.setContent(null);
 		}
 

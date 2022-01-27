@@ -25,7 +25,10 @@ public interface ProjectRepository extends JpaRepository<Projects, String> {
 	Projects getProjecById(String id);
 
 	@Query("Select distinct new map(p.pId as id, p.projectName as PName, p.projectDescritpion as projectDescritpion, p.clientId as clientId, c.clientName as clientname, "
-			+ "p.inHouse as inHouse, p.status as status,p.createdAt as createdAt) from Projects p join Client c ON p.clientId = c.Id and p.status != 'INACTIVE' ORDER BY p.createdAt DESC")
+			+ "p.inHouse as inHouse, p.status as status,p.createdAt as createdAt) from Projects  p "
+			+ "Inner join ProjectMembers pm on p.pId =pm.projectId  and pm.status='ACTIVE' "
+			+ " left join Client c ON p.clientId = c.Id and p.status != 'INACTIVE' "
+			+ "ORDER BY p.createdAt DESC")
 	Page<Map> getAllProjectsList(Pageable pageable);
 
 	@Query("Select distinct new map(p.pId as id, p.projectName as PName, p.projectDescritpion as projectDescritpion, p.clientId as clientId, "
