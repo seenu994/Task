@@ -71,7 +71,9 @@ ApiResponse getTicketDtlsByProjectNameAndStatus(Map<String, Object> filter, Page
 
 ApiResponse getAllTicketsByStatusMobile(Pageable pageable);
 
-ApiResponse getTicketCount();
+
+
+ApiResponse getTicketCount(Map<String, Object> filter);
 
 
 }

@@ -126,8 +126,6 @@ public class JobServiceImpl implements JobService {
 	@Override
 	public ApiResponse createJob(JobOpenings jobObj) {
 		ApiResponse response = new ApiResponse(false);
-
-		// Projects project = projectRepository.getById(ticketreq.getProjectId());
 		if (jobObj.getWings() != null && jobObj.getWings().getId() != null) {
 			CompanyWings wing = companyWingsRepository.getById(jobObj.getWings().getId());
 			if (wing != null)
@@ -142,7 +140,7 @@ public class JobServiceImpl implements JobService {
 		}
 		if(userDetail.getUserRole().equals("HR_ADMIN")) {
 			Employee employeeDetails = employeeRepository.getByEmpId(userDetail.getScopeId());
-			jobObj.setUpdatedBy(employeeDetails.getFirstName());
+			jobObj.setUpdatedBy(employeeDetails.getFirstName()+""+employeeDetails.getLastName());
 			}
 			else
 			{
@@ -238,48 +236,6 @@ public class JobServiceImpl implements JobService {
 		Page<JobOpenings> allList = jobRepository.getAllOpenings(searchString, statusApp, wing,
 				userDetail.getUserRole(), 1, pageable);
 
-////		List<Map> allJobs = jobRepository.getAllJobOpenings();
-////		List<JobOpenings> allList =  jobRepository.getList();
-//		Page<JobOpenings> allList = jobRepository.findAll(new Specification<JobOpenings>() {
-//			@Override
-//			public Predicate toPredicate(Root<JobOpenings> root, javax.persistence.criteria.CriteriaQuery<?> query,
-//					CriteriaBuilder criteriaBuilder) {
-//				// TODO Auto-generated method stub
-//				List<Predicate> predicates = new ArrayList<>();
-//				if (status != null) {
-//					predicates.add(criteriaBuilder
-//							.and(criteriaBuilder.equal(root.get("jobStatus"), statusApp.valueOf(status))));
-//				}
-//
-//				if (wing != null) {
-//					predicates
-//							.add(criteriaBuilder.and(criteriaBuilder.equal((root.get("wings").get("wingName")), wing)));
-//				}
-//
-//				// criteriaBuilder.upper(itemRoot.get("code"), code.toUpperCase()
-//				if (searchQuery != null) {
-////                	criteriaBuilder.like(root.get("title"), "%" + keyword + "%")
-//					// predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("jobTitle")),
-//					// "%"+searchQuery.toLowerCase()+"%"));
-//					predicates.add(
-//							criteriaBuilder.like(criteriaBuilder.lower(root.get("jobTitle")), "%" + searchQuery + "%"));
-//					// predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("jobCode")),
-//					// "%"+searchQuery.toLowerCase()+"%"));
-//
-////					predicates.add(criteriaBuilder.like(root.get("jobDescription"), "%"+searchQuery+"%"));
-////					predicates.add(criteriaBuilder.like(root.get("jobCode"), "%"+searchQuery+"%"));
-////					predicates.add(criteriaBuilder.or(criteriaBuilder.like(root.get("jobDescription"), "%"+searchQuery+"%")));
-////					predicates.add(criteriaBuilder.or(criteriaBuilder.like(root.get("jobCode"), "%"+searchQuery+"%")));
-//				}
-//				System.out.println(userDetail.getUserRole().equals("JOB_VENDOR"));
-//				if (userDetail.getUserRole().equals("JOB_VENDOR")) {
-//
-//					predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("vendor_view"), 1)));
-//				}
-//				query.orderBy(criteriaBuilder.desc(root.get("createdAt")));
-//				return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
-//			}
-//		}, pageable);
 		content.put("jobsList", allList);
 		if (allList != null) {
 			response.setSuccess(true);
@@ -302,8 +258,7 @@ public class JobServiceImpl implements JobService {
 		String searchQuery = filter.containsKey("searchstring") ? ((String) filter.get("searchstring")) : null;
 		String wing = filter.containsKey("wing") ? ((String) filter.get("wing")) : null;
 		JobOpeningStatus statusApp = null;
-//		List<Map> allJobs = jobRepository.getAllJobOpenings();
-//		List<JobOpenings> allList =  jobRepository.getList();
+
 		Page<JobOpenings> allList = jobRepository.findAll(new Specification<JobOpenings>() {
 			@Override
 			public Predicate toPredicate(Root<JobOpenings> root, javax.persistence.criteria.CriteriaQuery<?> query,

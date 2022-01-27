@@ -26,15 +26,22 @@ public class StoryLabelController {
 	@Autowired 
 	StoryLabelService storyLabelService;
 	
-	@PostMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/createStoryLabel",
-			AuthConstants.ADMIN_BASEPATH + "/createStoryLabel",
-			 AuthConstants.INFRA_ADMIN_BASEPATH + "/createStoryLabel",
-			 AuthConstants.INFRA_USER_BASEPATH + "/createStoryLabel"})
+	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/createStoryLabel"
+			,AuthConstants.HR_BASEPATH + "/createStoryLabel",
+			AuthConstants.HR_ADMIN_BASEPATH + "/createStoryLabel",
+						AuthConstants.INFRA_USER_BASEPATH + "/createStoryLabel",
+						AuthConstants.INFRA_ADMIN_BASEPATH + "/createStoryLabel",
+						AuthConstants.DEVELOPER_BASEPATH + "/createStoryLabel"})
 	public StoryLabel createStoryLabel(@RequestBody StoryLabel storylabel) {
 		return storyLabelService.createStoryLabel(storylabel);
 	} 
 	
-	@PutMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/editStoryLabel/{id}",AuthConstants.ADMIN_BASEPATH + "/editStoryLabel/{id}"})
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editStoryLabel/{id}"
+			,AuthConstants.HR_BASEPATH + "/editStoryLabel/{id}",
+			AuthConstants.HR_ADMIN_BASEPATH + "/editStoryLabel/{id}",
+						AuthConstants.INFRA_USER_BASEPATH + "/editStoryLabel/{id}",
+						AuthConstants.INFRA_ADMIN_BASEPATH + "/editStoryLabel/{id}",
+						AuthConstants.DEVELOPER_BASEPATH + "/editStoryLabel/{id}"})
 	public StoryLabel updateStoryLabel(@PathVariable String id,@RequestBody StoryLabel storylabel) {
 		return storyLabelService.updateStoryLabel(id,storylabel);
 	} 
@@ -42,10 +49,12 @@ public class StoryLabelController {
 	
 	
 	
-	@GetMapping(value= {AuthConstants.ADMIN_BASEPATH+"/getAllStoryLabel/{projectId}",
-			AuthConstants.DEVELOPER_BASEPATH+"/getAllStoryLabel/{projectId}",
-			 AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllStoryLabel/{projectId}",
-			 AuthConstants.INFRA_USER_BASEPATH + "/getAllStoryLabel/{projectId}"})
+	@GetMapping(value= {AuthConstants.ADMIN_BASEPATH + "/getAllStoryLabel/{projectId}"
+			,AuthConstants.HR_BASEPATH + "/getAllStoryLabel/{projectId}",
+			AuthConstants.HR_ADMIN_BASEPATH + "/getAllStoryLabel/{projectId}",
+						AuthConstants.INFRA_USER_BASEPATH + "/getAllStoryLabel/{projectId}",
+						AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllStoryLabel/{projectId}",
+						AuthConstants.DEVELOPER_BASEPATH + "/getAllStoryLabel/{projectId}"})
 	public IssueTrackerResponse getAllStoryLabelByProject(@PathVariable String projectId) {
 		return storyLabelService.getStoryLabelByProjectId(projectId);
 	}

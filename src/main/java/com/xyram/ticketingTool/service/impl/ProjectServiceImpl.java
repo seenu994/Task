@@ -138,7 +138,7 @@ public class ProjectServiceImpl implements ProjectService {
 			projectList = projectRepository.getAllForAdmins(pageable);
 				
 			} else
-				projectList = projectRepository.getAllProjectsList(pageable);
+				projectList = projectRepository.getAllProjectsList( pageable);
 if (projectList!=null) {
 	
 

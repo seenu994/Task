@@ -42,6 +42,7 @@ import com.xyram.ticketingTool.entity.Projects;
 import com.xyram.ticketingTool.entity.Ticket;
 import com.xyram.ticketingTool.entity.TicketAssignee;
 import com.xyram.ticketingTool.entity.TicketStatusHistory;
+import com.xyram.ticketingTool.enumType.JobApplicationStatus;
 import com.xyram.ticketingTool.enumType.NotificationType;
 import com.xyram.ticketingTool.enumType.TicketAssigneeStatus;
 import com.xyram.ticketingTool.enumType.TicketStatus;
@@ -121,8 +122,8 @@ public class TicketServiceImpl implements TicketService {
 		ApiResponse response = new ApiResponse(false);
 
 		Page<Map> allTickets ;
-		 if(userDetail.getUserRole().equals("TICKETINGTOOL_ADMIN") && status.equals(TicketStatus.ASSIGNED)) {
-		allTickets = ticketrepository.getAllTicketsForAdmin(pageable,userDetail.getUserRole());
+		 if(userDetail.getUserRole().equals("TICKETINGTOOL_ADMIN") ||userDetail.getUserRole().equalsIgnoreCase("INFRA_ADMIN") ) {
+		allTickets = ticketrepository.getAllTicketsForAdmin(pageable,userDetail.getUserRole(),status);
 		}
 		
 		else
@@ -1330,13 +1331,20 @@ public class TicketServiceImpl implements TicketService {
 	}
 
 	@Override
-	public ApiResponse getTicketCount() {
+	public ApiResponse getTicketCount(Map<String,Object> filter) {
 		ApiResponse response = new ApiResponse(false);
 
 		List<Map> allTickets ;
-		
+		String status = filter.containsKey("status") ? ((String) filter.get("status")) :"ACTIVE";
+			
+			
+			TicketAssigneeStatus ticketStatus=null;
+			try {
+				ticketStatus = status != null ? TicketAssigneeStatus.toEnum(status) : null;
+			} catch (Exception e) {
+				throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Invalid Status Passed ");
+			}
 			allTickets = ticketrepository.getTicketCount(userDetail.getUserRole(),userDetail.getUserId());
-		
 		if (allTickets != null) {
 			response.setSuccess(true);
 			response.setMessage("ticket status count retrieved successfully!!");

@@ -25,21 +25,22 @@ import com.xyram.ticketingTool.vo.StoryCommentVo;
 @RestController
 @CrossOrigin
 public class StoryCommentController {
-	
+
 	@Autowired
 	StoryCommentService storyCommentservice;
-	
-	
+
 	@Autowired
 	StoryCommentMapper storyCommentMapper;
-	
-	@PostMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/createStoryComment",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/createStoryComment" ,
-			AuthConstants.ROLE_INFRA_USER + "/createStoryComment" })
+
+	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/createStoryComment",
+			AuthConstants.HR_BASEPATH + "/createStoryComment", AuthConstants.HR_ADMIN_BASEPATH + "/createStoryComment",
+			AuthConstants.INFRA_USER_BASEPATH + "/createStoryComment",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/createStoryComment",
+			AuthConstants.DEVELOPER_BASEPATH + "/createStoryComment" })
 	public StoryComments CreateStoryComment(@RequestBody @Valid StoryCommentVo storyCommentVo) {
-		
+
 		return storyCommentservice.createStoryComment(storyCommentMapper.getEntityFromVo(storyCommentVo));
-	} 
+	}
 //	
 //	@GetMapping(value = {AuthConstants.DEVELOPER_BASEPATH + "/getListByProjectId/{projectId}"})
 //	public List<Map> getStoryCommentbyprojectId(@PathVariable String projectId) {
@@ -51,20 +52,25 @@ public class StoryCommentController {
 //		return storyCommentservice.getStoryCommentbyprojectIdandStoryId(projectId,storyId);
 //	}
 
-	@PutMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/updateStoryComment/{storyCommentId}"})
-	public StoryComments updateStoryComments( @PathVariable String storyCommentId, @RequestBody StoryComments storyComments)
-	{
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/updateStoryComment/{storyCommentId}",
+			AuthConstants.HR_BASEPATH + "/updateStoryComment/{storyCommentId}",
+			AuthConstants.HR_ADMIN_BASEPATH + "/updateStoryComment/{storyCommentId}",
+			AuthConstants.INFRA_USER_BASEPATH + "/updateStoryComment/{storyCommentId}",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/updateStoryComment/{storyCommentId}",
+			AuthConstants.DEVELOPER_BASEPATH + "/updateStoryComment/{storyCommentId}" })
+	public StoryComments updateStoryComments(@PathVariable String storyCommentId,
+			@RequestBody StoryComments storyComments) {
 		return storyCommentservice.updateStoryComment(storyCommentId, storyComments);
 	}
-	
-	
-	@PutMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/deleteStoryComment/{storyCommentId}"})
-	public Map<String, Object> deleteStoryComments(@PathVariable String storyCommentId)
-	{
+
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/deleteStoryComment/{storyCommentId}",
+			AuthConstants.HR_BASEPATH + "/deleteStoryComment/{storyCommentId}",
+			AuthConstants.HR_ADMIN_BASEPATH + "/deleteStoryComment/{storyCommentId}",
+			AuthConstants.INFRA_USER_BASEPATH + "/deleteStoryComment/{storyCommentId}",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/deleteStoryComment/{storyCommentId}",
+			AuthConstants.DEVELOPER_BASEPATH + "/deleteStoryComment/{storyCommentId}" })
+	public Map<String, Object> deleteStoryComments(@PathVariable String storyCommentId) {
 		return storyCommentservice.deleteStoryCommentById(storyCommentId);
 	}
-	
-	
-	
-	
+
 }

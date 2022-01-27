@@ -98,6 +98,7 @@ public class TicketAssignServiceImpl implements TicketAssignService {
 									+ "id",employeeObjt.getUserCredientials().getUid() );
 							request.put("title", "TICKET CREATED");
 							request.put("body", "New Ticket Created - " + prevAssignee.getTicketId());
+
 							pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 12,
 									NotificationType.TICKET_CREATED.toString()));
 							
