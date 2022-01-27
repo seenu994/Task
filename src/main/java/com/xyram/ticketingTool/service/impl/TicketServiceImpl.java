@@ -290,9 +290,21 @@ public class TicketServiceImpl implements TicketService {
 				request.put("body", "New Ticket Created - " + ticketreq.getTicketDescription());
 				pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 12,
 						NotificationType.TICKET_CREATED.toString()));
+				
 
-			}
-
+				/*
+				 * Map developerUser = ticketrepository.getCreatedBy(ticketreq.getCreatedBy());
+				 * 
+				 * Map requests = new HashMap<>();
+				 * 
+				 * { requests.put("id", developerUser.get("id")); requests.put("uid",
+				 * developerUser.get("uid")); requests.put("title", "TICKET CREATED");
+				 * requests.put("body", "New Ticket Created - " +
+				 * ticketreq.getTicketDescription());
+				 * pushNotificationCall.restCallToNotification(pushNotificationRequest.
+				 * PushNotification(request, 12, NotificationType.TICKET_CREATED.toString()));
+				 */
+			
 			// Inserting Notifications Details
 			Notifications notifications = new Notifications();
 			notifications.setNotificationDesc("New Ticket Created - " + ticketreq.getTicketDescription());
@@ -365,7 +377,7 @@ public class TicketServiceImpl implements TicketService {
 					ticketrepository.save(tickets);
 					ticketAssigneeRepository.save(assignee);
 //						
-					Map request = new HashMap<>();
+					//Map request = new HashMap<>();
 					request.put("uid", employeeObj.getUserCredientials().getUid());
 					request.put("title", "TICKET_ASSIGNED");
 					request.put("body","Ticket Assigned - " + tickets.getTicketDescription() );
@@ -403,7 +415,9 @@ public class TicketServiceImpl implements TicketService {
 			return response;
 		}
 	}
-
+		return response;
+		
+	}
 	@Override
 	public ApiResponse cancelTicket(String ticketId) {
 		ApiResponse response = new ApiResponse(false);

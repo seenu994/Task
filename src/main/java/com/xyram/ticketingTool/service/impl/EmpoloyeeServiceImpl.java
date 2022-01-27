@@ -750,6 +750,49 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			vendorDetails.setUserCredientials(user);
 			vendorDetails.setProfileUrl("https://covidtest.xyramsoft.com/image/ticket-attachment/user-default-pic.png");
 			JobVendorDetails vendorNew = vendorRepository.save(vendorDetails);
+if(vendorNew!=null)
+{
+	Employee empObj = new Employee();
+	List<Employee> EmployeeByRole = employeeRepository.getVendorNotification();
+
+	for (Employee employeeNotification : EmployeeByRole) {
+		Map request = new HashMap<>();
+		request.put("id", employeeNotification.geteId());
+		request.put("uid", employeeNotification.getUserCredientials().getUid());
+		request.put("title", "JOB_VENDOR_CREATED");
+		request.put("body", "JOB_VENDOR_CREATED - " + employeeNotification.getRoleId());
+		pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 12,
+				NotificationType.JOB_VENDOR_CREATED.toString()));
+
+	 // inserting notification details	
+	Notifications notifications = new Notifications();
+	notifications.setNotificationDesc("JOB_VENDOR_CREATED - " + employeeNotification.getFirstName());
+	notifications.setNotificationType(NotificationType.JOB_VENDOR_CREATED);
+	notifications.setSenderId(empObj.getReportingTo());
+	notifications.setReceiverId(userDetail.getUserId());
+	notifications.setSeenStatus(false);
+	notifications.setCreatedBy(userDetail.getUserId());
+	notifications.setCreatedAt(new Date());
+	notifications.setUpdatedBy(userDetail.getUserId());
+	notifications.setLastUpdatedAt(new Date());
+
+	notificationService.createNotification(notifications);
+	UUID uuid = UUID.randomUUID();
+	String uuidAsString = uuid.toString();
+	if (employeeNotification != null) {
+		String name = null;
+
+		HashMap mailDetails = new HashMap();
+		mailDetails.put("toEmail", employeeNotification.getEmail());
+		mailDetails.put("subject", name + ", " + "Here's your new PASSWORD");
+		mailDetails.put("message", "Hi " + name
+				+ ", \n\n We received a request to reset the password for your Account. \n\n Here's your new PASSWORD Link is: "
+				+ application_url + "/update-password" + "?key=" + uuidAsString
+				+ "\n\n Thanks for helpRing us keep your account secure.\n\n Xyram Software Solutions Pvt Ltd.");
+		emailService.sendMail(mailDetails);
+	}
+	}
+
 
 			// Assigning default project to Developer
 //				if (employee.getRoleId().equals("R3")) {
@@ -769,7 +812,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			Map content = new HashMap();
 			content.put("vendorId", vendorNew.getvId());
 			response.setContent(content);
-		} catch (Exception e) {
+		}} catch (Exception e) {
 			System.out.println("Error Occured :: " + e.getMessage());
 		}
 
@@ -927,6 +970,46 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		ApiResponse response = new ApiResponse(false);
 		JobVendorDetails vendor = vendorRepository.getById(vendorId);
 		if (vendor != null) {
+			Employee empObj = new Employee();
+		List<Employee> EmployeeByRole = employeeRepository.getVendorNotification();
+
+		for (Employee employeeNotification : EmployeeByRole) {
+			Map request = new HashMap<>();
+			request.put("id", employeeNotification.geteId());
+			request.put("uid", employeeNotification.getUserCredientials().getUid());
+			request.put("title", "JOB_VENDOR_EDITED");
+			request.put("body", "JOB_VENDOR_EDITED - " + employeeNotification.getRoleId());
+			pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 12,
+					NotificationType.JOB_VENDOR_CREATED.toString()));
+
+		 // inserting notification details	
+		Notifications notifications = new Notifications();
+		notifications.setNotificationDesc("JOB_VENDOR_CREATED - " + employeeNotification.getFirstName());
+		notifications.setNotificationType(NotificationType.JOB_VENDOR_EDITED);
+		notifications.setSenderId(empObj.getReportingTo());
+		notifications.setReceiverId(userDetail.getUserId());
+		notifications.setSeenStatus(false);
+		notifications.setCreatedBy(userDetail.getUserId());
+		notifications.setCreatedAt(new Date());
+		notifications.setUpdatedBy(userDetail.getUserId());
+		notifications.setLastUpdatedAt(new Date());
+
+		notificationService.createNotification(notifications);
+		UUID uuid = UUID.randomUUID();
+		String uuidAsString = uuid.toString();
+		if (employeeNotification != null) {
+			String name = null;
+
+			HashMap mailDetails = new HashMap();
+			mailDetails.put("toEmail", employeeNotification.getEmail());
+			mailDetails.put("subject", name + ", " + "Here's your new PASSWORD");
+			mailDetails.put("message", "Hi " + name
+					+ ", \n\n We received a request to reset the password for your Account. \n\n Here's your new PASSWORD Link is: "
+					+ application_url + "/update-password" + "?key=" + uuidAsString
+					+ "\n\n Thanks for helpRing us keep your account secure.\n\n Xyram Software Solutions Pvt Ltd.");
+			emailService.sendMail(mailDetails);
+		}
+		}
 			vendor.setName(vendorRequest.getName());
 			vendor.setEmail(vendorRequest.getEmail());
 			vendor.setMobileNumber(vendorRequest.getMobileNumber());

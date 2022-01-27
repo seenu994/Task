@@ -97,4 +97,8 @@ public interface StoryRepository extends JpaRepository<Story, String> {
 			+ "left join Employee e1 on e1.eId=s.owner " + "left join Employee e2 on e2.eId=s.assignTo"
 			+ " where s.projectId=:projectId and s.storyStatus=:storystatusId")
 	List<Map> getAllStoriesByStoryStaus(String projectId, String storystatusId);
+
+
+	@Query("select   new Map(s.id as id,s.assignTo as assignTo,e.userCredientials.uid as uid )From Story s left join Employee e On s.assignTo=e.eId where s.assignTo=:assignTo")
+	List<Map> getVendorNotification(String assignTo);
 }

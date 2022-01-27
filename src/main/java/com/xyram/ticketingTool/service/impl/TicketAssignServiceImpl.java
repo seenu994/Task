@@ -81,11 +81,57 @@ public class TicketAssignServiceImpl implements TicketAssignService {
 				ticketObj.setStatus(TicketStatus.ASSIGNED);
 				ticketRepository.save(ticketObj);
 				List<TicketAssignee> allAssignees = ticketAssignRepository.findByTicketId(assignee.getTicketId());
+
 				for(int i=0;i<allAssignees.size();i++) {
 					TicketAssignee prevAssignee = allAssignees.get(i);
 					prevAssignee.setStatus(TicketAssigneeStatus.INACTIVE);
 					
-					ticketAssignRepository.save(prevAssignee);
+					TicketAssignee ticketAssigneOb=ticketAssignRepository.save(prevAssignee);
+					if(ticketAssigneOb!=null) {
+						
+						Employee employeeObjt = employeeRepository.getById(assignee.getEmployeeId());
+						
+
+							Map request = new HashMap<>();
+							request.put("id", employeeObjt.geteId());
+							request.put("u"
+									+ "id",employeeObjt.getUserCredientials().getUid() );
+							request.put("title", "TICKET CREATED");
+							request.put("body", "New Ticket Created - " + prevAssignee.getTicketId());
+							pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 12,
+									NotificationType.TICKET_CREATED.toString()));
+							
+
+							/*
+							 * Map developerUser = ticketrepository.getCreatedBy(ticketreq.getCreatedBy());
+							 * 
+							 * Map requests = new HashMap<>();
+							 * 
+							 * { requests.put("id", developerUser.get("id")); requests.put("uid",
+							 * developerUser.get("uid")); requests.put("title", "TICKET CREATED");
+							 * requests.put("body", "New Ticket Created - " +
+							 * ticketreq.getTicketDescription());
+							 * pushNotificationCall.restCallToNotification(pushNotificationRequest.
+							 * PushNotification(request, 12, NotificationType.TICKET_CREATED.toString()));
+							 */
+						
+						// Inserting Notifications Details
+						Notifications notifications = new Notifications();
+						notifications.setNotificationDesc("New Ticket Created - ");
+						notifications.setNotificationType(NotificationType.TICKET_CREATED);
+						notifications.setSenderId(userDetail.getUserId());
+						notifications.setReceiverId(userDetail.getUserId());
+						notifications.setSeenStatus(false);
+						notifications.setCreatedBy(userDetail.getUserId());
+						notifications.setCreatedAt(new Date());
+						notifications.setUpdatedBy(userDetail.getUserId());
+						notifications.setLastUpdatedAt(new Date());
+						notifications.setTicketId(prevAssignee.getTicketId());
+						//notificationsRepository.save(notifications);
+						notificationService.createNotification(notifications);
+						response.setSuccess(true);
+						response.setMessage(ResponseMessages.TICKET_ADDED);
+					
 				}
 				ticketAssignRepository.save(assignee);
 				response.setSuccess(true);
@@ -93,7 +139,7 @@ public class TicketAssignServiceImpl implements TicketAssignService {
 				response.setContent(null);
 				
 				
-			}else {
+			}}else {
 				response.setSuccess(false);
 				response.setMessage(ResponseMessages.EMPLOYEE_INVALID);
 				response.setContent(null);

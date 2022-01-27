@@ -1,8 +1,10 @@
 package com.xyram.ticketingTool.service.impl;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.swing.text.html.HTML;
 import javax.transaction.Transactional;
@@ -10,6 +12,7 @@ import javax.transaction.Transactional;
 import org.apache.coyote.http11.Http11AprProtocol;
 import org.apache.poi.hssf.record.OldCellRecord;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -17,15 +20,23 @@ import org.stringtemplate.v4.compiler.CodeGenerator.region_return;
 import org.stringtemplate.v4.compiler.STParser.mapExpr_return;
 
 import com.microsoft.schemas.office.excel.STObjectType;
+import com.xyram.ticketingTool.Communication.PushNotificationCall;
+import com.xyram.ticketingTool.Communication.PushNotificationRequest;
+import com.xyram.ticketingTool.Repository.EmployeeRepository;
 import com.xyram.ticketingTool.Repository.StoryRepository;
 import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
+import com.xyram.ticketingTool.email.EmailService;
+import com.xyram.ticketingTool.entity.Employee;
+import com.xyram.ticketingTool.entity.Notifications;
 import com.xyram.ticketingTool.entity.ProjectMembers;
 import com.xyram.ticketingTool.entity.Projects;
 import com.xyram.ticketingTool.entity.Story;
 import com.xyram.ticketingTool.entity.StoryComments;
+import com.xyram.ticketingTool.enumType.NotificationType;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.request.StoryChangeStatusRequest;
 import com.xyram.ticketingTool.response.StoryDetailsResponse;
+import com.xyram.ticketingTool.service.NotificationService;
 import com.xyram.ticketingTool.service.PlatformService;
 import com.xyram.ticketingTool.service.ProjectFeatureService;
 import com.xyram.ticketingTool.service.ProjectMemberService;
@@ -65,6 +76,25 @@ public class StoryServiceImpl implements StoryService {
 
 	@Autowired
 	CurrentUser currentUser;
+	@Autowired
+	EmployeeRepository employeeRepository;
+	
+	@Autowired
+	PushNotificationCall pushNotificationCall;
+	@Autowired
+	PushNotificationRequest pushNotificationRequest;
+
+	
+
+	@Autowired
+	NotificationService notificationService;
+
+	@Autowired
+	EmailService emailService;
+	
+	@Value("${APPLICATION_URL}")
+	private String application_url;
+
 
 	@Override
 	public Story createStory(Story story) {
@@ -84,15 +114,56 @@ public class StoryServiceImpl implements StoryService {
 			story.setStoryNo(storyNo.toString());
 			story.setCreatedOn(new Date());
 
-			return storyRepository.save(story);
+		if( storyRepository.save(story) != null) {
 
-		} else {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, " project not found " + story.getId());
 
-		}
+	Employee empObj = new Employee();
+	
+	List<Map> EmployeeByRole = storyRepository.getVendorNotification(story.getAssignTo());
 
+	for (Map employeeNotification : EmployeeByRole) {
+		Map request = new HashMap<>();
+		request.put("id", employeeNotification.get("eId"));
+		request.put("uid", employeeNotification.get("uid"));
+		request.put("title", "JOB_VENDOR_EDITED");
+		request.put("body", "JOB_VENDOR_EDITED - " );
+		pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 12,
+				NotificationType.JOB_VENDOR_CREATED.toString()));
+
+	 // inserting notification details	
+	Notifications notifications = new Notifications();
+	notifications.setNotificationDesc("JOB_VENDOR_CREATED - " + employeeNotification.get("firstName"));
+	notifications.setNotificationType(NotificationType.JOB_VENDOR_EDITED);
+	notifications.setSenderId(empObj.getReportingTo());
+	notifications.setReceiverId(currentUser.getUserId());
+	notifications.setSeenStatus(false);
+	notifications.setCreatedBy(currentUser.getUserId());
+	notifications.setCreatedAt(new Date());
+	notifications.setUpdatedBy(currentUser.getUserId());
+	notifications.setLastUpdatedAt(new Date());
+
+	notificationService.createNotification(notifications);
+	UUID uuid = UUID.randomUUID();
+	String uuidAsString = uuid.toString();
+	if (employeeNotification != null) {
+		String name = null;
+
+		HashMap mailDetails = new HashMap();
+		mailDetails.put("toEmail", employeeNotification.get("email"));
+		mailDetails.put("subject", name + ", " + "Here's your new PASSWORD");
+		mailDetails.put("message", "Hi " + name
+				+ ", \n\n We received a request to reset the password for your Account. \n\n Here's your new PASSWORD Link is: "
+				+ application_url + "/update-password" + "?key=" + uuidAsString
+				+ "\n\n Thanks for helpRing us keep your account secure.\n\n Xyram Software Solutions Pvt Ltd.");
+		emailService.sendMail(mailDetails);
 	}
+	}}
 
+else {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, " project not found " + story.getId());
+}
+		}
+		return story;}
 	@Override
 	public Story editStoryDetails(String storyId, Story storyRequest) {
 		return storyRepository.findById(storyId).map(story -> {
@@ -122,19 +193,18 @@ public class StoryServiceImpl implements StoryService {
 	}
 
 	@Override
-	public IssueTrackerResponse getAllStories(String projectId, Map<String ,Object> filter) {
+	public IssueTrackerResponse getAllStories(String projectId, Map<String, Object> filter) {
 
 		IssueTrackerResponse response = new IssueTrackerResponse();
-		String issue=null;
-		String searchString = filter.containsKey("searchString") ? ((String) filter.get("searchString")).toLowerCase() : null;
+		String issue = null;
+		String searchString = filter.containsKey("searchString") ? ((String) filter.get("searchString")).toLowerCase()
+				: null;
 		String assignTo = filter.containsKey("assignTo") ? ((String) filter.get("assignTo")).toLowerCase() : null;
 		String platform = filter.containsKey("platform") ? ((String) filter.get("platform")).toLowerCase() : null;
-		String storyStatus = filter.containsKey("storyStatus") ? ((String) filter.get("storyStatus")).toLowerCase() : null;
+		String storyStatus = filter.containsKey("storyStatus") ? ((String) filter.get("storyStatus")).toLowerCase()
+				: null;
 		String storyType = filter.containsKey("storyType") ? ((String) filter.get("storyType")).toLowerCase() : null;
-		
-		
-		
-		
+
 		List<Map> storyList = storyRepository.getAllStories(projectId, searchString);
 
 		response.setContent(storyList);
@@ -191,26 +261,28 @@ public class StoryServiceImpl implements StoryService {
 			return true;
 		}
 	}
-	
+
 	@Override
-	public IssueTrackerResponse  storySearch(String projectId, Map<String , Object> filter)
-	{
-		String searchString = filter.containsKey("searchString") ? ((String) filter.get("searchString")).toLowerCase() : null;
+	public IssueTrackerResponse storySearch(String projectId, Map<String, Object> filter) {
+		String searchString = filter.containsKey("searchString") ? ((String) filter.get("searchString")).toLowerCase()
+				: null;
 		String assignTo = filter.containsKey("assignTo") ? ((String) filter.get("assignTo")).toLowerCase() : null;
 		String platform = filter.containsKey("platform") ? ((String) filter.get("platform")).toLowerCase() : null;
-		String storyStatus = filter.containsKey("storyStatus") ? ((String) filter.get("storyStatus")).toLowerCase() : null;
+		String storyStatus = filter.containsKey("storyStatus") ? ((String) filter.get("storyStatus")).toLowerCase()
+				: null;
 		String storyType = filter.containsKey("storyType") ? ((String) filter.get("storyType")).toLowerCase() : null;
 		String storyLabel = filter.containsKey("storyLabel") ? ((String) filter.get("storyLabel")).toLowerCase() : null;
-		
+
 		IssueTrackerResponse response = new IssueTrackerResponse();
-		 
-		List<Map> stories = storyRepository.getStoryTesting(projectId ,searchString, assignTo, platform, storyStatus, storyType,storyLabel);
+
+		List<Map> stories = storyRepository.getStoryTesting(projectId, searchString, assignTo, platform, storyStatus,
+				storyType, storyLabel);
 		response.setContent(stories);
 
-		response.setStatus("success");;
+		response.setStatus("success");
+		;
 		return response;
 	}
-	
 
 	public boolean checkLabel(String labelId) {
 		if (labelId != null) {
@@ -265,8 +337,7 @@ public class StoryServiceImpl implements StoryService {
 	@Override
 	public IssueTrackerResponse getAllStoriesBystatus(String projectId, String storyStatusId) {
 		IssueTrackerResponse response = new IssueTrackerResponse();
-		
-	
+
 		List<Map> storyList = storyRepository.getAllStoriesByStoryStaus(projectId, storyStatusId);
 
 		response.setContent(storyList);
@@ -275,6 +346,5 @@ public class StoryServiceImpl implements StoryService {
 
 		return response;
 	}
-
 
 }

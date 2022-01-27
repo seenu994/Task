@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.JobOpenings;
 import com.xyram.ticketingTool.entity.Ticket;
 import com.xyram.ticketingTool.entity.TicketAssignee;
@@ -202,6 +203,10 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 			+ "FROM Ticket a left join Employee ee on a.createdBy = ee.userCredientials left join TicketAssignee b ON a.Id = b.ticketId and b.status = 'ACTIVE' left join Employee e on b.employeeId = e.eId "
 			+ "WHERE ('TICKETINGTOOL_ADMIN' = :roleId and a.status IN ('ASSIGNED','REOPEN')) ORDER BY a.createdAt DESC")
 	Page<Map> getAllTicketsForAdmin(Pageable pageable, String roleId);
+
+	@Query("Select new map(t.Id as id,t.ticketDescription as ticketDescription,t.projectId as projectId,t.createdBy as createdBy,"
+			+ "t.priorityId as priorityId,t.status as status,e.userCredientials.uid as uid,e.eId as id) from Ticket t left join Employee e On t.createdBy=e.userCredientials.id where  t.createdBy=:createdBy ")
+	Map getCreatedBy(String createdBy);
 	
 	
 //	@Query("SELECT DISTINCT b FROM Branch b WHERE " + " (:name is null or lower(b.name) LIKE %:name%)"

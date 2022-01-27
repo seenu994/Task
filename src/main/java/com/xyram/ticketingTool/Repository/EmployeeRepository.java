@@ -14,6 +14,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.xyram.ticketingTool.entity.Employee;
+import com.xyram.ticketingTool.entity.Ticket;
 import com.xyram.ticketingTool.helper.EmployeePojo;
 
 @Repository
@@ -175,12 +176,12 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 	@Query(value = "select * from employee", nativeQuery = true)
 	List<Employee> getAllEmployeeNotification();
 
-	@Query(value = "SELECT e.employee_id as employeeId, e.frist_name as firstname, e.last_name as lastname, u.uid as uid"
-			+ " FROM employee e inner join user u on u.user_id=e.user_id  "
 
-			+ "where  e.role_id = 'R5' and  e.role_id = 'R6'", nativeQuery = true)
 
-	List<Map> getEmployeeByRole();
+	@Query("Select e from Employee e "
+			+ "INNER JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id WHERE r.roleName = 'HR_ADMIN' ORDER BY e.createdAt DESC")
+
+List<Employee> getEmployeeByRole();
 
 	@Query("Select distinct new map(e.eId as id,e.email as email,e. profileUrl as profileUrl,e.userCredientials.uid as uid,e.firstName as firstName,e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId, "
 			+ "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,d.designationName as designationName,e.profileUrl as profileUrl,e.createdAt as createdAt,e.reportingTo as reportingTo,CONCAT(ee.firstName ,' ', ee.lastName) as ReporterName) from Employee e "
@@ -213,6 +214,20 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 	Employee getEmployeeNameByScoleId(String referredEmployeeId);
 	@Query("SELECT e from Employee e ")
 	Employee getAllEmployy();
+	@Query("SELECT e from Employee e  left join JobApplication j On e.eId=j.referredEmployeeId and  j.referredEmployeeId=:referredEmployeeId")
+	List<Employee> getRefereEmployee(String referredEmployeeId);
+	@Query("Select e from Employee e "
+			+ "INNER JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id WHERE r.roleName in( 'HR_ADMIN','TICKETINGTOOL_ADMIN') ORDER BY e.createdAt DESC")
+	List<Employee> getVendorNotification();
+
+	@Query("Select e from Employee e  left join Ticket t On e.userCredientials.id=t.createdBy where t.createdBy=:createdBy")
+	List<Employee> getCreatedBy(String createdBy);
+	@Query("Select e from Employee e  left join TicketAssignee t On e.eId=t.employeeId where t.employeeId=:employeeId")
+
+
+	Employee getAssigneeNotify(String employeeId);
+
+	
 
 	
 
