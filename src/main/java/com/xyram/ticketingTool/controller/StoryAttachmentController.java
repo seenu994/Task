@@ -1,4 +1,4 @@
-	package com.xyram.ticketingTool.controller;
+package com.xyram.ticketingTool.controller;
 
 import java.util.List;
 import java.util.Map;
@@ -20,19 +20,20 @@ import com.xyram.ticketingTool.vo.StoryCommentVo;
 
 @RestController
 public class StoryAttachmentController {
-	
+
 	@Autowired
 	StoryAttachmentsService storyAttachmentsService;
-	
 
-	
-	@PostMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/uplaodStoryAttachment",
-			 AuthConstants.INFRA_ADMIN_BASEPATH + "/uplaodStoryAttachment",
-			 AuthConstants.INFRA_USER_BASEPATH+ "/uplaodStoryAttachment",})
+	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/uplaodStoryAttachment",
+			AuthConstants.HR_BASEPATH + "/uplaodStoryAttachment",
+			AuthConstants.HR_ADMIN_BASEPATH + "/uplaodStoryAttachment",
+			AuthConstants.INFRA_USER_BASEPATH + "/uplaodStoryAttachment",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/uplaodStoryAttachment",
+			AuthConstants.DEVELOPER_BASEPATH + "/uplaodStoryAttachment" })
 	public IssueTrackerResponse CreateStoryAttachment(@ModelAttribute StoryAttachmentVo storyAttachmentVo) {
-		
+
 		return storyAttachmentsService.uploadStoryAttachemet(storyAttachmentVo);
-	} 
+	}
 //	
 //	@GetMapping(value = {AuthConstants.DEVELOPER_BASEPATH + "/getListByProjectId/{projectId}"})
 //	public List<Map> getStoryCommentbyprojectId(@PathVariable String projectId) {
@@ -43,15 +44,15 @@ public class StoryAttachmentController {
 //	public List<Map> getStoryCommentbyprojectIdandStoryId(@PathVariable String projectId,String storyId) {
 //		return storyCommentservice.getStoryCommentbyprojectIdandStoryId(projectId,storyId);
 //
-	
-	
-	@PutMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/deleteStoryAttachment{storyAttachmentId}",
-			AuthConstants.INFRA_ADMIN_BASEPATH+ "/deleteStoryAttachment{storyAttachmentId}",
-			AuthConstants.INFRA_USER_BASEPATH + "/deleteStoryAttachment{storyAttachmentId}"})
-	public Map<String, Object> deleteStoryComments(String storyAttachmentId)
-	{
+
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/deleteStoryAttachment{storyAttachmentId}",
+			AuthConstants.HR_BASEPATH + "/deleteStoryAttachment{storyAttachmentId}",
+			AuthConstants.HR_ADMIN_BASEPATH + "/deleteStoryAttachment{storyAttachmentId}",
+			AuthConstants.INFRA_USER_BASEPATH + "/deleteStoryAttachment{storyAttachmentId}",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/deleteStoryAttachment{storyAttachmentId}",
+			AuthConstants.DEVELOPER_BASEPATH + "/deleteStoryAttachment{storyAttachmentId}" })
+	public Map<String, Object> deleteStoryComments(String storyAttachmentId) {
 		return storyAttachmentsService.deleteStoryAttachmentById(storyAttachmentId);
 	}
-	
 
 }
