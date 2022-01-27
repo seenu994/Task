@@ -24,11 +24,18 @@ public interface JobOfferRepository extends CrudRepository<JobOffer, Long>, JpaS
 	@Query("Select jo from JobOffer jo where jo.Id = :offerId")
 	List<JobOffer> getAllJobOfferById(String offerId);
 
-	@Query(value = " Select jo from JobOffer jo   where " + " (:userRole is null  or (:userRole ='HR_ADMIN') ) and"
+	@Query(value = " Select jo from JobOffer jo   where " + " (:userRole is null  or (:userRole IN('HR_ADMIN','TICKETINGTOOL_ADMIN')) ) and"
 			+ " (:searchString is null  " + "  Or lower(jo.candidateEmail) LIKE %:searchString% "
 			+ "  Or lower(jo.candidateMobile) LIKE %:searchString% "
 			+ "  Or lower(jo.candidateName) Like %:searchString%" + "  Or lower(jo.status)  Like %:searchString%"
 			+ "  Or lower(jo.jobTitle) LIKE %:searchString% " + "  Or lower(jo.doj) Like %:searchString%)")
 	Page<JobOffer> getAllJobOffer(String searchString, String userRole, Pageable pageable);
+
+	@Query(value = " Select jo from JobOffer jo   where  jo.applicationId.referredVendor = :name and "
+			+ " (:searchString is null  " + "  Or lower(jo.candidateEmail) LIKE %:searchString% "
+			+ "  Or lower(jo.candidateMobile) LIKE %:searchString% "
+			+ "  Or lower(jo.candidateName) Like %:searchString%" + "  Or lower(jo.status)  Like %:searchString%"
+			+ "  Or lower(jo.jobTitle) LIKE %:searchString% " + "  Or lower(jo.doj) Like %:searchString%)")
+	Page<JobOffer> getAllJobOfferVendors(String searchString,String name, Pageable pageable);
 
 }

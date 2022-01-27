@@ -256,8 +256,14 @@ public class TicketServiceImpl implements TicketService {
 			response.setContent(null);
 			return response;
 		} else {
-			if(ticketreq.getCreatedBy() == null) {
+			if(ticketreq.getCreatedBy() != null) {
+				ticketreq.setCreatedBy(ticketreq.getCreatedBy());
+			}
+			
+			else
+			{
 				ticketreq.setCreatedBy(userDetail.getUserId());
+				
 			}
 			ticketreq.setCreatedAt(new Date());
 			ticketreq.setUpdatedBy(userDetail.getUserId());
@@ -360,6 +366,8 @@ public class TicketServiceImpl implements TicketService {
 				notificationService.createNotification(notifications);
 				
 			}
+			else
+			{
 			String assignEmployeeId = ticketrepository.getElgibleAssignee();
 //			Ticket ticketObj = ticketRepository.getById(assignee.getTicketId());
 			if (assignEmployeeId != null) {
@@ -406,12 +414,14 @@ public class TicketServiceImpl implements TicketService {
 //					response.setContent(null);
 				}
 			
-			}else {
+				}
+				else {
 				response.setSuccess(false);
 				response.setMessage(ResponseMessages.TICKET_CREATED);
 				response.setContent(null);
 			}
 			
+			}
 			return response;
 		}
 	}

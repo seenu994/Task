@@ -10,8 +10,11 @@ import java.util.Random;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
@@ -35,6 +38,7 @@ import com.xyram.ticketingTool.enumType.NotificationType;
 import com.xyram.ticketingTool.enumType.TicketCommentsStatus;
 import com.xyram.ticketingTool.enumType.TicketStatus;
 import com.xyram.ticketingTool.exception.ResourceNotFoundException;
+import com.xyram.ticketingTool.fileupload.FileTransferService;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.TicketAttachmentService;
 import com.xyram.ticketingTool.service.TicketService;
@@ -46,6 +50,13 @@ public class TicketAttachmentServiceImpl  implements TicketAttachmentService{
 
 @Autowired
 ticketAttachmentRepository  ticketattachmentRepository;
+
+
+@Value("${ticket-attachment-base-url}")
+private String ticketAttachmentUrl;
+
+@Autowired
+FileTransferService fileTransferService;
 
 @Autowired
 TicketRepository  ticketRepository;
@@ -243,7 +254,9 @@ public String addFileAdmin(MultipartFile file, String fileName){
 public ApiResponse deleteImage(String ticketId) {
 	ApiResponse response = new ApiResponse(false);
 	 TicketAttachment ticketObj=ticketattachmentRepository.getById(ticketId);
-	 deleteFile(ticketObj.getImagePath());
+	 if(ticketObj!=null ) {
+	 
+		fileTransferService.deleteFile(ticketAttachmentUrl,ticketObj.getImagePath());
 	 ticketattachmentRepository.deletByTicket(ticketId);
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.DELETE_ATTACHMENT);
@@ -251,8 +264,11 @@ public ApiResponse deleteImage(String ticketId) {
 			
 
 		return response;
+		
+}else {
+	throw new ResponseStatusException(HttpStatus.NOT_FOUND,"No Attachement found with id ");
 }
-
+}
 
 private String deleteFile(String imagePath) {
 	System.out.println("bjsjsjn");

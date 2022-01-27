@@ -82,6 +82,7 @@ public class JobController {
 	  @GetMapping(value = { AuthConstants.ADMIN_BASEPATH +
 	  "/getAllCompanyWingsAndSkills",AuthConstants.HR_ADMIN_BASEPATH +
 	  "/getAllCompanyWingsAndSkills", AuthConstants.INFRA_ADMIN_BASEPATH +
+	  "/getAllCompanyWingsAndSkills",AuthConstants.JOB_VENDOR_BASEPATH +
 	  "/getAllCompanyWingsAndSkills", AuthConstants.INFRA_USER_BASEPATH +
 	  "/getAllCompanyWingsAndSkills", AuthConstants.HR_BASEPATH +
 	  "/getAllCompanyWingsAndSkills", AuthConstants.DEVELOPER_BASEPATH +
@@ -110,7 +111,7 @@ public class JobController {
 		return jobService.editJobApplication(files,jobAppObj,jobAppId);
 	}
 	
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/scheduleJobInterview/{applicationId}",AuthConstants.INFRA_ADMIN_BASEPATH	 + "/scheduleJobInterview/{applicationId}",AuthConstants.HR_ADMIN_BASEPATH + "/scheduleJobInterview/{applicationId}"  })
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/scheduleJobInterview/{applicationId}",AuthConstants.HR_BASEPATH + "/scheduleJobInterview/{applicationId}",AuthConstants.INFRA_ADMIN_BASEPATH	 + "/scheduleJobInterview/{applicationId}",AuthConstants.HR_ADMIN_BASEPATH + "/scheduleJobInterview/{applicationId}"  })
 	public ApiResponse scheduleJobInterview(@RequestBody JobInterviews schedule,
 			@PathVariable String applicationId) {
 		logger.info("Get All Job");
@@ -203,7 +204,7 @@ public class JobController {
 		return jobService.editJobOffer(jobObj,jobOfferId);
 	}
 	
-	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/getAllJobOffer",AuthConstants.ADMIN_BASEPATH + "/getAllJobOffer" })
+	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/getAllJobOffer",AuthConstants.ADMIN_BASEPATH + "/getAllJobOffer",AuthConstants.JOB_VENDOR_BASEPATH + "/getAllJobOffer" })
 	public ApiResponse getAllJobOffer(@RequestParam Map<String,Object> filter ,Pageable pageable) {
 		logger.info("Creating Job Offers");
 		return jobService.getAllJobOffer(filter,pageable);

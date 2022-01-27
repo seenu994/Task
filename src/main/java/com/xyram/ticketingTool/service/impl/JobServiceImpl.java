@@ -140,7 +140,14 @@ public class JobServiceImpl implements JobService {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wing does not exist");
 			}
 		}
-		jobObj.setUpdatedBy(userDetail.getUserId());
+		if(userDetail.getUserRole().equals("HR_ADMIN")) {
+			Employee employeeDetails = employeeRepository.getByEmpId(userDetail.getScopeId());
+			jobObj.setUpdatedBy(employeeDetails.getFirstName());
+			}
+			else
+			{
+				jobObj.setUpdatedBy(userDetail.getName());
+			}
 		jobObj.setCreatedAt(new Date());
 		jobObj.setCreatedBy(userDetail.getUserId());
 		jobObj.setJobStatus(JobOpeningStatus.VACANT);
@@ -556,7 +563,8 @@ public class JobServiceImpl implements JobService {
 			}
 
 			if (userDetail.getUserRole() != null && userDetail.getUserRole().equals("JOB_VENDOR")) {
-				jobAppObj.setReferredVendor(userDetail.getScopeId());
+				Employee employeeDetails = employeeRepository.getByEmpId(userDetail.getScopeId());
+				jobAppObj.setReferredVendor(employeeDetails.getFirstName());
 			}
 
 			if (jobAppRepository.save(jobAppObj) != null) {
@@ -938,7 +946,14 @@ public class JobServiceImpl implements JobService {
 		ApiResponse response = new ApiResponse(false);
 		JobOpenings jobOpening = jobRepository.getById(jobId);
 		if (jobOpening != null) {
-			jobOpening.setUpdatedBy(userDetail.getUserId());
+			if(userDetail.getUserRole().equals("HR_ADMIN")) {
+			Employee employeeDetails = employeeRepository.getByEmpId(userDetail.getScopeId());
+			jobOpening.setUpdatedBy(employeeDetails.getFirstName());
+			}
+			else
+			{
+				jobOpening.setUpdatedBy(userDetail.getName());
+			}
 			jobOpening.setJobDescription(jobObj.getJobDescription());
 			jobOpening.setNotifyVendor(jobObj.isNotifyVendor());
 			if (jobOpening.getJobCode().equals(jobObj.getJobCode())) {
@@ -1161,6 +1176,14 @@ public class JobServiceImpl implements JobService {
 			jobObj.setCreatedAt(new Date());
 			jobObj.setCreatedBy(userDetail.getUserId());
 			jobObj.setApplicationId(application);
+			jobObj.setCandidateEmail(application.getCandidateEmail());
+			jobObj.setCandidateName(application.getCandidateName());
+			jobObj.setCandidateMobile(application.getCandidateMobile());
+			jobObj.setJobCode(application.getJobCode());
+			jobObj.setTotalExp(application.getTotalExp());
+			jobObj.setJobTitle(application.getJobOpenings().getJobTitle());
+			application.setJobApplicationSatus(JobApplicationStatus.RELEASED_OFFER);
+			jobAppRepository.save(application);
 			if (offerRepository.save(jobObj) != null) {
 				response.setSuccess(true);
 				response.setMessage("New Job Offer Created");
@@ -1180,13 +1203,8 @@ public class JobServiceImpl implements JobService {
 		ApiResponse response = new ApiResponse(false);
 		JobOffer jobOffer = offerRepository.getById(jobOfferId);
 		if (jobOffer != null) {
-			jobOffer.setCandidateEmail(jobObj.getCandidateEmail());
-			jobOffer.setCandidateMobile(jobObj.getCandidateMobile());
-			jobOffer.setCandidateName(jobObj.getCandidateName());
 			jobOffer.setDoj(jobObj.getDoj());
-			jobOffer.setJobTitle(jobObj.getJobTitle());
 			jobOffer.setSalary(jobObj.getSalary());
-			jobOffer.setTotalExp(jobObj.getTotalExp());
 			jobObj.setStatus(jobObj.getStatus());
 			offerRepository.save(jobOffer);
 			response.setSuccess(true);
@@ -1206,10 +1224,15 @@ public class JobServiceImpl implements JobService {
 	public ApiResponse getAllJobOffer(Map<String, Object> filter, Pageable pageable) {
 		ApiResponse response = new ApiResponse(false);
 		Map content = new HashMap();
+		Page<JobOffer> allList = null;
 		String searchString = filter.containsKey("searchString") ? ((String) filter.get("searchString")).toLowerCase()
 				: null;
+		if(userDetail.getUserRole().equals("JOB_VENDOR")) {
+			Employee employeeDetails = employeeRepository.getByEmpId(userDetail.getScopeId());
+			allList = offerRepository.getAllJobOfferVendors(searchString,employeeDetails.getFirstName(), pageable);
+		}
 //		List<JobInterviews> allList =  jobInterviewRepository.getList();
-		Page<JobOffer> allList = offerRepository.getAllJobOffer(searchString, userDetail.getUserRole(), pageable);
+		 allList = offerRepository.getAllJobOffer(searchString, userDetail.getUserRole(), pageable);
 
 		content.put("OfferList", allList);
 		if (allList != null) {
