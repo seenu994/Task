@@ -324,8 +324,8 @@ public class TicketServiceImpl implements TicketService {
 			notifications.setUpdatedBy(userDetail.getUserId());
 			notifications.setLastUpdatedAt(new Date());
 			notifications.setTicketId(tickets.getId());
-			//notificationsRepository.save(notifications);
-			notificationService.createNotification(notifications);
+			notificationsRepository.save(notifications);
+			//notificationService.createNotification(notifications);
 			response.setSuccess(true);
 			response.setMessage(ResponseMessages.TICKET_ADDED);
 			Map<String, String> content = new HashMap<String, String>();
@@ -402,7 +402,7 @@ public class TicketServiceImpl implements TicketService {
 					notifications.setCreatedAt(new Date());
 					notifications.setUpdatedBy(userDetail.getUserId());
 					notifications.setLastUpdatedAt(new Date());
-				//	notificationsRepository.save(notifications);
+				//notificationsRepository.save(notifications);
 					notificationService.createNotification(notifications);
 					
 //					response.setSuccess(true);
@@ -1007,8 +1007,12 @@ public class TicketServiceImpl implements TicketService {
 		String priority = filter.containsKey("priority") ? ((String) filter.get("priority")):null;
 		
 		List<Map> serachList = null;
-		if(userDetail.getUserRole().equals("INFRA_ADMIN	") || userDetail.getUserRole().equals("TICKETINGTOOL_ADMIN")) {
+		if(userDetail.getUserRole().equals("TICKETINGTOOL_ADMIN")) {
 			serachList = ticketrepository.searchAllTicket(searchString,priority);
+		}
+		if(userDetail.getUserRole().equals("INFRA_ADMIN")) {
+			serachList = ticketrepository.searchAllTicket(searchString,priority);
+			
 		}
 		else if(userDetail.getUserRole().equals("INFRA_USER")) {
 			serachList = ticketrepository.searchSelfAssignedTicket(searchString,priority,userDetail.getUserId());
