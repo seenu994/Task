@@ -219,7 +219,7 @@ public class JobServiceImpl implements JobService {
 		ApiResponse response = new ApiResponse(false);
 		Map content = new HashMap();
 		String status = filter.containsKey("status") ? ((String) filter.get("status")) : null;
-		Boolean notify = filter.containsKey("notify") ? ((Boolean) filter.get("notify")) : true;
+		boolean notify = filter.containsKey("notify") ? ((Boolean) filter.get("notify")) : true;
 
 		String wing = filter.containsKey("wing") ? ((String) filter.get("wing")).toLowerCase() : null;
 		JobOpeningStatus statusApp = null;
@@ -234,7 +234,7 @@ public class JobServiceImpl implements JobService {
 		}
 
 		Page<JobOpenings> allList = jobRepository.getAllOpenings(searchString, statusApp, wing,
-				userDetail.getUserRole(), 1, pageable);
+				userDetail.getUserRole(), pageable);
 
 		content.put("jobsList", allList);
 		if (allList != null) {
@@ -910,7 +910,7 @@ public class JobServiceImpl implements JobService {
 				jobOpening.setUpdatedBy(userDetail.getName());
 			}
 			jobOpening.setJobDescription(jobObj.getJobDescription());
-			jobOpening.setNotifyVendor(jobObj.isNotifyVendor());
+			jobOpening.setNotifyVendor(jobObj.getNotifyVendor());
 			if (jobOpening.getJobCode().equals(jobObj.getJobCode())) {
 				jobOpening.setJobCode(jobObj.getJobCode());
 			} else {

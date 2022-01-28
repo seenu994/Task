@@ -100,7 +100,7 @@ public interface JobRepository extends CrudRepository<JobOpenings, Long>, JpaSpe
 	@Query(value = " SELECT j from JobOpenings j left join j.wings as w  where"
 			+ " (:wing is null or  lower(w.wingName)=:wing ) and "
 			+ "(:status is null or j.jobStatus=:status) and "
-			+ "(:userRole is null  or ((:userRole='JOB_VENDOR' and j.vendor_view=:notify ) Or (:userRole!='JOB_VENDOR' )))and "
+			+ "(:userRole is null  or ((:userRole='JOB_VENDOR' and 1=j.vendor_view ) Or (:userRole!='JOB_VENDOR' )))and "
 			+ " (:searchString is null  "
 			+ " Or lower(j.jobTitle) LIKE %:searchString% "
 			+ " Or lower(j.jobSkills) LIKE %:searchString% "
@@ -112,7 +112,7 @@ public interface JobRepository extends CrudRepository<JobOpenings, Long>, JpaSpe
 			+"  Or lower(j.maxExp) Like %:searchString%"
 			+ " Or lower(j.minExp) LIKE %:searchString%) ORDER BY j.createdAt DESC")		
 	Page<JobOpenings> getAllOpenings(String searchString, JobOpeningStatus status, String wing, String userRole,
-			Boolean  notify, Pageable pageable);
+		 Pageable pageable);
 	
 	
 	
