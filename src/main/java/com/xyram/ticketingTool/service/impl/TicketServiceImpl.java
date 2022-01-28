@@ -387,6 +387,7 @@ public class TicketServiceImpl implements TicketService {
 					ticketAssigneeRepository.save(assignee);
 //						
 					//Map request = new HashMap<>();
+					request.put("id",employeeObj.geteId());
 					request.put("uid", employeeObj.getUserCredientials().getUid());
 					request.put("title", "TICKET_ASSIGNED");
 					request.put("body","Ticket Assigned - " + tickets.getTicketDescription() );

@@ -29,8 +29,12 @@ public class UserServiceImpl  implements UserService  {
 	@Override
 	public int updateUID(String username, String uid, String osType,String deviceId) {
 
-		
+		if(uid==null) {
+			return 0;
+		}else
+		{
 		return userRepository.updateUid(username, uid,osType,deviceId);
 
-	}
+	}}
+		
 }

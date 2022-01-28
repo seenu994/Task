@@ -12,8 +12,6 @@ import org.springframework.stereotype.Repository;
 
 import com.xyram.ticketingTool.entity.Projects;
 
-
-
 @Repository
 public interface ProjectRepository extends JpaRepository<Projects, String> {
 
@@ -27,8 +25,7 @@ public interface ProjectRepository extends JpaRepository<Projects, String> {
 	@Query("Select distinct new map(p.pId as id, p.projectName as PName, p.projectDescritpion as projectDescritpion, p.clientId as clientId, c.clientName as clientname, "
 			+ "p.inHouse as inHouse, p.status as status,p.createdAt as createdAt) from Projects  p "
 			+ "Inner join ProjectMembers pm on p.pId =pm.projectId  and pm.status='ACTIVE' "
-			+ " left join Client c ON p.clientId = c.Id and p.status != 'INACTIVE'"
-			+ "where pm.employeeId=:scopeId  "
+			+ " left join Client c ON p.clientId = c.Id and p.status != 'INACTIVE'" + "where pm.employeeId=:scopeId  "
 			+ "ORDER BY p.createdAt DESC")
 	Page<Map> getAllProjectsList(String scopeId, Pageable pageable);
 
@@ -40,7 +37,7 @@ public interface ProjectRepository extends JpaRepository<Projects, String> {
 			+ " p.inHouse as inHouse, p.status as status) from Projects "
 			+ " p left join  ProjectMembers e On p.pId=e.projectId where e.status = 'ACTIVE' and e.employeeId = :scopeId ")
 	Page<Map> getAllProjectByDeveloper(Pageable pageable, String scopeId);
-	
+
 	@Query("SELECT p.projectName FROM Projects p WHERE p.pId=:pId")
 	String getProjectNameByProjectId(Object pId);
 
@@ -48,7 +45,10 @@ public interface ProjectRepository extends JpaRepository<Projects, String> {
 	String getProjectId(String projectName);
 
 	@Query("Select distinct new map(e.pId as id,e.projectName as PName,e.projectDescritpion as projectDescritpion,e.clientId as clientId,c.clientName as clientname,e.inHouse as inHouse,"
-			+ "e.status as status) from Projects e join Client c ON e.clientId = c.Id where e.projectName like %:searchString% and e.status != 'ACTIVE'")
+
+			+ "e.status as status) from Projects e left join Client c ON e.clientId = c.Id where "
+			+ "(:searchString is null " + " OR lower(e.projectName) LIKE %:searchString%)")
+
 	List<Map> searchProject(@Param("searchString") String searchString);
 
 	@Query("SELECT new map(p as others) from Projects p  WHERE p.allotToAll= 1")
@@ -61,22 +61,21 @@ public interface ProjectRepository extends JpaRepository<Projects, String> {
 	@Query("Select distinct new map(e.pId as id,e.projectName as PName,e.projectDescritpion as projectDescritpion,e.clientId as clientId,e.inHouse as inHouse,"
 			+ "e.status as status) from Projects e where e.status != 'INACTIVE'")
 	List<Map> getAllProject();
-	
+
 	@Query("Select distinct new map(e.pId as id,e.projectName as PName,e.projectDescritpion as projectDescritpion,e.clientId as clientId,e.inHouse as inHouse,"
 			+ "e.status as status) from Projects e")
 	List<Map> getAllProjectforAdmin();
-
 
 	@Query("Select distinct new map(p.pId as id,p.projectName as PName, p.projectDescritpion as projectDescritpion, p.clientId as clientId, "
 			+ " p.inHouse as inHouse, p.status as status) from Projects "
 			+ " p left join  ProjectMembers e On  p.pId=e.projectId where e.status = 'ACTIVE' and e.employeeId = :employeeId ")
 	List<Map> getAllProjectByDeveloperList(String employeeId);
-	
+
 	@Query("Select distinct new map(p.pId as projectId,p.projectName as PName) from Projects p where p.allotToAll = 1")
 	List<Map> getAllAllottedProjects();
 
 	@Query("Select distinct new map(p.pId as id, p.projectName as PName, p.projectDescritpion as projectDescritpion, p.clientId as clientId, c.clientName as clientname, "
-			+"p.inHouse as inHouse, p.status as status,p.createdAt as createdAt) from Projects p join Client c ON p.clientId = c.Id ")
+			+ "p.inHouse as inHouse, p.status as status,p.createdAt as createdAt) from Projects p join Client c ON p.clientId = c.Id ")
 	Page<Map> getAllForAdmins(Pageable pageable);
 
 }
