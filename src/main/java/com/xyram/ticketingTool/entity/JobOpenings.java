@@ -86,8 +86,9 @@ public class JobOpenings extends AuditModel{
 	@Column(name="vendor_view")
 	private Integer vendor_view = 0;
 	
-	@Column(name="notify_vendor")
-	private Boolean notifyVendor = false;
+	
+	@Column(name="notify_vendor",nullable = false, columnDefinition = "TINYINT(1)")
+	private boolean notifyVendor = false;
 
 	public String getId() {
 		return Id;
@@ -195,11 +196,13 @@ public class JobOpenings extends AuditModel{
 
 	
 
-	public Boolean getNotifyVendor() {
+	
+
+	public boolean isNotifyVendor() {
 		return notifyVendor;
 	}
 
-	public void setNotifyVendor(Boolean notifyVendor) {
+	public void setNotifyVendor(boolean notifyVendor) {
 		this.notifyVendor = notifyVendor;
 	}
 
