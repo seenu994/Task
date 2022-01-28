@@ -22,6 +22,7 @@ import com.xyram.ticketingTool.enumType.JobOfferStatus;
 import com.xyram.ticketingTool.enumType.JobOpeningStatus;
 import com.xyram.ticketingTool.request.InterviewRoundReviewRequest;
 import com.xyram.ticketingTool.request.JobApplicationSearchRequest;
+import com.xyram.ticketingTool.request.JobApplicationStatusRequest;
 import com.xyram.ticketingTool.request.JobInterviewsRequest;
 import com.xyram.ticketingTool.request.JobOpeningSearchRequest;
 
@@ -87,5 +88,7 @@ public interface JobService {
 	ApiResponse getAllJobOffer(Map<String, Object> filter, Pageable pageable);
 
 	ApiResponse createJobApplication(MultipartFile[] files, String jobAppString);
+
+	ApiResponse changeJobApplicationStatus(String jobApplicationId, JobApplicationStatusRequest request);
 
 }

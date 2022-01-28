@@ -97,13 +97,14 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 			+ "left join TicketAssignee b ON a.Id = b.ticketId and b.status = 'ACTIVE' "
 			+ " left join Employee e on b.employeeId = e.eId " + "where "
 			+ "(:status is null or a.status = :status) and "
+			+"(:isUser is false or a.status Not IN ('COMPELETED','CANCELLED' ) ) and "
 			+ " (('INFRA_USER' = :roleId and ((e.userCredientials.id = :createdBy)  "
 			+ " OR (a.createdBy = :createdBy )) ) " + "OR ('DEVELOPER' = :roleId   and a.createdBy = :createdBy) "
 			+ "OR ('TICKETINGTOOL_ADMIN' = :roleId )" + "OR ('HR' = :roleId  and a.createdBy = :createdBy) "
 			+ "OR ('HR_ADMIN' = :roleId and a.createdBy = :createdBy)"
 			+ " OR ('INFRA_ADMIN' = :roleId)) ORDER BY a.createdAt DESC")
 	Page<Map> getAllTicketsByStatus(Pageable pageable, @Param("createdBy") String createdBy,
-			@Param("roleId") String roleId, TicketStatus status);
+			@Param("roleId") String roleId, TicketStatus status,boolean isUser);
 
 	@Query("SELECT distinct new map(a.Id as ticket_id, a.ticketDescription as ticket_description, a.status as ticket_status, a.createdAt as created_at, a.createdBy as created_by,a.UpdatedBy as UpdatedBy, a.lastUpdatedAt as last_updated_at, "
 			+ "a.priorityId as priority_id, b.employeeId as assigneeId, concat(e.firstName,' ', e.lastName) as assigneeName, concat(ee.firstName,' ', ee.lastName) as createdByEmp) "

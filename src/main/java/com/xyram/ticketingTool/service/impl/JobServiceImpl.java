@@ -43,6 +43,7 @@ import com.xyram.ticketingTool.Repository.JobInterviewRepository;
 import com.xyram.ticketingTool.Repository.JobOfferRepository;
 import com.xyram.ticketingTool.Repository.JobRepository;
 import com.xyram.ticketingTool.Repository.UserRepository;
+import com.xyram.ticketingTool.Repository.VendorRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.email.EmailService;
 import com.xyram.ticketingTool.entity.ApplicationComments;
@@ -52,6 +53,7 @@ import com.xyram.ticketingTool.entity.JobApplication;
 import com.xyram.ticketingTool.entity.JobInterviews;
 import com.xyram.ticketingTool.entity.JobOffer;
 import com.xyram.ticketingTool.entity.JobOpenings;
+import com.xyram.ticketingTool.entity.JobVendorDetails;
 import com.xyram.ticketingTool.entity.Notifications;
 import com.xyram.ticketingTool.entity.Projects;
 import com.xyram.ticketingTool.enumType.JobApplicationStatus;
@@ -62,6 +64,7 @@ import com.xyram.ticketingTool.enumType.UserRole;
 import com.xyram.ticketingTool.fileupload.FileTransferService;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.request.InterviewRoundReviewRequest;
+import com.xyram.ticketingTool.request.JobApplicationStatusRequest;
 import com.xyram.ticketingTool.service.FileService;
 import com.xyram.ticketingTool.service.JobService;
 import com.xyram.ticketingTool.service.NotificationService;
@@ -106,6 +109,9 @@ public class JobServiceImpl implements JobService {
 
 	@Autowired
 	EmployeeRepository employeeRepository;
+	
+	@Autowired
+	VendorRepository vendorRepository;
 
 	@Autowired
 	EmpoloyeeServiceImpl employeeServiceImpl;
@@ -447,15 +453,18 @@ public class JobServiceImpl implements JobService {
 
 			jobAppObj = objectMapper.readValue(jobAppString, JobApplication.class);
 		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST ,e.getMessage());
+	
 		} catch (JsonProcessingException e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST ,e.getMessage());
+		
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST ,e.getMessage());
 		}
+
+
+	
 		if (files.length > 0) {
 			for (MultipartFile constentFile : files) {
 				try {
@@ -502,10 +511,10 @@ public class JobServiceImpl implements JobService {
 			jobAppObj.setCreatedAt(new Date());
 			jobAppObj.setCreatedBy(userDetail.getUserId());
 			jobAppObj.setJobApplicationSatus(JobApplicationStatus.APPLIED);
-			Employee empObi = new Employee();
+			Employee empObj =null;
 
 			if (jobAppObj.getReferredEmployeeId() != null) {
-				Employee empObj = employeeRepository.getEmployeeNameByScoleId(jobAppObj.getReferredEmployeeId());
+			 empObj = employeeRepository.getEmployeeNameByScoleId(jobAppObj.getReferredEmployeeId());
 
 				if (empObj != null) {
 
@@ -518,51 +527,15 @@ public class JobServiceImpl implements JobService {
 			}
 
 			if (userDetail.getUserRole() != null && userDetail.getUserRole().equals("JOB_VENDOR")) {
-				Employee employeeDetails = employeeRepository.getByEmpId(userDetail.getScopeId());
-				jobAppObj.setReferredVendor(employeeDetails.getFirstName());
+				JobVendorDetails jobVendorDetails = vendorRepository.getJobVendorById(userDetail.getScopeId());
+			
+			
+				jobAppObj.setReferredVendor(jobVendorDetails !=null?  jobVendorDetails.getName():null);
 			}
 
 			if (jobAppRepository.save(jobAppObj) != null) {
 
-				Employee empObj = new Employee();
-				List<Employee> EmployeeByRole = employeeRepository.getEmployeeByRole();
-
-				for (Employee employeeNotification : EmployeeByRole) {
-					Map request = new HashMap<>();
-					request.put("eId", employeeNotification.geteId());
-					request.put("uid", employeeNotification.getUserCredientials().getUid());
-					request.put("title", "EMPLOYEE CREATED");
-					request.put("body", " employee Created - " + empObj.getRoleId());
-					pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 12,
-							NotificationType.EMPLOYEE_CREATED.toString()));
-
-				} // inserting notification details	
-				Notifications notifications = new Notifications();
-				notifications.setNotificationDesc("employee created - " + empObj.getFirstName());
-				notifications.setNotificationType(NotificationType.JOB_APPLOCATION_CREATED);
-				notifications.setSenderId(empObj.getReportingTo());
-				notifications.setReceiverId(userDetail.getUserId());
-				notifications.setSeenStatus(false);
-				notifications.setCreatedBy(userDetail.getUserId());
-				notifications.setCreatedAt(new Date());
-				notifications.setUpdatedBy(userDetail.getUserId());
-				notifications.setLastUpdatedAt(new Date());
-
-				notificationService.createNotification(notifications);
-				UUID uuid = UUID.randomUUID();
-				String uuidAsString = uuid.toString();
-				if (empObj != null) {
-					String name = null;
-
-					HashMap mailDetails = new HashMap();
-					mailDetails.put("toEmail", empObj.getEmail());
-					mailDetails.put("subject", name + ", " + "Here's your new PASSWORD");
-					mailDetails.put("message", "Hi " + name
-							+ ", \n\n We received a request to reset the password for your Account. \n\n Here's your new PASSWORD Link is: "
-							+ application_url + "/update-password" + "?key=" + uuidAsString
-							+ "\n\n Thanks for helping us keep your account secure.\n\n Xyram Software Solutions Pvt Ltd.");
-					emailService.sendMail(mailDetails);
-				}
+				
 
 				response.setSuccess(true);
 				response.setMessage("New Job Application Created");
@@ -994,6 +967,44 @@ public class JobServiceImpl implements JobService {
 					}
 					appRepository.save(appComments);
 					status.setJobApplicationSatus(jobStatus);
+					jobAppRepository.save(status);
+					response.setSuccess(true);
+					response.setMessage("Job Application Status Updated Sucessfully");
+					response.setContent(null);
+				}
+			} else {
+				response.setSuccess(false);
+				response.setMessage("Job application Id does Not Exist");
+			}
+		} else {
+			response.setSuccess(false);
+			response.setMessage("Job application Id does Not Exist");
+		}
+		// TODO Auto-generated method stub
+		return response;
+
+	}
+	
+	
+	@Override
+	public ApiResponse changeJobApplicationStatus(String jobApplicationId, JobApplicationStatusRequest request) {
+		ApiResponse response = new ApiResponse(false);
+		JobApplication status = jobAppRepository.getApplicationById(jobApplicationId);
+		System.out.println(userDetail.getUserRole());
+		if (status != null) {
+			if (userDetail.getUserId().equals(status.getCreatedBy()) || userDetail.getUserRole() == "HR_ADMIN"
+					|| userDetail.getUserRole() == "TICKETINGTOOL_ADMIN") {
+				if (status != null) {
+					ApplicationComments appComments = new ApplicationComments();
+					appComments.setApplicationId(jobApplicationId);
+					if (request.getComments() != null) {
+						appComments.setGivenDescription(request.getComments());
+					} else {
+						appComments.setAutoDescription(
+								"Status changed to" + " " + request.getJobApplicationStatus() + "by" + status.getCreatedBy());
+					}
+					appRepository.save(appComments);
+					status.setJobApplicationSatus(request.getJobApplicationStatus());
 					jobAppRepository.save(status);
 					response.setSuccess(true);
 					response.setMessage("Job Application Status Updated Sucessfully");

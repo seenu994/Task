@@ -129,7 +129,7 @@ public class TicketServiceImpl implements TicketService {
 		else
 		{
 			allTickets = ticketrepository.getAllTicketsByStatus(pageable, userDetail.getUserId(),
-					userDetail.getUserRole(),status);
+					userDetail.getUserRole(),status,true);
 		}
 		
 		if (allTickets != null) {
@@ -1374,11 +1374,17 @@ public class TicketServiceImpl implements TicketService {
 		
 		
 		String status = filter.containsKey("ticketStatus") ? ((String) filter.get("ticketStatus")) :null;
+		boolean isUser = filter.containsKey("isUser") ? ((Boolean) filter.get("isUser")) :true;
 		
 		
 		TicketStatus ticketStatus=null;
 		try {
 			ticketStatus = status != null ? TicketStatus.toEnum(status) : null;
+			if (ticketStatus!=null)
+			{
+				isUser=false;
+			}
+				
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Invalid Status Passed ");
 		}
@@ -1391,7 +1397,7 @@ public class TicketServiceImpl implements TicketService {
 		else
 		{
 			allTickets = ticketrepository.getAllTicketsByStatus(pageable, userDetail.getUserId(),
-					userDetail.getUserRole(),ticketStatus);
+					userDetail.getUserRole(),ticketStatus,isUser);
 		}
 		
 		if (allTickets != null) {

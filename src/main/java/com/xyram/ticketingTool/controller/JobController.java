@@ -27,6 +27,7 @@ import com.xyram.ticketingTool.enumType.JobApplicationStatus;
 import com.xyram.ticketingTool.enumType.JobOfferStatus;
 import com.xyram.ticketingTool.enumType.JobOpeningStatus;
 import com.xyram.ticketingTool.request.InterviewRoundReviewRequest;
+import com.xyram.ticketingTool.request.JobApplicationStatusRequest;
 import com.xyram.ticketingTool.service.JobService;
 import com.xyram.ticketingTool.util.AuthConstants;
 
@@ -157,12 +158,21 @@ public class JobController {
 	 
 	  
 	  @PutMapping(value= {AuthConstants.ADMIN_BASEPATH+"/changeJobApplicationStatus/{jobApplicationId}/{status}",AuthConstants.HR_ADMIN_BASEPATH + "/changeJobApplicationStatus/{jobApplicationId}/{status}",AuthConstants.DEVELOPER_BASEPATH+ "/changeJobApplicationStatus/{jobApplicationId}/{status}", AuthConstants.HR_BASEPATH + "/changeJobApplicationStatus/{jobApplicationId}/{status}",AuthConstants.INFRA_ADMIN_BASEPATH + "/changeJobApplicationStatus/{jobApplicationId}/{status}",AuthConstants.INFRA_USER_BASEPATH + "/changeJobApplicationStatus/{jobApplicationId}/{status}", AuthConstants.JOB_VENDOR_BASEPATH + "/changeJobApplicationStatus/{jobApplicationId}/{status}"})
-	  public ApiResponse changeJobApplicatonStatus(@PathVariable String jobApplicationId,@PathVariable JobApplicationStatus status,@RequestParam(required = false) String comment)
+	  public ApiResponse changeJobApplicatonStatus(@PathVariable String jobApplicationId,@PathVariable JobApplicationStatus status
+			  ,@RequestParam(required=false) String comment)
 	  {
 		  logger.info("change job application status");
 		  return jobService.changeJobApplicationStatus(jobApplicationId, status,comment);
 	  }
 	
+	  
+	  
+	  @PutMapping(value= {AuthConstants.ADMIN_BASEPATH+"/changeJobApplicationStatus/{jobApplicationId}",AuthConstants.HR_ADMIN_BASEPATH + "changeJobApplicationStatus/{jobApplicationId}",AuthConstants.DEVELOPER_BASEPATH+ "changeJobApplicationStatus/{jobApplicationId}", AuthConstants.HR_BASEPATH + "changeJobApplicationStatus/{jobApplicationId}",AuthConstants.INFRA_ADMIN_BASEPATH + "changeJobApplicationStatus/{jobApplicationId}",AuthConstants.INFRA_USER_BASEPATH + "changeJobApplicationStatus/{jobApplicationId}", AuthConstants.JOB_VENDOR_BASEPATH + "changeJobApplicationStatus/{jobApplicationId}"})
+	  public ApiResponse updateJobApplicatonStatus(@PathVariable String jobApplicationId, @RequestBody JobApplicationStatusRequest request)
+	  {
+		  logger.info("change job application status");
+		  return jobService.changeJobApplicationStatus(jobApplicationId,request);
+	  }
 	
 	@GetMapping(value= {AuthConstants.ADMIN_BASEPATH+"/getAllJobInterviews",AuthConstants.HR_ADMIN_BASEPATH + "/getAllJobInterviews",AuthConstants.DEVELOPER_BASEPATH+ "/getAllJobInterviews", AuthConstants.HR_BASEPATH + "/getAllJobInterviews",AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllJobInterviews",AuthConstants.INFRA_USER_BASEPATH + "/getAllJobInterviews", AuthConstants.JOB_VENDOR_BASEPATH + "/getAllJobInterviews"})
 	public ApiResponse getAllJobInterviews(@RequestParam Map<String, Object> filter,Pageable pageable) {

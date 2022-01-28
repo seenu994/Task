@@ -930,7 +930,7 @@ if(vendorNew!=null)
 	@Override
 	public ApiResponse getJobVendorById(String vendorId) {
 		ApiResponse response = new ApiResponse(false);
-		Map employee = vendorRepository.getJobVendorById(vendorId);
+		JobVendorDetails employee = vendorRepository.getJobVendorById(vendorId);
 		Map content = new HashMap();
 		content.put("employee", employee);
 		if (employee != null) {
