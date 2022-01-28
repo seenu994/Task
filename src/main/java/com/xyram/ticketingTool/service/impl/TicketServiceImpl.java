@@ -89,10 +89,9 @@ public class TicketServiceImpl implements TicketService {
 
 	@Autowired
 	NotificationRepository notificationsRepository;
-	
-	
+
 	@Autowired
-    NotificationService notificationService;
+	NotificationService notificationService;
 
 	@Autowired
 	EmpoloyeeServiceImpl employeeServiceImpl;
@@ -102,7 +101,7 @@ public class TicketServiceImpl implements TicketService {
 
 	@Autowired
 	TicketAssignRepository ticketAssigneeRepository;
-	
+
 	@Autowired
 	ProjectMemberRepository memberRepo;
 
@@ -117,24 +116,24 @@ public class TicketServiceImpl implements TicketService {
 	TicketStatusHistRepository tktStatusHistory;
 
 	@Override
-	public ApiResponse getAllTicketsByStatus(TicketStatus status,Pageable pageable) {
+	public ApiResponse getAllTicketsByStatus(TicketStatus status, Pageable pageable) {
 		// TODO Auto-generated method stub
 		ApiResponse response = new ApiResponse(false);
 
-		Page<Map> allTickets ;
-		 if(userDetail.getUserRole().equals("TICKETINGTOOL_ADMIN") ||userDetail.getUserRole().equalsIgnoreCase("INFRA_ADMIN") ) {
-		allTickets = ticketrepository.getAllTicketsForAdmin(pageable,userDetail.getUserRole(),status);
+		Page<Map> allTickets;
+		if (userDetail.getUserRole().equals("TICKETINGTOOL_ADMIN")
+				|| userDetail.getUserRole().equalsIgnoreCase("INFRA_ADMIN")) {
+			allTickets = ticketrepository.getAllTicketsForAdmin(pageable, userDetail.getUserRole(), status);
 		}
-		
-		else
-		{
+
+		else {
 			allTickets = ticketrepository.getAllTicketsByStatus(pageable, userDetail.getUserId(),
-					userDetail.getUserRole(),status,true);
+					userDetail.getUserRole(), status, true);
 		}
-		
+
 		if (allTickets != null) {
 			response.setSuccess(true);
-			response.setMessage(ResponseMessages.TICKET_EXIST+" ROLE :: "+userDetail.getUserRole());
+			response.setMessage(ResponseMessages.TICKET_EXIST + " ROLE :: " + userDetail.getUserRole());
 			Map<String, Page<Map>> content = new HashMap<String, Page<Map>>();
 			content.put("tickets", allTickets);
 			response.setContent(content);
@@ -152,9 +151,9 @@ public class TicketServiceImpl implements TicketService {
 		// TODO Auto-generated method stub
 		ApiResponse response = new ApiResponse(false);
 
-		Page<Map> allTickets = ticketrepository.getAllCompletedTickets(pageable,userDetail.getUserId(),
+		Page<Map> allTickets = ticketrepository.getAllCompletedTickets(pageable, userDetail.getUserId(),
 				userDetail.getUserRole());
-		
+
 		if (allTickets != null) {
 			response.setSuccess(true);
 			response.setMessage(ResponseMessages.TICKET_EXIST);
@@ -230,213 +229,101 @@ public class TicketServiceImpl implements TicketService {
 	}
 
 	@Override
-	public ApiResponse createTickets(MultipartFile[] files, String ticketRequest,String assigneeId) {
-		ApiResponse response = new ApiResponse(false);
-		ObjectMapper objectMapper = new ObjectMapper();
-		Ticket ticketreq = null;
-		try {
-			ticketreq = objectMapper.readValue(ticketRequest, Ticket.class);
-		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}	
-		/*
-		 * JSONObject json = new JSONObject(ticketRequest); Ticket ticketreq=new
-		 * Ticket();
-		 */
-		Projects project = projectRepository.getById(ticketreq.getProjectId());
-		if (project == null) {
-			response.setSuccess(false);
-			response.setMessage(ResponseMessages.PROJECT_NOTEXIST);
-			response.setContent(null);
-			return response;
-		} else {
-			if(ticketreq.getCreatedBy() != null) {
-				ticketreq.setCreatedBy(ticketreq.getCreatedBy());
-			}
-			
-			else
-			{
-				ticketreq.setCreatedBy(userDetail.getUserId());
-				
-			}
-			ticketreq.setCreatedAt(new Date());
-			ticketreq.setUpdatedBy(userDetail.getUserId());
-			ticketreq.setLastUpdatedAt(new Date());
-			// ticketreq.setStatus(TicketStatus.INITIATED);
-			Ticket tickets = ticketrepository.save(ticketreq);
-
-			// Calling file upload method
-			if (files != null)
-				attachmentService.storeImage(files, tickets.getId());
-
-			// Inserting Ticket history details
-			TicketStatusHistory tktStatusHist = new TicketStatusHistory();
-			tktStatusHist.setTicketId(tickets.getId());
-			tktStatusHist.setTicketStatus(TicketStatus.INITIATED);
-			tktStatusHist.setCreatedBy(userDetail.getUserId());
-			tktStatusHist.setCreatedAt(new Date());
-			tktStatusHist.setUpdatedBy(userDetail.getUserId());
-			tktStatusHist.setLastUpdatedAt(new Date());
-			tktStatusHistory.save(tktStatusHist);
-
-			List<Map> userList = employeeServiceImpl.getListOfInfraAdmins();
-
-			for (Map user : userList) {
-
-				Map request = new HashMap<>();
-				request.put("id", user.get("employeeId"));
-				request.put("uid", user.get("uid"));
-				request.put("title", "TICKET CREATED");
-				request.put("body", "New Ticket Created - " + ticketreq.getTicketDescription());
-				pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 12,
-						NotificationType.TICKET_CREATED.toString()));
-				
-
-				/*
-				 * Map developerUser = ticketrepository.getCreatedBy(ticketreq.getCreatedBy());
-				 * 
-				 * Map requests = new HashMap<>();
-				 * 
-				 * { requests.put("id", developerUser.get("id")); requests.put("uid",
-				 * developerUser.get("uid")); requests.put("title", "TICKET CREATED");
-				 * requests.put("body", "New Ticket Created - " +
-				 * ticketreq.getTicketDescription());
-				 * pushNotificationCall.restCallToNotification(pushNotificationRequest.
-				 * PushNotification(request, 12, NotificationType.TICKET_CREATED.toString()));
-				 */
-			
-			// Inserting Notifications Details
-			Notifications notifications = new Notifications();
-			notifications.setNotificationDesc("New Ticket Created - " + ticketreq.getTicketDescription());
-			notifications.setNotificationType(NotificationType.TICKET_CREATED);
-			notifications.setSenderId(userDetail.getUserId());
-			notifications.setReceiverId(userDetail.getUserId());
-			notifications.setSeenStatus(false);
-			notifications.setCreatedBy(userDetail.getUserId());
-			notifications.setCreatedAt(new Date());
-			notifications.setUpdatedBy(userDetail.getUserId());
-			notifications.setLastUpdatedAt(new Date());
-			notifications.setTicketId(tickets.getId());
-			notificationsRepository.save(notifications);
-			//notificationService.createNotification(notifications);
-			response.setSuccess(true);
-			response.setMessage(ResponseMessages.TICKET_ADDED);
-			Map<String, String> content = new HashMap<String, String>();
-			content.put("ticketId", tickets.getId());
-
-			response.setContent(content);
-			if(assigneeId != null) {
-				Employee employeeObj = employeeRepository.getByEmpId(assigneeId);
-				if(employeeObj.getStatus() != UserStatus.OFFLINE) {
-				TicketAssignee assignee = new TicketAssignee();
-				assignee.setEmployeeId(assigneeId);
-				assignee.setTicketId(tickets.getId());
-				assignee.setCreatedAt(new Date());
-				assignee.setCreatedBy(userDetail.getUserId());
-				assignee.setStatus(TicketAssigneeStatus.ACTIVE);
-				
-				tickets.setStatus(TicketStatus.ASSIGNED);
-				ticketrepository.save(tickets);
-				ticketAssigneeRepository.save(assignee);
+		public ApiResponse createTickets(MultipartFile[] files, String ticketRequest,String assigneeId) {
+			ApiResponse response = new ApiResponse(false);
+			ObjectMapper objectMapper = new ObjectMapper();
+			Ticket ticketreq = null;
+			try {
+				ticketreq = objectMapper.readValue(ticketRequest, Ticket.class);
+			} catch (JsonMappingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (JsonProcessingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}	
+	
+			Projects project = projectRepository.getById(ticketreq.getProjectId());
+			if (project == null) {
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.PROJECT_NOTEXIST);
+				response.setContent(null);
+				return response;
+			} else {
+				if(ticketreq.getCreatedBy() != null) {
+					ticketreq.setCreatedBy(ticketreq.getCreatedBy());
 				}
-//					
-//				Map request = new HashMap<>();
-//				request.put("uid", employeeObj.getUserCredientials().getUid());
-//				request.put("title", "TICKET_ASSIGNED");
-//				request.put("body","Ticket Assigned - " + tickets.getTicketDescription() );
-//				pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 13, NotificationType.TICKET_ASSIGNED.toString()));
-//				
-				//Inserting Notifications Details
-				notifications.setNotificationDesc("Ticket Assigned - " + tickets.getTicketDescription());
-				notifications.setNotificationType(NotificationType.TICKET_ASSIGNED);
-				notifications.setSenderId(userDetail.getUserId());
-				notifications.setReceiverId(userDetail.getUserId());
-				notifications.setSeenStatus(false);
-				notifications.setCreatedBy(userDetail.getUserId());
-				notifications.setCreatedAt(new Date());
-				notifications.setUpdatedBy(userDetail.getUserId());
-				notifications.setLastUpdatedAt(new Date());
-			//	notificationsRepository.save(notifications);
-				notificationService.createNotification(notifications);
 				
-			}
-			else
-			{
-			String assignEmployeeId = ticketrepository.getElgibleAssignee();
-//			Ticket ticketObj = ticketRepository.getById(assignee.getTicketId());
-			if (assignEmployeeId != null) {
-				Employee employeeObj = employeeRepository.getById(assignEmployeeId);
-				if (employeeObj != null) {
-					response.setMessage(ResponseMessages.TICKET_ADDED+" And assigned.");
+				else
+				{
+					ticketreq.setCreatedBy(userDetail.getUserId());
+					
+				}
+				ticketreq.setCreatedAt(new Date());
+				ticketreq.setUpdatedBy(userDetail.getUserId());
+				ticketreq.setLastUpdatedAt(new Date());
+				// ticketreq.setStatus(TicketStatus.INITIATED);
+				Ticket tickets = ticketrepository.save(ticketreq);
+
+				// Calling file upload method
+				if (files != null) {
+					attachmentService.storeImage(files, tickets.getId());
+				}
+
+
+
+            	if(assigneeId != null) {
+					Employee employeeObj = employeeRepository.getByEmpId(assigneeId);
+					if(employeeObj.getStatus() != UserStatus.OFFLINE) {
 					TicketAssignee assignee = new TicketAssignee();
-					assignee.setEmployeeId(assignEmployeeId);
+					assignee.setEmployeeId(assigneeId);
 					assignee.setTicketId(tickets.getId());
 					assignee.setCreatedAt(new Date());
 					assignee.setCreatedBy(userDetail.getUserId());
 					assignee.setStatus(TicketAssigneeStatus.ACTIVE);
 					
 					tickets.setStatus(TicketStatus.ASSIGNED);
-					ticketrepository.save(tickets);
 					ticketAssigneeRepository.save(assignee);
-//						
-					//Map request = new HashMap<>();
-					request.put("id",employeeObj.geteId());
-					request.put("uid", employeeObj.getUserCredientials().getUid());
-					request.put("title", "TICKET_ASSIGNED");
-					request.put("body","Ticket Assigned - " + tickets.getTicketDescription() );
-					pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 13, NotificationType.TICKET_ASSIGNED.toString()));
-//					
-					//Inserting Notifications Details
-					notifications.setNotificationDesc("Ticket Assigned - " + tickets.getTicketDescription());
-					notifications.setNotificationType(NotificationType.TICKET_ASSIGNED);
-					notifications.setSenderId(userDetail.getUserId());
-					notifications.setReceiverId(userDetail.getUserId());
-					notifications.setSeenStatus(false);
-					notifications.setCreatedBy(userDetail.getUserId());
-					notifications.setCreatedAt(new Date());
-					notifications.setUpdatedBy(userDetail.getUserId());
-					notifications.setLastUpdatedAt(new Date());
-				//notificationsRepository.save(notifications);
-					notificationService.createNotification(notifications);
+					}
+            	}
+
+	else {
+				String assignEmployeeId = ticketrepository.getElgibleAssignee();
+			
+				if (assignEmployeeId != null) {
+					Employee employeeObj1 = employeeRepository.getById(assignEmployeeId);
+					if (employeeObj1 != null) {
+						response.setMessage(ResponseMessages.TICKET_ADDED+" And assigned.");
+						TicketAssignee assignee = new TicketAssignee();
+						assignee.setEmployeeId(assignEmployeeId);
+						assignee.setTicketId(tickets.getId());
+						assignee.setCreatedAt(new Date());
+						assignee.setCreatedBy(userDetail.getUserId());
+						assignee.setStatus(TicketAssigneeStatus.ACTIVE);
+						
+						tickets.setStatus(TicketStatus.ASSIGNED);
+						ticketAssigneeRepository.save(assignee);
+						}
 					
-//					response.setSuccess(true);
-//					response.setMessage(ResponseMessages.TICKET_ASSIGNED);
-//					response.setContent(null);
-//					
-				}else {
-//					response.setSuccess(false);
-//					response.setMessage(ResponseMessages.EMPLOYEE_INVALID);
-//					response.setContent(null);
 				}
-			
 				}
-				else {
-				response.setSuccess(false);
-				response.setMessage(ResponseMessages.TICKET_CREATED);
-				response.setContent(null);
-			}
-			
+					response.setSuccess(false);
+					response.setMessage(ResponseMessages.TICKET_CREATED);
+					response.setContent(null);
 			}
 			return response;
-		}
 	}
-		return response;
-		
-	}
+
 	@Override
 	public ApiResponse cancelTicket(String ticketId) {
 		ApiResponse response = new ApiResponse(false);
 		Ticket ticketNewRequest = ticketrepository.getById(ticketId);
 		System.out.println(userDetail.getUserId());
 		Employee employee = employeeRepository.getbyUserByUserId(userDetail.getUserId());
-		
+
 		// System.out.println("Status :: "+ticketNewRequest.getStatus());
 		if (ticketNewRequest != null) {
 			if (ticketNewRequest.getStatus().equals(TicketStatus.CANCELLED)) {
@@ -444,20 +331,23 @@ public class TicketServiceImpl implements TicketService {
 				response.setMessage(ResponseMessages.TICKET_ALREADY_CANCELLED);
 				response.setContent(null);
 			} else if (!ticketNewRequest.getStatus().equals(TicketStatus.COMPLETED)) {
-				
-				if (userDetail.getUserRole()!=null && userDetail.getUserRole().equalsIgnoreCase("DEVELOPER")) {
+
+				if (userDetail.getUserRole() != null && userDetail.getUserRole().equalsIgnoreCase("DEVELOPER")) {
 					if (ticketNewRequest.getStatus().equals(TicketStatus.ASSIGNED)
 							|| ticketNewRequest.getStatus().equals(TicketStatus.INPROGRESS)) {
 						// Change userDetail.getUserId() to Ticket Assignee
-						sendPushNotification(ticketAssigneeRepository.getAssigneeIdForDeveloper(ticketNewRequest.getId(),employee.geteId()),
+						sendPushNotification(
+								ticketAssigneeRepository.getAssigneeIdForDeveloper(ticketNewRequest.getId(),
+										employee.geteId()),
 								"Ticket Cancelled By User -", ticketNewRequest, "TICKET_CANCELLED", 16);
 					}
-					
-			
+
 				} else {
-					TicketAssignee ticketAssigneObj=new TicketAssignee();
-					TicketAssignee ticket=ticketAssigneeRepository.getDuplicateTickate(ticketAssigneObj.getTicketId());
-					if ( ticketAssigneObj.getStatus().equals(TicketAssigneeStatus.INACTIVE) ||ticketNewRequest.getStatus().equals(TicketStatus.ASSIGNED)
+					TicketAssignee ticketAssigneObj = new TicketAssignee();
+					TicketAssignee ticket = ticketAssigneeRepository
+							.getDuplicateTickate(ticketAssigneObj.getTicketId());
+					if (ticketAssigneObj.getStatus().equals(TicketAssigneeStatus.INACTIVE)
+							|| ticketNewRequest.getStatus().equals(TicketStatus.ASSIGNED)
 							|| ticketNewRequest.getStatus().equals(TicketStatus.INPROGRESS)) {
 						// Change userDetail.getUserId() to Ticket Assignee
 						sendPushNotification(ticketAssigneeRepository.getAssigneeId(ticket),
@@ -467,7 +357,7 @@ public class TicketServiceImpl implements TicketService {
 					sendPushNotification(ticketNewRequest.getCreatedBy(), "Ticket Cancelled By Admin - ",
 							ticketNewRequest, "TICKET_CANCELLED", 17);
 				}
-				
+
 				ticketNewRequest.setStatus(TicketStatus.CANCELLED);
 				ticketNewRequest.setUpdatedBy(userDetail.getUserId());
 				ticketNewRequest.setLastUpdatedAt(new Date());
@@ -508,7 +398,7 @@ public class TicketServiceImpl implements TicketService {
 		Employee employeeObj = employeeRepository.getbyUserId(userId);
 		if (employeeObj != null) {
 			Map request = new HashMap<>();
-			request.put("id",userDetail.getUserId());
+			request.put("id", userDetail.getUserId());
 			request.put("uid", employeeObj.getUserCredientials().getUid());
 			request.put("title", title);
 			request.put("body", message + ticketNewRequest.getTicketDescription());
@@ -621,7 +511,7 @@ public class TicketServiceImpl implements TicketService {
 						notifications.setCreatedAt(new Date());
 						notifications.setUpdatedBy(userDetail.getUserId());
 						notifications.setLastUpdatedAt(new Date());
-					//	notificationsRepository.save(notifications);
+						// notificationsRepository.save(notifications);
 						notificationService.createNotification(notifications);
 					}
 
@@ -681,8 +571,8 @@ public class TicketServiceImpl implements TicketService {
 	public ApiResponse editTicket(MultipartFile[] files, String ticketId, String ticketRequest) {
 
 		ApiResponse response = new ApiResponse(false);
-		Ticket ticketObj=null;
-		 ticketObj = ticketrepository.getById(ticketId);
+		Ticket ticketObj = null;
+		ticketObj = ticketrepository.getById(ticketId);
 		Employee employee = employeeRepository.getbyUserByUserId(userDetail.getUserId());
 		ObjectMapper objectMapper = new ObjectMapper();
 		Ticket ticketreq = null;
@@ -708,9 +598,9 @@ public class TicketServiceImpl implements TicketService {
 				ticketObj.setProjectId(ticketreq.getProjectId());
 //				ticketObj.setStatus(ticketreq.getStatus());
 				ticketObj.setUpdatedBy(userDetail.getUserId());
-				
+
 				ticketObj.setLastUpdatedAt(new Date());
-				
+
 				ticketrepository.saveAndFlush(ticketObj);
 
 				// Inserting Ticket history details
@@ -725,7 +615,8 @@ public class TicketServiceImpl implements TicketService {
 				if (files != null)
 					attachmentService.storeImage(files, ticketId);
 				// Change userID to assignee
-				sendPushNotification(ticketAssigneeRepository.getAssigneeIdForDeveloper(ticketObj.getId(),employee.geteId()),
+				sendPushNotification(
+						ticketAssigneeRepository.getAssigneeIdForDeveloper(ticketObj.getId(), employee.geteId()),
 						"Ticket Edited By User - " + ticketObj.getTicketDescription(), ticketObj, "TICKET_EDITED", 26);
 
 				response.setSuccess(true);
@@ -756,7 +647,8 @@ public class TicketServiceImpl implements TicketService {
 				response.setSuccess(false);
 				response.setMessage(ResponseMessages.TICKET_ALREADY_REOPEND);
 				response.setContent(null);
-			} else if (ticketObj.getStatus().equals(TicketStatus.COMPLETED) || ticketObj.getStatus().equals(TicketStatus.CANCELLED)) {
+			} else if (ticketObj.getStatus().equals(TicketStatus.COMPLETED)
+					|| ticketObj.getStatus().equals(TicketStatus.CANCELLED)) {
 
 				if (commentObj.getTicketCommentDescription() == null
 						|| commentObj.getTicketCommentDescription().length() == 0) {
@@ -810,7 +702,6 @@ public class TicketServiceImpl implements TicketService {
 								"TICKET_REOPENED", 18);
 					}
 
-					
 					response.setSuccess(true);
 					response.setMessage(ResponseMessages.TICKET_REOPENED);
 					response.setContent(null);
@@ -915,7 +806,7 @@ public class TicketServiceImpl implements TicketService {
 								commentObj.setCreatedBy(comment.getCreatedBy());
 								commentObj.setUpdatedBy(userDetail.getUserId());
 								commentObj.setLastUpdatedAt(new Date());
-								
+
 								// commentObj.setCreatedBy(comment.getCreatedBy());
 								commentRepository.save(commentObj);
 								response.setSuccess(true);
@@ -947,8 +838,6 @@ public class TicketServiceImpl implements TicketService {
 			return response;
 		}
 	}
-
-
 
 	@Override
 	public ApiResponse deleteComment(Comments commentObj) {
@@ -1002,37 +891,36 @@ public class TicketServiceImpl implements TicketService {
 		response.setContent(content);
 		return response;
 	}
+
 	@Override
-	public ApiResponse searchTicket(Map<String, Object>filter) {
-		String searchString = filter.containsKey("searchString") ? ((String) filter.get("searchString")).toLowerCase():null;
-		String priority = filter.containsKey("priority") ? ((String) filter.get("priority")):null;
-		
+	public ApiResponse searchTicket(Map<String, Object> filter) {
+		String searchString = filter.containsKey("searchString") ? ((String) filter.get("searchString")).toLowerCase()
+				: null;
+		String priority = filter.containsKey("priority") ? ((String) filter.get("priority")) : null;
+
 		List<Map> serachList = null;
-		if(userDetail.getUserRole().equals("TICKETINGTOOL_ADMIN")) {
-			serachList = ticketrepository.searchAllTicket(searchString,priority);
+		if (userDetail.getUserRole().equals("TICKETINGTOOL_ADMIN")) {
+			serachList = ticketrepository.searchAllTicket(searchString, priority);
 		}
-		if(userDetail.getUserRole().equals("INFRA_ADMIN")) {
-			serachList = ticketrepository.searchAllTicket(searchString,priority);
-			
-		}
-		else if(userDetail.getUserRole().equals("INFRA_USER")) {
-			serachList = ticketrepository.searchSelfAssignedTicket(searchString,priority,userDetail.getUserId());
-		}else {
-			serachList = ticketrepository.searchSelfTicket(searchString,priority,userDetail.getUserId());
+		if (userDetail.getUserRole().equals("INFRA_ADMIN")) {
+			serachList = ticketrepository.searchAllTicket(searchString, priority);
+
+		} else if (userDetail.getUserRole().equals("INFRA_USER")) {
+			serachList = ticketrepository.searchSelfAssignedTicket(searchString, priority, userDetail.getUserId());
+		} else {
+			serachList = ticketrepository.searchSelfTicket(searchString, priority, userDetail.getUserId());
 		}
 		ApiResponse response = new ApiResponse(true);
-		
+
 		Map content = new HashMap();
 		content.put("serachList", serachList);
-		//ApiResponse response = new ApiResponse(true);
+		// ApiResponse response = new ApiResponse(true);
 		response.setMessage(ResponseMessages.TICKET_LIST);
 		response.setSuccess(true);
 		response.setContent(content);
-		
+
 		return response;
 	}
-	
-	
 
 	@Override
 	public ApiResponse inprogressTicket(String ticketId) {
@@ -1047,7 +935,8 @@ public class TicketServiceImpl implements TicketService {
 				response.setContent(null);
 			} else {
 
-				if (ticketNewRequest.getStatus() == TicketStatus.ASSIGNED || ticketNewRequest.getStatus() == TicketStatus.REOPEN  ) {
+				if (ticketNewRequest.getStatus() == TicketStatus.ASSIGNED
+						|| ticketNewRequest.getStatus() == TicketStatus.REOPEN) {
 
 					ticketNewRequest.setStatus(TicketStatus.INPROGRESS);
 					ticketNewRequest.setUpdatedBy(userDetail.getUserId());
@@ -1115,81 +1004,73 @@ public class TicketServiceImpl implements TicketService {
 	public List<Ticket> findAll() {
 		return ticketrepository.findAll();
 	}
-	
+
 	@Override
-	public ApiResponse getAllTicketsByDuration(Pageable pageable,String date1,String date2) {
+	public ApiResponse getAllTicketsByDuration(Pageable pageable, String date1, String date2) {
 		// TODO Auto-generated method stub
-	System.out.println("inside service method");
+		System.out.println("inside service method");
 		ApiResponse response = new ApiResponse(false);
-		
-		
-		 try {
-			 SimpleDateFormat sdf = new SimpleDateFormat(  "yyyy-MM-dd");
-			 Date startTime,endTime;
-			startTime=sdf.parse(date1);
+
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Date startTime, endTime;
+			startTime = sdf.parse(date1);
 			endTime = sdf.parse(date2);
-			Page<Map> allTks =  ticketrepository.getAllTicketsByDuration(pageable, startTime, endTime);
-			//  System.out.println( "values"+allTks.getContent());
+			Page<Map> allTks = ticketrepository.getAllTicketsByDuration(pageable, startTime, endTime);
+			// System.out.println( "values"+allTks.getContent());
 			/*
 			 * for(Map map: allTks) { map.entrySet(); // map.forEach((k, v) ->
 			 * System.out.println("Key : " + k + ", Value : " + v.toString())); }
 			 */
 			if (allTks != null) {
 				response.setSuccess(true);
-				response.setMessage(ResponseMessages.TICKET_EXIST+" ROLE :: "+userDetail.getUserRole());
+				response.setMessage(ResponseMessages.TICKET_EXIST + " ROLE :: " + userDetail.getUserRole());
 				Map<String, Page<Map>> content = new HashMap<String, Page<Map>>();
-				
+
 				content.put("tickets", (Page<Map>) allTks);
-				
+
 				response.setContent(content);
 			} else {
 				response.setSuccess(false);
 				response.setMessage(ResponseMessages.TICKET_NOT_EXIST);
 				response.setContent(null);
 			}
-	     
+
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
+
 		return response;
 
-		
 	}
-	
+
 	@Override
 	public ApiResponse getTicketStatusCountWithProject(Pageable pageable) {
 		// TODO Auto-generated method stub
-	System.out.println("inside service method");
+		System.out.println("inside service method");
 		ApiResponse response = new ApiResponse(false);
-		
-	
-		Page<Map> allTks =  ticketrepository.getTicketStatusCountWithProject(pageable);
-	
-	
+
+		Page<Map> allTks = ticketrepository.getTicketStatusCountWithProject(pageable);
 
 		System.out.println("ticket service impl");
-		
-		
-			if (allTks != null) {
-				response.setSuccess(true);
-				response.setMessage(ResponseMessages.TICKET_EXIST+" ROLE :: "+userDetail.getUserRole());
-				Map<String, Page<Map>> content = new HashMap<String, Page<Map>>();
-				
-				content.put("tickets", allTks);
-				
-				response.setContent(content);
-			} else {
-				response.setSuccess(false);
-				response.setMessage(ResponseMessages.TICKET_NOT_EXIST);
-				response.setContent(null);
-			}
-	     
+
+		if (allTks != null) {
+			response.setSuccess(true);
+			response.setMessage(ResponseMessages.TICKET_EXIST + " ROLE :: " + userDetail.getUserRole());
+			Map<String, Page<Map>> content = new HashMap<String, Page<Map>>();
+
+			content.put("tickets", allTks);
+
+			response.setContent(content);
+		} else {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.TICKET_NOT_EXIST);
+			response.setContent(null);
+		}
+
 		return response;
 	}
-
 
 	@Override
 	public ApiResponse getAllTicketsDetails(Pageable pageable) {
@@ -1210,58 +1091,44 @@ public class TicketServiceImpl implements TicketService {
 		}
 
 		return response;
-		
+
 	}
-	
-	  public static String findDifference(Date date, Date date2)
-		 {
-			  long difference_In_Days = 0;
-			  String duration=" ";
-		      try {
-		        	 SimpleDateFormat sdf = new SimpleDateFormat(  "dd-MM-yyyy HH:mm:ss");
-		       Date d1 = date;
-		       Date d2 = date2;
-		  
-		          
-		            long difference_In_Time
-		                = d2.getTime() - d1.getTime();
-		  
-		            difference_In_Days
-		                = (difference_In_Time
-		                   / (1000 * 60 * 60 * 24))
-		                  % 365;
-		            long difference_In_Hours
-	                = (difference_In_Time
-	                   / (1000 * 60 * 60))
-	                  % 24;
-		            System.out.println(
-		                   
-		                    + difference_In_Days
-		                    + " days, "
-		                    +difference_In_Hours+"hrs"
-		                    );
-		       duration= String.valueOf(difference_In_Days)+"Days"+String.valueOf(difference_In_Hours)+"hr";
-		     
-		  
-		            return duration;
-		        }
-		  
-		        // Catch the Exception
-		        catch (Exception e) {
-		            e.printStackTrace();
-		        }
-				return duration;
-				
-		    }
-	//report 	  ticketrepo.getTicketDataByStatus
-	  
-	
+
+	public static String findDifference(Date date, Date date2) {
+		long difference_In_Days = 0;
+		String duration = " ";
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+			Date d1 = date;
+			Date d2 = date2;
+
+			long difference_In_Time = d2.getTime() - d1.getTime();
+
+			difference_In_Days = (difference_In_Time / (1000 * 60 * 60 * 24)) % 365;
+			long difference_In_Hours = (difference_In_Time / (1000 * 60 * 60)) % 24;
+			System.out.println(
+
+					+difference_In_Days + " days, " + difference_In_Hours + "hrs");
+			duration = String.valueOf(difference_In_Days) + "Days" + String.valueOf(difference_In_Hours) + "hr";
+
+			return duration;
+		}
+
+		// Catch the Exception
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		return duration;
+
+	}
+	// report ticketrepo.getTicketDataByStatus
 
 	@Override
 	public ApiResponse getTicketDtlsByProjectNameAndStatus(Map<String, Object> filter, Pageable pageable) {
 		ApiResponse response = new ApiResponse(false);
 
-		String projectName = filter.containsKey("projectName") ? ((String) filter.get("projectName")).toLowerCase() : null;
+		String projectName = filter.containsKey("projectName") ? ((String) filter.get("projectName")).toLowerCase()
+				: null;
 
 		String fromDate = filter.containsKey("fromDate") ? filter.get("fromDate").toString() : null;
 		String toDate = filter.containsKey("toDate") ? filter.get("toDate").toString() : null;
@@ -1275,7 +1142,7 @@ public class TicketServiceImpl implements TicketService {
 			parsedToDate = toDate != null ? dateFormat.parse(toDate) : null;
 
 		} catch (ParseException e) {
-			
+
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid date format date should be yyyy-MM-dd");
 
 		}
@@ -1287,23 +1154,23 @@ public class TicketServiceImpl implements TicketService {
 					filter.get("status").toString() + " is not a valid status");
 		}
 
-		Page<Map> allTks =  ticketrepository.getTicketDataByStatusProjectName(projectName,status,parsedFromDate,parsedToDate,searchQuery,pageable);
+		Page<Map> allTks = ticketrepository.getTicketDataByStatusProjectName(projectName, status, parsedFromDate,
+				parsedToDate, searchQuery, pageable);
 
 		if (allTks != null) {
 			response.setSuccess(true);
-			response.setMessage(ResponseMessages.TICKET_EXIST+" ROLE :: "+userDetail.getUserRole());
+			response.setMessage(ResponseMessages.TICKET_EXIST + " ROLE :: " + userDetail.getUserRole());
 			Map<String, Page<Map>> content = new HashMap<String, Page<Map>>();
-			
+
 			content.put("tickets", (Page<Map>) allTks);
-			
+
 			response.setContent(content);
 		} else {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.TICKET_NOT_EXIST);
 			response.setContent(null);
 		}
-		
-		
+
 		return response;
 
 	}
@@ -1312,17 +1179,17 @@ public class TicketServiceImpl implements TicketService {
 	public ApiResponse getAllTicketsByStatusMobile(Pageable pageable) {
 		ApiResponse response = new ApiResponse(false);
 
-		Page<Map> allTickets ;
-		if (userDetail.getUserRole()!=null && userDetail.getUserRole() .equals("INFRA_USER")) {
+		Page<Map> allTickets;
+		if (userDetail.getUserRole() != null && userDetail.getUserRole().equals("INFRA_USER")) {
 			allTickets = ticketrepository.getAllTicketsForInfraUser(pageable, userDetail.getUserId());
-		}else {
+		} else {
 			allTickets = ticketrepository.getAllTicketsByStatusMobile(pageable, userDetail.getUserId(),
 					userDetail.getUserRole());
 		}
-		
+
 		if (allTickets != null) {
 			response.setSuccess(true);
-			response.setMessage(ResponseMessages.TICKET_EXIST+" ROLE :: "+userDetail.getUserRole());
+			response.setMessage(ResponseMessages.TICKET_EXIST + " ROLE :: " + userDetail.getUserRole());
 			Map<String, Page<Map>> content = new HashMap<String, Page<Map>>();
 			content.put("tickets", allTickets);
 			response.setContent(content);
@@ -1336,20 +1203,19 @@ public class TicketServiceImpl implements TicketService {
 	}
 
 	@Override
-	public ApiResponse getTicketCount(Map<String,Object> filter) {
+	public ApiResponse getTicketCount(Map<String, Object> filter) {
 		ApiResponse response = new ApiResponse(false);
 
-		List<Map> allTickets ;
-		String status = filter.containsKey("status") ? ((String) filter.get("status")) :"ACTIVE";
-			
-			
-			TicketAssigneeStatus ticketStatus=null;
-			try {
-				ticketStatus = status != null ? TicketAssigneeStatus.toEnum(status) : null;
-			} catch (Exception e) {
-				throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Invalid Status Passed ");
-			}
-			allTickets = ticketrepository.getTicketCount(userDetail.getUserRole(),userDetail.getUserId());
+		List<Map> allTickets;
+		String status = filter.containsKey("status") ? ((String) filter.get("status")) : "ACTIVE";
+
+		TicketAssigneeStatus ticketStatus = null;
+		try {
+			ticketStatus = status != null ? TicketAssigneeStatus.toEnum(status) : null;
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Invalid Status Passed ");
+		}
+		allTickets = ticketrepository.getTicketCount(userDetail.getUserRole(), userDetail.getUserId());
 		if (allTickets != null) {
 			response.setSuccess(true);
 			response.setMessage("ticket status count retrieved successfully!!");
@@ -1368,42 +1234,36 @@ public class TicketServiceImpl implements TicketService {
 	@Override
 	public ApiResponse getAllSupporytTickets(Map<String, Object> filter, Pageable pageable) {
 		ApiResponse response = new ApiResponse(false);
-		
-		
 
-		Page<Map> allTickets=null;
-		
-		
-		String status = filter.containsKey("ticketStatus") ? ((String) filter.get("ticketStatus")) :null;
-		boolean isUser = filter.containsKey("isUser") ? ((Boolean) filter.get("isUser")) :true;
-		
-		
-		TicketStatus ticketStatus=null;
+		Page<Map> allTickets = null;
+
+		String status = filter.containsKey("ticketStatus") ? ((String) filter.get("ticketStatus")) : null;
+		boolean isUser = filter.containsKey("isUser") ? ((Boolean) filter.get("isUser")) : true;
+
+		TicketStatus ticketStatus = null;
 		try {
 			ticketStatus = status != null ? TicketStatus.toEnum(status) : null;
-			if (ticketStatus!=null)
-			{
-				isUser=false;
+			if (ticketStatus != null) {
+				isUser = false;
 			}
-				
+
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Invalid Status Passed ");
 		}
-		
-		
-		 if(userDetail.getUserRole().equals("TICKETINGTOOL_ADMIN") ||userDetail.getUserRole().equalsIgnoreCase("INFRA_ADMIN") ) {
-		allTickets = ticketrepository.getAllTicketsForAdmin(pageable,userDetail.getUserRole(),ticketStatus);
+
+		if (userDetail.getUserRole().equals("TICKETINGTOOL_ADMIN")
+				|| userDetail.getUserRole().equalsIgnoreCase("INFRA_ADMIN")) {
+			allTickets = ticketrepository.getAllTicketsForAdmin(pageable, userDetail.getUserRole(), ticketStatus);
 		}
-		
-		else
-		{
+
+		else {
 			allTickets = ticketrepository.getAllTicketsByStatus(pageable, userDetail.getUserId(),
-					userDetail.getUserRole(),ticketStatus,isUser);
+					userDetail.getUserRole(), ticketStatus, isUser);
 		}
-		
+
 		if (allTickets != null) {
 			response.setSuccess(true);
-			response.setMessage(ResponseMessages.TICKET_EXIST+" ROLE :: "+userDetail.getUserRole());
+			response.setMessage(ResponseMessages.TICKET_EXIST + " ROLE :: " + userDetail.getUserRole());
 			Map<String, Page<Map>> content = new HashMap<String, Page<Map>>();
 			content.put("tickets", allTickets);
 			response.setContent(content);
@@ -1415,10 +1275,5 @@ public class TicketServiceImpl implements TicketService {
 
 		return response;
 	}
-	
-	
-	
-	
 
-	
-	}
+}

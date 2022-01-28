@@ -97,7 +97,7 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 			+ "left join TicketAssignee b ON a.Id = b.ticketId and b.status = 'ACTIVE' "
 			+ " left join Employee e on b.employeeId = e.eId " + "where "
 			+ "(:status is null or a.status = :status) and "
-			+"(:isUser is false or a.status Not IN ('COMPELETED','CANCELLED' ) ) and "
+			+"(:isUser is false or a.status Not IN ('COMPLETED','CANCELLED' ) ) and "
 			+ " (('INFRA_USER' = :roleId and ((e.userCredientials.id = :createdBy)  "
 			+ " OR (a.createdBy = :createdBy )) ) " + "OR ('DEVELOPER' = :roleId   and a.createdBy = :createdBy) "
 			+ "OR ('TICKETINGTOOL_ADMIN' = :roleId )" + "OR ('HR' = :roleId  and a.createdBy = :createdBy) "
