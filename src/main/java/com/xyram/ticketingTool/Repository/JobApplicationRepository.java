@@ -49,7 +49,7 @@ public interface JobApplicationRepository
 	
 
 	@Query(value = "SELECT ja from JobApplication ja left join ja.jobOpenings as jo where"
-			+ " (:vendor is null or  lower(ja.referredVendor)=:vendor ) and "
+			+ " (:vendor is null or  lower(ja.referredVendor)=:vendor )  and "
 			+ "(:status is null or ja.jobApplicationSatus=:status) and "
 			+ "(:userRole is null  or (:userRole ='HR_ADMIN') "
 			+ " OR (:userRole ='TICKETINGTOOL_ADMIN') "

@@ -421,6 +421,7 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 	public IssueTrackerResponse removeProjectAdmin(String employeeId, String projectId) {
 
 		IssueTrackerResponse issueTrackerResponse = new IssueTrackerResponse();
+		issueTrackerResponse.setStatus("true");
 
 		ProjectMembers projectMembers = projectMemberRepository.getMemberInProject(employeeId, projectId);
 		if (projectMembers != null) {

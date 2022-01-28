@@ -112,7 +112,7 @@ public interface JobRepository extends CrudRepository<JobOpenings, Long>, JpaSpe
 			+"  Or lower(j.maxExp) Like %:searchString%"
 			+ " Or lower(j.minExp) LIKE %:searchString%) ORDER BY j.createdAt DESC")		
 	Page<JobOpenings> getAllOpenings(String searchString, JobOpeningStatus status, String wing, String userRole,
-			Integer notify, Pageable pageable);
+			Boolean  notify, Pageable pageable);
 	
 	
 	

@@ -76,6 +76,9 @@ ApiResponse getAllTicketsByStatusMobile(Pageable pageable);
 ApiResponse getTicketCount(Map<String, Object> filter);
 
 
+ApiResponse getAllSupporytTickets(Map<String, Object> filter, Pageable pageable);
+
+
 }
 		
 

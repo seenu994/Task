@@ -140,7 +140,7 @@ class ProjectMemberContoller {
 
 	@GetMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/isProjectMember",
 			AuthConstants.INFRA_USER_BASEPATH + "/isProjectMember",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/isProjectMember" })
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/isProjectMember"})
 	public ProjectMemberresponse isProjectMember(@RequestParam String employeeId, @RequestParam String projectId) {
 		logger.info("indide ProjectMembersController :: MakeProjectAdmin");
 		return projectMemberService.isProjectMember(employeeId, projectId);
