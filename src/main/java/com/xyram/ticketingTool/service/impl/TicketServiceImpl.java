@@ -1007,8 +1007,12 @@ public class TicketServiceImpl implements TicketService {
 		String priority = filter.containsKey("priority") ? ((String) filter.get("priority")):null;
 		
 		List<Map> serachList = null;
-		if(userDetail.getUserRole().equals("INFRA_ADMIN	") || userDetail.getUserRole().equals("TICKETINGTOOL_ADMIN")) {
+		if(userDetail.getUserRole().equals("TICKETINGTOOL_ADMIN")) {
 			serachList = ticketrepository.searchAllTicket(searchString,priority);
+		}
+		if(userDetail.getUserRole().equals("INFRA_ADMIN")) {
+			serachList = ticketrepository.searchAllTicket(searchString,priority);
+			
 		}
 		else if(userDetail.getUserRole().equals("INFRA_USER")) {
 			serachList = ticketrepository.searchSelfAssignedTicket(searchString,priority,userDetail.getUserId());
