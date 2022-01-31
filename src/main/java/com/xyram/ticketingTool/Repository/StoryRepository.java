@@ -18,12 +18,13 @@ public interface StoryRepository extends JpaRepository<Story, String> {
 	@Query("select s from Story s where s.id=:id")
 	Story getStoryById(String id);
 
-	@Query("select   new Map( s.storyNo as storyNo ,s.version as version,s.title as title ,sl.labelName as storyLabel, s.createdOn as createdOn, p.projectName as projectName,f.featureName as storyStatus,  "
+	@Query("select   new Map( s.storyNo as storyNo ,s.version as version,s.title as title ,sl.labelName as storyLabel,s.updatedOn as updatedOn, s.createdOn as createdOn, p.projectName as projectName,f.featureName as storyStatus,  "
 			+ " s.id as id, s.storyType as storyType,CONCAT(e1.firstName ,' ', e1.lastName) as owner, "
-			+ "CONCAT(e2.firstName ,' ', e2.lastName) as assignedTo )"
+			+ "CONCAT(e2.firstName ,' ', e2.lastName) as assignedTo,CONCAT(e3.firstName ,' ', e3.lastName) as lastUpdatedBy )"
 			+ " From Story s left join Projects p on p.pId =s.projectId "
 			+ "left join Feature f on f.featureId=s.storyStatus " + "left join Employee e1 on e1.eId=s.owner "
 			+ " left join Platform pt on pt.id=s.platform " + "left join StoryLabel sl on sl.id=s.storyLabel "
+			+ "left join Employee e3 on e3.eId=s.lastUpdatedBy "
 			+ "left join Employee e2 on e2.eId=s.assignTo where s.projectId=:projectId and "
 			+ "(:searchString  is null " + " OR  s.storyType Like %:searchString% "
 			+ " OR  CONCAT(e2.firstName ,' ', e2.lastName) LIKE %:searchString% " + " OR s.title LIKE %:searchString% "
@@ -38,14 +39,15 @@ public interface StoryRepository extends JpaRepository<Story, String> {
 //			+ "pt.platformName as platform, s.storyLabel as s.storyLabelId) 
 
 	@Query("select   new Map( s.storyNo as storyNo ,s.version as version,s.title as title "
-			+ ",f.featureName as storyStatus,s.storyStatus as storyStatusId, f.featureId as featureId, "
+			+ ",f.featureName as storyStatus,s.storyStatus as storyStatusId, f.featureId as featureId,s.updatedOn as updatedOn, "
 			+ "s.id as id, s.storyType as storyType,CONCAT(e1.firstName ,' ', e1.lastName) as owner, sp.sprintName as sprintName ,s.sprintId as sprintId,"
-			+ "CONCAT(e2.firstName ,' ', e2.lastName) as assignedTo,s.version as versionId "
-			+ ",s.createdOn as createdOn, v.versionName as versionName ,s.storyDescription as storyDescription ,s.owner as owenerid,"
+			+ "CONCAT(e2.firstName ,' ', e2.lastName) as assignedTo,s.version as versionId ,CONCAT(e3.firstName ,' ', e3.lastName) as lastUpdatedBY,"
+			+ "s.createdOn as createdOn, v.versionName as versionName ,s.storyDescription as storyDescription ,s.owner as owenerid,"
 			+ "s.assignTo as assignId, sl.labelName as storyLabel,"
 			+ "pt.platformName as platform, s.platform as platformId ,s.storyLabel as storyLabelId) " + " From Story s"
 			+ " left join Projects p on p.pId =s.projectId " + "left join Feature f on f.featureId=s.storyStatus "
 			+ "left join Employee e1 on e1.eId=s.owner " + "left join Employee e2 on e2.eId=s.assignTo "
+			+ "left join Employee e3 on e3.eId=s.lastUpdatedBy "
 			+ "left join StoryLabel sl on sl.id=s.storyLabel " + " left join Platform pt on pt.id=s.platform "
 			+ " left join Version v on v.id= s.version " 
 			+ "left join Sprint sp on sp.id=s.sprintId "
@@ -67,12 +69,13 @@ public interface StoryRepository extends JpaRepository<Story, String> {
 
 	@Query(value = "select  s.story_no as storyNo ,s.version as version,s.title as title , s.created_on as createdOn, p.project_name as projectName,f.feature_name as storyStatus,  "
 			+ " s.id as id, s.story_type as storyType,CONCAT(e1.frist_name ,' ', e1.last_name) as owner, "
-			+ "CONCAT(e2.frist_name ,' ', e2.last_name) as assignedTo  , sl.label_name as storyLabel  "
+			+ "CONCAT(e2.frist_name ,' ', e2.last_name) as assignedTo ,sl.label_name as storyLabel  "
 			+ "from story s " + "left join project p on p.project_id =s.project_id "
 			+ " left join feature f on f.feature_id=s.story_status_id "
 			+ " left join employee e1 on e1.employee_id=s.owner  " + " left join platform pt on pt.id=s.platform  "
 			+ " left join story_label sl on sl.id =s.story_label "
-			+ " left join employee e2 on e2.employee_id=s.assign_to " + " Where s.project_id=:projectId and "
+			+ " left join employee e2 on e2.employee_id=s.assign_to " 
+			+ " Where s.project_id=:projectId and "
 			+ " (:assignTo is null or find_in_set(s.assign_to ,:assignTo)) and "
 			+ " (:platform is null or find_in_set(s.platform , :platform)) and  "
 			+ " (:storyStatus is null or find_in_set(s.story_status_id ,(:storyStatus))) and "
@@ -92,24 +95,24 @@ public interface StoryRepository extends JpaRepository<Story, String> {
 	
 	
 	
-	@Query(value = "select  s.story_no as storyNo ,s.version as version,s.title as title , s.created_on as createdOn, p.project_name as projectName,f.feature_name as storyStatus,  "
-			+ " s.id as id, s.story_type as storyType,sp.sprintName as sprintName,pt.platformName as platform,CONCAT(e1.frist_name ,' ', e1.last_name) as owner, "
-			+ "CONCAT(e2.frist_name ,' ', e2.last_name) as assignedTo, v.versionName as versionName , sl.label_name as storyLabel  "
+	@Query(value = "select  s.story_no as storyNo ,s.version as version,s.story_description as storyDescription , s.title as title , s.created_on as createdOn, p.project_name as projectName,f.feature_name as storyStatus,  "
+			+ " s.id as id, s.story_type as storyType,sp.sprint_name as sprintName,pt.platform_name as platform,CONCAT(e1.frist_name ,' ', e1.last_name) as owner, "
+			+ "CONCAT(e2.frist_name ,' ', e2.last_name) as assignedTo, v.version_name as versionName , sl.label_name as storyLabel  "
 			+ "from story s " + "left join project p on p.project_id =s.project_id "
 			+ " left join feature f on f.feature_id=s.story_status_id "
-			+ " left join employee e1 on e1.employee_id=s.owner  " + " left join platform pt on pt.id=s.platform  "
+			+ " left join employee e1 on e1.employee_id=s.owner  "
 			+ " left join story_label sl on sl.id =s.story_label "
-			+ " left join Version v on v.id= s.version "
-			+ " left join Platform pt on pt.id=s.platform "
-			+ "left join Sprint sp on sp.id=s.sprintId "
+			+ " left join version v on v.id= s.version "
+			+ " left join platform pt on pt.id=s.platform "
+			+ "left join sprint sp on sp.sprint_id=s.sprint_id "
 			+ " left join employee e2 on e2.employee_id=s.assign_to " + " Where s.project_id=:projectId and "
 			+ " (:assignTo is null or find_in_set(s.assign_to ,:assignTo)) and "
 			+ " (:platform is null or find_in_set(s.platform , :platform)) and  "
 			+ " (:storyStatus is null or find_in_set(s.story_status_id ,(:storyStatus))) and "
 			+ " (:storyType is null or find_in_set(s.story_type ,:storyType)) and "
 			+ " (:storyLabel is null or find_in_set(s.story_label,:storyLabel))"
-			+ " and (:fromDate is null or Date(createded_date) >= STR_TO_DATE(:fromDate, '%Y-%m-%d')) and "
-			+"  (:toDate is null or Date(createded_date) >= STR_TO_DATE(:toDate, '%Y-%m-%d')) and "
+			+ " and (:fromDate is null or Date(s.created_on) >= STR_TO_DATE(:fromDate, '%Y-%m-%d')) and "
+			+"  (:toDate is null or Date(s.created_on) >= STR_TO_DATE(:toDate, '%Y-%m-%d')) and "
 			+ "" + "(:searchString  is null "
 			+ " OR  s.story_type Like %:searchString%  "
 			+ " OR  CONCAT(e1.frist_name ,' ', e1.last_name) LIKE %:searchString% "
@@ -133,13 +136,15 @@ public interface StoryRepository extends JpaRepository<Story, String> {
 	
 	
 
-	@Query("select   new Map( s.storyNo as storyNo ,s.version as version,s.title as title , sl.labelName as storyLabel,"
+	@Query("select   new Map( s.storyNo as storyNo ,s.version as version,s.title as title ,s.updatedOn as updatedOn, sl.labelName as storyLabel,"
 			+ " p.projectName as projectName,f.featureName as storyStatus,  "
 			+ " s.id as id, s.storyType as storyType,CONCAT(e1.firstName ,' ', e1.lastName) as owner,s.createdOn as createdOn,"
-			+ "CONCAT(e2.firstName ,' ', e2.lastName) as assignedTo )"
+			+ "CONCAT(e2.firstName ,' ', e2.lastName) as assignedTo,CONCAT(e3.firstName ,' ', e3.lastName) as lastUpdatedBy )"
 			+ " From Story s left join Projects p on p.pId =s.projectId "
 			+ "left join StoryLabel sl on sl.id=s.storyLabel " + "left join Feature f on f.featureId=s.storyStatus "
-			+ "left join Employee e1 on e1.eId=s.owner " + "left join Employee e2 on e2.eId=s.assignTo"
+			+ "left join Employee e1 on e1.eId=s.owner " 
+			+ "left join Employee e3 on e3.eId=s.lastUpdatedBy "
+			+ "left join Employee e2 on e2.eId=s.assignTo"
 			+ " where s.projectId=:projectId and s.storyStatus=:storystatusId")
 	List<Map> getAllStoriesByStoryStaus(String projectId, String storystatusId);
 

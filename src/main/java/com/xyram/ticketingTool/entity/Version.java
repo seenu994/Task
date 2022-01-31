@@ -13,7 +13,7 @@ import com.xyram.ticketingTool.id.generator.IdGenerator;
 import com.xyram.ticketingTool.id.generator.IdPrefix;
 
 @Entity
-@Table(name = "version_table")
+@Table(name = "version")
 public class Version extends AuditModel{
 	
 	@Id

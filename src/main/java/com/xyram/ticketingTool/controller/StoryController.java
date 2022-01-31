@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +21,7 @@ import com.xyram.ticketingTool.entity.Sprint;
 import com.xyram.ticketingTool.entity.Story;
 import com.xyram.ticketingTool.modelMapper.StoryMapper;
 import com.xyram.ticketingTool.request.StoryChangeStatusRequest;
+import com.xyram.ticketingTool.response.ReportExportResponse;
 import com.xyram.ticketingTool.response.StoryDetailsResponse;
 import com.xyram.ticketingTool.service.SprintService;
 import com.xyram.ticketingTool.service.StoryService;
@@ -84,6 +86,35 @@ public class StoryController {
 
 	}
 
+	@PostMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/downloadIssueTrackerReport/{projectId}",
+			AuthConstants.ADMIN_BASEPATH + "/downloadIssueTrackerReport/{projectId}",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/downloadIssueTrackerReport/{projectId}",
+			AuthConstants.INFRA_USER_BASEPATH + "/downloadIssueTrackerReport/{projectId}",
+			AuthConstants.ACCOUNTANT_BASEPATH + "/downloadIssueTrackerReport/{projectId}",
+			AuthConstants.DEVELOPER_BASEPATH + "/downloadIssueTrackerReport/{projectId}",
+			AuthConstants.HR_ADMIN_BASEPATH + "/downloadIssueTrackerReport/{projectId}",
+			AuthConstants.JOB_VENDOR_BASEPATH + "/downloadIssueTrackerReport/{projectId}"})
+	public ReportExportResponse downloadIssueTrackerReport(@PathVariable String projectId, @RequestBody  Map request) {
+
+		return storyService.getStoryDetailsForReportDownload(projectId, request);
+	}
+	
+	
+	@PostMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/getallStorysReport/{projectId}",
+			AuthConstants.ADMIN_BASEPATH + "/getallStorysReport/{projectId}",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/getallStorysReport/{projectId}",
+			AuthConstants.INFRA_USER_BASEPATH + "/getallStorysReport/{projectId}",
+			AuthConstants.ACCOUNTANT_BASEPATH + "/getallStorysReport/{projectId}",
+			AuthConstants.DEVELOPER_BASEPATH + "/getallStorysReport/{projectId}",
+			AuthConstants.HR_ADMIN_BASEPATH + "/getallStorysReport/{projectId}",
+			AuthConstants.JOB_VENDOR_BASEPATH + "/getallStorysReport/{projectId}"})
+	public IssueTrackerResponse GetAlllIssueTrackerReport(@PathVariable String projectId, @RequestBody  Map request) {
+
+		return storyService.getStoryDetailsForReport(projectId, request);
+	}
+	
+	
+	
 	@PutMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/updateStory/{storyId}",
 			AuthConstants.ADMIN_BASEPATH + "/updateStory/{storyId}",
 			AuthConstants.INFRA_ADMIN_BASEPATH + "/updateStory/{storyId}",

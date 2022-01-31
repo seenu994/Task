@@ -61,6 +61,7 @@ public class Story {
 	@Column(name="owner")
 	private String owner;
 	
+
 	
 	@Column(name="assign_to")
 	private String assignTo;
@@ -71,6 +72,13 @@ public class Story {
 	
 	@Column(name="created_on")
 	private Date createdOn;
+	
+	
+	@Column(name="updated_on")
+	private Date updatedOn;
+	
+	@Column(name="last_updated_by")
+	private String lastUpdatedBy;
 		
 
 
@@ -219,6 +227,26 @@ public class Story {
 
 	public void setVersion(String version) {
 		this.version = version;
+	}
+
+
+	public Date getUpdatedOn() {
+		return updatedOn;
+	}
+
+
+	public void setUpdatedOn(Date updatedOn) {
+		this.updatedOn = updatedOn;
+	}
+
+
+	public String getLastUpdatedBy() {
+		return lastUpdatedBy;
+	}
+
+
+	public void setLastUpdatedBy(String lastUpdatedBy) {
+		this.lastUpdatedBy = lastUpdatedBy;
 	}
 	
 	

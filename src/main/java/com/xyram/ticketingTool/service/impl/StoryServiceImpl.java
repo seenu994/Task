@@ -1,5 +1,6 @@
 package com.xyram.ticketingTool.service.impl;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -55,15 +57,12 @@ import com.xyram.ticketingTool.service.StoryLabelService;
 import com.xyram.ticketingTool.service.StoryService;
 import com.xyram.ticketingTool.util.ExcelUtil;
 
-
 @Service
 @Transactional
 public class StoryServiceImpl implements StoryService {
 
-	
 	private static final Logger logger = LoggerFactory.getLogger(StoryServiceImpl.class);
 
-	
 	@Autowired
 	StoryRepository storyRepository;
 
@@ -92,26 +91,20 @@ public class StoryServiceImpl implements StoryService {
 	CurrentUser currentUser;
 	@Autowired
 	EmployeeRepository employeeRepository;
-	
+
 	@Autowired
 	PushNotificationCall pushNotificationCall;
 	@Autowired
 	PushNotificationRequest pushNotificationRequest;
-
-	
 
 	@Autowired
 	NotificationService notificationService;
 
 	@Autowired
 	EmailService emailService;
-	
+
 	@Value("${APPLICATION_URL}")
 	private String application_url;
-	
-	
-
-
 
 	@Override
 	public Story createStory(Story story) {
@@ -122,65 +115,31 @@ public class StoryServiceImpl implements StoryService {
 			checkProjectMemberInProject(story.getProjectId(), story.getAssignTo());
 			CheckplatformExist(story.getPlatform());
 			checkLabel(story.getStoryLabel());
+			if(story.getStoryStatus()!=null)
+			{
 			Map projectFeature = projectFeatureService.getFeatureByProjectAndFeatureId(story.getProjectId(),
 					story.getStoryStatus());
-
 			
+			}
+			else {
+		     story.setStoryStatus("f1");
+			}
+
 			story.setOwner(currentUser.getScopeId());
 			Integer storyNo = storyRepository.getTotalTicketByprojectId(story.getProjectId()) + 1;
 			story.setStoryNo(storyNo.toString());
 			story.setCreatedOn(new Date());
-
-		if( storyRepository.save(story) != null) {
-
-
-	Employee empObj = new Employee();
-	
-	List<Map> EmployeeByRole = storyRepository.getVendorNotification(story.getAssignTo());
-
-	for (Map employeeNotification : EmployeeByRole) {
-		Map request = new HashMap<>();
-		request.put("id", employeeNotification.get("eId"));
-		request.put("uid", employeeNotification.get("uid"));
-		request.put("title", "JOB_VENDOR_EDITED");
-		request.put("body", "JOB_VENDOR_EDITED - " );
-		pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 12,
-				NotificationType.JOB_VENDOR_CREATED.toString()));
-
-	 // inserting notification details	
-	Notifications notifications = new Notifications();
-	notifications.setNotificationDesc("JOB_VENDOR_CREATED - " + employeeNotification.get("firstName"));
-	notifications.setNotificationType(NotificationType.JOB_VENDOR_EDITED);
-	notifications.setSenderId(empObj.getReportingTo());
-	notifications.setReceiverId(currentUser.getUserId());
-	notifications.setSeenStatus(false);
-	notifications.setCreatedBy(currentUser.getUserId());
-	notifications.setCreatedAt(new Date());
-	notifications.setUpdatedBy(currentUser.getUserId());
-	notifications.setLastUpdatedAt(new Date());
-
-	notificationService.createNotification(notifications);
-	UUID uuid = UUID.randomUUID();
-	String uuidAsString = uuid.toString();
-	if (employeeNotification != null) {
-		String name = null;
-
-		HashMap mailDetails = new HashMap();
-		mailDetails.put("toEmail", employeeNotification.get("email"));
-		mailDetails.put("subject", name + ", " + "Here's your new PASSWORD");
-		mailDetails.put("message", "Hi " + name
-				+ ", \n\n We received a request to reset the password for your Account. \n\n Here's your new PASSWORD Link is: "
-				+ application_url + "/update-password" + "?key=" + uuidAsString
-				+ "\n\n Thanks for helpRing us keep your account secure.\n\n Xyram Software Solutions Pvt Ltd.");
-		emailService.sendMail(mailDetails);
-	}
-	}}
-
-else {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, " project not found " + story.getId());
-}
+			story.setUpdatedOn(new Date());
+			story.setLastUpdatedBy(currentUser.getScopeId());
+			return storyRepository.save(story);
 		}
-		return story;}
+		else
+		{
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"invaild project Reference");
+		}
+		
+	}
+
 	@Override
 	public Story editStoryDetails(String storyId, Story storyRequest) {
 		return storyRepository.findById(storyId).map(story -> {
@@ -203,6 +162,8 @@ else {
 				CheckplatformExist(story.getPlatform());
 				story.setPlatform(storyRequest.getPlatform());
 			}
+			story.setUpdatedOn(new Date());
+			story.setLastUpdatedBy(currentUser.getScopeId());
 			return storyRepository.save(story);
 
 		}).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "story not found with " + storyId));
@@ -238,6 +199,8 @@ else {
 
 			if (checkFeature(storyChangeStatusrequest.getStorystatus(), story.getProjectId()) != null) {
 				story.setStoryStatus(storyChangeStatusrequest.getStorystatus());
+				story.setUpdatedOn(new Date());
+				story.setLastUpdatedBy(currentUser.getScopeId());
 
 				return storyRepository.save(story);
 			}
@@ -300,28 +263,30 @@ else {
 		;
 		return response;
 	}
-	
+
 	@Override
-	public IssueTrackerResponse getStoryDetailsForReport(String projectId, Map<String, Object> filter) {
+	public IssueTrackerResponse getStoryDetailsForReport(String projectId, Map request) {
+		
+		Map filter =(Map)request;
+		
 		String searchString = filter.containsKey("searchString") ? ((String) filter.get("searchString")).toLowerCase()
 				: null;
 		String assignTo = filter.containsKey("assignTo") ? ((String) filter.get("assignTo")).toLowerCase() : null;
 		String platform = filter.containsKey("platform") ? ((String) filter.get("platform")).toLowerCase() : null;
-		String storyStatus = filter.containsKey("storyStatus") ? ((String) filter.get("storyStatus")).toLowerCase(): null;
+		String storyStatus = filter.containsKey("storyStatus") ? ((String) filter.get("storyStatus")).toLowerCase()
+				: null;
 		String storyType = filter.containsKey("storyType") ? ((String) filter.get("storyType")).toLowerCase() : null;
 		String storyLabel = filter.containsKey("storyLabel") ? ((String) filter.get("storyLabel")).toLowerCase() : null;
-		
+
 		String fromDate = filter.containsKey("fromDate") ? filter.get("fromDate").toString() : null;
 		String toDate = filter.containsKey("toDate") ? filter.get("toDate").toString() : null;
-		
-		
-		
+
 		Date parsedfromDate = null;
 		Date parsedtoDate = null;
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 		try {
-			
+
 			parsedfromDate = fromDate != null ? dateFormat.parse(fromDate) : null;
 			parsedtoDate = toDate != null ? dateFormat.parse(toDate) : null;
 
@@ -329,47 +294,41 @@ else {
 			logger.error("Invalid date format date should be yyyy-MM-dd");
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid date format date should be yyyy-MM-dd");
 		}
-		
 
 		IssueTrackerResponse response = new IssueTrackerResponse();
 
-		List<Map> stories = storyRepository.getStoryFilterForReport(projectId, searchString, assignTo, platform, storyStatus,
-				storyType, storyLabel, fromDate, toDate);
-		
+		List<Map> stories = storyRepository.getStoryFilterForReport(projectId, searchString, assignTo, platform,
+				storyStatus, storyType, storyLabel, fromDate, toDate);
+
 		response.setContent(stories);
-		
-		
-		
 
 		response.setStatus("success");
 		;
 		return response;
 	}
-	
-	
-	
-	
+
 	@Override
-	public ReportExportResponse getStoryDetailsForReportDownload(String projectId, Map<String, Object> filter) {
+	public ReportExportResponse getStoryDetailsForReportDownload(String projectId, Map request) {
+Map filter =(Map)request;
+		
 		String searchString = filter.containsKey("searchString") ? ((String) filter.get("searchString")).toLowerCase()
 				: null;
 		String assignTo = filter.containsKey("assignTo") ? ((String) filter.get("assignTo")).toLowerCase() : null;
 		String platform = filter.containsKey("platform") ? ((String) filter.get("platform")).toLowerCase() : null;
-		String storyStatus = filter.containsKey("storyStatus") ? ((String) filter.get("storyStatus")).toLowerCase(): null;
+		String storyStatus = filter.containsKey("storyStatus") ? ((String) filter.get("storyStatus")).toLowerCase()
+				: null;
 		String storyType = filter.containsKey("storyType") ? ((String) filter.get("storyType")).toLowerCase() : null;
 		String storyLabel = filter.containsKey("storyLabel") ? ((String) filter.get("storyLabel")).toLowerCase() : null;
-		
+
 		String fromDate = filter.containsKey("fromDate") ? filter.get("fromDate").toString() : null;
 		String toDate = filter.containsKey("toDate") ? filter.get("toDate").toString() : null;
-		
-		
-		
+
 		Date parsedfromDate = null;
 		Date parsedtoDate = null;
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 		try {
-			
+
 			parsedfromDate = fromDate != null ? dateFormat.parse(fromDate) : null;
 			parsedtoDate = toDate != null ? dateFormat.parse(toDate) : null;
 
@@ -377,35 +336,35 @@ else {
 			logger.error("Invalid date format date should be yyyy-MM-dd");
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid date format date should be yyyy-MM-dd");
 		}
-		
 
 		ReportExportResponse response = new ReportExportResponse();
-	Map<String, Object>	fileResponse=  new HashMap<>();
+		Map<String, Object> fileResponse = new HashMap<>();
 
-		List<Map> stories = storyRepository.getStoryFilterForReport(projectId, searchString, assignTo, platform, storyStatus,
-				storyType, storyLabel, fromDate, toDate);
-		
-         prepareExcelWorkBook(stories);
-         
-         Workbook workbook =   prepareExcelWorkBook(stories);
+		List<Map> stories = storyRepository.getStoryFilterForReport(projectId, searchString, assignTo, platform,
+				storyStatus, storyType, storyLabel, fromDate, toDate);
 
-			byte[] blob = ExcelUtil.toBlob(workbook);
+	
+		Workbook workbook = prepareExcelWorkBook(stories);
+		
+////	Save file locally 
+//	try {
+//		ExcelUtil.saveWorkbook(workbook, "isuueTracker-report.xlsx");
+//	} catch (IOException e) {
+//		// TODO Auto-generated catch block
+//		e.printStackTrace();
+//	}
 
-			fileResponse.put("fileName", "issue-report.xlsx");
-			fileResponse.put("type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-			fileResponse.put("blob", blob);
-		
-		
+		byte[] blob = ExcelUtil.toBlob(workbook);
+
+		fileResponse.put("fileName", "issue-report.xlsx");
+		fileResponse.put("type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+		fileResponse.put("blob", blob);
+		response.setFileDetails(fileResponse);
+		response.setStatus("success");
+		response.setMessage("report exported Successfully");
+
 		return response;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
 
 	public boolean checkLabel(String labelId) {
 		if (labelId != null) {
@@ -469,35 +428,32 @@ else {
 
 		return response;
 	}
-	
+
 	private Workbook prepareExcelWorkBook(List<Map> storyDetails) {
 
-		List<String> headers = Arrays.asList("Story NO, Title", "Description", "Created on ","Issue Type", "Issue Status",
-				"storyType", "Reporter", "Assignee", "Module","Version", "Sprint" );
+		List<String> headers = Arrays.asList("Story NO","Created on ", "Title", "Description",  "Issue Type",
+				"Issue Status", "Reporter", "Assignee", "Module", "Version", "Sprint");
 		List data = new ArrayList<>();
 
 		for (Map story : storyDetails) {
 
 			Map row = new HashMap<>();
 
-	//row.put("Patient Name", story.get("project") + " " + claim.getPatient().getLastName());
-//			row.put("Date of Service", claim.getDateOfService().toString().substring(0, 10) != null ? claim.getDateOfService() : null);
-//			row.put("CPT Code", claim.getCptcodeIds() != null ? claim.getCptcodeIds() : null);
-//			row.put("Primary Practitioner", claim.getPatient().getPrimaryPhysician().getName());
-//			row.put("Submission Status", claim.getClaimStatus().toString());
-//			row.put("Patient Gender", claim.getPatient().getGender().toString());
-//			row.put("Patient DOB", claim.getPatient().getDob().toString().substring(0, 10));
-//			row.put("Patient Diagnosis Codes", claim.getPatient().getIcdCodeIds());
-//			row.put("Patient Medicare Number", claim.getPatient().getMedicareNumber());
-//			row.put("Patient Medicare Advantage Insurer", claim.getPatient().getMedicareAdvantageInsurer());
-//			row.put("Patient Medicare Advantage Individual Number", claim.getPatient().getMedAdvIndividualNumber());
-//			row.put("Patient Medicare Advantage Group Number", claim.getPatient().getMedAdvGroupNumber());
-//			row.put("Patient Street Address", claim.getPatient().getAddress().getAddressLine());
-//			row.put("Patient City", claim.getPatient().getAddress().getCity());
-//			row.put("Patient State", claim.getPatient().getAddress().getState());
-//			row.put("Patient Zipcode", claim.getPatient().getAddress().getZipCode());
-//			row.put("Patient Phone Number", claim.getPatient().getCellNumber());
-//			row.put("Patient RPM Start Date", claim.getDateOfService().toString().substring(0, 10));
+			row.put("Story NO",story.get("storyNo") != null ? story.get("storyNo").toString(): "");
+			row.put("Title", story.get("title") != null ? story.get("title").toString() : "");
+
+			row.put("Description",
+					story.get("storyDescription") != null ? story.get("storyDescription").toString() : "");
+			row.put("Created on ", story.get("createdOn") != null ? story.get("createdOn").toString() : "");
+			row.put("Issue Type", story.get("storyType") != null ? story.get("storyType").toString() : "");
+			row.put("Issue Status", story.get("storyStatus") != null ? story.get("storyStatus").toString() : "");
+			row.put("Reporter", story.get("owner") != null ? story.get("owner").toString() : "");
+			row.put("Assignee", story.get("assignedTo") != null ? story.get("title").toString() : "");
+
+			row.put("Module", story.get("storyLabel") != null ? story.get("storyLabel").toString() : "");
+			row.put("Version", story.get("versionName") != null ? story.get("versionName").toString() : "");
+
+			row.put("Sprint", story.get("sprintName") != null ? story.get("sprintName").toString() : "");
 
 			data.add(row);
 		}
@@ -517,6 +473,5 @@ else {
 
 		return workbook;
 	}
-
 
 }

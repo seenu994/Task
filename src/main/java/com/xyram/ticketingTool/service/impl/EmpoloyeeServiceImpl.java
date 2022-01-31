@@ -153,6 +153,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				user.setUsername(employee.getEmail());
 				String encodedPassword = new BCryptPasswordEncoder().encode(employee.getPassword());
 				user.setPassword(encodedPassword);
+				user.setName(employee.getFirstName() +"" +employee.getLastName());
 				// Employee employeere=new Employee();
 				Role role = roleRepository.getById(employee.getRoleId());
 				if (role != null) {
@@ -358,6 +359,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			employee.setLastName(employeeRequest.getLastName());
 			employee.setLastUpdatedAt(new Date());
 
+			user.setName(employeeRequest.getFirstName() +"" +employeeRequest.getLastName());
 			employee.setMiddleName(employeeRequest.getMiddleName());
 			employee.setMobileNumber(employeeRequest.getMobileNumber());
 			employee.setPassword(employeeRequest.getPassword());

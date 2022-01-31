@@ -3,6 +3,8 @@ package com.xyram.ticketingTool.service;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
+
 import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
 import com.xyram.ticketingTool.entity.Story;
 import com.xyram.ticketingTool.request.StoryChangeStatusRequest;
@@ -28,8 +30,8 @@ public interface StoryService {
 
 	IssueTrackerResponse storySearch(String projectId, Map<String, Object> filter);
 
-	IssueTrackerResponse getStoryDetailsForReport(String projectId, Map<String, Object> filter);
+	IssueTrackerResponse getStoryDetailsForReport(String projectId,  Map request);
 
-	ReportExportResponse getStoryDetailsForReportDownload(String projectId, Map<String, Object> filter);
+	ReportExportResponse getStoryDetailsForReportDownload(String projectId,  Map request);
 
 }

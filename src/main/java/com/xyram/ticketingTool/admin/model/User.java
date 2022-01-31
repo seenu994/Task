@@ -51,6 +51,10 @@ public class User extends IBaseData {
 
 	@Column(name = "uid")
 	private String uid;
+	
+	
+	@Column(name="name")
+	private String name;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "userStatus")
@@ -214,6 +218,16 @@ public class User extends IBaseData {
 	public void setScopeId(String scopeId) {
 		this.scopeId = scopeId;
 	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	
 	
 	
 

@@ -44,9 +44,7 @@ public class StoryVo {
 
 	private String storyLabel;
 
-	@NotNull(message = "story Status should is mandatory")
-	@NotEmpty(message = "story Status  should be not empty")
-	@Size(min = 2)
+	
 	private String storyStatus;
 
 	@NotNull(message = "assignTo should is mandatory")

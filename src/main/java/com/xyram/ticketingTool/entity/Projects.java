@@ -56,7 +56,7 @@ public class Projects extends AuditModel {
 	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "projectstatus")
-	private ProjectStatus status = ProjectStatus.INDEVELOPMENT;
+	private ProjectStatus status = ProjectStatus.ACTIVE;
 	
 	@Column(name="allot_to_all")
 	private Integer allotToAll = 0;
