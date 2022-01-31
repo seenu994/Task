@@ -109,7 +109,7 @@ public class JobServiceImpl implements JobService {
 
 	@Autowired
 	EmployeeRepository employeeRepository;
-	
+
 	@Autowired
 	VendorRepository vendorRepository;
 
@@ -144,14 +144,12 @@ public class JobServiceImpl implements JobService {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wing does not exist");
 			}
 		}
-		if(userDetail.getUserRole().equals("HR_ADMIN")) {
+		if (userDetail.getUserRole().equals("HR_ADMIN")) {
 			Employee employeeDetails = employeeRepository.getByEmpId(userDetail.getScopeId());
-			jobObj.setUpdatedBy(employeeDetails.getFirstName()+""+employeeDetails.getLastName());
-			}
-			else
-			{
-				jobObj.setUpdatedBy(userDetail.getName());
-			}
+			jobObj.setUpdatedBy(employeeDetails.getFirstName() + "" + employeeDetails.getLastName());
+		} else {
+			jobObj.setUpdatedBy(userDetail.getName());
+		}
 		jobObj.setCreatedAt(new Date());
 		jobObj.setCreatedBy(userDetail.getUserId());
 		jobObj.setJobStatus(JobOpeningStatus.VACANT);
@@ -171,14 +169,14 @@ public class JobServiceImpl implements JobService {
 
 			List<Employee> EmployeeList = employeeRepository.getAllEmployeeNotification();
 			for (Employee employeeNotification : EmployeeList) {
-//				Map request = new HashMap<>();
-//				request.put("eId", employeeNotification.geteId());
-//
-//				request.put("uid", employeeNotification.getUserCredientials().getUid());
-//				request.put("title", "job CREATED");
-//				request.put("body", " job Created - " + emp.getFirstName());
-//				pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 12,
-//						NotificationType.EMPLOYEE_CREATED.toString()));
+
+				Map request = new HashMap<>();
+				request.put("eId", employeeNotification.geteId());
+				request.put("uid", employeeNotification.getUserCredientials().getUid());
+				request.put("title", "job CREATED");
+				request.put("body", " job Created - " + emp.getFirstName()); //
+				pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 12, //
+						NotificationType.EMPLOYEE_CREATED.toString()));
 
 				// inserting notification details
 				Notifications notifications = new Notifications();
@@ -453,18 +451,16 @@ public class JobServiceImpl implements JobService {
 
 			jobAppObj = objectMapper.readValue(jobAppString, JobApplication.class);
 		} catch (JsonMappingException e) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST ,e.getMessage());
-	
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+
 		} catch (JsonProcessingException e) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST ,e.getMessage());
-		
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST ,e.getMessage());
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
 		}
 
-
-	
 		if (files.length > 0) {
 			for (MultipartFile constentFile : files) {
 				try {
@@ -511,10 +507,10 @@ public class JobServiceImpl implements JobService {
 			jobAppObj.setCreatedAt(new Date());
 			jobAppObj.setCreatedBy(userDetail.getUserId());
 			jobAppObj.setJobApplicationSatus(JobApplicationStatus.APPLIED);
-			Employee empObj =null;
+			Employee empObj = null;
 
 			if (jobAppObj.getReferredEmployeeId() != null) {
-			 empObj = employeeRepository.getEmployeeNameByScoleId(jobAppObj.getReferredEmployeeId());
+				empObj = employeeRepository.getEmployeeNameByScoleId(jobAppObj.getReferredEmployeeId());
 
 				if (empObj != null) {
 
@@ -528,14 +524,11 @@ public class JobServiceImpl implements JobService {
 
 			if (userDetail.getUserRole() != null && userDetail.getUserRole().equals("JOB_VENDOR")) {
 				JobVendorDetails jobVendorDetails = vendorRepository.getJobVendorById(userDetail.getScopeId());
-			
-			
-				jobAppObj.setReferredVendor(jobVendorDetails !=null?  jobVendorDetails.getName():null);
+
+				jobAppObj.setReferredVendor(jobVendorDetails != null ? jobVendorDetails.getName() : null);
 			}
 
 			if (jobAppRepository.save(jobAppObj) != null) {
-
-				
 
 				response.setSuccess(true);
 				response.setMessage("New Job Application Created");
@@ -570,46 +563,47 @@ public class JobServiceImpl implements JobService {
 //			schedule.setInterviewer(emp);
 			if (jobInterviewRepository.save(schedule) != null) {
 				schedule.setJobInterviewStatus("SCHEDULED");
-				if(jobAppRepository.save(jobApp) != null)
-				{
-				List<Employee> EmployeeByRole = employeeRepository.getRefereEmployee(jobApp.getReferredEmployeeId());
+				if (jobAppRepository.save(jobApp) != null) {
+					List<Employee> EmployeeByRole = employeeRepository
+							.getRefereEmployee(jobApp.getReferredEmployeeId());
 
-				for (Employee employeeNotification : EmployeeByRole) {
-					Map request = new HashMap<>();
-					request.put("eId", employeeNotification.geteId());
-					request.put("uid", employeeNotification.getUserCredientials().getUid());
-					request.put("title", "SHEDULE JOB");
-					request.put("body", " Interview shedule - " + empObj.getRoleId());
-					pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 12,
-							NotificationType.EMPLOYEE_CREATED.toString()));
+					for (Employee employeeNotification : EmployeeByRole) {
+						Map request = new HashMap<>();
+						request.put("eId", employeeNotification.geteId());
+						request.put("uid", employeeNotification.getUserCredientials().getUid());
+						request.put("title", "SHEDULE JOB");
+						request.put("body", " Interview shedule - " + empObj.getRoleId());
+						pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request,
+								12, NotificationType.EMPLOYEE_CREATED.toString()));
 
-				} // inserting notification details	
-				Notifications notifications = new Notifications();
-				notifications.setNotificationDesc("employee created - " + empObj.getFirstName());
-				notifications.setNotificationType(NotificationType.JOB_APPLOCATION_CREATED);
-				notifications.setSenderId(empObj.getReportingTo());
-				notifications.setReceiverId(userDetail.getUserId());
-				notifications.setSeenStatus(false);
-				notifications.setCreatedBy(userDetail.getUserId());
-				notifications.setCreatedAt(new Date());
-				notifications.setUpdatedBy(userDetail.getUserId());
-				notifications.setLastUpdatedAt(new Date());
+					} // inserting notification details
+					Notifications notifications = new Notifications();
+					notifications.setNotificationDesc("employee created - " + empObj.getFirstName());
+					notifications.setNotificationType(NotificationType.JOB_APPLOCATION_CREATED);
+					notifications.setSenderId(empObj.getReportingTo());
+					notifications.setReceiverId(userDetail.getUserId());
+					notifications.setSeenStatus(false);
+					notifications.setCreatedBy(userDetail.getUserId());
+					notifications.setCreatedAt(new Date());
+					notifications.setUpdatedBy(userDetail.getUserId());
+					notifications.setLastUpdatedAt(new Date());
 
-				notificationService.createNotification(notifications);
-				UUID uuid = UUID.randomUUID();
-				String uuidAsString = uuid.toString();
-				if (empObj != null) {
-					String name = null;
+					notificationService.createNotification(notifications);
+					UUID uuid = UUID.randomUUID();
+					String uuidAsString = uuid.toString();
+					if (empObj != null) {
+						String name = null;
 
-					HashMap mailDetails = new HashMap();
-					mailDetails.put("toEmail", empObj.getEmail());
-					mailDetails.put("subject", name + ", " + "Here's your new PASSWORD");
-					mailDetails.put("message", "Hi " + name
-							+ ", \n\n We received a request to reset the password for your Account. \n\n Here's your new PASSWORD Link is: "
-							+ application_url + "/update-password" + "?key=" + uuidAsString
-							+ "\n\n Thanks for helping us keep your account secure.\n\n Xyram Software Solutions Pvt Ltd.");
-					emailService.sendMail(mailDetails);
-				}}
+						HashMap mailDetails = new HashMap();
+						mailDetails.put("toEmail", empObj.getEmail());
+						mailDetails.put("subject", name + ", " + "Here's your new PASSWORD");
+						mailDetails.put("message", "Hi " + name
+								+ ", \n\n We received a request to reset the password for your Account. \n\n Here's your new PASSWORD Link is: "
+								+ application_url + "/update-password" + "?key=" + uuidAsString
+								+ "\n\n Thanks for helping us keep your account secure.\n\n Xyram Software Solutions Pvt Ltd.");
+						emailService.sendMail(mailDetails);
+					}
+				}
 
 				response.setSuccess(true);
 				response.setMessage("Interview Scheduled");
@@ -626,7 +620,7 @@ public class JobServiceImpl implements JobService {
 
 	@Override
 	public ApiResponse getAllJobInterviews(Map<String, Object> filter, Pageable pageable) {
-	
+
 		ApiResponse response = new ApiResponse(false);
 		Map content = new HashMap();
 //		List<JobInterviews> allList =  jobInterviewRepository.getList();
@@ -790,8 +784,7 @@ public class JobServiceImpl implements JobService {
 					jobAppRepository.save(application);
 				}
 			}
-			if(jobInterviewRepository.save(status) != null)
-			{
+			if (jobInterviewRepository.save(status) != null) {
 
 				Employee empObj = new Employee();
 				List<Employee> EmployeeByRole = employeeRepository.getEmployeeByRole();
@@ -805,39 +798,40 @@ public class JobServiceImpl implements JobService {
 					pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 12,
 							NotificationType.SHEDULE_INTERVIEW_STATUS.toString()));
 
-				 // inserting notification details	
-				Notifications notifications = new Notifications();
-				notifications.setNotificationDesc("employee created - " + empObj.getFirstName());
-				notifications.setNotificationType(NotificationType.SHEDULE_INTERVIEW_STATUS);
-				notifications.setSenderId(empObj.getReportingTo());
-				notifications.setReceiverId(userDetail.getUserId());
-				notifications.setSeenStatus(false);
-				notifications.setCreatedBy(userDetail.getUserId());
-				notifications.setCreatedAt(new Date());
-				notifications.setUpdatedBy(userDetail.getUserId());
-				notifications.setLastUpdatedAt(new Date());
+					// inserting notification details
+					Notifications notifications = new Notifications();
+					notifications.setNotificationDesc("employee created - " + empObj.getFirstName());
+					notifications.setNotificationType(NotificationType.SHEDULE_INTERVIEW_STATUS);
+					notifications.setSenderId(empObj.getReportingTo());
+					notifications.setReceiverId(userDetail.getUserId());
+					notifications.setSeenStatus(false);
+					notifications.setCreatedBy(userDetail.getUserId());
+					notifications.setCreatedAt(new Date());
+					notifications.setUpdatedBy(userDetail.getUserId());
+					notifications.setLastUpdatedAt(new Date());
 
-				notificationService.createNotification(notifications);
-				UUID uuid = UUID.randomUUID();
-				String uuidAsString = uuid.toString();
-				if (empObj != null) {
-					String name = null;
+					notificationService.createNotification(notifications);
+					UUID uuid = UUID.randomUUID();
+					String uuidAsString = uuid.toString();
+					if (empObj != null) {
+						String name = null;
 
-					HashMap mailDetails = new HashMap();
-					mailDetails.put("toEmail", employeeNotification.getEmail());
-					mailDetails.put("subject", name + ", " + "Here's your new PASSWORD");
-					mailDetails.put("message", "Hi " + name
-							+ ", \n\n We received a request to reset the password for your Account. \n\n Here's your new PASSWORD Link is: "
-							+ application_url + "/update-password" + "?key=" + uuidAsString
-							+ "\n\n Thanks for helping us keep your account secure.\n\n Xyram Software Solutions Pvt Ltd.");
-					emailService.sendMail(mailDetails);
+						HashMap mailDetails = new HashMap();
+						mailDetails.put("toEmail", employeeNotification.getEmail());
+						mailDetails.put("subject", name + ", " + "Here's your new PASSWORD");
+						mailDetails.put("message", "Hi " + name
+								+ ", \n\n We received a request to reset the password for your Account. \n\n Here's your new PASSWORD Link is: "
+								+ application_url + "/update-password" + "?key=" + uuidAsString
+								+ "\n\n Thanks for helping us keep your account secure.\n\n Xyram Software Solutions Pvt Ltd.");
+						emailService.sendMail(mailDetails);
+					}
 				}
-				}
-			
-			response.setSuccess(true);
-			response.setMessage("Job Interview Status Updated Sucessfully");
-			response.setContent(null);
-		} }else {
+
+				response.setSuccess(true);
+				response.setMessage("Job Interview Status Updated Sucessfully");
+				response.setContent(null);
+			}
+		} else {
 			response.setSuccess(false);
 			response.setMessage("Job Interview Id does Not Exist");
 		}
@@ -874,12 +868,10 @@ public class JobServiceImpl implements JobService {
 		ApiResponse response = new ApiResponse(false);
 		JobOpenings jobOpening = jobRepository.getById(jobId);
 		if (jobOpening != null) {
-			if(userDetail.getUserRole().equals("HR_ADMIN")) {
-			Employee employeeDetails = employeeRepository.getByEmpId(userDetail.getScopeId());
-			jobOpening.setUpdatedBy(employeeDetails.getFirstName());
-			}
-			else
-			{
+			if (userDetail.getUserRole().equals("HR_ADMIN")) {
+				Employee employeeDetails = employeeRepository.getByEmpId(userDetail.getScopeId());
+				jobOpening.setUpdatedBy(employeeDetails.getFirstName());
+			} else {
 				jobOpening.setUpdatedBy(userDetail.getName());
 			}
 			jobOpening.setJobDescription(jobObj.getJobDescription());
@@ -984,8 +976,7 @@ public class JobServiceImpl implements JobService {
 		return response;
 
 	}
-	
-	
+
 	@Override
 	public ApiResponse changeJobApplicationStatus(String jobApplicationId, JobApplicationStatusRequest request) {
 		ApiResponse response = new ApiResponse(false);
@@ -1000,8 +991,8 @@ public class JobServiceImpl implements JobService {
 					if (request.getComments() != null) {
 						appComments.setGivenDescription(request.getComments());
 					} else {
-						appComments.setAutoDescription(
-								"Status changed to" + " " + request.getJobApplicationStatus() + "by" + status.getCreatedBy());
+						appComments.setAutoDescription("Status changed to" + " " + request.getJobApplicationStatus()
+								+ "by" + status.getCreatedBy());
 					}
 					appRepository.save(appComments);
 					status.setJobApplicationSatus(request.getJobApplicationStatus());
@@ -1193,12 +1184,12 @@ public class JobServiceImpl implements JobService {
 		Page<JobOffer> allList = null;
 		String searchString = filter.containsKey("searchString") ? ((String) filter.get("searchString")).toLowerCase()
 				: null;
-		if(userDetail.getUserRole().equals("JOB_VENDOR")) {
+		if (userDetail.getUserRole().equals("JOB_VENDOR")) {
 			Employee employeeDetails = employeeRepository.getByEmpId(userDetail.getScopeId());
-			allList = offerRepository.getAllJobOfferVendors(searchString,employeeDetails.getFirstName(), pageable);
+			allList = offerRepository.getAllJobOfferVendors(searchString, employeeDetails.getFirstName(), pageable);
 		}
 //		List<JobInterviews> allList =  jobInterviewRepository.getList();
-		 allList = offerRepository.getAllJobOffer(searchString, userDetail.getUserRole(), pageable);
+		allList = offerRepository.getAllJobOffer(searchString, userDetail.getUserRole(), pageable);
 
 		content.put("OfferList", allList);
 		if (allList != null) {
