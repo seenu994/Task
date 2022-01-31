@@ -149,13 +149,13 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 
 	@Query(value = " select e.employee_id from (select d.employee_id, sum(d.emp_cnt) as tkt_cnt from(select c.employee_id, c.emp_cnt from(  "
 			+ "			 select e.employee_id, count(e.employee_id) as emp_cnt from ticketdbtool.employee e join ticketdbtool.ticket_assignee t on e.employee_id = t.employee_id  "
-			+ "			 where  e.role_id = 'R3'  and ticket_assignee_status = 'ACTIVE'  and ticket_id in (select ticket_id from ticketdbtool.ticket_info where ticket_status in ('ASSIGNED','INPROGRESS'))  "
+			+ "			 where  e.role_id = 'R3' and e.employee_status='ACTIVE'  and ticket_assignee_status = 'ACTIVE'  and ticket_id in (select ticket_id from ticketdbtool.ticket_info where ticket_status in ('ASSIGNED','INPROGRESS'))  "
 			+ "			 group by e.employee_id   union  "
-			+ "			 select e.employee_id, 0 as emp_cnt from ticketdbtool.employee e where e.role_id = 'R3'  "
+			+ "			 select e.employee_id, 0 as emp_cnt from ticketdbtool.employee e where e.role_id = 'R3' and e.employee_status='ACTIVE' "
 			+ "			 and e.employee_id not in (select t.employee_id from ticketdbtool.ticket_assignee t where e.employee_id = t.employee_id)) c  "
 			+ "			 UNION   select e.employee_id as emp_id, 0 as emp_cnt from ticketdbtool.employee e   "
 			+ "			 join ticketdbtool.ticket_assignee t on e.employee_id = t.employee_id Join ticketdbtool.ticket_info i on t.ticket_id 	= i.ticket_id  "
-			+ "			 where ticket_assignee_status = 'ACTIVE' and e.role_id = 'R3' and i.ticket_status in ('COMPLETED','CANCELLED'))d  group by d.employee_id) e order by e.tkt_cnt  "
+			+ "			 where ticket_assignee_status = 'ACTIVE' and e.role_id = 'R3' and e.employee_status='ACTIVE'  and i.ticket_status in ('COMPLETED','CANCELLED'))d  group by d.employee_id) e order by e.tkt_cnt  "
 			+ "			 limit 1 ", nativeQuery = true)
 	String getElgibleAssignee();
 

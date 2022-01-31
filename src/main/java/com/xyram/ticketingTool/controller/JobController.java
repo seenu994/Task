@@ -109,7 +109,7 @@ public class JobController {
 		return jobService.createJobApplication(files,jobAppObj);
 	}
 	
-	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editJobApplication/{jobAppId}",AuthConstants.HR_ADMIN_BASEPATH + "/editJobApplication/{jobAppId}",AuthConstants.DEVELOPER_BASEPATH+ "/editJobApplication/{jobAppId}", AuthConstants.HR_BASEPATH + "/editJobApplication/{jobAppId}",AuthConstants.INFRA_ADMIN_BASEPATH + "/editJobApplication/{jobAppId}",AuthConstants.INFRA_USER_BASEPATH + "/editJobApplication/{jobAppId}", AuthConstants.JOB_VENDOR_BASEPATH + "/createJobApplication/{jobCode}"  })
+	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editJobApplication/{jobAppId}",AuthConstants.HR_ADMIN_BASEPATH + "/editJobApplication/{jobAppId}",AuthConstants.DEVELOPER_BASEPATH+ "/editJobApplication/{jobAppId}", AuthConstants.HR_BASEPATH + "/editJobApplication/{jobAppId}",AuthConstants.INFRA_ADMIN_BASEPATH + "/editJobApplication/{jobAppId}",AuthConstants.INFRA_USER_BASEPATH + "/editJobApplication/{jobAppId}", AuthConstants.JOB_VENDOR_BASEPATH + "/editJobApplication/{jobAppId}"  })
 	public ApiResponse editJobApplication(@RequestPart(name = "files", required = false) MultipartFile[] files,@RequestPart String jobAppObj,
 			@PathVariable String jobAppId) {
 		logger.info("Creating Job Application");
@@ -123,7 +123,7 @@ public class JobController {
 		return jobService.scheduleJobInterview(schedule,applicationId);
 	}
 
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/scheduleJobInterview/{applicationId}",AuthConstants.DEVELOPER_BASEPATH + "/scheduleJobInterview/{applicationId}",AuthConstants.INFRA_ADMIN_BASEPATH + "/scheduleJobInterview/{applicationId}",AuthConstants.HR_ADMIN_BASEPATH + "/scheduleJobInterview/{applicationId}"  })
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/scheduleJobInterview/{applicationId}",AuthConstants.HR_BASEPATH + "/scheduleJobInterview/{applicationId}",AuthConstants.DEVELOPER_BASEPATH + "/scheduleJobInterview/{applicationId}",AuthConstants.INFRA_ADMIN_BASEPATH + "/scheduleJobInterview/{applicationId}",AuthConstants.HR_ADMIN_BASEPATH + "/scheduleJobInterview/{applicationId}"  })
 	public ApiResponse getJobInterviewByAppId(@PathVariable String applicationId) {
 		logger.info("Get All Job");
 		return jobService.getJobInterviewByAppId(applicationId);
