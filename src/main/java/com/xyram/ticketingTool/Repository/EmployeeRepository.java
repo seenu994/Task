@@ -226,6 +226,15 @@ List<Employee> getEmployeeByRole();
 
 
 	Employee getAssigneeNotify(String employeeId);
+	@Query("Select e from Employee e  left join TicketAssignee t On e.eId=t.employeeId where t.employeeId=:employeeId")
+
+
+	Employee getAssigneeNotification(String employeeId);
+	@Query("select e from Employee e left join User u On e.userCredientials.id=u.id where e.eId= :geteId ")
+
+
+
+	Employee getByEmpIdss(String geteId);
 
 	
 

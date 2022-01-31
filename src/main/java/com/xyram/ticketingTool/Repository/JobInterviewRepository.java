@@ -60,5 +60,9 @@ public interface JobInterviewRepository
 			+ "  Or lower(jo.jobCode) LIKE %:searchString%)")
 	Page<JobInterviews> getAllJobInterview(String searchString, String status,
 			String userRole, String userId, Pageable pageable);
+	@Query(value = "SELECT jo as jobInterviews from JobInterviews jo where jo.interviewer = :interviewer  ")
+	List<Map> getInterviwerByInterviewr(String interviewer);
+	@Query(value = "SELECT jo as jobInterviews from JobInterviews jo where jo.jobApplication.Id=:applicationId")
+	List<Map> getInterviwerByInterview(String applicationId);
 
 }

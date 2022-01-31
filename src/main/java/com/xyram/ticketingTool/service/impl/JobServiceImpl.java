@@ -943,11 +943,11 @@ public class JobServiceImpl implements JobService {
 	public ApiResponse changeJobApplicationStatus(String jobApplicationId, JobApplicationStatus jobStatus,
 			String comment) {
 		ApiResponse response = new ApiResponse(false);
-		JobApplication status = jobAppRepository.getApplicationById(jobApplicationId);
+	JobApplication status = jobAppRepository.getApplicationById(jobApplicationId);
 		System.out.println(userDetail.getUserRole());
 		if (status != null) {
-			if (userDetail.getUserId().equals(status.getCreatedBy()) || userDetail.getUserRole() == "HR_ADMIN"
-					|| userDetail.getUserRole() == "TICKETINGTOOL_ADMIN") {
+			if ((userDetail.getUserId().equals(status.getCreatedBy()) || (userDetail.getUserRole().equalsIgnoreCase("HR_ADMIN"))
+ 					||( userDetail.getUserRole().equalsIgnoreCase("TICKETINGTOOL_ADMIN"))) ){
 				if (status != null) {
 					ApplicationComments appComments = new ApplicationComments();
 					appComments.setApplicationId(jobApplicationId);
@@ -962,7 +962,7 @@ public class JobServiceImpl implements JobService {
 					jobAppRepository.save(status);
 					response.setSuccess(true);
 					response.setMessage("Job Application Status Updated Sucessfully");
-					response.setContent(null);
+			
 				}
 			} else {
 				response.setSuccess(false);
@@ -980,7 +980,8 @@ public class JobServiceImpl implements JobService {
 	@Override
 	public ApiResponse changeJobApplicationStatus(String jobApplicationId, JobApplicationStatusRequest request) {
 		ApiResponse response = new ApiResponse(false);
-		JobApplication status = jobAppRepository.getApplicationById(jobApplicationId);
+		JobApplication status = jobAppRepository.getJobApplicationNotifys(jobApplicationId);
+		
 		System.out.println(userDetail.getUserRole());
 		if (status != null) {
 			if (userDetail.getUserId().equals(status.getCreatedBy()) || userDetail.getUserRole() == "HR_ADMIN"
@@ -1017,9 +1018,10 @@ public class JobServiceImpl implements JobService {
 	@Override
 	public ApiResponse editJobApplication(MultipartFile[] files, String jobAppObj, String jobAppId) {
 		ApiResponse response = new ApiResponse(false);
-		JobApplication jobApp = jobAppRepository.getApplicationById(jobAppId);
-		if (jobApp != null && userDetail.getUserId() == (jobApp.getCreatedBy())
-				|| userDetail.getUserRole().equals("HR_ADMIN")) {
+		
+		JobApplication jobApp = jobAppRepository.getJobApplicationNotify(jobAppId);
+		if (jobApp != null &&( userDetail.getUserId() == (jobApp.getCreatedBy())
+				|| userDetail.getUserRole().equals("HR_ADMIN"))) {
 			ObjectMapper objectMapper = new ObjectMapper();
 			JobApplication newJobAppObj = null;
 			try {
@@ -1078,6 +1080,18 @@ public class JobServiceImpl implements JobService {
 			jobApp.setCandidateEmail(newJobAppObj.getCandidateEmail());
 			jobApp.setCandidateMobile(newJobAppObj.getCandidateMobile());
 			jobApp.setCandidateName(newJobAppObj.getCandidateName());
+			jobApp.setTotalExp(newJobAppObj.getTotalExp());
+			jobApp.setReferredEmployee(newJobAppObj.getReferredEmployee());
+			
+			JobOpenings jobOpening = jobRepository.getJobOpeningsById(newJobAppObj.getJobOpenings().getId());
+
+			if (jobOpening != null) {
+				
+					jobApp.setJobOpenings(jobOpening);
+				} else {
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+							"sorry  no vacant  job opening right now");
+				}
 			jobApp.setExpectedSalary(newJobAppObj.getExpectedSalary());
 			jobApp.setJobApplicationSatus(newJobAppObj.getJobApplicationSatus());
 			if (jobAppRepository.save(jobApp) != null) {
@@ -1267,7 +1281,8 @@ public class JobServiceImpl implements JobService {
 				|| userDetail.getUserRole().equals("INFRA_USER")) {
 
 			System.out.println(userDetail.getUserId());
-			List<Map> jobInterviewsObj = jobInterviewRepository.getInterviwerByScopeID(userDetail.getScopeId());
+			JobInterviews jobApp=new JobInterviews();
+			List<Map> jobInterviewsObj = jobInterviewRepository.getInterviwerByInterview(applicationId);
 			Map interviews = new HashMap();
 			interviews.put("interviews", jobInterviewsObj);
 			if (jobInterviewsObj.isEmpty()) {
