@@ -42,6 +42,7 @@ import com.xyram.ticketingTool.Repository.JobApplicationRepository;
 import com.xyram.ticketingTool.Repository.JobInterviewRepository;
 import com.xyram.ticketingTool.Repository.JobOfferRepository;
 import com.xyram.ticketingTool.Repository.JobRepository;
+import com.xyram.ticketingTool.Repository.JobVendorRepository;
 import com.xyram.ticketingTool.Repository.UserRepository;
 import com.xyram.ticketingTool.Repository.VendorRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
@@ -101,6 +102,8 @@ public class JobServiceImpl implements JobService {
 
 	@Autowired
 	FileTransferService fileTransferService;
+	@Autowired
+	JobVendorRepository jobVendorRepo;
 
 	@Autowired
 	UserRepository userRepo;
@@ -1199,8 +1202,9 @@ public class JobServiceImpl implements JobService {
 		String searchString = filter.containsKey("searchString") ? ((String) filter.get("searchString")).toLowerCase()
 				: null;
 		if (userDetail.getUserRole().equals("JOB_VENDOR")) {
-			Employee employeeDetails = employeeRepository.getByEmpId(userDetail.getScopeId());
-			allList = offerRepository.getAllJobOfferVendors(searchString, employeeDetails.getFirstName(), pageable);
+			JobVendorDetails employeeDetails=jobVendorRepo.getVendorByUserIs(userDetail.getUserId());
+			//Employee employeeDetails = employeeRepository.getByEmpId(userDetail.getUserId());
+			allList = offerRepository.getAllJobOfferVendors(searchString, employeeDetails.getName(), pageable);
 		}
 //		List<JobInterviews> allList =  jobInterviewRepository.getList();
 		allList = offerRepository.getAllJobOffer(searchString, userDetail.getUserRole(), pageable);
@@ -1297,7 +1301,7 @@ public class JobServiceImpl implements JobService {
 			return response;
 
 		} else {
-			if (userDetail.getUserRole().equals("HR_ADMIN") || userDetail.getUserRole().equals("TICKETINGTOOL_ADMIN")) {
+			if (userDetail.getUserRole().equals("HR_ADMIN") || userDetail.getUserRole().equals("TICKETINGTOOL_ADMIN") || userDetail.getUserRole().equals("HR") ) {
 
 				List<Map> jobOpening = jobInterviewRepository.getInterviewByAppId(applicationId);
 				Map interviews = new HashMap();

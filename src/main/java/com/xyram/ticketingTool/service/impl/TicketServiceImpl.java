@@ -229,57 +229,76 @@ public class TicketServiceImpl implements TicketService {
 	}
 
 	@Override
-		public ApiResponse createTickets(MultipartFile[] files, String ticketRequest,String assigneeId) {
-			ApiResponse response = new ApiResponse(false);
-			ObjectMapper objectMapper = new ObjectMapper();
-			Ticket ticketreq = null;
-			try {
-				ticketreq = objectMapper.readValue(ticketRequest, Ticket.class);
-			} catch (JsonMappingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (JsonProcessingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}	
-	
-			Projects project = projectRepository.getById(ticketreq.getProjectId());
-			if (project == null) {
-				response.setSuccess(false);
-				response.setMessage(ResponseMessages.PROJECT_NOTEXIST);
-				response.setContent(null);
-				return response;
-			} else {
-				if(ticketreq.getCreatedBy() != null) {
-					ticketreq.setCreatedBy(ticketreq.getCreatedBy());
-				}
+	public ApiResponse createTickets(MultipartFile[] files, String ticketRequest,String assigneeId) {
+		ApiResponse response = new ApiResponse(false);
+		ObjectMapper objectMapper = new ObjectMapper();
+		Ticket ticketreq = null;
+		try {
+			ticketreq = objectMapper.readValue(ticketRequest, Ticket.class);
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+
+		Projects project = projectRepository.getById(ticketreq.getProjectId());
+		if (project == null) {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.PROJECT_NOTEXIST);
+			response.setContent(null);
+			return response;
+		} else {
+			if(ticketreq.getCreatedBy() != null) {
+				ticketreq.setCreatedBy(ticketreq.getCreatedBy());
+			}
+			
+			else
+			{
+				ticketreq.setCreatedBy(userDetail.getUserId());
 				
-				else
-				{
-					ticketreq.setCreatedBy(userDetail.getUserId());
-					
+			}
+			ticketreq.setCreatedAt(new Date());
+			ticketreq.setUpdatedBy(userDetail.getUserId());
+			ticketreq.setLastUpdatedAt(new Date());
+			// ticketreq.setStatus(TicketStatus.INITIATED);
+			Ticket tickets = ticketrepository.save(ticketreq);
+
+			// Calling file upload method
+			if (files != null) {
+				attachmentService.storeImage(files, tickets.getId());
+			}
+
+
+
+        	if(assigneeId != null) {
+				Employee employeeObj = employeeRepository.getByEmpId(assigneeId);
+				if(employeeObj.getStatus() != UserStatus.OFFLINE) {
+				TicketAssignee assignee = new TicketAssignee();
+				assignee.setEmployeeId(assigneeId);
+				assignee.setTicketId(tickets.getId());
+				assignee.setCreatedAt(new Date());
+				assignee.setCreatedBy(userDetail.getUserId());
+				assignee.setStatus(TicketAssigneeStatus.ACTIVE);
+				
+				tickets.setStatus(TicketStatus.ASSIGNED);
+				ticketAssigneeRepository.save(assignee);
 				}
-				ticketreq.setCreatedAt(new Date());
-				ticketreq.setUpdatedBy(userDetail.getUserId());
-				ticketreq.setLastUpdatedAt(new Date());
-				// ticketreq.setStatus(TicketStatus.INITIATED);
-				Ticket tickets = ticketrepository.save(ticketreq);
+        	}
 
-				// Calling file upload method
-				if (files != null) {
-					attachmentService.storeImage(files, tickets.getId());
-				}
-
-
-
-            	if(assigneeId != null) {
-					Employee employeeObj = employeeRepository.getByEmpId(assigneeId);
-					if(employeeObj.getStatus() != UserStatus.OFFLINE) {
+else {
+			String assignEmployeeId = ticketrepository.getElgibleAssignee();
+		
+			if (assignEmployeeId != null) {
+				Employee employeeObj1 = employeeRepository.getById(assignEmployeeId);
+				if (employeeObj1 != null) {
+					response.setMessage(ResponseMessages.TICKET_ADDED+" And assigned.");
 					TicketAssignee assignee = new TicketAssignee();
-					assignee.setEmployeeId(assigneeId);
+					assignee.setEmployeeId(assignEmployeeId);
 					assignee.setTicketId(tickets.getId());
 					assignee.setCreatedAt(new Date());
 					assignee.setCreatedBy(userDetail.getUserId());
@@ -288,35 +307,15 @@ public class TicketServiceImpl implements TicketService {
 					tickets.setStatus(TicketStatus.ASSIGNED);
 					ticketAssigneeRepository.save(assignee);
 					}
-            	}
-
-	else {
-				String assignEmployeeId = ticketrepository.getElgibleAssignee();
-			
-				if (assignEmployeeId != null) {
-					Employee employeeObj1 = employeeRepository.getById(assignEmployeeId);
-					if (employeeObj1 != null) {
-						response.setMessage(ResponseMessages.TICKET_ADDED+" And assigned.");
-						TicketAssignee assignee = new TicketAssignee();
-						assignee.setEmployeeId(assignEmployeeId);
-						assignee.setTicketId(tickets.getId());
-						assignee.setCreatedAt(new Date());
-						assignee.setCreatedBy(userDetail.getUserId());
-						assignee.setStatus(TicketAssigneeStatus.ACTIVE);
-						
-						tickets.setStatus(TicketStatus.ASSIGNED);
-						ticketAssigneeRepository.save(assignee);
-						}
-					
-				}
-				}
-					response.setSuccess(false);
-					response.setMessage(ResponseMessages.TICKET_CREATED);
-					response.setContent(null);
+				
 			}
-			return response;
-	}
-
+			}
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.TICKET_CREATED);
+				response.setContent(null);
+		}
+		return response;
+}
 	@Override
 	public ApiResponse cancelTicket(String ticketId) {
 		ApiResponse response = new ApiResponse(false);

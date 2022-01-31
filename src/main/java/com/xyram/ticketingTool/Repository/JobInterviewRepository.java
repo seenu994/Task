@@ -48,7 +48,7 @@ public interface JobInterviewRepository
 	@Query(value = "SELECT ji from JobInterviews ji left join ji.jobApplication as ja "
 			+ " left join ja.jobOpenings as jo where "
 			+ " (:status is null Or ji.jobInterviewStatus= :status) and "
-			+ " (:userRole is null  or ((:userRole ='HR_ADMIN') " + " OR (:userRole ='TICKETINGTOOL_ADMIN') "
+			+ " (:userRole is null  or ((:userRole ='HR_ADMIN') " + " OR (:userRole ='TICKETINGTOOL_ADMIN') " + "  OR (:userRole ='HR')"
 			+ " OR (ji.interviewer=:userId))) and " 
 			+ " (:searchString is null  "
 			+ "  Or lower(ji.interviewerName) LIKE %:searchString% "

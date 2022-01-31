@@ -235,6 +235,9 @@ List<Employee> getEmployeeByRole();
 
 
 	Employee getByEmpIdss(String geteId);
+	@Query("select e from Employee e left join User u On e.userCredientials.id=u.id where e.eId= :userId ")
+
+	Employee getByEmpIdssss(String userId);
 
 	
 
