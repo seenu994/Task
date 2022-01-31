@@ -6,6 +6,7 @@ import java.util.Map;
 import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
 import com.xyram.ticketingTool.entity.Story;
 import com.xyram.ticketingTool.request.StoryChangeStatusRequest;
+import com.xyram.ticketingTool.response.ReportExportResponse;
 import com.xyram.ticketingTool.response.StoryDetailsResponse;
 
 public interface StoryService {
@@ -26,5 +27,9 @@ public interface StoryService {
 	IssueTrackerResponse getAllStories(String projectId, Map<String, Object> filter);
 
 	IssueTrackerResponse storySearch(String projectId, Map<String, Object> filter);
+
+	IssueTrackerResponse getStoryDetailsForReport(String projectId, Map<String, Object> filter);
+
+	ReportExportResponse getStoryDetailsForReportDownload(String projectId, Map<String, Object> filter);
 
 }

@@ -137,35 +137,35 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 	 */
 
 	@Query("SELECT distinct new map(a.Id as ticket_id, a.ticketDescription as ticket_description, a.status as ticket_status, a.createdAt as created_at, a.createdBy as created_by, a.lastUpdatedAt as last_updated_at, a.projectId as project_id, b.employeeId as assigneeId, concat(e.firstName,' ', e.lastName) as assigneeName, concat(ee.firstName,' ', ee.lastName) as createdByEmp) "
-			+ "from Ticket a left join Employee ee on a.createdBy = ee.userCredientials left join TicketAssignee b ON a.Id = b.ticketId and b.status = 'ACTIVE'\r\n"
+			+ "from Ticket a left join Employee ee on a.createdBy = ee.userCredientials left join TicketAssignee b ON a.Id = b.ticketId and b.status = 'ACTIVE' "
 			+ "left join Employee e on b.employeeId = e.eId where (a.createdAt between :startTime and :endTime)")
 	Page<Map> getAllTicketsByDuration(Pageable pageable, @Param("startTime") Date startTime,
 			@Param("endTime") Date endTime);
 
-	@Query(value = "SELECT t.ticket_status, count(t.ticket_status) as TotalCount, p.project_name from ticket_info t \r\n"
-			+ "left join  project p on t.project_id=p.project_id \r\n"
+	@Query(value = "SELECT t.ticket_status, count(t.ticket_status) as TotalCount, p.project_name from ticket_info t  "
+			+ "left join  project p on t.project_id=p.project_id  "
 			+ "group by t.ticket_status, p.project_name", nativeQuery = true)
 	Page<Map> getTicketStatusCountWithProject(Pageable pageable);
 
-	@Query(value = " select e.employee_id from (select d.employee_id, sum(d.emp_cnt) as tkt_cnt from(select c.employee_id, c.emp_cnt from( "
-			+ "select e.employee_id, count(e.employee_id) as emp_cnt from ticketdbtool.employee e join ticketdbtool.ticket_assignee t on e.employee_id = t.employee_id "
-			+ "where  ticket_assignee_status = 'ACTIVE' and ticket_id in (select ticket_id from ticketdbtool.ticket_info where ticket_status in ('ASSIGNED','INPROGRESS')) "
-			+ "group by e.employee_id " + "union "
-			+ "select e.employee_id, 0 as emp_cnt from ticketdbtool.employee e where e.role_id = 'R3' "
-			+ "and e.employee_id not in (select t.employee_id from ticketdbtool.ticket_assignee t where e.employee_id = t.employee_id)) c "
-			+ "UNION " + "select e.employee_id as emp_id, 0 as emp_cnt from ticketdbtool.employee e "
-			+ "join ticketdbtool.ticket_assignee t on e.employee_id = t.employee_id Join ticketdbtool.ticket_info i on t.ticket_id 	= i.ticket_id "
-			+ "where ticket_assignee_status = 'ACTIVE' and i.ticket_status in ('COMPLETED','CANCELLED'))d  group by d.employee_id) e order by e.tkt_cnt "
-			+ "limit 1 ", nativeQuery = true)
+	@Query(value = " select e.employee_id from (select d.employee_id, sum(d.emp_cnt) as tkt_cnt from(select c.employee_id, c.emp_cnt from(  "
+			+ "			 select e.employee_id, count(e.employee_id) as emp_cnt from ticketdbtool.employee e join ticketdbtool.ticket_assignee t on e.employee_id = t.employee_id  "
+			+ "			 where  e.role_id = 'R3'  and ticket_assignee_status = 'ACTIVE'  and ticket_id in (select ticket_id from ticketdbtool.ticket_info where ticket_status in ('ASSIGNED','INPROGRESS'))  "
+			+ "			 group by e.employee_id   union  "
+			+ "			 select e.employee_id, 0 as emp_cnt from ticketdbtool.employee e where e.role_id = 'R3'  "
+			+ "			 and e.employee_id not in (select t.employee_id from ticketdbtool.ticket_assignee t where e.employee_id = t.employee_id)) c  "
+			+ "			 UNION   select e.employee_id as emp_id, 0 as emp_cnt from ticketdbtool.employee e   "
+			+ "			 join ticketdbtool.ticket_assignee t on e.employee_id = t.employee_id Join ticketdbtool.ticket_info i on t.ticket_id 	= i.ticket_id  "
+			+ "			 where ticket_assignee_status = 'ACTIVE' and e.role_id = 'R3' and i.ticket_status in ('COMPLETED','CANCELLED'))d  group by d.employee_id) e order by e.tkt_cnt  "
+			+ "			 limit 1 ", nativeQuery = true)
 	String getElgibleAssignee();
 
 	@Query("SELECT distinct new map(a.Id as ticket_id, a.ticketDescription as ticket_description, a.status as ticket_status, a.createdAt as created_at, a.createdBy as created_by, a.lastUpdatedAt as last_updated_at, a.projectId as project_id, b.employeeId as assigneeId, concat(e.firstName,' ', e.lastName) as assigneeName, concat(ee.firstName,' ', ee.lastName) as createdByEmp) "
-			+ "from Ticket a left join Employee ee on a.createdBy = ee.userCredientials left join TicketAssignee b ON a.Id = b.ticketId and b.status = 'ACTIVE'\r\n"
+			+ "from Ticket a left join Employee ee on a.createdBy = ee.userCredientials left join TicketAssignee b ON a.Id = b.ticketId and b.status = 'ACTIVE' "
 			+ "left join Employee e on b.employeeId = e.eId")
 	Page<Map> getAllTicketsDetails(Pageable pageable);
 
-	@Query("SELECT distinct new map(a.Id as ticket_id, a.ticketDescription as ticket_description, a.status as ticket_status, a.createdAt as created_at, a.createdBy as created_by, a.lastUpdatedAt as last_updated_at, a.projectId as project_id, b.employeeId as assigneeId, concat(e.firstName,' ', e.lastName) as assigneeName, concat(ee.firstName,' ', ee.lastName) as createdByEmp) \r\n"
-			+ "from Ticket a left join Employee ee on a.createdBy = ee.userCredientials left join TicketAssignee b ON a.Id = b.ticketId and b.status = 'ACTIVE' left join Employee e on b.employeeId = e.eId  WHERE (:projectId='' OR a.projectId LIKE concat('%', :projectId ,'%''))\r\n"
+	@Query("SELECT distinct new map(a.Id as ticket_id, a.ticketDescription as ticket_description, a.status as ticket_status, a.createdAt as created_at, a.createdBy as created_by, a.lastUpdatedAt as last_updated_at, a.projectId as project_id, b.employeeId as assigneeId, concat(e.firstName,' ', e.lastName) as assigneeName, concat(ee.firstName,' ', ee.lastName) as createdByEmp)  "
+			+ "from Ticket a left join Employee ee on a.createdBy = ee.userCredientials left join TicketAssignee b ON a.Id = b.ticketId and b.status = 'ACTIVE' left join Employee e on b.employeeId = e.eId  WHERE (:projectId='' OR a.projectId LIKE concat('%', :projectId ,'%'')) "
 			+ "AND (:status='' OR a.status LIKE concat('%', :status ,'%''))")
 	Page<Map> getUU(Pageable pageable, @Param("projectId") String projectId);
 

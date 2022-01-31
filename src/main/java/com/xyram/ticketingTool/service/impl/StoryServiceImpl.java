@@ -1,5 +1,9 @@
 package com.xyram.ticketingTool.service.impl;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +15,9 @@ import javax.transaction.Transactional;
 
 import org.apache.coyote.http11.Http11AprProtocol;
 import org.apache.poi.hssf.record.OldCellRecord;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -35,6 +42,7 @@ import com.xyram.ticketingTool.entity.StoryComments;
 import com.xyram.ticketingTool.enumType.NotificationType;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.request.StoryChangeStatusRequest;
+import com.xyram.ticketingTool.response.ReportExportResponse;
 import com.xyram.ticketingTool.response.StoryDetailsResponse;
 import com.xyram.ticketingTool.service.NotificationService;
 import com.xyram.ticketingTool.service.PlatformService;
@@ -45,11 +53,17 @@ import com.xyram.ticketingTool.service.StoryAttachmentsService;
 import com.xyram.ticketingTool.service.StoryCommentService;
 import com.xyram.ticketingTool.service.StoryLabelService;
 import com.xyram.ticketingTool.service.StoryService;
+import com.xyram.ticketingTool.util.ExcelUtil;
+
 
 @Service
 @Transactional
 public class StoryServiceImpl implements StoryService {
 
+	
+	private static final Logger logger = LoggerFactory.getLogger(StoryServiceImpl.class);
+
+	
 	@Autowired
 	StoryRepository storyRepository;
 
@@ -94,6 +108,9 @@ public class StoryServiceImpl implements StoryService {
 	
 	@Value("${APPLICATION_URL}")
 	private String application_url;
+	
+	
+
 
 
 	@Override
@@ -283,6 +300,112 @@ else {
 		;
 		return response;
 	}
+	
+	@Override
+	public IssueTrackerResponse getStoryDetailsForReport(String projectId, Map<String, Object> filter) {
+		String searchString = filter.containsKey("searchString") ? ((String) filter.get("searchString")).toLowerCase()
+				: null;
+		String assignTo = filter.containsKey("assignTo") ? ((String) filter.get("assignTo")).toLowerCase() : null;
+		String platform = filter.containsKey("platform") ? ((String) filter.get("platform")).toLowerCase() : null;
+		String storyStatus = filter.containsKey("storyStatus") ? ((String) filter.get("storyStatus")).toLowerCase(): null;
+		String storyType = filter.containsKey("storyType") ? ((String) filter.get("storyType")).toLowerCase() : null;
+		String storyLabel = filter.containsKey("storyLabel") ? ((String) filter.get("storyLabel")).toLowerCase() : null;
+		
+		String fromDate = filter.containsKey("fromDate") ? filter.get("fromDate").toString() : null;
+		String toDate = filter.containsKey("toDate") ? filter.get("toDate").toString() : null;
+		
+		
+		
+		Date parsedfromDate = null;
+		Date parsedtoDate = null;
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+		try {
+			
+			parsedfromDate = fromDate != null ? dateFormat.parse(fromDate) : null;
+			parsedtoDate = toDate != null ? dateFormat.parse(toDate) : null;
+
+		} catch (ParseException e) {
+			logger.error("Invalid date format date should be yyyy-MM-dd");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid date format date should be yyyy-MM-dd");
+		}
+		
+
+		IssueTrackerResponse response = new IssueTrackerResponse();
+
+		List<Map> stories = storyRepository.getStoryFilterForReport(projectId, searchString, assignTo, platform, storyStatus,
+				storyType, storyLabel, fromDate, toDate);
+		
+		response.setContent(stories);
+		
+		
+		
+
+		response.setStatus("success");
+		;
+		return response;
+	}
+	
+	
+	
+	
+	@Override
+	public ReportExportResponse getStoryDetailsForReportDownload(String projectId, Map<String, Object> filter) {
+		String searchString = filter.containsKey("searchString") ? ((String) filter.get("searchString")).toLowerCase()
+				: null;
+		String assignTo = filter.containsKey("assignTo") ? ((String) filter.get("assignTo")).toLowerCase() : null;
+		String platform = filter.containsKey("platform") ? ((String) filter.get("platform")).toLowerCase() : null;
+		String storyStatus = filter.containsKey("storyStatus") ? ((String) filter.get("storyStatus")).toLowerCase(): null;
+		String storyType = filter.containsKey("storyType") ? ((String) filter.get("storyType")).toLowerCase() : null;
+		String storyLabel = filter.containsKey("storyLabel") ? ((String) filter.get("storyLabel")).toLowerCase() : null;
+		
+		String fromDate = filter.containsKey("fromDate") ? filter.get("fromDate").toString() : null;
+		String toDate = filter.containsKey("toDate") ? filter.get("toDate").toString() : null;
+		
+		
+		
+		Date parsedfromDate = null;
+		Date parsedtoDate = null;
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+		try {
+			
+			parsedfromDate = fromDate != null ? dateFormat.parse(fromDate) : null;
+			parsedtoDate = toDate != null ? dateFormat.parse(toDate) : null;
+
+		} catch (ParseException e) {
+			logger.error("Invalid date format date should be yyyy-MM-dd");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid date format date should be yyyy-MM-dd");
+		}
+		
+
+		ReportExportResponse response = new ReportExportResponse();
+	Map<String, Object>	fileResponse=  new HashMap<>();
+
+		List<Map> stories = storyRepository.getStoryFilterForReport(projectId, searchString, assignTo, platform, storyStatus,
+				storyType, storyLabel, fromDate, toDate);
+		
+         prepareExcelWorkBook(stories);
+         
+         Workbook workbook =   prepareExcelWorkBook(stories);
+
+			byte[] blob = ExcelUtil.toBlob(workbook);
+
+			fileResponse.put("fileName", "issue-report.xlsx");
+			fileResponse.put("type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+			fileResponse.put("blob", blob);
+		
+		
+		return response;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 
 	public boolean checkLabel(String labelId) {
 		if (labelId != null) {
@@ -346,5 +469,54 @@ else {
 
 		return response;
 	}
+	
+	private Workbook prepareExcelWorkBook(List<Map> storyDetails) {
+
+		List<String> headers = Arrays.asList("Story NO, Title", "Description", "Created on ","Issue Type", "Issue Status",
+				"storyType", "Reporter", "Assignee", "Module","Version", "Sprint" );
+		List data = new ArrayList<>();
+
+		for (Map story : storyDetails) {
+
+			Map row = new HashMap<>();
+
+	//row.put("Patient Name", story.get("project") + " " + claim.getPatient().getLastName());
+//			row.put("Date of Service", claim.getDateOfService().toString().substring(0, 10) != null ? claim.getDateOfService() : null);
+//			row.put("CPT Code", claim.getCptcodeIds() != null ? claim.getCptcodeIds() : null);
+//			row.put("Primary Practitioner", claim.getPatient().getPrimaryPhysician().getName());
+//			row.put("Submission Status", claim.getClaimStatus().toString());
+//			row.put("Patient Gender", claim.getPatient().getGender().toString());
+//			row.put("Patient DOB", claim.getPatient().getDob().toString().substring(0, 10));
+//			row.put("Patient Diagnosis Codes", claim.getPatient().getIcdCodeIds());
+//			row.put("Patient Medicare Number", claim.getPatient().getMedicareNumber());
+//			row.put("Patient Medicare Advantage Insurer", claim.getPatient().getMedicareAdvantageInsurer());
+//			row.put("Patient Medicare Advantage Individual Number", claim.getPatient().getMedAdvIndividualNumber());
+//			row.put("Patient Medicare Advantage Group Number", claim.getPatient().getMedAdvGroupNumber());
+//			row.put("Patient Street Address", claim.getPatient().getAddress().getAddressLine());
+//			row.put("Patient City", claim.getPatient().getAddress().getCity());
+//			row.put("Patient State", claim.getPatient().getAddress().getState());
+//			row.put("Patient Zipcode", claim.getPatient().getAddress().getZipCode());
+//			row.put("Patient Phone Number", claim.getPatient().getCellNumber());
+//			row.put("Patient RPM Start Date", claim.getDateOfService().toString().substring(0, 10));
+
+			data.add(row);
+		}
+
+		Workbook workbook = ExcelUtil.createSingleSheetWorkbook(ExcelUtil.createSheet("Claim Report", headers, data));
+
+//		To create workbook with multiple sheets
+//		List sheets = new ArrayList<>();
+//		
+//		sheets.add(ExcelUtil.createSheet("Claim Report", headers, data));
+//		sheets.add(ExcelUtil.createSheet(headers, data));
+//		sheets.add(ExcelUtil.createSheet("no data", headers, null));
+//		sheets.add(ExcelUtil.createSheet(headers, data, 2, 1));
+//		sheets.add(ExcelUtil.createSheet("Row Init Col Init", headers, data, 2, 1));
+//		
+//		Workbook workbook = ExcelUtil.createWorkbook(sheets);
+
+		return workbook;
+	}
+
 
 }

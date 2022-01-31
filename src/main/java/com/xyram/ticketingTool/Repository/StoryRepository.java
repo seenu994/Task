@@ -47,7 +47,8 @@ public interface StoryRepository extends JpaRepository<Story, String> {
 			+ " left join Projects p on p.pId =s.projectId " + "left join Feature f on f.featureId=s.storyStatus "
 			+ "left join Employee e1 on e1.eId=s.owner " + "left join Employee e2 on e2.eId=s.assignTo "
 			+ "left join StoryLabel sl on sl.id=s.storyLabel " + " left join Platform pt on pt.id=s.platform "
-			+ " left join Version v on v.id= s.version " + "left join Sprint sp on sp.id=s.sprintId "
+			+ " left join Version v on v.id= s.version " 
+			+ "left join Sprint sp on sp.id=s.sprintId "
 			+ " where s.id=:storyId and s.projectId =:projectId ")
 	Map getAllStoriesByStoryId(String projectId, String storyId);
 
@@ -87,6 +88,50 @@ public interface StoryRepository extends JpaRepository<Story, String> {
 			+ "  OR s.story_description Like %:searchString% )", nativeQuery = true)
 	public List<Map> getStoryTesting(String projectId, String searchString, String assignTo, String platform,
 			String storyStatus, String storyType, String storyLabel);
+	
+	
+	
+	
+	@Query(value = "select  s.story_no as storyNo ,s.version as version,s.title as title , s.created_on as createdOn, p.project_name as projectName,f.feature_name as storyStatus,  "
+			+ " s.id as id, s.story_type as storyType,sp.sprintName as sprintName,pt.platformName as platform,CONCAT(e1.frist_name ,' ', e1.last_name) as owner, "
+			+ "CONCAT(e2.frist_name ,' ', e2.last_name) as assignedTo, v.versionName as versionName , sl.label_name as storyLabel  "
+			+ "from story s " + "left join project p on p.project_id =s.project_id "
+			+ " left join feature f on f.feature_id=s.story_status_id "
+			+ " left join employee e1 on e1.employee_id=s.owner  " + " left join platform pt on pt.id=s.platform  "
+			+ " left join story_label sl on sl.id =s.story_label "
+			+ " left join Version v on v.id= s.version "
+			+ " left join Platform pt on pt.id=s.platform "
+			+ "left join Sprint sp on sp.id=s.sprintId "
+			+ " left join employee e2 on e2.employee_id=s.assign_to " + " Where s.project_id=:projectId and "
+			+ " (:assignTo is null or find_in_set(s.assign_to ,:assignTo)) and "
+			+ " (:platform is null or find_in_set(s.platform , :platform)) and  "
+			+ " (:storyStatus is null or find_in_set(s.story_status_id ,(:storyStatus))) and "
+			+ " (:storyType is null or find_in_set(s.story_type ,:storyType)) and "
+			+ " (:storyLabel is null or find_in_set(s.story_label,:storyLabel))"
+			+ " and (:fromDate is null or Date(createded_date) >= STR_TO_DATE(:fromDate, '%Y-%m-%d')) and "
+			+"  (:toDate is null or Date(createded_date) >= STR_TO_DATE(:toDate, '%Y-%m-%d')) and "
+			+ "" + "(:searchString  is null "
+			+ " OR  s.story_type Like %:searchString%  "
+			+ " OR  CONCAT(e1.frist_name ,' ', e1.last_name) LIKE %:searchString% "
+			+ " OR  CONCAT(e2.frist_name ,' ', e2.last_name) LIKE %:searchString% "
+			+ " OR s.title LIKE %:searchString% " + " OR pt.platform_name LIKE %:searchString% "
+			+ " OR f.feature_name LIKE %:searchString% "
+			+ " OR s.story_no LIKE %:searchString% "
+			+ " OR sl.label_name  LIKE %:searchString% "
+			+ "  OR s.story_description Like %:searchString% )", nativeQuery = true)
+	public List<Map> getStoryFilterForReport(String projectId, String searchString, String assignTo, String platform,
+			String storyStatus, String storyType, String storyLabel,String fromDate ,String toDate);
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	@Query("select   new Map( s.storyNo as storyNo ,s.version as version,s.title as title , sl.labelName as storyLabel,"
 			+ " p.projectName as projectName,f.featureName as storyStatus,  "

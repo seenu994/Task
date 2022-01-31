@@ -25,7 +25,7 @@ public interface ProjectRepository extends JpaRepository<Projects, String> {
 	@Query("Select distinct new map(p.pId as id, p.projectName as PName, p.projectDescritpion as projectDescritpion, p.clientId as clientId, c.clientName as clientname, "
 			+ "p.inHouse as inHouse, p.status as status,p.createdAt as createdAt) from Projects  p "
 			+ "Inner join ProjectMembers pm on p.pId =pm.projectId  and pm.status='ACTIVE' "
-			+ " left join Client c ON p.clientId = c.Id and p.status != 'INACTIVE'" + "where pm.employeeId=:scopeId  "
+			+ " left join Client c ON p.clientId = c.Id and p.status != 'INACTIVE'" + "where pm.employeeId=:scopeId and p.status!='INACTIVE'  "
 			+ "ORDER BY p.createdAt DESC")
 	Page<Map> getAllProjectsList(String scopeId, Pageable pageable);
 
@@ -44,12 +44,17 @@ public interface ProjectRepository extends JpaRepository<Projects, String> {
 	@Query("SELECT p.pId from Projects p  WHERE p.projectName=:projectName")
 	String getProjectId(String projectName);
 
-	@Query("Select distinct new map(e.pId as id,e.projectName as PName,e.projectDescritpion as projectDescritpion,e.clientId as clientId,c.clientName as clientname,e.inHouse as inHouse,"
+	@Query("Select distinct new map(p.pId as id,p.projectName as PName,p.projectDescritpion as projectDescritpion,p.clientId as clientId,c.clientName as clientname,p.inHouse as inHouse,"
+			+ "p.status as status) from Projects p"
+			+ " left join Client c ON p.clientId = c.Id"
+			+ " left join ProjectMembers pm on p.pId =pm.projectId where "
+			+ " (:userRole is null Or( "
+			+ " (:userRole  IN ('TICKETINGTOOL_ADMIN','INFRA_ADMIN') )  "
+			+ " OR (pm.employeeId=:scopeId and p.status!='INACTIVE' and pm.status='ACTIVE'))) And"
+			+ "(:searchString is null " + " OR lower(p.projectName) LIKE %:searchString%)")
+	
 
-			+ "e.status as status) from Projects e left join Client c ON e.clientId = c.Id where "
-			+ "(:searchString is null " + " OR lower(e.projectName) LIKE %:searchString%)")
-
-	List<Map> searchProject(@Param("searchString") String searchString);
+	List<Map> searchProject(@Param("searchString") String searchString ,String userRole ,String scopeId);
 
 	@Query("SELECT new map(p as others) from Projects p  WHERE p.allotToAll= 1")
 	List<Map> getgenericIssues();
@@ -68,7 +73,7 @@ public interface ProjectRepository extends JpaRepository<Projects, String> {
 
 	@Query("Select distinct new map(p.pId as id,p.projectName as PName, p.projectDescritpion as projectDescritpion, p.clientId as clientId, "
 			+ " p.inHouse as inHouse, p.status as status) from Projects "
-			+ " p left join  ProjectMembers e On  p.pId=e.projectId where e.status = 'ACTIVE' and e.employeeId = :employeeId ")
+			+ " p left join  ProjectMembers e On  p.pId=e.projectId where p.status!='INACTIVE' and e.status = 'ACTIVE' and e.employeeId = :employeeId ")
 	List<Map> getAllProjectByDeveloperList(String employeeId);
 
 	@Query("Select distinct new map(p.pId as projectId,p.projectName as PName) from Projects p where p.allotToAll = 1")

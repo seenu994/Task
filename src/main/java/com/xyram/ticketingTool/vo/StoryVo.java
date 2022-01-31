@@ -51,7 +51,6 @@ public class StoryVo {
 
 	@NotNull(message = "assignTo should is mandatory")
 	@NotEmpty(message = "assignTo should be not null")
-	@Size(min = 5, max = 50)
 	private String assignTo;
 	
 	private String version;

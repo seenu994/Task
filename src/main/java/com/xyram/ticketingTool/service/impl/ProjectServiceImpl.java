@@ -289,7 +289,8 @@ return response;
 	@Override
 	public ApiResponse searchProject(String searchString) {
 		ApiResponse response = new ApiResponse(false);
-		List<Map> projectList = projectRepository.searchProject(searchString);
+		List<Map> projectList = projectRepository.searchProject(searchString,userDetail.getUserRole(),
+				userDetail.getScopeId());
 		Map content = new HashMap();
 		if (projectList.size() > 0) {
 			content.put("projectList", projectList);
