@@ -63,5 +63,14 @@ public interface JobApplicationRepository
 			+ " Or lower(jo.jobCode) LIKE %:searchString%)")		 
 	Page<JobApplication> getAllApllication(String searchString, JobApplicationStatus status,
 			String vendor ,String userRole, String userId, Pageable pageable );
+	
+	@Query(value = "SELECT ja from JobApplication ja  where ja.Id=:jobAppId")
+
+
+	JobApplication getJobApplicationNotify(String jobAppId);
+	@Query(value = "SELECT ja from JobApplication ja  where ja.Id=:jobApplicationId")
+
+
+	JobApplication getJobApplicationNotifys(String jobApplicationId);
 
 }
