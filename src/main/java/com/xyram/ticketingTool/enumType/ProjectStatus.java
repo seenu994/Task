@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.Optional;
 
 public enum ProjectStatus {
-	INDEVELOPMENT("INDEVELOPMENT"),
-	INPRODUCTION("INPRODUCTION"),
+//	INDEVELOPMENT("INDEVELOPMENT"),
+//	INPRODUCTION("INPRODUCTION"),
 	INACTIVE("INACTIVE"),
 	ACTIVE("ACTIVE");
 
