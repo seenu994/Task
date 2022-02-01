@@ -11,6 +11,8 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -52,6 +54,7 @@ import com.xyram.ticketingTool.entity.VendorType;
 import com.xyram.ticketingTool.enumType.NotificationType;
 import com.xyram.ticketingTool.enumType.UserStatus;
 import com.xyram.ticketingTool.exception.ResourceNotFoundException;
+import com.xyram.ticketingTool.fileupload.FileTransferService;
 import com.xyram.ticketingTool.helper.EmployeePojo;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.EmployeeService;
@@ -70,6 +73,11 @@ import com.xyram.ticketingTool.util.ResponseMessages;
 @Service
 
 public class EmpoloyeeServiceImpl implements EmployeeService {
+
+	
+	
+	 
+	private static final Logger logger = LoggerFactory.getLogger(EmpoloyeeServiceImpl.class);
 
 	@Autowired
 	EmployeeRepository employeeRepository;
@@ -119,6 +127,11 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 	@Autowired
 	NotificationService notificationService;
+	
+	
+	@Autowired
+	FileTransferService fileUploadService;
+
 
 	@Autowired
 	EmailService emailService;
@@ -131,6 +144,11 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 	@Value("${APPLICATION_URL}")
 	private String application_url;
+	
+
+	@Value("${ticket-attachment-base-url}")
+	private String TicketAttachmentBaseUrl;
+
 
 	static ChannelSftp channelSftp = null;
 	static Session session = null;
@@ -153,7 +171,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				user.setUsername(employee.getEmail());
 				String encodedPassword = new BCryptPasswordEncoder().encode(employee.getPassword());
 				user.setPassword(encodedPassword);
-				user.setName(employee.getFirstName() +"" +employee.getLastName());
+				user.setName(employee.getFirstName() +" " +employee.getLastName());
 				// Employee employeere=new Employee();
 				Role role = roleRepository.getById(employee.getRoleId());
 				if (role != null) {
@@ -359,7 +377,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			employee.setLastName(employeeRequest.getLastName());
 			employee.setLastUpdatedAt(new Date());
 
-			user.setName(employeeRequest.getFirstName() +"" +employeeRequest.getLastName());
+			user.setName(employeeRequest.getFirstName() +" " +employeeRequest.getLastName());
 			employee.setMiddleName(employeeRequest.getMiddleName());
 			employee.setMobileNumber(employeeRequest.getMobileNumber());
 			employee.setPassword(employeeRequest.getPassword());
@@ -626,28 +644,43 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		}
 //	       System.out.println(file.);
 		String fileextension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
-		String filename = getRandomFileName() + fileextension;// constentFile.getOriginalFilename();
+		String filename = getRandomFileName() +System.currentTimeMillis();
+		boolean succesResponse = false;
+		try {
+			succesResponse = fileUploadService.uploadFile(file, TicketAttachmentBaseUrl, filename);
+		
 
-		if (addFileAdmin(file, filename) != null) {
+		} catch (Exception e) {
+
+			logger.info(e.toString());
+		}
+		
+
+		if (succesResponse) {
 
 			Employee employeeObj = employeeRepository.getbyUserByUserId(userId);
 			if (employeeObj != null) {
 				// employeeObj=new Employee();
-				employeeObj.setProfileUrl("https://covidtest.xyramsoft.com/image/ticket-attachment/" + filename);
+				employeeObj.setProfileUrl(application_url +attachmentService +"/"+ filename);
 				employeeRepository.save(employeeObj);
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.EMPLOYEE_PROFILE_UPDATION);
 				response.setContent(null);
 				return response;
 			}
-		} else {
+			else {
 
-			response.setSuccess(false);
-			response.setMessage(ResponseMessages.EMPLOYEE_INVALID);
-			response.setContent(null);
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.EMPLOYEE_INVALID);
+				response.setContent(null);
+				
+			}
+			return response;
+		} 
+		{
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"unable to upload image");
 		}
-
-		return response;
+	
 	}
 
 	public String getRandomFileName() {

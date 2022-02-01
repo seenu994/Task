@@ -121,9 +121,9 @@ class EmployeeController {
 	@PutMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/profile/image/{employeeId}",AuthConstants.HR_ADMIN_BASEPATH + "/profile/image/{employeeId}",
 			AuthConstants.HR_BASEPATH + "/profile/image/{employeeId}",AuthConstants.INFRA_USER_BASEPATH + "/profile/image/{employeeId}",AuthConstants.DEVELOPER_BASEPATH + "/profile/image/{employeeId}",AuthConstants.ADMIN_BASEPATH + "/profile/image/{employeeId}",AuthConstants.JOB_VENDOR_BASEPATH + "/profile/image/{employeeId}"})
 	public ApiResponse updateProfileImage(@RequestPart(name = "file", required = true) MultipartFile file,
-			@PathVariable String userId) {
+			@PathVariable String employeeId) {
 		logger.info("Received request for update doctor profile");
-		return employeeService.updateProfileImage(file, userId);
+		return employeeService.updateProfileImage(file, employeeId);
 	}
 
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editEmployee/{employeeId}",

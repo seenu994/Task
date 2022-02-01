@@ -93,14 +93,14 @@ class ProjectMemberContoller {
 
 	}
 
-	@PutMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/addProjectAdmin",
+	@PutMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/addProjectAdmin",AuthConstants.ADMIN_BASEPATH + "/addProjectAdmin",
 			AuthConstants.INFRA_USER_BASEPATH + "/addProjectAdmin" })
 	public IssueTrackerResponse MakeProjectAdmin(@RequestParam String employeeId, @RequestParam String projectId) {
 		logger.info("indide ProjectMembersController :: MakeProjectAdmin");
 		return projectMemberService.makeProjectAdmin(employeeId, projectId);
 	}
 
-	@PutMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/removeProjectAdmin",
+	@PutMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/removeProjectAdmin", AuthConstants.ADMIN_BASEPATH + "/removeProjectAdmin",
 			AuthConstants.INFRA_USER_BASEPATH + "/removeProjectAdmin" })
 	public IssueTrackerResponse removeProjectAdmin(@RequestParam String employeeId, @RequestParam String projectId) {
 		logger.info("indide ProjectMembersController :: removeProjectAdmin");
