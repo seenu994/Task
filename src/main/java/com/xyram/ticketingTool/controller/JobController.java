@@ -225,7 +225,7 @@ public class JobController {
 	}
 	
 	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/getAllJobOffer/{offerId}",AuthConstants.ADMIN_BASEPATH + "/getAllJobOffer/{offerId}" })
-	public ApiReonse getAllJobOfferById(@PathVariable String offerId) {
+	public ApiResponse getAllJobOfferById(@PathVariable String offerId) {
 		logger.info("Creating Job Offers");
 		return jobService.getAllJobOfferById(offerId);
 	}
