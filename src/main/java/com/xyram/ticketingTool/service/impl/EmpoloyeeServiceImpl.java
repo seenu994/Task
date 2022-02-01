@@ -147,7 +147,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	
 
 	@Value("${ticket-attachment-base-url}")
-	private String TicketAttachmentBaseUrl;
+	private String ticketAttachmentBaseUrl;
 
 
 	static ChannelSftp channelSftp = null;
@@ -647,7 +647,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		String filename = getRandomFileName() +System.currentTimeMillis();
 		boolean succesResponse = false;
 		try {
-			succesResponse = fileUploadService.uploadFile(file, TicketAttachmentBaseUrl, filename);
+			succesResponse = fileUploadService.uploadFile(file, ticketAttachmentBaseUrl, filename);
 		
 
 		} catch (Exception e) {
@@ -661,7 +661,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			Employee employeeObj = employeeRepository.getbyUserByUserId(userId);
 			if (employeeObj != null) {
 				// employeeObj=new Employee();
-				employeeObj.setProfileUrl(application_url +attachmentService +"/"+ filename);
+				employeeObj.setProfileUrl(ticketAttachmentBaseUrl +"/"+ filename);
 				employeeRepository.save(employeeObj);
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.EMPLOYEE_PROFILE_UPDATION);

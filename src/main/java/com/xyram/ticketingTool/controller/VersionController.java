@@ -45,7 +45,7 @@ public class VersionController {
 		return versionService.updateVersion(id,versionBody);
 	} 
 	
-	@GetMapping(value = {AuthConstants.ADMIN_BASEPATH + "/getVersionByProjectId/{id}", AuthConstants.DEVELOPER_BASEPATH + "/getVersionByProjectId/{id}"})
+	@GetMapping(value = {AuthConstants.ADMIN_BASEPATH + "/getVersionByProjectId/{id}",AuthConstants.INFRA_ADMIN_BASEPATH + "/getVersionByProjectId/{id}", AuthConstants.DEVELOPER_BASEPATH + "/getVersionByProjectId/{id}"})
 	public IssueTrackerResponse getVersionByProjectId(@PathVariable String id) {
 		
 		return versionService.getVersionByProjectId(id);

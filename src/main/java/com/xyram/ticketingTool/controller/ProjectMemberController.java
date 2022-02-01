@@ -107,7 +107,7 @@ class ProjectMemberContoller {
 		return projectMemberService.removeProjectAdmin(employeeId, projectId);
 	}
 
-	@GetMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/isProjectAdmin",
+	@GetMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/isProjectAdmin",AuthConstants.ADMIN_BASEPATH + "/isProjectAdmin",
 			AuthConstants.INFRA_USER_BASEPATH + "/isProjectAdmin",
 			AuthConstants.INFRA_ADMIN_BASEPATH + "/isProjectAdmin" })
 	public ProjectAdminResponse isProjectAdmin(@RequestParam String employeeId, @RequestParam String projectId) {
@@ -138,7 +138,7 @@ class ProjectMemberContoller {
 		return projectMemberService.searchProjectMembersByProjectId(projectid, searchString);
 	}
 
-	@GetMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/isProjectMember",
+	@GetMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/isProjectMember",AuthConstants.ADMIN_BASEPATH + "/isProjectMember",
 			AuthConstants.INFRA_USER_BASEPATH + "/isProjectMember",
 			AuthConstants.INFRA_ADMIN_BASEPATH + "/isProjectMember"})
 	public ProjectMemberresponse isProjectMember(@RequestParam String employeeId, @RequestParam String projectId) {
