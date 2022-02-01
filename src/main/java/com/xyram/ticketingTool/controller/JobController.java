@@ -116,14 +116,14 @@ public class JobController {
 		return jobService.editJobApplication(files,jobAppObj,jobAppId);
 	}
 	
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/scheduleJobInterview/{applicationId}",AuthConstants.HR_BASEPATH + "/scheduleJobInterview/{applicationId}",AuthConstants.INFRA_ADMIN_BASEPATH	 + "/scheduleJobInterview/{applicationId}",AuthConstants.HR_ADMIN_BASEPATH + "/scheduleJobInterview/{applicationId}"  })
+	@PutMapping(value = { AuthConstants.HR_BASEPATH + "/scheduleJobInterview/{applicationId}",AuthConstants.INFRA_ADMIN_BASEPATH	 + "/scheduleJobInterview/{applicationId}",AuthConstants.HR_ADMIN_BASEPATH + "/scheduleJobInterview/{applicationId}"  })
 	public ApiResponse scheduleJobInterview(@RequestBody JobInterviews schedule,
 			@PathVariable String applicationId) {
 		logger.info("Get All Job");
 		return jobService.scheduleJobInterview(schedule,applicationId);
 	}
 
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/scheduleJobInterview/{applicationId}",AuthConstants.HR_BASEPATH + "/scheduleJobInterview/{applicationId}",AuthConstants.DEVELOPER_BASEPATH + "/scheduleJobInterview/{applicationId}",AuthConstants.INFRA_ADMIN_BASEPATH + "/scheduleJobInterview/{applicationId}",AuthConstants.HR_ADMIN_BASEPATH + "/scheduleJobInterview/{applicationId}"})
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/scheduleJobInterview/{applicationId}",AuthConstants.INFRA_USER_BASEPATH + "/scheduleJobInterview/{applicationId}",AuthConstants.HR_BASEPATH + "/scheduleJobInterview/{applicationId}",AuthConstants.DEVELOPER_BASEPATH + "/scheduleJobInterview/{applicationId}",AuthConstants.INFRA_ADMIN_BASEPATH + "/scheduleJobInterview/{applicationId}",AuthConstants.HR_ADMIN_BASEPATH + "/scheduleJobInterview/{applicationId}"})
 	public ApiResponse getJobInterviewByAppId(@PathVariable String applicationId) {
 		logger.info("Get All Job");
 		return jobService.getJobInterviewByAppId(applicationId);
@@ -225,7 +225,7 @@ public class JobController {
 	}
 	
 	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/getAllJobOffer/{offerId}",AuthConstants.ADMIN_BASEPATH + "/getAllJobOffer/{offerId}" })
-	public ApiResponse getAllJobOfferById(@PathVariable String offerId) {
+	public ApiReonse getAllJobOfferById(@PathVariable String offerId) {
 		logger.info("Creating Job Offers");
 		return jobService.getAllJobOfferById(offerId);
 	}
