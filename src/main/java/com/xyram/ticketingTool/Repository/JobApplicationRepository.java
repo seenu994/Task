@@ -60,7 +60,7 @@ public interface JobApplicationRepository
 			+ " Or lower(ja.candidateMobile) LIKE %:searchString% "
 			+"  Or lower(ja.referredEmployee) Like %:searchString%"
 			+"  Or lower(ja.candidateName) Like %:searchString%"
-			+ " Or lower(jo.jobCode) LIKE %:searchString%)")		 
+			+ " Or lower(jo.jobCode) LIKE %:searchString%) ORDER BY ja.createdAt DESC")		 
 	Page<JobApplication> getAllApllication(String searchString, JobApplicationStatus status,
 			String vendor ,String userRole, String userId, Pageable pageable );
 	

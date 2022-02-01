@@ -57,7 +57,7 @@ public interface JobInterviewRepository
 			+ "  Or lower(ja.candidateEmail) LIKE %:searchString% "
 			+ "  Or lower(ja.candidateMobile) LIKE %:searchString% "
 			+ "  Or lower(ja.candidateName) LIKE %:searchString% "
-			+ "  Or lower(jo.jobCode) LIKE %:searchString%)")
+			+ "  Or lower(jo.jobCode) LIKE %:searchString%) ORDER BY ji.createdAt DESC ")
 	Page<JobInterviews> getAllJobInterview(String searchString, String status,
 			String userRole, String userId, Pageable pageable);
 	@Query(value = "SELECT jo as jobInterviews from JobInterviews jo where jo.interviewer = :interviewer  ")
