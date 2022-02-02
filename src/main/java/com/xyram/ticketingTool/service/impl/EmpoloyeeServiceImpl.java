@@ -986,10 +986,9 @@ if(vendorNew!=null)
 	@Override
 	public ApiResponse getListByAccessToken() {
 		ApiResponse response = new ApiResponse(false);
-		String accessToken = currentUser.getUserId();
-
-		if (accessToken != null) {
-			Map employee = employeeRepository.getbyAccessToken(accessToken);
+		String id = currentUser.getUserId();
+		if (id != null) {
+			Map employee = employeeRepository.getbyAccessToken(id);
 			response.setSuccess(true);
 			response.setMessage("Employee Retrieved Successfully");
 			response.setContent(employee);
