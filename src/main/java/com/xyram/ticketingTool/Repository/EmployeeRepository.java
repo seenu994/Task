@@ -70,7 +70,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 //			+ "where e.status = 'ACTIVE' and e.email like %:searchString% ")
 	@Query("Select new map(e.eId as id,e.email as email,e.firstName as firstName,e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId, "
 			+ "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,d.designationName as designationName,e.location as location,e.position as position,e.wings as wings,e.profileUrl as profileUrl) from Employee e "
-			+ "JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id where e.email like %:searchString%")
+			+ "JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id where r.Id !='R1' e.email like %:searchString%")
 	List<Map> searchEmployee(@Param("searchString") String searchString);
 
 	@Query(value = "SELECT e.employee_id, e.frist_name, e.last_name, count(e.employee_id) assigned_cnt FROM ticketdbtool.employee e "

@@ -164,9 +164,19 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 		response = validateEmployee(employee);
 		System.out.println("username::" + currentUser.getName());
+		
 
 		if (response.isSuccess()) {
 			try {
+				
+			
+				if(!employeeRepository.getbyEmpId(employee.geteId()).isEmpty())
+				{
+			
+				throw new ResponseStatusException(HttpStatus.CONFLICT,"Employee code already Assigned to Existing employee ");
+				}
+				
+				
 				User user = new User();
 				user.setUsername(employee.getEmail());
 				String encodedPassword = new BCryptPasswordEncoder().encode(employee.getPassword());
@@ -264,16 +274,22 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				Map content = new HashMap();
 				content.put("employeeId", employeeNew.geteId());
 				response.setContent(content);
-			} catch (Exception e) {
+			} catch (ResponseStatusException re) {
+			 throw new  ResponseStatusException(re.getStatus(), re.getReason());
+			}
+			catch (Exception e) {
 				System.out.println("Error Occured :: " + e.getMessage());
 			}
 
 			return response;
 
 		}
+			
+	
 
 		return response;
 	}
+		
 
 	private ApiResponse validateEmployee(Employee employee) {
 		ApiResponse response = new ApiResponse(false);

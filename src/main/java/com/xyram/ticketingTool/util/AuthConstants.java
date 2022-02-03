@@ -1,5 +1,7 @@
 package com.xyram.ticketingTool.util;
 
+import java.util.Arrays;
+
 public interface AuthConstants {
 	/** Role Constants */
 	String ROLE_ADMIN = "TICKETINGTOOL_ADMIN";
@@ -31,5 +33,8 @@ public interface AuthConstants {
 	/** Token Constants */
 	long JWT_TOKEN_VALIDITY = 24 * 60 * 60; // token format: hour * minutes * seconds
 	String TOKEN_ISSUER = "xyramsoft";
-
+	
+	
+	
+  
 }

@@ -29,7 +29,11 @@ public interface JobInterviewRepository
 
 	@Query(value = "SELECT jo from JobInterviews jo  ")
 	List<JobInterviews> getList();
-
+	
+	@Query(value = "SELECT count(jo.Id) from JobInterviews jo left  join jo.jobApplication ja  "
+			+ "where ja.Id = :jobAppId  ")
+	Integer getTotalRoundsCount(String jobAppId);
+	
 	@Query(value = "SELECT new map(jo as jobInterviewDetail) from JobInterviews jo where jo.Id = :jobInterviewId  ")
 	Map getInterviewById(String jobInterviewId);
 

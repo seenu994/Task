@@ -3,6 +3,7 @@ package com.xyram.ticketingTool.service.impl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -74,6 +75,10 @@ import com.xyram.ticketingTool.util.ResponseMessages;
 @Service
 @Transactional
 public class JobServiceImpl implements JobService {
+	
+	
+	 List<String> privilegeJobAcesss=Arrays.asList("TICKETINGTOOL_ADMIN ","HR_ADMIN","HR","JOB_VENDOR");
+
 
 	@Autowired
 	CurrentUser userDetail;
@@ -240,11 +245,28 @@ public class JobServiceImpl implements JobService {
 			throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Invalid Status Passed ");
 		}
 
-		Page<JobOpenings> allList = jobRepository.getAllOpenings(searchString, statusApp, wing,
+		Page<JobOpenings> jobOpeningList = jobRepository.getAllOpenings(searchString, statusApp, wing,
 				userDetail.getUserRole(), pageable);
+		
 
-		content.put("jobsList", allList);
-		if (allList != null) {
+		 jobOpeningList.forEach (jobopening->
+		{
+			if((userDetail.getUserRole()!=null && !privilegeJobAcesss.contains(userDetail.getUserRole())))
+					{
+				jobopening.setJobSalary(0);
+				
+			}
+					
+				
+		});
+		
+			
+		
+		
+		
+
+		content.put("jobsList", jobOpeningList);
+		if (jobOpeningList != null) {
 			response.setSuccess(true);
 			response.setMessage("Succesfully retrieved Jobs");
 		} else {
@@ -410,10 +432,25 @@ public class JobServiceImpl implements JobService {
 			throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Invalid Status Passed ");
 		}
 
-		Page<JobApplication> allList = jobAppRepository.getAllApllication(searchString, statusApp, vendor,
+		Page<JobApplication> jobApplicationList = jobAppRepository.getAllApllication(searchString, statusApp, vendor,
 				userDetail.getUserRole(), userDetail.getUserId(), pageable);
-		content.put("jobAppList", allList);
-		if (allList != null) {
+		
+
+		jobApplicationList.forEach (jobApplication->
+		{
+			if((userDetail.getUserRole()!=null && !privilegeJobAcesss.contains(userDetail.getUserRole())))
+					{
+				jobApplication.setExpectedSalary(0);
+				
+			}
+					
+				
+		});
+		
+		
+		
+		content.put("jobAppList", jobApplicationList);
+		if (jobApplicationList != null) {
 			response.setSuccess(true);
 			response.setMessage("Succesfully retrieved Jobs");
 		} else {
@@ -557,7 +594,8 @@ public class JobServiceImpl implements JobService {
 			schedule.setCreatedAt(new Date());
 			schedule.setCreatedBy(userDetail.getUserId());
 			schedule.setJobInterviewStatus("SCHEDULED");
-			schedule.setRoundNo(schedule.getRoundNo());
+		Integer rounds=	jobInterviewRepository.getTotalRoundsCount(applicationId);
+			schedule.setRoundNo(rounds+1);
 			schedule.setJobApplication(jobApp);
 			Employee empObj = employeeRepository.getByEmpId(schedule.getInterviewer());
 			if (empObj != null) {
@@ -1030,16 +1068,14 @@ public class JobServiceImpl implements JobService {
 			try {
 				newJobAppObj = objectMapper.readValue(jobAppObj, JobApplication.class);
 			} catch (JsonMappingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+
 			} catch (JsonProcessingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+
 			} catch (Exception e) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, " invalid job application Object ");
+				// TODO Auto-generated catch block
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"invalid data passed");
 			}
 			if (files != null) {
 				for (MultipartFile constentFile : files) {
@@ -1060,11 +1096,12 @@ public class JobServiceImpl implements JobService {
 
 				JobOpenings jobOpening = jobRepository.getJobOpeningsById(newJobAppObj.getJobOpenings().getId());
 
+
 				if (jobOpening != null) {
-					if (jobOpening.getFilledPositions() >= jobOpening.getTotalOpenings()
+					if (jobOpening.getFilledPositions() <= jobOpening.getTotalOpenings()
 							&& jobOpening.getJobStatus() != null
 							&& jobOpening.getJobStatus().equals(JobOpeningStatus.VACANT)) {
-						jobApp.setJobOpenings(jobOpening);
+						newJobAppObj.setJobOpenings(jobOpening);
 					} else {
 						throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 								"sorry  no vacant  job opening right now");
@@ -1106,7 +1143,7 @@ public class JobServiceImpl implements JobService {
 			}
 		} else {
 			response.setSuccess(false);
-			response.setMessage("Job Application Id Not Exist");
+			response.setMessage("You Don't have any permission to perform this operation");
 		}
 		return response;
 	}
@@ -1206,8 +1243,10 @@ public class JobServiceImpl implements JobService {
 			//Employee employeeDetails = employeeRepository.getByEmpId(userDetail.getUserId());
 			allList = offerRepository.getAllJobOfferVendors(searchString, employeeDetails.getName(), pageable);
 		}
-//		List<JobInterviews> allList =  jobInterviewRepository.getList();
+		else {
 		allList = offerRepository.getAllJobOffer(searchString, userDetail.getUserRole(), pageable);
+	
+		}
 
 		content.put("OfferList", allList);
 		if (allList != null) {
