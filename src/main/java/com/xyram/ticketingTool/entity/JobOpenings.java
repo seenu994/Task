@@ -9,6 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -72,6 +73,9 @@ public class JobOpenings extends AuditModel{
 	@Column(name="max_exp")
 	private Integer maxExp;
 	
+	@Transient
+	private double salaryPackage;
+	
 	@OneToOne(cascade = {  CascadeType.ALL})
 	@JoinColumn(name = "wing_id")
     private CompanyWings wings;
@@ -79,7 +83,7 @@ public class JobOpenings extends AuditModel{
 	@Enumerated(EnumType.STRING)
 	@Column(name="status")
 	private JobOpeningStatus jobStatus = JobOpeningStatus.VACANT;
-	
+
 	@Column(name="salary")
 	private double jobSalary;
 	
@@ -182,6 +186,9 @@ public class JobOpenings extends AuditModel{
 	public void setJobCode(String jobCode) {
 		this.jobCode = jobCode;
 	}
+	
+	
+	
 
 	
 
@@ -210,6 +217,16 @@ public class JobOpenings extends AuditModel{
 		return jobSalary;
 	}
 
+	public double getSalaryPackage() {
+		return salaryPackage;
+	}
+
+	public void setSalaryPackage(double salaryPackage) {
+		this.salaryPackage = salaryPackage;
+	}
+
+
+	
 	
 	
 }

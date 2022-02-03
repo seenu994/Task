@@ -80,6 +80,8 @@ class ProjectContoller {
 
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/searchProject/{searchString}",
 			AuthConstants.INFRA_USER_BASEPATH + "/searchProject/{searchString}",
+			AuthConstants.HR_ADMIN_BASEPATH + "/searchProject/{searchString}",
+			AuthConstants.HR_BASEPATH + "/searchProject/{searchString}",
 			AuthConstants.DEVELOPER_BASEPATH + "/searchProject/{searchString}",AuthConstants.INFRA_ADMIN_BASEPATH + "/searchProject/{searchString}" })
 	public ApiResponse searchProject(@PathVariable String searchString) {
 		logger.info("inside ProjectContoller :: searchProject ");

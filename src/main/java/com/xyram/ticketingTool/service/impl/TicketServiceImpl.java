@@ -901,7 +901,7 @@ else {
 		if (userDetail.getUserRole().equals("TICKETINGTOOL_ADMIN")) {
 			serachList = ticketrepository.searchAllTicket(searchString, priority);
 		}
-		if (userDetail.getUserRole().equals("INFRA_ADMIN")) {
+		else if  (userDetail.getUserRole().equals("INFRA_ADMIN")) {
 			serachList = ticketrepository.searchAllTicket(searchString, priority);
 
 		} else if (userDetail.getUserRole().equals("INFRA_USER")) {

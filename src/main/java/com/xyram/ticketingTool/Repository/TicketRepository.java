@@ -40,7 +40,7 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 			+ "left join ticketdbtool.employee e on b.employee_id = e.employee_id "
 			+ "left join ticketdbtool.priority p on a.priority_id = p.priority_id " + "where"
 			+ "  (:priority is null OR (p.priority_name) LIKE %:priority%) AND " + " (:searchString is null "
-			+ " OR lower(a.ticket_description) LIKE %:searchString%  "
+			+ " OR lower(a.ticket_description) LIKE %:searchString% "
 			+ " OR   lower(a.ticket_id) LIKE %:searchString%) ", nativeQuery = true)
 	List<Map> searchAllTicket(String searchString, String priority);
 

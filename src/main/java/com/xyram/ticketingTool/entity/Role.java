@@ -38,6 +38,9 @@ public class Role extends AuditModel {
 	@Enumerated(EnumType.STRING)
 	@Column(name = "roleStatus")
 	private UserStatus status = UserStatus.INACTIVE;
+	
+	@Column(name="displayable_name")
+	private String displayableName;
 
 	public String getId() {
 		return Id;
@@ -62,5 +65,15 @@ public class Role extends AuditModel {
 	public void setStatus(UserStatus status) {
 		this.status = status;
 	}
+
+	public String getDisplayableName() {
+		return displayableName;
+	}
+
+	public void setDisplayableName(String displayableName) {
+		this.displayableName = displayableName;
+	}
+	
+	
 
 }
