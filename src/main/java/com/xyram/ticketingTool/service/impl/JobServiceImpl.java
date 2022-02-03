@@ -1,7 +1,5 @@
 package com.xyram.ticketingTool.service.impl;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -22,7 +20,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -57,17 +54,14 @@ import com.xyram.ticketingTool.entity.JobOffer;
 import com.xyram.ticketingTool.entity.JobOpenings;
 import com.xyram.ticketingTool.entity.JobVendorDetails;
 import com.xyram.ticketingTool.entity.Notifications;
-import com.xyram.ticketingTool.entity.Projects;
 import com.xyram.ticketingTool.enumType.JobApplicationStatus;
 import com.xyram.ticketingTool.enumType.JobOfferStatus;
 import com.xyram.ticketingTool.enumType.JobOpeningStatus;
 import com.xyram.ticketingTool.enumType.NotificationType;
-import com.xyram.ticketingTool.enumType.UserRole;
 import com.xyram.ticketingTool.fileupload.FileTransferService;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.request.InterviewRoundReviewRequest;
 import com.xyram.ticketingTool.request.JobApplicationStatusRequest;
-import com.xyram.ticketingTool.service.FileService;
 import com.xyram.ticketingTool.service.JobService;
 import com.xyram.ticketingTool.service.NotificationService;
 import com.xyram.ticketingTool.util.ResponseMessages;
@@ -77,7 +71,7 @@ import com.xyram.ticketingTool.util.ResponseMessages;
 public class JobServiceImpl implements JobService {
 	
 	
-	 List<String> privilegeJobAcesss=Arrays.asList("TICKETINGTOOL_ADMIN ","HR_ADMIN","HR","JOB_VENDOR");
+	 List<String> privilegeJobAcesss=Arrays.asList("TICKETINGTOOL_ADMIN","HR_ADMIN","HR","JOB_VENDOR");
 
 
 	@Autowired
@@ -248,18 +242,18 @@ public class JobServiceImpl implements JobService {
 		Page<JobOpenings> jobOpeningList = jobRepository.getAllOpenings(searchString, statusApp, wing,
 				userDetail.getUserRole(), pageable);
 		
-
-		 jobOpeningList.forEach (jobopening->
-		{
-			if((userDetail.getUserRole()!=null && !privilegeJobAcesss.contains(userDetail.getUserRole())))
-					{
-				jobopening.setJobSalary(0);
-				
-			}
-					
-				
-		});
-		
+////
+////		 jobOpeningList.forEach (jobopening->
+////		{
+////			if((userDetail.getUserRole()!=null && privilegeJobAcesss.contains(UserRole.toEnum(userDetail.getUserRole())) ))
+////					{
+////				jobopening.setSalaryPackage(jobopening.getJobSalary());
+////				
+////			}
+//					
+//				
+//		});
+//		
 			
 		
 		
@@ -436,16 +430,16 @@ public class JobServiceImpl implements JobService {
 				userDetail.getUserRole(), userDetail.getUserId(), pageable);
 		
 
-		jobApplicationList.forEach (jobApplication->
-		{
-			if((userDetail.getUserRole()!=null && !privilegeJobAcesss.contains(userDetail.getUserRole())))
-					{
-				jobApplication.setExpectedSalary(0);
-				
-			}
-					
-				
-		});
+//		jobApplicationList.forEach (jobApplication->
+//		{
+//			if((userDetail.getUserRole()!=null && !privilegeJobAcesss.contains(userDetail.getUserRole())))
+//					{
+//				jobApplication.setExpectedSalary(0);
+//				
+//			}
+//					
+//				
+//		});
 		
 		
 		
@@ -1061,8 +1055,7 @@ public class JobServiceImpl implements JobService {
 		ApiResponse response = new ApiResponse(false);
 		
 		JobApplication jobApp = jobAppRepository.getJobApplicationNotify(jobAppId);
-		if (jobApp != null &&( userDetail.getUserId() == (jobApp.getCreatedBy())
-				|| userDetail.getUserRole().equals("HR_ADMIN"))) {
+		if (jobApp != null &&( userDetail.getUserId().equalsIgnoreCase(jobApp.getCreatedBy()) || userDetail.getUserRole().equals("HR_ADMIN"))) {
 			ObjectMapper objectMapper = new ObjectMapper();
 			JobApplication newJobAppObj = null;
 			try {
@@ -1183,7 +1176,14 @@ public class JobServiceImpl implements JobService {
 	public ApiResponse createJobOffer(JobOffer jobObj, String jobAppId) {
 		ApiResponse response = new ApiResponse(false);
 		JobApplication application = jobAppRepository.getApplicationById(jobAppId);
-		if (application.getJobApplicationSatus().equals(JobApplicationStatus.SELECTED)) {
+		if(application==null)
+		{
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid job Appliation");
+		}
+		
+   
+		
+		if (application.getJobApplicationSatus()!=null  && application.getJobApplicationSatus().equals(JobApplicationStatus.SELECTED)) {
 			jobObj.setCreatedAt(new Date());
 			jobObj.setCreatedBy(userDetail.getUserId());
 			jobObj.setApplicationId(application);
@@ -1194,6 +1194,14 @@ public class JobServiceImpl implements JobService {
 			jobObj.setTotalExp(application.getTotalExp());
 			jobObj.setJobTitle(application.getJobOpenings().getJobTitle());
 			application.setJobApplicationSatus(JobApplicationStatus.RELEASED_OFFER);
+			
+			JobOpenings jobOpening = application.getJobOpenings();
+			jobOpening.setFilledPositions(jobOpening.getFilledPositions()+1);
+			if(jobOpening.getFilledPositions() >= jobOpening.getTotalOpenings()) {
+				jobOpening.setJobStatus(JobOpeningStatus.COMPLETED);
+			}
+			
+			
 			jobAppRepository.save(application);
 			if (offerRepository.save(jobObj) != null) {
 				response.setSuccess(true);
@@ -1268,6 +1276,16 @@ public class JobServiceImpl implements JobService {
 		if (offer != null) {
 			offer.setStatus(status);
 			offerRepository.save(offer);
+			if(!status.equals("OFFERED"))
+			{
+			//	JobApplication application = jobAppRepository.getApplicationById(offer.getApplicationId());
+				JobOpenings jobOpening = offer.getApplicationId().getJobOpenings();
+				jobOpening.setFilledPositions(jobOpening.getFilledPositions()-1);
+				
+					jobOpening.setJobStatus(JobOpeningStatus.VACANT);
+		
+				jobRepository.save(jobOpening);
+			}
 			response.setSuccess(true);
 			response.setMessage("Job Offer Status Updated Sucessfully");
 			response.setContent(null);
@@ -1300,7 +1318,7 @@ public class JobServiceImpl implements JobService {
 	@Override
 	public ApiResponse getAllJobCodes() {
 		ApiResponse response = new ApiResponse(false);
-		List<Map> offer = jobRepository.getAllJobCodes();
+		List<Map> offer = jobRepository.getAllJobCodes(userDetail.getUserRole());
 		Map res = new HashMap();
 		if (offer != null) {
 			res.put("jobcodes", offer);

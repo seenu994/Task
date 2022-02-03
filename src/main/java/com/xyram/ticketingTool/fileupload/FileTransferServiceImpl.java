@@ -53,6 +53,8 @@ public class FileTransferServiceImpl implements FileTransferService {
 	private boolean isPasswordRequired;
 
 	String SFTPKEY = "/home/ubuntu/tomcat-be/webapps/Ticket_tool-0.0.1-SNAPSHOT/WEB-INF/classes/Covid-Phast-Prod.ppk";
+	
+//	String SFTPKEY = "covid-Phast-Prod.ppk";
 	String SFTPWORKINGDIRAADMIN = "/home/ubuntu/tomcat-be/webapps";
 
 	@Override
@@ -60,7 +62,7 @@ public class FileTransferServiceImpl implements FileTransferService {
 		ChannelSftp channelSftp = createChannelSftp();
 		String SFTPWORKINGDIR=SFTPWORKINGDIRAADMIN+""+path;
 		try {
-			
+		 
 			channelSftp.cd(SFTPWORKINGDIR);
 			channelSftp.put(file.getInputStream(), fileName);
 			
