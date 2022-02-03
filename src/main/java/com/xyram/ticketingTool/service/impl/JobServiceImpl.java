@@ -1157,6 +1157,19 @@ public class JobServiceImpl implements JobService {
 			jobObj.setTotalExp(application.getTotalExp());
 			jobObj.setJobTitle(application.getJobOpenings().getJobTitle());
 			application.setJobApplicationSatus(JobApplicationStatus.RELEASED_OFFER);
+			
+			JobOpenings jobOpening = application.getJobOpenings();
+			jobOpening.setFilledPositions(jobOpening.getFilledPositions()+1);
+			if(jobOpening.getFilledPositions() >= jobOpening.getTotalOpenings()) {
+				jobOpening.setJobStatus(JobOpeningStatus.COMPLETED);
+			}
+			jobRepository.save(jobOpening);
+			
+			List<JobInterviews> jobInterviews = jobInterviewRepository.getInterviewByAppListId(jobAppId);
+			for (JobInterviews jobInterview : jobInterviews) {
+				jobInterview.setJobInterviewStatus("RELEASED_OFFER");
+				jobInterviewRepository.save(jobInterview);
+			}
 			jobAppRepository.save(application);
 			if (offerRepository.save(jobObj) != null) {
 				response.setSuccess(true);
@@ -1229,6 +1242,16 @@ public class JobServiceImpl implements JobService {
 		if (offer != null) {
 			offer.setStatus(status);
 			offerRepository.save(offer);
+			if(!status.equals("OFFERED"))
+			{
+			//	JobApplication application = jobAppRepository.getApplicationById(offer.getApplicationId());
+				JobOpenings jobOpening = offer.getApplicationId().getJobOpenings();
+				jobOpening.setFilledPositions(jobOpening.getFilledPositions()-1);
+				
+					jobOpening.setJobStatus(JobOpeningStatus.VACANT);
+		
+				jobRepository.save(jobOpening);
+			}
 			response.setSuccess(true);
 			response.setMessage("Job Offer Status Updated Sucessfully");
 			response.setContent(null);
@@ -1261,7 +1284,8 @@ public class JobServiceImpl implements JobService {
 	@Override
 	public ApiResponse getAllJobCodes() {
 		ApiResponse response = new ApiResponse(false);
-		List<Map> offer = jobRepository.getAllJobCodes();
+		List<Map> offer = jobRepository.getAllJobCodes(userDetail.getUserRole());
+		
 		Map res = new HashMap();
 		if (offer != null) {
 			res.put("jobcodes", offer);
