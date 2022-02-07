@@ -558,8 +558,8 @@ public class JobServiceImpl implements JobService {
 				empObj = employeeRepository.getEmployeeNameByScoleId(jobAppObj.getReferredEmployeeId());
 
 				if (empObj != null) {
-
-					jobAppObj.setReferredEmployee(empObj.getFirstName() + "" + empObj.getLastName());
+					jobAppObj.setReferredEmployee( jobAppObj.getReferredEmployeeId());
+					jobAppObj.setReferredEmployeeName(empObj.getFirstName()+" "+empObj.getLastName());
 				} else {
 					response.setMessage("employee id not exsists");
 					return response;
@@ -570,7 +570,8 @@ public class JobServiceImpl implements JobService {
 			if (userDetail.getUserRole() != null && userDetail.getUserRole().equals("JOB_VENDOR")) {
 				JobVendorDetails jobVendorDetails = vendorRepository.getJobVendorById(userDetail.getScopeId());
 
-				jobAppObj.setReferredVendor(jobVendorDetails != null ? jobVendorDetails.getName() : null);
+				jobAppObj.setReferredVendor(userDetail.getScopeId());
+				jobAppObj.setReferredVendorName(jobVendorDetails != null ? jobVendorDetails.getName() : null);
 			}
 
 			if (jobAppRepository.save(jobAppObj) != null) {
@@ -1134,7 +1135,31 @@ public class JobServiceImpl implements JobService {
 			jobApp.setCandidateMobile(newJobAppObj.getCandidateMobile());
 			jobApp.setCandidateName(newJobAppObj.getCandidateName());
 			jobApp.setTotalExp(newJobAppObj.getTotalExp());
-			jobApp.setReferredEmployee(newJobAppObj.getReferredEmployee());
+			
+			
+			Employee empObj = null;
+
+			if (jobApp.getReferredEmployeeId() != null) {
+				empObj = employeeRepository.getEmployeeNameByScoleId(jobApp.getReferredEmployeeId());
+
+				if (empObj != null) {
+					jobApp.setReferredEmployee( jobApp.getReferredEmployeeId());
+					jobApp.setReferredEmployeeName(empObj.getFirstName()+" "+empObj.getLastName());
+				} else {
+					response.setMessage("employee id not exsists");
+					return response;
+				}
+
+			}
+
+			if (userDetail.getUserRole() != null && userDetail.getUserRole().equals("JOB_VENDOR")) {
+				JobVendorDetails jobVendorDetails = vendorRepository.getJobVendorById(userDetail.getScopeId());
+
+				jobApp.setReferredVendor(userDetail.getScopeId());
+				jobApp.setReferredVendorName(jobVendorDetails != null ? jobVendorDetails.getName() : null);
+			}
+			
+//			jobApp.setReferredEmployee(newJobAppObj.getReferredEmployee());
 
 			JobOpenings jobOpening = jobRepository.getJobOpeningsById(newJobAppObj.getJobOpenings().getId());
 

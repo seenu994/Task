@@ -119,7 +119,7 @@ public interface JobRepository extends CrudRepository<JobOpenings, Long>, JpaSpe
 		 Pageable pageable);
 	
 	@Query(value = " SELECT new map(j.Id as Id, j.jobDescription as jobDescription , j.jobCode as jobCode, j.jobTitle as jobTitle , "
-			+ "j.jobSkills as jobSkills , w.wingName, j.jobCode as jobCode, j.maxExp as,maxExp, j.minExp as minExp, j.totalOpenings as totalOpenings ,"
+			+ "j.jobSkills as jobSkills , w.wingName as wingName, j.jobCode as jobCode, j.maxExp as maxExp, j.minExp as minExp, j.totalOpenings as totalOpenings ,"
 			+ " j.filledPositions as filledPositions, j.jobStatus as jobStatus) from JobOpenings "
 			+ " j left join j.wings as w  where"
 			+ " (:wing is null or  lower(w.wingName)=:wing ) and "
