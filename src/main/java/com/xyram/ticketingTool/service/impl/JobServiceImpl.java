@@ -243,10 +243,10 @@ public class JobServiceImpl implements JobService {
 		if(userDetail.getUserRole().equals("HR_ADMIN") || userDetail.getUserRole().equals("JOB_VENDOR") ||
 				userDetail.getUserRole().equals("HR"))
 		{
-			jobOpeningList = jobRepository.getAllOpeningsWithoutPackage(searchString, statusApp, wing,
+			jobOpeningList = jobRepository.getAllOpenings(searchString, statusApp, wing,
 					userDetail.getUserRole(), pageable);
 		}else {
-			jobOpeningList = jobRepository.getAllOpenings(searchString, statusApp, wing,
+			jobOpeningList = jobRepository.getAllOpeningsWithoutPackage(searchString, statusApp, wing,
 					userDetail.getUserRole(), pageable);
 		}
 		
