@@ -106,9 +106,9 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 	Page<Map> getAllTicketsByStatus(Pageable pageable, @Param("createdBy") String createdBy,
 			@Param("roleId") String roleId, TicketStatus status,boolean isUser);
 
-	@Query("SELECT distinct new map(a.Id as ticket_id, a.ticketDescription as ticket_description, a.status as ticket_status, a.createdAt as created_at, a.createdBy as created_by,a.UpdatedBy as UpdatedBy, a.lastUpdatedAt as last_updated_at, "
+	@Query("SELECT distinct new map(uu.userRole as updatedRole, a.Id as ticket_id, a.ticketDescription as ticket_description, a.status as ticket_status, a.createdAt as created_at, a.createdBy as created_by,a.UpdatedBy as UpdatedBy, a.lastUpdatedAt as last_updated_at, "
 			+ "a.priorityId as priority_id, b.employeeId as assigneeId, concat(e.firstName,' ', e.lastName) as assigneeName, concat(ee.firstName,' ', ee.lastName) as createdByEmp) "
-			+ "FROM Ticket a left join Employee ee on a.createdBy = ee.userCredientials left join TicketAssignee b ON a.Id = b.ticketId and b.status = 'ACTIVE' "
+			+ "FROM Ticket a left join User uu on a.UpdatedBy = uu.id left join Employee ee on a.createdBy = ee.userCredientials left join TicketAssignee b ON a.Id = b.ticketId and b.status = 'ACTIVE' "
 			+ "left join Employee e on b.employeeId = e.eId where "
 			+ " (('INFRA_USER' = :roleId and a.status IN ('COMPLETED', 'CANCELLED')) "
 			+ "OR ('DEVELOPER' = :roleId and a.status IN ('COMPLETED', 'CANCELLED')   and a.createdBy = :createdBy)"
