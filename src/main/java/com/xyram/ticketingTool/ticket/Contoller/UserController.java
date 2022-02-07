@@ -45,9 +45,9 @@ public class UserController {
 	@PostMapping("/createAdmin")
 	public String createUser() {
 
-		User user = userService.getUserByUsername("superadmin@gmail.com");
+		User user = userService.getUserByUsername("admin@gmail.com");
 		
-		if (user!=null) {
+		if (user==null) {
 			user = new User();
 			user.setUsername("admin");
 			 String encodedPassword = new BCryptPasswordEncoder().encode("admin");

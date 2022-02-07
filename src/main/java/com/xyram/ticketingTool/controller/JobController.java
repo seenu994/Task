@@ -55,7 +55,10 @@ public class JobController {
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllJobs"
 			,AuthConstants.HR_ADMIN_BASEPATH + "/getAllJobs",
 			AuthConstants.JOB_VENDOR_BASEPATH + "/getAllJobs",
-			AuthConstants.DEVELOPER_BASEPATH+ "/getAllJobs", AuthConstants.HR_BASEPATH + "/getAllJobs",AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllJobs",AuthConstants.INFRA_USER_BASEPATH + "/getAllJobs", AuthConstants.JOB_VENDOR_BASEPATH + "/getAllJobs" })
+			AuthConstants.DEVELOPER_BASEPATH+ "/getAllJobs", 
+			AuthConstants.HR_BASEPATH + "/getAllJobs",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllJobs",
+			AuthConstants.INFRA_USER_BASEPATH + "/getAllJobs", AuthConstants.JOB_VENDOR_BASEPATH + "/getAllJobs" })
 	public ApiResponse getAllJobs(@RequestParam Map<String, Object> filter,Pageable pageable) {
 		logger.info("Get All Job");
 		return jobService.getAllJobsOpening(filter, pageable);
