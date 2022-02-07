@@ -50,9 +50,31 @@ public class JobApplication extends AuditModel{
 	@Column(name="referred_employee")
 	private String referredEmployee;
 	
+	@Column(name="referred_employee_name")
+	private String referredEmployeeName;
+	
+	public String getReferredEmployeeName() {
+		return referredEmployeeName;
+	}
+
+	public void setReferredEmployeeName(String referredEmployeeName) {
+		this.referredEmployeeName = referredEmployeeName;
+	}
+
 	@Column(name="referred_vendor")
 	private String referredVendor;
 	
+	@Column(name="referred_vendor_name")
+	private String referredVendorName;
+	
+	public String getReferredVendorName() {
+		return referredVendorName;
+	}
+
+	public void setReferredVendorName(String referredVendorName) {
+		this.referredVendorName = referredVendorName;
+	}
+
 	@Column(name="expected_salary")
 	private Integer expectedSalary;
 	

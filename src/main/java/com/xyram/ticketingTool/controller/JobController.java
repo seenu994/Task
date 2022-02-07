@@ -221,7 +221,10 @@ public class JobController {
 		return jobService.editJobOffer(jobObj,jobOfferId);
 	}
 	
-	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/getAllJobOffer",AuthConstants.HR_BASEPATH + "/getAllJobOffer",AuthConstants.ADMIN_BASEPATH + "/getAllJobOffer",AuthConstants.JOB_VENDOR_BASEPATH + "/getAllJobOffer" })
+	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/getAllJobOffer",
+			AuthConstants.HR_BASEPATH + "/getAllJobOffer",
+			AuthConstants.ADMIN_BASEPATH + "/getAllJobOffer",
+			AuthConstants.JOB_VENDOR_BASEPATH + "/getAllJobOffer" })
 	public ApiResponse getAllJobOffer(@RequestParam Map<String,Object> filter ,Pageable pageable) {
 		logger.info("Creating Job Offers");
 		return jobService.getAllJobOffer(filter,pageable);
