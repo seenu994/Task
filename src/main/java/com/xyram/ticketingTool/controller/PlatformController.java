@@ -29,23 +29,43 @@ public class PlatformController {
 	PlatformMapper platformMapper;
 	
 	
-	@PostMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/createPlatform", AuthConstants.ADMIN_BASEPATH + "/createPlatform"})
+	@PostMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/createPlatform", 
+			AuthConstants.ADMIN_BASEPATH + "/createPlatform",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/createPlatform",
+			AuthConstants.INFRA_USER_BASEPATH + "/createPlatform",
+			AuthConstants.HR_ADMIN_BASEPATH + "/createPlatform",
+			AuthConstants.HR_BASEPATH + "/createPlatform"})
 	public Platform CreatePlatform(@RequestBody PlatformVo platformVo) {
 		
 		return platformService.CreatePlatform(platformMapper.getEntityFromVo(platformVo));
 	} 
 	
-	@PutMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/editPlatform/{Id}",AuthConstants.ADMIN_BASEPATH + "/editPlatform/{Id}"})
+	@PutMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/editPlatform/{Id}",
+			AuthConstants.ADMIN_BASEPATH + "/editPlatform/{Id}",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/editPlatform/{Id}",
+			AuthConstants.INFRA_USER_BASEPATH + "/editPlatform/{Id}",
+			AuthConstants.HR_ADMIN_BASEPATH + "/editPlatform/{Id}",
+			AuthConstants.HR_BASEPATH + "/editPlatform/{Id}"})
 	public Platform UpdatePlatform(@PathVariable String Id,@RequestBody Platform platformObj) {
 		return platformService.updatePlatform(Id,platformObj);
 	} 
 
-	@GetMapping(value= {AuthConstants.DEVELOPER_BASEPATH+"/getAllplatform",AuthConstants.ADMIN_BASEPATH+"/getAllplatform"})
+	@GetMapping(value= {AuthConstants.DEVELOPER_BASEPATH+"/getAllplatform",
+			AuthConstants.ADMIN_BASEPATH+"/getAllplatform",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllplatform",
+			AuthConstants.INFRA_USER_BASEPATH + "/getAllplatform",
+			AuthConstants.HR_ADMIN_BASEPATH + "/getAllplatform",
+			AuthConstants.HR_BASEPATH + "/getAllplatform"})
 	public List<Platform> getAllPlatform() {
 		return platformService.getAllPlatform();
 	}
 	
-	@GetMapping(value= {AuthConstants.DEVELOPER_BASEPATH+"/getplatformById/{Id}",AuthConstants.ADMIN_BASEPATH+"/getplatformById/{Id}"})
+	@GetMapping(value= {AuthConstants.DEVELOPER_BASEPATH+"/getplatformById/{Id}",
+			AuthConstants.ADMIN_BASEPATH+"/getplatformById/{Id}",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/getplatformById/{Id}",
+			AuthConstants.INFRA_USER_BASEPATH + "/getplatformById/{Id}",
+			AuthConstants.HR_ADMIN_BASEPATH + "/getplatformById/{Id}",
+			AuthConstants.HR_BASEPATH + "/getplatformById/{Id}"})
 	public Platform getPlatformById(@PathVariable String Id) {
 		return platformService.getPlatformById(Id);
 	}
@@ -53,7 +73,11 @@ public class PlatformController {
 	
 
 	@GetMapping(value= {AuthConstants.DEVELOPER_BASEPATH+"/getAllplatforms/{projectId}"
-			,AuthConstants.ADMIN_BASEPATH+"/getAllplatforms/{projectId}"})
+			,AuthConstants.ADMIN_BASEPATH+"/getAllplatforms/{projectId}",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllplatforms/{Id}",
+			AuthConstants.INFRA_USER_BASEPATH + "/getAllplatforms/{Id}",
+			AuthConstants.HR_ADMIN_BASEPATH + "/getAllplatforms/{Id}",
+			AuthConstants.HR_BASEPATH + "/getAllplatforms/{Id}"})
 	public IssueTrackerResponse getAllPlatformByProject(@PathVariable String projectId) {
 		return platformService.getStoryPlatformByProject(projectId);
 	}

@@ -118,6 +118,25 @@ public interface JobRepository extends CrudRepository<JobOpenings, Long>, JpaSpe
 	Page<JobOpenings> getAllOpenings(String searchString, JobOpeningStatus status, String wing, String userRole,
 		 Pageable pageable);
 	
+	@Query(value = " SELECT j.Id, j.jobCode, j.jobTitle, j.jobSkills, j.wingName, j.jobCode, j.maxExp, j.minExp, j.totalOpenings,"
+			+ " j.filledPositions j.jobStatus from JobOpenings "
+			+ " j left join j.wings as w  where"
+			+ " (:wing is null or  lower(w.wingName)=:wing ) and "
+			+ "(:status is null or j.jobStatus=:status) and "
+			+ "(:userRole is null   Or (:userRole!='JOB_VENDOR' ) OR"
+			+ " (:userRole='JOB_VENDOR' and TRUE =(j.notifyVendor ) ))and "
+			+ " (:searchString is null  "
+			+ " Or lower(j.jobTitle) LIKE %:searchString% "
+			+ " Or lower(j.jobSkills) LIKE %:searchString% "
+			+"  Or lower(j.jobCode) Like %:searchString%"
+			+"  Or lower(w.wingName) Like %:searchString%"
+			+"  Or lower(j.jobDescription) Like %:searchString%"
+			+"  Or lower(j.jobCode) Like %:searchString%"
+			+"  Or lower(j.maxExp) Like %:searchString%"
+			+ " Or lower(j.minExp) LIKE %:searchString%) ORDER BY j.createdAt DESC")		
+	Page<JobOpenings> getAllOpeningsWithoutPackage(String searchString, JobOpeningStatus status, String wing, String userRole,
+		 Pageable pageable);
+	
 	
 	
 

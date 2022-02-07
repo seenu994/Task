@@ -38,9 +38,10 @@ public class StoryController {
 	private StoryMapper storyMapper;
 
 	@PostMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/CreateStory",
+			AuthConstants.DEVELOPER_BASEPATH + "/CreateStory",
 			AuthConstants.INFRA_ADMIN_BASEPATH + "/CreateStory", AuthConstants.INFRA_USER_BASEPATH + "/CreateStory",
 			AuthConstants.ACCOUNTANT_BASEPATH + "/CreateStory", AuthConstants.DEVELOPER_BASEPATH + "/CreateStory",
-			AuthConstants.HR_ADMIN_BASEPATH + "/CreateStory", AuthConstants.JOB_VENDOR_BASEPATH + "/CreateStory" })
+			AuthConstants.HR_ADMIN_BASEPATH + "/CreateStory", AuthConstants.HR_BASEPATH + "/CreateStory" })
 	public Story createStory(@Valid @RequestBody StoryVo storyVo) {
 
 		return storyService.createStory(storyMapper.getEntityFromVo(storyVo));
@@ -53,7 +54,7 @@ public class StoryController {
 			AuthConstants.ACCOUNTANT_BASEPATH + "/getAllStories/{projectId}",
 			AuthConstants.DEVELOPER_BASEPATH + "/getAllStories/{projectId}",
 			AuthConstants.HR_ADMIN_BASEPATH + "/getAllStories/{projectId}",
-			AuthConstants.JOB_VENDOR_BASEPATH + "/getAllStories/{projectId}"})
+			AuthConstants.HR_BASEPATH + "/getAllStories/{projectId}"})
 	public IssueTrackerResponse createStory(@PathVariable String projectId, @RequestParam Map<String, Object> filter) {
 
 		return storyService.getAllStories(projectId, filter);
@@ -64,7 +65,7 @@ public class StoryController {
 			AuthConstants.INFRA_USER_BASEPATH + "/getStoryDetails",
 			AuthConstants.ACCOUNTANT_BASEPATH + "/getStoryDetails",
 			AuthConstants.DEVELOPER_BASEPATH + "/getStoryDetails", AuthConstants.HR_ADMIN_BASEPATH + "/getStoryDetails",
-			AuthConstants.JOB_VENDOR_BASEPATH + "/getStoryDetails" })
+			AuthConstants.HR_BASEPATH + "/getStoryDetails" })
 	public StoryDetailsResponse getStoryDetails(@RequestParam String projectId, @RequestParam String storyId) {
 
 		return storyService.getStoryDetailsById(projectId, storyId);
@@ -78,7 +79,7 @@ public class StoryController {
 			AuthConstants.ACCOUNTANT_BASEPATH + "/storySearch/{projectId}",
 			AuthConstants.DEVELOPER_BASEPATH + "/storySearch/{projectId}",
 			AuthConstants.HR_ADMIN_BASEPATH + "/storySearch/{projectId}",
-			AuthConstants.JOB_VENDOR_BASEPATH + "/storySearch/{projectId}"})
+			AuthConstants.HR_BASEPATH + "/storySearch/{projectId}"})
 	public IssueTrackerResponse getStoryDetails(@PathVariable String projectId,
 			@RequestParam Map<String, Object> filter) {
 
@@ -93,7 +94,7 @@ public class StoryController {
 			AuthConstants.ACCOUNTANT_BASEPATH + "/downloadIssueTrackerReport/{projectId}",
 			AuthConstants.DEVELOPER_BASEPATH + "/downloadIssueTrackerReport/{projectId}",
 			AuthConstants.HR_ADMIN_BASEPATH + "/downloadIssueTrackerReport/{projectId}",
-			AuthConstants.JOB_VENDOR_BASEPATH + "/downloadIssueTrackerReport/{projectId}"})
+			AuthConstants.HR_BASEPATH + "/downloadIssueTrackerReport/{projectId}"})
 	public ReportExportResponse downloadIssueTrackerReport(@PathVariable String projectId, @RequestBody  Map request) {
 
 		return storyService.getStoryDetailsForReportDownload(projectId, request);
@@ -107,7 +108,7 @@ public class StoryController {
 			AuthConstants.ACCOUNTANT_BASEPATH + "/getallStorysReport/{projectId}",
 			AuthConstants.DEVELOPER_BASEPATH + "/getallStorysReport/{projectId}",
 			AuthConstants.HR_ADMIN_BASEPATH + "/getallStorysReport/{projectId}",
-			AuthConstants.JOB_VENDOR_BASEPATH + "/getallStorysReport/{projectId}"})
+			AuthConstants.HR_BASEPATH + "/getallStorysReport/{projectId}"})
 	public IssueTrackerResponse GetAlllIssueTrackerReport(@PathVariable String projectId, @RequestBody  Map request) {
 
 		return storyService.getStoryDetailsForReport(projectId, request);
@@ -122,7 +123,7 @@ public class StoryController {
 			AuthConstants.ACCOUNTANT_BASEPATH + "/updateStory/{storyId}",
 			AuthConstants.DEVELOPER_BASEPATH + "/updateStory/{storyId}",
 			AuthConstants.HR_ADMIN_BASEPATH + "/updateStory/{storyId}",
-			AuthConstants.JOB_VENDOR_BASEPATH + "/updateStory/{storyId}"})
+			AuthConstants.HR_BASEPATH + "/updateStory/{storyId}"})
 	public Story updateStory(@PathVariable String storyId, @RequestBody Story story) {
 
 		return storyService.editStoryDetails(storyId, story);
@@ -132,7 +133,7 @@ public class StoryController {
 			AuthConstants.ADMIN_BASEPATH + "/getAllStories", AuthConstants.INFRA_USER_BASEPATH + "/getAllStories",
 			AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllStories", AuthConstants.ACCOUNTANT_BASEPATH + "/getAllStories",
 			AuthConstants.DEVELOPER_BASEPATH + "/getAllStories", AuthConstants.HR_ADMIN_BASEPATH + "/getAllStories",
-			AuthConstants.JOB_VENDOR_BASEPATH + "/getAllStories" })
+			AuthConstants.HR_BASEPATH + "/getAllStories" })
 	public IssueTrackerResponse getStoryDetailsByStoryStatus(@RequestParam String projectId,
 			@RequestParam String storyStatusId) {
 
@@ -147,7 +148,7 @@ public class StoryController {
 			AuthConstants.ACCOUNTANT_BASEPATH + "/changeStoryStatus",
 			AuthConstants.DEVELOPER_BASEPATH + "/changeStoryStatus",
 			AuthConstants.HR_ADMIN_BASEPATH + "/changeStoryStatus",
-			AuthConstants.JOB_VENDOR_BASEPATH + "/changeStoryStatus"})
+			AuthConstants.HR_BASEPATH + "/changeStoryStatus"})
 	public Story changeStoryStatus(StoryChangeStatusRequest storyChangeStatusrequest) {
 
 		return storyService.changeStoryStatus(storyChangeStatusrequest);
