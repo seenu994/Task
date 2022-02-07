@@ -238,16 +238,25 @@ public class JobServiceImpl implements JobService {
 			throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Invalid Status Passed ");
 		}
 
-		Page<JobOpenings> jobOpeningList = null;
+		Page<List<Map>> jobOpeningList = null;
+		Page<JobOpenings> jobOpening = null;
+		
+		
 		
 		if(userDetail.getUserRole().equals("HR_ADMIN") || userDetail.getUserRole().equals("JOB_VENDOR") ||
 				userDetail.getUserRole().equals("HR"))
 		{
-			jobOpeningList = jobRepository.getAllOpenings(searchString, statusApp, wing,
+			
+			jobOpening = jobRepository.getAllOpenings(searchString, statusApp, wing,
 					userDetail.getUserRole(), pageable);
+			
+			content.put("jobsList", jobOpening);
+			
 		}else {
+
 			jobOpeningList = jobRepository.getAllOpeningsWithoutPackage(searchString, statusApp, wing,
 					userDetail.getUserRole(), pageable);
+			content.put("jobsList", jobOpeningList);
 		}
 		
 
