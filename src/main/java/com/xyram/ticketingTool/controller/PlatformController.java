@@ -72,12 +72,12 @@ public class PlatformController {
 	
 	
 
-	@GetMapping(value= {AuthConstants.DEVELOPER_BASEPATH+"/getAllplatforms/{projectId}"
-			,AuthConstants.ADMIN_BASEPATH+"/getAllplatforms/{projectId}",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllplatforms/{Id}",
-			AuthConstants.INFRA_USER_BASEPATH + "/getAllplatforms/{Id}",
-			AuthConstants.HR_ADMIN_BASEPATH + "/getAllplatforms/{Id}",
-			AuthConstants.HR_BASEPATH + "/getAllplatforms/{Id}"})
+	@GetMapping(value= {AuthConstants.DEVELOPER_BASEPATH+"/getAllPlatformByProject/{projectId}"
+			,AuthConstants.ADMIN_BASEPATH+"/getAllPlatformByProject/{projectId}",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllPlatformByProject/{Id}",
+			AuthConstants.INFRA_USER_BASEPATH + "/getAllPlatformByProject/{Id}",
+			AuthConstants.HR_ADMIN_BASEPATH + "/getAllPlatformByProject/{Id}",
+			AuthConstants.HR_BASEPATH + "/getAllPlatformByProject/{Id}"})
 	public IssueTrackerResponse getAllPlatformByProject(@PathVariable String projectId) {
 		return platformService.getStoryPlatformByProject(projectId);
 	}
