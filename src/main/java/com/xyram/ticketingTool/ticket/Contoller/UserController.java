@@ -45,7 +45,7 @@ public class UserController {
 	@PostMapping("/createAdmin")
 	public String createUser() {
 
-		User user = userService.getUserByUsername("admin");
+		User user = userService.getUserByUsername("superadmin@gmail.com");
 		
 		if (user!=null) {
 			user = new User();
