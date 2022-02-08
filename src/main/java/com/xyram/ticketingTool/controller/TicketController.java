@@ -91,8 +91,12 @@ class TicketController {
 		
 	}
 
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/reopenTicket/{ticketId}",AuthConstants.HR_ADMIN_BASEPATH + "/reopenTicket/{ticketId}",
-			AuthConstants.DEVELOPER_BASEPATH + "/reopenTicket/{ticketId}",AuthConstants.INFRA_ADMIN_BASEPATH + "/reopenTicket/{ticketId}",AuthConstants.HR_BASEPATH + "/reopenTicket/{ticketId}" })
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/reopenTicket/{ticketId}",
+			AuthConstants.HR_ADMIN_BASEPATH + "/reopenTicket/{ticketId}",
+			AuthConstants.INFRA_USER_BASEPATH + "/reopenTicket/{ticketId}",
+			AuthConstants.DEVELOPER_BASEPATH + "/reopenTicket/{ticketId}",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/reopenTicket/{ticketId}"
+			,AuthConstants.HR_BASEPATH + "/reopenTicket/{ticketId}" })
 	public ApiResponse reopenTicket(@PathVariable String ticketId, @RequestBody Comments commentObj) {
 //		logger.info("Recive request to reopened ticket by id:" + ticketRequest.getId());
 		commentObj.setCreatedAt(new Date());

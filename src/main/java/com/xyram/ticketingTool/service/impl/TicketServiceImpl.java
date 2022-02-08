@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
+import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -229,22 +229,22 @@ public class TicketServiceImpl implements TicketService {
 	}
 
 	@Override
-	public ApiResponse createTickets(MultipartFile[] files, String ticketRequest,String assigneeId) {
+	public ApiResponse createTickets(MultipartFile[] files, String ticketRequest, String assigneeId) {
 		ApiResponse response = new ApiResponse(false);
 		ObjectMapper objectMapper = new ObjectMapper();
 		Ticket ticketreq = null;
 		try {
 			ticketreq = objectMapper.readValue(ticketRequest, Ticket.class);
 		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+
 		} catch (JsonProcessingException e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}	
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+		}
 
 		Projects project = projectRepository.getById(ticketreq.getProjectId());
 		if (project == null) {
@@ -253,69 +253,55 @@ public class TicketServiceImpl implements TicketService {
 			response.setContent(null);
 			return response;
 		} else {
-			if(ticketreq.getCreatedBy() != null) {
+			if (ticketreq.getCreatedBy() != null) {
 				ticketreq.setCreatedBy(ticketreq.getCreatedBy());
 			}
-			
-			else
-			{
+
+			else {
 				ticketreq.setCreatedBy(userDetail.getUserId());
-				
+
 			}
 			ticketreq.setCreatedAt(new Date());
 			ticketreq.setUpdatedBy(userDetail.getUserId());
 			ticketreq.setLastUpdatedAt(new Date());
-			// ticketreq.setStatus(TicketStatus.INITIATED);
+			
 			Ticket tickets = ticketrepository.save(ticketreq);
 
-			// Calling file upload method
 			if (files != null) {
 				attachmentService.storeImage(files, tickets.getId());
 			}
 
-
-
-        	if(assigneeId != null) {
+			TicketAssignee assignee=null;
+			if (assigneeId != null) {
 				Employee employeeObj = employeeRepository.getByEmpId(assigneeId);
-				if(employeeObj.getStatus() != UserStatus.OFFLINE) {
-				TicketAssignee assignee = new TicketAssignee();
-				assignee.setEmployeeId(assigneeId);
-				assignee.setTicketId(tickets.getId());
-				assignee.setCreatedAt(new Date());
-				assignee.setCreatedBy(userDetail.getUserId());
-				assignee.setStatus(TicketAssigneeStatus.ACTIVE);
-				
-				tickets.setStatus(TicketStatus.ASSIGNED);
-				ticketAssigneeRepository.save(assignee);
-				}
-        	}
-
-else {
-			String assignEmployeeId = ticketrepository.getElgibleAssignee();
-		
-			if (assignEmployeeId != null) {
-				Employee employeeObj1 = employeeRepository.getById(assignEmployeeId);
-				if (employeeObj1 != null) {
-					response.setMessage(ResponseMessages.TICKET_ADDED+" And assigned.");
-					TicketAssignee assignee = new TicketAssignee();
-					assignee.setEmployeeId(assignEmployeeId);
+				if (employeeObj!=null  && employeeObj.getStatus() != UserStatus.OFFLINE) {
+					 assignee = new TicketAssignee();
+					assignee.setEmployeeId(assigneeId);
 					assignee.setTicketId(tickets.getId());
 					assignee.setCreatedAt(new Date());
 					assignee.setCreatedBy(userDetail.getUserId());
 					assignee.setStatus(TicketAssigneeStatus.ACTIVE);
-					
+
 					tickets.setStatus(TicketStatus.ASSIGNED);
 					ticketAssigneeRepository.save(assignee);
-					}
-				
+				}else {
+					tickets.setStatus(TicketStatus.INITIATED);
+				}
 			}
+
+			else {
+
+				tickets.setStatus(TicketStatus.INITIATED);
+
 			}
-				response.setSuccess(false);
-				response.setMessage(ResponseMessages.TICKET_CREATED);
-				response.setContent(null);
-		}
-		return response;
-}
+
+		response.setSuccess(false);
+		response.setMessage(ResponseMessages.TICKET_CREATED);
+		response.setContent(null);
+	}return response;
+
+	}
+
 	@Override
 	public ApiResponse cancelTicket(String ticketId) {
 		ApiResponse response = new ApiResponse(false);
@@ -578,39 +564,32 @@ else {
 		try {
 			ticketreq = objectMapper.readValue(ticketRequest, Ticket.class);
 		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+
 		} catch (JsonProcessingException e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
 		}
-		// String s = ticketrepository.getTicketById(ticketId);
-		// System.out.println("s Value " + s);
 		if (ticketObj != null) {
-			if (!ticketObj.getStatus().equals(TicketStatus.COMPLETED)) {
+			if (ticketObj.getStatus().equals(TicketStatus.COMPLETED)) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "U CAN't Edit Already Completed Ticket ");
+				
+			}
 
 				ticketObj.setTicketDescription(ticketreq.getTicketDescription());
 				ticketObj.setPriorityId(ticketreq.getPriorityId());
 				ticketObj.setProjectId(ticketreq.getProjectId());
-//				ticketObj.setStatus(ticketreq.getStatus());
 				ticketObj.setUpdatedBy(userDetail.getUserId());
-
 				ticketObj.setLastUpdatedAt(new Date());
-
-				ticketrepository.saveAndFlush(ticketObj);
-
-				// Inserting Ticket history details
-				TicketStatusHistory tktStatusHist = new TicketStatusHistory();
-				// tktStatusHist.setTicketId(ticketId);
-				tktStatusHist.setTicketStatus(TicketStatus.EDITED);
-				tktStatusHist.setCreatedBy(userDetail.getUserId());
-				tktStatusHist.setCreatedAt(new Date());
-				tktStatusHist.setUpdatedBy(userDetail.getUserId());
-				tktStatusHist.setLastUpdatedAt(new Date());
-				tktStatusHistory.save(tktStatusHist);
+			
+				createTicketHistory(ticketObj,TicketStatus.EDITED);
+				
+			   ticketrepository.save(ticketObj);
+				
+				
 				if (files != null)
 					attachmentService.storeImage(files, ticketId);
 				// Change userID to assignee
@@ -622,12 +601,7 @@ else {
 				response.setMessage(ResponseMessages.TICKET_EDITED);
 				response.setContent(null);
 
-			} else {
-				response.setSuccess(false);
-				response.setMessage(ResponseMessages.TICKET_ALREADY_RESOLVED);
-				response.setContent(null);
-			}
-
+			
 		} else {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.TICKET_NOT_EXIST);
@@ -635,6 +609,47 @@ else {
 		}
 		return response;
 	}
+	
+
+
+public TicketStatusHistory createTicketHistory(Ticket ticket,TicketStatus status)
+{
+	
+	TicketStatusHistory tktStatusHist = new TicketStatusHistory();
+	 tktStatusHist.setTicketId(ticket.getId());
+	tktStatusHist.setTicketStatus(status);
+	tktStatusHist.setCreatedBy(userDetail.getUserId());
+	tktStatusHist.setCreatedAt(new Date());
+	tktStatusHist.setUpdatedBy(userDetail.getUserId());
+	tktStatusHist.setLastUpdatedAt(new Date());
+return 	tktStatusHistory.save(tktStatusHist);
+	
+}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	@Override
 	public ApiResponse reopenTicket(String ticketId, Comments commentObj) {
@@ -898,17 +913,18 @@ else {
 		String priority = filter.containsKey("priority") ? ((String) filter.get("priority")) : null;
 
 		List<Map> serachList = null;
-		if (userDetail.getUserRole().equals("TICKETINGTOOL_ADMIN")) {
-			serachList = ticketrepository.searchAllTicket(searchString, priority);
-		}
-		else if  (userDetail.getUserRole().equals("INFRA_ADMIN")) {
-			serachList = ticketrepository.searchAllTicket(searchString, priority);
-
-		} else if (userDetail.getUserRole().equals("INFRA_USER")) {
-			serachList = ticketrepository.searchSelfAssignedTicket(searchString, priority, userDetail.getUserId());
-		} else {
-			serachList = ticketrepository.searchSelfTicket(searchString, priority, userDetail.getUserId());
-		}
+//		if (userDetail.getUserRole().equals("TICKETINGTOOL_ADMIN")) {
+//			serachList = ticketrepository.searchAllTicket(searchString, priority);
+//		}
+//		else if  (userDetail.getUserRole().equals("INFRA_ADMIN")) {
+//			serachList = ticketrepository.searchAllTicket(searchString, priority);
+//
+//		} else if (userDetail.getUserRole().equals("INFRA_USER")) {
+//			serachList = ticketrepository.searchSelfAssignedTicket(searchString, priority, userDetail.getUserId());
+//		} else {
+//			serachList = ticketrepository.searchSelfTicket(searchString, priority, userDetail.getUserId());
+//		}
+		serachList = ticketrepository.searchAllTicket(searchString, priority);
 		ApiResponse response = new ApiResponse(true);
 
 		Map content = new HashMap();

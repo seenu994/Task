@@ -59,18 +59,18 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 //			+ "and p1.projectId = :projectId)) and e.email like %:searchString%")
 
 	@Query("Select distinct new map(e.eId as id, e.firstName as firstName, e.lastName as lastName) from Employee e "
-			+ "where e.status = 'ACTIVE' and e.email like %:searchString% and e.roleId = 'R3' ")
+			+ "where e.status = 'ACTIVE' and e.email like %:searchString%  or e.firstName like %:searchString% or e.middleName like %:searchString% or e.lastName like %:searchString% and e.roleId = 'R3' ")
 	List<Map> searchInfraUser(@Param("searchString") String searchString);
 
 	@Query("Select distinct new map(e.eId as id, e.firstName as firstName, e.lastName as lastName) from Employee e "
-			+ "where e.status = 'ACTIVE' and e.email like %:searchString% and e.roleId = 'R3' and e.userCredientials.id != :userId")
+			+ "where e.status = 'ACTIVE' and e.email like %:searchString%  or e.firstName like %:searchString% or e.middleName like %:searchString% or e.lastName like %:searchString% and e.roleId = 'R3' and e.userCredientials.id != :userId")
 	List<Map> searchInfraUsersForInfraUser(@Param("searchString") String searchString, @Param("userId") String userId);
 
 //	@Query("Select distinct new map(e.eId as id, e.firstName as firstName, e.lastName as lastName) from Employee e "
 //			+ "where e.status = 'ACTIVE' and e.email like %:searchString% ")
 	@Query("Select new map(e.eId as id,e.email as email,e.firstName as firstName,e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId, "
 			+ "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,d.designationName as designationName,e.location as location,e.position as position,e.wings as wings,e.profileUrl as profileUrl) from Employee e "
-			+ "JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id where r.Id !='R1' and e.email like %:searchString%")
+			+ "JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id where r.Id !='R1' and e.email like %:searchString% or e.firstName like %:searchString% or e.middleName like %:searchString% or e.lastName like %:searchString%")
 	List<Map> searchEmployee(@Param("searchString") String searchString);
 
 	@Query(value = "SELECT e.employee_id, e.frist_name, e.last_name, count(e.employee_id) assigned_cnt FROM ticketdbtool.employee e "
@@ -139,7 +139,10 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 	@Query("SELECT e from Employee e where DATE_TRUNC('month', e.createdAt) = DATE_TRUNC('month', CURRENT_DATE)")
 	List<Map> getAllEmployeeCurrentMonth(Pageable pageable);
 
-	@Query("SELECT new map(e as employeeDetails) from Employee e where e.userCredientials.id = :accessToken")
+
+	@Query("Select new map(e.eId as id,e.email as email,e.firstName as firstName,e.profileUrl as profileUrl, e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId,e.location as location,e.position as position,e.wings as wings, "
+			+ "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,d.designationName as designationName,e.reportingTo as reportingTo,CONCAT(ee.firstName ,' ', ee.lastName) as ReporterName,ee.profileUrl as ReporterURL) from Employee e left join Employee ee On ee.eId = e.reportingTo  "
+			+ "JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id where e.userCredientials.id=:accessToken")
 	Map getbyAccessToken(String accessToken);
 
 	@Query("SELECT new map(CONCAT(e.firstName ,' ', e.lastName) as ReporterName,e.eId as Id,e.profileUrl as profileUrl) from Employee e where e.reportingTo = :reportingId")

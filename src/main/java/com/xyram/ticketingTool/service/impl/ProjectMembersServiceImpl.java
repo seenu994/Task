@@ -243,6 +243,7 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 				member.getProjectId());
 		if (projectMembers != null) {
 			projectMembers.setStatus(ProjectMembersStatus.INACTIVE);
+			projectMembers.setIsAdmin("0");
 			projectMemberRepository.save(projectMembers);
 
 		}
