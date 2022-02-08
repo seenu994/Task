@@ -71,19 +71,20 @@ public interface ProjectRepository extends JpaRepository<Projects, String> {
 	List<Map> getAllProject();
 
 	@Query("Select distinct new map(e.pId as id,e.projectName as PName,e.projectDescritpion as projectDescritpion,e.clientId as clientId,e.inHouse as inHouse,"
-			+ "e.status as status) from Projects e")
+			+ "e.status as status, e.createdAt as createdDate) from Projects e ORDER BY e.createdAt DESC")
 	List<Map> getAllProjectforAdmin();
 
 	@Query("Select distinct new map(p.pId as id,p.projectName as PName, p.projectDescritpion as projectDescritpion, p.clientId as clientId, "
-			+ " p.inHouse as inHouse, p.status as status) from Projects "
-			+ " p left join  ProjectMembers e On  p.pId=e.projectId where p.status!='INACTIVE' and e.status = 'ACTIVE' and e.employeeId = :employeeId ")
+			+ " p.inHouse as inHouse, p.status as status , p.createdAt as createdDate) from Projects "
+			+ " p left join  ProjectMembers e On  p.pId=e.projectId where p.status!='INACTIVE' and e.status = 'ACTIVE' and e.employeeId = :employeeId "
+			+ " ORDER BY p.createdAt DESC")
 	List<Map> getAllProjectByDeveloperList(String employeeId);
 
-	@Query("Select distinct new map(p.pId as projectId,p.projectName as PName) from Projects p where p.allotToAll = 1")
+	@Query("Select distinct new map(p.pId as projectId,p.projectName as PName, p.createdAt as createdDate) from Projects p where p.allotToAll = 1 ORDER BY p.createdAt DESC")
 	List<Map> getAllAllottedProjects();
 
-	@Query("Select distinct new map(p.pId as id, p.projectName as PName, p.projectDescritpion as projectDescritpion, p.clientId as clientId, c.clientName as clientname, "
-			+ "p.inHouse as inHouse, p.status as status,p.createdAt as createdAt) from Projects p join Client c ON p.clientId = c.Id ")
+	@Query("Select distinct new map(p.pId as id, p.projectName as PName, p.projectDescritpion as projectDescritpion, p.clientId as clientId, c.clientName as clientname, p.createdAt as createdDate, "
+			+ "p.inHouse as inHouse, p.status as status,p.createdAt as createdAt) from Projects p join Client c ON p.clientId = c.Id ORDER BY p.createdAt DESC ")
 	Page<Map> getAllForAdmins(Pageable pageable);
 
 }

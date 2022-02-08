@@ -898,17 +898,18 @@ else {
 		String priority = filter.containsKey("priority") ? ((String) filter.get("priority")) : null;
 
 		List<Map> serachList = null;
-		if (userDetail.getUserRole().equals("TICKETINGTOOL_ADMIN")) {
-			serachList = ticketrepository.searchAllTicket(searchString, priority);
-		}
-		else if  (userDetail.getUserRole().equals("INFRA_ADMIN")) {
-			serachList = ticketrepository.searchAllTicket(searchString, priority);
-
-		} else if (userDetail.getUserRole().equals("INFRA_USER")) {
-			serachList = ticketrepository.searchSelfAssignedTicket(searchString, priority, userDetail.getUserId());
-		} else {
-			serachList = ticketrepository.searchSelfTicket(searchString, priority, userDetail.getUserId());
-		}
+//		if (userDetail.getUserRole().equals("TICKETINGTOOL_ADMIN")) {
+//			serachList = ticketrepository.searchAllTicket(searchString, priority);
+//		}
+//		else if  (userDetail.getUserRole().equals("INFRA_ADMIN")) {
+//			serachList = ticketrepository.searchAllTicket(searchString, priority);
+//
+//		} else if (userDetail.getUserRole().equals("INFRA_USER")) {
+//			serachList = ticketrepository.searchSelfAssignedTicket(searchString, priority, userDetail.getUserId());
+//		} else {
+//			serachList = ticketrepository.searchSelfTicket(searchString, priority, userDetail.getUserId());
+//		}
+		serachList = ticketrepository.searchAllTicket(searchString, priority);
 		ApiResponse response = new ApiResponse(true);
 
 		Map content = new HashMap();

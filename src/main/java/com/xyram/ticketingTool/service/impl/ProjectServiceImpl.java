@@ -55,13 +55,13 @@ public class ProjectServiceImpl implements ProjectService {
 
 	@Autowired
 	EmployeeRepository employeeRepository;
-	
+
 	@Autowired
 	FeatureRepository featureRepository;
-	
-    @Autowired
+
+	@Autowired
 	ProjectFeatureService projectFeatureService;
-	
+
 	@Override
 	public ApiResponse addproject(Projects project) {
 		ApiResponse response = validateClientId(project);
@@ -81,30 +81,24 @@ public class ProjectServiceImpl implements ProjectService {
 			// System.out.println("project.getCreatedBy - " + project.getCreatedBy());
 			// System.out.println("userDetail.getUserId() - " + userDetail.getUserId());
 			Projects projetAdded = projectRepository.save(project);
-			
-			if(projetAdded!=null)
-			{
-			List<Feature> features=	featureRepository.getDefaultFeatures();
-			
-			features.forEach(feature->{
-			      ProjectFeature projectFeature =new ProjectFeature();
-			      projectFeature.setFeatureId(feature.getFeatureId());
-			      projectFeature.setProjectId(projetAdded.getpId());
-			      projectFeatureService.addProjectFeature(projectFeature);
-			});
+
+			if (projetAdded != null) {
+				List<Feature> features = featureRepository.getDefaultFeatures();
+
+				features.forEach(feature -> {
+					ProjectFeature projectFeature = new ProjectFeature();
+					projectFeature.setFeatureId(feature.getFeatureId());
+					projectFeature.setProjectId(projetAdded.getpId());
+					projectFeatureService.addProjectFeature(projectFeature);
+				});
 			}
-			
-			
 
 			response.setSuccess(true);
 			response.setMessage(ResponseMessages.PROJECT_ADDED);
 			Map<String, String> content = new HashMap<String, String>();
 			content.put("projectId", projetAdded.getpId());
 			response.setContent(content);
-			
-			
-			
-			
+
 			return response;
 		}
 		return response;
@@ -130,34 +124,32 @@ public class ProjectServiceImpl implements ProjectService {
 		 * // Page<Map> projectList = projectRepository.getAllProjectLsit(pageable);
 		 */
 		Page<Map> projectList;
-		
+
 		System.out.println(userDetail.getUserRole());
-			
-		if ( userDetail.getUserRole()!=null && (userDetail.getUserRole().equalsIgnoreCase("TICKETINGTOOL_ADMIN") 
+
+		if (userDetail.getUserRole() != null && (userDetail.getUserRole().equalsIgnoreCase("TICKETINGTOOL_ADMIN")
 				|| userDetail.getUserRole().equalsIgnoreCase("INFRA_ADMIN"))) {
 			projectList = projectRepository.getAllForAdmins(pageable);
-				
-			} else
-				projectList = projectRepository.getAllProjectsList(userDetail.getScopeId(), pageable);
-if (projectList!=null) {
-	
 
-		Map content = new HashMap<>();
-		content.put("projectList", projectList);
-		ApiResponse response = new ApiResponse(true);
-		response.setSuccess(true);
-		response.setContent(content);
-		return response;
-	}
-	else
-	{
-		ApiResponse response = new ApiResponse(true);
-	
-		response.setMessage("project list is empty");
+		} else
+			projectList = projectRepository.getAllProjectsList(userDetail.getScopeId(), pageable);
+		if (projectList != null) {
 
-return response;
+			Map content = new HashMap<>();
+			content.put("projectList", projectList);
+			ApiResponse response = new ApiResponse(true);
+			response.setSuccess(true);
+			response.setContent(content);
+			return response;
+		} else {
+			ApiResponse response = new ApiResponse(true);
+
+			response.setMessage("project list is empty");
+
+			return response;
+		}
 	}
-	}
+
 	public Projects getProjectById(String projectId) {
 
 		return projectRepository.findById(projectId).map(project -> {
@@ -267,14 +259,14 @@ return response;
 	@Override
 	public IssueTrackerResponse findById(String id) {
 		IssueTrackerResponse response = new IssueTrackerResponse();
-		
+
 		List<Map> projectDetails = projectRepository.getByProjectClietName(id);
 		response.setContent(projectDetails);
 
 		response.setStatus("success");
 
 		return response;
-		
+
 	}
 
 	@Override
@@ -282,14 +274,11 @@ return response;
 		return projectRepository.getProjecById(projectId);
 
 	}
-	
-	
-
 
 	@Override
 	public ApiResponse searchProject(String searchString) {
 		ApiResponse response = new ApiResponse(false);
-		List<Map> projectList = projectRepository.searchProject(searchString,userDetail.getUserRole(),
+		List<Map> projectList = projectRepository.searchProject(searchString, userDetail.getUserRole(),
 				userDetail.getScopeId());
 		Map content = new HashMap();
 		if (projectList.size() > 0) {
@@ -308,14 +297,14 @@ return response;
 	@Override
 	public ApiResponse getgenericIssues() {
 
-			List<Map> projectList = projectRepository.getgenericIssues();
+		List<Map> projectList = projectRepository.getgenericIssues();
 
 		Map content = new HashMap();
 		content.put("projectList", projectList);
 		ApiResponse response = new ApiResponse(true);
 		response.setSuccess(true);
 		response.setContent(content);
-		return response;	
+		return response;
 	}
 
 	@Override
@@ -324,12 +313,12 @@ return response;
 		 * // Page<Map> projectList = projectRepository.getAllProjectLsit(pageable);
 		 */
 		List<Map> projectList;
-		
+
 		System.out.println(userDetail.getUserRole());
-	if ( userDetail.getUserRole()!=null && (userDetail.getUserRole().equalsIgnoreCase("TICKETINGTOOL_ADMIN") 
-			|| userDetail.getUserRole().equalsIgnoreCase("INFRA_ADMIN"))) {
-		projectList = projectRepository.getAllProject();
-			
+		if (userDetail.getUserRole() != null && (userDetail.getUserRole().equalsIgnoreCase("TICKETINGTOOL_ADMIN")
+				|| userDetail.getUserRole().equalsIgnoreCase("INFRA_ADMIN"))) {
+			projectList = projectRepository.getAllProject();
+
 		} else
 			projectList = projectRepository.getAllProjectByDeveloperList(userDetail.getScopeId());
 
@@ -340,9 +329,11 @@ return response;
 		response.setContent(content);
 		return response;
 	}
+
 	private ApiResponse validateStatus(ProjectStatus projectStatus) {
 		ApiResponse response = new ApiResponse(false);
-		if (projectStatus == ProjectStatus.ACTIVE || projectStatus == ProjectStatus.INACTIVE || projectStatus == ProjectStatus.INDEVELOPMENT ||projectStatus == ProjectStatus.INPRODUCTION){
+		if (projectStatus == ProjectStatus.ACTIVE || projectStatus == ProjectStatus.INACTIVE
+				|| projectStatus == ProjectStatus.INDEVELOPMENT || projectStatus == ProjectStatus.INPRODUCTION) {
 			response.setMessage(ResponseMessages.STATUS_UPDATE);
 			response.setSuccess(true);
 		}
@@ -355,31 +346,31 @@ return response;
 
 		return response;
 	}
+
 	@Override
 	public ApiResponse updateProjectStatus(String projectId, ProjectStatus projectStatus) {
-		
-			ApiResponse response = validateStatus(projectStatus);
-			if (response.isSuccess()) {
-				Projects projects = projectRepository.getById(projectId);
-				if (projects != null) {
 
-					projects.setStatus(projectStatus);
-					projectRepository.save(projects);
-					
+		ApiResponse response = validateStatus(projectStatus);
+		if (response.isSuccess()) {
+			Projects projects = projectRepository.getById(projectId);
+			if (projects != null) {
 
-					// Employee employeere=new Employee();z
+				projects.setStatus(projectStatus);
+				projectRepository.save(projects);
 
-					response.setSuccess(true);
-					response.setMessage(ResponseMessages.STATUS_UPDATE);
-					response.setContent(null);
-				}
-			} else {
-				response.setSuccess(false);
-				response.setMessage(ResponseMessages.PROJECT_ID_VALID);
+				// Employee employeere=new Employee();z
+
+				response.setSuccess(true);
+				response.setMessage(ResponseMessages.STATUS_UPDATE);
 				response.setContent(null);
 			}
-
-			return response;
+		} else {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.PROJECT_ID_VALID);
+			response.setContent(null);
 		}
+
+		return response;
+	}
 
 }
