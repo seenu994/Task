@@ -80,6 +80,11 @@ public class ArticleServiceImpl implements ArticleService{
 		ApiResponse response = new ApiResponse(false);
 		
 		Articles articleObj = articleRepository.findArticleById(article.getArticleId());
+		if(!currentUser.getUserRole().equals("TICKETINGTOOL_ADMIN") && !currentUser.getUserId().equals(articleObj.getUserId())) {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.NOT_AUTHORIZED);
+			return response;
+		}
 		
 		if(articleObj != null) {		
 			try {
@@ -111,7 +116,11 @@ public class ArticleServiceImpl implements ArticleService{
 		ApiResponse response = new ApiResponse(false);
 		
 		Articles articleObj = articleRepository.findArticleById(articleId);
-		
+		if(!currentUser.getUserRole().equals("TICKETINGTOOL_ADMIN") && !currentUser.getUserId().equals(articleObj.getUserId())) {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.NOT_AUTHORIZED);
+			return response;
+		}
 		if(articleObj != null) {		
 			try {
 				
@@ -138,7 +147,11 @@ public class ArticleServiceImpl implements ArticleService{
 		ApiResponse response = new ApiResponse(false);
 		
 		Articles articleObj = articleRepository.findArticleById(articleId);
-		
+		if(!currentUser.getUserRole().equals("TICKETINGTOOL_ADMIN") && !currentUser.getUserId().equals(articleObj.getUserId())) {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.NOT_AUTHORIZED);
+			return response;
+		}
 		if(articleObj != null) {		
 			try {
 				
@@ -220,7 +233,11 @@ public class ArticleServiceImpl implements ArticleService{
 		ApiResponse response = new ApiResponse(false);
 		
 		Articles articleObj = articleRepository.findArticleById(articleId);
-		
+		if(!currentUser.getUserRole().equals("TICKETINGTOOL_ADMIN") && !currentUser.getUserId().equals(articleObj.getUserId())) {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.NOT_AUTHORIZED);
+			return response;
+		}
 		if(articleObj != null) {		
 			try {
 

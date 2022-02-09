@@ -106,7 +106,7 @@ public interface ResponseMessages {
 	String ARTICLE_STATUS_NOT_CHANGED = "Artcle status not changed";
 	String ARTICLE_DELETED = "Artcle deleted successfully";
 	String ARTICLE_NOT_DELETED = "Artcle not deleted";
-	
+	String NOT_AUTHORIZED = "Artcle not deleted";
 	String ARTICLE_LIST_RETREIVED = "Artcle list retreived successfully";
 	String ARTICLE_LIST_NOT_RETREIVED = "Artcle list not retreived";
 	
