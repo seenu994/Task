@@ -131,9 +131,9 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 	@Query(value = "SELECT * from ticket_attachment t where t.ticket_id = :ticketId  ", nativeQuery = true)
 	List<Map> getTktAttachmentsById(String ticketId);
 
-	@Query(value = "SELECT a.ticket_id as ticket_id, a.type as type,p.project_id as projectId, p.project_name as projectName, a.ticket_description as ticket_description , a.ticket_status as ticket_status, a.created_at as created_at, a.created_by as created_by, a.last_updated_at as last_updated_at, "
-			+ "a.priority_id as priority_id, b.employee_id as assigneeId, concat(e.frist_name, ' ', e.last_name) as assigneeName, concat(ee.frist_name, ' ', ee.last_name) as createdByEmp, a.project_id as projectId, p.project_name as projectName "
-			+ "FROM ticket_info a left join project p on a.project_id = p.project_id "
+	@Query(value = "SELECT a.ticket_id as ticket_id, a.type as type,p.project_id as projectId, a.ticket_description as ticket_description , a.ticket_status as ticket_status, a.created_at as created_at, a.created_by as created_by, a.last_updated_at as last_updated_at, "
+			+ "a.priority_id as priority_id, b.employee_id as assigneeId, concat(e.frist_name, ' ', e.last_name) as assigneeName, concat(ee.frist_name, ' ', ee.last_name) as createdByEmp, p.project_name as projectName "
+			+ "FROM ticket_info a "
 			+ "left join ticketdbtool.project p ON a.project_id = p.project_id left join employee ee on a.created_by = ee.user_id left join ticket_assignee b ON a.ticket_id = b.ticket_id and b.ticket_assignee_status = 'ACTIVE' "
 			+ "left join employee e on b.employee_id = 	e.employee_id where a.ticket_id = :ticketId", nativeQuery = true)
 	List<Map> getTicketSearchById(@Param("ticketId") String ticketId);
@@ -144,7 +144,7 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 	 * ) List<Ticket> getTicketDetailsExceptStatus();
 	 */
 
-	@Query("SELECT distinct new map(a.Id as ticket_id, a.type as type,p.pId as projectId,p.projectName as projectName, a.ticketDescription as ticket_description, a.status as ticket_status, a.createdAt as created_at, a.createdBy as created_by, a.lastUpdatedAt as last_updated_at, a.projectId as project_id, b.employeeId as assigneeId, concat(e.firstName,' ', e.lastName) as assigneeName, concat(ee.firstName,' ', ee.lastName) as createdByEmp) "
+	@Query("SELECT distinct new map(a.Id as ticket_id, a.type as type,p.projectName as projectName, a.ticketDescription as ticket_description, a.status as ticket_status, a.createdAt as created_at, a.createdBy as created_by, a.lastUpdatedAt as last_updated_at, a.projectId as project_id, b.employeeId as assigneeId, concat(e.firstName,' ', e.lastName) as assigneeName, concat(ee.firstName,' ', ee.lastName) as createdByEmp) "
 			+ "from Ticket a left join Employee ee on a.createdBy = ee.userCredientials  left join Projects p ON a.projectId = p.pId  left join TicketAssignee b ON a.Id = b.ticketId and b.status = 'ACTIVE' "
 			+ "left join Employee e on b.employeeId = e.eId where (a.createdAt between :startTime and :endTime)")
 	Page<Map> getAllTicketsByDuration(Pageable pageable, @Param("startTime") Date startTime,
@@ -172,14 +172,14 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 			+ "left join Employee e on b.employeeId = e.eId")
 	Page<Map> getAllTicketsDetails(Pageable pageable);
 
-	@Query("SELECT distinct new map(a.Id as ticket_id, a.type as type,p.pId as projectId, a.ticketDescription as ticket_description, a.status as ticket_status, a.createdAt as created_at, a.createdBy as created_by, a.lastUpdatedAt as last_updated_at, a.projectId as project_id, b.employeeId as assigneeId, concat(e.firstName,' ', e.lastName) as assigneeName, concat(ee.firstName,' ', ee.lastName) as createdByEmp)  "
+	@Query("SELECT distinct new map(a.Id as ticket_id, a.type as type, a.ticketDescription as ticket_description, a.status as ticket_status, a.createdAt as created_at, a.createdBy as created_by, a.lastUpdatedAt as last_updated_at, a.projectId as project_id, b.employeeId as assigneeId, concat(e.firstName,' ', e.lastName) as assigneeName, concat(ee.firstName,' ', ee.lastName) as createdByEmp)  "
 			+ "from Ticket a left join Employee ee on a.createdBy = ee.userCredientials left join Projects p ON a.projectId = p.pId left join TicketAssignee b ON a.Id = b.ticketId and b.status = 'ACTIVE' left join Employee e on b.employeeId = e.eId  WHERE (:projectId='' OR a.projectId LIKE concat('%', :projectId ,'%'')) "
 			+ "AND (:status='' OR a.status LIKE concat('%', :status ,'%''))")
 	Page<Map> getUU(Pageable pageable, @Param("projectId") String projectId);
 
 	List<Ticket> findAll(Specification<Ticket> specification);
 
-	@Query(value = "SELECT new map(a.Id as ticketId,a.type as type,p.pId as projectId,p.projectName as projectName,a.ticketDescription as ticketDescription,a.status as ticketStatus,a.createdAt as createdAt,a.createdBy as createdBy,a.lastUpdatedAt as lastUpdatedAt,p.projectName as projectName,b.Id as ticketAsigneeId,concat(e.firstName,' ', e.lastName) as assignedTo,concat(ee.firstName,' ',ee.lastName) as createdByEmp,DATEDIFF(a.resolvedAt,a.createdAt) as duration) "
+	@Query(value = "SELECT new map(a.Id as ticketId,a.type as type,p.pId as projectId,a.ticketDescription as ticketDescription,a.status as ticketStatus,a.createdAt as createdAt,a.createdBy as createdBy,a.lastUpdatedAt as lastUpdatedAt,p.projectName as projectName,b.Id as ticketAsigneeId,concat(e.firstName,' ', e.lastName) as assignedTo,concat(ee.firstName,' ',ee.lastName) as createdByEmp,DATEDIFF(a.resolvedAt,a.createdAt) as duration) "
 			+ "from Ticket a left join TicketAssignee b ON a.Id = b.ticketId and b.status = 'ACTIVE' "
 			+ "left join Employee e on b.employeeId = e.eId left join Employee ee on a.createdBy = ee.userCredientials.id left join Projects p ON a.projectId = p.pId where (:status is null or a.status = :status)"
 			+ "and  (:projectName is null or p.projectName = :projectName) and  (cast(:parsedFromDate as date) is null or DATE(a.createdAt) >= :parsedFromDate ) and (cast(:parsedToDate as date) is null or DATE(a.createdAt) <= :parsedToDate ) AND (:searchQuery is null OR lower(e.firstName) LIKE %:searchQuery% OR lower(e.lastName) LIKE %:searchQuery%  OR e.eId LIKE %:searchQuery%) ORDER BY a.createdAt DESC ")
