@@ -97,4 +97,18 @@ public interface ResponseMessages {
 	String SCHEDULEINIERVIEW_UPDATED = "ScheduleInterview Updated Successfully";
 	String SCHEDULEINIERVIEW_INVALID = "Invalid interview Id";
 	String TICKET_CREATED = "Ticket created successfully";
+	
+	String ARTICLE_ADDED = "Artcle created successfully";
+	String ARTICLE_NOT_ADDED = "Artcle not created";
+	String ARTICLE_EDITED = "Artcle edited successfully";
+	String ARTICLE_NOT_EDITED = "Artcle not edited";
+	String ARTICLE_STATUS_CHANGED = "Artcle status changed successfully";
+	String ARTICLE_STATUS_NOT_CHANGED = "Artcle status not changed";
+	String ARTICLE_DELETED = "Artcle deleted successfully";
+	String ARTICLE_NOT_DELETED = "Artcle not deleted";
+	
+	String ARTICLE_LIST_RETREIVED = "Artcle list retreived successfully";
+	String ARTICLE_LIST_NOT_RETREIVED = "Artcle list not retreived";
+	
+	
 }
