@@ -66,33 +66,33 @@ public interface ArticleRepository extends JpaRepository<Articles, String>{
 	private String UpdatedBy;
 	 */
 	
-	@Query("Select distinct new map( a.articleId as articleId,a.title as title,a.description as description,a.userId as userId,"
+	@Query("Select distinct new map( a.articleId as articleId,a.title as title,a.searchLabels as searchLabels,a.description as description,a.userId as userId,"
 			+ " a.userName as userName, a.createdAt as createdAt,a.lastUpdatedAt as lastUpdatedAt,"
 			+ " a.UpdatedBy as UpdatedBy, a.createdBy as createdBy) from Articles a where a.status = 'ACTIVE' "
 			+ " ORDER BY a.createdAt DESC")
 	Page<Map> getAllActiveArticles(Pageable pageable);
 	
-	@Query("Select distinct new map( a.articleId as articleId,a.title as title,a.description as description,a.userId as userId,"
+	@Query("Select distinct new map( a.articleId as articleId,a.title as title,a.searchLabels as searchLabels,a.description as description,a.userId as userId,"
 			+ " a.userName as userName, a.createdAt as createdAt,a.lastUpdatedAt as lastUpdatedAt,"
 			+ " a.UpdatedBy as UpdatedBy, a.createdBy as createdBy) from Articles a "
 			+ " ORDER BY a.createdAt DESC")
 	Page<Map> getAllArticles(Pageable pageable);
 	
-	@Query("Select distinct new map( a.articleId as articleId,a.title as title,a.description as description,a.userId as userId,"
+	@Query("Select distinct new map( a.articleId as articleId,a.title as title,a.searchLabels as searchLabels,a.description as description,a.userId as userId,"
 			+ " a.userName as userName, a.createdAt as createdAt,a.lastUpdatedAt as lastUpdatedAt,"
 			+ " a.UpdatedBy as UpdatedBy, a.createdBy as createdBy) from Articles a where a.userId=:userId  "
 			+ " ORDER BY a.createdAt DESC")
 	Page<Map> getAllMyArticles(Pageable pageable, String userId); 
 	
-	@Query("Select distinct new map( a.articleId as articleId,a.title as title,a.description as description,a.userId as userId,"
+	@Query("Select distinct new map( a.articleId as articleId,a.title as title,a.searchLabels as searchLabels,a.description as description,a.userId as userId,"
 			+ " a.userName as userName, a.createdAt as createdAt,a.lastUpdatedAt as lastUpdatedAt,"
 			+ " a.UpdatedBy as UpdatedBy, a.createdBy as createdBy) from Articles a where a.title like %:searchString% or a.description like %:searchString% "
 			+ " ORDER BY a.createdAt DESC")
 	Page<Map> searchAllArticles(Pageable pageable, String searchString);
 	
-	@Query("Select distinct new map( a.articleId as articleId,a.title as title,a.description as description,a.userId as userId,"
+	@Query("Select distinct new map( a.articleId as articleId,a.title as title,a.searchLabels as searchLabels,a.description as description,a.userId as userId,"
 			+ " a.userName as userName, a.createdAt as createdAt,a.lastUpdatedAt as lastUpdatedAt,"
-			+ " a.UpdatedBy as UpdatedBy, a.createdBy as createdBy) from Articles a where a.status = 'ACTIVE' and a.title like %:searchString% or a.description like %:searchString% "
+			+ " a.UpdatedBy as UpdatedBy, a.createdBy as createdBy) from Articles a where a.status = 'ACTIVE' and a.title like %:searchString% or a.description like %:searchString% or a.searchLabels like %:searchString% "
 			+ " ORDER BY a.createdAt DESC")
 	Page<Map> searchAllActiveArticles(Pageable pageable, String searchString);
 	

@@ -85,6 +85,7 @@ public class ArticleServiceImpl implements ArticleService{
 			try {
 				articleObj.setTitle(article.getTitle());
 				articleObj.setDescription(article.getDescription());
+				articleObj.setSearchLabels(article.getSearchLabels());
 				articleObj.setUpdatedBy(currentUser.getUserId());
 				articleObj.setLastUpdatedAt(new Date());
 				

@@ -38,6 +38,17 @@ public class Articles extends AuditModel {
 	
 	@Column(name = "user_name", nullable = false)
 	private String userName;
+	
+	@Column(name = "search_labels")
+	private String searchLabels;
+
+	public String getSearchLabels() {
+		return searchLabels;
+	}
+
+	public void setSearchLabels(String searchLabels) {
+		this.searchLabels = searchLabels;
+	}
 
 	public String getArticleId() {
 		return articleId;
