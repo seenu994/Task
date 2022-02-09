@@ -18,7 +18,7 @@ public interface EmployeeService {
 
 	ApiResponse addemployee(Employee employee);
 
-	ApiResponse getAllEmployee(Pageable pageable);
+	ApiResponse getAllEmployee(Map<String, Object> filter, Pageable pageable);
 
 	ApiResponse editEmployee(String employeeId, Employee employee);
 
