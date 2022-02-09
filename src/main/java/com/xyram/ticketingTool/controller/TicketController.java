@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -30,6 +31,7 @@ import com.xyram.ticketingTool.request.JobOpeningSearchRequest;
 
 import com.xyram.ticketingTool.service.TicketService;
 import com.xyram.ticketingTool.util.AuthConstants;
+import com.xyram.ticketingTool.vo.TicketVo;
 
 /**
  * 
@@ -85,9 +87,9 @@ class TicketController {
 
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editTicket/{ticketId}",AuthConstants.HR_ADMIN_BASEPATH + "/editTicket/{ticketId}",AuthConstants.INFRA_USER_BASEPATH + "/editTicket/{ticketId}",
 			AuthConstants.HR_BASEPATH + "/editTicket/{ticketId}",AuthConstants.DEVELOPER_BASEPATH + "/editTicket/{ticketId}",AuthConstants.INFRA_ADMIN_BASEPATH + "/editTicket/{ticketId}" })
-	public ApiResponse editTicket(@RequestPart(name = "files", required = false) MultipartFile[] files,@PathVariable String ticketId, @RequestPart String ticketRequest) {
+	public ApiResponse editTicket(@PathVariable String ticketId,@ModelAttribute TicketVo ticketVo) {
 //		logger.info("Recive request to edit ticket by id:" + ticketRequest.getId());
-		return ticketService.editTicket(files,ticketId, ticketRequest);
+		return ticketService.editTicket(ticketId, ticketVo);
 		
 	}
 

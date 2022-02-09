@@ -53,6 +53,7 @@ import com.xyram.ticketingTool.service.NotificationService;
 import com.xyram.ticketingTool.service.TicketAttachmentService;
 import com.xyram.ticketingTool.service.TicketService;
 import com.xyram.ticketingTool.util.ResponseMessages;
+import com.xyram.ticketingTool.vo.TicketVo;
 
 /**
  * 
@@ -553,7 +554,7 @@ public class TicketServiceImpl implements TicketService {
 	}
 
 	@Override
-	public ApiResponse editTicket(MultipartFile[] files, String ticketId, String ticketRequest) {
+	public ApiResponse editTicket( String ticketId,TicketVo ticketVo) {
 
 		ApiResponse response = new ApiResponse(false);
 		Ticket ticketObj = null;
@@ -562,7 +563,7 @@ public class TicketServiceImpl implements TicketService {
 		ObjectMapper objectMapper = new ObjectMapper();
 		Ticket ticketreq = null;
 		try {
-			ticketreq = objectMapper.readValue(ticketRequest, Ticket.class);
+			ticketreq = objectMapper.readValue(ticketVo.getTicketRequest(), Ticket.class);
 		} catch (JsonMappingException e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
 
@@ -590,8 +591,8 @@ public class TicketServiceImpl implements TicketService {
 			   ticketrepository.save(ticketObj);
 				
 				
-				if (files != null)
-					attachmentService.storeImage(files, ticketId);
+				if (ticketVo.getFiles() != null &&ticketVo.getFiles().length>0)
+					attachmentService.storeImage(ticketVo.getFiles(), ticketId);
 				// Change userID to assignee
 				sendPushNotification(
 						ticketAssigneeRepository.getAssigneeIdForDeveloper(ticketObj.getId(), employee.geteId()),
@@ -610,7 +611,8 @@ public class TicketServiceImpl implements TicketService {
 		return response;
 	}
 	
-
+	
+	
 
 public TicketStatusHistory createTicketHistory(Ticket ticket,TicketStatus status)
 {
@@ -625,9 +627,10 @@ public TicketStatusHistory createTicketHistory(Ticket ticket,TicketStatus status
 return 	tktStatusHistory.save(tktStatusHist);
 	
 }
-	
-	
-	
+
+
+
+
 	
 	
 	
@@ -1291,4 +1294,5 @@ return 	tktStatusHistory.save(tktStatusHist);
 		return response;
 	}
 
+	
 }

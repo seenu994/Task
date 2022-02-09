@@ -14,6 +14,7 @@ import com.xyram.ticketingTool.entity.ProjectMembers;
 import com.xyram.ticketingTool.entity.Ticket;
 //import com.xyram.ticketingTool.entity.TicketComments;
 import com.xyram.ticketingTool.enumType.TicketStatus;
+import com.xyram.ticketingTool.vo.TicketVo;
 
 
 public interface TicketService {
@@ -33,7 +34,7 @@ public interface TicketService {
 
 	//Ticket onHoldTicket(Ticket ticketRequest);
 
-	ApiResponse editTicket(MultipartFile[] files, String ticketId, String ticketRequest);
+
 	
 	ApiResponse reopenTicket( String ticketId,Comments commentObj); 
 	
@@ -77,6 +78,8 @@ ApiResponse getTicketCount(Map<String, Object> filter);
 
 
 ApiResponse getAllSupporytTickets(Map<String, Object> filter, Pageable pageable);
+
+ApiResponse editTicket(String ticketId, TicketVo ticketVo);
 
 
 }
