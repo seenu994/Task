@@ -1,22 +1,18 @@
 
 package com.xyram.ticketingTool.controller;
 
-import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,17 +20,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.xyram.ticketingTool.Repository.RoleMasterRepository;
 import com.xyram.ticketingTool.Repository.UserRepository;
-import com.xyram.ticketingTool.admin.model.User;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.JobVendorDetails;
 import com.xyram.ticketingTool.entity.RoleMasterTable;
-import com.xyram.ticketingTool.enumType.UserRole;
 import com.xyram.ticketingTool.enumType.UserStatus;
 import com.xyram.ticketingTool.service.EmployeeService;
 import com.xyram.ticketingTool.util.AuthConstants;
 
-import ch.qos.logback.core.pattern.color.ANSIConstants;
 
 /**
  * 
@@ -98,14 +91,14 @@ class EmployeeController {
 		return employeeService.getJobVendorById(vendorId);
 	}
 
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllEmployee",
+	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllEmployee",
 			AuthConstants.HR_ADMIN_BASEPATH + "/getAllEmployee", AuthConstants.INFRA_USER_BASEPATH + "/getAllEmployee",
 			AuthConstants.HR_BASEPATH + "/getAllEmployee",
 			AuthConstants.DEVELOPER_BASEPATH + "/getAllEmployee",
 			AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllEmployee" })
-	public ApiResponse getAllEmployee(Pageable pageable) {
+	public ApiResponse getAllEmployee(@RequestBody(required = false) Map<String,Object> filter, Pageable pageable) {
 		logger.info("indide CatagoryController :: getAllCatagory");
-		return employeeService.getAllEmployee(pageable);
+		return employeeService.getAllEmployee(filter,pageable);
 	}
 
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllEmployee/currentMonth",

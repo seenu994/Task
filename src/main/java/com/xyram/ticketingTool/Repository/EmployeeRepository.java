@@ -26,6 +26,23 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 			+ "left JOIN Employee ee ON ee.eId = e.reportingTo "
 			+ "INNER JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id ORDER BY e.createdAt DESC")
 	Page<Map> getAllEmployeeList(Pageable pageable);
+	
+	@Query("Select distinct new map(e.eId as id,e.email as email, e. profileUrl as profileUrl, e.userCredientials.id as userId , e.firstName as firstName,e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId, "
+			+ "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,d.designationName as designationName,e.profileUrl as profileUrl,e.createdAt as createdAt,e.location as location,e.position as position,e.wings as wings,e.reportingTo as reportingTo,CONCAT(ee.firstName ,' ', ee.lastName) as ReporterName) from Employee e "
+			+ "left JOIN Employee ee ON ee.eId = e.reportingTo "
+			+" left join e.wings w "
+			+ "INNER JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id "
+			+ " where (:role is null or r.id=:role) and "
+			+ "(:designation is null or d.Id=:designation) and "
+			+ "(:position is null or lower(e.position) like %:position%) and "
+			+ "(:wing is null or w.id=:wing) and"
+			+ "(:searchString is null"
+			+ " or lower(e.email) like %:searchString% "
+			+ " or lower(e.firstName) like %:searchString% "
+			+ "or lower(e.middleName) like %:searchString% "
+			+ "or lower(e.lastName) like %:searchString%) "
+			+ " ORDER BY e.createdAt DESC")
+	Page<Map> getAllEmployeeListByFilter(Pageable pageable, String searchString, String role, String designation, String position, String wing);
 
 	// Select e.`employee_id` as id, e.`frist_name` as firstName, e.`last_name` as
 	// lastName

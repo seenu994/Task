@@ -327,9 +327,27 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		return matcher.find();
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
-	public ApiResponse getAllEmployee(Pageable pageable) {
-		Page<Map> employeeList = employeeRepository.getAllEmployeeList(pageable);
+	public ApiResponse getAllEmployee(Map<String, Object> filter,Pageable pageable) {
+			
+		Page<Map> employeeList = null;
+		
+		if(filter == null) {
+			employeeList = employeeRepository.getAllEmployeeList(pageable);
+		}else {
+			
+			String searchString = filter.containsKey("searchString") ? ((String) filter.get("searchString")).toLowerCase()
+					: null;
+			String role = filter.containsKey("role") ? ((String) filter.get("role")).toLowerCase() : null;
+			String designation = filter.containsKey("designation") ? ((String) filter.get("designation")).toLowerCase() : null;
+			String position = filter.containsKey("position") ? ((String) filter.get("position")).toLowerCase()
+					: null;
+			String wing = filter.containsKey("wing") ? ((String) filter.get("wing")).toLowerCase()
+					: null;
+			employeeList = employeeRepository.getAllEmployeeListByFilter(pageable,searchString,role,designation,position,wing); 
+		}
+		
 		Map content = new HashMap();
 		content.put("employeeList", employeeList);
 		ApiResponse response = new ApiResponse(true);
