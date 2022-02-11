@@ -22,6 +22,8 @@ public interface ResponseMessages {
 	String TICKET_ALREADY_RESOLVED = "Ticket is already Resolved.";
 	String TICKET_ADDED = "Ticket Added Successfully.";
 	String TICKET_NOT_IN_REVIEW = "Ticket is notin review state.";
+	String TICKET_RESOLUTION_UPDATED = "Ticket resolution updated successfully.";
+	String TICKET_RESOLUTION_NOT_UPDATED = "Ticket resolution not updated.";
 
 	String TICKET_LIST = "Successfully get the list of tickets";
 
@@ -109,6 +111,8 @@ public interface ResponseMessages {
 	String NOT_AUTHORIZED = "Artcle not deleted";
 	String ARTICLE_LIST_RETREIVED = "Artcle list retreived successfully";
 	String ARTICLE_LIST_NOT_RETREIVED = "Artcle list not retreived";
+	String ARTICLE_DETAILS_RETREIVED = "Artcle details retreived successfully";
+	String ARTICLE_DETAILS_NOT_RETREIVED = "Artcle details not retreived";
 	
 	
 }

@@ -28,6 +28,9 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 
 	@Query(value = "SELECT t.ticket_status from ticket_info t where t.ticket_id = :ticketId ", nativeQuery = true)
 	String getTicketById(String ticketId);
+	
+	@Query(value = "SELECT * from ticket_info t where t.ticket_id = :ticketId ", nativeQuery = true)
+	Ticket getTicketDetailById(String ticketId);
 
 	@Query("Select new map(t.Id as id,t.ticketDescription as ticketDescription,p.pId as projectId,t.createdBy as createdBy,"
 			+ "t.type as type, p.projectName as projectName, t.priorityId as priorityId,t.status as status) from Ticket t "
@@ -35,37 +38,37 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 	Page<Map> getAllTicketList(Pageable pageable);
 
 	@Query(value = "SELECT a.ticket_id as ticket_id, a.type as type, p.project_id as projectId, p.project_name as projectName, a.ticket_description as ticket_description, a.ticket_status as ticket_status, a.created_at as created_at, a.last_updated_at as last_updated_at, "
-			+ "a.created_by as created_by, a.priority_id as priority_id,p.priority_name as priority_name, b.employee_id as assigneeId, concat(e.frist_name,' ', e.last_name) as assigneeName, concat(ee.frist_name,' ', ee.last_name) as createdByEmp "
+			+ "a.created_by as created_by, a.priority_id as priority_id,p1.priority_name as priority_name, b.employee_id as assigneeId, concat(e.frist_name,' ', e.last_name) as assigneeName, concat(ee.frist_name,' ', ee.last_name) as createdByEmp "
 			+ "FROM ticketdbtool.ticket_info a " + "left join ticketdbtool.employee ee on a.created_by = ee.user_id "
 			+ "left join ticketdbtool.ticket_assignee b ON a.ticket_id = b.ticket_id  and b.ticket_assignee_status = 'ACTIVE' "
 			+ "left join ticketdbtool.employee e on b.employee_id = e.employee_id "
 			+ "left join ticketdbtool.project p ON a.project_id = p.project_id "
-			+ "left join ticketdbtool.priority p on a.priority_id = p.priority_id " + "where"
-			+ "  (:priority is null OR (p.priority_name) LIKE %:priority%) AND " + " (:searchString is null "
+			+ "left join ticketdbtool.priority p1 on a.priority_id = p1.priority_id " + "where"
+			+ "  (:priority is null OR (p1.priority_name) LIKE %:priority%) AND " + " (:searchString is null "
 			+ " OR lower(a.ticket_description) LIKE %:searchString% "
 			+ " OR   lower(a.ticket_id) LIKE %:searchString%) ", nativeQuery = true)
 	List<Map> searchAllTicket(String searchString, String priority);
 
 	@Query(value = "SELECT a.ticket_id as ticket_id, a.type as type,p.project_id as projectId, p.project_name as projectName, a.ticket_description as ticket_description, a.ticket_status as ticket_status, a.created_at as created_at, a.last_updated_at as last_updated_at, "
-			+ "a.created_by as created_by, a.priority_id as priority_id,p.priority_name as priority_name, b.employee_id as assigneeId, concat(e.frist_name,' ', e.last_name) as assigneeName, concat(ee.frist_name,' ', ee.last_name) as createdByEmp "
+			+ "a.created_by as created_by, a.priority_id as priority_id,p1.priority_name as priority_name, b.employee_id as assigneeId, concat(e.frist_name,' ', e.last_name) as assigneeName, concat(ee.frist_name,' ', ee.last_name) as createdByEmp "
 			+ "FROM ticketdbtool.ticket_info a " + "left join ticketdbtool.employee ee on a.created_by = ee.user_id "
 			+ "left join ticketdbtool.ticket_assignee b ON a.ticket_id = b.ticket_id  and b.ticket_assignee_status = 'ACTIVE' "
 			+ "left join ticketdbtool.employee e on b.employee_id = e.employee_id "
 			+ "left join ticketdbtool.project p ON a.project_id = p.project_id "
-			+ "left join ticketdbtool.priority p on a.priority_id = p.priority_id " + "where"
-			+ "  (:priority is null OR (p.priority_name) LIKE %:priority%) AND " + " (:searchString is null "
+			+ "left join ticketdbtool.priority p1 on a.priority_id = p1.priority_id " + "where"
+			+ "  (:priority is null OR (p1.priority_name) LIKE %:priority%) AND " + " (:searchString is null "
 			+ " OR lower(a.ticket_description) LIKE %:searchString%  "
 			+ " OR   lower(a.ticket_id) LIKE %:searchString%) AND a.created_by= :employeeId ", nativeQuery = true)
 	List<Map> searchSelfTicket(String searchString, String priority, String employeeId);
 
 	@Query(value = "SELECT a.ticket_id as ticket_id, a.type as type,p.project_id as projectId, p.project_name as projectName, a.ticket_description as ticket_description, a.ticket_status as ticket_status, a.created_at as created_at, a.last_updated_at as last_updated_at, "
-			+ "a.created_by as created_by, a.priority_id as priority_id,p.priority_name as priority_name, b.employee_id as assigneeId, concat(e.frist_name,' ', e.last_name) as assigneeName, concat(ee.frist_name,' ', ee.last_name) as createdByEmp "
+			+ "a.created_by as created_by, a.priority_id as priority_id,p1.priority_name as priority_name, b.employee_id as assigneeId, concat(e.frist_name,' ', e.last_name) as assigneeName, concat(ee.frist_name,' ', ee.last_name) as createdByEmp "
 			+ "FROM ticketdbtool.ticket_info a " + "left join ticketdbtool.employee ee on a.created_by = ee.user_id "
 			+ "left join ticketdbtool.ticket_assignee b ON a.ticket_id = b.ticket_id  and b.ticket_assignee_status = 'ACTIVE' "
 			+ "left join ticketdbtool.employee e on b.employee_id = e.employee_id "
 			+ "left join ticketdbtool.project p ON a.project_id = p.project_id "
-			+ "left join ticketdbtool.priority p on a.priority_id = p.priority_id " + "where"
-			+ "  (:priority is null OR (p.priority_name) LIKE %:priority%) AND " + " (:searchString is null "
+			+ "left join ticketdbtool.priority p1 on a.priority_id = p1.priority_id " + "where"
+			+ "  (:priority is null OR (p1.priority_name) LIKE %:priority%) AND " + " (:searchString is null "
 			+ " OR lower(a.ticket_description) LIKE %:searchString%  "
 			+ " OR   lower(a.ticket_id) LIKE %:searchString%) AND b.employee_id= :employeeId", nativeQuery = true)
 	List<Map> searchSelfAssignedTicket(String searchString, String priority, String employeeId);
@@ -102,7 +105,8 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 			+ "left join Projects p ON a.projectId = p.pId "
 			+ "left join TicketAssignee b ON a.Id = b.ticketId and b.status = 'ACTIVE' "
 			+ " left join Employee e on b.employeeId = e.eId " + "where "
-			+ "(:status is null or a.status = :status) and "
+			+ "(:status is null or a.status = :status) and"
+			+ "(:priority is null or a.priorityId = :priority) and "
 			+"(:isUser is false or a.status Not IN ('COMPLETED','CANCELLED' ) ) and "
 			+ " (('INFRA_USER' = :roleId and ((e.userCredientials.id = :createdBy)  "
 			+ " OR (a.createdBy = :createdBy )) ) " + "OR ('DEVELOPER' = :roleId   and a.createdBy = :createdBy) "
@@ -110,7 +114,18 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 			+ "OR ('HR_ADMIN' = :roleId and a.createdBy = :createdBy)"
 			+ " OR ('INFRA_ADMIN' = :roleId)) ORDER BY a.createdAt DESC")
 	Page<Map> getAllTicketsByStatus(Pageable pageable, @Param("createdBy") String createdBy,
-			@Param("roleId") String roleId, TicketStatus status,boolean isUser);
+			@Param("roleId") String roleId, TicketStatus status,boolean isUser, String priority);
+	
+	@Query("SELECT distinct new map(a.Id as ticket_id, p.pId as projectId,p.projectName as projectName, a.type as type, a.ticketDescription as ticket_description, a.status as ticket_status, a.createdAt as created_at, a.createdBy as created_by, a.lastUpdatedAt as last_updated_at, "
+			+ "a.priorityId as priority_id, b.employeeId as assigneeId, concat(e.firstName,' ', e.lastName) as assigneeName, concat(ee.firstName,' ', ee.lastName) as createdByEmp) "
+			+ "FROM Ticket a left join Employee ee on a.createdBy = ee.userCredientials "
+			+ "left join Projects p ON a.projectId = p.pId "
+			+ "left join TicketAssignee b ON a.Id = b.ticketId and b.status = 'ACTIVE' "
+			+ "left join Employee e on b.employeeId = e.eId where "
+			+ "(:priority is null or a.priorityId = :priority) and "
+			+ "(a.status Not IN ('COMPLETED','CANCELLED')) and "
+			+ " a.createdBy = :createdBy ORDER BY a.createdAt DESC")
+	Page<Map> getAllActiveTickets(Pageable pageable, @Param("createdBy") String createdBy, String priority);
 
 	@Query("SELECT distinct new map(uu.userRole as updatedRole, a.Id as ticket_id, a.type as type , p.pId as projectId,p.projectName as projectName, a.ticketDescription as ticket_description, a.status as ticket_status, a.createdAt as created_at, a.createdBy as created_by,a.UpdatedBy as UpdatedBy, a.lastUpdatedAt as last_updated_at, "
 			+ "a.priorityId as priority_id, b.employeeId as assigneeId, concat(e.firstName,' ', e.lastName) as assigneeName, concat(ee.firstName,' ', ee.lastName) as createdByEmp) "
@@ -230,8 +245,9 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 			+ " left join Employee e on a.createdBy = e.userCredientials.id "
 			+ "left join Projects p ON a.projectId = p.pId "
 			+ " left join Employee e on b.employeeId = e.eId " + "WHERE "
+					+ "(:priority is null or a.priorityId = :priority) and "
 			+ "(:status is null or a.status = :status) and " + " :roleId!=null ORDER BY a.createdAt DESC")
-	Page<Map> getAllTicketsForAdmin(Pageable pageable, String roleId, TicketStatus status);
+	Page<Map> getAllTicketsForAdmin(Pageable pageable, String roleId, TicketStatus status, String priority);
 
 //	@Query("SELECT DISTINCT b FROM Branch b WHERE " + " (:name is null or lower(b.name) LIKE %:name%)"
 //			+ " AND (:contactno is null or lower(b.primaryContactNumber) LIKE %:contactno%)"

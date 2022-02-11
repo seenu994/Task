@@ -46,39 +46,22 @@ public interface TicketService {
 	ApiResponse getAllTicket(Pageable pageable);
 
 	ApiResponse inprogressTicket(String ticketId);
-	
 	ApiResponse getTktDetailsById(String ticketId);
-	
 	ApiResponse getTicketSearchById(String ticketId);
-
 	ApiResponse onHoldTicket(String ticketId);
-	
-
 	Optional <Ticket> findById(String Id);
 	List<Ticket> findAll();
-
-	
 	ApiResponse getAllTicketsByDuration(Pageable pageable, String date1, String date2);
-ApiResponse getTicketStatusCountWithProject(Pageable pageable);
+	ApiResponse getTicketStatusCountWithProject(Pageable pageable);
 	ApiResponse searchTicket(Map<String, Object>filter);
-
-	
-
 	ApiResponse deleteComment(Comments commentObj);
- ApiResponse getAllTicketsDetails(Pageable pageable);
-
-ApiResponse getTicketDtlsByProjectNameAndStatus(Map<String, Object> filter, Pageable pageable);
-
-ApiResponse getAllTicketsByStatusMobile(Pageable pageable);
-
-
-
-ApiResponse getTicketCount(Map<String, Object> filter);
-
-
-ApiResponse getAllSupporytTickets(Map<String, Object> filter, Pageable pageable);
-
-
+	ApiResponse getAllTicketsDetails(Pageable pageable);
+	ApiResponse getTicketDtlsByProjectNameAndStatus(Map<String, Object> filter, Pageable pageable);
+	ApiResponse getAllTicketsByStatusMobile(Pageable pageable);
+	ApiResponse getTicketCount(Map<String, Object> filter);
+	ApiResponse getAllSupporytTickets(Map<String, Object> filter, Pageable pageable);
+	ApiResponse getAllActiveTickets(Map<String, Object> filter, Pageable pageable);
+	ApiResponse updateTicketResolution(Map<String, Object> filter);
 }
 		
 

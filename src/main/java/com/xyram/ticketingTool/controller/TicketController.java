@@ -156,16 +156,33 @@ class TicketController {
 		return ticketService.getAllTicketsByStatus(status,pageable);
 	}
 	
+	@PostMapping(value = { 
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/updateTicketResolution",
+			AuthConstants.INFRA_USER_BASEPATH + "/updateTicketResolution" })
+	public ApiResponse updateTicketResolution(@RequestBody(required=true) Map<String,Object> filter) {
+		logger.info("inside updateTicketResolution ");
+		return ticketService.updateTicketResolution(filter);
+	}
 	
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllSupportTickets"
+	
+	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllSupportTickets"
 			,AuthConstants.HR_ADMIN_BASEPATH + "/getAllSupportTickets"
 			,AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllSupportTickets",
 			AuthConstants.INFRA_USER_BASEPATH + "/getAllSupportTickets",
 			AuthConstants.HR_BASEPATH + "/getAllSupportTickets",
 			AuthConstants.DEVELOPER_BASEPATH + "/getAllSupportTickets" })
-	public ApiResponse getAllSupportTickets(@RequestParam Map<String,Object> filter ,Pageable pageable) {
+	public ApiResponse getAllSupportTickets(@RequestBody(required=false) Map<String,Object> filter ,Pageable pageable) {
 		logger.info("inside Ticket controller :: getAllTicket");
 		return ticketService.getAllSupporytTickets(filter,pageable);
+	} 
+	
+	@PostMapping(value = { 
+			AuthConstants.HR_ADMIN_BASEPATH + "/getAllActiveTickets",
+			AuthConstants.HR_BASEPATH + "/getAllActiveTickets",
+			AuthConstants.DEVELOPER_BASEPATH + "/getAllActiveTickets" })
+	public ApiResponse getAllActiveTickets(@RequestParam(required=false) Map<String,Object> filter ,Pageable pageable) {
+		logger.info("inside Ticket controller :: getAllActiveTickets");
+		return ticketService.getAllActiveTickets(filter,pageable);
 	}
 	
 //	@GetMapping(AuthConstants.INFRA_USER_BASEPATH + " /getAllSupportTickets")

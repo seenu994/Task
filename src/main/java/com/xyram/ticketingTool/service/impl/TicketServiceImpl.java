@@ -123,12 +123,12 @@ public class TicketServiceImpl implements TicketService {
 		Page<Map> allTickets;
 		if (userDetail.getUserRole().equals("TICKETINGTOOL_ADMIN")
 				|| userDetail.getUserRole().equalsIgnoreCase("INFRA_ADMIN")) {
-			allTickets = ticketrepository.getAllTicketsForAdmin(pageable, userDetail.getUserRole(), status);
+			allTickets = ticketrepository.getAllTicketsForAdmin(pageable, userDetail.getUserRole(), status,null);
 		}
 
 		else {
 			allTickets = ticketrepository.getAllTicketsByStatus(pageable, userDetail.getUserId(),
-					userDetail.getUserRole(), status, true);
+					userDetail.getUserRole(), status, true,null);
 		}
 
 		if (allTickets != null) {
@@ -1238,6 +1238,7 @@ else {
 		Page<Map> allTickets = null;
 
 		String status = filter.containsKey("ticketStatus") ? ((String) filter.get("ticketStatus")) : null;
+		String priority = filter.containsKey("priority") ? ((String) filter.get("priority")) : null;
 		boolean isUser = filter.containsKey("isUser") ? ((Boolean) filter.get("isUser")) : true;
 
 		TicketStatus ticketStatus = null;
@@ -1253,12 +1254,12 @@ else {
 
 		if (userDetail.getUserRole().equals("TICKETINGTOOL_ADMIN")
 				|| userDetail.getUserRole().equalsIgnoreCase("INFRA_ADMIN")) {
-			allTickets = ticketrepository.getAllTicketsForAdmin(pageable, userDetail.getUserRole(), ticketStatus);
+			allTickets = ticketrepository.getAllTicketsForAdmin(pageable, userDetail.getUserRole(), ticketStatus,priority);
 		}
 
 		else {
 			allTickets = ticketrepository.getAllTicketsByStatus(pageable, userDetail.getUserId(),
-					userDetail.getUserRole(), ticketStatus, isUser);
+					userDetail.getUserRole(), ticketStatus, isUser,priority);
 		}
 
 		if (allTickets != null) {
@@ -1273,6 +1274,53 @@ else {
 			response.setContent(null);
 		}
 
+		return response;
+	}
+	
+	@Override
+	public ApiResponse getAllActiveTickets(Map<String, Object> filter, Pageable pageable) {
+		ApiResponse response = new ApiResponse(false);
+
+		Page<Map> allTickets = null;
+
+		String priority = filter.containsKey("priority") ? ((String) filter.get("priority")) : null;
+
+		allTickets = ticketrepository.getAllActiveTickets(pageable, userDetail.getUserId(),priority);
+
+		if (allTickets != null) {
+			response.setSuccess(true);
+			response.setMessage(ResponseMessages.TICKET_EXIST + " ROLE :: " + userDetail.getUserRole());
+			Map<String, Page<Map>> content = new HashMap<String, Page<Map>>();
+			content.put("tickets", allTickets);
+			response.setContent(content);
+		} else {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.TICKET_NOT_EXIST);
+			response.setContent(null);
+		}
+
+		return response;
+	}
+
+	@Override
+	public ApiResponse updateTicketResolution(Map<String, Object> filter) {
+		ApiResponse response = new ApiResponse(false);
+		String ticketId = filter.containsKey("ticketId") ? ((String) filter.get("ticketId")) : null;
+		String resolution = filter.containsKey("resolution") ? ((String) filter.get("resolution")) : null;
+		Ticket ticketObj = ticketrepository.getTicketDetailById(ticketId);
+		
+		if(ticketId != null && resolution != null && resolution.length() > 0 && ticketObj != null) {
+			ticketrepository.save(ticketObj);
+			response.setSuccess(true);
+			response.setMessage(ResponseMessages.TICKET_RESOLUTION_UPDATED);
+			response.setContent(null);
+		}else {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.TICKET_RESOLUTION_NOT_UPDATED);
+			response.setContent(null);
+		}
+		
+		
 		return response;
 	}
 

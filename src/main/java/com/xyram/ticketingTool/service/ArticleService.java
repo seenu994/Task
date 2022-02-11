@@ -28,5 +28,7 @@ public interface ArticleService {
 	
 	ApiResponse searchArticle(Pageable pageable, String searchString);
 
+	ApiResponse getAllMyArticles(Pageable pageable);
+
 
 }

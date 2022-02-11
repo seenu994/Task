@@ -299,7 +299,8 @@ public class ProjectServiceImpl implements ProjectService {
 
 		List<Map> projectList = projectRepository.getgenericIssues();
 
-		Map content = new HashMap();
+//		Map content = new HashMap();
+		Map<String, List<Map>> content = new HashMap<String, List<Map>>();
 		content.put("projectList", projectList);
 		ApiResponse response = new ApiResponse(true);
 		response.setSuccess(true);

@@ -48,25 +48,25 @@ public class ArticleServiceImpl implements ArticleService{
 		
 		if(article != null) {
 			
-			try {
+//			try {
 				article.setCreatedBy(currentUser.getUserId());
 				article.setUserId(currentUser.getUserId());
-				article.setUserName(currentUser.getName());
+				article.setUserName(currentUser.getFirstName());
 				article.setUpdatedBy(currentUser.getUserId());
 				article.setCreatedAt(new Date());
 				article.setLastUpdatedAt(new Date());
 				
-				articleRepository.saveAndFlush(article);
+				articleRepository.save(article);
 				
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.ARTICLE_ADDED);
 				Map content = new HashMap();
 				content.put("ArticleId", article.getArticleId());
 				response.setContent(content);
-			}catch(Exception e) {
-				response.setSuccess(false);
-				response.setMessage(ResponseMessages.ARTICLE_NOT_ADDED+" "+e.getMessage());
-			}	
+//			}catch(Exception e) {
+//				response.setSuccess(false);
+//				response.setMessage(ResponseMessages.ARTICLE_NOT_ADDED+" "+e.getMessage());
+//			}	
 		}else {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.ARTICLE_NOT_ADDED);
@@ -94,7 +94,7 @@ public class ArticleServiceImpl implements ArticleService{
 				articleObj.setUpdatedBy(currentUser.getUserId());
 				articleObj.setLastUpdatedAt(new Date());
 				
-				articleRepository.saveAndFlush(articleObj);
+				articleRepository.save(articleObj);
 
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.ARTICLE_EDITED);
@@ -159,7 +159,7 @@ public class ArticleServiceImpl implements ArticleService{
 				articleObj.setUpdatedBy(currentUser.getUserId());
 				articleObj.setLastUpdatedAt(new Date());
 				
-				articleRepository.saveAndFlush(articleObj);
+				articleRepository.save(articleObj);
 
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.ARTICLE_STATUS_CHANGED);
@@ -191,8 +191,29 @@ public class ArticleServiceImpl implements ArticleService{
 		if(list.getSize() > 0) {
 			response.setSuccess(true);
 			response.setMessage(ResponseMessages.ARTICLE_LIST_RETREIVED);
-			Map content = new HashMap();
-			content.put("List", list);
+			Map<String, Page<Map>> content = new HashMap<String, Page<Map>>();
+			content.put("Articles", list);
+			response.setContent(content);
+		}else {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.ARTICLE_LIST_NOT_RETREIVED);
+		}
+		
+		return response;
+	} 
+	
+	@Override
+	public ApiResponse getAllMyArticles(Pageable pageable) {
+		// TODO Auto-generated method stub
+		ApiResponse response = new ApiResponse(false);
+		
+		Page<Map> list = articleRepository.getAllMyArticles(pageable,currentUser.getUserId());
+		
+		if(list.getSize() > 0) {
+			response.setSuccess(true);
+			response.setMessage(ResponseMessages.ARTICLE_LIST_RETREIVED);
+			Map<String, Page<Map>> content = new HashMap<String, Page<Map>>();
+			content.put("Articles", list);
 			response.setContent(content);
 		}else {
 			response.setSuccess(false);
@@ -217,8 +238,8 @@ public class ArticleServiceImpl implements ArticleService{
 		if(list.getSize() > 0) {
 			response.setSuccess(true);
 			response.setMessage(ResponseMessages.ARTICLE_LIST_RETREIVED);
-			Map content = new HashMap();
-			content.put("List", list);
+			Map<String, Page<Map>> content = new HashMap<String, Page<Map>>();
+			content.put("Articles", list);
 			response.setContent(content);
 		}
 		else {
@@ -242,18 +263,19 @@ public class ArticleServiceImpl implements ArticleService{
 			try {
 
 				response.setSuccess(true);
-				response.setMessage(ResponseMessages.ARTICLE_STATUS_CHANGED);
-				
-			}catch(Exception e) {
-				response.setSuccess(false);
-				response.setMessage(ResponseMessages.ARTICLE_STATUS_CHANGED+" "+e.getMessage());
+				response.setMessage(ResponseMessages.ARTICLE_DETAILS_RETREIVED);
 				Map content = new HashMap();
 				content.put("Detail", articleObj);
 				response.setContent(content);
+				
+			}catch(Exception e) {
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.ARTICLE_DETAILS_RETREIVED+" "+e.getMessage());
+				
 			}	
 		}else {
 			response.setSuccess(false);
-			response.setMessage(ResponseMessages.ARTICLE_STATUS_NOT_CHANGED);
+			response.setMessage(ResponseMessages.ARTICLE_DETAILS_NOT_RETREIVED);
 		}
 		
 		return response;

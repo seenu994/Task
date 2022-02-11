@@ -91,13 +91,22 @@ public class ArticleController {
 	public ApiResponse getAllArticles(Pageable pageable) {
 		logger.info("Get all Articles ");
 		return articleService.getAllArticles(pageable);
+	} 
+	
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllMyArticles",
+			AuthConstants.HR_ADMIN_BASEPATH + "/getAllMyArticles", AuthConstants.INFRA_USER_BASEPATH + "/getAllMyArticles",
+			AuthConstants.HR_BASEPATH + "/getAllMyArticles", AuthConstants.DEVELOPER_BASEPATH + "/getAllMyArticles",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllMyArticles" })
+	public ApiResponse getAllMyArticles(Pageable pageable) {
+		logger.info("Get all getAllMyArticles ");
+		return articleService.getAllMyArticles(pageable);
 	}
 	
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/searchArticle/{searchString}",
 			AuthConstants.HR_ADMIN_BASEPATH + "/searchArticle/{searchString}", AuthConstants.INFRA_USER_BASEPATH + "/searchArticle/{searchString}",
 			AuthConstants.HR_BASEPATH + "/searchArticle/{searchString}", AuthConstants.DEVELOPER_BASEPATH + "/searchArticle/{searchString}",
 			AuthConstants.INFRA_ADMIN_BASEPATH + "/searchArticle/{searchString}" })
-	public ApiResponse getAllArticles(Pageable pageable,@PathVariable String searchString) {
+	public ApiResponse searchArticle(Pageable pageable,@PathVariable String searchString) {
 		logger.info("Get all Articles ");
 		return articleService.searchArticle(pageable,searchString);
 	}
