@@ -166,51 +166,11 @@ public class JobServiceImpl implements JobService {
 
 		}
 		if (jobRepository.save(jobObj) != null) {
-			Employee emp = new Employee();
-
-			List<Employee> EmployeeList = employeeRepository.getAllEmployeeNotification();
-			for (Employee employeeNotification : EmployeeList) {
-
-				Map request = new HashMap<>();
-				request.put("eId", employeeNotification.geteId());
-				request.put("uid", employeeNotification.getUserCredientials().getUid());
-				request.put("title", "job CREATED");
-				request.put("body", " job Created - " + emp.getFirstName()); //
-				pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 12, //
-						NotificationType.EMPLOYEE_CREATED.toString()));
-
-				// inserting notification details
-				Notifications notifications = new Notifications();
-				notifications.setNotificationDesc("job created - " + emp.getFirstName());
-				notifications.setNotificationType(NotificationType.JOB_CREATED);
-				notifications.setSenderId(emp.getReportingTo());
-				notifications.setReceiverId(userDetail.getUserId());
-				notifications.setSeenStatus(false);
-				notifications.setCreatedBy(userDetail.getUserId());
-				notifications.setCreatedAt(new Date());
-				notifications.setUpdatedBy(userDetail.getUserId());
-				notifications.setLastUpdatedAt(new Date());
-
-				notificationService.createNotification(notifications);
-				UUID uuid = UUID.randomUUID();
-				String uuidAsString = uuid.toString();
-//				if (emp != null) {
-//					String name = null;
-//
-//					HashMap mailDetails = new HashMap();
-//					mailDetails.put("toEmail", employeeNotification.getEmail());
-//					mailDetails.put("subject", name + ", " + "Here's your new PASSWORD");
-//					mailDetails.put("message", "Hi " + name
-//							+ ", \n\n We received a request to reset the password for your Account. \n\n Here's your new PASSWORD Link is: "
-//							+ application_url + "/update-password" + "?key=" + uuidAsString
-//							+ "\n\n Thanks for helping us keep your account secure.\n\n Xyram Software Solutions Pvt Ltd.");
-//					emailService.sendMail(mailDetails);
-//				}
 
 				response.setSuccess(true);
 				response.setMessage("New Job Opening Created");
 			}
-		} else {
+		 else {
 			response.setSuccess(false);
 			response.setMessage("New Job Opening Not Created");
 		}
