@@ -339,11 +339,11 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			
 			String searchString = filter.containsKey("searchString") ? ((String) filter.get("searchString")).toLowerCase()
 					: null;
-			String role = filter.containsKey("role") ? ((String) filter.get("role")).toLowerCase() : null;
-			String designation = filter.containsKey("designation") ? ((String) filter.get("designation")).toLowerCase() : null;
+			String role = filter.containsKey("role") ? ((String) filter.get("role")) : null;
+			String designation = filter.containsKey("designation") ? ((String) filter.get("designation")) : null;
 			String position = filter.containsKey("position") ? ((String) filter.get("position")).toLowerCase()
 					: null;
-			String wing = filter.containsKey("wing") ? ((String) filter.get("wing")).toLowerCase()
+			String wing = filter.containsKey("wing") ? ((String) filter.get("wing"))
 					: null;
 			employeeList = employeeRepository.getAllEmployeeListByFilter(pageable,searchString,role,designation,position,wing); 
 		}
