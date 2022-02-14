@@ -1257,6 +1257,8 @@ return 	tktStatusHistory.save(tktStatusHist);
 
 		String status = filter.containsKey("ticketStatus") ? ((String) filter.get("ticketStatus")) : null;
 		String priority = filter.containsKey("priority") ? ((String) filter.get("priority")) : null;
+		
+		
 		boolean isUser = filter.containsKey("isUser") ? ((Boolean) filter.get("isUser")) : true;
 
 		TicketStatus ticketStatus = null;
@@ -1270,9 +1272,14 @@ return 	tktStatusHistory.save(tktStatusHist);
 			throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Invalid Status Passed ");
 		}
 
-		if (userDetail.getUserRole().equals("TICKETINGTOOL_ADMIN")
-				|| userDetail.getUserRole().equalsIgnoreCase("INFRA_ADMIN")) {
-			allTickets = ticketrepository.getAllTicketsForAdmin(pageable, userDetail.getUserRole(), ticketStatus,priority);
+		if (userDetail.getUserRole().equalsIgnoreCase("TICKETINGTOOL_ADMIN")
+				|| userDetail.getUserRole().equalsIgnoreCase("INFRA_ADMIN") 
+				|| userDetail.getUserRole().equalsIgnoreCase("INFRA_USER")) {
+			if(userDetail.getUserRole().equalsIgnoreCase("INFRA_USER") && status.equalsIgnoreCase("INITIATED")) {
+				allTickets = ticketrepository.getAllTicketsForAdmin(pageable, userDetail.getUserRole(), ticketStatus,priority);
+			}else
+				allTickets = ticketrepository.getAllTicketsByStatus(pageable, userDetail.getUserId(),
+						userDetail.getUserRole(), ticketStatus, isUser,priority);
 		}
 
 		else {
@@ -1328,6 +1335,7 @@ return 	tktStatusHistory.save(tktStatusHist);
 		Ticket ticketObj = ticketrepository.getTicketDetailById(ticketId);
 		
 		if(ticketId != null && resolution != null && resolution.length() > 0 && ticketObj != null) {
+			ticketObj.setResolution(resolution);
 			ticketrepository.save(ticketObj);
 			response.setSuccess(true);
 			response.setMessage(ResponseMessages.TICKET_RESOLUTION_UPDATED);
@@ -1340,6 +1348,12 @@ return 	tktStatusHistory.save(tktStatusHist);
 		
 		
 		return response;
+	}
+
+	@Override
+	public ApiResponse editTicket(MultipartFile[] files, String ticketId, String ticketRequest) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	

@@ -14,6 +14,7 @@ import com.xyram.ticketingTool.entity.ProjectMembers;
 import com.xyram.ticketingTool.entity.Ticket;
 //import com.xyram.ticketingTool.entity.TicketComments;
 import com.xyram.ticketingTool.enumType.TicketStatus;
+import com.xyram.ticketingTool.vo.TicketVo;
 
 
 public interface TicketService {
@@ -62,6 +63,8 @@ public interface TicketService {
 	ApiResponse getAllSupporytTickets(Map<String, Object> filter, Pageable pageable);
 	ApiResponse getAllActiveTickets(Map<String, Object> filter, Pageable pageable);
 	ApiResponse updateTicketResolution(Map<String, Object> filter);
+
+	ApiResponse editTicket(String ticketId, TicketVo ticketVo);
 }
 		
 

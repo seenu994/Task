@@ -181,6 +181,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				user.setUsername(employee.getEmail());
 				String encodedPassword = new BCryptPasswordEncoder().encode(employee.getPassword());
 				user.setPassword(encodedPassword);
+				if(employee.getFirstName().length() > 3 && employee.getLastName().length() > 0)
 				user.setName(employee.getFirstName() +" " +employee.getLastName());
 				// Employee employeere=new Employee();
 				Role role = roleRepository.getById(employee.getRoleId());

@@ -76,19 +76,19 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 //			+ "and p1.projectId = :projectId)) and e.email like %:searchString%")
 
 	@Query("Select distinct new map(e.eId as id, e.firstName as firstName, e.lastName as lastName) from Employee e "
-			+ "where e.status = 'ACTIVE' and e.email like %:searchString%  or e.firstName like %:searchString% or e.middleName like %:searchString% or e.lastName like %:searchString% and e.roleId = 'R3' ")
+			+ "where e.status = 'ACTIVE' and (e.email like %:searchString%  or e.firstName like %:searchString% or e.middleName like %:searchString% or e.lastName like %:searchString%) and e.roleId = 'R3' ")
 	List<Map> searchInfraUser(@Param("searchString") String searchString);
 
 	@Query("Select distinct new map(e.eId as id, e.firstName as firstName, e.lastName as lastName) from Employee e "
-			+ "where e.status = 'ACTIVE' and e.email like %:searchString%  or e.firstName like %:searchString% or e.middleName like %:searchString% or e.lastName like %:searchString% and e.roleId = 'R3' and e.userCredientials.id != :userId")
+			+ "where e.status = 'ACTIVE' and e.roleId = 'R3' and e.userCredientials.id != :userId and (e.email like %:searchString%  or e.firstName like %:searchString% or e.middleName like %:searchString% or e.lastName like %:searchString%)")
 	List<Map> searchInfraUsersForInfraUser(@Param("searchString") String searchString, @Param("userId") String userId);
 
 //	@Query("Select distinct new map(e.eId as id, e.firstName as firstName, e.lastName as lastName) from Employee e "
 //			+ "where e.status = 'ACTIVE' and e.email like %:searchString% ")
 	@Query("Select new map(e.eId as id,e.email as email,e.firstName as firstName,e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId, "
 			+ "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,d.designationName as designationName,e.location as location,e.position as position,e.wings as wings,e.profileUrl as profileUrl) from Employee e "
-			+ "left join e.wings w JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id where r.Id !='R1' and e.email like %:searchString% or e.firstName like %:searchString% or e.middleName like %:searchString% or e.lastName like %:searchString% or d.designationName like %:searchString%  or e.id like %:searchString% "
-			+ "  or e.mobileNumber like %:searchString%  or w.wingName like %:searchString% or e.location like %:searchString%  or e.position like %:searchString%")
+			+ "left join e.wings w JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id where r.Id !='R1' and (e.email like %:searchString% or e.firstName like %:searchString% or e.middleName like %:searchString% or e.lastName like %:searchString% or d.designationName like %:searchString%  or e.id like %:searchString% "
+			+ "  or e.mobileNumber like %:searchString%  or w.wingName like %:searchString% or e.location like %:searchString%  or e.position like %:searchString%)")
 	List<Map> searchEmployee(@Param("searchString") String searchString);
 
 	@Query(value = "SELECT e.employee_id, e.frist_name, e.last_name, count(e.employee_id) assigned_cnt FROM ticketdbtool.employee e "
@@ -96,7 +96,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 			+ /*
 				 * \"where e.employee_status = 'ACTIVE' and a.ticket_assignee_status = 'ACTIVE'
 				 * and
-				 */"where e.role_id = 'R2' group by e.employee_id", nativeQuery = true)
+				 */"where e.role_id = 'R3' group by e.employee_id", nativeQuery = true)
 	List<Map> getAllInfraUserList();
 
 	@Query(value = "SELECT e.employee_id as employeeId, e.frist_name as firstname, e.last_name as lastname, u.uid as uid"

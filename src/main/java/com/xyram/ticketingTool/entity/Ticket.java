@@ -44,10 +44,21 @@ public class Ticket{
 	@Column(name="ticket_description",length = 5000)
 	private String ticketDescription;
 	
+	@Column(name="resolution",length = 5000)
+	private String resolution;
+	
 //	@ManyToOne(cascade = { CascadeType.ALL })
 //	@JoinColumn(name = "project_id")
 //	private Projects project;
 	
+	public String getResolution() {
+		return resolution;
+	}
+
+	public void setResolution(String resolution) {
+		this.resolution = resolution;
+	}
+
 	@Column(name = "project_id")
 	private String projectId;
 	

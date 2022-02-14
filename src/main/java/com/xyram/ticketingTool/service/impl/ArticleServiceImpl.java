@@ -80,7 +80,7 @@ public class ArticleServiceImpl implements ArticleService{
 		ApiResponse response = new ApiResponse(false);
 		
 		Articles articleObj = articleRepository.findArticleById(article.getArticleId());
-		if(!currentUser.getUserRole().equals("TICKETINGTOOL_ADMIN") && !currentUser.getUserId().equals(articleObj.getUserId())) {
+		if(!currentUser.getUserRole().equalsIgnoreCase("TICKETINGTOOL_ADMIN") && !currentUser.getUserId().equalsIgnoreCase(articleObj.getUserId())) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.NOT_AUTHORIZED);
 			return response;
@@ -116,7 +116,7 @@ public class ArticleServiceImpl implements ArticleService{
 		ApiResponse response = new ApiResponse(false);
 		
 		Articles articleObj = articleRepository.findArticleById(articleId);
-		if(!currentUser.getUserRole().equals("TICKETINGTOOL_ADMIN") && !currentUser.getUserId().equals(articleObj.getUserId())) {
+		if(!currentUser.getUserRole().equalsIgnoreCase("TICKETINGTOOL_ADMIN") && !currentUser.getUserId().equalsIgnoreCase(articleObj.getUserId())) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.NOT_AUTHORIZED);
 			return response;
@@ -147,7 +147,7 @@ public class ArticleServiceImpl implements ArticleService{
 		ApiResponse response = new ApiResponse(false);
 		
 		Articles articleObj = articleRepository.findArticleById(articleId);
-		if(!currentUser.getUserRole().equals("TICKETINGTOOL_ADMIN") && !currentUser.getUserId().equals(articleObj.getUserId())) {
+		if(!currentUser.getUserRole().equalsIgnoreCase("TICKETINGTOOL_ADMIN") && !currentUser.getUserId().equalsIgnoreCase(articleObj.getUserId())) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.NOT_AUTHORIZED);
 			return response;
@@ -183,7 +183,7 @@ public class ArticleServiceImpl implements ArticleService{
 		
 		Page<Map> list = null;
 		
-		if(!currentUser.getUserRole().equals("TICKETINGTOOL_ADMIN"))
+		if(!currentUser.getUserRole().equalsIgnoreCase("TICKETINGTOOL_ADMIN"))
 			list = articleRepository.getAllActiveArticles(pageable);
 		else
 			list = articleRepository.getAllArticles(pageable);
@@ -230,14 +230,19 @@ public class ArticleServiceImpl implements ArticleService{
 		
 		Page<Map> list = null;
 		
-		if(!currentUser.getUserRole().equals("TICKETINGTOOL_ADMIN"))
+		if(currentUser.getUserRole().equalsIgnoreCase("TICKETINGTOOL_ADMIN"))
+		{
+			response.setMessage(ResponseMessages.ARTICLE_LIST_RETREIVED+" For Super admin");
 			list = articleRepository.searchAllArticles(pageable,searchString);
-		else
+		}
+		else {
+			response.setMessage(ResponseMessages.ARTICLE_LIST_RETREIVED+" For employees");
 			list = articleRepository.searchAllActiveArticles(pageable,searchString);
+		}
 		
 		if(list.getSize() > 0) {
 			response.setSuccess(true);
-			response.setMessage(ResponseMessages.ARTICLE_LIST_RETREIVED);
+			
 			Map<String, Page<Map>> content = new HashMap<String, Page<Map>>();
 			content.put("Articles", list);
 			response.setContent(content);
@@ -254,11 +259,11 @@ public class ArticleServiceImpl implements ArticleService{
 		ApiResponse response = new ApiResponse(false);
 		
 		Articles articleObj = articleRepository.findArticleById(articleId);
-		if(!currentUser.getUserRole().equals("TICKETINGTOOL_ADMIN") && !currentUser.getUserId().equals(articleObj.getUserId())) {
-			response.setSuccess(false);
-			response.setMessage(ResponseMessages.NOT_AUTHORIZED);
-			return response;
-		}
+//		if(!currentUser.getUserRole().equals("TICKETINGTOOL_ADMIN") && !currentUser.getUserId().equals(articleObj.getUserId())) {
+//			response.setSuccess(false);
+//			response.setMessage(ResponseMessages.NOT_AUTHORIZED);
+//			return response;
+//		}
 		if(articleObj != null) {		
 			try {
 
