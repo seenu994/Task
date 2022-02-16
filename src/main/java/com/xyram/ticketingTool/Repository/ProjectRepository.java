@@ -31,6 +31,7 @@ public interface ProjectRepository extends JpaRepository<Projects, String> {
 			+ " left join Client c ON p.clientId = c.Id and p.status != 'INACTIVE'" + "where pm.employeeId=:scopeId and p.status!='INACTIVE'  "
 			+ "ORDER BY p.createdAt DESC")
 	Page<Map> getAllProjectsList(String scopeId, Pageable pageable);
+	
 
 	@Query("Select distinct new map(p.pId as id, p.projectName as PName, p.projectDescritpion as projectDescritpion, p.clientId as clientId, "
 			+ "p.inHouse as inHouse, p.status as status,p.createdAt as createdAt) from Projects p join  ProjectMembers m On p.pId=m.projectId and m.status = 'ACTIVE' ORDER BY p.createdAt DESC ")
@@ -86,5 +87,9 @@ public interface ProjectRepository extends JpaRepository<Projects, String> {
 	@Query("Select distinct new map(p.pId as id, p.projectName as PName, p.projectDescritpion as projectDescritpion, p.clientId as clientId, c.clientName as clientname, p.createdAt as createdDate, "
 			+ "p.inHouse as inHouse, p.status as status,p.createdAt as createdAt) from Projects p join Client c ON p.clientId = c.Id ORDER BY p.createdAt DESC ")
 	Page<Map> getAllForAdmins(Pageable pageable);
+	
+	@Query("Select distinct new map(p.pId as id, p.projectName as PName, p.projectDescritpion as projectDescritpion, p.clientId as clientId, c.clientName as clientname, p.createdAt as createdDate, "
+			+ "p.inHouse as inHouse, p.status as status,p.createdAt as createdAt) from Projects p join Client c ON p.clientId = c.Id where p.projectName like %:searchString% ORDER BY p.projectName,p.createdAt DESC ")
+	List<Map> getAllProjectsForTickets(String searchString);
 
 }

@@ -54,7 +54,7 @@ public interface TicketService {
 	List<Ticket> findAll();
 	ApiResponse getAllTicketsByDuration(Pageable pageable, String date1, String date2);
 	ApiResponse getTicketStatusCountWithProject(Pageable pageable);
-	ApiResponse searchTicket(Map<String, Object>filter);
+	ApiResponse searchTicket(Map<String, Object>filter, Pageable pageable);
 	ApiResponse deleteComment(Comments commentObj);
 	ApiResponse getAllTicketsDetails(Pageable pageable);
 	ApiResponse getTicketDtlsByProjectNameAndStatus(Map<String, Object> filter, Pageable pageable);

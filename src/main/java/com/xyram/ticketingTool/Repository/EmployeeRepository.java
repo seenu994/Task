@@ -50,7 +50,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 	// p.`employee_id` where e.`employee_status` = 'ACTIVE' and e.`role_id` = 'R3'
 	// and p.`project_id` = '2c9fab1f7c3eebc6017c4073c8770010'
 
-	@Query("Select distinct new map(e.eId as id, e.firstName as firstName, e.lastName as lastName) "
+	@Query("Select distinct new map(e.eId as id, e.firstName as firstName, e.lastName as lastName,e.status as status) "
 			+ "from Employee e left JOIN ProjectMembers p On e.eId = p.employeeId where p.status = 'ACTIVE' and e.status = 'ACTIVE' and p.projectId = :projectId")
 	List<Map> getAllEmpByProject(@Param("projectId") String projectId);
 
@@ -63,7 +63,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 //			+ " Where e.status = 'ACTIVE' and e.email like %:searchString% and e.roleId = 'R4' ")
 //	
 
-	@Query("Select distinct new map(e.eId as id, e.firstName as firstName, e.lastName as lastName) from Employee e Where"
+	@Query("Select distinct new map(e.eId as id, e.firstName as firstName, e.lastName as lastName,e.status as status) from Employee e Where"
 			+ " e.status = 'ACTIVE' and e.email like %:searchString%  and  e.eId NOT IN("
 			+ "select p.employeeId from ProjectMembers p where p.status = 'ACTIVE' and p.projectId = :projectId )")
 
@@ -75,11 +75,11 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 //			+ "and (p.projectId != :projectId and not exists (Select 1 from ProjectMembers p1 where e.eId = p1.employeeId "
 //			+ "and p1.projectId = :projectId)) and e.email like %:searchString%")
 
-	@Query("Select distinct new map(e.eId as id, e.firstName as firstName, e.lastName as lastName) from Employee e "
+	@Query("Select distinct new map(e.eId as id, e.firstName as firstName, e.lastName as lastName,e.status as status) from Employee e "
 			+ "where e.status = 'ACTIVE' and (e.email like %:searchString%  or e.firstName like %:searchString% or e.middleName like %:searchString% or e.lastName like %:searchString%) and e.roleId = 'R3' ")
 	List<Map> searchInfraUser(@Param("searchString") String searchString);
 
-	@Query("Select distinct new map(e.eId as id, e.firstName as firstName, e.lastName as lastName) from Employee e "
+	@Query("Select distinct new map(e.eId as id, e.firstName as firstName, e.lastName as lastName,e.status as status) from Employee e "
 			+ "where e.status = 'ACTIVE' and e.roleId = 'R3' and e.userCredientials.id != :userId and (e.email like %:searchString%  or e.firstName like %:searchString% or e.middleName like %:searchString% or e.lastName like %:searchString%)")
 	List<Map> searchInfraUsersForInfraUser(@Param("searchString") String searchString, @Param("userId") String userId);
 
@@ -91,7 +91,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 			+ "  or e.mobileNumber like %:searchString%  or w.wingName like %:searchString% or e.location like %:searchString%  or e.position like %:searchString%)")
 	List<Map> searchEmployee(@Param("searchString") String searchString);
 
-	@Query(value = "SELECT e.employee_id, e.frist_name, e.last_name, count(e.employee_id) assigned_cnt FROM ticketdbtool.employee e "
+	@Query(value = "SELECT e.employee_id, e.frist_name, e.last_name,e.employee_status as status, count(e.employee_id) assigned_cnt FROM ticketdbtool.employee e "
 			+ "left join ticketdbtool.ticket_assignee a on e.employee_id = a.employee_id "
 			+ /*
 				 * \"where e.employee_status = 'ACTIVE' and a.ticket_assignee_status = 'ACTIVE'
@@ -99,27 +99,27 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 				 */"where e.role_id = 'R3' group by e.employee_id", nativeQuery = true)
 	List<Map> getAllInfraUserList();
 
-	@Query(value = "SELECT e.employee_id as employeeId, e.frist_name as firstname, e.last_name as lastname, u.uid as uid"
+	@Query(value = "SELECT e.employee_id as employeeId, e.frist_name as firstname, e.last_name as lastname, u.uid as uid,e.employee_status as status"
 			+ " FROM employee e inner join user u on u.user_id=e.user_id  "
 
 			+ "where e.employee_status = 'ACTIVE'  and e.role_id = 'R3'", nativeQuery = true)
 	List<Employee> getAllInfraList();
 
-	@Query(value = "SELECT e.employee_id as employeeId, e.frist_name as firstname, e.last_name as lastname, u.uid as uid"
+	@Query(value = "SELECT e.employee_id as employeeId, e.frist_name as firstname, e.last_name as lastname, u.uid as uid,e.employee_status as status"
 			+ " FROM employee e inner join user u on u.user_id=e.user_id  "
 
 			+ "where e.employee_status = 'ACTIVE'  and e.role_id = 'R2'", nativeQuery = true)
 
 	List<Map> getAllInfraAdmins();
 
-	@Query(value = "SELECT e.employee_id as employeeId, e.frist_name as firstname, e.last_name as lastname, u.uid as uid"
+	@Query(value = "SELECT e.employee_id as employeeId, e.frist_name as firstname, e.last_name as lastname, u.uid as uid,e.employee_status as status"
 			+ " FROM employee e inner join user u on u.user_id=e.user_id  "
 
 			+ "where e.employee_status = 'ACTIVE'  and e.role_id = 'R4'", nativeQuery = true)
 
 	List<Map> getListOfDeveloper();
 
-	@Query(value = "SELECT e.employee_id as employeeId, e.frist_name as firstname, e.last_name as lastname, u.uid as uid"
+	@Query(value = "SELECT e.employee_id as employeeId, e.frist_name as firstname, e.last_name as lastname, u.uid as uid,e.employee_status as status"
 			+ " FROM employee e inner join user u on u.user_id=e.user_id  "
 
 			+ "where e.employee_status = 'ACTIVE'  and e.role_id in('R2','R3')", nativeQuery = true)

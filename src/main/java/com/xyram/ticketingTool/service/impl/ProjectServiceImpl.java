@@ -149,6 +149,33 @@ public class ProjectServiceImpl implements ProjectService {
 			return response;
 		}
 	}
+	
+	@Override
+	public ApiResponse getAllProjectsForTickets(String serachString) {
+		/*
+		 * // Page<Map> projectList = projectRepository.getAllProjectLsit(pageable);
+		 */
+		List<Map> projectList;
+
+		System.out.println(userDetail.getUserRole());
+
+		projectList = projectRepository.getAllProjectsForTickets(serachString);
+		if (projectList != null) {
+
+			Map content = new HashMap<>();
+			content.put("projectList", projectList);
+			ApiResponse response = new ApiResponse(true);
+			response.setSuccess(true);
+			response.setContent(content);
+			return response;
+		} else {
+			ApiResponse response = new ApiResponse(true);
+
+			response.setMessage("project list is empty");
+
+			return response;
+		}
+	}
 
 	public Projects getProjectById(String projectId) {
 

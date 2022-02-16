@@ -18,6 +18,8 @@ public interface ProjectService {
 	ApiResponse addproject(Projects project);
 
 	ApiResponse getAllProjects(Pageable pageable);
+	
+	ApiResponse getAllProjectsForTickets(String serachString);
 
 	ApiResponse editEmployee(Projects projectRequest);
 

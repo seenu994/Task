@@ -594,9 +594,9 @@ public class TicketServiceImpl implements TicketService {
 				if (ticketVo.getFiles() != null &&ticketVo.getFiles().length>0)
 					attachmentService.storeImage(ticketVo.getFiles(), ticketId);
 				// Change userID to assignee
-				sendPushNotification(
-						ticketAssigneeRepository.getAssigneeIdForDeveloper(ticketObj.getId(), employee.geteId()),
-						"Ticket Edited By User - " + ticketObj.getTicketDescription(), ticketObj, "TICKET_EDITED", 26);
+//				sendPushNotification(
+//						ticketAssigneeRepository.getAssigneeIdForDeveloper(ticketObj.getId(), employee.geteId()),
+//						"Ticket Edited By User - " + ticketObj.getTicketDescription(), ticketObj, "TICKET_EDITED", 26);
 
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.TICKET_EDITED);
@@ -673,7 +673,10 @@ return 	tktStatusHistory.save(tktStatusHist);
 					response.setMessage(ResponseMessages.TICKET_COMMENTS_NOT_EXIST);
 					response.setContent(null);
 				} else {
-					ticketObj.setStatus(TicketStatus.REOPEN);
+					if(ticketAssigneeRepository.getActiveAssigneeId(ticketObj.getId())!=null)
+						ticketObj.setStatus(TicketStatus.REOPEN);
+					else
+						ticketObj.setStatus(TicketStatus.INITIATED);
 					commentObj.setCreatedBy(userDetail.getUserId());
 					commentObj.setCreatedAt(new Date());
 					commentObj.setUpdatedBy(userDetail.getUserId());
@@ -693,31 +696,31 @@ return 	tktStatusHistory.save(tktStatusHist);
 					tktStatusHist.setUpdatedBy(userDetail.getUserId());
 					tktStatusHist.setLastUpdatedAt(new Date());
 					tktStatusHistory.save(tktStatusHist);
-
-					if (userDetail.getUserRole().equalsIgnoreCase("DEVELOPER")) {
-						// Change userDetail.getUserId() to Ticket Assignee
-						sendPushNotification(userDetail.getUserId(), "Ticket Re-opened By User -", ticketObj,
-								"TICKET_REOPENED", 19);
-						List<Map> userList = employeeServiceImpl.getListOfInfraAdmins();
-
-						for (Map user : userList) {
-
-							Map request = new HashMap<>();
-							request.put("id", user.get("employeeId"));
-							request.put("uid", user.get("uid"));
-							request.put("title", "TICKET CREATED");
-							request.put("body", "New Ticket Created - " + ticketObj.getTicketDescription());
-							pushNotificationCall.restCallToNotification(pushNotificationRequest
-									.PushNotification(request, 19, NotificationType.TICKET_REOPENED_BY_DEV.toString()));
-
-						}
-					} else {
-						// Change userDetail.getUserId() to Ticket Assignee
-						sendPushNotification(ticketAssigneeRepository.getAssigneeId(ticketObj.getId()),
-								"Ticket Re-opened By Admin - ", ticketObj, "TICKET_REOPENED", 18);
-						sendPushNotification(ticketObj.getCreatedBy(), "Ticket Re-opened By Admin - ", ticketObj,
-								"TICKET_REOPENED", 18);
-					}
+// Hemu Commented : Getting 500 Error
+//					if (userDetail.getUserRole().equalsIgnoreCase("DEVELOPER")) {
+//						// Change userDetail.getUserId() to Ticket Assignee
+//						sendPushNotification(userDetail.getUserId(), "Ticket Re-opened By User -", ticketObj,
+//								"TICKET_REOPENED", 19);
+//						List<Map> userList = employeeServiceImpl.getListOfInfraAdmins();
+//
+//						for (Map user : userList) {
+//
+//							Map request = new HashMap<>();
+//							request.put("id", user.get("employeeId"));
+//							request.put("uid", user.get("uid"));
+//							request.put("title", "TICKET CREATED");
+//							request.put("body", "New Ticket Created - " + ticketObj.getTicketDescription());
+//							pushNotificationCall.restCallToNotification(pushNotificationRequest
+//									.PushNotification(request, 19, NotificationType.TICKET_REOPENED_BY_DEV.toString()));
+//
+//						}
+//					} else {
+//						// Change userDetail.getUserId() to Ticket Assignee
+//						sendPushNotification(ticketAssigneeRepository.getAssigneeId(ticketObj.getId()),
+//								"Ticket Re-opened By Admin - ", ticketObj, "TICKET_REOPENED", 18);
+//						sendPushNotification(ticketObj.getCreatedBy(), "Ticket Re-opened By Admin - ", ticketObj,
+//								"TICKET_REOPENED", 18);
+//					}
 
 					response.setSuccess(true);
 					response.setMessage(ResponseMessages.TICKET_REOPENED);
@@ -910,12 +913,12 @@ return 	tktStatusHistory.save(tktStatusHist);
 	}
 
 	@Override
-	public ApiResponse searchTicket(Map<String, Object> filter) {
+	public ApiResponse searchTicket(Map<String, Object> filter, Pageable pageable) {
 		String searchString = filter.containsKey("searchString") ? ((String) filter.get("searchString")).toLowerCase()
 				: null;
 		String priority = filter.containsKey("priority") ? ((String) filter.get("priority")) : null;
 
-		List<Map> serachList = null;
+		Page<List<Map>> serachList = null;
 //		if (userDetail.getUserRole().equals("TICKETINGTOOL_ADMIN")) {
 //			serachList = ticketrepository.searchAllTicket(searchString, priority);
 //		}
@@ -927,7 +930,7 @@ return 	tktStatusHistory.save(tktStatusHist);
 //		} else {
 //			serachList = ticketrepository.searchSelfTicket(searchString, priority, userDetail.getUserId());
 //		}
-		serachList = ticketrepository.searchAllTicket(searchString, priority);
+		serachList = ticketrepository.searchAllTicket(searchString, priority,pageable);
 		ApiResponse response = new ApiResponse(true);
 
 		Map content = new HashMap();
@@ -1233,7 +1236,12 @@ return 	tktStatusHistory.save(tktStatusHist);
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Invalid Status Passed ");
 		}
-		allTickets = ticketrepository.getTicketCount(userDetail.getUserRole(), userDetail.getUserId());
+		
+		if (userDetail.getUserRole() != null && userDetail.getUserRole().equals("INFRA_USER")) {
+			allTickets = ticketrepository.getTicketCountForInfra(userDetail.getUserRole(), userDetail.getUserId());
+		}
+		else
+			allTickets = ticketrepository.getTicketCount(userDetail.getUserRole(), userDetail.getUserId());
 		if (allTickets != null) {
 			response.setSuccess(true);
 			response.setMessage("ticket status count retrieved successfully!!");
@@ -1275,15 +1283,34 @@ return 	tktStatusHistory.save(tktStatusHist);
 		if (userDetail.getUserRole().equalsIgnoreCase("TICKETINGTOOL_ADMIN")
 				|| userDetail.getUserRole().equalsIgnoreCase("INFRA_ADMIN") 
 				|| userDetail.getUserRole().equalsIgnoreCase("INFRA_USER")) {
+			
 			if(userDetail.getUserRole().equalsIgnoreCase("INFRA_USER") && status.equalsIgnoreCase("INITIATED")) {
 				allTickets = ticketrepository.getAllTicketsForAdmin(pageable, userDetail.getUserRole(), ticketStatus,priority);
-			}else
-				allTickets = ticketrepository.getAllTicketsByStatus(pageable, userDetail.getUserId(),
-						userDetail.getUserRole(), ticketStatus, isUser,priority);
+			}else {
+				if(status != null) {
+					if(status.equalsIgnoreCase("COMPLETED")) {
+						allTickets = ticketrepository.getAllTicketsByCompleted(pageable, userDetail.getUserId(),
+								userDetail.getUserRole(), ticketStatus,priority);
+					}else
+						allTickets = ticketrepository.getAllTicketsByStatus(pageable, userDetail.getUserId(),
+							userDetail.getUserRole(), ticketStatus, isUser,priority);
+				}else {
+					allTickets = ticketrepository.getAllTicketsByStatus(pageable, userDetail.getUserId(),
+							userDetail.getUserRole(), ticketStatus, isUser,priority);
+				}
+			}
 		}
 
 		else {
-			allTickets = ticketrepository.getAllTicketsByStatus(pageable, userDetail.getUserId(),
+			if(status != null) {
+				if(status.equalsIgnoreCase("COMPLETED"))
+					allTickets = ticketrepository.getAllTicketsByCompleted(pageable, userDetail.getUserId(),
+						userDetail.getUserRole(), ticketStatus,priority);
+				else
+					allTickets = ticketrepository.getAllTicketsByStatus(pageable, userDetail.getUserId(),
+							userDetail.getUserRole(), ticketStatus, isUser,priority);
+			}else
+				allTickets = ticketrepository.getAllTicketsByStatus(pageable, userDetail.getUserId(),
 					userDetail.getUserRole(), ticketStatus, isUser,priority);
 		}
 

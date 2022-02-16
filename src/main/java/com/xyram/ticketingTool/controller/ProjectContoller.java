@@ -59,6 +59,17 @@ class ProjectContoller {
 		return projectService.getAllProjects(pageable);
 	}
 	
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllProjectsForTickets/{serachString}",
+			AuthConstants.HR_BASEPATH + "/getAllProjectsForTickets/{serachString}",
+			AuthConstants.HR_ADMIN_BASEPATH + "/getAllProjectsForTickets/{serachString}",
+			AuthConstants.INFRA_USER_BASEPATH + "/getAllProjectsForTickets/{serachString}",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllProjectsForTickets/{serachString}", 
+			AuthConstants.DEVELOPER_BASEPATH + "/getAllProjectsForTickets/{serachString}" })
+	public ApiResponse getAllProjectsForTickets(@PathVariable String serachString) {
+		logger.info("indide ProjectContoller :: getAllProjectsForTickets");
+		return projectService.getAllProjectsForTickets(serachString);
+	}
+	
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/genericIssues",AuthConstants.HR_ADMIN_BASEPATH + "/genericIssues",
 			AuthConstants.INFRA_USER_BASEPATH + "/genericIssues",AuthConstants.HR_BASEPATH + "/genericIssues",AuthConstants.INFRA_ADMIN_BASEPATH + "/genericIssues", AuthConstants.DEVELOPER_BASEPATH + "/genericIssues" })
 	public ApiResponse getgenericIssues() {
