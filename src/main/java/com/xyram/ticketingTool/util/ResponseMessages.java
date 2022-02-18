@@ -108,11 +108,38 @@ public interface ResponseMessages {
 	String ARTICLE_STATUS_NOT_CHANGED = "Artcle status not changed";
 	String ARTICLE_DELETED = "Artcle deleted successfully";
 	String ARTICLE_NOT_DELETED = "Artcle not deleted";
-	String NOT_AUTHORIZED = "Artcle not deleted";
+	String NOT_AUTHORIZED = "Not authorised";
 	String ARTICLE_LIST_RETREIVED = "Artcle list retreived successfully";
 	String ARTICLE_LIST_NOT_RETREIVED = "Artcle list not retreived";
 	String ARTICLE_DETAILS_RETREIVED = "Artcle details retreived successfully";
 	String ARTICLE_DETAILS_NOT_RETREIVED = "Artcle details not retreived";
+	
+	String ANNOUNCEMENT_ADDED = "Announcement created successfully";
+	String ANNOUNCEMENT_NOT_ADDED = "Announcement not created";
+	String ANNOUNCEMENT_EDITED = "Announcement edited successfully";
+	String ANNOUNCEMENT_NOT_EDITED = "Announcement not edited";
+	String ANNOUNCEMENT_STATUS_CHANGED = "Announcement status changed successfully";
+	String ANNOUNCEMENT_STATUS_NOT_CHANGED = "Announcement status not changed";
+	String ANNOUNCEMENT_DELETED = "Announcement deleted successfully";
+	String ANNOUNCEMENT_NOT_DELETED = "Announcement not deleted";
+	String ANNOUNCEMENT_LIST_RETREIVED = "Announcement list retreived successfully";
+	String ANNOUNCEMENT_LIST_NOT_RETREIVED = "Announcement list not retreived";
+	String ANNOUNCEMENT_DETAILS_RETREIVED = "Announcement details retreived successfully";
+	String ANNOUNCEMENT_DETAILS_NOT_RETREIVED = "Announcement details not retreived";
+	
+	String SHEETS_ADDED = "Time Sheets added successfully";
+	String SHEETS_NOT_ADDED = "Time Sheets not added";
+	String SHEETS_OBJECT_ISSUE = "Time Sheets records are not proper or empty";
+//	String ANNOUNCEMENT_EDITED = "Announcement edited successfully";
+//	String ANNOUNCEMENT_NOT_EDITED = "Announcement not edited";
+//	String ANNOUNCEMENT_STATUS_CHANGED = "Announcement status changed successfully";
+//	String ANNOUNCEMENT_STATUS_NOT_CHANGED = "Announcement status not changed";
+//	String ANNOUNCEMENT_DELETED = "Announcement deleted successfully";
+//	String ANNOUNCEMENT_NOT_DELETED = "Announcement not deleted";
+//	String ANNOUNCEMENT_LIST_RETREIVED = "Announcement list retreived successfully";
+//	String ANNOUNCEMENT_LIST_NOT_RETREIVED = "Announcement list not retreived";
+//	String ANNOUNCEMENT_DETAILS_RETREIVED = "Announcement details retreived successfully";
+//	String ANNOUNCEMENT_DETAILS_NOT_RETREIVED = "Announcement details not retreived";
 	
 	
 }

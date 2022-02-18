@@ -130,7 +130,7 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 
 							ProjectMembers projectMember = null;
 
-							projectMember = projectMemberRepository.getMemberInProject(employeeId, project.getpId());
+							projectMember = projectMemberRepository.getMemberInProject(employeeId, project.getpId(),null);
 
 							if (projectMember != null) {
 
@@ -380,19 +380,19 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 	}
 
 	@Override
-	public ProjectMembers getProjectMembersInProject(String employeeId, String projectId) {
+	public ProjectMembers getProjectMembersInProject(String employeeId, String projectId,String searchString) {
 
-		return projectMemberRepository.getMemberInProject(employeeId, projectId);
+		return projectMemberRepository.getMemberInProject(employeeId, projectId,searchString);
 	}
 
 	@Override
-	public IssueTrackerResponse getProjectMembersInProject(String projectId) {
+	public IssueTrackerResponse getProjectMembersInProject(String projectId, String searchString) {
 
 		IssueTrackerResponse response = new IssueTrackerResponse();
 		
 		
 		List<Map> projectMemberList = projectMemberRepository.getAllMemberByProject(projectId,userDetail.getUserRole(),
-				userDetail.getScopeId());
+				userDetail.getScopeId(),searchString);
 
 		response.setContent(projectMemberList);
 
@@ -406,7 +406,7 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 	public IssueTrackerResponse makeProjectAdmin(String employeeId, String projectId) {
 		IssueTrackerResponse issueTrackerResponse = new IssueTrackerResponse();
 
-		ProjectMembers projectMembers = projectMemberRepository.getMemberInProject(employeeId, projectId);
+		ProjectMembers projectMembers = projectMemberRepository.getMemberInProject(employeeId, projectId,null);
 		if (projectMembers != null) {
 			String isadmin = "1";
 			projectMemberRepository.updateProjectAdmin(projectMembers.getId(), isadmin);
@@ -424,7 +424,7 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 		IssueTrackerResponse issueTrackerResponse = new IssueTrackerResponse();
 		issueTrackerResponse.setStatus("true");
 
-		ProjectMembers projectMembers = projectMemberRepository.getMemberInProject(employeeId, projectId);
+		ProjectMembers projectMembers = projectMemberRepository.getMemberInProject(employeeId, projectId,null);
 		if (projectMembers != null) {
 			String isadmin = "0";
 			projectMemberRepository.updateProjectAdmin(projectMembers.getId(), isadmin);

@@ -171,8 +171,15 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 	List<Employee> employeeListForReporting();
 
 	@Query("Select e from Employee e "
-			+ "INNER JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id WHERE r.roleName = 'INFRA_USER' and e.status ='ACTIVE' ORDER BY e.createdAt DESC")
-	List<Employee> getInfraEmployee();
+			+ "INNER JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id WHERE r.roleName = 'INFRA_USER' "
+			+ "and e.status ='ACTIVE' and "
+			+ "(:searchString is null"
+			+ " or lower(e.email) like %:searchString% "
+			+ " or lower(e.firstName) like %:searchString% "
+			+ "or lower(e.middleName) like %:searchString% "
+			+ "or lower(e.lastName) like %:searchString%) "
+			+ "ORDER BY e.createdAt DESC")
+	List<Employee> getInfraEmployee(String searchString);
 
 	@Query("Select distinct new map(e.eId as id,e.userCredientials.uid as uid,e.email as email,e. profileUrl as profileUrl , e.firstName as firstName,e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId, "
 			+ "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,d.designationName as designationName,e.profileUrl as profileUrl,e.createdAt as createdAt,e.reportingTo as reportingTo,CONCAT(ee.firstName ,' ', ee.lastName) as ReporterName) from Employee e "

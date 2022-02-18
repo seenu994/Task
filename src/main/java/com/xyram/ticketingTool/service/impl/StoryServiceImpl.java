@@ -215,7 +215,7 @@ public class StoryServiceImpl implements StoryService {
 	}
 
 	public boolean checkProjectMemberInProject(String projectId, String employeeId) {
-		ProjectMembers projectMembers = projectMemberService.getProjectMembersInProject(employeeId, projectId);
+		ProjectMembers projectMembers = projectMemberService.getProjectMembersInProject(employeeId, projectId,null);
 		if (projectMembers != null) {
 			if (projectMembers.getStatus().equals("INACTIVE")) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "  project member is inactive state");

@@ -1140,9 +1140,9 @@ if(vendorNew!=null)
 	}
 
 	@Override
-	public ApiResponse getInfraEmployee() {
+	public ApiResponse getInfraEmployee(String searchString) {
 		ApiResponse response = new ApiResponse(false);
-		List<Employee> infraUsers = employeeRepository.getInfraEmployee();
+		List<Employee> infraUsers = employeeRepository.getInfraEmployee(searchString);
 		Map content = new HashMap();
 		content.put("infraUsers", infraUsers);
 		if (content != null) {

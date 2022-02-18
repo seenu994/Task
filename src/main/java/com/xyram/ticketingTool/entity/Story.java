@@ -32,7 +32,7 @@ public class Story {
 	@Column(name="title")
 	private String  title;
 	
-	@Column(name="story_description" ,length = 1000)
+	@Column(name="story_description" ,length = 5000)
 	private String storyDescription;
 	
 	

@@ -62,7 +62,7 @@ public class Comments extends AuditModel {
 	@Column(name = "ticketCommentsStatus")
 	private TicketCommentsStatus status = TicketCommentsStatus.ACTIVE;
 	
-	@Column(name="Description")
+	@Column(name="Description",length = 1000)
 	private String ticketCommentDescription;
 
 

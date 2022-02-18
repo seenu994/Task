@@ -72,7 +72,7 @@ public interface EmployeeService {
 
 	ApiResponse getEmployeeByReportingId(String reportingId);
 
-	ApiResponse getInfraEmployee();
+	ApiResponse getInfraEmployee(String searchString);
 
 	ApiResponse getAllRolePermissions(String roleId);
 

@@ -141,15 +141,15 @@ class ProjectMemberContoller {
 		return projectMemberService.isProjectAdmin(employeeId, projectId);
 	}
 
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllProjectMemberByProject/{projectId}",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllProjectMemberByProject/{projectId}",
-			AuthConstants.INFRA_USER_BASEPATH + "/getAllProjectMemberByProject/{projectId}",
-			AuthConstants.DEVELOPER_BASEPATH + "/getAllProjectMemberByProject/{projectId}",
-			AuthConstants.HR_ADMIN_BASEPATH + "/getAllProjectMemberByProject/{projectId}",
-			AuthConstants.HR_BASEPATH + "/getAllProjectMemberByProject/{projectId}" })
-	public IssueTrackerResponse getAllProjectMemberById(@PathVariable String projectId) {
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllProjectMemberByProject/{projectId}/searchString/{searchString}",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllProjectMemberByProject/{projectId}/searchString/{searchString}",
+			AuthConstants.INFRA_USER_BASEPATH + "/getAllProjectMemberByProject/{projectId}/searchString/{searchString}",
+			AuthConstants.DEVELOPER_BASEPATH + "/getAllProjectMemberByProject/{projectId}/searchString/{searchString}",
+			AuthConstants.HR_ADMIN_BASEPATH + "/getAllProjectMemberByProject/{projectId}/searchString/{searchString}",
+			AuthConstants.HR_BASEPATH + "/getAllProjectMemberByProject/{projectId}/searchString/{searchString}" })
+	public IssueTrackerResponse getAllProjectMemberById(@PathVariable String projectId,@PathVariable(required=false) String searchString) {
 		logger.info("indide ProjectMembersController :: MakeProjectAdmin");
-		return projectMemberService.getProjectMembersInProject(projectId);
+		return projectMemberService.getProjectMembersInProject(projectId,searchString);
 	}
 
 	@GetMapping(value = {

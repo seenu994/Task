@@ -32,7 +32,7 @@ public class Articles extends AuditModel {
 	@Column(name = "title", nullable = false)
 	private String title;
 
-	@Column(name = "description", nullable = false)
+	@Column(name = "description",length = 5000, nullable = false)
 	private String description;
 
 	@Enumerated(EnumType.STRING)

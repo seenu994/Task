@@ -241,7 +241,7 @@ class EmployeeController {
 			AuthConstants.HR_BASEPATH + "/updateProfile",AuthConstants.DEVELOPER_BASEPATH + "/updateProfile",
 			AuthConstants.INFRA_ADMIN_BASEPATH + "/updateProfile" })
 	public ApiResponse editEmployee(@RequestBody Map employeeRequest) {
-		logger.info("indide ProductController :: getAllemployee");
+		logger.info("indide ProductController :: editEmployee");
 		return employeeService.updateEmployee(employeeRequest);
 	}
 
@@ -260,7 +260,7 @@ class EmployeeController {
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editJobVendor/{vendorId}",
 			AuthConstants.HR_ADMIN_BASEPATH + "/editJobVendor/{vendorId}" })
 	public ApiResponse editJobVendor(@RequestBody JobVendorDetails vendorRequest, @PathVariable String vendorId) {
-		logger.info("indide ProductController :: getAllemployee");
+		logger.info("indide ProductController :: editJobVendor");
 		return employeeService.editJobVendor(vendorId, vendorRequest);
 	}
 
@@ -276,14 +276,14 @@ class EmployeeController {
 		return employeeService.getEmployeeByReportingId(reportingId);
 	}
 
-	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/getInfraEmployee",
-			AuthConstants.ADMIN_BASEPATH + "/getInfraEmployee", AuthConstants.DEVELOPER_BASEPATH + "/getInfraEmployee",
-			AuthConstants.HR_BASEPATH + "/getInfraEmployee", AuthConstants.INFRA_ADMIN_BASEPATH + "/getInfraEmployee",
-			AuthConstants.INFRA_USER_BASEPATH + "/getInfraEmployee",
-			AuthConstants.JOB_VENDOR_BASEPATH + "/getInfraEmployee}" })
-	public ApiResponse getInfraEmployee() {
+	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/getInfraEmployee/{searchString}",
+			AuthConstants.ADMIN_BASEPATH + "/getInfraEmployee/{searchString}", AuthConstants.DEVELOPER_BASEPATH + "/getInfraEmployee/{searchString}",
+			AuthConstants.HR_BASEPATH + "/getInfraEmployee/{searchString}", AuthConstants.INFRA_ADMIN_BASEPATH + "/getInfraEmployee/{searchString}",
+			AuthConstants.INFRA_USER_BASEPATH + "/getInfraEmployee/{searchString}",
+			AuthConstants.JOB_VENDOR_BASEPATH + "/getInfraEmployee/{searchString}}" })
+	public ApiResponse getInfraEmployee(@PathVariable String searchString ) {
 		logger.info("Received request to add Employee");
-		return employeeService.getInfraEmployee();
+		return employeeService.getInfraEmployee(searchString);
 	}
 
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllRolePermissions/{roleId}" })

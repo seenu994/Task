@@ -57,7 +57,7 @@ public class ArticleController {
 			AuthConstants.HR_BASEPATH + "/changeArticleStatus/{articleId}/status/{articleStatus}", 
 			AuthConstants.DEVELOPER_BASEPATH + "/changeArticleStatus/{articleId}/status/{articleStatus}",
 			AuthConstants.INFRA_ADMIN_BASEPATH + "/changeArticleStatus/{articleId}/status/{articleStatus}" })
-	public ApiResponse updateEmployeeStatus(@PathVariable String articleId, @PathVariable ArticleStatus articleStatus) {
+	public ApiResponse changeArticleStatus(@PathVariable String articleId, @PathVariable ArticleStatus articleStatus) {
 		logger.info("Received request to change article status to: " + articleStatus + "for articleId: " + articleId);
 		return articleService.changeArticleStatus(articleId, articleStatus);
 	}

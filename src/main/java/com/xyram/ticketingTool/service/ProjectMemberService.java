@@ -37,7 +37,7 @@ public interface ProjectMemberService {
 
 	ApiResponse getAllProjectByEmployeeId();
 
-	ProjectMembers getProjectMembersInProject(String employeeId, String projectId);
+	ProjectMembers getProjectMembersInProject(String employeeId, String projectId,String searchString);
 
 	IssueTrackerResponse makeProjectAdmin(String employeeId, String projectId);
 
@@ -45,7 +45,7 @@ public interface ProjectMemberService {
 
 	ProjectAdminResponse isProjectAdmin(String employeeId, String projectId);
 
-	IssueTrackerResponse getProjectMembersInProject(String projectId);
+	IssueTrackerResponse getProjectMembersInProject(String projectId, String searchString);
 
 	ApiResponse projectMemberService(String projectid, String searchString);
 
