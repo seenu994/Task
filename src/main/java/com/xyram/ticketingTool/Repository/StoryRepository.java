@@ -112,7 +112,7 @@ public interface StoryRepository extends JpaRepository<Story, String> {
 			+ " (:storyType is null or find_in_set(s.story_type ,:storyType)) and "
 			+ " (:storyLabel is null or find_in_set(s.story_label,:storyLabel))"
 			+ " and (:fromDate is null or Date(s.created_on) >= STR_TO_DATE(:fromDate, '%Y-%m-%d')) and "
-			+"  (:toDate is null or Date(s.created_on) >= STR_TO_DATE(:toDate, '%Y-%m-%d')) and "
+			+"  (:toDate is null or Date(s.created_on) <= STR_TO_DATE(:toDate, '%Y-%m-%d')) and "
 			+ "" + "(:searchString  is null "
 			+ " OR  s.story_type Like %:searchString%  "
 			+ " OR  CONCAT(e1.frist_name ,' ', e1.last_name) LIKE %:searchString% "

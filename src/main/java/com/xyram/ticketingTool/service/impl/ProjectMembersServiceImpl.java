@@ -401,6 +401,22 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 		return response;
 
 	}
+	
+	@Override 
+	public IssueTrackerResponse searchMembersInProject(String projectId, String searchString) {
+
+		IssueTrackerResponse response = new IssueTrackerResponse();
+		
+		
+		List<Map> projectMemberList = projectMemberRepository.searchMembersInProject(projectId,searchString);
+
+		response.setContent(projectMemberList);
+
+		response.setStatus("success");
+
+		return response;
+
+	}
 
 	@Override
 	public IssueTrackerResponse makeProjectAdmin(String employeeId, String projectId) {

@@ -65,6 +65,8 @@ public interface TicketService {
 	ApiResponse updateTicketResolution(Map<String, Object> filter);
 
 	ApiResponse editTicket(String ticketId, TicketVo ticketVo);
+
+	ApiResponse getAllTicketReports(Map<String, Object> filter, Pageable pageable);
 }
 		
 

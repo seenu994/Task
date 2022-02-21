@@ -4,9 +4,12 @@ package com.xyram.ticketingTool.service.impl;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter;
@@ -932,6 +935,83 @@ return 	tktStatusHistory.save(tktStatusHist);
 //		}
 		serachList = ticketrepository.searchAllTicket(searchString, priority,pageable);
 		ApiResponse response = new ApiResponse(true);
+
+		Map content = new HashMap();
+		content.put("serachList", serachList);
+		// ApiResponse response = new ApiResponse(true);
+		response.setMessage(ResponseMessages.TICKET_LIST);
+		response.setSuccess(true);
+		response.setContent(content);
+
+		return response;
+	} 
+	
+	@Override
+	public ApiResponse getAllTicketReports(Map<String, Object> filter, Pageable pageable) {
+		
+		ApiResponse response = new ApiResponse(true);
+
+		String fromDateStr = filter.containsKey("fromDate") ? ((String) filter.get("fromDate")).toLowerCase()
+				: null;
+		Date fromDate = null;
+		if(fromDateStr!=null) {
+			try {
+				fromDate=new SimpleDateFormat("yyyy-MM-dd").parse(fromDateStr);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}  
+		}
+		
+		String toDateStr = filter.containsKey("toDate") ? ((String) filter.get("toDate")).toLowerCase()
+				: null;
+		Date toDate = null;
+		if(toDateStr!=null) {
+			try {
+				toDate=new SimpleDateFormat("yyyy-MM-dd").parse(toDateStr);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}  
+		}
+		
+		if(toDate == null || fromDate == null) {
+			response.setMessage("From or To dates are missing");
+			response.setSuccess(false);
+		}
+		
+		String projectId = filter.containsKey("projectId") ? ((String) filter.get("projectId"))
+				: null;
+		String statusStr = filter.containsKey("status") ? ((String) filter.get("status"))
+				: null;
+		String assigneeId = filter.containsKey("assigneeId") ? ((String) filter.get("assigneeId"))
+				: null;
+		String createrId = filter.containsKey("createrId") ? ((String) filter.get("createrId"))
+				: null;
+		String priority = filter.containsKey("priority") ? ((String) filter.get("priority")) : null;
+		
+		if(statusStr!=null) {
+			TicketStatus status = null;
+			try {
+				status = filter.containsKey("status") ? TicketStatus.toEnum((String) filter.get("status")) : null;
+			} catch (IllegalArgumentException e) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+						filter.get("status").toString() + " is not a valid status");
+			}
+		}
+		
+
+		Page<List<Map>> serachList = null;
+		if(userDetail.getUserRole().equals("TICKETINGTOOL_ADMIN") ||
+				userDetail.getUserRole().equals("INFRA_ADMIN")) {
+			
+		}else if(userDetail.getUserRole().equals("INFRA_USER")){
+			assigneeId = userDetail.getUserId();
+		}else {
+			createrId = userDetail.getUserId();
+		}
+
+		serachList = ticketrepository.searchAllTickets(projectId,fromDateStr,toDateStr,statusStr,createrId,assigneeId, priority,pageable);
 
 		Map content = new HashMap();
 		content.put("serachList", serachList);

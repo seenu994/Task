@@ -135,8 +135,12 @@ class TicketController {
 		return ticketService.deleteComment(commentObj);
 	}
 
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllTicket",AuthConstants.HR_ADMIN_BASEPATH + "/getAllTicket",AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllTicket",
-			AuthConstants.INFRA_USER_BASEPATH + "/getAllTicket" ,AuthConstants.DEVELOPER_BASEPATH + "/getAllTicket",AuthConstants.HR_BASEPATH + "/getAllTicket"})
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllTicket",
+			AuthConstants.HR_ADMIN_BASEPATH + "/getAllTicket",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllTicket",
+			AuthConstants.INFRA_USER_BASEPATH + "/getAllTicket" ,
+			AuthConstants.DEVELOPER_BASEPATH + "/getAllTicket",
+			AuthConstants.HR_BASEPATH + "/getAllTicket"})
 	public ApiResponse getAllTicket(Pageable pageable) {
 		logger.info("inside Ticket controller :: getAllTicket");
 		return ticketService.getAllTicket(pageable);
@@ -148,6 +152,14 @@ class TicketController {
 	public ApiResponse searchTicket(@RequestBody Map<String, Object>filter,Pageable pageable) {
 		logger.info("inside Ticket controller :: getAllTicket");
 		return ticketService.searchTicket(filter,pageable);
+	}
+	
+	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllTicketReports",AuthConstants.INFRA_ADMIN_BASEPATH+ "/getAllTicketReports",
+			AuthConstants.INFRA_USER_BASEPATH + "/getAllTicketReports" ,
+			AuthConstants.DEVELOPER_BASEPATH + "/getAllTicketReports",AuthConstants.HR_ADMIN_BASEPATH + "/getAllTicketReports",AuthConstants.HR_BASEPATH + "/getAllTicketReports"})
+	public ApiResponse getAllTicketReoprts(@RequestBody Map<String, Object>filter,Pageable pageable) {
+		logger.info("inside Ticket controller :: getAllTicketReports");
+		return ticketService.getAllTicketReports(filter,pageable);
 	}
 
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllTktByStatus/{status}",AuthConstants.HR_ADMIN_BASEPATH + "/getAllTktByStatus/{status}",AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllTktByStatus/{status}",

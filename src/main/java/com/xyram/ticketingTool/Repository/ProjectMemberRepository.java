@@ -55,6 +55,17 @@ public interface ProjectMemberRepository extends JpaRepository<ProjectMembers, S
 			+ "Or  (lower(:userRole)!='ticketingtool_admin')) or (p.employeeId=:scopeId))")
 	List<Map> getAllMemberByProject(String projectId, String  userRole,String scopeId,String searchString);
 	
+	@Query("select new map( p.id as id , e.eId as employeeId ,CONCAT(e.firstName ,' ', e.lastName) as employeeName,e.userCredientials.id as userId,p.isAdmin as isAdmin) "
+			+ "from ProjectMembers p inner join Employee e on p.employeeId=e.eId "
+			+ " where p.projectId = :projectId  and  p.status='ACTIVE' and "
+			+ "(:searchString is null"
+			+ " or lower(e.email) like %:searchString% "
+			+ " or lower(e.firstName) like %:searchString% "
+			+ "or lower(e.middleName) like %:searchString% "
+			+ "or lower(e.lastName) like %:searchString%) ")
+	List<Map> searchMembersInProject(String projectId,String searchString);
+	
+	
 	@Query("select new map( p.id as id , e.eId as employeeId ,CONCAT(e.firstName ,' ', e.lastName) as employeeName,p.isAdmin as isAdmin) "
 			+ "from ProjectMembers p inner join Employee e on p.employeeId=e.eId "
 			+ " where p.projectId = :projectId  and  p.status='ACTIVE'")

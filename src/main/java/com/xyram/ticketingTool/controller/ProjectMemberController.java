@@ -151,6 +151,17 @@ class ProjectMemberContoller {
 		logger.info("indide ProjectMembersController :: MakeProjectAdmin");
 		return projectMemberService.getProjectMembersInProject(projectId,searchString);
 	}
+	
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/searchMembersInProject/{projectId}/searchString/{searchString}",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/searchMembersInProject/{projectId}/searchString/{searchString}",
+			AuthConstants.INFRA_USER_BASEPATH + "/searchMembersInProject/{projectId}/searchString/{searchString}",
+			AuthConstants.DEVELOPER_BASEPATH + "/searchMembersInProject/{projectId}/searchString/{searchString}",
+			AuthConstants.HR_ADMIN_BASEPATH + "/searchMembersInProject/{projectId}/searchString/{searchString}",
+			AuthConstants.HR_BASEPATH + "/searchMembersInProject/{projectId}/searchString/{searchString}" })
+	public IssueTrackerResponse searchMembersInProject(@PathVariable String projectId,@PathVariable(required=false) String searchString) {
+		logger.info("indide ProjectMembersController :: MakeProjectAdmin");
+		return projectMemberService.searchMembersInProject(projectId,searchString);
+	}
 
 	@GetMapping(value = {
 			AuthConstants.ADMIN_BASEPATH + "/searchProjectMembersByProjectId/{projectid}/searchString/{searchString}",
