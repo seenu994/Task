@@ -194,14 +194,11 @@ public class TimesheetServiceImpl implements TimesheetService{
 			response.setSuccess(false);
 		}
 		
-		String projectId = filter.containsKey("projectId") ? ((String) filter.get("projectId")).toLowerCase()
+		String projectId = filter.containsKey("projectId") ? ((String) filter.get("projectId"))
 				: null;
-		String statusStr = filter.containsKey("status") ? ((String) filter.get("status")).toLowerCase()
+		String statusStr = filter.containsKey("status") ? ((String) filter.get("status"))
 				: null;
-//		String assigneeId = filter.containsKey("assigneeId") ? ((String) filter.get("assigneeId")).toLowerCase()
-//				: null;
-//		String createrId = filter.containsKey("createrId") ? ((String) filter.get("createrId")).toLowerCase()
-//				: null;
+
 				
 		TimesheetStatus status = null;
 		try {
@@ -211,7 +208,7 @@ public class TimesheetServiceImpl implements TimesheetService{
 					filter.get("status").toString() + " is not a valid status");
 		}
 		
-		Page<List<Map>> timeSheetList = timesheetRepository.getAllMyTimeSheets(currentUser.getUserId(), projectId, fromDateStr, toDateStr, statusStr, pageable);
+		List<Map> timeSheetList = timesheetRepository.getAllMyTimeSheets(currentUser.getUserId(), projectId, fromDateStr, toDateStr, statusStr, pageable);
 		Map content = new HashMap();
 		content.put("timeSheetList", timeSheetList);
 		// ApiResponse response = new ApiResponse(true);

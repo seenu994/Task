@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -47,9 +48,15 @@ public class TimesheetController {
 		return timesheetService.editTimeSheets(timesheets);
 	} 
 	
-	public 	ApiResponse approveTimeSheets(@RequestBody List<String> timesheets) {
+	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/approveTimeSheets/{reason}",
+			AuthConstants.HR_ADMIN_BASEPATH + "/approveTimeSheets/{reason}",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/approveTimeSheets/{reason}",
+			AuthConstants.INFRA_USER_BASEPATH + "/approveTimeSheets/{reason}",
+			AuthConstants.HR_BASEPATH + "/approveTimeSheets/{reason}",
+			})
+	public 	ApiResponse approveTimeSheets(@RequestBody List<String> timesheets, @PathVariable String reason) {
 		logger.info("Approving Time sheets");
-		return timesheetService.approveTimeSheets(timesheets);
+		return timesheetService.rejectTimeSheets(timesheets,reason);
 
 	}
 

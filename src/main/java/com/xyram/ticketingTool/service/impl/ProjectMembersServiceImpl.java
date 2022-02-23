@@ -391,13 +391,11 @@ public class ProjectMembersServiceImpl implements ProjectMemberService {
 		IssueTrackerResponse response = new IssueTrackerResponse();
 		
 		
-		List<Map> projectMemberList = projectMemberRepository.getAllMemberByProject(projectId,userDetail.getUserRole(),
-				userDetail.getScopeId(),searchString);
-
+//		List<Map> projectMemberList = projectMemberRepository.getAllMemberByProject(projectId,userDetail.getUserRole(),
+//				userDetail.getScopeId(),searchString); searchMembersInProject
+		List<Map> projectMemberList = projectMemberRepository.searchMembersInProject(projectId,searchString);
 		response.setContent(projectMemberList);
-
 		response.setStatus("success");
-
 		return response;
 
 	}

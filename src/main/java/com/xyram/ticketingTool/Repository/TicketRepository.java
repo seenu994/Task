@@ -125,8 +125,23 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 			+ "(:assigneeId is null OR b.employee_id= :assigneeId) AND "
 			+ "(:projectId is null OR a.project_id= :projectId) AND "
 			+ "(:toDate is null OR (Date(a.created_at) <= STR_TO_DATE(:toDate, '%Y-%m-%d'))) ", nativeQuery = true)
-	Page<List<Map>> searchAllTickets(String projectId, String fromDate, String toDate, String status,
+	List<Map> searchAllTickets(String projectId, String fromDate, String toDate, String status,
 			String createrId, String assigneeId, String priority, Pageable pageable);
+	
+	@Query(value = "SELECT count(a.ticket_id) as ticket_id FROM ticketdbtool.ticket_info a left join ticketdbtool.employee ee on a.created_by = ee.user_id "
+			+ "left join ticketdbtool.ticket_assignee b ON a.ticket_id = b.ticket_id  and b.ticket_assignee_status = 'ACTIVE' "
+			+ "left join ticketdbtool.employee e on b.employee_id = e.employee_id "
+			+ "left join ticketdbtool.project p ON a.project_id = p.project_id "
+			+ "left join ticketdbtool.priority p1 on a.priority_id = p1.priority_id " + 
+			"where (:fromDate is null OR (Date(a.created_at) >= STR_TO_DATE(:fromDate, '%Y-%m-%d'))) AND "
+			+ "(:priority is null OR (p1.priority_id = :priority)) AND "
+			+ "(:status is null OR lower(a.ticket_status)=:status) AND "
+			+ "(:createrId is null OR a.created_by= :createrId) AND "
+			+ "(:assigneeId is null OR b.employee_id= :assigneeId) AND "
+			+ "(:projectId is null OR a.project_id= :projectId) AND "
+			+ "(:toDate is null OR (Date(a.created_at) <= STR_TO_DATE(:toDate, '%Y-%m-%d'))) ", nativeQuery = true)
+	Integer searchAllTicketsCount(String projectId, String fromDate, String toDate, String status,
+			String createrId, String assigneeId, String priority);
 
 	@Query(value = "SELECT a.ticket_id as ticket_id, a.type as type,a.resolution as resolution,p.project_id as projectId, p.project_name as projectName, a.ticket_description as ticket_description, a.ticket_status as ticket_status, a.created_at as created_at, a.last_updated_at as last_updated_at, "
 			+ "a.created_by as created_by, a.priority_id as priority_id,p1.priority_name as priority_name, b.employee_id as assigneeId, concat(e.frist_name,' ', e.last_name) as assigneeName, concat(ee.frist_name,' ', ee.last_name) as createdByEmp "

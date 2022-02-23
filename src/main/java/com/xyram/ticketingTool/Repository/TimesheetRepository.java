@@ -34,6 +34,6 @@ public interface TimesheetRepository extends JpaRepository<TimeSheet, String>{
 			+ "(:projectId is null OR t.project_id=:projectId) AND "
 			+ "(:fromDate is null OR Date(t.timesheet_date) >= STR_TO_DATE(:fromDate, '%Y-%m-%d')) AND "
 			+ "(:userId is null OR lower(t.employee_id)=:userId) ",  nativeQuery = true)
-	Page<List<Map>> getAllMyTimeSheets(String userId,String projectId, String fromDate, String toDate, String status, Pageable pageable);
+	List<Map> getAllMyTimeSheets(String userId,String projectId, String fromDate, String toDate, String status, Pageable pageable);
 
 }

@@ -37,6 +37,7 @@ import com.xyram.ticketingTool.Repository.TicketAssignRepository;
 import com.xyram.ticketingTool.Repository.TicketRepository;
 import com.xyram.ticketingTool.Repository.TicketStatusHistRepository;
 import com.xyram.ticketingTool.Repository.UserRepository;
+import com.xyram.ticketingTool.admin.model.User;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Comments;
 import com.xyram.ticketingTool.entity.Employee;
@@ -258,6 +259,13 @@ public class TicketServiceImpl implements TicketService {
 			return response;
 		} else {
 			if (ticketreq.getCreatedBy() != null) {
+				User empObj = employeeRepository.getUserByUSerId(ticketreq.getCreatedBy());
+				if (empObj == null ) {
+					response.setSuccess(false);
+					response.setMessage("Not a valid Raised By Employee ");
+					response.setContent(null);
+					return response;
+				}
 				ticketreq.setCreatedBy(ticketreq.getCreatedBy());
 			}
 
@@ -278,7 +286,7 @@ public class TicketServiceImpl implements TicketService {
 			TicketAssignee assignee=null;
 			if (assigneeId != null) {
 				Employee employeeObj = employeeRepository.getByEmpId(assigneeId);
-				if (employeeObj!=null  && employeeObj.getStatus() != UserStatus.OFFLINE) {
+				if (employeeObj != null  && employeeObj.getStatus() != UserStatus.OFFLINE) {
 					 assignee = new TicketAssignee();
 					assignee.setEmployeeId(assigneeId);
 					assignee.setTicketId(tickets.getId());
@@ -982,7 +990,7 @@ return 	tktStatusHistory.save(tktStatusHist);
 		
 		String projectId = filter.containsKey("projectId") ? ((String) filter.get("projectId"))
 				: null;
-		String statusStr = filter.containsKey("status") ? ((String) filter.get("status"))
+		String statusStr = filter.containsKey("status") ? ((String) filter.get("status")).toLowerCase()
 				: null;
 		String assigneeId = filter.containsKey("assigneeId") ? ((String) filter.get("assigneeId"))
 				: null;
@@ -1001,7 +1009,7 @@ return 	tktStatusHistory.save(tktStatusHist);
 		}
 		
 
-		Page<List<Map>> serachList = null;
+		List<Map> serachList = null;
 		if(userDetail.getUserRole().equals("TICKETINGTOOL_ADMIN") ||
 				userDetail.getUserRole().equals("INFRA_ADMIN")) {
 			
@@ -1012,9 +1020,10 @@ return 	tktStatusHistory.save(tktStatusHist);
 		}
 
 		serachList = ticketrepository.searchAllTickets(projectId,fromDateStr,toDateStr,statusStr,createrId,assigneeId, priority,pageable);
-
+		Integer listCount =  ticketrepository.searchAllTicketsCount(projectId,fromDateStr,toDateStr,statusStr,createrId,assigneeId, priority);
 		Map content = new HashMap();
 		content.put("serachList", serachList);
+		content.put("totalCount", listCount);
 		// ApiResponse response = new ApiResponse(true);
 		response.setMessage(ResponseMessages.TICKET_LIST);
 		response.setSuccess(true);

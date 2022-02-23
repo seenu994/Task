@@ -13,6 +13,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.xyram.ticketingTool.admin.model.User;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.Ticket;
 import com.xyram.ticketingTool.helper.EmployeePojo;
@@ -233,6 +234,9 @@ List<Employee> getEmployeeByRole();
 
 	@Query("select e from User e  where e.id= :userId ")
 	Employee getEmployeeByUSerId(String userId);
+	
+	@Query("select e from User e  where e.id= :userId ")
+	User getUserByUSerId(String userId);
 
 	@Query("SELECT e from Employee e  left join JobApplication j On e.eId= j.referredEmployeeId where e.eId = :geteId")
 	Employee getEmployeeNameByScoleID(String geteId);
