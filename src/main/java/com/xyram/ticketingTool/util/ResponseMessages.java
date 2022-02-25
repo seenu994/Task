@@ -132,6 +132,11 @@ public interface ResponseMessages {
 	String SHEETS_OBJECT_ISSUE = "Time Sheets records are not proper or empty";
 	String SHEETS_EDITED = "Time Sheets edited successfully";
 	String SHEETS_NOT_EDITED = "Time Sheets not edited";
+	String SHEETS_APPROVED = "Time Sheets are approved successfully";
+	String SHEETS_NOT_APPROVED = "Few or All Time Sheets are not approved";
+	String SHEETS_REJECTED = "Time Sheets rejected successfully";
+	String SHEETS_NOT_REJECTED = "Few or All Time Sheets not rejected";
+	
 //	String ANNOUNCEMENT_STATUS_CHANGED = "Announcement status changed successfully";
 //	String ANNOUNCEMENT_STATUS_NOT_CHANGED = "Announcement status not changed";
 //	String ANNOUNCEMENT_DELETED = "Announcement deleted successfully";

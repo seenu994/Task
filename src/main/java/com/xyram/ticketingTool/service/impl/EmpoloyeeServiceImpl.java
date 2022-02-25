@@ -1119,24 +1119,23 @@ if(vendorNew!=null)
 	@Override
 	public ApiResponse getEmployeeByReportingId(String reportingId) {
 		ApiResponse response = new ApiResponse(false);
-//		List<Map> reportees = employeeRepository.getReortingList(reportingId);
-//		Map content = new HashMap();
-//		content.put("reportees", reportees);
-//		if (content != null) {
-//			response.setSuccess(true);
-//			response.setMessage("Reportees Retrieved Successfully");
-//			response.setContent(content);
-//		}
-//
-//		else {
-//			response.setSuccess(false);
-//			response.setMessage("Could not retrieve data");
-//			response.setContent(null);
-//		}
-//
-//		return response;
+		List<Map> reportees = employeeRepository.getReortingList(reportingId);
+		Map content = new HashMap();
+		content.put("reportees", reportees);
+		if (content != null) {
+			response.setSuccess(true);
+			response.setMessage("Reportees Retrieved Successfully");
+			response.setContent(content);
+		}
 
-		return null;
+		else {
+			response.setSuccess(false);
+			response.setMessage("Could not retrieve data");
+			response.setContent(null);
+		}
+
+		return response;
+
 	}
 
 	@Override

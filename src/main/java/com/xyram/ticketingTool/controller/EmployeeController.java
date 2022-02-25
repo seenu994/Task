@@ -29,11 +29,6 @@ import com.xyram.ticketingTool.service.EmployeeService;
 import com.xyram.ticketingTool.util.AuthConstants;
 
 
-/**
- * 
- * @author sahana.neelappa
- *
- */
 @RestController
 @CrossOrigin
 class EmployeeController {

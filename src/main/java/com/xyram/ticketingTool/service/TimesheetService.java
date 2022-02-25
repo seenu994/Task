@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.TimeSheet;
+import com.xyram.ticketingTool.response.ReportExportResponse;
 
 public interface TimesheetService {
 	
@@ -20,7 +21,12 @@ public interface TimesheetService {
 	
 	ApiResponse getAllMyTimeSheets(Map<String, Object>filter,Pageable pageable);
 	
+	ReportExportResponse downloadAllMyTimeSheets(Map<String, Object>filter);
+	
 	ApiResponse getAllMyTeamTimeSheets(Map<String, Object>filter,Pageable pageable);
+	
+	ReportExportResponse downloadAllMyTeamTimeSheets(Map<String, Object>filter);
+
 
 
 }

@@ -346,14 +346,6 @@ Map filter =(Map)request;
 	
 		Workbook workbook = prepareExcelWorkBook(stories);
 		
-////	Save file locally 
-//	try {
-//		ExcelUtil.saveWorkbook(workbook, "isuueTracker-report.xlsx");
-//	} catch (IOException e) {
-//		// TODO Auto-generated catch block
-//		e.printStackTrace();
-//	}
-
 		byte[] blob = ExcelUtil.toBlob(workbook);
 
 		fileResponse.put("fileName", "issue-report.xlsx");
