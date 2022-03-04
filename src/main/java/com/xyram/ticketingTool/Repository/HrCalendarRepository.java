@@ -14,6 +14,6 @@ import com.xyram.ticketingTool.entity.HrCalendar;
 @Repository
 public interface HrCalendarRepository extends JpaRepository<HrCalendar, String>{
 
-	@Query("Select new map(h.Id as id,h.candidateMobile as candidateMobile,h.status as status) from hrcalendar h")
+	@Query("Select new map(h.Id as id,h.candidateMobile as candidateMobile,h.status as status) from HrCalendar h")
 	Page<Map> getAllHrCalendarSchedules(Pageable pageable);
 }
