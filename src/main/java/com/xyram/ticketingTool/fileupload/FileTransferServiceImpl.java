@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.itextpdf.text.pdf.codec.Base64.InputStream;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
@@ -72,6 +73,25 @@ public class FileTransferServiceImpl implements FileTransferService {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			disconnectChannelSftp(channelSftp);
+		}
+
+		return false;
+	}
+	
+	@Override
+	public boolean uploadTimeSheetFile(InputStream stream,String path ,String fileName) {
+		ChannelSftp channelSftp = createChannelSftp();
+		String SFTPWORKINGDIR=SFTPWORKINGDIRAADMIN+""+path;
+		try {
+		 
+			channelSftp.cd(SFTPWORKINGDIR);
+			channelSftp.put(stream, fileName);
+			
+			return true;
+		} catch (SftpException ex) {
+			logger.error("Error upload file", ex);
 		} finally {
 			disconnectChannelSftp(channelSftp);
 		}

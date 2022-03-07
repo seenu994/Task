@@ -13,6 +13,7 @@ import javax.transaction.Transactional;
 
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -20,12 +21,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
+import com.xyram.ticketingTool.Repository.StoryAttachmentsRespostiory;
 import com.xyram.ticketingTool.Repository.TimesheetRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.TimeSheet;
 import com.xyram.ticketingTool.enumType.TicketStatus;
 import com.xyram.ticketingTool.enumType.TimesheetStatus;
+import com.xyram.ticketingTool.fileupload.FileTransferService;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.response.ReportExportResponse;
 import com.xyram.ticketingTool.service.TimesheetService;
@@ -47,6 +50,12 @@ public class TimesheetServiceImpl implements TimesheetService{
 	
 	@Autowired
 	EmployeeRepository empRepository;
+	
+	@Value("${time-sheet-base-url}")
+	private String timeSheetAttachmentBaseUrl;
+
+	@Autowired
+	FileTransferService fileUploadService;
 	
 	@Override
 	public ApiResponse createTimeSheets(List<TimeSheet> timesheets) {
@@ -121,7 +130,7 @@ public class TimesheetServiceImpl implements TimesheetService{
 				   
 				    TimeSheet sheet = timesheetRepository.getById(sheetId);
 				    if(sheet != null) {
-				    	if(sheet.getApproverId() != currentUser.getUserId()) {
+				    	if(!sheet.getApproverId().equals(currentUser.getUserId())) {
 				    		response.setSuccess(false);
 							response.setMessage(ResponseMessages.SHEETS_OBJECT_ISSUE);
 							return response;
@@ -163,7 +172,7 @@ public class TimesheetServiceImpl implements TimesheetService{
 				   
 				    TimeSheet sheet = timesheetRepository.getById(sheetId);
 				    if(sheet != null) {
-				    	if(sheet.getApproverId() != currentUser.getUserId()) {
+				    	if(!sheet.getApproverId().equals(currentUser.getUserId())) {
 				    		response.setSuccess(false);
 							response.setMessage(ResponseMessages.SHEETS_OBJECT_ISSUE);
 							return response;
@@ -242,10 +251,10 @@ public class TimesheetServiceImpl implements TimesheetService{
 					filter.get("status").toString() + " is not a valid status");
 		}
 		
-		List<Map> timeSheetList = timesheetRepository.getAllMyTimeSheets(currentUser.getUserId(), projectId, fromDateStr, toDateStr, statusStr, pageable);
+		Page<Map> timeSheetList = timesheetRepository.getAllMyTimeSheets(currentUser.getUserId(), projectId, fromDateStr, toDateStr, status, pageable);
 		Map content = new HashMap();
 		content.put("timeSheetList", timeSheetList);
-		content.put("totalCount", timesheetRepository.getAllMyTimeSheetsCount(currentUser.getUserId(), projectId, fromDateStr, toDateStr, statusStr));
+//		content.put("totalCount", timesheetRepository.getAllMyTimeSheetsCount(currentUser.getUserId(), projectId, fromDateStr, toDateStr, statusStr));
 		// ApiResponse response = new ApiResponse(true);
 		response.setMessage("List Retrieved");
 		response.setSuccess(true);
@@ -302,10 +311,10 @@ public class TimesheetServiceImpl implements TimesheetService{
 					filter.get("status").toString() + " is not a valid status");
 		}
 		
-		List<Map> timeSheetList = timesheetRepository.getAllMyTeamTimeSheets(currentUser.getUserId(),employeeId, projectId, fromDateStr, toDateStr, statusStr, pageable);
+		Page<Map> timeSheetList = timesheetRepository.getAllMyTeamTimeSheets(currentUser.getUserId(),employeeId, projectId, fromDateStr, toDateStr, status, pageable);
 		Map content = new HashMap();
 		content.put("timeSheetList", timeSheetList);
-		content.put("totalCount", timesheetRepository.getAllMyTeamTimeSheetsCount(currentUser.getUserId(),employeeId, projectId, fromDateStr, toDateStr, statusStr));
+//		content.put("totalCount", timesheetRepository.getAllMyTeamTimeSheetsCount(currentUser.getUserId(),employeeId, projectId, fromDateStr, toDateStr, statusStr));
 		// ApiResponse response = new ApiResponse(true);
 		response.setMessage("List Retrieved");
 		response.setSuccess(true);
@@ -361,7 +370,7 @@ public class TimesheetServiceImpl implements TimesheetService{
 					filter.get("status").toString() + " is not a valid status");
 		}
 		
-		List<Map> timeSheetList = timesheetRepository.downloadAllMyTimeSheets(currentUser.getUserId(), projectId, fromDateStr, toDateStr, statusStr);
+		List<Map> timeSheetList = timesheetRepository.downloadAllMyTimeSheets(currentUser.getUserId(), projectId, fromDateStr, toDateStr, status);
 		
 		Map<String, Object> fileResponse = new HashMap<>();
 

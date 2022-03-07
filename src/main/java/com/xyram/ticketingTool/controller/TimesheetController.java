@@ -74,7 +74,7 @@ public class TimesheetController {
 			AuthConstants.DEVELOPER_BASEPATH + "/rejectTimeSheets/{reason}",
 			})
 	public 	ApiResponse rejectTimeSheets(@RequestBody List<String> timesheets, @PathVariable String reason) {
-		logger.info("Approving Time sheets");
+		logger.info("Rejecting Time sheets");
 		return timesheetService.rejectTimeSheets(timesheets,reason);
 
 	} 

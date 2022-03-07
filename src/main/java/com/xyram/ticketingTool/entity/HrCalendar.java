@@ -34,8 +34,39 @@ public class HrCalendar extends AuditModel{
 	@Column(name = "schedule_date")
 	private Date scheduleDate;
 	
+	@Column(name = "searched_source")
+	private String searchedSource;
+	
+	@Column(name = "job_id")
+	private String jobId;
+	
 	@Column(name = "status")
 	private String status;
+	
+	@Column(name = "closed")
+	private Boolean closed = false;
+	
+	@Column(name = "call_count")
+	private Integer callCount = 0;
+	
+	@Column(name = "reporting_to")
+	private String reportingTo;
+
+	public Integer getCallCount() {
+		return callCount;
+	}
+
+	public void setCallCount(Integer callCount) {
+		this.callCount = callCount;
+	}
+
+	public String getReportingTo() {
+		return reportingTo;
+	}
+
+	public void setReportingTo(String reportingTo) {
+		this.reportingTo = reportingTo;
+	}
 
 	public String getId() {
 		return Id;
@@ -76,9 +107,30 @@ public class HrCalendar extends AuditModel{
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	
-	
-	
+
+	public Boolean getClosed() {
+		return closed;
+	}
+
+	public void setClosed(Boolean closed) {
+		this.closed = closed;
+	}
+
+	public String getSearchedSource() {
+		return searchedSource;
+	}
+
+	public void setSearchedSource(String searchedSource) {
+		this.searchedSource = searchedSource;
+	}
+
+	public String getJobId() {
+		return jobId;
+	}
+
+	public void setJobId(String jobId) {
+		this.jobId = jobId;
+	}
 	
 	
 }

@@ -257,60 +257,61 @@ public class TicketServiceImpl implements TicketService {
 			response.setMessage(ResponseMessages.PROJECT_NOTEXIST);
 			response.setContent(null);
 			return response;
-		} else {
-			if (ticketreq.getCreatedBy() != null) {
-				User empObj = employeeRepository.getUserByUSerId(ticketreq.getCreatedBy());
-				if (empObj == null ) {
-					response.setSuccess(false);
-					response.setMessage("Not a valid Raised By Employee ");
-					response.setContent(null);
-					return response;
+			} else {
+				if (ticketreq.getCreatedBy() != null) {
+					User empObj = employeeRepository.getUserByUSerId(ticketreq.getCreatedBy());
+					if (empObj == null ) {
+						response.setSuccess(false);
+						response.setMessage("Not a valid Raised By Employee ");
+						response.setContent(null);
+						return response;
+					}
+					ticketreq.setCreatedBy(ticketreq.getCreatedBy());
 				}
-				ticketreq.setCreatedBy(ticketreq.getCreatedBy());
-			}
-
-			else {
-				ticketreq.setCreatedBy(userDetail.getUserId());
-
-			}
-			ticketreq.setCreatedAt(new Date());
-			ticketreq.setUpdatedBy(userDetail.getUserId());
-			ticketreq.setLastUpdatedAt(new Date());
-			
-			Ticket tickets = ticketrepository.save(ticketreq);
-
-			if (files != null) {
-				attachmentService.storeImage(files, tickets.getId());
-			}
-
-			TicketAssignee assignee=null;
-			if (assigneeId != null) {
-				Employee employeeObj = employeeRepository.getByEmpId(assigneeId);
-				if (employeeObj != null  && employeeObj.getStatus() != UserStatus.OFFLINE) {
-					 assignee = new TicketAssignee();
-					assignee.setEmployeeId(assigneeId);
-					assignee.setTicketId(tickets.getId());
-					assignee.setCreatedAt(new Date());
-					assignee.setCreatedBy(userDetail.getUserId());
-					assignee.setStatus(TicketAssigneeStatus.ACTIVE);
-
-					tickets.setStatus(TicketStatus.ASSIGNED);
-					ticketAssigneeRepository.save(assignee);
-				}else {
+	
+				else {
+					ticketreq.setCreatedBy(userDetail.getUserId());
+	
+				}
+				ticketreq.setCreatedAt(new Date());
+				ticketreq.setUpdatedBy(userDetail.getUserId());
+				ticketreq.setLastUpdatedAt(new Date());
+				
+				Ticket tickets = ticketrepository.save(ticketreq);
+	
+				if (files != null) {
+					attachmentService.storeImage(files, tickets.getId());
+				}
+	
+				TicketAssignee assignee=null;
+				if (assigneeId != null) {
+					Employee employeeObj = employeeRepository.getByEmpId(assigneeId);
+					if (employeeObj != null  && employeeObj.getStatus() != UserStatus.OFFLINE) {
+						 assignee = new TicketAssignee();
+						assignee.setEmployeeId(assigneeId);
+						assignee.setTicketId(tickets.getId());
+						assignee.setCreatedAt(new Date());
+						assignee.setCreatedBy(userDetail.getUserId());
+						assignee.setStatus(TicketAssigneeStatus.ACTIVE);
+	
+						tickets.setStatus(TicketStatus.ASSIGNED);
+						ticketAssigneeRepository.save(assignee);
+					}else {
+						tickets.setStatus(TicketStatus.INITIATED);
+					}
+				}
+	
+				else {
+	
 					tickets.setStatus(TicketStatus.INITIATED);
+	
 				}
-			}
-
-			else {
-
-				tickets.setStatus(TicketStatus.INITIATED);
-
-			}
-
-		response.setSuccess(false);
-		response.setMessage(ResponseMessages.TICKET_CREATED);
-		response.setContent(null);
-	}return response;
+	
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.TICKET_CREATED);
+			response.setContent(null);
+		}
+		return response;
 
 	}
 
