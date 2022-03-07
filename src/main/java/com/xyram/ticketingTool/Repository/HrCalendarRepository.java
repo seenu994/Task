@@ -80,4 +80,6 @@ public interface HrCalendarRepository extends JpaRepository<HrCalendar, String>{
 	List<Map> downloadAllMyTeamSchedulesFromCalendarByStatus(String userId,String employeeId,String jobId, 
 		String fromDate, String toDate, String status,Boolean closed);
 	
+	@Query("Select new map(h.Id as id,h.candidateMobile as candidateMobile,h.status as status) from HrCalendar h")
+	Page<Map> getAllHrCalendarSchedules(Pageable pageable);
 }
