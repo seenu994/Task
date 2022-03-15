@@ -1,7 +1,9 @@
 package com.xyram.ticketingTool.service.impl;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -21,10 +23,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
+import com.xyram.ticketingTool.Repository.ProjectMemberRepository;
 import com.xyram.ticketingTool.Repository.StoryAttachmentsRespostiory;
 import com.xyram.ticketingTool.Repository.TimesheetRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Employee;
+import com.xyram.ticketingTool.entity.ProjectMembers;
 import com.xyram.ticketingTool.entity.TimeSheet;
 import com.xyram.ticketingTool.enumType.TicketStatus;
 import com.xyram.ticketingTool.enumType.TimesheetStatus;
@@ -57,6 +61,9 @@ public class TimesheetServiceImpl implements TimesheetService{
 	@Autowired
 	FileTransferService fileUploadService;
 	
+	@Autowired
+	ProjectMemberRepository projectMemberRepository;
+	
 	@Override
 	public ApiResponse createTimeSheets(List<TimeSheet> timesheets) {
 		
@@ -69,6 +76,37 @@ public class TimesheetServiceImpl implements TimesheetService{
 				    sheet.setUpdatedBy(currentUser.getUserId());
 				    sheet.setLastUpdatedAt(new Date());	
 				    
+				    if(sheet.getProjectId()!=null) {
+				    	ProjectMembers projectMember = null;
+						projectMember = projectMemberRepository.getMemberInProject(currentUser.getScopeId(), sheet.getProjectId(),null);
+						if (projectMember == null) {
+							break;
+						}
+				    }
+				    
+				    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");  
+				    String strDate = dateFormat.format(sheet.getTimeSheetDate());  
+				    Date tmDate = null;
+				    try {
+				    	tmDate=new SimpleDateFormat("yyyy-MM-dd").parse(strDate);
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						break;
+					}
+				    if(tmDate!=null) {
+				    	try {
+							if (tmDate.after(getDateWithoutTimeUsingFormat())) {
+							    break;
+							}
+						} catch (ParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+				    	sheet.setTimeSheetDate(tmDate);
+				    }
+				    else
+				    	break;
 				    Employee employee = empRepository.getByEmpId(currentUser.getScopeId());
 				    Employee reportor = empRepository.getByEmpId(employee.getReportingTo());
 				    sheet.setApproverId(reportor.getUserCredientials().getId());
@@ -91,6 +129,13 @@ public class TimesheetServiceImpl implements TimesheetService{
 		}
 		return response;
 	}
+	
+	public static Date getDateWithoutTimeUsingFormat() 
+	  throws ParseException {
+	    SimpleDateFormat formatter = new SimpleDateFormat(
+	      "yyyy-MM-dd");
+	    return formatter.parse(formatter.format(new Date()));
+	}
 
 	@Override
 	public ApiResponse editTimeSheets(List<TimeSheet> timesheets) {
@@ -102,6 +147,41 @@ public class TimesheetServiceImpl implements TimesheetService{
 				    sheet.setUpdatedBy(currentUser.getUserId());
 				    sheet.setLastUpdatedAt(new Date());	
 				    sheet.setStatus(TimesheetStatus.PENDING);
+				    Employee employee = empRepository.getByEmpId(currentUser.getScopeId());
+				    Employee reportor = empRepository.getByEmpId(employee.getReportingTo());
+				    sheet.setApproverId(reportor.getUserCredientials().getId());
+				    
+				    if(sheet.getProjectId()!=null) {
+				    	ProjectMembers projectMember = null;
+						projectMember = projectMemberRepository.getMemberInProject(currentUser.getScopeId(), sheet.getProjectId(),null);
+						if (projectMember == null) {
+							break;
+						}
+				    }
+				    
+				    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");  
+				    String strDate = dateFormat.format(sheet.getTimeSheetDate());  
+				    Date tmDate = null;
+				    try {
+				    	tmDate=new SimpleDateFormat("yyyy-MM-dd").parse(strDate);
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						break;
+					}
+				    if(tmDate!=null) {
+				    	try {
+							if (tmDate.after(getDateWithoutTimeUsingFormat())) {
+							    break;
+							}
+						} catch (ParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+				    	sheet.setTimeSheetDate(tmDate);
+				    }
+				    else
+				    	break;
 				    
 				    timesheetRepository.save(sheet);
 				    response.setSuccess(true);
