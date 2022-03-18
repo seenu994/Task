@@ -101,7 +101,14 @@ public interface ProjectMemberRepository extends JpaRepository<ProjectMembers, S
 			+ " e left join  Projects p On e.projectId = p.pId where e.status = 'ACTIVE' and e.employeeId = :scopeId ")
 	Page<Map> getAllProjectByDeveloper(Pageable pageable, String scopeId);
 
-	@Query("select new map( p.id as id , e.eId as employeeId ,CONCAT(e.firstName ,' ', e.lastName) as employeeName,r.roleName as roleName,p.projectId as projectId,p.createdAt as createdAt,p.createdBy as createdBy,p.lastUpdatedAt as lastUpdatedAt,p.UpdatedBy as UpdatedBy,d.designationName as designationName,p.isAdmin as isAdmin) from ProjectMembers p left join Employee e on p.employeeId=e.eId left join Projects pr On p.id=pr.pId left join Role r On e.roleId=r.Id left join Designation d On e.designationId=d.Id where e.firstName like %:searchString% and p.projectId=:projectId")
+	@Query("select new map( p.id as id , e.eId as employeeId ,CONCAT(e.firstName ,' ', e.lastName) as employeeName, "
+			+ "r.roleName as roleName,p.projectId as projectId,p.createdAt as createdAt,p.createdBy as createdBy, "
+			+ "p.lastUpdatedAt as lastUpdatedAt,p.UpdatedBy as UpdatedBy,d.designationName as designationName, "
+			+ "p.isAdmin as isAdmin) from ProjectMembers p left join Employee e on p.employeeId=e.eId "
+			+ "left join Projects pr On p.id=pr.pId left join Role r On e.roleId=r.Id "
+			+ "left join Designation d On e.designationId=d.Id where "
+			+ "(e.firstName like %:searchString% or e.middleName like %:searchString% or e.lastName like %:searchString%  or e.email like %:searchString%) "
+			+ "and p.projectId=:projectId")
 
 	List<Map> searchProjectMembersByProjectId(@Param("projectId") String projectId,
 			@Param("searchString") String searchString);

@@ -69,8 +69,17 @@ public class TimesheetServiceImpl implements TimesheetService{
 		
 		ApiResponse response = new ApiResponse(false);
 		if(timesheets != null) {
+			Boolean problemEncountered = false;
+			String problemIs = "";
 			if(timesheets.size() > 0) {
 				for (TimeSheet sheet : timesheets) {
+					
+					if(sheet.getHoursSpent() > 24 || sheet.getTaskName().length() == 0 || sheet.getTaskDescription().length() == 0) {
+						problemEncountered = true;
+						problemIs = "HoursSPent Should not exceed 24 Hrs or TaskName-Description are missing";
+				    	break;
+				    }
+					
 				    sheet.setCreatedAt(new Date());
 				    sheet.setCreatedBy(currentUser.getUserId());
 				    sheet.setUpdatedBy(currentUser.getUserId());
@@ -80,6 +89,8 @@ public class TimesheetServiceImpl implements TimesheetService{
 				    	ProjectMembers projectMember = null;
 						projectMember = projectMemberRepository.getMemberInProject(currentUser.getScopeId(), sheet.getProjectId(),null);
 						if (projectMember == null) {
+							problemEncountered = true;
+							problemIs += "Project not exist";
 							break;
 						}
 				    }
@@ -92,11 +103,14 @@ public class TimesheetServiceImpl implements TimesheetService{
 					} catch (ParseException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
+						problemEncountered = true;
+						problemIs += "-Date";
 						break;
 					}
 				    if(tmDate!=null) {
 				    	try {
 							if (tmDate.after(getDateWithoutTimeUsingFormat())) {
+								problemEncountered = true;
 							    break;
 							}
 						} catch (ParseException e) {
@@ -107,17 +121,34 @@ public class TimesheetServiceImpl implements TimesheetService{
 				    }
 				    else
 				    	break;
+				    
+				    List<TimeSheet> timeSheetList = timesheetRepository.getAllSheetsByDate(sheet.getTimeSheetDate());
+			    	if(timeSheetList != null) {
+			    		Float totalHours = sheet.getHoursSpent();
+			    		for (final TimeSheet sheetEntity : timeSheetList) {
+			    			totalHours += sheetEntity.getHoursSpent();
+			    		}
+			    		if(totalHours > 24) {
+			    			problemEncountered = true;
+			    			problemIs += "Per day 24 Hours allowed";
+			    			break;
+			    		}
+			    	}
+				    
 				    Employee employee = empRepository.getByEmpId(currentUser.getScopeId());
 				    Employee reportor = empRepository.getByEmpId(employee.getReportingTo());
 				    sheet.setApproverId(reportor.getUserCredientials().getId());
 				    if(sheet.getEmployeeId() == null) {
 				    	sheet.setEmployeeId(currentUser.getUserId());
 				    }
-				    
 				    timesheetRepository.save(sheet);
-				    response.setSuccess(true);
-					response.setMessage(ResponseMessages.SHEETS_ADDED);
 				}
+				if(problemEncountered)
+					response.setMessage("Some thing went Wrong"+" : "+problemIs);
+				else
+					response.setMessage("Sheets saved successfully");
+
+			    response.setSuccess(true);
 			}else {
 				response.setSuccess(false);
 				response.setMessage(ResponseMessages.SHEETS_OBJECT_ISSUE);
@@ -142,21 +173,45 @@ public class TimesheetServiceImpl implements TimesheetService{
 		ApiResponse response = new ApiResponse(false);
 		if(timesheets != null) {
 			if(timesheets.size() > 0) {
+				Boolean problemEncountered = false;
+				String problemIs = "";
 				for (TimeSheet sheet : timesheets) {
-				   
-				    sheet.setUpdatedBy(currentUser.getUserId());
-				    sheet.setLastUpdatedAt(new Date());	
-				    sheet.setStatus(TimesheetStatus.PENDING);
+					
+					TimeSheet sheetEntity = timesheetRepository.getById(sheet.getTimeSheetId());
+					if(sheetEntity == null){
+						problemEncountered = true;
+						problemIs += "Sheet Not Found";
+						break;
+					}
+				    if(sheet.getHoursSpent() > 24 || sheet.getTaskName().length() == 0 || sheet.getTaskDescription().length() == 0) {
+				    	problemEncountered = true;
+						problemIs += "Wrong Details in Hours Spent-TaskName-Description";
+				    	break;
+				    }
+				    if(sheet.getTaskId() != null) {
+				    	sheetEntity.setTaskId(sheet.getTaskId());
+				    }
+					
+				    sheetEntity.setUpdatedBy(currentUser.getUserId());
+				    sheetEntity.setLastUpdatedAt(new Date());	
+				    sheetEntity.setStatus(TimesheetStatus.PENDING);
 				    Employee employee = empRepository.getByEmpId(currentUser.getScopeId());
 				    Employee reportor = empRepository.getByEmpId(employee.getReportingTo());
-				    sheet.setApproverId(reportor.getUserCredientials().getId());
+				    sheetEntity.setApproverId(reportor.getUserCredientials().getId());
+				    
+				    sheetEntity.setHoursSpent(sheet.getHoursSpent());
+				    sheetEntity.setTaskName(sheet.getTaskName());
+				    sheetEntity.setTaskDescription(sheet.getTaskDescription());
 				    
 				    if(sheet.getProjectId()!=null) {
 				    	ProjectMembers projectMember = null;
 						projectMember = projectMemberRepository.getMemberInProject(currentUser.getScopeId(), sheet.getProjectId(),null);
 						if (projectMember == null) {
+							problemEncountered = true;
+							problemIs += "Wrong in Project";
 							break;
 						}
+						sheetEntity.setProjectId(sheet.getProjectId());
 				    }
 				    
 				    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");  
@@ -172,21 +227,40 @@ public class TimesheetServiceImpl implements TimesheetService{
 				    if(tmDate!=null) {
 				    	try {
 							if (tmDate.after(getDateWithoutTimeUsingFormat())) {
+								problemEncountered = true;
+								problemIs += "Wrong in Date Format";
 							    break;
 							}
 						} catch (ParseException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-				    	sheet.setTimeSheetDate(tmDate);
+				    	sheetEntity.setTimeSheetDate(tmDate);
 				    }
 				    else
 				    	break;
 				    
-				    timesheetRepository.save(sheet);
-				    response.setSuccess(true);
-					response.setMessage(ResponseMessages.SHEETS_EDITED);
+				    List<TimeSheet> timeSheetList = timesheetRepository.getAllSheetsByDate(sheet.getTimeSheetDate());
+			    	if(timeSheetList != null) {
+			    		Float totalHours = sheet.getHoursSpent();
+			    		for (final TimeSheet entity : timeSheetList) {
+			    			if(sheet.getTimeSheetId() != entity.getTimeSheetId())
+			    			totalHours += entity.getHoursSpent();
+			    		}
+			    		if(totalHours > 24) {
+			    			problemEncountered = true;
+							problemIs += "Total Hours are Greater than 24 Hours";
+			    			break;
+			    		}
+			    	}
+				    
+				    timesheetRepository.save(sheetEntity);
+				    
 				}
+				if(problemEncountered)
+					response.setMessage("Some thing went Wrong"+" : "+problemIs);
+				else
+					response.setMessage("Sheet Saved Successfully");
 			}else {
 				response.setSuccess(false);
 				response.setMessage(ResponseMessages.SHEETS_OBJECT_ISSUE);
@@ -467,6 +541,10 @@ public class TimesheetServiceImpl implements TimesheetService{
 		
 		return response;
 	}
+	
+
+
+	
 
 	@Override
 	public ReportExportResponse downloadAllMyTeamTimeSheets(Map<String, Object> filter) {
@@ -517,7 +595,7 @@ public class TimesheetServiceImpl implements TimesheetService{
 					filter.get("status").toString() + " is not a valid status");
 		}
 		
-		List<Map> timeSheetList = timesheetRepository.downloadAllMyTeamTimeSheets(currentUser.getUserId(),employeeId, projectId, fromDateStr, toDateStr, statusStr);
+		List<Map> timeSheetList = timesheetRepository.downloadAllMyTeamTimeSheets(currentUser.getUserId(),employeeId, projectId, fromDateStr, toDateStr, status);
 		Map<String, Object> fileResponse = new HashMap<>();
 
 		Workbook workbook = prepareExcelWorkBook(timeSheetList);
@@ -573,6 +651,33 @@ public class TimesheetServiceImpl implements TimesheetService{
 		Workbook workbook = ExcelUtil.createSingleSheetWorkbook(ExcelUtil.createSheet("Time Sheet Report", headers, data));
 
 		return workbook;
+	}
+	
+	@Override
+	public ApiResponse getAllSheetsByDate(String sheetId, Float hoursSpent) {
+		ApiResponse response = new ApiResponse(false);
+		TimeSheet sheet = timesheetRepository.getById(sheetId);
+	    if(sheet != null) {
+	    	List<TimeSheet> timeSheetList = timesheetRepository.getAllSheetsByDate(sheet.getTimeSheetDate());
+	    	if(timeSheetList != null) {
+	    		Float totalHours = hoursSpent;
+	    		for (final TimeSheet sheetEntity : timeSheetList) {
+	    			if(sheetEntity.getTimeSheetId() != sheetId)
+	    			totalHours += sheetEntity.getHoursSpent();
+	    		}
+	    		if(totalHours > 24) {
+	    			response.setMessage("More than 24 Hours are not allowed per day");
+	    			response.setSuccess(false);
+	    		}else {
+	    			response.setMessage("Success");
+	    			response.setSuccess(true);
+	    		}
+	    	}
+	    }else {
+	    	response.setMessage("Sheet Id not exist");
+			response.setSuccess(false);
+	    }
+		return response;
 	}
 
  

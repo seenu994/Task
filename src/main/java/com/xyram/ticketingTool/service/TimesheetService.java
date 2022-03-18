@@ -26,6 +26,8 @@ public interface TimesheetService {
 	ApiResponse getAllMyTeamTimeSheets(Map<String, Object>filter,Pageable pageable);
 	
 	ReportExportResponse downloadAllMyTeamTimeSheets(Map<String, Object>filter);
+	
+	ApiResponse getAllSheetsByDate(String sheetId,Float hoursSpent);
 
 
 

@@ -131,6 +131,21 @@ public class TimesheetController {
 		return timesheetService.downloadAllMyTeamTimeSheets(filter);
 
 	}
+	
+	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllSheetsByDate/{sheetId}/{hoursSpent}",
+			AuthConstants.HR_ADMIN_BASEPATH + "/getAllSheetsByDate/{sheetId}/{hoursSpent}",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllSheetsByDate/{sheetId}/{hoursSpent}",
+			AuthConstants.INFRA_USER_BASEPATH + "/getAllSheetsByDate/{sheetId}/{hoursSpent}",
+			AuthConstants.HR_BASEPATH + "/getAllSheetsByDate/{sheetId}/{hoursSpent}",
+			AuthConstants.DEVELOPER_BASEPATH + "/getAllSheetsByDate/{sheetId}/{hoursSpent}",
+			})
+	public 	ApiResponse checkHoursSpentById(@PathVariable String sheetId, @PathVariable Float hoursSpent) {
+		logger.info("getAllSheetsByDate");
+		return timesheetService.getAllSheetsByDate(sheetId,hoursSpent);
+
+	}
+	
+	
 
 
 }
