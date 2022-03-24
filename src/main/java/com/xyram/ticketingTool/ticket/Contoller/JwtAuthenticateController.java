@@ -51,16 +51,16 @@ import com.xyram.ticketingTool.util.AuthUtil;
 public class JwtAuthenticateController {
 
 	@Autowired
-	private AuthenticationManager authenticationManager;
+	 AuthenticationManager authenticationManager;
 
 	@Autowired
-	private JwtTokenUtil jwtTokenUtil;
+	 JwtTokenUtil jwtTokenUtil;
 
 	@Autowired
-	private JwtUserDetailsService userDetailsService;
+	 JwtUserDetailsService userDetailsService;
 	 
 	@Autowired
-	private UserService userService;
+	 UserService userService;
 	
 	@Autowired
 	UserPermissionRepository permissionRepo;

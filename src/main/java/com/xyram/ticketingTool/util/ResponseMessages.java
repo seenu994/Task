@@ -136,6 +136,10 @@ public interface ResponseMessages {
 	String SHEETS_NOT_APPROVED = "Few or All Time Sheets are not approved";
 	String SHEETS_REJECTED = "Time Sheets rejected successfully";
 	String SHEETS_NOT_REJECTED = "Few or All Time Sheets not rejected";
+
+	String ASSET_NOT_EDITED = "Asset not edited";
+
+	String ASSET_EDITED = "Asset edited successfully";
 	
 //	String ANNOUNCEMENT_STATUS_CHANGED = "Announcement status changed successfully";
 //	String ANNOUNCEMENT_STATUS_NOT_CHANGED = "Announcement status not changed";

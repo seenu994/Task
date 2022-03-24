@@ -35,4 +35,6 @@ public interface AssetIssuesRepository extends JpaRepository<AssetIssues, String
 	
 	
 	
+	
+	
 }
