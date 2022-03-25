@@ -1,5 +1,7 @@
 package com.xyram.ticketingTool.entity;
 
+import java.util.Date;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,42 +13,42 @@ import javax.persistence.Table;
 
 import com.xyram.ticketingTool.admin.model.User;
 
-/*@Entity
+@Entity
 @Table(name="assetBilling")
 public class AssetBilling 
 {
 	@Id
-    @Column(name="Billing_Type")
+    @Column(name="billing_type")
     public String billingType;
     
-    @Column(name="UnderWarrenty")
-    public String underWarrenty;
+    @Column(name="under_warrenty")
+    public Boolean underWarrenty;
     
-    @Column(name="AssetAmount")
-    public String assetAmount;
+    @Column(name="asset_amount")
+    public Integer assetAmount;
     
-    @Column(name="GSTAmount")
-    public String gstAmount;
+    @Column(name="GST_Amount")
+    public Integer gstAmount;
     
-    @Column(name="TransactionDate")
-    public String transactionDate;
+    @Column(name="transaction_date")
+    public Date transactionDate;
     
-    
-	@Column(name = "vendorId")
-    private String vendorId;
-    
-    @Column(name="BillPhotoUrl")
+    @OneToOne(cascade = {CascadeType.MERGE })
+	@JoinColumn(name = "VendorID")
+    private AssetVendor vendorId;
+	
+    @Column(name="bill_photo_url")
     public String billPhotoUrl;
     
     @OneToOne(cascade = {CascadeType.MERGE })
-    @JoinColumn(name="IssueId")
+    @JoinColumn(name="Issue_Id")
     public AssetIssues issueId;
     
-    @Column(name="ReturnDate")
-    public String returnDate;
+    @Column(name="return_date")
+    public Date returnDate;
     
-    @Column(name="AmountPaid")
-    public String amountPaid;
+    @Column(name="amount_paid")
+    public Integer amountPaid;
 
 	public String getBillingType() {
 		return billingType;
@@ -56,45 +58,43 @@ public class AssetBilling
 		this.billingType = billingType;
 	}
 
-	public String getUnderWarrent() {
+	public Boolean getUnderWarrenty() {
 		return underWarrenty;
 	}
 
-	public void setUnderWarrent(String underWarrent) {
-		this.underWarrenty = underWarrent;
+	public void setUnderWarrenty(Boolean underWarrenty) {
+		this.underWarrenty = underWarrenty;
 	}
 
-	public String getAssetAmount() {
+	public Integer getAssetAmount() {
 		return assetAmount;
 	}
 
-	public void setAssetAmount(String assetAmount) {
+	public void setAssetAmount(Integer assetAmount) {
 		this.assetAmount = assetAmount;
 	}
 
-	public String getGstAmount() {
+	public Integer getGstAmount() {
 		return gstAmount;
 	}
 
-	public void setGstAmount(String gstAmount) {
+	public void setGstAmount(Integer gstAmount) {
 		this.gstAmount = gstAmount;
 	}
 
-	public String getTransactionDate() {
+	public Date getTransactionDate() {
 		return transactionDate;
 	}
 
-	public void setTransactionDate(String transactionDate) {
+	public void setTransactionDate(Date transactionDate) {
 		this.transactionDate = transactionDate;
 	}
 
-	
-
-	public String getVendorId() {
+	public AssetVendor getVendorId() {
 		return vendorId;
 	}
 
-	public void setVendorId(String vendorId) {
+	public void setVendorId(AssetVendor vendorId) {
 		this.vendorId = vendorId;
 	}
 
@@ -114,29 +114,21 @@ public class AssetBilling
 		this.issueId = issueId;
 	}
 
-	public String getReturnDate() {
+	public Date getReturnDate() {
 		return returnDate;
 	}
 
-	public void setReturnDate(String returnDate) {
+	public void setReturnDate(Date returnDate) {
 		this.returnDate = returnDate;
 	}
 
-	public String getAmountPaid() {
+	public Integer getAmountPaid() {
 		return amountPaid;
 	}
 
-	public void setAmountPaid(String amountPaid) {
+	public void setAmountPaid(Integer amountPaid) {
 		this.amountPaid = amountPaid;
 	}
 
-	public Object getById() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-    
+}
 	
-   
-    
-}*/

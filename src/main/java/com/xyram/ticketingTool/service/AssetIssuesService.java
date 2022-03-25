@@ -14,9 +14,9 @@ import com.xyram.ticketingTool.entity.AssetIssues;
 @Transactional
 public interface AssetIssuesService 
 {
-    ApiResponse addAssetIssues(AssetIssues assetIssues);
+    //ApiResponse addAssetIssues(AssetIssues assetIssues);
     
-    ApiResponse editAssetIssues(AssetIssues assetIssues);
+    /*ApiResponse editAssetIssues(AssetIssues assetIssues);
     
     ApiResponse getIssues(Pageable pageable);
     
@@ -27,5 +27,5 @@ public interface AssetIssuesService
 
 	ApiResponse changeAssetIssuesStatus(String Status, String issueId);
 	
-	ApiResponse downloadAllAssetIssues(Map<String, Object> filter);
+	ApiResponse downloadAllAssetIssues(Map<String, Object> filter);*/
 }

@@ -1,5 +1,5 @@
 package com.xyram.ticketingTool.Repository;
-/*
+
 import java.awt.print.Pageable;
 import java.util.Map;
 
@@ -19,15 +19,15 @@ import com.xyram.ticketingTool.entity.Employee;
 public interface AssetBillingRepository extends JpaRepository<AssetBilling, String>
 {
 	
-	@Query("Select distinct new map(a.billingType as billingType, a.underWarrenty as underWarrenty, "
+	/*@Query("Select distinct new map(a.billingType as billingType, a.underWarrenty as underWarrenty, "
 			+ "a.assetAmount as assetAmount, a.gstAmount as gstAmount, "
 			+ "a.transactionDate as transactionDate, a.vendorId as vendorId, "
-			+ "a.billPhotoUrl as billPhotoUrl,a.issueId as issueId) from AssetBilling a")
-	Page<Map> getAllAssetBilling(Pageable pageable);
+			+ "a.billPhotoUrl as billPhotoUrl,a.issueId as issueId) from AssetBilling a")*/
+	//Page<Map> getAllAssetBilling(Pageable pageable);
 
 	ApiResponse save(ApiResponse addAssetBilling);
 
 	
 	
     
-}*/
+}

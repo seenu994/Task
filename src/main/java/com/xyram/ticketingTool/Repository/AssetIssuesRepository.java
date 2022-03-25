@@ -18,11 +18,11 @@ import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Announcement;
 import com.xyram.ticketingTool.entity.AssetIssues;
 
-@Repository
+/*@Repository
 @Transactional
 public interface AssetIssuesRepository<getAssetIssues> extends JpaRepository<AssetIssues, String>
 {
-	@Query("Select distinct new map(i.issueId as issueId, i.complaintRaisedDate as complaintRaisedDate, "
+	/*@Query("Select distinct new map(i.issueId as issueId, i.complaintRaisedDate as complaintRaisedDate, "
 			+ "i.description as description, i.Solution as Solution,a.aId as aId, "
 			+ "i.Status as Status, i.vendorId as vendorId, "
 			+ "i.resolvedDate as resolvedDate) "
@@ -57,4 +57,6 @@ AssetIssues changeAssetIssuesStatus(Object getissueId);
 
 AssetIssues downloadAssetIssues(Map<String, Object> filter);
 	
-}
+	//ApiResponse save(ApiResponse addAssetIssues);
+	
+}*/

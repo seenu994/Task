@@ -1,6 +1,6 @@
 package com.xyram.ticketingTool.service.impl;
 
-import java.awt.print.Pageable;
+/*import java.awt.print.Pageable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -8,19 +8,28 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.xyram.ticketingTool.Repository.AssetIssuesRepository;
+import com.xyram.ticketingTool.Repository.AssetRepository;
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Announcement;
+import com.xyram.ticketingTool.entity.Asset;
 import com.xyram.ticketingTool.entity.AssetIssues;
 import com.xyram.ticketingTool.entity.Projects;
+import com.xyram.ticketingTool.entity.Role;
+import com.xyram.ticketingTool.enumType.UserStatus;
+import com.xyram.ticketingTool.exception.ResourceNotFoundException;
 import com.xyram.ticketingTool.service.AssetIssuesService;
 import com.xyram.ticketingTool.util.ResponseMessages;
 
-@Service
+import ch.qos.logback.core.status.Status;
+
+/*@Service
 @Repository
 public class AssetIssuesServiceImpl implements AssetIssuesService
 {
@@ -28,13 +37,35 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 	@Autowired
 	AssetIssuesRepository  assetIssuesRepository;
 
+	@SuppressWarnings({ "unused", "unchecked" })
 	@Override
 	public ApiResponse addAssetIssues(AssetIssues assetIssues) 
 	{
 		ApiResponse response = new ApiResponse(false);
-		
-		if(assetIssues != null) 
+		response = validateAssetIssues(assetIssues);
+		System.out.println("aId::" + assetIssues.getaId());
+		if(response.isSuccess()) 
 		{
+			if(!((String) assetIssuesRepository.getById(assetIssues.getIssueId())).isEmpty())
+			{
+		
+			throw new ResponseStatusException(HttpStatus.CONFLICT,"asset issue is already assigned to existing vendor ");
+			}
+			Asset asset = AssetRepository.getById(assetIssues.getaId());
+			if (asset != null) 
+			{
+				try 
+				{
+                   assetIssues.setassetIssues(asset.getaId());
+				} 
+				catch (Exception e) {
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+							asset.getaId() + " is not a valid status");
+				}
+			} else {
+				throw new ResourceNotFoundException("invalid asset id ");
+			}
+			//asset.setAssetstatus(assetStatus.AVAILABLE);
 			 assetIssuesRepository.save(assetIssues);
 	         response.setSuccess(true);
 	         response.setMessage(ResponseMessages.ASSET_ISSUES_ADDED);
@@ -46,9 +77,14 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 		}
 		
 		return response;
+	}
+
+	private ApiResponse validateAssetIssues(AssetIssues assetIssues) {
+		
+		return null;
 	}		
 				
-	@Override
+	/*@Override
 	public ApiResponse editAssetIssues(AssetIssues assetIssues) 
 	{
 		
@@ -96,7 +132,8 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 	public ApiResponse searchAssetIssues(Pageable pageable,String issueId) 
 	{
 		ApiResponse response = new ApiResponse();
-		AssetIssues.setissueId(issueId);
+		AssetIssues assetIssues2 = new AssetIssues();
+		assetIssues2.setIssueId(issueId);
 		List<Map> assetIssuesList = assetIssuesRepository.searchAssetIssues(issueId);
 		Map content = new HashMap();
 		content.put("AssetIssuesList", assetIssuesList);
@@ -151,4 +188,4 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 
 
 
-}
+}*/

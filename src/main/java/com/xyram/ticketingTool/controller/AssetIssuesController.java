@@ -20,7 +20,7 @@ import com.xyram.ticketingTool.response.ReportExportResponse;
 import com.xyram.ticketingTool.service.AssetIssuesService;
 import com.xyram.ticketingTool.util.AuthConstants;
 
-@RestController
+/*@RestController
 @CrossOrigin
 public class AssetIssuesController
 {
@@ -35,7 +35,7 @@ public class AssetIssuesController
 		logger.info("received request to add assetIssues");
 		return assetIssuesService.addAssetIssues(assetIssues);
 	}
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editAssetIssues" })
+	/*@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editAssetIssues" })
 	public ApiResponse editAssetIssues(@RequestBody AssetIssues assetIssues)
 	{
 		logger.info("received request to edit assetIssues");
@@ -72,4 +72,4 @@ public class AssetIssuesController
 		return assetIssuesService.downloadAllAssetIssues(filter);
 	}
 
-}
+}*/

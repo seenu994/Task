@@ -1,5 +1,7 @@
 package com.xyram.ticketingTool.entity;
 
+import java.util.Date;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,36 +11,35 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="assetIssues")
+@Table(name="asset_Issues")
 public class AssetIssues 
 {
 	@Id
-    @Column(name="IssueId")
-   public String issueId;
+    @Column(name="Issue_Id")
+    public String issueId;
    
-
     @OneToOne(cascade = {CascadeType.MERGE })
 	@JoinColumn(name = "asset_Id")
     private Asset aId;
     
-    @Column(name="ComplaintRaisedDate")
-    public String complaintRaisedDate;
+    @Column(name="Complaint_Raised_Date")
+    public Date complaintRaisedDate;
     
     @Column(name="Description")
     public String description;
     
-    @Column(name="solution")
+    @Column(name="Solution")
     public String solution;
     
-    @Column(name="status")
+    @Column(name="Status")
     public String status;
     
     @OneToOne(cascade = {CascadeType.MERGE })
-	@JoinColumn(name = "VendorId")
+	@JoinColumn(name = "Vendor_Id")
     private AssetVendor vendorId;
     
-    @Column(name="ResolvedDate")
-    public String resolvedDate;
+    @Column(name="Resolved_Date")
+    public Date resolvedDate;
 
 	public String getIssueId() {
 		return issueId;
@@ -48,19 +49,19 @@ public class AssetIssues
 		this.issueId = issueId;
 	}
 
-	public Asset getAssetId() {
+	public Asset getaId() {
 		return aId;
 	}
 
-	public void setVendorId(AssetVendor vendorId) {
-		this.vendorId = vendorId;
+	public void setaId(Asset aId) {
+		this.aId = aId;
 	}
 
-	public String getComplaintRaisedDate() {
+	public Date getComplaintRaisedDate() {
 		return complaintRaisedDate;
 	}
 
-	public void setComplaintRaisedDate(String complaintRaisedDate) {
+	public void setComplaintRaisedDate(Date complaintRaisedDate) {
 		this.complaintRaisedDate = complaintRaisedDate;
 	}
 
@@ -77,7 +78,7 @@ public class AssetIssues
 	}
 
 	public void setSolution(String solution) {
-		solution = solution;
+		this.solution = solution;
 	}
 
 	public String getStatus() {
@@ -85,32 +86,28 @@ public class AssetIssues
 	}
 
 	public void setStatus(String status) {
-		status = status;
+		this.status = status;
 	}
-
-	
 
 	public AssetVendor getVendorId() {
 		return vendorId;
 	}
 
-	public void setAssetId(String assetId) {
-		this.aId = aId;
+	public void setVendorId(AssetVendor vendorId) {
+		this.vendorId = vendorId;
 	}
 
-	public String getResolvedDate() {
+	public Date getResolvedDate() {
 		return resolvedDate;
 	}
 
-	public void setResolvedDate(String resolvedDate) {
+	public void setResolvedDate(Date resolvedDate) {
 		this.resolvedDate = resolvedDate;
 	}
 
-	public static void setissueId(String issueId2) {
+	public void setassetIssues(String getaId) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	
-    
 }

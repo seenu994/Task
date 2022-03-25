@@ -16,10 +16,16 @@ import org.springframework.stereotype.Service;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Announcement;
 import com.xyram.ticketingTool.entity.Asset;
+import com.xyram.ticketingTool.entity.Role;
 
 
 @Repository
 public interface AssetRepository extends JpaRepository<Asset, String>{
+
+	static Asset getById(Asset getaId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	/*@Query("Select distinct new map(a.aId as aId,a.vId as vId,"
 			+ "a.brand as brand,a.purchasedate as purchasedate,a.model as model,"
 			+ "a.serialno as serialno,a.warantydate as warantydate,a.ram as ram,"

@@ -1,5 +1,5 @@
 package com.xyram.ticketingTool.service.impl;
-/*
+
 import java.awt.print.Pageable;
 
 import javax.transaction.Transactional;
@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.xyram.ticketingTool.Repository.AssetBillingRepository;
-import com.xyram.ticketingTool.Repository.AssetIssuesRepository;
+
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.AssetBilling;
 import com.xyram.ticketingTool.entity.AssetIssues;
@@ -19,7 +19,7 @@ import com.xyram.ticketingTool.util.ResponseMessages;
 @Transactional
 public class AssetBillingServiceImpl implements AssetBillingService
 {
-	/*@Autowired
+	@Autowired
 	AssetBillingRepository  assetBillingRepository;
 
 
@@ -43,7 +43,7 @@ public class AssetBillingServiceImpl implements AssetBillingService
 		return response;
 	}
 
-	@Override
+	/*@Override
 	public ApiResponse editAssetBilling(AssetBilling assetBilling) 
 	{
         ApiResponse response = new ApiResponse(false);
@@ -76,6 +76,6 @@ public class AssetBillingServiceImpl implements AssetBillingService
 	public ApiResponse getAllAssetBilling(Pageable pageable) {
 		
 		return (ApiResponse) assetBillingRepository.getAllAssetBilling(pageable);
-	}
+	}*/
 
-}*/
+}

@@ -1,5 +1,5 @@
 package com.xyram.ticketingTool.controller;
-/*
+
 import java.awt.print.Pageable;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ import ch.qos.logback.classic.Logger;
 @CrossOrigin
 public class AssetBillingController 
 {
-	/*private final com.itextpdf.text.log.Logger logger = LoggerFactory.getLogger(AssetBillingController.class);
+	private final com.itextpdf.text.log.Logger logger = LoggerFactory.getLogger(AssetBillingController.class);
     
 	@Autowired
 	AssetBillingService assetBillingService;
@@ -34,7 +34,7 @@ public class AssetBillingController
 		return assetBillingService.addAssetBilling(assetBilling);
 	}
 	
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/createAssetBilling" })
+	/*@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/createAssetBilling" })
 	public ApiResponse editAssetBilling(@RequestBody AssetBilling assetBilling)
 	{
 		logger.info("received request to edit assetBilling");
@@ -45,8 +45,8 @@ public class AssetBillingController
 	{
 		logger.info("received request to edit assetBilling");
 		return assetBillingService.getAllAssetBilling(pageable);
-    }
-}*/
+    }*/
+}
 
 
 
