@@ -31,6 +31,7 @@ public class AssetController {
 	
 	
 	
+	
 	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/addAsset"})
 	public ApiResponse addasset(@RequestBody Asset asset) {
 		logger.info("Received request to add Asset");

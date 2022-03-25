@@ -56,6 +56,7 @@ public class Asset {
 
 	public void setaId(String aId) {
 		this.aId = aId;
+		
 	}
 
 	public String getvId() {

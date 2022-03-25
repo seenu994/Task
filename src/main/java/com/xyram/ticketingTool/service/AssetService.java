@@ -14,6 +14,7 @@ public interface AssetService {
     
 	/*ApiResponse addasset(Asset asset);
 	
+	
 	ApiResponse getAllAssets(Pageable pageable);
 	
 	ApiResponse editAsset(Asset AssetRequest);

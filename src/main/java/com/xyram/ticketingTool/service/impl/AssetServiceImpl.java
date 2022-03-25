@@ -1,14 +1,18 @@
 package com.xyram.ticketingTool.service.impl;
 
-import java.awt.print.Pageable;
+
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.xyram.ticketingTool.Repository.AssetRepository;
 import com.xyram.ticketingTool.Repository.ProjectRepository;
@@ -16,6 +20,7 @@ import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
 import com.xyram.ticketingTool.entity.Announcement;
 import com.xyram.ticketingTool.entity.Asset;
+import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.service.AssetService;
 import com.xyram.ticketingTool.util.ResponseMessages;
 
@@ -24,16 +29,53 @@ import com.xyram.ticketingTool.util.ResponseMessages;
 public class AssetServiceImpl implements AssetService{
 
 	
-	/*@Autowired
+	@Autowired
 	AssetRepository assetRepository;
 	
-	@Override
-	public ApiResponse addasset(Asset asset) {
+	    @Override
+	 	public ApiResponse addasset(Asset asset)
+		{
+		ApiResponse response = new ApiResponse(false);
+		response = validateAsset(asset);
 		
-	    ApiResponse addasset = null;
-		return assetRepository.save(addasset);
-	}
+		if(asset != null)
+		{
+		assetRepository.save(asset);
+		response.setSuccess(true);
+		response.setMessage(ResponseMessages.ASSET_ADDED);
+		}
+		else
+		{
+		response.setSuccess(false);
+		response.setMessage(ResponseMessages.ASSET_NOT_ADDED);
+		}
+		
+		
+		
+		return response;
+		}
+	    private ApiResponse validateAsset(Asset asset) {
+			ApiResponse response = new ApiResponse(false);
+			if (asset.getvId() != null) {
+				
+				
+				
+				response.setMessage(ResponseMessages.VENDOR_ID_INVALID);
 
+				response.setSuccess(false);
+			}
+
+
+			else {
+				response.setMessage(ResponseMessages.VENDOR_ID_ADDED);
+
+				response.setSuccess(true);
+			}
+
+			return response;
+		}
+	 
+   /*
 	@Override
 	public ApiResponse getAllAssets(Pageable pageable) {
 		
@@ -45,7 +87,7 @@ public class AssetServiceImpl implements AssetService{
 	public ApiResponse editAsset(Asset asset) {
 		ApiResponse response = new ApiResponse(false);
 		
-		Object findAll = null;
+	
 		Asset assetObj = assetRepository.getById(asset.getaId());
 		
 		
@@ -59,7 +101,7 @@ public class AssetServiceImpl implements AssetService{
 				
 			}catch(Exception e) {
 				response.setSuccess(false);
-				response.setMessage(ResponseMessages.ASSET_NOT_EDITED+" "+e.getMessage());
+				response.setMessage(ResponseMessages.ASSET_NOT_EDITED);
 			}	
 		}else {
 			response.setSuccess(false);
@@ -68,16 +110,11 @@ public class AssetServiceImpl implements AssetService{
 		
 		return response;
 	}
-*/
-     /*
-	@Override
-	public ApiResponse editAsset(Asset AssetRequest) {
-	
-		return null;
-	}*/
+
+     
 	
 
-/*
+    /*
 	@Override
 	public ApiResponse searchAsset(String searchString) {
 		
@@ -90,7 +127,23 @@ public class AssetServiceImpl implements AssetService{
 		return response;
 		
 	}
-
 	*/
+    /*
+	@Override
+	public ApiResponse searchAsset(String aid) {
+	ApiResponse response = new ApiResponse(false);
+	Asset assetRequest = new Asset();
+	assetRequest.setaId(aid);
+	List<Map> assetList = assetRepository.searchAsset(aid);
+	Map content = new HashMap();
+	
+	content.put("AssetList", assetList);
+	response.setSuccess(true);
+	response.setContent(content);
+	return response;
+	}
+
+
+		*/
 
 }
