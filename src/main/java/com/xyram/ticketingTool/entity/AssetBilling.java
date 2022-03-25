@@ -33,14 +33,14 @@ public class AssetBilling
     @Column(name="transaction_date")
     public Date transactionDate;
     
-    @OneToOne(cascade = {CascadeType.MERGE })
+    @ManyToOne(cascade = {CascadeType.MERGE })
 	@JoinColumn(name = "VendorID")
     private AssetVendor vendorId;
 	
     @Column(name="bill_photo_url")
     public String billPhotoUrl;
     
-    @OneToOne(cascade = {CascadeType.MERGE })
+    @ManyToOne(cascade = {CascadeType.MERGE })
     @JoinColumn(name="Issue_Id")
     public AssetIssues issueId;
     
