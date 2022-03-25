@@ -2,6 +2,8 @@ package com.xyram.ticketingTool.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -9,6 +11,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 
 import com.xyram.ticketingTool.baseData.model.AuditModel;
+import com.xyram.ticketingTool.enumType.ProjectMembersStatus;
 import com.xyram.ticketingTool.id.generator.IdGenerator;
 import com.xyram.ticketingTool.id.generator.IdPrefix;
 
@@ -46,9 +49,10 @@ public class AssetVendor  {
 		@Column(name="Country")
 		private String Country;
 		
-		@Column(name="Status")
-		private String Status;
-
+		
+		@Enumerated(EnumType.STRING)
+		@Column(name = "status")
+		private AssetVendorStatus status = AssetVendorStatus.ACTIVE;
 		public String getVendorID() {
 			return vendorID;
 		}
@@ -105,13 +109,14 @@ public class AssetVendor  {
 			Country = country;
 		}
 
-		public String getStatus() {
-			return Status;
+		public AssetVendorStatus getStatus() {
+			return status;
 		}
 
-		public void setStatus(String status) {
-			Status = status;
+		public void setStatus(AssetVendorStatus status) {
+			this.status = status;
 		}
+
 		
 		
 }
