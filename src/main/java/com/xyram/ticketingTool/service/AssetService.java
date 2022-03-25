@@ -1,5 +1,6 @@
 package com.xyram.ticketingTool.service;
 
+/*
 import java.awt.print.Pageable;
 
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ public interface AssetService {
 	
 	ApiResponse editAsset(Asset AssetRequest);
 	
-	ApiResponse searchAsset(String searchString);*/
+	ApiResponse searchAsset(String searchString);
 	
 
-}
+}*/

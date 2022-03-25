@@ -153,13 +153,48 @@ public interface ResponseMessages {
 	
 	 String ASSET_ISSUES_STATUS__NOT_CHANGED = "Asset issues status not changed";
 
-	String ASSET_BILL_ADDED = "Asset bill added";
+	String ASSET_BILL_ADDED_SUCCESSFULLY = "Asset bill added successfully";
 	
 	String ASSET_BILL_NOT_ADDED = "Asset bill not  added";
 	
-    String ASSET_BILL_EDITED = "Asset bill added";
+    
+
 	
-	String ASSET_BILL_NOT_EDITED = "Asset bill not  added";
+	
+	String VENDORID_IN_VALID = "VendorId is in valid";
+
+	String ADD_ISSUEID = "Enter issueId";
+
+	String ISSUEID_IN_VALID = "issue id is invalid";
+
+	String RETURN_FROM_REPAIR = "return from repair";
+
+	String ASSET_BILL_EDIT_SUCCESSFULLY = "asset bill edited successfully";
+
+	String ASSET_ID_INVALID = "Asset id is invalid";
+
+	String ASSET_PURCHASE_BILL_ADDED_SUCCESSFULLY = "Asset purchase bill added successsfully";
+
+	String ASSET_PURCHASE_BILL_EDIT_SUCCESSFULLY = "Asset purchase bill edited successfully";
+
+	String ASSET_REPAIR_BILL_ADDED_SUCCESSFULLY = "Asset repair bill added successsfully";
+
+	String ASSET_REPAIR_BILL_EDITED_SUCCESSFULLY = "Asset repair bill edited successfully";
+
+	String ID_INVALID = "id is invalid";
+
+	String ASSET_ISSUES_ADDED_SUCCESSFULLY = "Asset issues added successfully";
+
+	String ASSET_ISSUES_EDIT_SUCCESSFULLY = "Asset issues edited successfully";
+
+	String ASSET_ISSUES_ID_IS_INVALID = "A sset issue id is invalid";
+
+	
+	
+
+	
+
+	
 	
 	
 //	String ANNOUNCEMENT_STATUS_CHANGED = "Announcement status changed successfully";
