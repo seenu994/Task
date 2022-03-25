@@ -41,8 +41,9 @@ import ch.qos.logback.core.pattern.color.ANSIConstants;
 @CrossOrigin
 //@RequestMapping("/api/project")
 class ProjectContoller {
+	
 	private final Logger logger = LoggerFactory.getLogger(ProjectContoller.class);
-
+	
 	@Autowired
 	ProjectService projectService;
 

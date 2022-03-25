@@ -23,6 +23,11 @@ public class ApiResponse {
 	}
 
 
+	public ApiResponse() {
+		// TODO Auto-generated constructor stub
+	}
+
+
 	public String getMessage() {
 		return message;
 	}
@@ -48,9 +53,25 @@ public class ApiResponse {
 	}
 
 
-	public void setContent(Map content) {
-		this.content = content;
+	public void setContent(Map content2) {
+		this.content = (Map) content2;
 	}
+
+
+	public void setStatus(String string) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	public void setContent1(List<Map> assetList) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	
 
 
 	

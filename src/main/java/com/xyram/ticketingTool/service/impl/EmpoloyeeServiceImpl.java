@@ -75,8 +75,6 @@ import com.xyram.ticketingTool.util.ResponseMessages;
 public class EmpoloyeeServiceImpl implements EmployeeService {
 
 	
-	
-	 
 	private static final Logger logger = LoggerFactory.getLogger(EmpoloyeeServiceImpl.class);
 
 	@Autowired

@@ -31,7 +31,8 @@ import com.xyram.ticketingTool.util.AuthConstants;
 
 @RestController
 @CrossOrigin
-class EmployeeController {
+class EmployeeController 
+{
 	private final Logger logger = LoggerFactory.getLogger(EmployeeController.class);
 
 	@Autowired

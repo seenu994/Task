@@ -9,7 +9,7 @@ import com.xyram.ticketingTool.enumType.UserStatus;
 
 public interface ClientService {
 
- ApiResponse addClient(Client clientRequest);
+ApiResponse addClient(Client clientRequest);
 
 ApiResponse updateClientStatus(String clientId, ClientStatus userstatus);
 
