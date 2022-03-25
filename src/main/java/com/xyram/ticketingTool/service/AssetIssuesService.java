@@ -1,6 +1,7 @@
 package com.xyram.ticketingTool.service;
 
 import java.awt.print.Pageable;
+import java.util.Map;
 
 import javax.transaction.Transactional;
 
@@ -17,11 +18,14 @@ public interface AssetIssuesService
     
     ApiResponse editAssetIssues(AssetIssues assetIssues);
     
-    ApiResponse getAssetIssues();
+    ApiResponse getIssues(Pageable pageable);
     
-    ApiResponse searchAssetIssues(String issueId);
+    ApiResponse searchAssetIssues(Pageable pageable,String issueId);
     
-    ApiResponse changeAssetIssuesStatus(String Status);
     
-    ApiResponse getAllAssetIssues(Pageable pageable);
+    ApiResponse getAssetIssues(Pageable pageable);
+
+	ApiResponse changeAssetIssuesStatus(String Status, String issueId);
+	
+	ApiResponse downloadAllAssetIssues(Map<String, Object> filter);
 }

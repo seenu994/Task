@@ -11,7 +11,7 @@ import javax.persistence.Table;
 
 import com.xyram.ticketingTool.admin.model.User;
 
-@Entity
+/*@Entity
 @Table(name="assetBilling")
 public class AssetBilling 
 {
@@ -20,7 +20,7 @@ public class AssetBilling
     public String billingType;
     
     @Column(name="UnderWarrenty")
-    public String underWarrent;
+    public String underWarrenty;
     
     @Column(name="AssetAmount")
     public String assetAmount;
@@ -57,11 +57,11 @@ public class AssetBilling
 	}
 
 	public String getUnderWarrent() {
-		return underWarrent;
+		return underWarrenty;
 	}
 
 	public void setUnderWarrent(String underWarrent) {
-		this.underWarrent = underWarrent;
+		this.underWarrenty = underWarrent;
 	}
 
 	public String getAssetAmount() {
@@ -130,8 +130,13 @@ public class AssetBilling
 		this.amountPaid = amountPaid;
 	}
 
+	public Object getById() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
     
 	
    
     
-}
+}*/

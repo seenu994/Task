@@ -24,7 +24,7 @@ import com.xyram.ticketingTool.util.ResponseMessages;
 public class AssetServiceImpl implements AssetService{
 
 	
-	@Autowired
+	/*@Autowired
 	AssetRepository assetRepository;
 	
 	@Override
@@ -46,7 +46,7 @@ public class AssetServiceImpl implements AssetService{
 		ApiResponse response = new ApiResponse(false);
 		
 		Object findAll = null;
-		Asset assetObj = assetRepository.findAll (asset.getaId());
+		Asset assetObj = assetRepository.getById(asset.getaId());
 		
 		
 		if(assetObj != null) {		
@@ -68,7 +68,7 @@ public class AssetServiceImpl implements AssetService{
 		
 		return response;
 	}
-
+*/
      /*
 	@Override
 	public ApiResponse editAsset(Asset AssetRequest) {
@@ -77,7 +77,7 @@ public class AssetServiceImpl implements AssetService{
 	}*/
 	
 
-
+/*
 	@Override
 	public ApiResponse searchAsset(String searchString) {
 		
@@ -91,6 +91,6 @@ public class AssetServiceImpl implements AssetService{
 		
 	}
 
-	
+	*/
 
 }

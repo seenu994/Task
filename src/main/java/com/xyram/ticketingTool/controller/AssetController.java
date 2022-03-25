@@ -24,7 +24,7 @@ import com.xyram.ticketingTool.util.AuthConstants;
 @RestController
 
 public class AssetController {
-	private final Logger logger = LoggerFactory.getLogger(AssetController.class);
+	/*private final Logger logger = LoggerFactory.getLogger(AssetController.class);
 	
 	@Autowired
 	AssetService assetService;
@@ -53,6 +53,6 @@ public class AssetController {
     public ApiResponse searchAsset(@PathVariable String searchString) {
 		logger.info("inside AsssetContoller :: searchAsset ");
 		return assetService.searchAsset(searchString);
-	}
+	}*/
 	
 }

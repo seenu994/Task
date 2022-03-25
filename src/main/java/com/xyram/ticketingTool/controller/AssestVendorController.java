@@ -23,14 +23,14 @@ public class AssestVendorController {
 	
 private final Logger logger = LoggerFactory.getLogger(AssestVendorController.class);
 	
-	@Autowired
+	/*@Autowired
 	AssetvendorService assetvendorService;
 
 	@PostMapping(value = "/createVendor" )
 	public ApiResponse addAssestVendor(@RequestBody AssetVendor vendor) { 
 		logger.info("Received request to add Asset vendor");
 		return assetvendorService.addAssestVendor(vendor);
-	}
+	}*/
 	
 	
 	

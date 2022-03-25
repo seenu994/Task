@@ -8,7 +8,7 @@ import com.xyram.ticketingTool.entity.AssetVendor;
 public interface AssetvendorService {
 	
 
-	ApiResponse addAssestVendor(AssetVendor vendor);
+	// ApiResponse addAssestVendor(AssetVendor vendor);
 	
 	
 

@@ -16,8 +16,10 @@ public class AssetIssues
     @Column(name="IssueId")
    public String issueId;
    
-	@Column(name = "assetId")
-    private String assetId;
+
+    @OneToOne(cascade = {CascadeType.MERGE })
+	@JoinColumn(name = "asset_Id")
+    private Asset aId;
     
     @Column(name="ComplaintRaisedDate")
     public String complaintRaisedDate;
@@ -25,14 +27,15 @@ public class AssetIssues
     @Column(name="Description")
     public String description;
     
-    @Column(name="Solution")
-    public String Solution;
+    @Column(name="solution")
+    public String solution;
     
-    @Column(name="Status")
-    public String Status;
+    @Column(name="status")
+    public String status;
     
-	@Column(name = "VendorId")
-    private String vendorId;
+    @OneToOne(cascade = {CascadeType.MERGE })
+	@JoinColumn(name = "VendorId")
+    private AssetVendor vendorId;
     
     @Column(name="ResolvedDate")
     public String resolvedDate;
@@ -45,11 +48,11 @@ public class AssetIssues
 		this.issueId = issueId;
 	}
 
-	public String getAssetId() {
-		return assetId;
+	public Asset getAssetId() {
+		return aId;
 	}
 
-	public void setVendorId(String vendorId) {
+	public void setVendorId(AssetVendor vendorId) {
 		this.vendorId = vendorId;
 	}
 
@@ -70,29 +73,29 @@ public class AssetIssues
 	}
 
 	public String getSolution() {
-		return Solution;
+		return solution;
 	}
 
 	public void setSolution(String solution) {
-		Solution = solution;
+		solution = solution;
 	}
 
 	public String getStatus() {
-		return Status;
+		return status;
 	}
 
 	public void setStatus(String status) {
-		Status = status;
+		status = status;
 	}
 
 	
 
-	public String getVendorId() {
+	public AssetVendor getVendorId() {
 		return vendorId;
 	}
 
 	public void setAssetId(String assetId) {
-		this.assetId = assetId;
+		this.aId = aId;
 	}
 
 	public String getResolvedDate() {
@@ -101,6 +104,11 @@ public class AssetIssues
 
 	public void setResolvedDate(String resolvedDate) {
 		this.resolvedDate = resolvedDate;
+	}
+
+	public static void setissueId(String issueId2) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	

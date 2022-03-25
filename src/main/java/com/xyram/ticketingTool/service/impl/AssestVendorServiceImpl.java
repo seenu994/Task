@@ -19,7 +19,7 @@ import com.xyram.ticketingTool.util.ResponseMessages;
 @Service
 @Transactional
 public class AssestVendorServiceImpl implements AssetvendorService {
-	private final Logger logger = LoggerFactory.getLogger(AssestVendorServiceImpl.class);
+	/*private final Logger logger = LoggerFactory.getLogger(AssestVendorServiceImpl.class);
 
 	@Autowired
 	AssetVendorRepository assetVendorRepository;
@@ -41,7 +41,7 @@ public class AssestVendorServiceImpl implements AssetvendorService {
        }
 	return response;
 	
-	}
+	}*/
 
 	
 

@@ -140,6 +140,27 @@ public interface ResponseMessages {
 	String ASSET_NOT_EDITED = "Asset not edited";
 
 	String ASSET_EDITED = "Asset edited successfully";
+
+	String ASSET_ISSUES_ADDED = "Asset Issues added";
+	
+	String ASSET_ISSUES_NOT_ADDED = "Asset Issues added";
+	
+    String ASSET_ISSUES_EDITED = "Asset Issues added";
+	
+	String ASSET_ISSUES_NOT_EDITED = "Asset Issues added";
+	
+	String ASSET_ISSUES_STATUS_CHANGED = "Asset issues status changed";
+	
+	 String ASSET_ISSUES_STATUS__NOT_CHANGED = "Asset issues status not changed";
+
+	String ASSET_BILL_ADDED = "Asset bill added";
+	
+	String ASSET_BILL_NOT_ADDED = "Asset bill not  added";
+	
+    String ASSET_BILL_EDITED = "Asset bill added";
+	
+	String ASSET_BILL_NOT_EDITED = "Asset bill not  added";
+	
 	
 //	String ANNOUNCEMENT_STATUS_CHANGED = "Announcement status changed successfully";
 //	String ANNOUNCEMENT_STATUS_NOT_CHANGED = "Announcement status not changed";

@@ -71,6 +71,12 @@ public class ApiResponse {
 	}
 
 
+	public Object getissueId() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
 	
 
 
