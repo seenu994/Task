@@ -220,17 +220,21 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 				}
 				else {
 					response.setSuccess(false);
-					response.setMessage("Future date is allowed and Min 15 minutes prior to the present time is required.");
+					response.setMessage("Only future date is allowed and Min 15 minutes prior to the present time is required.");
 					return response;
 				}
 		
 			}else if(status.equalsIgnoreCase("CANCELLED")) {
+				scheduleObj.setClosed(true);
 				
 			}else if(status.equalsIgnoreCase("CANDIDATE-NOT-SUITS")) {
+				scheduleObj.setClosed(true);
 				
 			}else if(status.equalsIgnoreCase("CANDIDATE-NOT-INTERESTED")) {
+				scheduleObj.setClosed(true);
 				
 			}else if(status.equalsIgnoreCase("CANDIDATE-INTERESTED")) {
+				scheduleObj.setClosed(true);
 				
 			}
 			else {
@@ -245,9 +249,11 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 			cmt.setCreatedBy(currentUser.getUserId());
 			cmt.setUpdatedBy(currentUser.getUserId());
 			cmt.setLastUpdatedAt(new Date());
+			cmtRepository.save(cmt);
 			
 			scheduleObj.setStatus(status.toUpperCase());
 			scheduleObj.setLastUpdatedAt(new Date());
+			
 			hrCalendarRepository.save(scheduleObj);
 			response.setSuccess(true);
 			response.setMessage("Status changed successfully.");
