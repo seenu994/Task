@@ -101,6 +101,9 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 					schedule.setStatus("SCHEDULED");
 					response.setSuccess(true);
 					response.setMessage("Schedule created successfully.");
+					Map content = new HashMap();
+					content.put("scheduleId", schedule.getId());
+					response.setContent(content);
 					hrCalendarRepository.save(schedule);
 				} else {
 					response.setSuccess(false);
