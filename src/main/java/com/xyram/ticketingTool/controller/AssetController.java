@@ -24,12 +24,10 @@ import com.xyram.ticketingTool.util.AuthConstants;
 @RestController
 
 public class AssetController {
-	/*private final Logger logger = LoggerFactory.getLogger(AssetController.class);
+	private final Logger logger = LoggerFactory.getLogger(AssetController.class);
 	
 	@Autowired
 	AssetService assetService;
-	
-	
 	
 	
 	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/addAsset"})
@@ -38,8 +36,9 @@ public class AssetController {
 		return assetService.addasset(asset);
 	}
 	
+	/*
     @GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllAsset"})
-    public ApiResponse getAllAssets (java.awt.print.Pageable pageable) {
+    public ApiResponse getAllAssets (Pageable pageable) {
 	        logger.info("inside AssetContoller :: getAllAssets");
 			return assetService.getAllAssets(pageable);
 	}
@@ -51,9 +50,9 @@ public class AssetController {
 	}
     
     @GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/searchAsset"})
-    public ApiResponse searchAsset(@PathVariable String searchString) {
+    public ApiResponse searchAsset(@PathVariable String searchaid) {
 		logger.info("inside AsssetContoller :: searchAsset ");
-		return assetService.searchAsset(searchString);
-	}*/
-	
+		return assetService.searchAsset(searchaid);
+	}
+	*/
 }

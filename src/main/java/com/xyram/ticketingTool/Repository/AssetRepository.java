@@ -1,5 +1,6 @@
 package com.xyram.ticketingTool.Repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -22,10 +23,7 @@ import com.xyram.ticketingTool.entity.Role;
 @Repository
 public interface AssetRepository extends JpaRepository<Asset, String>{
 
-	static Asset getById(Asset getaId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 	/*@Query("Select distinct new map(a.aId as aId,a.vId as vId,"
 			+ "a.brand as brand,a.purchasedate as purchasedate,a.model as model,"
 			+ "a.serialno as serialno,a.warantydate as warantydate,a.ram as ram,"
@@ -34,6 +32,9 @@ public interface AssetRepository extends JpaRepository<Asset, String>{
 			+ "a.assetstatus as assetstatus) from Asset a")
 	Page<Map> getAllAssets(java.awt.print.Pageable pageable);
 	Asset findAll(String getaId);*/
+
+	//@Query("SELECT a.purchasDate from Asset a where a.purchaseDate =:purchaseDate")
+	//Asset getByDate(Date purchaseDate);
    
 	/*
 	@Query("Select distinct new map(a.aId as aId,a.vId as vId,"
@@ -46,13 +47,12 @@ public interface AssetRepository extends JpaRepository<Asset, String>{
 			+ " ORDER BY a.createdAt DESC")
 	Page<Map> searchAllAssets(Pageable pageable, String searchString);
 	*/
+	
+	//List<Map> searchAsset(Object assetId, String searchString);
+	
+	//@Query("SELECT a from Asset a where a.assignedTo =:assignedTo")
+	//Asset findAssetByaId(String assignedTo);
 	/*
-	List<Map> searchAsset(Object assetId, String searchString);
-	
-	
-	@Query("SELECT a from Asset a where a.aId=:id")
-	Asset findAssetByaId(String id);
-	
 	@Query("SELECT a from Asset a where a.vId=:id")
 	Asset findAssetByvId(String id);
 

@@ -160,6 +160,16 @@ public interface ResponseMessages {
     String ASSET_BILL_EDITED = "Asset bill added";
 	
 	String ASSET_BILL_NOT_EDITED = "Asset bill not  added";
+
+	String ASSET_ADDED = "Asset added successfully";
+
+	String ASSET_NOT_ADDED = "Asset not added";
+
+	String VENDOR_ID_INVALID = "Vendor Id is not valid";
+
+	String EMP_ID_INVALID = "Already Asset is assigned to Employee";
+
+	//String VENDOR_ID_ADDED = "Vendor Id added successfully";
 	
 	
 //	String ANNOUNCEMENT_STATUS_CHANGED = "Announcement status changed successfully";

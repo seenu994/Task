@@ -1,54 +1,71 @@
 package com.xyram.ticketingTool.entity;
 
+import java.util.Date;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+
+import com.xyram.ticketingTool.admin.model.User;
 
 
 @Entity
 @Table(name = "asset")
+
 public class Asset {
 
 	@Id
-	@Column(name = "asset_id")
+	@Column(name = "Asset_Id")
 	private String aId;
+	
 
-	@Column(name = "vendor_id")
+	@Column(name = "Vendor_Id")
 	private String vId;
+	
+//	@OneToOne(cascade = { CascadeType.MERGE })
+//	@JoinColumn(name = "VendorId")
+//	private AssetVendor vendorId;
 
-	@Column(name = "brand")
+	@Column(name = "Brand")
 	private String brand;
 
-	@Column(name = "purchase_date")
-	private String purchasedate;
+	@Column(name = "Purchase_Date")
+	public Date purchaseDate;
 
-	@Column(name = "model")
-	private String model;
+	@Column(name = "Model_No")
+	private String modelNo;
+	
+    
+	@Column(name = "Serial_No", unique = true)
+	private String serialNo;
 
-	@Column(name = "serial_no")
-	private String serialno;
+	@Column(name = "Warranty_Date")
+	private Date warrantyDate;
 
-	@Column(name = "waranty_date")
-	private String warantydate;
-
-	@Column(name = "RAM")
+	@Column(name = "Ram")
 	private String ram;
 	
-	@Column(name = "bag_available")
-	private String bagavailable;
+	@Column(name = "Bag_Available")
+	private boolean bagAvailable;
 
-	@Column(name = "powercord_available")
-	private String powercordavailable;
+	@Column(name = "Powercord_Available")
+	private boolean powercordAvailable;
 
-	@Column(name = "mouse_available")
-	private String mouseavailable;
+	@Column(name = "Mouse_Available")
+	private boolean mouseAvailable;
 
-	@Column(name = "asset_photo_URL")
-	private String assetphotourl;
+	@Column(name = "Asset_Photo_Url")
+	private String assetPhotoUrl;
 	
-	@Column(name = "asset_status")
-	private String assetstatus;
+	@Column(name = "Asset_Status")
+	private String assetStatus;
+	
+	
 
 	public String getaId() {
 		return aId;
@@ -56,7 +73,6 @@ public class Asset {
 
 	public void setaId(String aId) {
 		this.aId = aId;
-		
 	}
 
 	public String getvId() {
@@ -75,36 +91,37 @@ public class Asset {
 		this.brand = brand;
 	}
 
-	public String getPurchasedate() {
-		return purchasedate;
+	public Date getPurchaseDate() {
+		return purchaseDate;
+	}
+	
+
+	public void setPurchaseDate(Date purchaseDate) {
+		this.purchaseDate = purchaseDate;
 	}
 
-	public void setPurchasedate(String purchasedate) {
-		this.purchasedate = purchasedate;
+	public String getModelNo() {
+		return modelNo;
 	}
 
-	public String getModel() {
-		return model;
+	public void setModelNo(String modelNo) {
+		this.modelNo = modelNo;
 	}
 
-	public void setModel(String model) {
-		this.model = model;
+	public String getSerialNo() {
+		return serialNo;
 	}
 
-	public String getSerialno() {
-		return serialno;
+	public void setSerialNo(String serialNo) {
+		this.serialNo = serialNo;
 	}
 
-	public void setSerialno(String serialno) {
-		this.serialno = serialno;
+	public Date getWarrantyDate() {
+		return warrantyDate;
 	}
 
-	public String getWarantydate() {
-		return warantydate;
-	}
-
-	public void setWarantydate(String warantydate) {
-		this.warantydate = warantydate;
+	public void setWarrantyDate(Date warrantyDate) {
+		this.warrantyDate = warrantyDate;
 	}
 
 	public String getRam() {
@@ -115,45 +132,46 @@ public class Asset {
 		this.ram = ram;
 	}
 
-	public String getBagavailable() {
-		return bagavailable;
+	public boolean isBagAvailable() {
+		return bagAvailable;
 	}
 
-	public void setBagavailable(String bagavailable) {
-		this.bagavailable = bagavailable;
+	public void setBagAvailable(boolean bagAvailable) {
+		this.bagAvailable = bagAvailable;
 	}
 
-	public String getPowercordavailable() {
-		return powercordavailable;
+	public boolean isPowercordAvailable() {
+		return powercordAvailable;
 	}
 
-	public void setPowercordavailable(String powercordavailable) {
-		this.powercordavailable = powercordavailable;
+	public void setPowercordAvailable(boolean powercordAvailable) {
+		this.powercordAvailable = powercordAvailable;
 	}
 
-	public String getMouseavailable() {
-		return mouseavailable;
+	public boolean isMouseAvailable() {
+		return mouseAvailable;
 	}
 
-	public void setMouseavailable(String mouseavailable) {
-		this.mouseavailable = mouseavailable;
+	public void setMouseAvailable(boolean mouseAvailable) {
+		this.mouseAvailable = mouseAvailable;
 	}
 
-	public String getAssetphotourl() {
-		return assetphotourl;
+	public String getAssetPhotoUrl() {
+		return assetPhotoUrl;
 	}
 
-	public void setAssetphotourl(String assetphotourl) {
-		this.assetphotourl = assetphotourl;
+	public void setAssetPhotoUrl(String assetPhotoUrl) {
+		this.assetPhotoUrl = assetPhotoUrl;
 	}
 
-	public String getAssetstatus() {
-		return assetstatus;
+	public String getAssetStatus() {
+		return assetStatus;
 	}
 
-	public void setAssetstatus(String assetstatus) {
-		this.assetstatus = assetstatus;
+	public void setAssetStatus(String assetStatus) {
+		this.assetStatus = assetStatus;
 	}
+	
 
 	
 }
