@@ -61,6 +61,7 @@ public class AssetServiceImpl implements AssetService {
 	AssetStatusRepository assetStatusRepository;
 
 	String[] brandList = { "Lg", "Dell", "Lenovo", "Acer" };
+	
 
 	String[] ram = { "2GB", "4GB", "8GB", "16GB", "20GB", "32GB", "64GB", "128GB", "256GB" };
 
