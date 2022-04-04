@@ -122,7 +122,7 @@ public class TimesheetServiceImpl implements TimesheetService{
 				    else
 				    	break;
 				    
-				    List<TimeSheet> timeSheetList = timesheetRepository.getAllSheetsByDate(sheet.getTimeSheetDate());
+				    List<TimeSheet> timeSheetList = timesheetRepository.getAllSheetsByDate(sheet.getTimeSheetDate(),sheet.getEmployeeId());
 			    	if(timeSheetList != null) {
 			    		Float totalHours = sheet.getHoursSpent();
 			    		for (final TimeSheet sheetEntity : timeSheetList) {
@@ -240,7 +240,7 @@ public class TimesheetServiceImpl implements TimesheetService{
 				    else
 				    	break;
 				    
-				    List<TimeSheet> timeSheetList = timesheetRepository.getAllSheetsByDate(sheet.getTimeSheetDate());
+				    List<TimeSheet> timeSheetList = timesheetRepository.getAllSheetsByDate(sheet.getTimeSheetDate(),sheet.getEmployeeId());
 			    	if(timeSheetList != null) {
 			    		Float totalHours = sheet.getHoursSpent();
 			    		for (final TimeSheet entity : timeSheetList) {
@@ -658,7 +658,7 @@ public class TimesheetServiceImpl implements TimesheetService{
 		ApiResponse response = new ApiResponse(false);
 		TimeSheet sheet = timesheetRepository.getById(sheetId);
 	    if(sheet != null) {
-	    	List<TimeSheet> timeSheetList = timesheetRepository.getAllSheetsByDate(sheet.getTimeSheetDate());
+	    	List<TimeSheet> timeSheetList = timesheetRepository.getAllSheetsByDate(sheet.getTimeSheetDate(),sheet.getEmployeeId());
 	    	if(timeSheetList != null) {
 	    		Float totalHours = hoursSpent;
 	    		for (final TimeSheet sheetEntity : timeSheetList) {

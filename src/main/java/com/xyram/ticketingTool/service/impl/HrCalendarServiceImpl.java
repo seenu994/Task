@@ -98,13 +98,14 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 					if(schedule.getCallCount() == null) {
 						schedule.setCallCount(0);
 					}	
+					HrCalendar savedObj = hrCalendarRepository.save(schedule);
+
 					schedule.setStatus("SCHEDULED");
 					response.setSuccess(true);
 					response.setMessage("Schedule created successfully.");
 					Map content = new HashMap();
-					content.put("scheduleId", schedule.getId());
+					content.put("scheduleId", savedObj.getId());
 					response.setContent(content);
-					hrCalendarRepository.save(schedule);
 				} else {
 					response.setSuccess(false);
 					response.setMessage("Employee reporter not found.");

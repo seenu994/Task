@@ -21,8 +21,8 @@ import com.xyram.ticketingTool.enumType.TimesheetStatus;
 public interface TimesheetRepository extends JpaRepository<TimeSheet, String>{
 	
 	
-	@Query(value = "SELECT t from TimeSheet t where Date(t.timeSheetDate) = STR_TO_DATE(:sheetDate, '%Y-%m-%d')  ")
-	List<TimeSheet> getAllSheetsByDate(Date sheetDate);
+	@Query(value = "SELECT t from TimeSheet t where Date(t.timeSheetDate) = STR_TO_DATE(:sheetDate, '%Y-%m-%d') and t.employeeId=:employeeId ")
+	List<TimeSheet> getAllSheetsByDate(Date sheetDate, String employeeId);
 	
 
 	@Query(value = "SELECT distinct  new map( t.timeSheetId as timeSheetId,t.employeeId as employeeId,t.timeSheetDate as timeSheetDate, "
