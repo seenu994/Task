@@ -154,6 +154,13 @@ public class AssestVendorServiceImpl implements AssetvendorService {
 	}
 
 
+	@Override
+	public ApiResponse getAllVendorList(java.awt.print.Pageable pageable) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
 
 //	public ApiResponse getAllVendorList(Pageable pageable) {
 //		AssetVendor vendorDetails = new AssetVendor();

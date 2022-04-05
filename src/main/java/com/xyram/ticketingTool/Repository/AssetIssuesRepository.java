@@ -44,7 +44,7 @@ public interface AssetIssuesRepository extends JpaRepository<AssetIssues, String
  
 //AssetIssues getAssetIssues(AssetIssues assetIssues);
 	
-	@Query("Select distinct new map(i.assetIssue as assetIssue, i.complaintRaisedDate as complaintRaisedDate, "
+	@Query("Select distinct new map(i.assetIssueId as assetIssueId, i.complaintRaisedDate as complaintRaisedDate, "
 	+ "i.description as description, i.solution as solution,i.asset as asset, "
 	+ "i.assetIssueStatus as assetIssueStatus, i.assetVendor as assetVendor, "
 	+ "i.resolvedDate as resolvedDate ) from AssetIssues i ")
