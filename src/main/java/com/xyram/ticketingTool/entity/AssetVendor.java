@@ -114,6 +114,8 @@ public class AssetVendor {
 		this.country = country;
 	}
 
+	
+
 }
 
 /*
