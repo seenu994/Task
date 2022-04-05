@@ -1,11 +1,13 @@
 package com.xyram.ticketingTool.controller;
 
-import java.awt.print.Pageable;
+
 import java.util.Map;
+
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +22,7 @@ import com.xyram.ticketingTool.response.ReportExportResponse;
 import com.xyram.ticketingTool.service.AssetIssuesService;
 import com.xyram.ticketingTool.util.AuthConstants;
 
-/*@RestController
+@RestController
 @CrossOrigin
 public class AssetIssuesController
 {
@@ -35,14 +37,14 @@ public class AssetIssuesController
 		logger.info("received request to add assetIssues");
 		return assetIssuesService.addAssetIssues(assetIssues);
 	}
-	/*@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editAssetIssues" })
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editAssetIssues" })
 	public ApiResponse editAssetIssues(@RequestBody AssetIssues assetIssues)
 	{
 		logger.info("received request to edit assetIssues");
 		return assetIssuesService.editAssetIssues(assetIssues);
 	}
 	
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAssetIssues"})
+	/*@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAssetIssues"})
 	public ApiResponse getIssues(Pageable pageable) {
 		logger.info("Received request to get assetIssues");
 		return assetIssuesService.getAssetIssues(pageable);
@@ -59,17 +61,18 @@ public class AssetIssuesController
 		logger.info("Received request to change status of assetIssue");
 		return assetIssuesService.changeAssetIssuesStatus(Status,issueId);
 	}
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllAssetIssues"})
-	public ApiResponse getAssetIssues(Pageable pageable) {
-		logger.info("Received request to get assetIssues");
-		return assetIssuesService.getAssetIssues(pageable);
-	}
 	
-	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/downloadAllAssetIssues",})
+	
+	/*@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/downloadAllAssetIssues",})
 	public 	ApiResponse downloadAllAssetIssues(@RequestBody Map<String, Object> filter) 
 	{
 		logger.info("Download all My Time sheets");
 		return assetIssuesService.downloadAllAssetIssues(filter);
+	}*/
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAssetIssuesList"})
+	public ApiResponse getAssetIssuesList(@RequestBody AssetIssues assetIssues) {
+		logger.info("Received request to get assetIssues");
+		return assetIssuesService.getAssetIssuesList(assetIssues);
 	}
 
-}*/
+}

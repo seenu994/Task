@@ -154,32 +154,49 @@ public interface ResponseMessages {
 	 String ASSET_ISSUES_STATUS__NOT_CHANGED = "Asset issues status not changed";
 
 	String ASSET_BILL_ADDED = "Asset bill added";
+	String ASSET_BILL_ADDED_SUCCESSFULLY = "Asset bill added successfully";
 	
 	String ASSET_BILL_NOT_ADDED = "Asset bill not  added";
 	
     String ASSET_BILL_EDITED = "Asset bill added";
+    
+
 	
-	String ASSET_BILL_NOT_EDITED = "Asset bill not  added";
+	
+	String VENDORID_IN_VALID = "VendorId is in valid";
 
-	String ASSET_ADDED = "Asset added successfully";
+	String ADD_ISSUEID = "Enter issueId";
 
-	String ASSET_NOT_ADDED = "Asset not added";
+	String ISSUEID_IN_VALID = "issue id is invalid";
 
-	String VENDOR_ID_INVALID = "Vendor Id is not valid";
+	String RETURN_FROM_REPAIR = "return from repair";
 
-	String EMP_ID_INVALID = "Already Asset is assigned to Employee";
+	String ASSET_BILL_EDIT_SUCCESSFULLY = "asset bill edited successfully";
 
-	String ASSET_EMPLOYEE_ADDED = "Asset Employee Added Successfully";
+	String ASSET_ID_INVALID = "Asset id is invalid";
 
-	String ASSET_EMPLOYEE_NOT_ADDED = "Asset Employee not added";
+	String ASSET_PURCHASE_BILL_ADDED_SUCCESSFULLY = "Asset purchase bill added successsfully";
 
-	String ASSET_EMPLOYEE_EDITED = "Asset Employee edited successfully";
+	String ASSET_PURCHASE_BILL_EDIT_SUCCESSFULLY = "Asset purchase bill edited successfully";
 
-	String ASSET_SOFTWARE_ADDED = "Asset Software Added Successfully";
+	String ASSET_REPAIR_BILL_ADDED_SUCCESSFULLY = "Asset repair bill added successsfully";
 
-	String ASSET_SOFTWARE_NOT_ADDED = "Asset Software not added";
+	String ASSET_REPAIR_BILL_EDITED_SUCCESSFULLY = "Asset repair bill edited successfully";
 
-	//String VENDOR_ID_ADDED = "Vendor Id added successfully";
+	String ID_INVALID = "id is invalid";
+
+	String ASSET_ISSUES_ADDED_SUCCESSFULLY = "Asset issues added successfully";
+
+	String ASSET_ISSUES_EDIT_SUCCESSFULLY = "Asset issues edited successfully";
+
+	String ASSET_ISSUES_ID_IS_INVALID = "A sset issue id is invalid";
+
+	
+	
+
+	
+
+	
 	
 	
 //	String ANNOUNCEMENT_STATUS_CHANGED = "Announcement status changed successfully";

@@ -19,18 +19,24 @@ import com.xyram.ticketingTool.service.ProjectService;
 import com.xyram.ticketingTool.util.AuthConstants;
 @RestController
 @CrossOrigin
-public class AssestVendorController {
+public class AssetVendorController {
 	
-private final Logger logger = LoggerFactory.getLogger(AssestVendorController.class);
+private final Logger logger = LoggerFactory.getLogger(AssetVendorController.class);
 	
-	/*@Autowired
+	@Autowired
 	AssetvendorService assetvendorService;
 
-	@PostMapping(value = "/createVendor" )
+	/*@PostMapping(value = "/createVendor" )
 	public ApiResponse addAssestVendor(@RequestBody AssetVendor vendor) { 
 		logger.info("Received request to add Asset vendor");
 		return assetvendorService.addAssestVendor(vendor);
 	}*/
+	@GetMapping(value = "/createVendor" )
+	public ApiResponse getAllAssetVendor(@RequestBody AssetVendor vendor) 
+	{ 
+		logger.info("Received request to add Asset vendor");
+		return assetvendorService.getAllAssestVendor(vendor);
+	}
 	
 	
 	
