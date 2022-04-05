@@ -102,8 +102,8 @@ public class AssetBillingServiceImpl implements AssetBillingService
 		 }
 		 else
 		 {
-			 Asset asset = getAssetById(assetBilling.getAsset().getaId());
-			 if(asset.getaId() == null)
+			 Asset asset = getAssetById(assetBilling.getAsset().getAssetId());
+			 if(asset.getAssetId() == null)
 			 {
 				 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset id not valid!!!");
 			 }
