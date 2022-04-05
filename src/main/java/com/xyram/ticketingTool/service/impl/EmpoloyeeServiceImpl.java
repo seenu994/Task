@@ -183,17 +183,14 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				user.setName(employee.getFirstName() +" " +employee.getLastName());
 				// Employee employeere=new Employee();
 				Role role = roleRepository.getById(employee.getRoleId());
-				if (role != null) {
-					try {
-
-						user.setUserRole(role.getRoleName());
-					} catch (Exception e) {
-						throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-								role.getRoleName() + " is not a valid status");
-					}
-				} else {
-					throw new ResourceNotFoundException("invalid user role ");
-				}
+				/*
+				 * if (role != null) { try {
+				 * 
+				 * user.setUserRole(role.getRoleName()); } catch (Exception e) { throw new
+				 * ResponseStatusException(HttpStatus.BAD_REQUEST, role.getRoleName() +
+				 * " is not a valid status"); } } else { throw new
+				 * ResourceNotFoundException("invalid user role "); }
+				 */
 				Integer permission = permissionConfig.setDefaultPermissions(user.getUserRole().toString());
 				user.setPermission(permission);
 				user.setStatus(UserStatus.ACTIVE);
