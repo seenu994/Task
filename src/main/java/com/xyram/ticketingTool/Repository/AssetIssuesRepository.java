@@ -45,11 +45,10 @@ public interface AssetIssuesRepository extends JpaRepository<AssetIssues, String
 //AssetIssues getAssetIssues(AssetIssues assetIssues);
 	
 	@Query("Select distinct new map(i.assetIssue as assetIssue, i.complaintRaisedDate as complaintRaisedDate, "
-	+ "i.description as description, i.solution as solution,i.aId as aId, "
+	+ "i.description as description, i.solution as solution,i.asset as asset, "
 	+ "i.assetIssueStatus as assetIssueStatus, i.assetVendor as assetVendor, "
-	+ "i.resolvedDate as resolvedDate ,"
-	+  "a.aId as aId, a.assetStatus as assetStatus) from AssetIssues i "
-    + "left JOIN i.aId as   a  ")
+	+ "i.resolvedDate as resolvedDate ) from AssetIssues i ")
+
 	AssetIssues getAssetIssuesList(AssetIssues assetIssues);
 	/*@Query("SELECT i from AssetIssues i where i.assetIssue =:assetIssue")
 	 AssetIssues getAssetIssue(AssetIssues assetIssue);*/

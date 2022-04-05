@@ -17,6 +17,7 @@ import javax.persistence.UniqueConstraint;
 import org.hibernate.annotations.GenericGenerator;
 
 import com.xyram.ticketingTool.admin.model.User;
+import com.xyram.ticketingTool.baseData.model.AuditModel;
 import com.xyram.ticketingTool.id.generator.IdGenerator;
 import com.xyram.ticketingTool.id.generator.IdPrefix;
 
@@ -24,7 +25,7 @@ import com.xyram.ticketingTool.id.generator.IdPrefix;
 @Entity
 @Table(name = "asset")
 
-public class Asset {
+public class Asset extends AuditModel{
 
 	@Id
 	@IdPrefix(value = "ASS")
@@ -36,10 +37,6 @@ public class Asset {
 	@Column(name = "vendor_id")
 	private String vendorId;
 	
-//	@OneToOne(cascade = { CascadeType.MERGE })
-//	@JoinColumn(name = "VendorId")
-//	private AssetVendor vendorId;
-
 	@Column(name = "brand")
 	private String brand;
 
@@ -49,7 +46,6 @@ public class Asset {
 	@Column(name = "model_no")
 	private String modelNo;
 	
-    
 	@Column(name = "serial_no", unique = true)
 	private String serialNo;
 
@@ -188,11 +184,5 @@ public class Asset {
 	public void setAssignedTo(String assignedTo) {
 		this.assignedTo = assignedTo;
 	}
-	
-	//@ManyToOne(cascade = { CascadeType.},fetch = FetchType.)
-//	@JoinColumn( name = "employee_id")
-//	private Employee employee;
-	
-
 	
 }
