@@ -53,12 +53,6 @@ public class AssetServiceImpl implements AssetService {
 	AssetRepository assetRepository;
 	
 	@Autowired
-	AssetServiceImpl assetServiceImpl;
-
-	@Autowired
-	AssetService assetService;
-
-	@Autowired
 	EmployeeRepository employeeRepository;
 
 	@Autowired
@@ -108,11 +102,11 @@ public class AssetServiceImpl implements AssetService {
 //		private String assetStatus; Mandatory - BE should update 
 
 		// Validate Vendor
-		if (asset.getAssetId() == null || asset.getAssetId().equals("")) {
+		if (asset.getVendorId() == null || asset.getVendorId().equals("")) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "vendor id is mandatory");
 		} else {
 			// Validate Vendor
-			AssetVendor vendor = assetVendorRepository.getVendorById(asset.getAssetId());
+			AssetVendor vendor = assetVendorRepository.getVendorById(asset.getVendorId());
 			if (vendor == null) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "vendor id is not valid");
 			}
@@ -208,12 +202,7 @@ public class AssetServiceImpl implements AssetService {
 				if (employee == null) {
 					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "employee id is not valid");
 				}
-			 }
-//				Asset asset1 = assetRepository.getByAssignedTo(asset.getAssignedTo());
-//				if(asset1 != null) {
-//					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "already asset is assigned to that employee");
-//				}
-//			}
+			 }				
 			response.setSuccess(true);
 
 			return response;
@@ -369,8 +358,6 @@ public class AssetServiceImpl implements AssetService {
 		}
 		
 	}
-
-
 	private boolean checkVId(String getvId) {
     	AssetVendor vendor = assetVendorRepository.getVendorById(getvId);
 		if (vendor == null) {
