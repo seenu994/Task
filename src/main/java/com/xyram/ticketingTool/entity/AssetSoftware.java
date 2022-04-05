@@ -9,12 +9,13 @@ import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.xyram.ticketingTool.baseData.model.AuditModel;
 import com.xyram.ticketingTool.enumType.AssetEmployeeStatus;
 import com.xyram.ticketingTool.enumType.AssetSoftwareStatus;
 
 @Entity
 @Table(name = "asset_software")
-public class AssetSoftware {
+public class AssetSoftware extends AuditModel {
 	
 	@Id
 	@Column(name = "asset_id")

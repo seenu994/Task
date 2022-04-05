@@ -124,6 +124,8 @@ public class AssetVendor {
 	private Set<AssetIssues> assetIssues;
 
 
+	
+
 }
 
 /*
