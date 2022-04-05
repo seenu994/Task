@@ -2,116 +2,119 @@ package com.xyram.ticketingTool.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import com.xyram.ticketingTool.baseData.model.AuditModel;
+import com.xyram.ticketingTool.enumType.AssetVendorEnum;
 import com.xyram.ticketingTool.id.generator.IdGenerator;
 import com.xyram.ticketingTool.id.generator.IdPrefix;
 
 @Entity
-@Table(name="Asset_Vendor")
+@Table(name = "asset_vendor")
+public class AssetVendor {
 
-public class AssetVendor  {
-	
-	
-@Id
-@IdPrefix(value = "VE")
-@GeneratedValue(generator = IdGenerator.ID_GENERATOR)
-@GenericGenerator(name = IdGenerator.ID_GENERATOR, strategy = "com.xyram.ticketingTool.id.generator.IdGenerator")
-       @Column(name="VendorID")
-       private String vendorID;
-	
+	// private static final String Status = null;
 
-		@Column(name="Address")
-		private String address;
-		
-		@Column(name="Vendorname")
-		private String vendorName;	
-	
-		
-		@Column(name="Mobileno")
-		private String mobileNo;
-		
-		@Column(name="Email")
-		private String email;
-		
-		
-		@Column(name="City")
-		private String City;
-		
-		@Column(name="Country")
-		private String Country;
-		
-		@Column(name="Status")
-		private String Status;
+	@Id
+	@IdPrefix(value = "PRO_")
+	@GeneratedValue(generator = IdGenerator.ID_GENERATOR)
+	@GenericGenerator(name = IdGenerator.ID_GENERATOR, strategy = "com.xyram.ticketingTool.id.generator.IdGenerator")
+	@Column(name = "vendorId")
+	private String assetVendor;
 
-		public String getVendorID() {
-			return vendorID;
-		}
+	@Column(name = "address")
+	private String address;
 
-		public void setVendorID(String vendorID) {
-			this.vendorID = vendorID;
-		}
+	@Column(name = "vendor_name")
+	private String vendorName;
 
-		public String getAddress() {
-			return address;
-		}
+	@Column(name = "mobile_no")
+	private String mobileNo;
 
-		public void setAddress(String address) {
-			this.address = address;
-		}
+	@Column(name = "email")
+	private String email;
 
-		public String getVendorName() {
-			return vendorName;
-		}
+	@Column(name = "city")
+	private String city;
 
-		public void setVendorName(String vendorName) {
-			this.vendorName = vendorName;
-		}
+	@Column(name = "country")
+	private String country;
 
-		public String getMobileNo() {
-			return mobileNo;
-		}
+	public String getAssetVendor() {
+		return assetVendor;
+	}
 
-		public void setMobileNo(String mobileNo) {
-			this.mobileNo = mobileNo;
-		}
+	public void setAssetVendor(String assetVendor) {
+		this.assetVendor = assetVendor;
+	}
 
-		public String getEmail() {
-			return email;
-		}
+	public AssetVendorEnum getAssetVendorStatus() {
+		return assetVendorStatus;
+	}
 
-		public void setEmail(String email) {
-			this.email = email;
-		}
+	public void setAssetVendorStatus(AssetVendorEnum assetVendorStatus) {
+		this.assetVendorStatus = assetVendorStatus;
+	}
 
-		public String getCity() {
-			return City;
-		}
+	@Enumerated(EnumType.STRING)
+	@Column(name = "assetVendorStatus")
+	private AssetVendorEnum assetVendorStatus = AssetVendorEnum.ACTIVE;
 
-		public void setCity(String city) {
-			City = city;
-		}
+	public String getAddress() {
+		return address;
+	}
 
-		public String getCountry() {
-			return Country;
-		}
+	public void setAddress(String address) {
+		this.address = address;
+	}
 
-		public void setCountry(String country) {
-			Country = country;
-		}
+	public String getVendorName() {
+		return vendorName;
+	}
 
-		public String getStatus() {
-			return Status;
-		}
+	public void setVendorName(String vendorName) {
+		this.vendorName = vendorName;
+	}
 
-		public void setStatus(String status) {
-			Status = status;
-		}
-		
-		
+	public String getMobileNo() {
+		return mobileNo;
+	}
+
+	public void setMobileNo(String mobileNo) {
+		this.mobileNo = mobileNo;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
+
 }
+
+/*
+ * public void setStatus(AssetVendorEnum status) { this.status = status; }
+ */

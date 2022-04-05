@@ -78,7 +78,7 @@ class ProjectContoller {
 		return projectService.getgenericIssues();
 	}
 
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editProejct",AuthConstants.HR_ADMIN_BASEPATH + "/editProejct",
+	@PutMapping (value = { AuthConstants.ADMIN_BASEPATH + "/editProejct",AuthConstants.HR_ADMIN_BASEPATH + "/editProejct",
 			AuthConstants.INFRA_USER_BASEPATH + "/editProejct",AuthConstants.INFRA_ADMIN_BASEPATH + "/editProejct"  })
 	public ApiResponse editProject(@RequestBody Projects projectRequest) {
 		logger.info("indide ProjectContoller :: editProejct");
