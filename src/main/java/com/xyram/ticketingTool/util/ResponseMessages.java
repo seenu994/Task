@@ -191,6 +191,20 @@ public interface ResponseMessages {
 
 	String ASSET_ISSUES_ID_IS_INVALID = "A sset issue id is invalid";
 
+	String ASSET_ADDED = "Asset added successfully";
+
+	String ASSET_NOT_ADDED = "Asset not added";
+
+	String ASSET_SOFTWARE_ADDED = "Asset software added successfully";
+
+	String ASSET_SOFTWARE_NOT_ADDED = "Asset Softwarec not added";
+
+	String ASSET_EMPLOYEE_ADDED = "Asset Employee added successfully";
+
+	String ASSET_EMPLOYEE_NOT_ADDED = "Asset Employee not added";
+
+	String ASSET_EMPLOYEE_EDITED = "Asset Employee edited successfully";
+
 	String VENDOR_ADDED = "Vendor added successfully";
 
 	String VENDOR_DETAILS_EDIT = "Vendor details edit successfully";
