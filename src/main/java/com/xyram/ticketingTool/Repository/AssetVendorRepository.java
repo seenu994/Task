@@ -14,10 +14,10 @@ import com.xyram.ticketingTool.entity.AssetVendor;
 @Transactional
 public interface AssetVendorRepository extends JpaRepository<AssetVendor, String> {
 
-	static AssetVendor getById(AssetVendor assetVendor) {
-		// TODO Auto-generated method stub
-		return assetVendor;
-	}
+	
+	AssetVendor getByvendorId(String getvId);
+
+	
 
 	
     
