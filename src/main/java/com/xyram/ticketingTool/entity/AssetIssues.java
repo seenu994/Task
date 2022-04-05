@@ -1,7 +1,7 @@
 package com.xyram.ticketingTool.entity;
 
 import java.util.Date;
-
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,11 +12,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.xyram.ticketingTool.baseData.model.AuditModel;
 import com.xyram.ticketingTool.enumType.AssetIssueStatus;
 //import com.xyram.ticketingTool.enumType.AssetIssueStatus;
 import com.xyram.ticketingTool.enumType.ProjectStatus;
@@ -25,7 +27,7 @@ import com.xyram.ticketingTool.id.generator.IdPrefix;
 
 @Entity
 @Table(name="asset_issues")
-public class AssetIssues 
+public class AssetIssues extends AuditModel
 {
 	@Id
 	/*@IdPrefix(value = "AI")
@@ -75,10 +77,6 @@ public class AssetIssues
 	
 
 	public AssetIssueStatus getAssetIssueStatus;
-
-	
-
-	
 
 	public String getAssetIssueId() {
 		return assetIssueId;

@@ -39,9 +39,9 @@ public interface AssetBillingRepository extends JpaRepository<AssetBilling, Stri
 	 @Query("SELECT b from AssetBilling b where b.gstAmount =:gstAmount")
 	 AssetBilling getGstAmount(Integer gstAmount);
 
-	@Query("Select distinct new map (b.aId as aId, b.assetAmount as assetAmount, b.billingType as billingType,"
+	@Query("Select distinct new map (b.assetBillingId as assetBillingId, b.assetAmount as assetAmount, b.billingType as billingType,"
  		+ "b.gstAmount as gstAmount,b.billPhotoUrl as billPhotoUrl,b.returnDate as returnDate,"
- 		+ "b.assetVendor as assetVendor) from AssetBilling b Inner Join Asset a ON b.aId = a.aId where b.billingType = 'return' ")
+ 		+ "b.assetVendor as assetVendor) from AssetBilling b Inner Join Asset a ON b.asset = a.assetId where b.billingType = 'return' ")
 	 AssetBilling getReturnFromRepair(AssetBilling assetBilling);
 	
 
