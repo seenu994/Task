@@ -205,6 +205,14 @@ public interface ResponseMessages {
 
 	String ASSET_EMPLOYEE_EDITED = "Asset Employee edited successfully";
 
+	String VENDOR_ADDED = "Vendor added successfully";
+
+	String VENDOR_DETAILS_EDIT = "Vendor details edit successfully";
+
+	String VENDOR_DETAILS_INVALID = "Invalid Vendor Details";
+
+	
+
 	
 	
 
