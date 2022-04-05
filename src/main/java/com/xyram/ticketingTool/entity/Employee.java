@@ -86,6 +86,7 @@ public class Employee extends AuditModel {
 	@JoinColumn(name = "wing_id")
     private CompanyWings wings;
 	
+	
 	public String geteId() {
 		return eId;
 	}

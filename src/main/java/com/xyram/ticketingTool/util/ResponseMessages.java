@@ -153,10 +153,12 @@ public interface ResponseMessages {
 	
 	 String ASSET_ISSUES_STATUS__NOT_CHANGED = "Asset issues status not changed";
 
+	String ASSET_BILL_ADDED = "Asset bill added";
 	String ASSET_BILL_ADDED_SUCCESSFULLY = "Asset bill added successfully";
 	
 	String ASSET_BILL_NOT_ADDED = "Asset bill not  added";
 	
+    String ASSET_BILL_EDITED = "Asset bill added";
     
 
 	

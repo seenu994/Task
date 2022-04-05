@@ -1,5 +1,6 @@
 package com.xyram.ticketingTool.Repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -44,6 +45,9 @@ public interface AssetRepository extends JpaRepository<Asset, String>{
 	
 
 	
+
+	//@Query("SELECT a.purchasDate from Asset a where a.purchaseDate =:purchaseDate")
+	//Asset getByDate(Date purchaseDate);
    
 	/*
 	@Query("Select distinct new map(a.aId as aId,a.vId as vId,"
@@ -56,13 +60,12 @@ public interface AssetRepository extends JpaRepository<Asset, String>{
 			+ " ORDER BY a.createdAt DESC")
 	Page<Map> searchAllAssets(Pageable pageable, String searchString);
 	*/
+	
+	//List<Map> searchAsset(Object assetId, String searchString);
+	
+	//@Query("SELECT a from Asset a where a.assignedTo =:assignedTo")
+	//Asset findAssetByaId(String assignedTo);
 	/*
-	List<Map> searchAsset(Object assetId, String searchString);
-	
-	
-	@Query("SELECT a from Asset a where a.aId=:id")
-	Asset findAssetByaId(String id);
-	
 	@Query("SELECT a from Asset a where a.vId=:id")
 	Asset findAssetByvId(String id);
 
