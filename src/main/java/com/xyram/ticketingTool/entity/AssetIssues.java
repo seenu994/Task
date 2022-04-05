@@ -1,7 +1,7 @@
 package com.xyram.ticketingTool.entity;
 
 import java.util.Date;
-
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -76,10 +77,6 @@ public class AssetIssues extends AuditModel
 	
 
 	public AssetIssueStatus getAssetIssueStatus;
-
-	
-
-	
 
 	public String getAssetIssueId() {
 		return assetIssueId;

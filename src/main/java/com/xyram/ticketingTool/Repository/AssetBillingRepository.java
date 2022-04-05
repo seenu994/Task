@@ -39,7 +39,7 @@ public interface AssetBillingRepository extends JpaRepository<AssetBilling, Stri
 	 @Query("SELECT b from AssetBilling b where b.gstAmount =:gstAmount")
 	 AssetBilling getGstAmount(Integer gstAmount);
 
-	@Query("Select distinct new map (b.assetBillingId as assetBillingId, b.assetAmount as assetAmount, b.billingType as billingType,"
+	@Query("Select distinct new map (b.assetBillId as assetBillId, b.assetAmount as assetAmount, b.billingType as billingType,"
  		+ "b.gstAmount as gstAmount,b.billPhotoUrl as billPhotoUrl,b.returnDate as returnDate,"
  		+ "b.assetVendor as assetVendor) from AssetBilling b Inner Join Asset a ON b.asset = a.assetId where b.billingType = 'return' ")
 	 AssetBilling getReturnFromRepair(AssetBilling assetBilling);
@@ -53,7 +53,7 @@ public interface AssetBillingRepository extends JpaRepository<AssetBilling, Stri
 	@Query("SELECT b from AssetBilling b where b.amountPaid =:amountPaid") 
 	AssetBilling getAmountPaidAmount(Integer amountPaid);
 	
-	@Query("Select distinct new map(b.aId as aId, b.billingType as billingType, b.underWarrenty as underWarrenty, "
+	@Query("Select distinct new map(b.asset as asset, b.billingType as billingType, b.underWarrenty as underWarrenty, "
 			+ "b.assetAmount as assetAmount, b.gstAmount as gstAmount, "
 			+ "b.transactionDate as transactionDate, b.assetVendor as assetVendor, "
 			+ "b.billPhotoUrl as billPhotoUrl,b.assetIssues as assetIssues, b.returnDate as returnDate, b.amountPaid as amountPaid) from AssetBilling b" )
