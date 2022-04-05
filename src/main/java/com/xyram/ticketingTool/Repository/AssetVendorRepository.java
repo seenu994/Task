@@ -12,14 +12,14 @@ import com.xyram.ticketingTool.entity.AssetVendor;
 public interface AssetVendorRepository  extends JpaRepository<AssetVendor, String> {
 	
 	
-	//@Query("select new map( p.vendorName as vendorName, p.mobileNo as mobileNo, p.email as email, p.city as city, p.country as country, "
-			 //+ "p.assetVendorStatus as assetVendorStatus) from AssetVendor p where p.assetVendorStatus != 'INACTIVE'") 
+//	@Query("select new map( p.vendorName as vendorName, p.mobileNo as mobileNo, p.email as email, p.city as city, p.country as country, "
+//			 + "p.assetVendorStatus as assetVendorStatus) from AssetVendor p where p.assetVendorStatus != 'INACTIVE'") 
 //List<Map> 	findVendorDetailswithVendorId();
 
-		return assetVendor;
-//	@Query("Select distinct p from AssetVendor p where p.assetVendor=:id and p.status != 'INACTIVE'")
-//	Projects getVendorById(String id);
-//	
+		
+	@Query("Select distinct p from AssetVendor p where p.assetVendor=:id and p.status != 'INACTIVE'")
+	AssetVendor getVendorById(String id);
+	
 
 	
 //	String filterByEmail(String email);	
@@ -34,8 +34,6 @@ public interface AssetVendorRepository  extends JpaRepository<AssetVendor, Strin
 	 	 
 	@Query("Select e.email from AssetVendor e where e.email = :email")
 	String filterByEmail(String email);
-
-	AssetVendor getByvendorId(String assetId);
 //
 //	@Query("Select distinct new map(p.vendorID as vendorID, p.vendorID asvendorID, p.vendorName as vendorName, p.mobileNo as mobileNo, p.email as Email, p.City as City,Country as Country,"
 //			  + "e.Status as Status) from AssetVendor p where p.Status != 'INACTIVE'")

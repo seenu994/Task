@@ -173,15 +173,11 @@ public class AssestVendorServiceImpl implements AssetvendorService {
 //		return response;
 //	}
 //
-//	@Override
-//	public ApiResponse getAllVendorList() {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
+
 
 	
 	
-		//return null;
+		
 		
 
 }

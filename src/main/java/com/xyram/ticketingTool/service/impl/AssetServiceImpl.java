@@ -112,7 +112,7 @@ public class AssetServiceImpl implements AssetService {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "vendor id is mandatory");
 		} else {
 			// Validate Vendor
-			AssetVendor vendor = assetVendorRepository.getByvendorId(asset.getAssetId());
+			AssetVendor vendor = assetVendorRepository.getVendorById(asset.getAssetId());
 			if (vendor == null) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "vendor id is not valid");
 			}
@@ -372,7 +372,7 @@ public class AssetServiceImpl implements AssetService {
 
 
 	private boolean checkVId(String getvId) {
-    	AssetVendor vendor = assetVendorRepository.getByvendorId(getvId);
+    	AssetVendor vendor = assetVendorRepository.getVendorById(getvId);
 		if (vendor == null) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "vendor id is not valid");
 		}
