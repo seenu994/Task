@@ -22,9 +22,11 @@ public enum JobOpeningStatus {
 	public static JobOpeningStatus toEnum(String value) {
 		Optional<JobOpeningStatus> optional = Arrays.stream(values()).filter(e -> e.value.equalsIgnoreCase(value))
 				.findFirst();
-		if (optional.isPresent())
+		if (optional.isPresent()) {
 			return optional.get();
-		else
+		}
+		else {
 			throw new IllegalArgumentException(value + " is not a valid status");
+		}
 	}
 }

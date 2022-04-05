@@ -36,19 +36,21 @@ public class AssetController {
 		return assetService.addasset(asset);
 	}
 	
-	/*
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editAsset/{assetId}"})
+    public ApiResponse editAsset(@RequestBody Asset asset,@PathVariable String id) {
+		logger.info("Received request to edit Asset");
+		return assetService.editAsset(asset,id);
+	}
+	
+	
     @GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllAsset"})
     public ApiResponse getAllAssets (Pageable pageable) {
 	        logger.info("inside AssetContoller :: getAllAssets");
 			return assetService.getAllAssets(pageable);
 	}
     
-    @PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editAsset"})
-    public ApiResponse editAsset(@RequestBody Asset AssetRequest) {
-		logger.info("inside AssetContoller :: editAsset");
-		return assetService.editAsset(AssetRequest);
-	}
     
+    /*
     @GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/searchAsset"})
     public ApiResponse searchAsset(@PathVariable String searchaid) {
 		logger.info("inside AsssetContoller :: searchAsset ");

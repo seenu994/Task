@@ -5,13 +5,20 @@ import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import com.xyram.ticketingTool.admin.model.User;
+import com.xyram.ticketingTool.id.generator.IdGenerator;
+import com.xyram.ticketingTool.id.generator.IdPrefix;
 
 
 @Entity
@@ -20,67 +27,70 @@ import com.xyram.ticketingTool.admin.model.User;
 public class Asset {
 
 	@Id
-	@Column(name = "Asset_Id")
-	private String aId;
+	@IdPrefix(value = "ASS")
+	@GeneratedValue(generator = IdGenerator.ID_GENERATOR)
+	@GenericGenerator(name = IdGenerator.ID_GENERATOR, strategy = "com.xyram.ticketingTool.id.generator.IdGenerator")
+	@Column(name = "asset_id")
+	private String assetId;
 	
-
-	@Column(name = "Vendor_Id")
-	private String vId;
+	@Column(name = "vendor_id")
+	private String vendorId;
 	
 //	@OneToOne(cascade = { CascadeType.MERGE })
 //	@JoinColumn(name = "VendorId")
 //	private AssetVendor vendorId;
 
-	@Column(name = "Brand")
+	@Column(name = "brand")
 	private String brand;
 
-	@Column(name = "Purchase_Date")
+	@Column(name = "purchase_date")
 	public Date purchaseDate;
 
-	@Column(name = "Model_No")
+	@Column(name = "model_no")
 	private String modelNo;
 	
     
-	@Column(name = "Serial_No", unique = true)
+	@Column(name = "serial_no", unique = true)
 	private String serialNo;
 
-	@Column(name = "Warranty_Date")
+	@Column(name = "warranty_date")
 	private Date warrantyDate;
 
-	@Column(name = "Ram")
+	@Column(name = "ram")
 	private String ram;
 	
-	@Column(name = "Bag_Available")
+	@Column(name = "bag_available")
 	private boolean bagAvailable;
 
-	@Column(name = "Powercord_Available")
+	@Column(name = "powercord_available")
 	private boolean powercordAvailable;
 
-	@Column(name = "Mouse_Available")
+	@Column(name = "mouse_available")
 	private boolean mouseAvailable;
 
-	@Column(name = "Asset_Photo_Url")
+	@Column(name = "asset_photo_url")
 	private String assetPhotoUrl;
 	
-	@Column(name = "Asset_Status")
+	@Column(name = "asset_status")
 	private String assetStatus;
 	
-	
+	@Column(name = "assigned_to")
+	private String assignedTo;
 
-	public String getaId() {
-		return aId;
+	public String getAssetId() {
+		return assetId;
 	}
 
-	public void setaId(String aId) {
-		this.aId = aId;
+	public void setAssetId(String assetId) {
+		this.assetId = assetId;
 	}
 
-	public String getvId() {
-		return vId;
+	public String getVendorId() {
+		return vendorId;
 	}
 
-	public void setvId(String vId) {
-		this.vId = vId;
+	public void setVendorId(String vendorId) {
+		this.vendorId = vendorId;
 	}
 
 	public String getBrand() {
@@ -94,7 +104,6 @@ public class Asset {
 	public Date getPurchaseDate() {
 		return purchaseDate;
 	}
-	
 
 	public void setPurchaseDate(Date purchaseDate) {
 		this.purchaseDate = purchaseDate;
@@ -171,6 +180,18 @@ public class Asset {
 	public void setAssetStatus(String assetStatus) {
 		this.assetStatus = assetStatus;
 	}
+
+	public String getAssignedTo() {
+		return assignedTo;
+	}
+
+	public void setAssignedTo(String assignedTo) {
+		this.assignedTo = assignedTo;
+	}
+	
+	//@ManyToOne(cascade = { CascadeType.},fetch = FetchType.)
+//	@JoinColumn( name = "employee_id")
+//	private Employee employee;
 	
 
 	

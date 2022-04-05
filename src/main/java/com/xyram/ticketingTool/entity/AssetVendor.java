@@ -22,8 +22,8 @@ public class AssetVendor  {
 @IdPrefix(value = "VE")
 @GeneratedValue(generator = IdGenerator.ID_GENERATOR)
 @GenericGenerator(name = IdGenerator.ID_GENERATOR, strategy = "com.xyram.ticketingTool.id.generator.IdGenerator")
-       @Column(name="VendorID")
-       private String vendorID;
+       @Column(name="vendorId")
+       private String vendorId;
 	
 
 		@Column(name="Address")
@@ -49,12 +49,14 @@ public class AssetVendor  {
 		@Column(name="Status")
 		private String Status;
 
-		public String getVendorID() {
-			return vendorID;
+		
+
+		public String getVendorId() {
+			return vendorId;
 		}
 
-		public void setVendorID(String vendorID) {
-			this.vendorID = vendorID;
+		public void setVendorId(String vendorId) {
+			this.vendorId = vendorId;
 		}
 
 		public String getAddress() {

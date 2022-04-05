@@ -169,6 +169,16 @@ public interface ResponseMessages {
 
 	String EMP_ID_INVALID = "Already Asset is assigned to Employee";
 
+	String ASSET_EMPLOYEE_ADDED = "Asset Employee Added Successfully";
+
+	String ASSET_EMPLOYEE_NOT_ADDED = "Asset Employee not added";
+
+	String ASSET_EMPLOYEE_EDITED = "Asset Employee edited successfully";
+
+	String ASSET_SOFTWARE_ADDED = "Asset Software Added Successfully";
+
+	String ASSET_SOFTWARE_NOT_ADDED = "Asset Software not added";
+
 	//String VENDOR_ID_ADDED = "Vendor Id added successfully";
 	
 	
