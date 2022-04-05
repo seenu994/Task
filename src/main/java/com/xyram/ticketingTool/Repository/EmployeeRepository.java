@@ -242,10 +242,11 @@ List<Employee> getEmployeeByRole();
 	Employee getEmployeeNameByScoleID(String geteId);
 
 	@Query("SELECT e from Employee e  where e.eId = :referredEmployeeId")
-
 	Employee getEmployeeNameByScoleId(String referredEmployeeId);
+	
 	@Query("SELECT e from Employee e ")
 	Employee getAllEmployy();
+	
 	@Query("SELECT e from Employee e  left join JobApplication j On e.eId=j.referredEmployeeId and  j.referredEmployeeId=:referredEmployeeId")
 	List<Employee> getRefereEmployee(String referredEmployeeId);
 	@Query("Select e from Employee e "
@@ -270,6 +271,10 @@ List<Employee> getEmployeeByRole();
 	@Query("select e from Employee e left join User u On e.userCredientials.id=u.id where e.eId= :userId ")
 
 	Employee getByEmpIdssss(String userId);
+	
+	
+    @Query("select e from Employee e where e.firstName = :firstName")
+	Employee getByEmpName(String firstName);
 
 	
 

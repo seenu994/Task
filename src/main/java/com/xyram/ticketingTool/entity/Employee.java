@@ -1,5 +1,7 @@
 package com.xyram.ticketingTool.entity;
 
+import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,6 +10,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
@@ -86,7 +89,18 @@ public class Employee extends AuditModel {
 	@JoinColumn(name = "wing_id")
     private CompanyWings wings;
 	
+//	@OneToMany(mappedBy = "employee")
+//    private Set<Asset> asset;
 	
+	
+//	public Set<Asset> getAsset() {
+//		return asset;
+//	}
+//
+//	public void setAsset(Set<Asset> asset) {
+//		this.asset = asset;
+//	}
+
 	public String geteId() {
 		return eId;
 	}

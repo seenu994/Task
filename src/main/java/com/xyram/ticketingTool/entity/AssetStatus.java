@@ -11,18 +11,32 @@ import javax.persistence.Table;
 public class AssetStatus {
     
 	@Id
-	@Column(name = "Asset_Id")
-	private String assetId;
+	@Column(name = "asset_status_id")
+	private String assetStatusId;
 	
-	@Column(name = "asset_available")
-	private boolean assetAvailable;
+	@Column(name = "status_name")
+	private String statusName;
+
+	public String getAssetStatusId() {
+		return assetStatusId;
+	}
+
+	public void setAssetStatusId(String assetStatusId) {
+		this.assetStatusId = assetStatusId;
+	}
+
+	public String getStatusName() {
+		return statusName;
+	}
+
+	public void setStatusName(String statusName) {
+		this.statusName = statusName;
+	}
+
+
 	
-	@Column(name = "asset_allotted")
-	private boolean assetAllotted;
 	
-	@Column(name = "asset_repair")
-	private boolean assetRepair;
 	
-	@Column(name = "asset_damaged_broken")
-	private boolean assetDamagedBroken;
+	
+	
 }
