@@ -17,7 +17,7 @@ public interface AssetVendorRepository  extends JpaRepository<AssetVendor, Strin
 //List<Map> 	findVendorDetailswithVendorId();
 
 		
-	@Query("Select distinct p from AssetVendor p where p.assetVendor=:id and p.status != 'INACTIVE'")
+	@Query("Select distinct p from AssetVendor p where p.vendorId=:id and p.assetVendorStatus != 'INACTIVE'")
 	AssetVendor getVendorById(String id);
 	
 

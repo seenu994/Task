@@ -16,8 +16,8 @@ public interface AssetService {
 	ApiResponse addasset(Asset asset);
 	
 	ApiResponse editAsset(Asset asset, String id);
-	
-    ApiResponse getAllAssets(Pageable pageable);
+
+	ApiResponse getAllAsset(Pageable pageable);
 
 //	ApiResponse searchAsset(String searchString);
 	

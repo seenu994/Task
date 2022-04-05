@@ -44,9 +44,9 @@ public class AssetController {
 	
 	
     @GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllAsset"})
-    public ApiResponse getAllAssets (Pageable pageable) {
-	        logger.info("inside AssetContoller :: getAllAssets");
-			return assetService.getAllAssets(pageable);
+    public ApiResponse getAllAsset(Pageable pageable) {
+	        logger.info("Received request to get all Asset");
+			return assetService.getAllAsset(pageable);
 	}
     
     

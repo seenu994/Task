@@ -327,7 +327,6 @@ public class AssetServiceImpl implements AssetService {
 	
 	private boolean checkWarrantyDate(Date warrantyDate) {
 		
-		
 //		Asset purchaseDate = assetRepository.getByPurchaseDate(Id);
 //		Date d1 = purchaseDate;
 //		Date d2 = warrantyDate;
@@ -370,7 +369,7 @@ public class AssetServiceImpl implements AssetService {
 	}
 
 	@Override
-	public ApiResponse getAllAssets(Pageable pageable) {
+	public ApiResponse getAllAsset(Pageable pageable) {
 
 		ApiResponse apiResponse = new ApiResponse();
 		Page<Map> assets = assetRepository.getAllAsset(pageable);

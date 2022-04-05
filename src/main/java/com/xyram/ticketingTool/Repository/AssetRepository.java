@@ -25,54 +25,22 @@ import com.xyram.ticketingTool.entity.Role;
 @Repository
 @Transactional
 public interface AssetRepository extends JpaRepository<Asset, String>{
-	
-	
-	
 
 	@Query("SELECT a from Asset a where a.assetId =:assetId")
 	Asset getByassetId(String assetId);
-
-//	@Query("SELECT a from Asset a where a.assignedTo =:assignedTo")
-//	Asset getByAssignedTo(String assignedTo);
-
 	
-        @Query("Select distinct new map(a.assetId as assetId,a.vendorId as vendorId,"		
-            + "a.brand as brand,a.purchaseDate as purchaseDate,a.modelNo as modelNo,"
-			+ "a.serialNo as serialNo,a.warrantyDate as warrantyDate,a.ram as ram,"
-		    + "a.assetStatus as assetStatus, a.assignedTo as assignedTo) from Asset a")
-        Page<Map> getAllAsset(Pageable pageable);
+    @Query("Select distinct new map(a.assetId as assetId,a.vendorId as vendorId,"		
+        + "a.brand as brand,a.purchaseDate as purchaseDate,a.modelNo as modelNo,"
+		+ "a.serialNo as serialNo,a.warrantyDate as warrantyDate,a.ram as ram,"
+	    + "a.assetStatus as assetStatus, a.assignedTo as assignedTo) from Asset a")
+    Page<Map> getAllAsset(Pageable pageable);
 
-        
-		
-
-		
-
-//        @Query("select a from Asset a where a.purchaseDate = :purchaseDate")
+//      @Query("select a from Asset a where a.purchaseDate = :purchaseDate")
 //		Date getBypurchaseDate(Date purchaseDate);
-//
-//        @Query("select a from Asset a where a.warrantyDate = :warrantyDate")
-//		Asset getByaId(Date warrantyDate);
 
-//        @Query("select a from Asset a where a.purchaseDate = :purchaseDate")
-//		Date getbyPurchaseDate(Date aId);
-
-		
-	        
-	//Asset findAll(String getaId);
-
-	
-    //@Query("Select a Asset a where a.aId=:aId")
-	//Asset getaId(Asset getaId);
-
-	//Asset getAssetAmount(Integer assetAmount);
-
-	
-
-	
-
-	//@Query("SELECT a.purchasDate from Asset a where a.purchaseDate =:purchaseDate")
-	//Asset getByDate(Date purchaseDate);
-   
+        @Query("select a.assetId from Asset a where a.warrantyDate = :warrantyDate")
+		Asset getByaId(Date warrantyDate);
+    
 	/*
 	@Query("Select distinct new map(a.aId as aId,a.vId as vId,"
 			+ "a.brand as brand,a.purchasedate as purchasedate,a.model as model,"
