@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.transaction.Transactional;
+
 import org.hibernate.metamodel.model.convert.spi.JpaAttributeConverter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +23,7 @@ import com.xyram.ticketingTool.entity.Role;
 
 
 @Repository
+@Transactional
 public interface AssetRepository extends JpaRepository<Asset, String>{
 	
 	
@@ -57,6 +60,16 @@ public interface AssetRepository extends JpaRepository<Asset, String>{
 	        
 	//Asset findAll(String getaId);
 
+	
+    //@Query("Select a Asset a where a.aId=:aId")
+	//Asset getaId(Asset getaId);
+
+	//Asset getAssetAmount(Integer assetAmount);
+
+	
+
+	
+
 	//@Query("SELECT a.purchasDate from Asset a where a.purchaseDate =:purchaseDate")
 	//Asset getByDate(Date purchaseDate);
    
@@ -80,9 +93,9 @@ public interface AssetRepository extends JpaRepository<Asset, String>{
 	@Query("SELECT a from Asset a where a.vId=:id")
 	Asset findAssetByvId(String id);
 
-	ApiResponse save(ApiResponse addasset);
+	ApiResponse save(ApiResponse addasset);*/
 
-	*/
+	
 
 
 }

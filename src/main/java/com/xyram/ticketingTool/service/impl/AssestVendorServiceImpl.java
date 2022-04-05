@@ -10,15 +10,33 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.xyram.ticketingTool.Repository.AssetBillingRepository;
 import com.xyram.ticketingTool.Repository.AssetVendorRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.AssetVendor;
+import com.xyram.ticketingTool.service.AssetBillingService;
 import com.xyram.ticketingTool.service.AssetvendorService;
 import com.xyram.ticketingTool.util.ResponseMessages;
 
 @Service
 @Transactional
-public class AssestVendorServiceImpl implements AssetvendorService {
+public class AssestVendorServiceImpl implements AssetvendorService 
+{
+	@Autowired
+	AssetVendorRepository  assetVendorRepository;
+	
+	@Autowired
+	AssetvendorService assetVendorService;
+	
+	@Autowired
+	AssetBillingService assetBillingService;
+	
+	
+	
+	public ApiResponse getAllAssestVendor(AssetVendor vendor) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	/*private final Logger logger = LoggerFactory.getLogger(AssestVendorServiceImpl.class);
 
 	@Autowired
@@ -41,6 +59,12 @@ public class AssestVendorServiceImpl implements AssetvendorService {
        }
 	return response;
 	
+	}*/
+
+	//@Override
+	/*public AssetVendor getAllAssestVendor(String vendorID) {
+		// TODO Auto-generated method stub
+		return null;
 	}*/
 
 	
