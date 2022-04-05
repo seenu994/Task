@@ -1,48 +1,83 @@
-/*
- * package com.xyram.ticketingTool.controller;
- * 
- * import java.awt.print.Pageable;
- * 
- * import org.springframework.beans.factory.annotation.Autowired; import
- * org.springframework.web.bind.annotation.CrossOrigin; import
- * org.springframework.web.bind.annotation.GetMapping; import
- * org.springframework.web.bind.annotation.PostMapping; import
- * org.springframework.web.bind.annotation.PutMapping; import
- * org.springframework.web.bind.annotation.RequestBody; import
- * org.springframework.web.bind.annotation.RestController;
- * 
- * import com.itextpdf.text.log.LoggerFactory; import
- * com.xyram.ticketingTool.apiresponses.ApiResponse; import
- * com.xyram.ticketingTool.entity.AssetBilling; import
- * com.xyram.ticketingTool.service.AssetBillingService; import
- * com.xyram.ticketingTool.util.AuthConstants;
- * 
- * import ch.qos.logback.classic.Logger;
- * 
- * @RestController
- * 
- * @CrossOrigin public class AssetBillingController { private final
- * com.itextpdf.text.log.Logger logger =
- * LoggerFactory.getLogger(AssetBillingController.class);
- * 
- * @Autowired AssetBillingService assetBillingService;
- * 
- * @PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/createAssetBilling"
- * }) public ApiResponse addAssetBilling(@RequestBody AssetBilling assetBilling)
- * { logger.info("received request to add assetBilling"); return
- * assetBillingService.addAssetBilling(assetBilling); }
- * 
- * @PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/createAssetBilling" })
- * public ApiResponse editAssetBilling(@RequestBody AssetBilling assetBilling) {
- * logger.info("received request to edit assetBilling"); return
- * assetBillingService.editAssetBilling(assetBilling); }
- * 
- * @GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/createAssetBilling" })
- * public ApiResponse getAllAssetBilling(Pageable pageable) {
- * logger.info("received request to edit assetBilling"); return
- * assetBillingService.getAllAssetBilling(pageable); } }
- * 
- * 
- * 
- * 
- */
+package com.xyram.ticketingTool.controller;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.xyram.ticketingTool.apiresponses.ApiResponse;
+import com.xyram.ticketingTool.entity.AssetBilling;
+import com.xyram.ticketingTool.service.AssetBillingService;
+import com.xyram.ticketingTool.util.AuthConstants;
+
+
+
+@RestController
+@CrossOrigin
+public class AssetBillingController 
+{
+    private final Logger logger = LoggerFactory.getLogger(AssetBillingController.class);
+    
+	@Autowired
+	AssetBillingService assetBillingService;
+	
+	/*@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/createAssetBilling"})
+	public ApiResponse addAssetBilling(@RequestBody AssetBilling assetBilling)
+	{
+		logger.info("received request to add assetBilling");
+		return assetBillingService.addAssetBilling(assetBilling);
+	}*/
+	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/createPuchaseAssetBill"})
+	public ApiResponse addPurchaseAssetBill(@RequestBody AssetBilling assetBilling)
+	{
+		logger.info("received request to add assetBilling");
+		return assetBillingService.addPurchaseAssetBill(assetBilling);
+	}
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editPuchaseAssetBill"})
+	public ApiResponse editPurchaseAssetBill(@RequestBody AssetBilling assetBilling)
+	{
+		logger.info("received request to edit asset purchase bill");
+		return assetBillingService.editPurchaseAssetBill(assetBilling);
+	}
+	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/createRepairAssetBill"})
+	public ApiResponse addRepairAssetBill(@RequestBody AssetBilling assetBilling)
+	{
+		logger.info("received request to add assetBilling");
+		return assetBillingService.addRepairAssetBill(assetBilling);
+	}
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editRepairAssetBill"})
+	public ApiResponse editRepairAssetBill(@RequestBody AssetBilling assetBilling)
+	{
+		logger.info("received request to edit asset purchase bill");
+		return assetBillingService.editRepairAssetBill(assetBilling);
+	}
+	
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/returnFromRepair" })
+	public ApiResponse returnFromRepair(@RequestBody AssetBilling assetBilling)
+	{
+		logger.info("received request to return from repair");
+		return assetBillingService.returnFromRepair(assetBilling);
+	}
+	
+	/*@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editAssetBilling" })
+	public ApiResponse editAssetBilling(@RequestBody AssetBilling assetBilling)
+	{
+		logger.info("received request to edit assetBilling");
+		return assetBillingService.editAssetBilling(assetBilling);
+	}*/
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllAssetBillingList" })
+	public ApiResponse getAllAssetBillingList()
+	{
+		logger.info("received request to get all assetBilling list");
+		return assetBillingService.getAllAssetBillingList();
+    }
+}
+
+
+
+

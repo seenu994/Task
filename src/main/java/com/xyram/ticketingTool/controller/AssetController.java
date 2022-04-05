@@ -1,6 +1,6 @@
 package com.xyram.ticketingTool.controller;
 
-import org.slf4j.Logger;
+/*import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -24,11 +24,10 @@ import com.xyram.ticketingTool.util.AuthConstants;
 @RestController
 
 public class AssetController {
-	/*private final Logger logger = LoggerFactory.getLogger(AssetController.class);
+	private final Logger logger = LoggerFactory.getLogger(AssetController.class);
 	
 	@Autowired
 	AssetService assetService;
-	
 	
 	
 	
@@ -54,6 +53,6 @@ public class AssetController {
     public ApiResponse searchAsset(@PathVariable String searchString) {
 		logger.info("inside AsssetContoller :: searchAsset ");
 		return assetService.searchAsset(searchString);
-	}*/
+	}
 	
-}
+}*/

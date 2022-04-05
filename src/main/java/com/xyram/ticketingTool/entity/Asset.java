@@ -1,5 +1,7 @@
 package com.xyram.ticketingTool.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -8,7 +10,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "asset")
-public class Asset {
+public class Asset implements Serializable {
 
 	@Id
 	@Column(name = "asset_id")
@@ -21,139 +23,220 @@ public class Asset {
 	private String brand;
 
 	@Column(name = "purchase_date")
-	private String purchasedate;
+	private String purchaseDate;
 
 	@Column(name = "model")
 	private String model;
 
 	@Column(name = "serial_no")
-	private String serialno;
+	private String serialNo;
 
 	@Column(name = "waranty_date")
-	private String warantydate;
+	private String warantyDate;
 
-	@Column(name = "RAM")
+	@Column(name = "ram")
 	private String ram;
 	
 	@Column(name = "bag_available")
-	private String bagavailable;
+	private boolean bagAvailable;
 
 	@Column(name = "powercord_available")
-	private String powercordavailable;
+	private boolean powercordAvailable;
 
 	@Column(name = "mouse_available")
-	private String mouseavailable;
+	private boolean mouseAvailable;
 
-	@Column(name = "asset_photo_URL")
-	private String assetphotourl;
+	@Column(name = "asset_photo_url")
+	private String assetPhotoUrl;
 	
 	@Column(name = "asset_status")
-	private String assetstatus;
+	private String assetStatus;
+	
+	
 
+	
 	public String getaId() {
 		return aId;
 	}
 
-	public void setaId(String aId) {
+    public void setaId(String aId) {
 		this.aId = aId;
-		
 	}
+
+
+
 
 	public String getvId() {
 		return vId;
 	}
 
+
+
+
 	public void setvId(String vId) {
 		this.vId = vId;
 	}
+
+
+
 
 	public String getBrand() {
 		return brand;
 	}
 
+
+
+
 	public void setBrand(String brand) {
 		this.brand = brand;
 	}
 
-	public String getPurchasedate() {
-		return purchasedate;
+
+
+
+	public String getPurchaseDate() {
+		return purchaseDate;
 	}
 
-	public void setPurchasedate(String purchasedate) {
-		this.purchasedate = purchasedate;
+
+
+
+	public void setPurchaseDate(String purchaseDate) {
+		this.purchaseDate = purchaseDate;
 	}
+
+
+
 
 	public String getModel() {
 		return model;
 	}
 
+
+
+
 	public void setModel(String model) {
 		this.model = model;
 	}
 
-	public String getSerialno() {
-		return serialno;
+
+
+
+	public String getSerialNo() {
+		return serialNo;
 	}
 
-	public void setSerialno(String serialno) {
-		this.serialno = serialno;
+
+
+
+	public void setSerialNo(String serialNo) {
+		this.serialNo = serialNo;
 	}
 
-	public String getWarantydate() {
-		return warantydate;
+
+
+
+	public String getWarantyDate() {
+		return warantyDate;
 	}
 
-	public void setWarantydate(String warantydate) {
-		this.warantydate = warantydate;
+
+
+
+	public void setWarantyDate(String warantyDate) {
+		this.warantyDate = warantyDate;
 	}
+
+
+
 
 	public String getRam() {
 		return ram;
 	}
 
+
+
+
 	public void setRam(String ram) {
 		this.ram = ram;
 	}
 
-	public String getBagavailable() {
-		return bagavailable;
+
+
+
+	public boolean getBagAvailable() {
+		return bagAvailable;
 	}
 
-	public void setBagavailable(String bagavailable) {
-		this.bagavailable = bagavailable;
+
+
+
+	public void setBagAvailable(boolean bagAvailable) {
+		this.bagAvailable = bagAvailable;
 	}
 
-	public String getPowercordavailable() {
-		return powercordavailable;
+
+
+
+	public boolean getPowercordAvailable() {
+		return powercordAvailable;
 	}
 
-	public void setPowercordavailable(String powercordavailable) {
-		this.powercordavailable = powercordavailable;
+
+
+
+	public void setPowercordAvailable(boolean powercordAvailable) {
+		this.powercordAvailable = powercordAvailable;
 	}
 
-	public String getMouseavailable() {
-		return mouseavailable;
+
+
+
+	public boolean getMouseAvailable() {
+		return mouseAvailable;
 	}
 
-	public void setMouseavailable(String mouseavailable) {
-		this.mouseavailable = mouseavailable;
+
+
+
+	public void setMouseAvailable(boolean mouseAvailable) {
+		this.mouseAvailable = mouseAvailable;
 	}
 
-	public String getAssetphotourl() {
-		return assetphotourl;
+
+
+
+	public String getAssetPhotoUrl() {
+		return assetPhotoUrl;
 	}
 
-	public void setAssetphotourl(String assetphotourl) {
-		this.assetphotourl = assetphotourl;
+
+
+
+	public void setAssetPhotoUrl(String assetPhotoUrl) {
+		this.assetPhotoUrl = assetPhotoUrl;
 	}
 
-	public String getAssetstatus() {
-		return assetstatus;
+
+
+
+	public String getAssetStatus() {
+		return assetStatus;
 	}
 
-	public void setAssetstatus(String assetstatus) {
-		this.assetstatus = assetstatus;
+
+
+
+	public void setAssetStatus(String assetStatus) {
+		this.assetStatus = assetStatus;
 	}
+
+
+
+
+	
+
+	
 
 	
 }
