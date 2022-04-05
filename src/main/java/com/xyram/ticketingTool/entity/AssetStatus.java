@@ -5,10 +5,12 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.xyram.ticketingTool.baseData.model.AuditModel;
+
 @Entity
 @Table(name = "asset_status")
 
-public class AssetStatus {
+public class AssetStatus extends AuditModel {
     
 	@Id
 	@Column(name = "asset_status_id")
