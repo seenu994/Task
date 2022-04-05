@@ -2,30 +2,30 @@ package com.xyram.ticketingTool.service;
 
 import java.awt.print.Pageable;
 
-import javax.transaction.Transactional;
-
-import org.springframework.stereotype.Service;
-
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.AssetVendor;
 
-@Service
-@Transactional
-public interface AssetvendorService 
-{
-
-	//AssetVendor getAllAssestVendor(String string);
-
-	//AssetVendor getAllAssestVendor(AssetVendor vendor);
-
-	//ApiResponse getAllAssestVendor(AssetVendor vendor);
-
-	//AssetVendor getAllAssestVendor(String vendorID);
-	
-    // ApiResponse addAssestVendor(AssetVendor vendor);
+public interface AssetvendorService {
 	
 
-	ApiResponse getAllAssestVendor(AssetVendor assetVendor);
+	ApiResponse addAssestVendor(AssetVendor vendor);
+	 
+	
+     ApiResponse editassetVendor(AssetVendor AssetVendorRequest, String vendorId);
+    // ApiResponse getAllVendorList();
+
+	//ApiResponse getAllVendorList(Pageable pageable);
+
+
+	//ApiResponse getAllVendorList(AssetVendor pageable);
+
+
+	//ApiResponse getAllVendorList(Pageable pageable);
+
+// ApiResponse getAllAssetVendor();
+	
+
+
 	
 
 }
