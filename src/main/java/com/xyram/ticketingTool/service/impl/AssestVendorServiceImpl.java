@@ -140,12 +140,12 @@ public class AssestVendorServiceImpl implements AssetvendorService {
 
 	public ApiResponse validateVendorId(AssetVendor vendor) {
 		ApiResponse response = new ApiResponse(false);
-		if (vendor.getAssetVendor() != null) {
+		if (vendor.getVendorId() != null) {
 			response.setMessage("success");
 			response.setSuccess(true);
 			//response.setContent(null);
 		} else {
-			response.setMessage(ResponseMessages.VENDOR_ID_VALID);
+			response.setMessage(ResponseMessages.VENDOR_ADDED);
 			response.setSuccess(false);
 			//response.setContent(null);
 		}

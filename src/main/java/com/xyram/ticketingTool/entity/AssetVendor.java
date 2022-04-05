@@ -25,7 +25,7 @@ public class AssetVendor {
 	@GeneratedValue(generator = IdGenerator.ID_GENERATOR)
 	@GenericGenerator(name = IdGenerator.ID_GENERATOR, strategy = "com.xyram.ticketingTool.id.generator.IdGenerator")
 	@Column(name = "vendorId")
-	private String assetVendor;
+	private String vendorId;
 
 	@Column(name = "address")
 	private String address;
@@ -45,12 +45,13 @@ public class AssetVendor {
 	@Column(name = "country")
 	private String country;
 
-	public String getAssetVendor() {
-		return assetVendor;
+	
+	public String getVendorId() {
+		return vendorId;
 	}
 
-	public void setAssetVendor(String assetVendor) {
-		this.assetVendor = assetVendor;
+	public void setVendorId(String vendorId) {
+		this.vendorId = vendorId;
 	}
 
 	public AssetVendorEnum getAssetVendorStatus() {
