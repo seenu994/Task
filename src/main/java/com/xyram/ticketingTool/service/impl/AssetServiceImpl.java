@@ -386,8 +386,6 @@ public class AssetServiceImpl implements AssetService {
 	public ApiResponse getAllAssets(Pageable pageable) {
 
 		ApiResponse apiResponse = new ApiResponse();
-
-		
 		Page<Map> assets = assetRepository.getAllAsset(pageable);
 		Map content = new HashMap<>();
 		content.put("assets", assets);

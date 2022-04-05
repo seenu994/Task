@@ -10,6 +10,7 @@ import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.xyram.ticketingTool.Repository.AssetVendorRepository;
@@ -172,7 +173,7 @@ public class AssestVendorServiceImpl implements AssetvendorService {
 //	}
 //		return response;
 //	}
-//
+
 
 
 	
