@@ -17,6 +17,7 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.xyram.ticketingTool.baseData.model.AuditModel;
 import com.xyram.ticketingTool.enumType.AssetIssueStatus;
 //import com.xyram.ticketingTool.enumType.AssetIssueStatus;
 import com.xyram.ticketingTool.enumType.ProjectStatus;
@@ -25,7 +26,7 @@ import com.xyram.ticketingTool.id.generator.IdPrefix;
 
 @Entity
 @Table(name="asset_issues")
-public class AssetIssues 
+public class AssetIssues extends AuditModel
 {
 	@Id
 	/*@IdPrefix(value = "AI")
