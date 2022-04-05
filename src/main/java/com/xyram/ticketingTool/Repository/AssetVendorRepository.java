@@ -26,7 +26,7 @@ public interface AssetVendorRepository  extends JpaRepository<AssetVendor, Strin
 //	 @Query("Select distinct new map(p.vendorID as vendorID, p.vendorID asvendorID, p.vendorName as vendorName, p.mobileNo as mobileNo, p.email as Email, p.City as City,Country as Country,"
 //			  + "e.Status as Status from AssetVendor p where p.Status != 'INACTIVE'")
 	
-	//Page<Map> getAllVendorList(String scopeId, Pageable pageable);
+	//Page<Map> getAllVendorList( Pageable pageable);
 //	
 //  @Query("Select distinct new map(p.assetVendor as vendorID,  p.vendorName as vendorName, p.mobileNo as mobileNo, p.email as Email, p.city as city,country as country,"
 //	  + "e.Status as Status) from AssetVendor p where p.Status != 'INACTIVE'")
@@ -34,7 +34,9 @@ public interface AssetVendorRepository  extends JpaRepository<AssetVendor, Strin
 	 	 
 	@Query("Select e.email from AssetVendor e where e.email = :email")
 	String filterByEmail(String email);
-//
+
+	
+	//Page<Map> getAllVendorList( Pageable pageable);
 //	@Query("Select distinct new map(p.vendorID as vendorID, p.vendorID asvendorID, p.vendorName as vendorName, p.mobileNo as mobileNo, p.email as Email, p.City as City,Country as Country,"
 //			  + "e.Status as Status) from AssetVendor p where p.Status != 'INACTIVE'")
   // Page<Map> getAllVendorList(String assetVendor);

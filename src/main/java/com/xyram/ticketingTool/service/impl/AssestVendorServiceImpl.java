@@ -10,6 +10,7 @@ import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -156,24 +157,17 @@ public class AssestVendorServiceImpl implements AssetvendorService {
 
 
 //	public ApiResponse getAllVendorList(Pageable pageable) {
-//		AssetVendor vendorDetails = new AssetVendor();
-//		System.out.println(vendorDetails.getVendorName());
-//		if (vendorDetails.getVendorName() != null) {
-//
-//		} 
-//	
-//	else {
-//			Page<Map> vendorList = assetVendorRepository.getAllVendorList(vendorDetails.getAssetVendor());
+
+//			Page<Map> vendorList = assetVendorRepository.getVendorList(pageable);
 //
 //		Map content = new HashMap();
 //		content.put("VendorList", vendorList);
 //		ApiResponse response = new ApiResponse(true);
 //		response.setSuccess(true);
 //		response.setContent(content);
-//	}
 //		return response;
 //	}
-
+//
 
 
 	

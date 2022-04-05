@@ -14,7 +14,7 @@ public interface AssetvendorService {
      ApiResponse editassetVendor(AssetVendor AssetVendorRequest, String vendorId);
     // ApiResponse getAllVendorList();
 
-	ApiResponse getAllVendorList(Pageable pageable);
+//	ApiResponse getAllVendorList(Pageable pageable);
 
 
 	//ApiResponse getAllVendorList(AssetVendor pageable);
