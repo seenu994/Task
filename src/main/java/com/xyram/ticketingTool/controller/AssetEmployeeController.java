@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,14 +28,14 @@ public class AssetEmployeeController {
 	
 	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/addAssetEmployee"})
 	public ApiResponse addAssetEmployee(@RequestBody AssetEmployee assetEmployee) {
-		logger.info("Received request to add Asset");
+		logger.info("Received request to add Asset Employee");
 		return assetEmployeeService.addAssetEmployee(assetEmployee);
 	}
 	
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editAssetEmployee"})
-    public ApiResponse editAssetEmployee(@RequestBody AssetEmployee assetEmployee) {
-		logger.info("inside AssetEmployeeContoller :: editAssetEmployee");
-		return assetEmployeeService.editAssetEmployee(assetEmployee);
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editAssetEmployee/{assetId}"})
+    public ApiResponse editAssetEmployee(@RequestBody AssetEmployee assetEmployee, @PathVariable String assetId) {
+		logger.info("Received request to edit asset employee");
+		return assetEmployeeService.editAssetEmployee(assetEmployee, assetId);
 	}
 
 }

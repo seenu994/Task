@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import com.xyram.ticketingTool.enumType.AssetStatus;
+import com.xyram.ticketingTool.enumType.TicketStatus;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -22,8 +24,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.jcraft.jsch.Logger;
+import com.xyram.ticketingTool.Repository.AssetEmployeeRepository;
 import com.xyram.ticketingTool.Repository.AssetRepository;
-import com.xyram.ticketingTool.Repository.AssetStatusRepository;
 import com.xyram.ticketingTool.Repository.AssetVendorRepository;
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
 import com.xyram.ticketingTool.Repository.ProjectRepository;
@@ -32,17 +34,19 @@ import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
 import com.xyram.ticketingTool.entity.Announcement;
 import com.xyram.ticketingTool.entity.Asset;
-import com.xyram.ticketingTool.entity.AssetStatus;
+import com.xyram.ticketingTool.entity.AssetEmployee;
 import com.xyram.ticketingTool.entity.AssetVendor;
 import com.xyram.ticketingTool.entity.CompanyWings;
 import com.xyram.ticketingTool.entity.DateValidatorUsingDateFormat;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.JobOpenings;
+import com.xyram.ticketingTool.entity.JobVendorDetails;
 import com.xyram.ticketingTool.entity.Role;
 import com.xyram.ticketingTool.service.AssetService;
 import com.xyram.ticketingTool.service.EmployeeService;
 import com.xyram.ticketingTool.util.ResponseMessages;
 
+import io.swagger.models.Response;
 import io.swagger.models.properties.StringProperty.Format;
 
 @Service
@@ -53,19 +57,13 @@ public class AssetServiceImpl implements AssetService {
 	AssetRepository assetRepository;
 	
 	@Autowired
-	AssetServiceImpl assetServiceImpl;
-
-	@Autowired
-	AssetService assetService;
-
-	@Autowired
 	EmployeeRepository employeeRepository;
+	
+	@Autowired
+	AssetEmployeeRepository assetEmployeeRepository;
 
 	@Autowired
 	AssetVendorRepository assetVendorRepository;
-
-	@Autowired
-	AssetStatusRepository assetStatusRepository;
 
 	String[] brandList = { "Lg", "Dell", "Lenovo", "Acer", "Hp" };
 
@@ -108,11 +106,11 @@ public class AssetServiceImpl implements AssetService {
 //		private String assetStatus; Mandatory - BE should update 
 
 		// Validate Vendor
-		if (asset.getAssetId() == null || asset.getAssetId().equals("")) {
+		if (asset.getVendorId() == null || asset.getVendorId().equals("")) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "vendor id is mandatory");
 		} else {
 			// Validate Vendor
-			AssetVendor vendor = assetVendorRepository.getVendorById(asset.getAssetId());
+			AssetVendor vendor = assetVendorRepository.getVendorById(asset.getVendorId());
 			if (vendor == null) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "vendor id is not valid");
 			}
@@ -191,15 +189,10 @@ public class AssetServiceImpl implements AssetService {
 			}
 
 			// Validate asset status
-			if (asset.getAssetStatus() == null || asset.getAssetStatus().equals("")) {
+			if (asset.getAssetStatus() == null) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset status is mandatory");
-			} else {
-				// Validate asset status
-				AssetStatus status = assetStatusRepository.getByStatusName(asset.getAssetStatus());
-				if (status == null) {
-					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset status is not valid");
-				}
-			}
+			} 
+			
 
 			// Validate assignedTo emp_id
 			if (asset.getAssignedTo() != null) {
@@ -208,14 +201,9 @@ public class AssetServiceImpl implements AssetService {
 				if (employee == null) {
 					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "employee id is not valid");
 				}
-			 }
-//				Asset asset1 = assetRepository.getByAssignedTo(asset.getAssignedTo());
-//				if(asset1 != null) {
-//					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "already asset is assigned to that employee");
-//				}
-//			}
+			 }	
+			
 			response.setSuccess(true);
-
 			return response;
 		}
 	}
@@ -223,13 +211,12 @@ public class AssetServiceImpl implements AssetService {
 	@Override
 	public ApiResponse editAsset(Asset asset,String Id) {
 
-		ApiResponse response = new ApiResponse(false);
+		ApiResponse response = new ApiResponse();
 
 		Asset assetObj = assetRepository.getByassetId(Id);
 		
 		if (assetObj != null) {
 			
-			//if (response.isSuccess()) {
 		    if(asset.getVendorId() != null) {
 		    	checkVId(asset.getVendorId());
 		    	assetObj.setVendorId(asset.getVendorId());
@@ -242,7 +229,7 @@ public class AssetServiceImpl implements AssetService {
 		    	assetObj.setPurchaseDate(new Date());
 		    }
 		    if(asset.getWarrantyDate() != null) {
-		    	checkWarrantyDate(asset.getWarrantyDate());
+		    	checkWarrantyDate(asset.getWarrantyDate(), Id);
 		    	assetObj.setWarrantyDate(new Date());
 		    }
 		    if(asset.getModelNo() != null) {
@@ -258,7 +245,6 @@ public class AssetServiceImpl implements AssetService {
 		    	assetObj.setRam(asset.getRam());
 		    }
 		    if(asset.getAssetStatus() != null) {
-		    	checkAssetStatus(asset.getAssetStatus());
 		    	assetObj.setAssetStatus(asset.getAssetStatus());
 		    }
 		    if(asset.getAssignedTo()!= null) {
@@ -289,16 +275,6 @@ public class AssetServiceImpl implements AssetService {
 			 return true;
 		 }
 		
-	}
-
-	private boolean checkAssetStatus(String assetStatus) {
-    	 AssetStatus status = assetStatusRepository.getByStatusName(assetStatus);
-			if (status == null) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset status is not valid");
-			}
-			else {
-				return true;
-			}
 	}
 
 	private boolean checkRam(String ram1) {
@@ -336,21 +312,19 @@ public class AssetServiceImpl implements AssetService {
 		 }
 	}
 	
-	private boolean checkWarrantyDate(Date warrantyDate) {
+	private boolean checkWarrantyDate(Date warrantyDate,String id) {
 		
-		
-//		Asset purchaseDate = assetRepository.getByPurchaseDate(Id);
-//		Date d1 = purchaseDate;
-//		Date d2 = warrantyDate;
-//		if (d1.after(d2) || d1.equals(d2)) {
-//				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-//						"warranty date should be greater than purchase date");
-//		}
-//		else {
-//			return true;
-//		}
-		return true;
-	
+		Date asset = assetRepository.getPurchaseDateById(id);
+		Date d1 = asset;
+		Date d2 = warrantyDate;
+	               
+		if (d1.after(d2) || d1.equals(d2)) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+						"warranty date should be greater than purchase date");
+		}
+		else {
+			return true;
+		}
 	}
 
 	private boolean checkBrand(String brand) {
@@ -369,8 +343,6 @@ public class AssetServiceImpl implements AssetService {
 		}
 		
 	}
-
-
 	private boolean checkVId(String getvId) {
     	AssetVendor vendor = assetVendorRepository.getVendorById(getvId);
 		if (vendor == null) {
@@ -382,39 +354,165 @@ public class AssetServiceImpl implements AssetService {
 		
 	}
 
+//	@Override
+//	public ApiResponse getAllAsset(Pageable pageable) {
+//
+//		ApiResponse response = new ApiResponse();
+//		Page<Map> assets = assetRepository.getAllAsset(pageable);
+//		Map content = new HashMap<>();
+//		content.put("assets", assets);
+//		if(content != null) {
+//			response.setSuccess(true);
+//			response.setMessage("Asset Retrieved Successfully");
+//			response.setContent(content);
+//			
+//		}
+//		else {
+//			response.setSuccess(false);
+//			response.setMessage("Could not retrieve data");
+//		}
+//
+//		return response;
+//	}
+
 	@Override
-	public ApiResponse getAllAssets(Pageable pageable) {
-
-		ApiResponse apiResponse = new ApiResponse();
-		Page<Map> assets = assetRepository.getAllAsset(pageable);
-		Map content = new HashMap<>();
-		content.put("assets", assets);
-		apiResponse.setContent(content);
-
-		return apiResponse;
-
+	public ApiResponse searchAsset(String assetId) {
+		ApiResponse response = new ApiResponse();
+//		Asset assetRequest = new Asset();
+//		assetRequest.setAssetId(assetId);
+		List<Map> assetList = assetRepository.searchAsset(assetId);
+		Map content = new HashMap();
+		content.put("AssetList", assetList);
+		if(content != null) {
+			response.setSuccess(true);
+			response.setMessage("Asset Retrieved successfully");
+			response.setContent(content);
+		}
+		else {
+			response.setSuccess(false);
+			response.setMessage("Could not retrieve data");
+		}
+		return response;
 	}
 
-	/*
-	 * @Override public ApiResponse searchAsset(String searchString) {
-	 * 
-	 * ApiResponse response = new ApiResponse();
-	 * 
-	 * Object assetId = null; List<Map> assetList =
-	 * assetRepository.searchAsset(assetId, searchString);
-	 * response.setContent1(assetList); response.setStatus("success"); return
-	 * response;
-	 * 
-	 * }
-	 * 
-	 * @Override public ApiResponse searchAsset(String aid) { ApiResponse response =
-	 * new ApiResponse(false); Asset assetRequest = new Asset();
-	 * assetRequest.setaId(aid); List<Map> assetList =
-	 * assetRepository.searchAsset(aid); Map content = new HashMap();
-	 * 
-	 * content.put("AssetList", assetList); response.setSuccess(true);
-	 * response.setContent(content); return response; }
-	 * 
-	 * 
-	 */
+	@Override
+	public ApiResponse getAssetById(String assetId) {
+		ApiResponse response = new ApiResponse();
+		Asset asset = assetRepository.getAssetById(assetId);
+		Map content = new HashMap();
+		content.put("asset", asset);
+		if(content != null) {
+			response.setSuccess(true);
+			response.setMessage("Asset Retrieved Successfully");
+			response.setContent(content);
+			
+		}
+		else {
+			response.setSuccess(false);
+			response.setMessage("Could not retrieve data");
+		}
+		return response;
+	}
+
+	@Override
+	public ApiResponse getAllAssets(Map<String, Object> filter, Pageable pageable) {
+		
+		ApiResponse response = new ApiResponse(false);
+		
+		String ram = filter.containsKey("ram") ? ((String) filter.get("ram"))
+				: null;
+		String brand = filter.containsKey("brand") ? ((String) filter.get("brand"))
+				: null;
+		String vendorId = filter.containsKey("vendorId") ? ((String) filter.get("vendorId"))
+					: null;
+		String assetStatus = filter.containsKey("assetStatus") ? ((String) filter.get("assetStatus")).toUpperCase()
+					: null;
+		
+		AssetStatus status = null;
+		if(assetStatus!=null) {
+			try {
+				status = assetStatus != null ? AssetStatus.toEnum(assetStatus) : null;
+			} catch (IllegalArgumentException e) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+						filter.get("status").toString() + " is not a valid status");
+			}
+		}
+				
+		Page<Map> asset = assetRepository.getAllAssets(ram, brand, status, vendorId, pageable);
+		
+		
+		if(asset.getSize() > 0) {
+			Map content = new HashMap();
+			content.put("asset", asset);
+			response.setContent(content);
+			response.setSuccess(true);
+			response.setMessage("List retreived successfully.");
+		}else {
+			response.setSuccess(false);
+			response.setMessage("List is empty.");
+		}
+		return response;
+	}
+
+	@Override
+	public ApiResponse getAssetEmployeeById(String assetId, Pageable pageable) {
+		ApiResponse response = new ApiResponse();
+		List<Map> asset = assetRepository.getAssetEmployeeById(assetId, pageable);
+		System.out.println(asset);
+		Map content = new HashMap();
+		content.put("asset", asset);
+		if(content != null) {
+			response.setSuccess(true);
+			response.setMessage("Asset Employee Retrieved Successfully");
+			response.setContent(content);
+		}
+		else {
+			response.setSuccess(false);
+			response.setMessage("Could not retrieve data");
+		}
+		return response;
+	}
+
+	@Override
+	public ApiResponse getAssetBillingById(String assetId, Pageable pageable) {
+		ApiResponse response = new ApiResponse();
+		List<Map> asset = assetRepository.getAssetBillingById(assetId, pageable);
+		System.out.println(asset);
+		Map content = new HashMap();
+		content.put("asset", asset);
+		if(content != null) {
+			response.setSuccess(true);
+			response.setMessage("Asset Employee Retrieved Successfully");
+			response.setContent(content);
+		}
+		else {
+			response.setSuccess(false);
+			response.setMessage("Could not retrieve data");
+		}
+		return response;
+	}
+	
+
+//	@Override
+//	public ApiResponse getAssetByVendorName(Pageable pageable, String vendorName) {
+//		ApiResponse response = new ApiResponse();
+//	    AssetVendor vendorId = assetVendorRepository.getVendorIdByVendorName(vendorName);
+//	    System.out.println(vendorId);
+//	    Page<Map> asset = assetRepository.getAllAsset(pageable, vendorId);
+//		Map content = new HashMap();
+//		content.put("asset", asset);
+//		if(content != null) {
+//			response.setSuccess(true);
+//			response.setMessage("Asset Retrieved Successfully");
+//			response.setContent(content);		
+//		}
+//		else {
+//			response.setSuccess(false);
+//			response.setMessage("Could not retrieve data");
+//		}
+//		return response;
+//	}
+
+	
+ 
 }

@@ -68,7 +68,7 @@ public class AssetEmployeeServiceImpl implements AssetEmployeeService{
 //		private String assetId;
 //		private String empId;
 //		private Date issuedDate;
-//		private  boolean bagIssued;
+//		private boolean bagIssued;
 //		private boolean powercordIssued;
 //		private boolean mouseIssued;
 //		private Date returnDate;
@@ -115,12 +115,12 @@ public class AssetEmployeeServiceImpl implements AssetEmployeeService{
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "return date should be greater than issued date");
 			}
 		 }
-			
 		
-//		// return type Validating
-//		if (assetEmployee.getReturnType() == null || assetEmployee.getReturnType().equals("")) {
-//			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "return type is mandatory");
-//		}
+		// return type Validating
+		if (assetEmployee.getReturnType() == null || assetEmployee.getReturnType().equals("")) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "return type is mandatory");
+		}
+
 		
 		// assetEmployeestatus Validating
 		if (assetEmployee.getAssetEmployeeStatus() == null || assetEmployee.getAssetEmployeeStatus().equals("")) {
@@ -132,13 +132,13 @@ public class AssetEmployeeServiceImpl implements AssetEmployeeService{
 	}
 	
 	@Override
-	public ApiResponse editAssetEmployee(AssetEmployee assetEmployee) {
+	public ApiResponse editAssetEmployee(AssetEmployee assetEmployee, String assetId) {
 	
 		ApiResponse response = new ApiResponse(false);
 		
 		response = validateAssetEmployee(assetEmployee);
 		
-		AssetEmployee assetObj1 = assetEmployeeRepository.getByassetId(assetEmployee.getAssetId());
+		AssetEmployee assetObj1 = assetEmployeeRepository.getByassetId(assetId);
 		
 		//AssetEmployee empObj = assetEmployeeRepository.getByempId(assetEmployee.getEmpId());
 		

@@ -11,6 +11,8 @@ public interface AssetEmployeeService {
 
 	ApiResponse addAssetEmployee(AssetEmployee assetEmployee);
 
-	ApiResponse editAssetEmployee(AssetEmployee assetEmployee);
+	ApiResponse editAssetEmployee(AssetEmployee assetEmployee, String assetId);
+
+	
 
 }
