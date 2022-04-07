@@ -39,7 +39,7 @@ public class AssetBilling extends AuditModel
     public Boolean underWarrenty;
     
     @Column(name="asset_amount")
-    public Integer assetAmount;
+    public double assetAmount;
     
     @Column(name="gst_amount")
     public Integer gstAmount;
@@ -47,16 +47,14 @@ public class AssetBilling extends AuditModel
     @Column(name="transaction_date")
     public Date transactionDate;
     
-    @ManyToOne(cascade = {CascadeType.ALL })
-	@JoinColumn(name = "vendor_id")
+	@Column(name = "vendor_id")
     public AssetVendor assetVendor;
 	
     @Column(name="bill_photo_url")
     public String billPhotoUrl;
     
-    @ManyToOne(cascade = {CascadeType.ALL })
-    @JoinColumn(name="issue_id")
-    public AssetIssues assetIssues;
+    @Column(name="issue_id")
+    public AssetIssues assetIssueId;
     
     @Column(name="return_date")
     public Date returnDate;
@@ -64,9 +62,9 @@ public class AssetBilling extends AuditModel
     @Column(name="amount_paid")
     public boolean amountPaid;
     
-    @OneToOne(cascade = {CascadeType.MERGE})
-	@JoinColumn(name = "asset_id")
-    private  Asset asset;
+    
+	@Column(name = "asset_id")
+    private  Asset assetId;
 
 
 	//public AssetBilling getBillingType;

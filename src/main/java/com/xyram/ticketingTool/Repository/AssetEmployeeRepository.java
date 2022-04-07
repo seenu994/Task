@@ -17,6 +17,12 @@ public interface AssetEmployeeRepository extends JpaRepository<AssetEmployee, St
 	@Query("SELECT a from AssetEmployee a where a.empId =:empId")
 	AssetEmployee getByempId(String empId);
 
+//	 @Query("Select distinct new map(a.empId as empId,a.issuedDate as issuedDate,"		
+//	            + "a.bagIssued as bagIssued,a.powercordIssued as powercordIssued,a.mouseIssued as mouseIssued,"
+//	    		+ "a.returnDate as returnDate,a.returnType as returnType,"
+//	    	    + "a.assetEmployeeStatus as assetEmployeeStatus) from AssetEmployee a where a.assetId =:assetId")
+//	AssetEmployee getAssetEmployeeById(String assetId);
+
 
 	
 	

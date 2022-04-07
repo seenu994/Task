@@ -5,6 +5,8 @@ import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -19,6 +21,8 @@ import org.hibernate.annotations.GenericGenerator;
 
 import com.xyram.ticketingTool.admin.model.User;
 import com.xyram.ticketingTool.baseData.model.AuditModel;
+import com.xyram.ticketingTool.enumType.AssetEmployeeStatus;
+import com.xyram.ticketingTool.enumType.AssetStatus;
 import com.xyram.ticketingTool.id.generator.IdGenerator;
 import com.xyram.ticketingTool.id.generator.IdPrefix;
 
@@ -65,11 +69,12 @@ public class Asset extends AuditModel{
 	@Column(name = "mouse_available")
 	private boolean mouseAvailable;
 
-	@Column(name = "asset_photo_url")
+	@Column(name = "asset_photo_url", nullable = true)
 	private String assetPhotoUrl;
 	
+	@Enumerated(EnumType.STRING)
 	@Column(name = "asset_status")
-	private String assetStatus;
+	private AssetStatus assetStatus = AssetStatus.AVAILABLE ;
 	
 	@Column(name = "assigned_to")
 	private String assignedTo;
@@ -171,11 +176,12 @@ public class Asset extends AuditModel{
 		this.assetPhotoUrl = assetPhotoUrl;
 	}
 
-	public String getAssetStatus() {
+	
+	public AssetStatus getAssetStatus() {
 		return assetStatus;
 	}
 
-	public void setAssetStatus(String assetStatus) {
+	public void setAssetStatus(AssetStatus assetStatus) {
 		this.assetStatus = assetStatus;
 	}
 

@@ -39,9 +39,8 @@ public class AssetEmployee extends AuditModel {
 	@Column(name = "return_date")
 	private Date returnDate;
 	
-	@Enumerated(EnumType.STRING)
-	@Column(name = "return_reason")
-	private AssetEmployeeStatus returnReason = AssetEmployeeStatus.REPAIR ;
+	@Column(name = "return_reason", length = 3000)
+	private String returnReason;
 	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "return_type")
@@ -107,11 +106,11 @@ public class AssetEmployee extends AuditModel {
 		this.returnDate = returnDate;
 	}
 
-	public AssetEmployeeStatus getReturnReason() {
+	public String getReturnReason() {
 		return returnReason;
 	}
 
-	public void setReturnReason(AssetEmployeeStatus returnReason) {
+	public void setReturnReason(String returnReason) {
 		this.returnReason = returnReason;
 	}
 
