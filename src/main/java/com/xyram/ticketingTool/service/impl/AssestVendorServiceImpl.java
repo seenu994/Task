@@ -24,9 +24,9 @@ import com.xyram.ticketingTool.util.ResponseMessages;
 @Service
 @Transactional
 public class AssestVendorServiceImpl implements AssetvendorService {
-	//private static final AssetVendor vendorDetail = null;
+	// private static final AssetVendor vendorDetail = null;
 
-	//private static final AssetVendor AssetVendorRequest = null;
+	// private static final AssetVendor AssetVendorRequest = null;
 
 	private final Logger logger = LoggerFactory.getLogger(AssestVendorServiceImpl.class);
 
@@ -51,10 +51,8 @@ public class AssestVendorServiceImpl implements AssetvendorService {
 			}
 			return response;
 		}
-		
 		return response;
 	}
-		
 
 	private ApiResponse validateAssetVendor(AssetVendor Vendor) {
 		ApiResponse response = new ApiResponse(false);
@@ -62,10 +60,9 @@ public class AssestVendorServiceImpl implements AssetvendorService {
 
 		if (!emailValidation(Vendor.getEmail())) {
 			response.setMessage(ResponseMessages.EMAIL_INVALID);
-
 			response.setSuccess(false);
-		}
 
+		}
 
 		else if (Vendor.getMobileNo().length() != 10) {
 			response.setMessage(ResponseMessages.MOBILE_INVALID);
@@ -95,10 +92,9 @@ public class AssestVendorServiceImpl implements AssetvendorService {
 			response.setMessage(ResponseMessages.STATUS_UPDATE);
 			response.setSuccess(true);
 		}
-		
 
 		else {
-			response.setMessage(ResponseMessages.USERSTATUS_INVALID);
+			response.setMessage(ResponseMessages.VENDORSTATUS_INVALID);
 			response.setSuccess(false);
 
 		}
@@ -107,22 +103,22 @@ public class AssestVendorServiceImpl implements AssetvendorService {
 	}
 
 	@Override
-	public ApiResponse editassetVendor(AssetVendor Vendor,String vendorId) {
+	public ApiResponse editassetVendor(AssetVendor Vendor, String vendorId) {
 
 		ApiResponse response = new ApiResponse();
 		response = validateAssetVendor(Vendor);
 		AssetVendor vendor1 = assetVendorRepository.getById(vendorId);
 		if (response.isSuccess()) {
-			if (vendor1 != null) 
-			{
+			if (vendor1 != null) {
 				vendor1.setAddress(Vendor.getAddress());
 				vendor1.setMobileNo(Vendor.getMobileNo());
+				vendor1.setVendorName(Vendor.getVendorName());
 				vendor1.setEmail(Vendor.getEmail());
 				vendor1.setCity(Vendor.getCity());
-				vendor1.setCountry(Vendor.getCountry() );
+				vendor1.setCountry(Vendor.getCountry());
 				vendor1.setAssetVendorStatus(Vendor.getAssetVendorStatus());
 				assetVendorRepository.save(vendor1);
-				//AssetVendor assetVendorAdded = new AssetVendor();
+				// AssetVendor assetVendorAdded = new AssetVendor();
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.VENDOR_DETAILS_EDIT);
 //				Map content = new HashMap();
@@ -132,7 +128,7 @@ public class AssestVendorServiceImpl implements AssetvendorService {
 			} else {
 				response.setSuccess(false);
 				response.setMessage(ResponseMessages.VENDOR_DETAILS_INVALID);
-				//response.setContent(null);
+				// response.setContent(null);
 			}
 
 		}
@@ -145,42 +141,45 @@ public class AssestVendorServiceImpl implements AssetvendorService {
 		if (vendor.getVendorId() != null) {
 			response.setMessage("success");
 			response.setSuccess(true);
-			//response.setContent(null);
+			// response.setContent(null);
 		} else {
 			response.setMessage(ResponseMessages.VENDOR_ADDED);
 			response.setSuccess(false);
-			//response.setContent(null);
+			// response.setContent(null);
 		}
 		return response;
 	}
 
+	public ApiResponse getAllVendorList(Pageable pageable) {
 
-	@Override
-	public ApiResponse getAllVendorList(java.awt.print.Pageable pageable) {
-		// TODO Auto-generated method stub
-		return null;
+		Page<Map> vendorList = assetVendorRepository.getAllVendorList(pageable);
+
+		Map content = new HashMap();
+		content.put("VendorList", vendorList);
+		ApiResponse response = new ApiResponse(true);
+		response.setSuccess(true);
+		response.setContent(content);
+		return response;
 	}
 
+	public ApiResponse updateassetVendorStatus(String vendorId, AssetVendorEnum assetVendorStatus) {
+		ApiResponse response = validateStatus(assetVendorStatus);
+		if (response.isSuccess()) {
+			AssetVendor assetVendor = assetVendorRepository.getById(vendorId);
+			if (assetVendor != null) {
+				assetVendor.setAssetVendorStatus(assetVendorStatus);
+				assetVendorRepository.save(assetVendor);
+				response.setSuccess(true);
+				response.setMessage(ResponseMessages.ASSETVENDOR_STATUS_UPDATED);
+				response.setContent(null);
+			}
+		} else {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.VENDOR_DETAILS_INVALID);
+			response.setContent(null);
+		}
 
-
-//	public ApiResponse getAllVendorList(Pageable pageable) {
-
-//			Page<Map> vendorList = assetVendorRepository.getVendorList(pageable);
-//
-//		Map content = new HashMap();
-//		content.put("VendorList", vendorList);
-//		ApiResponse response = new ApiResponse(true);
-//		response.setSuccess(true);
-//		response.setContent(content);
-//		return response;
-//	}
-//
-
-
-	
-	
-		
-		
+		return response;
+	}
 
 }
-

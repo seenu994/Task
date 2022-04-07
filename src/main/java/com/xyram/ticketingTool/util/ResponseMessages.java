@@ -207,9 +207,15 @@ public interface ResponseMessages {
 
 	String VENDOR_ADDED = "Vendor added successfully";
 
-	String VENDOR_DETAILS_EDIT = "Vendor details edit successfully";
+	String VENDOR_DETAILS_EDIT = "Vendor details edited successfully";
 
 	String VENDOR_DETAILS_INVALID = "Invalid Vendor Details";
+
+	String VENDORSTATUS_INVALID = "Invalid status";
+
+	String ASSETVENDOR_STATUS_UPDATED = " Status Updated Successfully";
+
+	String ADDED_SOFTWAREID = "Software Id added Successfully";
 
 	
 

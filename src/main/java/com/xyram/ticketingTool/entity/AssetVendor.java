@@ -13,13 +13,14 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.xyram.ticketingTool.baseData.model.AuditModel;
 import com.xyram.ticketingTool.enumType.AssetVendorEnum;
 import com.xyram.ticketingTool.id.generator.IdGenerator;
 import com.xyram.ticketingTool.id.generator.IdPrefix;
 
 @Entity
 @Table(name = "asset_vendor")
-public class AssetVendor {
+public class AssetVendor  extends AuditModel{
 
 	// private static final String Status = null;
 
