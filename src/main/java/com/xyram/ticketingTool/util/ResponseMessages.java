@@ -159,7 +159,7 @@ public interface ResponseMessages {
 	String ASSET_BILL_NOT_ADDED = "Asset bill not  added";
 	
     String ASSET_BILL_EDITED = "Asset bill added";
-    
+    String ASSET_IS_UNDERWARRENTY_NO_NEED_TO_PAY_ANY_AMOUNT = "asset is underwarrenty no need to pay any amount";
 
 	
 	
