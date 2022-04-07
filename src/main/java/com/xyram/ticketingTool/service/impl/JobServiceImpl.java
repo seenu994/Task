@@ -77,6 +77,7 @@ public class JobServiceImpl implements JobService {
 
 	@Autowired
 	JobRepository jobRepository;
+	
 
 	@Autowired
 	JobApplicationRepository jobAppRepository;

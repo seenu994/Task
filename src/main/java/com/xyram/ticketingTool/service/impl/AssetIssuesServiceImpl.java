@@ -1,6 +1,7 @@
 package com.xyram.ticketingTool.service.impl;
 
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,6 +21,7 @@ import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Asset;
 import com.xyram.ticketingTool.entity.AssetBilling;
 import com.xyram.ticketingTool.entity.AssetIssues;
+import com.xyram.ticketingTool.entity.AssetStatus;
 //import com.xyram.ticketingTool.entity.AssetIssuesStatus;
 import com.xyram.ticketingTool.entity.AssetVendor;
 import com.xyram.ticketingTool.enumType.AssetIssueStatus;
@@ -40,7 +42,7 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 	@Autowired
 	AssetIssuesService assetIssuesService;
 	
-	
+	@Autowired
 	AssetVendorRepository assetVendorRepository;
 	
 	
@@ -51,80 +53,59 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 	{
 		ApiResponse response = new ApiResponse(false);
 		response = validateAssetIssues(assetIssues);
-		response = validateAssetIssueStatus(assetIssues);
+		//response = validateAssetIssueStatus(assetIssues);
+		if(response.isSuccess()) {
 		if(assetIssues != null)
 		{
 			assetIssuesRepository.save(assetIssues);
 			response.setSuccess(true);
 			response.setMessage(ResponseMessages.ASSET_ISSUES_ADDED_SUCCESSFULLY);
 		}
+		}
 	     return response;
-		
-	}
+		}
 	
 	private ApiResponse validateAssetIssues(AssetIssues assetIssues) 
 	{
 		ApiResponse response = new ApiResponse(false);
 		
 		 //validate asset id
-		 if(assetIssues.getAsset() == null)
+		 if(assetIssues.getAssetId() == null)
 		 {
 			 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset id is mandatory !!");
 		 }
 		 else
 		 {
 			 //Asset asset = assetRepository.getaId(assetIssues.getaId());
-			 Asset asset = getAssetById(assetIssues.getAsset().getAssetId());
-			 if(asset.getAssetId() == null)
+			 Asset asset = getAssetById(assetIssues.getAssetId());
+			 if(asset == null)
 			 {
 				 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset id not valid!!!");
 			 }
-			 else
-			 {
-				 assetIssues.setAsset(asset);
-			 }
 		 }
-		 //validate issueid
-		 if(assetIssues.getAssetIssues() == null)
-		 {
-			 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "issue id is mandatory !!");
-		 }
-		 /*if(assetIssues.getAssetIssue() == null)
-		 {
-			 AssetIssues assetIssue = assetIssuesRepository.getAssetIssues(assetIssues.getAssetIssue());
-			 if(assetIssues.getAssetIssue() == null)
-			 {
-				 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "issueId not valid!!!");
-			 }
-		 }*/
-		//validate vendor id
-		 if(assetIssues.getAssetVendor() == null)
+
+		 if(assetIssues.getVendorId() == null)
 		 {
 			 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "vendor id is mandatory !!");
 		 }
 		 else
 		 {
-			 AssetVendor assetVendor = assetVendorRepository.getById(assetIssues.getAssetVendor().getVendorId());
-			 if(assetVendor.getVendorId() == null)
+			 AssetVendor vendor = assetVendorRepository.getVendorById(assetIssues.getVendorId());
+			 if(vendor == null)
 			 {
 				 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "vendor id is not valid!!!");
 			 }
-			 else
-			 {
-				 assetIssues.setAssetVendor(assetVendor);
-			 }
-		 }
-		 /*if(assetIssues.getAssetIssuesStatus() == null)
+			 
+		 }	
+		 if(assetIssues.getComplaintRaisedDate() == null)
 		 {
-			 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Asset issues status is mandetory");
-		 }*/
+			 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "complaint raised date is mandatory!!!");
+		 }
 		 
-		 
-		 
-		 
-		 
-		 
-		 
+		 if(assetIssues.getAssetIssueStatus() == null)
+	    	{
+	    		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Asset issues status is mandetory");
+	    	}
 		 response.setSuccess(true);
 		 return response;
 	}
@@ -142,7 +123,7 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 		return response;
 	}
 
-public Asset getAssetById(String aId) {
+   public Asset getAssetById(String aId) {
 		
 		return assetRepository.getById(aId);
 		
@@ -156,16 +137,35 @@ public Asset getAssetById(String aId) {
 		
         ApiResponse response = new ApiResponse(false);
 		
-		AssetIssues assetIssuesObj = assetIssuesRepository.getById(assetIssues.getAssetIssues().getAssetIssueId());
-		 Asset asset = getAssetById(assetIssues.getAsset().getAssetId());
+		AssetIssues assetIssuesObj = assetIssuesRepository.getAssetIssueById(assetIssues.getAssetIssueId());
+		 //Asset asset = getAssetById(assetIssues.getAssetId());
 		 
 		if(assetIssuesObj != null) 
 	    {	
-			assetIssues.setassetIssues(assetIssues.getAssetIssueId());
-			assetIssues.setAsset(asset);
+			if(assetIssues.getAssetId() != null)
+			{
+				 checkAssetId(assetIssues.getAssetId());
+				 assetIssues.setAssetId(assetIssues.getAssetId());
+			}
+			if(assetIssues.getVendorId() != null)
+			{
+				checkVendorId(assetIssues.getVendorId());
+				assetIssues.setVendorId(assetIssues.getVendorId());
+			}
+			if(assetIssues.getComplaintRaisedDate()!= null)
+			{
+				assetIssues.setComplaintRaisedDate(new Date());
+			}
+			if(assetIssues.getAssetIssueStatus() != null)
+			{
+				checkAssetIssueStatus(assetIssues.getAssetIssueStatus());
+				assetIssues.setAssetIssueStatus(assetIssues.getAssetIssueStatus());
+			}
+			/*assetIssues.setassetIssues(assetIssues.getAssetIssueId());
+			//assetIssues.setAssetId(assetId);
 			assetIssues.setComplaintRaisedDate(assetIssues.getComplaintRaisedDate());
 			assetIssues.setDescription(assetIssues.getDescription());
-			assetIssues.setAssetVendor(assetIssues.getAssetVendor());
+			assetIssues.setVendorId(assetIssues.getVendorId());
 			AssetIssues assetIssuesAdded = assetIssuesRepository.save(assetIssues);
 	
 			response.setSuccess(true);
@@ -176,32 +176,72 @@ public Asset getAssetById(String aId) {
 			
 			
 			response.setContent(content);
-			System.out.println("message ->"+response.getMessage());
+			System.out.println("message ->"+response.getMessage());*/
+			AssetIssues assetIssuesAdded = assetIssuesRepository.save(assetIssues);
+			
+			response.setSuccess(true);
+			response.setMessage(ResponseMessages.ASSET_ISSUES_EDIT_SUCCESSFULLY);
 	    }     
 		else 
 		{
 		response.setSuccess(false);
 		response.setMessage(ResponseMessages.ASSET_ISSUES_ID_IS_INVALID);
-		response.setContent(null);
+		
 	    }
       return response;
-    }	
-
-
-
-    public ApiResponse validateAssetIssueStatus(AssetIssues assetIssues)
-    {
-    	ApiResponse response = new ApiResponse(false);
-    	
-    	if(assetIssues.getAssetIssueStatus == null)
-    	{
-    		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Asset issues status is mandetory");
-    	}
-    	
-    	return response;
-    	
     }
-  }
+
+
+	private boolean checkAssetIssueStatus(AssetIssueStatus assetIssueStatus) 
+	{
+		//AssetIssues issues = assetIssuesRepository.getAssetIssueStatus();
+		if(assetIssueStatus == null)
+		{
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Asset issues status is mandetory");
+		}
+		
+		return true;
+	}
+
+	private boolean checkVendorId(String vendorId) 
+	{
+		AssetVendor assetvendor = assetVendorRepository.getVendorById(vendorId);
+		if(assetvendor == null)
+		{
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "vendor id is not valid");
+		}
+		return true;
+	}
+
+	private boolean checkAssetId(String assetId) 
+	{
+		Asset asset = assetRepository.getByassetId(assetId);
+		if(asset == null)
+		{
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset id is not valid");
+		}
+		else
+		{
+		   return true;
+		}
+    }
+
+}
+
+//    public ApiResponse validateAssetIssueStatus(AssetIssues assetIssues)
+//    {
+//    	ApiResponse response = new ApiResponse(false);
+//    	
+//    	if(assetIssues.getAssetIssueStatus == null || assetIssues.getAssetIssueStatus().equals(""))
+//    	{
+//    		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Asset issues status is mandetory");
+//    	}
+//    	
+//        response.set
+//    	return response;
+//    	
+//    }
+//  }
 	/*@Override
 	public ApiResponse getIssues(Pageable pageable) 
 	{

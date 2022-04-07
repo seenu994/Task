@@ -1,15 +1,17 @@
 package com.xyram.ticketingTool.Repository;
 
-import java.awt.print.Pageable;
+
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import javax.transaction.Transactional;
 
-import org.springframework.data.domain.Page;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
@@ -41,7 +43,7 @@ public interface AssetBillingRepository extends JpaRepository<AssetBilling, Stri
 
 	@Query("Select distinct new map (b.assetBillId as assetBillId, b.assetAmount as assetAmount, b.billingType as billingType,"
  		+ "b.gstAmount as gstAmount,b.billPhotoUrl as billPhotoUrl,b.returnDate as returnDate,"
- 		+ "b.assetVendor as assetVendor) from AssetBilling b Inner Join Asset a ON b.asset = a.assetId where b.billingType = 'return' ")
+ 		+ "b.vendorId as vendorId) from AssetBilling b Inner Join Asset a ON b.assetId = a.assetId where b.billingType = 'return' ")
 	 AssetBilling getReturnFromRepair(AssetBilling assetBilling);
 	
 
@@ -51,13 +53,16 @@ public interface AssetBillingRepository extends JpaRepository<AssetBilling, Stri
 	 AssetBilling getReturnDate(Date returnDate);
 
 	@Query("SELECT b from AssetBilling b where b.amountPaid =:amountPaid") 
-	AssetBilling getAmountPaidAmount(Integer amountPaid);
+	AssetBilling getAmountPaidAmount(Boolean amountPaid);
 	
-	@Query("Select distinct new map(b.asset as asset, b.billingType as billingType, b.underWarrenty as underWarrenty, "
+	/*@Query("Select distinct new map(b.asset as asset, b.billingType as billingType, b.underWarrenty as underWarrenty, "
 			+ "b.assetAmount as assetAmount, b.gstAmount as gstAmount, "
 			+ "b.transactionDate as transactionDate, b.assetVendor as assetVendor, "
 			+ "b.billPhotoUrl as billPhotoUrl,b.assetIssues as assetIssues, b.returnDate as returnDate, b.amountPaid as amountPaid) from AssetBilling b" )
-	List<Map> getAllAssetBilling();
+	Page<Map> getAllAssetBilling();*/
+
+	@Query("Select b from AssetBilling b where b.assetBillId=:assetBillId")
+	AssetBilling getAssetBillId(@Param("assetBillId") String assetBillId);
 
 	
 	

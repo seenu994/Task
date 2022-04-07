@@ -30,15 +30,14 @@ import com.xyram.ticketingTool.id.generator.IdPrefix;
 public class AssetIssues extends AuditModel
 {
 	@Id
-	/*@IdPrefix(value = "AI")
+	@IdPrefix(value = "AI")
 	@GeneratedValue(generator = IdGenerator.ID_GENERATOR)
-	@GenericGenerator(name = IdGenerator.ID_GENERATOR, strategy = "com.xyram.ticketingTool.id.generator.IdGenerator")*/
+	@GenericGenerator(name = IdGenerator.ID_GENERATOR, strategy = "com.xyram.ticketingTool.id.generator.IdGenerator")
     @Column(name="asset_issue_id")
     public String assetIssueId;
    
-    @OneToOne(cascade = {CascadeType.ALL})
-	@JoinColumn(name = "asset_id")
-    private Asset asset;
+	@Column(name = "asset_id")
+    private String assetId;
     
     @Column(name="complaint_raised_date")
     public Date complaintRaisedDate;
@@ -49,32 +48,39 @@ public class AssetIssues extends AuditModel
     @Column(name="solution")
     public String solution;
     
-    /*@Enumerated(EnumType.STRING)
-	@Column(name="asset_issue_status")
-    private AssetIssueStatus assetIssueStatus = AssetIssueStatus.OPEN;*/
     
     @Enumerated(EnumType.STRING)
     @Column(name="asset_issue_status")
     public AssetIssueStatus assetIssueStatus = AssetIssueStatus.OPEN;
     
- 
+    
 
-	public AssetIssueStatus getAssetIssuesStatus() {
-		return assetIssueStatus;
+	public String getAssetId() {
+		return assetId;
 	}
 
-	public void setAssetIssuesStatus(AssetIssueStatus assetIssuesStatus) {
-		this.assetIssueStatus = assetIssuesStatus;
+	public void setAssetId(String assetId) {
+		this.assetId = assetId;
 	}
 
-	@ManyToOne(cascade = {CascadeType.ALL})
-	@JoinColumn(name = "vendor_id")
-    private AssetVendor assetVendor;
+
+	
+
+	@Column(name = "vendor_id")
+    private String vendorId;
     
     @Column(name="resolved_date")
     public Date resolvedDate;
 
 	
+
+	public String getVendorId() {
+		return vendorId;
+	}
+
+	public void setVendorId(String vendorId) {
+		this.vendorId = vendorId;
+	}
 
 	public AssetIssueStatus getAssetIssueStatus;
 
@@ -86,13 +92,7 @@ public class AssetIssues extends AuditModel
 		this.assetIssueId = assetIssueId;
 	}
 
-	public Asset getAsset() {
-		return asset;
-	}
-
-	public void setAsset(Asset asset) {
-		this.asset = asset;
-	}
+	
 
 	public AssetIssueStatus getAssetIssueStatus() {
 		return assetIssueStatus;
@@ -134,21 +134,6 @@ public class AssetIssues extends AuditModel
 		this.solution = solution;
 	}
 
-	/*public AssetIssueStatus getAssetIssueStatus() {
-		return assetIssueStatus;
-	}
-
-	public void setAssetIssueStatus(AssetIssueStatus assetIssueStatus) {
-		this.assetIssueStatus = assetIssueStatus;
-	}*/
-
-	public AssetVendor getAssetVendor() {
-		return assetVendor;
-	}
-
-	public void setAssetVendor(AssetVendor assetVendor) {
-		this.assetVendor = assetVendor;
-	}
 
 	public Date getResolvedDate() {
 		return resolvedDate;

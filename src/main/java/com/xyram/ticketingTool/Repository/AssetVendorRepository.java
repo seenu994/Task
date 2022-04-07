@@ -1,10 +1,6 @@
 package com.xyram.ticketingTool.Repository;
-import java.util.Map;
-
 import javax.transaction.Transactional;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -21,7 +17,7 @@ public interface AssetVendorRepository  extends JpaRepository<AssetVendor, Strin
 //List<Map> 	findVendorDetailswithVendorId();
 
 		
-	@Query("Select distinct p from AssetVendor p where p.vendorId=:id")
+	@Query("Select distinct p from AssetVendor p where p.vendorId=:id and p.assetVendorStatus != 'INACTIVE'")
 	AssetVendor getVendorById(String id);
 	
 
@@ -45,8 +41,8 @@ public interface AssetVendorRepository  extends JpaRepository<AssetVendor, Strin
 //  
 
 
-    @Query("SELECT v.vendorId from AssetVendor v where v.vendorName = :vendorName")
-    AssetVendor getVendorIdByVendorName(String vendorName);
+	@Query("Select p from AssetVendor p where p.vendorId=:vendorId")
+	AssetVendor getAssetVendorById(String vendorId);
 	
 
 //Page<Map> getAllVendorList(String scopeId, Pageable pageable);
