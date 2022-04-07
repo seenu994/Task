@@ -463,7 +463,7 @@ public class AssetServiceImpl implements AssetService {
 		content.put("asset", asset);
 		if(content != null) {
 			response.setSuccess(true);
-			response.setMessage("Asset Employee Retrieved Successfully");
+			response.setMessage("Asset Billing Retrieved Successfully");
 			response.setContent(content);
 		}
 		else {
