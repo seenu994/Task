@@ -117,12 +117,6 @@ public class AssetVendor {
 		this.country = country;
 	}
 	
-	@OneToMany(mappedBy = "assetVendor",targetEntity=AssetBilling.class)
-	private Set<AssetBilling> assetbilling;
-	
-	@OneToMany(mappedBy = "assetVendor",targetEntity=AssetIssues.class)
-	private Set<AssetIssues> assetIssues;
-
 
 	
 

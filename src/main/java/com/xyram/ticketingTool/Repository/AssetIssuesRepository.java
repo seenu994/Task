@@ -45,8 +45,8 @@ public interface AssetIssuesRepository extends JpaRepository<AssetIssues, String
 //AssetIssues getAssetIssues(AssetIssues assetIssues);
 	
 	@Query("Select distinct new map(i.assetIssueId as assetIssueId, i.complaintRaisedDate as complaintRaisedDate, "
-	+ "i.description as description, i.solution as solution,i.asset as asset, "
-	+ "i.assetIssueStatus as assetIssueStatus, i.assetVendor as assetVendor, "
+	+ "i.description as description, i.solution as solution,i.assetId as assetId, "
+	+ "i.assetIssueStatus as assetIssueStatus, i.vendorId as vendorId, "
 	+ "i.resolvedDate as resolvedDate ) from AssetIssues i ")
 
 	AssetIssues getAssetIssuesList(AssetIssues assetIssues);
@@ -89,6 +89,13 @@ AssetIssues changeAssetIssuesStatus(Object getissueId);
 AssetIssues downloadAssetIssues(Map<String, Object> filter);
 	
 	//ApiResponse save(ApiResponse addAssetIssues);*/
+
+	@Query("Select i from AssetIssues i where i.assetIssueId=:assetIssueId")
+	AssetIssues getAssetIssueById(String assetIssueId);
+
+	@Query("Select i from AssetIssues i where i.assetIssueStatus=:assetIssueStatus")
+	AssetIssues getAssetIssueStatus();
+
 
 	//@Query("Select s AssetIssues s where s.assetIssuesStatus:assetIssuesStatus")
 	//AssetIssuesStatus getAssetIssuesStatus(String assetIssuesStatus);

@@ -211,7 +211,7 @@ public interface ResponseMessages {
 
 	String VENDOR_DETAILS_INVALID = "Invalid Vendor Details";
 
-	
+	String ASSET_IS_UNDERWARRENTY_NO_NEED_TO_PAY_ANY_AMOUNT = "Asset is under warrenty no need to pay any amount";
 
 	
 	

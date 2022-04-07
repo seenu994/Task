@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Announcement;
 import com.xyram.ticketingTool.entity.Asset;
+import com.xyram.ticketingTool.entity.AssetBilling;
 import com.xyram.ticketingTool.entity.Role;
 
 
@@ -41,6 +42,11 @@ public interface AssetRepository extends JpaRepository<Asset, String>{
 			+ "a.serialNo as serialNo,a.warrantyDate as warrantyDate,a.ram as ram,"
 		    + "a.assetStatus as assetStatus, a.assignedTo as assignedTo) from Asset a")
         Page<Map> getAllAsset(Pageable pageable);
+
+   
+       
+//        @Query("SELECT a from Asset a where a.assetId =:assetId")
+//		Asset getAssetById(Asset asset);
 
         
 		
