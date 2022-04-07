@@ -28,6 +28,9 @@ Page<Map> getAllVendorList(Pageable pageable);
 	@Query("Select e.email from AssetVendor e where e.email = :email")
 	String filterByEmail(String email);
 
+	@Query("Select distinct p from AssetVendor p where p.vendorId=:vendorId")
+	AssetVendor getAssetVendorById(String vendorId);
+
 	
 
 	
