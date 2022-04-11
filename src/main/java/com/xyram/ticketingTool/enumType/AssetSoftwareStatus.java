@@ -6,7 +6,8 @@ import java.util.Optional;
 public enum AssetSoftwareStatus {
 
 	ACTIVE("ACTIVE"),
-
+    INSTALL("INSTALL"),
+    UNINSTALL("UNINSTALL"),
 	INACTIVE("INACTIVE");
 	private String value;
 

@@ -220,7 +220,10 @@ public interface ResponseMessages {
 	
 
 	
+	//Download of asset
+String ASSET_DIRECTORY ="/Documents/assetDetails/";
 	
+	String BASE_DIRECTORY ="../webapps";
 
 	
 

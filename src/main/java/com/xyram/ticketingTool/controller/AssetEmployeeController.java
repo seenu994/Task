@@ -3,7 +3,9 @@ package com.xyram.ticketingTool.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -36,6 +38,18 @@ public class AssetEmployeeController {
     public ApiResponse editAssetEmployee(@RequestBody AssetEmployee assetEmployee, @PathVariable String assetId) {
 		logger.info("Received request to edit asset employee");
 		return assetEmployeeService.editAssetEmployee(assetEmployee, assetId);
+	}
+	
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/updateAssetEmployee/{assetId}"})
+	ApiResponse updateAssetEmployee(@RequestBody AssetEmployee assetEmployee,@PathVariable String assetId) {
+		logger.info("Received request to update Asset Employee");
+		return assetEmployeeService.updateAssetEmployee(assetEmployee, assetId);
+	}
+		
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAssetEmployeeById/{assetId}"})
+    public ApiResponse getAssetEmployeeById(@PathVariable String assetId, Pageable pageable) {
+	        logger.info("Received request to get Asset Employee by Id");
+			return assetEmployeeService.getAssetEmployeeById(assetId, pageable);
 	}
 
 }

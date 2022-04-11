@@ -54,7 +54,7 @@ public class AssetIssues extends AuditModel
     public AssetIssueStatus assetIssueStatus = AssetIssueStatus.OPEN;
     
     
-
+    
 	public String getAssetId() {
 		return assetId;
 	}

@@ -18,7 +18,7 @@ import com.xyram.ticketingTool.enumType.AssetSoftwareStatus;
 public class AssetSoftware extends AuditModel {
 	
 	@Id
-	@Column(name = "asset_id")
+	@Column(name = "asset_id1")
 	private String assetId1;
 
 	@Column(name = "software_id")
@@ -33,6 +33,10 @@ public class AssetSoftware extends AuditModel {
 	@Enumerated(EnumType.STRING)
 	@Column(name = "asset_software_status")
 	private AssetSoftwareStatus assetSoftwareStatus = AssetSoftwareStatus.ACTIVE;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "action")
+	private AssetSoftwareStatus action = AssetSoftwareStatus.UNINSTALL;
 
 	public String getAssetId1() {
 		return assetId1;
@@ -74,6 +78,13 @@ public class AssetSoftware extends AuditModel {
 		this.assetSoftwareStatus = assetSoftwareStatus;
 	}
 
-	
+	public AssetSoftwareStatus getAction() {
+		return action;
+	}
+
+	public void setAction(AssetSoftwareStatus action) {
+		this.action = action;
+	}
+
 	
 }
