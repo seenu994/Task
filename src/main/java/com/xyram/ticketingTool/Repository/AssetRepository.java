@@ -64,8 +64,10 @@ public interface AssetRepository extends JpaRepository<Asset, String>{
 			+ "(:vendorId is null OR a.vendorId=:vendorId) AND "
     	    + "(:searchString  is null "
     	    + " OR a.ram LIKE %:searchString%  OR a.brand LIKE %:searchString% "
-    	    + " OR a.vendorId LIKE %:searchString% OR a.assetId LIKE %:searchString%)")
-	Page<Map> getAllAssets(String ram, String brand, AssetStatus assetStatus, String vendorId, String searchString, Pageable pageable);
+    	    + " OR a.vendorId LIKE %:searchString% OR a.assetId LIKE %:searchString%) AND "
+    	    + "(:fromDateStr is null OR Date(a.purchaseDate) >= STR_TO_DATE(:fromDateStr, '%Y-%m-%d')) AND "
+    	    + "(:toDateStr is null OR Date(a.purchaseDate) <= STR_TO_DATE(:toDateStr, '%Y-%m-%d')) ")
+	Page<Map> getAllAssets(String ram, String brand, AssetStatus assetStatus, String vendorId, String searchString, String fromDateStr, String toDateStr, Pageable pageable);
 
     
 //    @Query("Select distinct new map(e.empId as empId,e.issuedDate as issuedDate,"		

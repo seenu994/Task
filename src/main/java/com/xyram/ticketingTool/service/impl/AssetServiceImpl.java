@@ -79,7 +79,7 @@ public class AssetServiceImpl implements AssetService {
 	@Override
 	public ApiResponse addasset(Asset asset) {
 		ApiResponse response = new ApiResponse(false);
-		response = validateAsset(asset);
+		response = validateAsset(asset); 
 		if (response.isSuccess()) {
 			if (asset != null) {
 				assetRepository.save(asset);
@@ -412,7 +412,6 @@ public class AssetServiceImpl implements AssetService {
 			response.setSuccess(true);
 			response.setMessage("Asset Retrieved Successfully");
 			response.setContent(content);
-			
 		}
 		else {
 			response.setSuccess(false);
@@ -434,6 +433,31 @@ public class AssetServiceImpl implements AssetService {
 				: null;
 		String vendorId = filter.containsKey("vendorId") ? ((String) filter.get("vendorId"))
 					: null;
+		String fromDateStr = filter.containsKey("fromDate") ? ((String) filter.get("fromDate")).toLowerCase()
+				: null;
+		Date fromDate = null;
+		if(fromDateStr!=null) {
+			try {
+				fromDate=new SimpleDateFormat("yyyy-MM-dd").parse(fromDateStr);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}  
+		}
+		String toDateStr = filter.containsKey("toDate") ? ((String) filter.get("toDate")).toLowerCase()
+				: null;
+		Date toDate = null;
+		if(toDateStr!=null) {
+			try {
+				toDate=new SimpleDateFormat("yyyy-MM-dd").parse(toDateStr);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}  
+		}
+		
+		if(toDate == null || fromDate == null) {
+			response.setMessage("From or To dates are missing");
+		}
+		
 		String assetStatus = filter.containsKey("assetStatus") ? ((String) filter.get("assetStatus")).toUpperCase()
 					: null;
 		
@@ -445,20 +469,23 @@ public class AssetServiceImpl implements AssetService {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 						filter.get("status").toString() + " is not a valid status");
 			}
-		}
-				
-		Page<Map> asset = assetRepository.getAllAssets(ram, brand, status, vendorId, searchString, pageable);
+		} 
 		
+		
+				
+		Page<Map> asset = assetRepository.getAllAssets(ram, brand, status, vendorId, searchString, fromDateStr, toDateStr, pageable);
 		
 		if(asset.getSize() > 0) {
+			System.out.println(asset);
 			Map content = new HashMap();
 			content.put("asset", asset);
 			response.setContent(content);
 			response.setSuccess(true);
-			response.setMessage("List retreived successfully");
-		}else {
+			response.setMessage("List retrieved successfully");
+		}
+		else {
 			response.setSuccess(false);
-			response.setMessage("List is empty.");
+			response.setMessage("List is empty");
 		}
 		return response;
 	}
