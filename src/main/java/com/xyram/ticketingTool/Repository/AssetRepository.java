@@ -2,11 +2,7 @@ package com.xyram.ticketingTool.Repository;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-
-import javax.transaction.Transactional;
-
-import org.hibernate.metamodel.model.convert.spi.JpaAttributeConverter;
+import java.util.Map;import javax.transaction.Transactional;import org.hibernate.metamodel.model.convert.spi.JpaAttributeConverter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,15 +10,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 //import org.springframework.data.jpa.repository.cdi.JpaRepositoryExtension;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
-
-import com.xyram.ticketingTool.apiresponses.ApiResponse;
-import com.xyram.ticketingTool.entity.Announcement;
+import org.springframework.stereotype.Service;import com.xyram.ticketingTool.apiresponses.ApiResponse;
+//import com.xyram.ticketingTool.entity.Announcement;
 import com.xyram.ticketingTool.entity.Asset;
 import com.xyram.ticketingTool.entity.AssetEmployee;
 import com.xyram.ticketingTool.entity.AssetVendor;
-import com.xyram.ticketingTool.entity.Role;
+//import com.xyram.ticketingTool.entity.Role;
 import com.xyram.ticketingTool.enumType.AssetStatus;
+
 
 
 @Repository
@@ -30,37 +25,11 @@ import com.xyram.ticketingTool.enumType.AssetStatus;
 public interface AssetRepository extends JpaRepository<Asset, String>
 {
 
-
-package com.xyram.ticketingTool.Repository;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import javax.transaction.Transactional;
-
-import org.hibernate.metamodel.model.convert.spi.JpaAttributeConverter;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-//import org.springframework.data.jpa.repository.cdi.JpaRepositoryExtension;
-import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
-
-import com.xyram.ticketingTool.apiresponses.ApiResponse;
-import com.xyram.ticketingTool.entity.Announcement;
-import com.xyram.ticketingTool.entity.Asset;
-import com.xyram.ticketingTool.entity.AssetEmployee;
-import com.xyram.ticketingTool.entity.AssetVendor;
-import com.xyram.ticketingTool.entity.Role;
-import com.xyram.ticketingTool.enumType.AssetStatus;
+//	@Query("SELECT a from Asset a where a.assetId =:assetId")
 
 
-@Repository
-@Transactional
-public interface AssetRepository extends JpaRepository<Asset, String>{
+
+
 
 	@Query("SELECT a from Asset a where a.assetId =:assetId")
 	Asset getByAssetId(String assetId);
