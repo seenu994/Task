@@ -39,12 +39,12 @@ public class AssetEmployee extends AuditModel {
 	@Column(name = "return_date")
 	private Date returnDate;
 	
-	@Column(name = "return_reason", length = 3000)
+	@Column(name = "return_reason", length = 500)
 	private String returnReason;
 	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "return_type")
-	private AssetEmployeeStatus returnType = AssetEmployeeStatus.REPAIR;
+	private AssetEmployeeStatus returnType;
 	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "asset_employee_status")

@@ -225,12 +225,27 @@ public interface ResponseMessages {
 
 	String GETALL_SOFTWAREMATER_LIST = "Get all software master list";
 
+	String ASSET_RETURNED_FROM_REPAIR_SUCCESSFULLY = "Asset is returned from repair successfully";
+
+	String RETURN_REPAIR = "return asset from repair";
+
+	String ASSET_ISSUE_STATUS_INVALID = "Asset issue status is invalid";
+
+	String ASSET_ISSUE_STATUS_UPDATE = "Asset issue status in updated";
+
 	String GETALL_VENDOR_LIST = "Asset vendor list";
+	String RETURN_DAMAGE = "Asset returned from damage";
+
 
 	
 
 	
+
 	
+	//Download of asset
+String ASSET_DIRECTORY ="/Documents/assetDetails/";
+	
+	String BASE_DIRECTORY ="../webapps";
 
 	
 

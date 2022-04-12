@@ -31,6 +31,9 @@ Page<Map> getAllVendorList(Pageable pageable);
 	@Query("Select distinct p from AssetVendor p where p.vendorId=:vendorId")
 	AssetVendor getAssetVendorById(String vendorId);
 
+//	@Query("Select distinct p from AssetVendor p where p.vendorId=:vendorId")
+//	AssetVendor getVendorById1(String vendorId);
+
 
 //	AssetVendor getVendorById(AssetVendor vendorId);
 

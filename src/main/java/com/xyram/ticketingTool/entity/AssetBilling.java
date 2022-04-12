@@ -141,6 +141,7 @@ public class AssetBilling extends AuditModel
 		this.returnDate = returnDate;
 	}
 
+	
 	public boolean isAmountPaid() {
 		return amountPaid;
 	}
@@ -157,10 +158,7 @@ public class AssetBilling extends AuditModel
 		this.assetId = assetId;
 	}
 
-	public boolean getAmountPaid() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	
 
 	
 

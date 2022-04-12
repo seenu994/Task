@@ -1,5 +1,6 @@
 package com.xyram.ticketingTool.service;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
@@ -12,6 +13,7 @@ public interface AssetEmployeeService {
 
 	ApiResponse editAssetEmployee(AssetEmployee assetEmployee, String assetId);
 
-	
+	ApiResponse updateAssetEmployee(AssetEmployee assetEmployee, String assetId);
 
+	ApiResponse getAssetEmployeeById(String assetId, Pageable pageable);
 }

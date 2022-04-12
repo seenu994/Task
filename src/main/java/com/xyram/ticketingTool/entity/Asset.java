@@ -17,7 +17,6 @@ import com.xyram.ticketingTool.enumType.AssetStatus;
 import com.xyram.ticketingTool.id.generator.IdGenerator;
 import com.xyram.ticketingTool.id.generator.IdPrefix;
 
-
 @Entity
 @Table(name = "asset")
 
@@ -65,7 +64,7 @@ public class Asset extends AuditModel{
 	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "asset_status")
-	private AssetStatus assetStatus = AssetStatus.AVAILABLE ;
+	private AssetStatus assetStatus = AssetStatus.AVAILABLE;
 	
 	@Column(name = "assigned_to")
 	private String assignedTo;
@@ -167,7 +166,6 @@ public class Asset extends AuditModel{
 		this.assetPhotoUrl = assetPhotoUrl;
 	}
 
-	
 	public AssetStatus getAssetStatus() {
 		return assetStatus;
 	}
@@ -182,6 +180,11 @@ public class Asset extends AuditModel{
 
 	public void setAssignedTo(String assignedTo) {
 		this.assignedTo = assignedTo;
+	}
+
+	public Asset getBillingDetailByAssetId(Asset assetId2) {
+		// TODO Auto-generated method stub
+		return assetId2;
 	}
 	
 }
