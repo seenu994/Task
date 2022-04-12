@@ -16,7 +16,6 @@ import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.AssetVendor;
 import com.xyram.ticketingTool.enumType.AssetVendorEnum;
 import com.xyram.ticketingTool.service.AssetvendorService;
-import com.xyram.ticketingTool.util.AuthConstants;
 
 @RestController
 @CrossOrigin
@@ -52,11 +51,11 @@ public class AssestVendorController {
 		return assetvendorService.getAllVendorList(pageable);
 	}
 
-	@PutMapping(value = "/changeStatus/{vendorId}/{assetVendorStatus}")
+	@PutMapping(value = "/changeStatus/{vendorId}/{assetVendorEnum}")
 	public ApiResponse editassetVendorStatus(@PathVariable String vendorId,
-			@PathVariable AssetVendorEnum assetVendorStatus) {
-		logger.info("Received request to change vendor status to: " + assetVendorStatus + "for vendorId: " + vendorId);
-		return assetvendorService.updateassetVendorStatus(vendorId, assetVendorStatus);
+			@PathVariable AssetVendorEnum assetVendorEnum) {
+		logger.info("Received request to change vendor status to: " + assetVendorEnum + "for vendorId: " + vendorId);
+		return assetvendorService.updateassetVendorStatus(vendorId, assetVendorEnum);
 	}
-
+	
 }

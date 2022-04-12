@@ -8,18 +8,12 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
-import com.xyram.ticketingTool.Repository.StoryAttachmentsRespostiory;
 import com.xyram.ticketingTool.Repository.StoryCommentRepository;
-import com.xyram.ticketingTool.entity.Platform;
 import com.xyram.ticketingTool.entity.StoryComments;
 import com.xyram.ticketingTool.request.CurrentUser;
-import com.xyram.ticketingTool.entity.StoryComments;
 import com.xyram.ticketingTool.service.StoryCommentService;
-import com.xyram.ticketingTool.vo.StoryCommentVo;
 
 @Service
 public class StoryCommentServiceImpl implements StoryCommentService {

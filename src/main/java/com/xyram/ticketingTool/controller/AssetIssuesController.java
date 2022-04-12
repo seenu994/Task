@@ -63,7 +63,7 @@ public class AssetIssuesController
 	ApiResponse getAllAssetsIssues(@RequestBody Map<String, Object>filter, Pageable pageable) {
 		System.out.println(filter);
 		logger.info("Received request to Get all asset issues");
-		return assetIssuesService.getAllAssetsIssues(filter, pageable);
+		return assetIssuesService.getAllAssetsIssues(filter,pageable);
 	}
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAssetIssuesById/{assetIssueId}"})
 	ApiResponse getAssetIssues(@PathVariable String assetIssueId) {

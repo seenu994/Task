@@ -15,11 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.xyram.ticketingTool.Repository.AnnouncementRepository;
-import com.xyram.ticketingTool.Repository.EmployeeRepository;
-import com.xyram.ticketingTool.Repository.PermissionRepository;
-import com.xyram.ticketingTool.Repository.ProjectMemberRepository;
-import com.xyram.ticketingTool.Repository.RoleRepository;
-import com.xyram.ticketingTool.Repository.UserRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Announcement;
 import com.xyram.ticketingTool.enumType.AnnouncementStatus;

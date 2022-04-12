@@ -1,6 +1,5 @@
 package com.xyram.ticketingTool.entity;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -8,18 +7,11 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.TypeDefs;
-
 import com.xyram.ticketingTool.baseData.model.AuditModel;
 import com.xyram.ticketingTool.enumType.UserStatus;
-import com.xyram.ticketingTool.ticket.config.JSONObjectUserType;
 
 @Entity
 @Table(name = "role")

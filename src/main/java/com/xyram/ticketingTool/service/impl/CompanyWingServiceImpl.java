@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import com.xyram.ticketingTool.Repository.CompanyWingsRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.service.CompanyWingService;
-import com.xyram.ticketingTool.service.EmployeeService;
 
 @Service
 @Transactional

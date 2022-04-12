@@ -24,7 +24,6 @@ import com.xyram.ticketingTool.entity.TicketAssignee;
 import com.xyram.ticketingTool.enumType.NotificationType;
 import com.xyram.ticketingTool.enumType.TicketAssigneeStatus;
 import com.xyram.ticketingTool.enumType.TicketStatus;
-import com.xyram.ticketingTool.exception.ResourceNotFoundException;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.NotificationService;
 import com.xyram.ticketingTool.service.TicketAssignService;

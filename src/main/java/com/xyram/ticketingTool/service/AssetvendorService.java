@@ -14,7 +14,13 @@ public interface AssetvendorService {
 
 	ApiResponse getAllVendorList(Pageable pageable);
 
-	ApiResponse updateassetVendorStatus(String vendorId, AssetVendorEnum assetVendorStatus);
+	//ApiResponse updateassetVendorStatus(String vendorId, AssetVendorEnum assetVendorEnum);
+
+	//ApiResponse updateassetVendorStatus(AssetVendor vendorId, AssetVendorEnum assetVendorEnum);
+
+
+
+	ApiResponse updateassetVendorStatus(String vendorId, AssetVendorEnum assetVendorEnum);
 
 	// ApiResponse getAllVendorList(Pageable pageable);
 

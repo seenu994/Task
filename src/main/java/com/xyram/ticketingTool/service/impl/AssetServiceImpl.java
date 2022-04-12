@@ -352,8 +352,8 @@ public class AssetServiceImpl implements AssetService {
 		}
 		
 	}
-	private boolean checkVId(String getvId) {
-    	AssetVendor vendor = assetVendorRepository.getVendorById1(getvId);
+	private boolean checkVId(String vendorId) {
+    	AssetVendor vendor = assetVendorRepository.getVendorById1(vendorId);
 		if (vendor == null) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "vendor id is not valid");
 		}

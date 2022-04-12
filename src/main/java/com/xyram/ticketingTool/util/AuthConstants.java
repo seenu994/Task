@@ -1,7 +1,5 @@
 package com.xyram.ticketingTool.util;
 
-import java.util.Arrays;
-
 public interface AuthConstants {
 	/** Role Constants */
 	String ROLE_ADMIN = "TICKETINGTOOL_ADMIN";

@@ -2,19 +2,15 @@ package com.xyram.ticketingTool.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
-import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import com.xyram.ticketingTool.baseData.model.AuditModel;
-import com.xyram.ticketingTool.enumType.NotificationType;
 import com.xyram.ticketingTool.id.generator.IdGenerator;
 import com.xyram.ticketingTool.id.generator.IdPrefix;
 

@@ -1,8 +1,5 @@
 package com.xyram.ticketingTool.vo;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-
 import org.springframework.web.multipart.MultipartFile;
 
 public class TicketVo {

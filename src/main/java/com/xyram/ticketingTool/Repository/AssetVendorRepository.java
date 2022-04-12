@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import com.xyram.ticketingTool.entity.AssetVendor;
 
 @Repository  
-@Transactional
+
 public interface AssetVendorRepository  extends JpaRepository<AssetVendor, String> {
 	
 	
@@ -31,8 +31,17 @@ Page<Map> getAllVendorList(Pageable pageable);
 	@Query("Select distinct p from AssetVendor p where p.vendorId=:vendorId")
 	AssetVendor getAssetVendorById(String vendorId);
 
-	@Query("Select v from AssetVendor v where v.vendorId=:vendorId")
+	@Query("Select distinct p from AssetVendor p where p.vendorId=:vendorId")
 	AssetVendor getVendorById1(String vendorId);
+
+
+
+
+//	@Query("Select distinct p from AssetVendor p where p.vendorId=:vendorId")
+//	AssetVendor getVendorById1(String vendorId);
+
+
+//	AssetVendor getVendorById(AssetVendor vendorId);
 
 	
 

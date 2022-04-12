@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.xyram.ticketingTool.Repository.UserRepository;
 import com.xyram.ticketingTool.admin.model.User;
-
 import com.xyram.ticketingTool.enumType.UserRole;
 import com.xyram.ticketingTool.enumType.UserStatus;
 import com.xyram.ticketingTool.service.UserService;

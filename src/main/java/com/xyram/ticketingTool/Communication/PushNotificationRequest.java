@@ -1,10 +1,7 @@
 package com.xyram.ticketingTool.Communication;
 
-import java.util.Date;
 import java.util.Map;
-import java.util.Set;
 
-import org.checkerframework.common.value.qual.StaticallyExecutable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -1,19 +1,13 @@
 package com.xyram.ticketingTool.entity;
 
 import java.util.Date;
-import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -21,8 +15,6 @@ import org.springframework.data.annotation.CreatedDate;
 
 import com.xyram.ticketingTool.baseData.model.AuditModel;
 import com.xyram.ticketingTool.enumType.AssetIssueStatus;
-//import com.xyram.ticketingTool.enumType.AssetIssueStatus;
-import com.xyram.ticketingTool.enumType.ProjectStatus;
 import com.xyram.ticketingTool.id.generator.IdGenerator;
 import com.xyram.ticketingTool.id.generator.IdPrefix;
 
