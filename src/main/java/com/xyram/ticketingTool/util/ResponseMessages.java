@@ -217,6 +217,14 @@ public interface ResponseMessages {
 
 	String ADDED_SOFTWAREID = "Software Id added Successfully";
 
+	String EDITED_SOFTWAREMASTER = "Software master details is edited Successfully";
+
+	String SOFTWARE_STATUS_UPDATED = "Software master status updated Successfully";
+
+	String SOFTWARE_DETAILS_INVALID = "Software Master Details Invalid";
+
+	String GETALL_SOFTWAREMATER_LIST = "Get all software master list";
+
 	String ASSET_RETURNED_FROM_REPAIR_SUCCESSFULLY = "Asset is returned from repair successfully";
 
 	String RETURN_REPAIR = "return asset from repair";
@@ -225,7 +233,9 @@ public interface ResponseMessages {
 
 	String ASSET_ISSUE_STATUS_UPDATE = "Asset issue status in updated";
 
+	String GETALL_VENDOR_LIST = "Asset vendor list";
 	String RETURN_DAMAGE = "Asset returned from damage";
+
 
 	
 

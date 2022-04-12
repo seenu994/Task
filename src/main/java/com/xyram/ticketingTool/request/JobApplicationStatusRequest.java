@@ -1,7 +1,5 @@
 package com.xyram.ticketingTool.request;
 
-import java.util.StringJoiner;
-
 import com.xyram.ticketingTool.enumType.JobApplicationStatus;
 
 public class JobApplicationStatusRequest {

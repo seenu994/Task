@@ -5,9 +5,7 @@ import org.modelmapper.PropertyMap;
 import org.springframework.stereotype.Component;
 
 import com.xyram.ticketingTool.entity.Platform;
-import com.xyram.ticketingTool.entity.Story;
 import com.xyram.ticketingTool.vo.PlatformVo;
-import com.xyram.ticketingTool.vo.StoryVo;
 
 @Component
 public class PlatformMapper {

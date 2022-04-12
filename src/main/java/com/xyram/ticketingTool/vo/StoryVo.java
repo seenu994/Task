@@ -1,10 +1,5 @@
 package com.xyram.ticketingTool.vo;
 
-import java.util.Date;
-
-import javax.annotation.Nonnull;
-import javax.mail.Multipart;
-import javax.persistence.Column;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;

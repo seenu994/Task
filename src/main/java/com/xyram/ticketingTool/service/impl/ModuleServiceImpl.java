@@ -1,22 +1,16 @@
 package com.xyram.ticketingTool.service.impl;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.xyram.ticketingTool.entity.Module;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 
 import com.xyram.ticketingTool.Repository.ModuleRespository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
-import com.xyram.ticketingTool.entity.JobOpenings;
-import com.xyram.ticketingTool.enumType.JobOpeningStatus;
+import com.xyram.ticketingTool.entity.Module;
 import com.xyram.ticketingTool.service.ModuleService;
 
 @Service

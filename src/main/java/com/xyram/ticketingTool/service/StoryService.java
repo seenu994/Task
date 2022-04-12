@@ -1,9 +1,6 @@
 package com.xyram.ticketingTool.service;
 
-import java.util.List;
 import java.util.Map;
-
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
 
 import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
 import com.xyram.ticketingTool.entity.Story;

@@ -3,7 +3,6 @@ package com.xyram.ticketingTool.service.impl;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.text.Position;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.xyram.ticketingTool.Repository.EmployeePositionTypeRepository;
-import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
 import com.xyram.ticketingTool.entity.EmployeePositionType;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.EmployeePositionTypeService;

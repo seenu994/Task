@@ -3,8 +3,6 @@ package com.xyram.ticketingTool.Repository;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.Column;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;

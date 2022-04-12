@@ -10,15 +10,15 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -36,17 +36,11 @@ import com.xyram.ticketingTool.Repository.ProjectRepository;
 import com.xyram.ticketingTool.Repository.TicketAssignRepository;
 import com.xyram.ticketingTool.Repository.TicketRepository;
 import com.xyram.ticketingTool.entity.Employee;
-import com.xyram.ticketingTool.entity.Projects;
-import com.xyram.ticketingTool.entity.Ticket;
-import com.xyram.ticketingTool.entity.TicketAssignee;
 import com.xyram.ticketingTool.enumType.TicketStatus;
 import com.xyram.ticketingTool.service.ProjectService;
 import com.xyram.ticketingTool.service.ReportService;
 import com.xyram.ticketingTool.service.TicketService;
 import com.xyram.ticketingTool.util.PdfUtil;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 
 @Service
 public class ReportServiceImpl implements ReportService{

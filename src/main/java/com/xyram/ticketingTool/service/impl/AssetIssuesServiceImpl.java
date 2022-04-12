@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -24,7 +23,6 @@ import com.xyram.ticketingTool.Repository.AssetVendorRepository;
 import com.xyram.ticketingTool.admin.model.User;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Asset;
-import com.xyram.ticketingTool.entity.AssetBilling;
 import com.xyram.ticketingTool.entity.AssetIssues;
 //import com.xyram.ticketingTool.entity.AssetIssuesStatus;
 import com.xyram.ticketingTool.entity.AssetVendor;

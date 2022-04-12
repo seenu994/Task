@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.xyram.ticketingTool.entity.Comments;
 import com.xyram.ticketingTool.entity.JobVendorDetails;
 @Repository
 @Transactional

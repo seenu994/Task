@@ -5,7 +5,6 @@ import org.springframework.data.domain.Pageable;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Client;
 import com.xyram.ticketingTool.enumType.ClientStatus;
-import com.xyram.ticketingTool.enumType.UserStatus;
 
 public interface ClientService {
 

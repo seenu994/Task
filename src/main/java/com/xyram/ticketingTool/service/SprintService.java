@@ -1,8 +1,5 @@
 package com.xyram.ticketingTool.service;
 
-import java.util.List;
-import java.util.Map;
-
 import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
 
 //import java.util.Map;

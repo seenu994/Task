@@ -1,10 +1,9 @@
 package com.xyram.ticketingTool.Repository;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
-import org.hibernate.query.NativeQuery;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -12,14 +11,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.xyram.ticketingTool.entity.JobOpenings;
 import com.xyram.ticketingTool.entity.Ticket;
-import com.xyram.ticketingTool.entity.TicketAssignee;
-import com.xyram.ticketingTool.enumType.TicketAssigneeStatus;
 import com.xyram.ticketingTool.enumType.TicketStatus;
-
-import java.util.List;
-import java.util.Map;
 
 public interface TicketRepository extends JpaRepository<Ticket, String> {
 
