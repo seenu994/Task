@@ -30,7 +30,7 @@ import com.xyram.ticketingTool.enumType.AssetStatus;
 public interface AssetRepository extends JpaRepository<Asset, String>{
 
 	@Query("SELECT a from Asset a where a.assetId =:assetId")
-	Asset getByassetId(String assetId);
+	Asset getByAssetId(String assetId);
 	
 //    @Query("Select distinct new map(a.assetId as assetId,a.vendorId as vendorId,"		
 //        + "a.brand as brand,a.purchaseDate as purchaseDate,a.modelNo as modelNo,"
@@ -81,6 +81,12 @@ public interface AssetRepository extends JpaRepository<Asset, String>{
     	    + "b.amountPaid as amountPaid) from AssetBilling b right join Asset a "
     	    + "on a.assetId  = b.assetId where b.assetId =:assetId")
 	List<Map> getAssetBillingById(String assetId, Pageable pageable);
+
+    @Query("SELECT a.assetId from Asset a where a.assetId =:assetId")
+	Asset getAssetById1(String assetId);
+
+    //@Query("select a.purchaseDate from Asset a where a.assetId = :assetId")
+	//Asset getPurchaseDateById(Date purchaseDate,String assetId);
     
 	/*
 	@Query("Select distinct new map(a.aId as aId,a.vId as vId,"

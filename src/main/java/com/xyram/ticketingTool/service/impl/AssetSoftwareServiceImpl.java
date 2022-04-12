@@ -69,7 +69,7 @@ public class AssetSoftwareServiceImpl implements AssetSoftwareService {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset id is mandatory");
 		} else {
 			// Validate asset
-			Asset asset = assetRepository.getByassetId(assetSoftware.getAssetId1());
+			Asset asset = assetRepository.getByAssetId(assetSoftware.getAssetId1());
 			if (asset == null) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset id is not valid");
 			}

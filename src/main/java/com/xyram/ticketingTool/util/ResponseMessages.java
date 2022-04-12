@@ -217,6 +217,18 @@ public interface ResponseMessages {
 
 	String ADDED_SOFTWAREID = "Software Id added Successfully";
 
+	String ASSET_RETURNED_FROM_REPAIR_SUCCESSFULLY = "Asset is returned from repair successfully";
+
+	String RETURN_REPAIR = "return asset from repair";
+
+	String ASSET_ISSUE_STATUS_INVALID = "Asset issue status is invalid";
+
+	String ASSET_ISSUE_STATUS_UPDATE = "Asset issue status in updated";
+
+	String RETURN_DAMAGE = "Asset returned from damage";
+
+	
+
 	
 
 	

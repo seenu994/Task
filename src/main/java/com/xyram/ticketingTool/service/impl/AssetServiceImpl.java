@@ -1,6 +1,7 @@
 package com.xyram.ticketingTool.service.impl;
 
 import java.io.Console;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -213,7 +214,7 @@ public class AssetServiceImpl implements AssetService {
 
 		ApiResponse response = new ApiResponse();
 
-		Asset assetObj = assetRepository.getByassetId(Id);
+		Asset assetObj = assetRepository.getByAssetId(Id);
 		
 		if (assetObj != null) {
 			
