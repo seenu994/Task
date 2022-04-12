@@ -27,10 +27,10 @@ import com.xyram.ticketingTool.enumType.AssetStatus;
 
 @Repository
 @Transactional
-public interface AssetRepository extends JpaRepository<Asset, String>{
+public interface AssetRepository extends JpaRepository<Asset, String>
+{
 
-	@Query("SELECT a from Asset a where a.assetId =:assetId")
-	Asset getByassetId(String assetId);
+
 package com.xyram.ticketingTool.Repository;
 
 import java.util.Date;
