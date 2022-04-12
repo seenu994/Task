@@ -3,7 +3,6 @@ package com.xyram.ticketingTool.service;
 import org.springframework.stereotype.Service;
 
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
-import com.xyram.ticketingTool.entity.Asset;
 import com.xyram.ticketingTool.entity.AssetEmployee;
 
 @Service

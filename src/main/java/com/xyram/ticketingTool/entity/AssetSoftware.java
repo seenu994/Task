@@ -10,7 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.xyram.ticketingTool.baseData.model.AuditModel;
-import com.xyram.ticketingTool.enumType.AssetEmployeeStatus;
 import com.xyram.ticketingTool.enumType.AssetSoftwareStatus;
 
 @Entity

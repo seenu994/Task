@@ -34,14 +34,10 @@ import com.xyram.ticketingTool.entity.Notifications;
 import com.xyram.ticketingTool.entity.Ticket;
 import com.xyram.ticketingTool.entity.TicketAttachment;
 import com.xyram.ticketingTool.enumType.NotificationType;
-//import com.xyram.ticketingTool.entity.TicketComments;
-import com.xyram.ticketingTool.enumType.TicketCommentsStatus;
 import com.xyram.ticketingTool.enumType.TicketStatus;
-import com.xyram.ticketingTool.exception.ResourceNotFoundException;
 import com.xyram.ticketingTool.fileupload.FileTransferService;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.TicketAttachmentService;
-import com.xyram.ticketingTool.service.TicketService;
 import com.xyram.ticketingTool.util.ResponseMessages;
 //import com.xyram.ticketingTool.service.TicketCommentService;
 @Service

@@ -3,11 +3,8 @@ package com.xyram.ticketingTool.Repository;
 
 
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 import javax.transaction.Transactional;
-
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,11 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
-import com.xyram.ticketingTool.entity.Asset;
 import com.xyram.ticketingTool.entity.AssetBilling;
-import com.xyram.ticketingTool.entity.AssetIssues;
-import com.xyram.ticketingTool.entity.AssetVendor;
-import com.xyram.ticketingTool.entity.Employee;
 
 @Repository
 @Transactional

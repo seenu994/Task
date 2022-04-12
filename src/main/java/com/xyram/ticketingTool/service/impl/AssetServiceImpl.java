@@ -1,19 +1,10 @@
 package com.xyram.ticketingTool.service.impl;
 
-import java.io.Console;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import com.xyram.ticketingTool.enumType.AssetStatus;
-import com.xyram.ticketingTool.enumType.TicketStatus;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,31 +14,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.jcraft.jsch.Logger;
 import com.xyram.ticketingTool.Repository.AssetEmployeeRepository;
 import com.xyram.ticketingTool.Repository.AssetRepository;
 import com.xyram.ticketingTool.Repository.AssetVendorRepository;
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
-import com.xyram.ticketingTool.Repository.ProjectRepository;
-import com.xyram.ticketingTool.admin.model.User;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
-import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
-import com.xyram.ticketingTool.entity.Announcement;
 import com.xyram.ticketingTool.entity.Asset;
-import com.xyram.ticketingTool.entity.AssetEmployee;
 import com.xyram.ticketingTool.entity.AssetVendor;
-import com.xyram.ticketingTool.entity.CompanyWings;
-import com.xyram.ticketingTool.entity.DateValidatorUsingDateFormat;
 import com.xyram.ticketingTool.entity.Employee;
-import com.xyram.ticketingTool.entity.JobOpenings;
-import com.xyram.ticketingTool.entity.JobVendorDetails;
-import com.xyram.ticketingTool.entity.Role;
+import com.xyram.ticketingTool.enumType.AssetStatus;
 import com.xyram.ticketingTool.service.AssetService;
-import com.xyram.ticketingTool.service.EmployeeService;
 import com.xyram.ticketingTool.util.ResponseMessages;
-
-import io.swagger.models.Response;
-import io.swagger.models.properties.StringProperty.Format;
 
 @Service
 @Transactional

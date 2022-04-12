@@ -9,9 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
-import com.xyram.ticketingTool.entity.Asset;
 import com.xyram.ticketingTool.entity.AssetSoftware;
-import com.xyram.ticketingTool.service.AssetService;
 import com.xyram.ticketingTool.service.AssetSoftwareService;
 import com.xyram.ticketingTool.util.AuthConstants;
 

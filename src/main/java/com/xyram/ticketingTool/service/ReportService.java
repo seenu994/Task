@@ -4,8 +4,6 @@ import java.util.Map;
 
 import org.springframework.data.domain.Pageable;
 
-import com.xyram.ticketingTool.entity.Ticket;
-
 public interface ReportService {
 
 public Map getSummaryReportData(Pageable pageable);

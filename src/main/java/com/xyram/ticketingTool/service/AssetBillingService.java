@@ -3,14 +3,9 @@ package com.xyram.ticketingTool.service;
 
 
 
-import javax.transaction.Transactional;
-import javax.validation.Valid;
-
 import org.springframework.stereotype.Service;
 
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
-import com.xyram.ticketingTool.entity.AssetBilling;
-import com.xyram.ticketingTool.entity.AssetIssues;
 import com.xyram.ticketingTool.request.AssetBillingRequest;
 
 @Service

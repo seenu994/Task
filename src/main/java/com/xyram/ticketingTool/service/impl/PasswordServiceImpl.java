@@ -17,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
+
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
 import com.xyram.ticketingTool.Repository.ForgotPasswordToken;
 import com.xyram.ticketingTool.Repository.UserRepository;
@@ -25,11 +26,8 @@ import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.email.EmailService;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.ForgotPasswordKey;
-import com.xyram.ticketingTool.enumType.UserRole;
-import com.xyram.ticketingTool.exception.ResourceNotFoundException;
 import com.xyram.ticketingTool.service.PasswordService;
 import com.xyram.ticketingTool.service.UserService;
-import com.xyram.ticketingTool.util.PasswordUtil;
 import com.xyram.ticketingTool.util.ResponseMessages;
 
 @Service

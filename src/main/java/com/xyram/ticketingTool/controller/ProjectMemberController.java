@@ -1,7 +1,5 @@
 package com.xyram.ticketingTool.controller;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -15,25 +13,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
-import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.ProjectMembers;
-import com.xyram.ticketingTool.entity.Projects;
-import com.xyram.ticketingTool.enumType.UserStatus;
 import com.xyram.ticketingTool.response.ProjectAdminResponse;
 import com.xyram.ticketingTool.response.ProjectMemberresponse;
-import com.xyram.ticketingTool.service.EmployeeService;
 import com.xyram.ticketingTool.service.ProjectMemberService;
-import com.xyram.ticketingTool.service.ProjectService;
-import com.xyram.ticketingTool.ticket.Model.AuthConstant;
 import com.xyram.ticketingTool.util.AuthConstants;
-
-import ch.qos.logback.core.pattern.color.ANSIConstants;
 
 /**
  * 

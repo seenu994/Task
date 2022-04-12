@@ -217,6 +217,16 @@ public interface ResponseMessages {
 
 	String ADDED_SOFTWAREID = "Software Id added Successfully";
 
+	String EDITED_SOFTWAREMASTER = "Software master details is edited Successfully";
+
+	String SOFTWARE_STATUS_UPDATED = "Software master status updated Successfully";
+
+	String SOFTWARE_DETAILS_INVALID = "Software Master Details Invalid";
+
+	String GETALL_SOFTWAREMATER_LIST = "Get all software master list";
+
+	String GETALL_VENDOR_LIST = "Asset vendor list";
+
 	
 
 	

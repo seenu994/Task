@@ -1,6 +1,5 @@
 package com.xyram.ticketingTool.service.impl;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,9 +15,7 @@ import org.springframework.stereotype.Service;
 import com.xyram.ticketingTool.Repository.ClientRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Client;
-import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.enumType.ClientStatus;
-import com.xyram.ticketingTool.enumType.UserStatus;
 import com.xyram.ticketingTool.service.ClientService;
 import com.xyram.ticketingTool.util.ResponseMessages;
 

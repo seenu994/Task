@@ -1,27 +1,21 @@
 package com.xyram.ticketingTool.service.impl;
 
-import org.springframework.data.domain.Pageable;
-
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import javax.management.Notification;
 import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.xyram.ticketingTool.Repository.NotificationRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.controller.NotificationController;
-import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.Notifications;
-import com.xyram.ticketingTool.enumType.NotificationType;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.NotificationService;
 import com.xyram.ticketingTool.util.ResponseMessages;

@@ -3,7 +3,6 @@ package com.xyram.ticketingTool.controller;
 import java.util.Map;
 
 import org.slf4j.Logger;
-
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -15,13 +14,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.itextpdf.text.log.SysoCounter;
-import com.xyram.ticketingTool.Repository.UserRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Asset;
-import com.xyram.ticketingTool.entity.Employee;
-import com.xyram.ticketingTool.entity.Projects;
-import com.xyram.ticketingTool.service.AssetEmployeeService;
 import com.xyram.ticketingTool.service.AssetService;
 import com.xyram.ticketingTool.util.AuthConstants;
 

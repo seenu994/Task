@@ -2,7 +2,6 @@ package com.xyram.ticketingTool.service.impl;
 
 import java.util.Date;
 
-import javax.persistence.Column;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +15,8 @@ import com.xyram.ticketingTool.Repository.EmployeeRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Asset;
 import com.xyram.ticketingTool.entity.AssetEmployee;
-import com.xyram.ticketingTool.entity.AssetVendor;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.service.AssetEmployeeService;
-import com.xyram.ticketingTool.service.AssetService;
 import com.xyram.ticketingTool.util.ResponseMessages;
 
 @Service

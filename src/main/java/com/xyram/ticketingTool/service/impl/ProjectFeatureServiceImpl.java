@@ -10,20 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import org.stringtemplate.v4.compiler.CodeGenerator.list_return;
 
-import com.xyram.ticketingTool.Repository.FeatureRepository;
 import com.xyram.ticketingTool.Repository.ProjectFeatureRepository;
 import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
 import com.xyram.ticketingTool.entity.Feature;
 import com.xyram.ticketingTool.entity.ProjectFeature;
-import com.xyram.ticketingTool.entity.Story;
 import com.xyram.ticketingTool.request.AssignFeatureRequest;
 import com.xyram.ticketingTool.request.ProjectFeatureRequest;
 import com.xyram.ticketingTool.service.FeatureService;
 import com.xyram.ticketingTool.service.ProjectFeatureService;
-
-import ch.qos.logback.core.status.Status;
 
 @Service
 @Transactional

@@ -5,7 +5,6 @@ import java.util.Map;
 
 import javax.transaction.Transactional;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,8 +14,6 @@ import org.springframework.stereotype.Repository;
 
 import com.xyram.ticketingTool.admin.model.User;
 import com.xyram.ticketingTool.entity.Employee;
-import com.xyram.ticketingTool.entity.Ticket;
-import com.xyram.ticketingTool.helper.EmployeePojo;
 
 @Repository
 @Transactional

@@ -7,26 +7,18 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.Table;
-import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
 
 import com.xyram.ticketingTool.baseData.model.IBaseData;
-import com.xyram.ticketingTool.enumType.ProjectStatus;
-import com.xyram.ticketingTool.enumType.UserRole;
 import com.xyram.ticketingTool.enumType.UserStatus;
 import com.xyram.ticketingTool.id.generator.IdGenerator;
 import com.xyram.ticketingTool.id.generator.IdPrefix;
 import com.xyram.ticketingTool.ticket.config.JSONObjectUserType;
-import javax.persistence.Lob;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name = "user")

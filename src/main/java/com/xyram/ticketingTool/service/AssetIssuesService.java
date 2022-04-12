@@ -2,11 +2,8 @@ package com.xyram.ticketingTool.service;
 
 
 
-import java.util.Map;
-
 import javax.transaction.Transactional;
 
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.xyram.ticketingTool.apiresponses.ApiResponse;

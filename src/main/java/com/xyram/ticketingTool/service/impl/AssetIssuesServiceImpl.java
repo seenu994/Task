@@ -2,7 +2,6 @@ package com.xyram.ticketingTool.service.impl;
 
 
 import java.util.Date;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,7 +9,6 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -20,9 +18,7 @@ import com.xyram.ticketingTool.Repository.AssetRepository;
 import com.xyram.ticketingTool.Repository.AssetVendorRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Asset;
-import com.xyram.ticketingTool.entity.AssetBilling;
 import com.xyram.ticketingTool.entity.AssetIssues;
-
 //import com.xyram.ticketingTool.entity.AssetIssuesStatus;
 import com.xyram.ticketingTool.entity.AssetVendor;
 import com.xyram.ticketingTool.enumType.AssetIssueStatus;

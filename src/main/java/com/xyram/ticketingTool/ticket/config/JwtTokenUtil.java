@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Component;
 
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.util.AuthConstants;
-import com.xyram.ticketingTool.util.AuthUtil;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

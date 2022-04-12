@@ -1,7 +1,5 @@
 package com.xyram.ticketingTool.util;
 
-import com.xyram.ticketingTool.admin.model.User;
-import com.xyram.ticketingTool.enumType.UserRole;
 import com.xyram.ticketingTool.exception.TciketExpetion;
 
 public interface AuthUtil {

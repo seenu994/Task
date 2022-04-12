@@ -1,7 +1,5 @@
 package com.xyram.ticketingTool.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,7 +14,6 @@ import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
 import com.xyram.ticketingTool.entity.Version;
 import com.xyram.ticketingTool.service.VersionService;
 import com.xyram.ticketingTool.util.AuthConstants;
-import com.xyram.ticketingTool.vo.PlatformVo;
 
 @RestController
 @CrossOrigin

@@ -4,9 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.xyram.ticketingTool.entity.Asset;
 import com.xyram.ticketingTool.entity.AssetEmployee;
-import com.xyram.ticketingTool.entity.Employee;
 
 @Repository
 public interface AssetEmployeeRepository extends JpaRepository<AssetEmployee, String>{

@@ -1,14 +1,11 @@
 package com.xyram.ticketingTool.entity;
 
-import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -28,7 +25,7 @@ public class AssetVendor  extends AuditModel{
 	@IdPrefix(value = "PRO_")
 	@GeneratedValue(generator = IdGenerator.ID_GENERATOR)
 	@GenericGenerator(name = IdGenerator.ID_GENERATOR, strategy = "com.xyram.ticketingTool.id.generator.IdGenerator")
-	@Column(name = "vendorId")
+	@Column(name = "vendor_id")
 	private String vendorId;
 
 	@Column(name = "address")
@@ -50,17 +47,25 @@ public class AssetVendor  extends AuditModel{
 	private String country;
 
 	
+	
+
+	public AssetVendorEnum getAssetVendorStatus() {
+		return assetVendorStatus;
+	}
+
+	
+
 	public String getVendorId() {
 		return vendorId;
 	}
+
+
 
 	public void setVendorId(String vendorId) {
 		this.vendorId = vendorId;
 	}
 
-	public AssetVendorEnum getAssetVendorStatus() {
-		return assetVendorStatus;
-	}
+
 
 	public void setAssetVendorStatus(AssetVendorEnum assetVendorStatus) {
 		this.assetVendorStatus = assetVendorStatus;
