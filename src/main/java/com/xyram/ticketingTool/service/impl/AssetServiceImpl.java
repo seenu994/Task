@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -221,7 +222,7 @@ public class AssetServiceImpl implements AssetService {
 
 		ApiResponse response = new ApiResponse();
 
-		Asset assetObj = assetRepository.getByassetId(Id);
+		Asset assetObj = assetRepository.getByAssetId(Id);
 		
 		if (assetObj != null) {
 			

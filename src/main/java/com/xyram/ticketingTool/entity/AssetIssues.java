@@ -17,6 +17,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.annotation.CreatedDate;
 
 import com.xyram.ticketingTool.baseData.model.AuditModel;
 import com.xyram.ticketingTool.enumType.AssetIssueStatus;
@@ -39,40 +40,34 @@ public class AssetIssues extends AuditModel
 	@Column(name = "asset_id")
     private String assetId;
     
-    @Column(name="complaint_raised_date")
+	@CreatedDate
+    @Column(name="complaint_raised_date", nullable = false, updatable = false)
     public Date complaintRaisedDate;
     
     @Column(name="description")
     public String description;
     
     @Column(name="solution")
-    public String solution;
+    public boolean solution;
     
     
     @Enumerated(EnumType.STRING)
     @Column(name="asset_issue_status")
     public AssetIssueStatus assetIssueStatus = AssetIssueStatus.OPEN;
     
+    @Column(name = "vendor_id")
+    private String vendorId;
     
-    
-	public String getAssetId() {
+    @Column(name="resolved_date")
+    public Date resolvedDate;
+
+    public String getAssetId() {
 		return assetId;
 	}
 
 	public void setAssetId(String assetId) {
 		this.assetId = assetId;
 	}
-
-
-	
-
-	@Column(name = "vendor_id")
-    private String vendorId;
-    
-    @Column(name="resolved_date")
-    public Date resolvedDate;
-
-	
 
 	public String getVendorId() {
 		return vendorId;
@@ -82,7 +77,6 @@ public class AssetIssues extends AuditModel
 		this.vendorId = vendorId;
 	}
 
-	public AssetIssueStatus getAssetIssueStatus;
 
 	public String getAssetIssueId() {
 		return assetIssueId;
@@ -102,14 +96,6 @@ public class AssetIssues extends AuditModel
 		this.assetIssueStatus = assetIssueStatus;
 	}
 
-	public AssetIssueStatus getGetAssetIssueStatus() {
-		return getAssetIssueStatus;
-	}
-
-	public void setGetAssetIssueStatus(AssetIssueStatus getAssetIssueStatus) {
-		this.getAssetIssueStatus = getAssetIssueStatus;
-	}
-
 	public Date getComplaintRaisedDate() {
 		return complaintRaisedDate;
 	}
@@ -126,11 +112,11 @@ public class AssetIssues extends AuditModel
 		this.description = description;
 	}
 
-	public String getSolution() {
+	public boolean getSolution() {
 		return solution;
 	}
 
-	public void setSolution(String solution) {
+	public void setSolution(boolean solution) {
 		this.solution = solution;
 	}
 
@@ -158,10 +144,7 @@ public class AssetIssues extends AuditModel
 		return assetIssues;
 	}
 
-	public Object getReturnDate() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 
 	
 	

@@ -31,6 +31,39 @@ public interface AssetRepository extends JpaRepository<Asset, String>{
 
 	@Query("SELECT a from Asset a where a.assetId =:assetId")
 	Asset getByassetId(String assetId);
+package com.xyram.ticketingTool.Repository;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import javax.transaction.Transactional;
+
+import org.hibernate.metamodel.model.convert.spi.JpaAttributeConverter;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+//import org.springframework.data.jpa.repository.cdi.JpaRepositoryExtension;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
+
+import com.xyram.ticketingTool.apiresponses.ApiResponse;
+import com.xyram.ticketingTool.entity.Announcement;
+import com.xyram.ticketingTool.entity.Asset;
+import com.xyram.ticketingTool.entity.AssetEmployee;
+import com.xyram.ticketingTool.entity.AssetVendor;
+import com.xyram.ticketingTool.entity.Role;
+import com.xyram.ticketingTool.enumType.AssetStatus;
+
+
+@Repository
+@Transactional
+public interface AssetRepository extends JpaRepository<Asset, String>{
+
+	@Query("SELECT a from Asset a where a.assetId =:assetId")
+	Asset getByAssetId(String assetId);
 	
 //    @Query("Select distinct new map(a.assetId as assetId,a.vendorId as vendorId,"		
 //        + "a.brand as brand,a.purchaseDate as purchaseDate,a.modelNo as modelNo,"
@@ -87,6 +120,12 @@ public interface AssetRepository extends JpaRepository<Asset, String>{
 //    	    + "on a.assetId  = b.assetId where b.assetId =:assetId")
 //	List<Map> getAssetBillingById(String assetId, Pageable pageable);
 
+
+    @Query("SELECT a.assetId from Asset a where a.assetId =:assetId")
+	Asset getAssetById1(String assetId);
+
+    //@Query("select a.purchaseDate from Asset a where a.assetId = :assetId")
+	//Asset getPurchaseDateById(Date purchaseDate,String assetId);
     
     
 //    @Query("Select distinct new map(m.softwareName as softwareName,s.installDate as installDate,"		

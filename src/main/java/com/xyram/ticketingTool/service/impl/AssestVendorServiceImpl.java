@@ -58,13 +58,14 @@ public class AssestVendorServiceImpl implements AssetvendorService {
 		ApiResponse response = new ApiResponse(false);
 //		String email = assetVendorRepository.filterByEmail(Vendor.getEmail());
 
+		// throw exception in case mandataory
 		if (!emailValidation(Vendor.getEmail())) {
 			response.setMessage(ResponseMessages.EMAIL_INVALID);
 			response.setSuccess(false);
 
 		}
 
-		else if (Vendor.getMobileNo().length() != 10) {
+		else if (Vendor.getMobileNo() != null && Vendor.getMobileNo().length() != 10) {
 			response.setMessage(ResponseMessages.MOBILE_INVALID);
 
 			response.setSuccess(false);
@@ -163,23 +164,24 @@ public class AssestVendorServiceImpl implements AssetvendorService {
 	}
 
 	public ApiResponse updateassetVendorStatus(String vendorId, AssetVendorEnum assetVendorStatus) {
-		ApiResponse response = validateStatus(assetVendorStatus);
-		if (response.isSuccess()) {
-			AssetVendor assetVendor = assetVendorRepository.getById(vendorId);
-			if (assetVendor != null) {
-				assetVendor.setAssetVendorStatus(assetVendorStatus);
-				assetVendorRepository.save(assetVendor);
-				response.setSuccess(true);
-				response.setMessage(ResponseMessages.ASSETVENDOR_STATUS_UPDATED);
-				response.setContent(null);
-			}
+		ApiResponse response = new ApiResponse();
+
+		AssetVendor assetVendor = assetVendorRepository.getById(vendorId);
+		if (assetVendor != null) {
+			assetVendor.setAssetVendorStatus(assetVendorStatus);
+			assetVendorRepository.save(assetVendor);
+			response.setSuccess(true);
+			response.setMessage(ResponseMessages.ASSETVENDOR_STATUS_UPDATED);
+			response.setContent(null);
+			return response;
+
 		} else {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.VENDOR_DETAILS_INVALID);
 			response.setContent(null);
+			return response;
 		}
 
-		return response;
 	}
 
 }

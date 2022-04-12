@@ -191,5 +191,10 @@ public class Asset extends AuditModel{
 	public void setAssignedTo(String assignedTo) {
 		this.assignedTo = assignedTo;
 	}
+
+	public Asset getBillingDetailByAssetId(Asset assetId2) {
+		// TODO Auto-generated method stub
+		return assetId2;
+	}
 	
 }

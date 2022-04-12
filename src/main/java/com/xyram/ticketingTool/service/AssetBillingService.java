@@ -3,9 +3,13 @@ package com.xyram.ticketingTool.service;
 
 
 
+import java.util.Map;
+
+
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
@@ -26,6 +30,13 @@ public interface AssetBillingService
 	ApiResponse addRepairAssetBill(AssetBillingRequest assetBilling);
 
 	ApiResponse editRepairAssetBill(AssetBillingRequest assetBilling);
+
+	ApiResponse returnFromRepair(AssetBillingRequest assetBilling);
+ 
+	ApiResponse getAllAssetBilling(Pageable pageable);
+	
+
+	//ApiResponse getAllAssetBillingList(Map<String, Object> filter, Pageable pageable);
 
 	/*ApiResponse editPurchaseAssetBill(AssetBillingRequest assetBilling);
 

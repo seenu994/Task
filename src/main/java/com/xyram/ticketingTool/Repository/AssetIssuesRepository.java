@@ -1,5 +1,6 @@
 package com.xyram.ticketingTool.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -21,6 +22,8 @@ import com.xyram.ticketingTool.entity.Announcement;
 import com.xyram.ticketingTool.entity.AssetBilling;
 import com.xyram.ticketingTool.entity.AssetIssues;
 //import com.xyram.ticketingTool.entity.AssetIssuesStatus;
+import com.xyram.ticketingTool.enumType.AssetIssueStatus;
+import com.xyram.ticketingTool.enumType.AssetStatus;
 
 @Repository
 @Transactional
@@ -44,13 +47,15 @@ public interface AssetIssuesRepository extends JpaRepository<AssetIssues, String
  
 //AssetIssues getAssetIssues(AssetIssues assetIssues);
 	
-	@Query("Select distinct new map(i.assetIssueId as assetIssueId, i.complaintRaisedDate as complaintRaisedDate, "
+	/*@Query("Select distinct new map(i.assetIssueId as assetIssueId, i.complaintRaisedDate as complaintRaisedDate, "
 	+ "i.description as description, i.solution as solution,i.assetId as assetId, "
 	+ "i.assetIssueStatus as assetIssueStatus, i.vendorId as vendorId, "
 	+ "i.resolvedDate as resolvedDate ) from AssetIssues i ")
 
 	AssetIssues getAssetIssuesList(AssetIssues assetIssues);
-	/*@Query("SELECT i from AssetIssues i where i.assetIssue =:assetIssue")
+	
+	
+		/*@Query("SELECT i from AssetIssues i where i.assetIssue =:assetIssue")
 	 AssetIssues getAssetIssue(AssetIssues assetIssue);*/
 	/*static AssetIssues getById(AssetIssues issueId) {
 		
@@ -96,9 +101,32 @@ AssetIssues downloadAssetIssues(Map<String, Object> filter);
 	@Query("Select i from AssetIssues i where i.assetIssueStatus=:assetIssueStatus")
 	AssetIssues getAssetIssueStatus();
 
+	@Query("Select distinct new map(i.assetIssueId as assetIssueId, i.complaintRaisedDate as complaintRaisedDate, "
+			+ "i.description as description, i.solution as solution,i.assetId as assetId, "
+			+ "i.assetIssueStatus as assetIssueStatus, i.vendorId as vendorId, "
+			+ "i.resolvedDate as resolvedDate ) from AssetIssues i left join Asset a on i.assetId = a.assetId "
+			+ "join AssetVendor v on i.vendorId = v.vendorId where "
+			+ "(:assetIssueStatus is null OR lower(i.assetIssueStatus)=:assetIssueStatus) AND "
+			+ "(:assetId is null OR i.assetId=:assetId) AND "
+			+ "(:vendorId is null OR i.vendorId=:vendorId)")
+			
+	Page<Map> getAllAssetsIssues(String assetId, String vendorId, AssetIssueStatus assetIssueStatus, Pageable pageable);
 
-	//@Query("Select s AssetIssues s where s.assetIssuesStatus:assetIssuesStatus")
-	//AssetIssuesStatus getAssetIssuesStatus(String assetIssuesStatus);
+	@Query("Select distinct new map(i.assetIssueId as assetIssueId, i.complaintRaisedDate as complaintRaisedDate, "
+			+ "i.description as description, i.solution as solution,i.assetId as assetId, "
+			+ "i.assetIssueStatus as assetIssueStatus, i.vendorId as vendorId, "
+			+ "i.resolvedDate as resolvedDate ) from AssetIssues i  join Asset a on i.assetId = a.assetId "
+			+ "join AssetVendor v on i.vendorId = v.vendorId where i.assetIssueId LIKE %:assetIssueId ")
+	
+	     List<Map> searchAssetIssue(String assetIssueId);
+
+	
+	@Query("Select i.complaintRaisedDate from AssetIssues i where i.assetIssueId=:assetIssueId")
+	Date getCompaintRaisedDate(String assetIssueId);
+	
+	
+	
+	  
 
 	
 	

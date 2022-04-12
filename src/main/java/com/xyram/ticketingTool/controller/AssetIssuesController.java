@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.AssetIssues;
+import com.xyram.ticketingTool.enumType.AssetIssueStatus;
 import com.xyram.ticketingTool.response.ReportExportResponse;
 import com.xyram.ticketingTool.service.AssetIssuesService;
 import com.xyram.ticketingTool.util.AuthConstants;
@@ -31,36 +32,52 @@ public class AssetIssuesController
 	@Autowired
 	AssetIssuesService assetIssuesService ; 
 	
-	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/createAssetIssues" })
+	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/addAssetIssues" })
 	public ApiResponse addAssetIssues(@RequestBody AssetIssues assetIssues)
 	{
 		logger.info("received request to add assetIssues");
 		return assetIssuesService.addAssetIssues(assetIssues);
+		
 	}
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editAssetIssues" })
-	public ApiResponse editAssetIssues(@RequestBody AssetIssues assetIssues)
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editAssetIssues/{assetIssueId}"})
+	public ApiResponse editAssetIssues(@RequestBody AssetIssues assetIssues, @PathVariable String assetIssueId)
+	
 	{
 		logger.info("received request to edit assetIssues");
-		return assetIssuesService.editAssetIssues(assetIssues);
+		return assetIssuesService.editAssetIssues(assetIssues, assetIssueId);
+	}
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/returnRepair/{assetIssueId}"})
+	public ApiResponse returnRepair(@RequestBody AssetIssues assetIssues,@PathVariable String assetIssueId)
+	{
+		logger.info("received request to return asset");
+		return assetIssuesService.returnRepair(assetIssues,assetIssueId);
+	}
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/returnDamage/{assetIssueId}" })
+	public ApiResponse returnDamage(@RequestBody AssetIssues assetIssues,@PathVariable String assetIssueId)
+	{
+		logger.info("received request to edit assetIssues");
+		return assetIssuesService.returnDamage(assetIssues,assetIssueId);
 	}
 	
-	/*@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAssetIssues"})
-	public ApiResponse getIssues(Pageable pageable) {
-		logger.info("Received request to get assetIssues");
-		return assetIssuesService.getAssetIssues(pageable);
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllAssetsIssues"})
+	ApiResponse getAllAssetsIssues(@RequestBody Map<String, Object>filter, Pageable pageable) {
+		System.out.println(filter);
+		logger.info("Received request to Get all asset issues");
+		return assetIssuesService.getAllAssetsIssues(filter, pageable);
+	}
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAssetIssuesById/{assetIssueId}"})
+	ApiResponse getAssetIssues(@PathVariable String assetIssueId) {
+		
+		logger.info("Received request to Get asset issue");
+		return assetIssuesService.getAssetIssues(assetIssueId);
 	}
 	
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/searchAssetIssues"})
-	public ApiResponse searchAssetIssues(Pageable pageable, String issueId) {
-		logger.info("Received request to search job Vendor");
-		return assetIssuesService.searchAssetIssues(pageable,issueId);
-	}
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/changeAssetIssuesStatus"})
-	public ApiResponse changeAssetIssuesstatus(@PathVariable String Status,String issueId) 
+	/*@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/changeAssetIssuesStatus/{assetIssuesId}/{assetIssueStatus}"})
+	public ApiResponse changeAssetIssueStatus(@PathVariable String assetIssueId, AssetIssueStatus assetIssueStatus) 
 	{
 		logger.info("Received request to change status of assetIssue");
-		return assetIssuesService.changeAssetIssuesStatus(Status,issueId);
-	}
+		return assetIssuesService.changeAssetIssueStatus(assetIssueId,assetIssueStatus);
+	}*/
 	
 	
 	/*@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/downloadAllAssetIssues",})
@@ -69,10 +86,10 @@ public class AssetIssuesController
 		logger.info("Download all My Time sheets");
 		return assetIssuesService.downloadAllAssetIssues(filter);
 	}*/
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAssetIssuesList"})
-	public ApiResponse getAssetIssuesList(@RequestBody AssetIssues assetIssues) {
-		logger.info("Received request to get assetIssues");
-		return assetIssuesService.getAssetIssuesList(assetIssues);
-	}
+	 @GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/searchAssetIssue/{assetIssueId}"})
+	    public ApiResponse searchAssetIssue(@PathVariable String assetIssueId) {
+			logger.info("Received request to search Asset issue");
+			return assetIssuesService.searchAssetIssue(assetIssueId);
+		}
 
 }

@@ -1,9 +1,13 @@
 package com.xyram.ticketingTool.controller;
 
+import java.util.Map;
+
+
 import org.slf4j.Logger;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -62,20 +66,20 @@ public class AssetBillingController
 		logger.info("received request to edit asset purchase bill");
 		return assetBillingService.editRepairAssetBill(assetBilling);
 	}
-	/*
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/returnFromRepair" })
-	public ApiResponse returnFromRepair(@PathVariable String assetBillId)
+	
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/returnFromRepair" })
+	public ApiResponse returnFromRepair(@ModelAttribute AssetBillingRequest assetBilling)
 	{
 		logger.info("received request to return from repair");
-		return assetBillingService.returnFromRepair(assetBillId);
+		return assetBillingService.returnFromRepair(assetBilling);
 	}
 	
-	/*@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllAssetBillingList"})
-    public ApiResponse getAllAssetBillingList (Pageable pageable) {
-	        logger.info("inside AssetContoller :: getAllAssets");
-			return assetBillingService.getAllAssetBillingList(pageable);
-	}*/
-	
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllAssetBilling" })
+    public ApiResponse getAllAssetBilling(Pageable pageable) {
+	        logger.info("Received request to get Asset Billing by Id");
+			return assetBillingService.getAllAssetBilling(pageable);
+	}
+    
 }
 
 
