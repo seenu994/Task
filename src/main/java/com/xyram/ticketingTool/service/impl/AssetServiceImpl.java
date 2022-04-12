@@ -139,7 +139,6 @@ public class AssetServiceImpl implements AssetService {
 			if (!isExist) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "brand is not valid");
 			}
-
 		}
 
 		// purchase date Validating
@@ -360,7 +359,6 @@ public class AssetServiceImpl implements AssetService {
 		else {
 			return true;
 		}
-		
 	}
 
 //	@Override

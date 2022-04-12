@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface AssetUtil {
 
-	String[] brandList = { "LG", "DELL", "LENOVO", "APPLE", "HP", "APPLE"};
+	String[] brandList = { "LG", "DELL", "LENOVO", "APPLE", "HP", "APPLE", "ACER", "SAMSUNG"};
 	
 	//List<String> brandList=Arrays.asList("Lg", "Dell", "Lenovo", "Acer", "Hp");
 	
