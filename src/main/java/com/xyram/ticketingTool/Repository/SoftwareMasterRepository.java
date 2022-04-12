@@ -13,6 +13,9 @@ import com.xyram.ticketingTool.entity.SoftwareMaster;
 public interface SoftwareMasterRepository extends JpaRepository<AssetVendor, String> {
 
 	SoftwareMaster save(SoftwareMaster softwareMaster);
+
+	@Query("select m from SoftwareMaster m where m.softwareId =:softwareId")
+	SoftwareMaster getBysoftId(String softwareId);
 	
 //	@Query("select new map(s.softwareId as softwareId,s.softwareName as softwareName," 
 // 	+ "s.softwareMasterStatus as softwareMasterStatus) from SoftwareMaster p")
