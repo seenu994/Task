@@ -339,7 +339,7 @@ public class AssetBillingServiceImpl implements AssetBillingService
 			 }
 			 if(assetBillingObj.getBillingType() != null)
 			 {
-				 assetBillingObj.setBillingType("purchase");
+				 assetBillingObject.setBillingType("purchase");
 			 }
 			 if(assetBillingObj.getTransactionDate() != null)
 			 {
@@ -347,6 +347,7 @@ public class AssetBillingServiceImpl implements AssetBillingService
 			 }
 			 if(assetBillingObj.getAssetAmount() != null)
 			 {
+				 //checkAssetAmount(assetBilling.)
 				assetBillingObject.setAssetAmount(assetBillingObj.getAssetAmount());
 			 }
 		     if(assetBillingObj.getGstAmount() != null)
@@ -494,7 +495,7 @@ public ApiResponse addRepairAssetBill(AssetBillingRequest assetBilling) {
 			 }
 			 if(assetBillingObj.getBillingType() != null)
 			 {
-				 assetBillingObj.setBillingType("repair");
+				 assetBillingObjects.setBillingType("repair");
 			 }
 			 if(assetBillingObj.getTransactionDate() != null)
 			 {
@@ -505,7 +506,7 @@ public ApiResponse addRepairAssetBill(AssetBillingRequest assetBilling) {
 			 if(assetBillingObj.getAssetIssueId() != null)
 			 {
 				 checkAssetIssueId(assetBillingObj.getAssetIssueId());
-				 //assetBillingObjects.setAssetIssueId(assetBillingObj.getAssetIssueId());
+				 assetBillingObjects.setAssetIssueId(assetBillingObj.getAssetIssueId());
 			 }
 			 if(assetBillingObj.getUnderWarrenty() != null)
 			 {
