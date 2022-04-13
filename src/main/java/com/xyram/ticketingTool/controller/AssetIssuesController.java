@@ -66,11 +66,18 @@ public class AssetIssuesController
 		return assetIssuesService.getAllAssetsIssues(filter,pageable);
 	}
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAssetIssuesById/{assetIssueId}"})
-	ApiResponse getAssetIssues(@PathVariable String assetIssueId) {
+	ApiResponse getAssetIssuesById(@PathVariable String assetIssueId) {
 		
 		logger.info("Received request to Get asset issue");
-		return assetIssuesService.getAssetIssues(assetIssueId);
+		return assetIssuesService.getAssetIssuesById(assetIssueId);
 	}
+	/*@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAssetIssuesByAssetId/{assetId}"})
+	ApiResponse getAllAssetIssuesByAssetId(Pageable pageable,@PathVariable String assetId) {
+		
+		logger.info("Received request to Get asset issue");
+		return assetIssuesService.getAllAssetIssuesByAssetId(pageable,assetId);
+	}*/
+	
 	
 	/*@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/changeAssetIssuesStatus/{assetIssuesId}/{assetIssueStatus}"})
 	public ApiResponse changeAssetIssueStatus(@PathVariable String assetIssueId, AssetIssueStatus assetIssueStatus) 

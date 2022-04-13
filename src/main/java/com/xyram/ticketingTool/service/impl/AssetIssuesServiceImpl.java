@@ -1,6 +1,8 @@
 package com.xyram.ticketingTool.service.impl;
 
 
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -149,17 +151,17 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 			if(assetIssues.getAssetId() != null)
 			{
 				 checkAssetId(assetIssues.getAssetId());
-				 assetIssues.setAssetId(assetIssues.getAssetId());
+				 //assetIssues.setAssetId(assetIssues.getAssetId());
 			}
 			if(assetIssues.getVendorId() != null)
 			{
 				checkVendorId(assetIssues.getVendorId());
 				assetIssues.setVendorId(assetIssues.getVendorId());
 			}
-			if(assetIssues.getComplaintRaisedDate()!= null)
+			/*if(assetIssues.getComplaintRaisedDate()!= null)
 			{
 				assetIssues.setComplaintRaisedDate(new Date());
-			}
+			}*/
 			if(assetIssues.getAssetIssueStatus() != null)
 			{
 				checkAssetIssuesStatus(assetIssues.getAssetIssueStatus());
@@ -167,6 +169,7 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 			}
 			if(assetIssues.getDescription() != null)
 			{
+				checkDescription(assetIssues.getDescription());
 		       assetIssues.setDescription(assetIssues.getDescription());
 			}
 			
@@ -185,6 +188,13 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
        return response;
     }
 
+
+	private boolean checkDescription(String description) 
+	{
+		
+		return true;
+		
+	}
 
 	private boolean checkVendorId(String vendorId) 
 	{
@@ -217,64 +227,58 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 	{
          ApiResponse response = new ApiResponse(false);
 		 AssetIssues assetIssuesObj = assetIssuesRepository.getAssetIssueById(assetIssues.getAssetIssueId());
-		 
-		if(assetIssuesObj != null) 
-	    {	
-			if(assetIssues.getAssetId() != null)
-			{
-				 checkAssetId(assetIssues.getAssetId());
-				 assetIssues.setAssetId(assetIssues.getAssetId());
+		 if(assetIssuesObj != null) 
+		    {	
+				if(assetIssues.getAssetId() != null)
+				{
+					 checkAssetId(assetIssuesObj.getAssetId());
+					 assetIssuesObj.setAssetId(assetIssues.getAssetId());
+				}
+				if(assetIssues.getVendorId() != null)
+				{
+					checkVendorId(assetIssuesObj.getVendorId());
+					assetIssuesObj.setVendorId(assetIssues.getVendorId());
+				}
+				
+				if(assetIssues.getAssetIssueStatus() != null)
+				{
+					checkAssetIssuesStatus(assetIssuesObj.getAssetIssueStatus());
+					assetIssuesObj.setAssetIssueStatus(AssetIssueStatus.CLOSE);
+				}
+				if(assetIssues.getDescription() != null)
+				{
+					checkDescription(assetIssuesObj.getDescription());
+					assetIssuesObj.setDescription(assetIssues.getDescription());
+				}
+				assetIssuesObj.setResolvedDate(new Date());
+				if(assetIssues.getResolvedDate() != null)
+				{
+					checkResolvedDate(assetIssues.getResolvedDate(), assetIssueId);
+					assetIssuesObj.setResolvedDate(assetIssues.getResolvedDate());
+					
+				}
+				assetIssuesRepository.save(assetIssuesObj);
+				response.setSuccess(true);
+				response.setMessage(ResponseMessages.RETURN_REPAIR);
+				
 			}
-			if(assetIssues.getVendorId() != null)
+
+			else 
 			{
-				checkVendorId(assetIssues.getVendorId());
-				assetIssues.setVendorId(assetIssues.getVendorId());
+				response.setSuccess(false);
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid assetIssueId");
+				
 			}
-			if(assetIssues.getComplaintRaisedDate()!= null)
-			{
-				assetIssues.setComplaintRaisedDate(new Date());
-			}
-			if(assetIssues.getAssetIssueStatus() != null)
-			{
-				checkAssetIssuesStatus(assetIssues.getAssetIssueStatus());
-				assetIssues.setAssetIssueStatus(AssetIssueStatus.CLOSE);
-			}
-			if(assetIssues.getResolvedDate()!= null)
-			{
-				checkResolvedDate(assetIssues.getResolvedDate(), assetIssueId);
-				assetIssues.setResolvedDate(assetIssues.getResolvedDate());
-			}
-			else
-			{
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"resolved date is mandatory");
-			}
-		    if(assetIssues.getSolution() != false)
-		    {
-		    	//checkSolution(assetIssues.getSolution());
-		    	assetIssues.setSolution(assetIssues.getSolution());
-		    }
-		    else
-		    {
-		    	throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"solution should be mandatory");
-		    }
-	
-		assetIssuesRepository.save(assetIssues);
-		response.setMessage(ResponseMessages.RETURN_REPAIR);
-		response.setSuccess(true);
-	  }
-		else
-		{
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"invalid assetIssueId");
-		}
-		return response;
+	       return response;
+	    }
 		
-	}
 
 	private boolean checkResolvedDate(Date resolvedDate,String assetIssueId) 
 	{
 		
-		Date assetIssues = assetIssuesRepository.getCompaintRaisedDate(assetIssueId);
-		Date d1 = assetIssues;
+		Date compaintRaisedDate = assetIssuesRepository.getCompaintRaisedDate(assetIssueId);
+		Date d1 = compaintRaisedDate;
+		System.out.println("d1"+ compaintRaisedDate);
 		Date d2 = resolvedDate;
 		
 	    if (d1.after(d2) || d1.equals(d2)) 
@@ -313,31 +317,36 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 		 AssetIssues assetIssuesObj = assetIssuesRepository.getAssetIssueById(assetIssues.getAssetIssueId());
 		 //Asset asset = getAssetById(assetIssues.getAssetId());
 		 
-		if(assetIssuesObj != null) 
+		if(assetIssues != null) 
 	    {	
 			if(assetIssues.getAssetId() != null)
 			{
-				 checkAssetId(assetIssues.getAssetId());
-				 assetIssues.setAssetId(assetIssues.getAssetId());
+				 checkAssetId(assetIssuesObj.getAssetId());
+				 assetIssuesObj.setAssetId(assetIssues.getAssetId());
 			}
 			if(assetIssues.getVendorId() != null)
 			{
-				checkVendorId(assetIssues.getVendorId());
-				assetIssues.setVendorId(assetIssues.getVendorId());
+				checkVendorId(assetIssuesObj.getVendorId());
+				assetIssuesObj.setVendorId(assetIssues.getVendorId());
 			}
-			if(assetIssues.getComplaintRaisedDate()!= null)
+			/*if(assetIssues.getComplaintRaisedDate()!= null)
 			{
 				assetIssues.setComplaintRaisedDate(new Date());
+			}*/
+			if(assetIssues.getDescription() != null)
+			{
+				checkDescription(assetIssuesObj.getDescription());
+				assetIssuesObj.setDescription(assetIssues.getDescription());
 			}
 			if(assetIssues.getAssetIssueStatus() != null)
 			{
-				checkAssetIssuesStatus(assetIssues.getAssetIssueStatus());
-				assetIssues.setAssetIssueStatus(AssetIssueStatus.DAMAGE);
+				checkAssetIssuesStatus(assetIssuesObj.getAssetIssueStatus());
+				assetIssuesObj.setAssetIssueStatus(AssetIssueStatus.DAMAGE);
 			}
 			if(assetIssues.getResolvedDate()!= null)
 			{
 				checkResolvedDate(assetIssues.getResolvedDate(),assetIssueId);
-				assetIssues.setResolvedDate(assetIssues.getResolvedDate());
+				assetIssuesObj.setResolvedDate(assetIssues.getResolvedDate());
 			}
 		    if(assetIssues.getSolution() != false)
 		    {
@@ -361,6 +370,7 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 		
 	}
 
+
 	private boolean checkStatus(AssetIssueStatus assetIssueStatus) 
 	{
 			AssetIssues assetIssue = new AssetIssues();
@@ -382,12 +392,31 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 		
 		ApiResponse response = new ApiResponse(false);
 		
+		String assetIssueStatus = filter.containsKey("assetIssueStatus") ? ((String) filter.get("assetIssueStatus")).toUpperCase()
+					: null;
 		String assetId = filter.containsKey("assetId") ? ((String) filter.get("assetId"))
 				: null;
 		String vendorId = filter.containsKey("vendorId") ? ((String) filter.get("vendorId"))
 				: null;
-		String assetIssueStatus = filter.containsKey("assetIssueStatus") ? ((String) filter.get("assetIssueStatus")).toUpperCase()
-					: null;
+		String fromDate = filter.containsKey("fromDate") ? filter.get("fromDate").toString(): null;
+		String toDate = filter.containsKey("toDate") ? filter.get("toDate").toString():null;
+		
+		Date parsefromDate = null;
+		Date parsetoDate = null;
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		if(fromDate != null && toDate != null)
+		{
+			try
+			{
+				parsefromDate = fromDate != null ? dateFormat.parse(fromDate) : null;
+				parsetoDate = toDate != null ? dateFormat.parse(toDate) : null;
+			}
+			catch(ParseException e)
+			{
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid date format date should be yyyy-MM-dd");
+			}
+			
+		}
 		
 		AssetIssueStatus assetIssuestatus = null;
 		if(assetIssueStatus!=null) {
@@ -399,8 +428,7 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 			}
 		}
 				
-		Page<Map> assetIssues = assetIssuesRepository.getAllAssetsIssues(assetId, vendorId, assetIssuestatus,pageable);
-		
+		Page<Map> assetIssues = assetIssuesRepository.getAllAssetsIssues(assetIssuestatus, assetId, vendorId, fromDate, toDate, pageable);
 		
 		if(assetIssues.getSize() > 0) {
 			Map content = new HashMap();
@@ -416,7 +444,7 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 	}
 
 	@Override
-	public ApiResponse getAssetIssues(String assetIssueId) 
+	public ApiResponse getAssetIssuesById(String assetIssueId) 
 	{
 		ApiResponse response = new ApiResponse();
 		AssetIssues assetIssues = assetIssuesRepository.getAssetIssueById(assetIssueId);
@@ -439,7 +467,7 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 	@Override
 	public ApiResponse searchAssetIssue(String assetIssueId) 
 	{
-		ApiResponse response = new ApiResponse();
+		ApiResponse response = new ApiResponse(false);
 		AssetIssues assetIssues = new AssetIssues();
 		assetIssues.setAssetIssueId(assetIssueId);
 		List<Map> assetIssuesList = assetIssuesRepository.searchAssetIssue(assetIssueId);
@@ -457,5 +485,30 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 		}
 		return response;
 	}
+
+	/*@Override
+	public ApiResponse getAllAssetIssuesByAssetId(Pageable pageable,String assetId) 
+	{
+		ApiResponse response = new ApiResponse(false);
+		Asset asset = assetRepository.getAssetById(assetId);
+		AssetIssues assetIssues = new AssetIssues();
+		//Page<Map> assetIssues = assetIssuesRepository.getAllAssetsIssues(null, assetId, assetId, assetId, assetId, pageable)
+		
+		Map content = new HashMap();
+		content.put("assetIssues", assetIssues);
+		if(content != null)
+		{
+			response.setSuccess(true);
+			response.setMessage("Asset issues retrived successfully");
+			response.setContent(content);
+		}
+		else
+		{
+			response.setSuccess(false);
+			response.setMessage("could not retrive tha data");
+		}
+		
+		return response;
+	}*/
 }
 	
