@@ -37,6 +37,8 @@ import com.xyram.ticketingTool.enumType.AssetStatus;
 
 
 
+
+
 @Repository
 @Transactional
 public interface AssetIssuesRepository extends JpaRepository<AssetIssues, String>
@@ -134,9 +136,10 @@ AssetIssues getAssetIssueStatus();
 + "join AssetVendor v on i.vendorId = v.vendorId where "
 + "(:assetIssueStatus is null OR lower(i.assetIssueStatus)=:assetIssueStatus) AND "
 + "(:assetId is null OR i.assetId=:assetId) AND "
-+ "(:vendorId is null OR i.vendorId=:vendorId)")
-
-Page<Map> getAllAssetsIssues(String assetId, String vendorId, AssetIssueStatus assetIssueStatus, Pageable pageable);
++ "(:vendorId is null OR i.vendorId=:vendorId) AND "
++ "(:toDate is null OR Date(i.complaintRaisedDate) <= STR_TO_DATE(:toDate, '%Y-%m-%d')) AND "
++ "(:fromDate is null OR Date(i.complaintRaisedDate) >= STR_TO_DATE(:fromDate, '%Y-%m-%d')) ")
+Page<Map> getAllAssetsIssues(AssetIssueStatus assetIssueStatus, String assetId, String vendorId, String fromDate, String toDate, Pageable pageable);
 
 
 
