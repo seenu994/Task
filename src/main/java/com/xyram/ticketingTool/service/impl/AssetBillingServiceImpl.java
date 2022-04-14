@@ -11,6 +11,7 @@ import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties.Admin;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -33,6 +34,7 @@ import com.xyram.ticketingTool.entity.AssetIssues;
 import com.xyram.ticketingTool.entity.AssetVendor;
 import com.xyram.ticketingTool.enumType.AssetIssueStatus;
 import com.xyram.ticketingTool.request.AssetBillingRequest;
+import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.AssetBillingService;
 import com.xyram.ticketingTool.service.AssetIssuesService;
 import com.xyram.ticketingTool.service.AssetService;
@@ -68,6 +70,8 @@ public class AssetBillingServiceImpl implements AssetBillingService
 	@Autowired
 	AssetService assetService;
 	
+	@Autowired
+	CurrentUser currentUser;
 
 	@Autowired
 	AssetIssuesRepository assetIssuesRepository;
@@ -111,6 +115,8 @@ public class AssetBillingServiceImpl implements AssetBillingService
 			if(assetBilling != null)
 			{
 				assetBillingObj.setBillingType("purchase");
+				assetBillingObj.setCreatedAt(new Date());
+				assetBillingObj.setCreatedBy(currentUser.getUserId());
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.ASSET_PURCHASE_BILL_ADDED_SUCCESSFULLY);
 				
@@ -139,21 +145,6 @@ public class AssetBillingServiceImpl implements AssetBillingService
 			   throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset id already exists!!!");
 			 }
 			 
-			// int Integer;
-			 //String s1 = getBillingDetailByAssetId(assetId);
-			 //System.out.println("asset.assetId - " + asset.getAssetId());
-			 //int Integer;
-			
-			
-			//System.out.println("asset.assetId - " + assetId.getBillingDetailByAssetId(assetId));
-			 //if(assetId == null )
-			 //{
-				 //throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset id not valid!!!");
-			 //}
-			
-//			 else {
-//				   assetBilling.setAsset(asset);
-//				 }
 		 }
 		 
 		 //validate vendor id
@@ -239,26 +230,7 @@ public class AssetBillingServiceImpl implements AssetBillingService
 	}
 
 
-	/*private boolean checkAmountPaid(boolean amountPaid, String assetBillId) 
-    {
-    	//AssetBilling assetBillingObj = new AssetBilling();
-    	//System.out.println(assetBillingObj);
-		System.out.println("assetBillId"+ assetBillId);
-		AssetBilling assetBillingObj = assetBillingRepository.getAssetAmount(assetBillId);
-		assetBillingObj = assetBillingRepository.getGstAmount(assetBillId);
-		
-    	if(assetBillingObj.getAssetAmount() == null && assetBillingObj.getAssetAmount().equals("") &&
-    	assetBillingObj.getGstAmount() == null && assetBillingObj.getGstAmount().equals(""))
-        {
-    		System.out.println(assetBillingObj.isAmountPaid());
-    	   return false;
-        }
-    	else
-    	{
-    		System.out.println(assetBillingObj.isAmountPaid());
-    	   return true;
-    	}
-	}*/
+	
 
 
 	private ApiResponse validateAssetIssueId(AssetBilling assetBilling) 
@@ -356,6 +328,9 @@ public class AssetBillingServiceImpl implements AssetBillingService
 			 }
 		     assetBillingObj.setAmountPaid(true);
 		     
+		        assetBillingObject.setLastUpdatedAt(new Date());
+		        assetBillingObject.setUpdatedBy(currentUser.getUserId());
+		        
 			   assetBillingRepository.save(assetBillingObject);
 				//AssetBilling assetBillingObject = assetBillingRepository.save(assetBilling);
 
@@ -430,7 +405,7 @@ public ApiResponse addRepairAssetBill(AssetBillingRequest assetBilling) {
 	throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
 	}
 	
-	response = validateAssetBilling(assetBillingObj);
+	response = validateAssetBillings(assetBillingObj);
 	//assetBillingObj = assetBillingRepository.save(assetBillingObj);
 		if(response.isSuccess())
 		{
@@ -438,6 +413,9 @@ public ApiResponse addRepairAssetBill(AssetBillingRequest assetBilling) {
 			if(assetBillingObj != null)
 			{
 				assetBillingObj.setBillingType("repair");
+				
+				assetBillingObj.setCreatedAt(new Date());
+				assetBillingObj.setCreatedBy(currentUser.getName());
 				assetBillingObj = assetBillingRepository.save(assetBillingObj);
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.ASSET_REPAIR_BILL_ADDED_SUCCESSFULLY);
@@ -445,17 +423,77 @@ public ApiResponse addRepairAssetBill(AssetBillingRequest assetBilling) {
 		}
 
 	return response;
-	
-   }
+}
+
+		private ApiResponse validateAssetBillings(AssetBilling assetBilling) {
+
+		ApiResponse response = new ApiResponse(false);
+		
+		if(assetBilling.getAssetId() == null || assetBilling.getAssetId().equals(""))
+		 {
+			 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset id is mandatory !!");
+		 }
+		 else
+		 {
+			 //Asset asset = assetRepository.getaId(assetIssues.getaId());
+			 Asset asset = assetRepository.getAssetById(assetBilling.getAssetId());
+			 if(asset == null)
+			 {
+				 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid asset reference");
+			 }
+		 }
+		
+		//validate vendor id
+		if(assetBilling.getVendorId() == null || assetBilling.getVendorId().equals(" "))
+		{
+			 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "vendor id is mandatory !!");
+		}
+		else
+		{
+			 AssetVendor assetVendor = assetVendorRepository.getAssetVendorById(assetBilling.getVendorId());
+			 if(assetVendor == null)
+			 {
+				 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid vendor id");
+			 }
+		}
+
+		//validate billingtype
+		if(assetBilling.getBillingType() == null || assetBilling.getBillingType().equals(""))
+		{
+			 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "billing type is mandatory");
+		}
+		
+		
+		//validate transactionDate
+		if(assetBilling.getTransactionDate() == null)
+		{
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "transaction date is mandatory !!");
+		
+		}
+		else
+		{
+			 validateTransactionDate(assetBilling.getTransactionDate());
+		}
+				
+		assetBilling.setAmountPaid(false);
+		
+		response.setSuccess(true);
+		return response;
+		
+		}
+	private Asset getAssetById(Asset assetId) {
+			// TODO Auto-generated method stub
+			return assetId;
+		}
+
 
 	@Override
 	public ApiResponse editRepairAssetBill(AssetBillingRequest assetBilling) 
 	{
-		
 		ApiResponse response = new ApiResponse();
 		ObjectMapper mapper = new ObjectMapper();
-		AssetBilling assetBillingObj = null;
-		
+		//assetBilling = validateAssetBilling(assetBilling);
+		AssetBilling assetBillingObj  = null;
 		try
 		{
 			assetBillingObj  = mapper.readValue(assetBilling.getAssetBilling(), AssetBilling.class);
@@ -476,65 +514,60 @@ public ApiResponse addRepairAssetBill(AssetBillingRequest assetBilling) {
 		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
 		}
 		
-		AssetBilling assetBillingObjects = assetBillingRepository.getAssetBillById(assetBillingObj.getAssetBillId());
 		
+		AssetBilling assetBillingObject = assetBillingRepository.getAssetBillById(assetBillingObj.getAssetBillId());
+		 //System.out.println("assetBillingObject.getAssetBillId() - " + assetBillingObject.getAssetId());
 		 
-		 if(assetBillingObjects != null)
-		 {  
-			 assetBillingObj.setAssetBillId(assetBillingObjects.getAssetBillId());
-			     
+		 if(assetBillingObject != null)
+		 {
+			 //System.out.println("IN IF");   
 			 if(assetBillingObj.getAssetId() != null)
 			 {
-				 checkAssetId(assetBillingObj.getAssetId());
-				 //assetBillingObjects.setAssetId(assetBillingObj.getAssetId());
+				 checkAssetId(assetBillingObject.getAssetId());
+				 assetBillingObject.setAssetId(assetBillingObj.getAssetId());
 			 }
 			 if(assetBillingObj.getVendorId() != null) 
 			 {
-			    	checkVendorId(assetBillingObj.getVendorId());
-			    	assetBillingObjects.setVendorId(assetBillingObj.getVendorId());
+			    	checkVendorId(assetBillingObject.getVendorId());
+			    	assetBillingObject.setVendorId(assetBillingObj.getVendorId());
 			 }
 			 if(assetBillingObj.getBillingType() != null)
 			 {
-				 assetBillingObjects.setBillingType("repair");
+				 assetBillingObject.setBillingType("reapir");
 			 }
 			 if(assetBillingObj.getTransactionDate() != null)
 			 {
-				 assetBillingObjects.setTransactionDate(new Date());
+				 assetBillingObject.setTransactionDate(assetBillingObj.getTransactionDate());
 			 }
-			 //response = validateAssetIssueId(assetBillingObj);
-			 
 			 if(assetBillingObj.getAssetIssueId() != null)
 			 {
-				 checkAssetIssueId(assetBillingObj.getAssetIssueId());
-				 assetBillingObjects.setAssetIssueId(assetBillingObj.getAssetIssueId());
+				 checkAssetIssueId(assetBillingObject.getAssetIssueId());
+				 assetBillingObject.setAssetIssueId(assetBillingObj.getAssetIssueId());
 			 }
-			 if(assetBillingObj.getUnderWarrenty() != null)
-			 {
-			    assetBillingObjects=checkUnderWarrenty1(assetBilling, assetBillingObj);
-			 }
-			    
-				
-			   assetBillingRepository.save(assetBillingObjects);
+			 checkUnderWarrenty1(assetBillingObj,assetBilling);
+		     
+		        assetBillingObject.setLastUpdatedAt(new Date());
+		        assetBillingObject.setUpdatedBy(currentUser.getUserId());
+		        
+			   assetBillingRepository.save(assetBillingObject);
+				//AssetBilling assetBillingObject = assetBillingRepository.save(assetBilling);
 
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.ASSET_REPAIR_BILL_EDITED_SUCCESSFULLY);
 			  } 
-		 
 
           else {
 				response.setSuccess(false);
+				
+				
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid asset bill id");
+				//response.setContent(null);
 			 
 		 }
-		
-		
-		
-		
-		
-		
-		
 		return response;
 	}
+
+		
 
 
 	private boolean checkAssetIssueId(String assetIssueId) 
@@ -551,22 +584,22 @@ public ApiResponse addRepairAssetBill(AssetBillingRequest assetBilling) {
 	}
 
 
-	private AssetBilling checkUnderWarrenty1(AssetBillingRequest assetBillingObj,AssetBilling assetBilling) 
+	private AssetBilling checkUnderWarrenty1(AssetBilling assetBilling,AssetBillingRequest assetBillingObj) 
 	{
 		if(assetBilling.getUnderWarrenty())
 		{
-			
-        	assetBilling.setAmountPaid(false);
         	assetBilling.setUnderWarrenty(true);
+        	//assetBilling.setAssetAmount(null);
+        	//assetBilling.setGstAmount(null);
+        	assetBilling.setAmountPaid(false);
         	return assetBilling;
         	
 		}
-		
 		else
 		{
 			assetBilling.setAssetAmount(assetBilling.getAssetAmount());
 			assetBilling.setGstAmount(assetBilling.getGstAmount());
-			assetBilling.setAmountPaid(false);
+			assetBilling.setAmountPaid(true);
 			assetBilling.setUnderWarrenty(false);
 			return assetBilling;
 		}
@@ -624,7 +657,7 @@ public ApiResponse addRepairAssetBill(AssetBillingRequest assetBilling) {
 				}
 				if(assetBillingObj.getUnderWarrenty() != false)
 				{
-					checkUnderWarrenty1(assetBilling,billingObj);
+					checkUnderWarrenty1(assetBillingObj,assetBilling);
 					billingObj.setUnderWarrenty(assetBillingObj.getUnderWarrenty());
 				}
                 if(assetBillingObj.getAssetIssueId() != null)
@@ -639,6 +672,8 @@ public ApiResponse addRepairAssetBill(AssetBillingRequest assetBilling) {
 					//assetIssues.setComplaintRaisedDate(new Date())
 					
 				}*/
+                billingObj.setLastUpdatedAt(new Date());
+                billingObj.setUpdatedBy(currentUser.getName());
 				assetBillingRepository.save(billingObj);
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.RETURN_REPAIR);
