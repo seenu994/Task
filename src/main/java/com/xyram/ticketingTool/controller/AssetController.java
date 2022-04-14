@@ -42,19 +42,19 @@ public class AssetController {
 	@Autowired
 	AssetEmployeeService assetEmployeeService;
 	
-	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/addAsset"})
+	@PostMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/addAsset"})
 	public ApiResponse addasset(@RequestBody Asset asset) {
 		logger.info("Received request to add Asset");
 		return assetService.addasset(asset);
 	}
 	
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editAsset/{assetId}"})
+	@PutMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/editAsset/{assetId}"})
     public ApiResponse editAsset(@RequestBody Asset asset,@PathVariable String assetId) {
 		logger.info("Received request to edit Asset");
 		return assetService.editAsset(asset,assetId);
 	}
 	
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllAssets"})
+	@GetMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllAssets"})
 	ApiResponse getAllAssets(@RequestBody Map<String, Object>filter, Pageable pageable) {
 		System.out.println(filter);
 		logger.info("Received request to Get all asset");

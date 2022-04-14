@@ -21,6 +21,8 @@ import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Asset;
 import com.xyram.ticketingTool.entity.AssetEmployee;
 import com.xyram.ticketingTool.entity.Employee;
+import com.xyram.ticketingTool.enumType.AssetEmployeeStatus;
+import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.AssetEmployeeService;
 import com.xyram.ticketingTool.util.ResponseMessages;
 
@@ -39,16 +41,18 @@ public class AssetEmployeeServiceImpl implements AssetEmployeeService{
 	
 	@Autowired
 	EmployeeRepository employeeRepository;
+	
+	@Autowired 
+	CurrentUser currentUser;
 
-	
-	
-	
 	@Override
 	public ApiResponse addAssetEmployee(AssetEmployee assetEmployee) {
 		ApiResponse response = new ApiResponse(false);
 		response = validateAssetEmployee(assetEmployee);
 		if (response.isSuccess()) {
 			if (assetEmployee != null) {
+				assetEmployee.setCreatedAt(new Date());
+				assetEmployee.setCreatedBy(currentUser.getName());
 				assetEmployeeRepository.save(assetEmployee);
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.ASSET_EMPLOYEE_ADDED);
@@ -152,6 +156,9 @@ public class AssetEmployeeServiceImpl implements AssetEmployeeService{
 			assetObj1.setBagIssued(assetEmployee.isBagIssued());
 			assetObj1.setMouseIssued(assetEmployee.isMouseIssued());
         	assetObj1.setPowercordIssued(assetEmployee.isPowercordIssued());
+        	
+        	assetObj1.setLastUpdatedAt(new Date());
+        	assetObj1.setUpdatedBy(currentUser.getName());
 			
             assetEmployeeRepository.save(assetObj1);
 			response.setSuccess(true);
@@ -190,6 +197,10 @@ public class AssetEmployeeServiceImpl implements AssetEmployeeService{
 			if(assetEmployee.getReturnReason() != null) {
 				empObj.setReturnReason(assetEmployee.getReturnReason());
 			}
+			
+		    empObj.setLastUpdatedAt(new Date());
+        	empObj.setUpdatedBy(currentUser.getName());
+        	empObj.setAssetEmployeeStatus(AssetEmployeeStatus.INACTIVE);
 			assetEmployeeRepository.save(empObj);
 			response.setSuccess(true);
 			response.setMessage("Asset Employee updated Successfully");
