@@ -25,6 +25,7 @@ import com.xyram.ticketingTool.entity.AssetVendor;
 import com.xyram.ticketingTool.entity.SoftwareMaster;
 import com.xyram.ticketingTool.enumType.AssetSoftwareStatus;
 import com.xyram.ticketingTool.enumType.AssetStatus;
+import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.AssetSoftwareService;
 import com.xyram.ticketingTool.util.ResponseMessages;
 
@@ -41,6 +42,9 @@ public class AssetSoftwareServiceImpl implements AssetSoftwareService {
 	@Autowired
 	SoftwareMasterRepository softwareMasterRepository;
 	
+	@Autowired 
+	CurrentUser currentUser;
+	
 	@Override
 	public ApiResponse addassetSoftware(AssetSoftware assetSoftware) {
 	ApiResponse response = new ApiResponse(false);
@@ -48,6 +52,9 @@ public class AssetSoftwareServiceImpl implements AssetSoftwareService {
 	
 	if (response.isSuccess()) {
 		if (assetSoftware != null) {
+			
+			assetSoftware.setCreatedAt(new Date());
+			assetSoftware.setCreatedBy(currentUser.getName());
 			assetSoftwareRepository.save(assetSoftware);
 			response.setSuccess(true);
 			response.setMessage(ResponseMessages.ASSET_SOFTWARE_ADDED);
@@ -143,6 +150,8 @@ public class AssetSoftwareServiceImpl implements AssetSoftwareService {
 				softObj.setAssetSoftwareStatus(AssetSoftwareStatus.ACTIVE);
 			}
 			//System.out.println(softObj.getAction());
+			softObj.setLastUpdatedAt(new Date());
+			softObj.setUpdatedBy(currentUser.getName());
 			assetSoftwareRepository.save(softObj);
 			response.setSuccess(true);
 			response.setMessage("Asset Sofware updated Successfully");
