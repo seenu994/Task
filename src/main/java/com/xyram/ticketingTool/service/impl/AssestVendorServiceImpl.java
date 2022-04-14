@@ -236,12 +236,12 @@ public class AssestVendorServiceImpl implements AssetvendorService {
 				// Employee employeere=new Employee();z
 
 				response.setSuccess(true);
-				response.setMessage(ResponseMessages.SOFTWARE_STATUS_UPDATED);
+				response.setMessage(ResponseMessages.ASSETVENDOR_STATUS_UPDATED);
 				response.setContent(null);
 			
 		} else {
 			response.setSuccess(false);
-			response.setMessage(ResponseMessages.SOFTWARE_DETAILS_INVALID);
+			response.setMessage(ResponseMessages.VENDORSTATUS_INVALID);
 			response.setContent(null);
 		}
 

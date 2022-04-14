@@ -66,8 +66,6 @@ public interface AssetBillingRepository extends JpaRepository<AssetBilling, Stri
 	@Query("Select b from AssetBilling b where b.assetBillId=:assetBillId")
 	AssetBilling getAssetBillById(@Param("assetBillId") String assetBillId);
 
-    @Query("select b.transactionDate from AssetBilling b where b.assetBillId = :assetBillId")
-	Date getTransationDate(String assetBillId);
 
 	@Query("Select distinct new map(b.assetBillId as assetBillId,b.billingType as billingType,"		
             + "b.underWarrenty as underWarrenty,b.assetAmount as assetAmount,b.gstAmount as gstAmount,"
@@ -84,6 +82,9 @@ public interface AssetBillingRepository extends JpaRepository<AssetBilling, Stri
 
 	@Query("select b from AssetBilling b where b.assetId =:assetId")
 	AssetBilling getAssetById(String assetId);
+
+	@Query("Select b.transactionDate from AssetBilling b where b.assetBillId=:assetBillId")
+	Date getTransationDate(String assetBillId);
 	
 	
 	

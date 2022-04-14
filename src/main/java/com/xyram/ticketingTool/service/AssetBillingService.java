@@ -31,9 +31,12 @@ public interface AssetBillingService
 
 	ApiResponse editRepairAssetBill(AssetBillingRequest assetBilling);
 
-	ApiResponse returnFromRepair(AssetBillingRequest assetBilling);
- 
+	
 	ApiResponse getAllAssetBilling(Pageable pageable);
+
+	
+
+	ApiResponse returnFromRepair(AssetBillingRequest assetBilling);
 	
 
 	//ApiResponse getAllAssetBillingList(Map<String, Object> filter, Pageable pageable);
