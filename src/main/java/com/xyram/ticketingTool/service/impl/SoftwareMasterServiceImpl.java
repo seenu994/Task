@@ -1,5 +1,6 @@
 package com.xyram.ticketingTool.service.impl;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,8 +17,10 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.xyram.ticketingTool.Repository.SoftwareMasterRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
+import com.xyram.ticketingTool.entity.AssetIssues;
 import com.xyram.ticketingTool.entity.AssetVendor;
 import com.xyram.ticketingTool.entity.SoftwareMaster;
+import com.xyram.ticketingTool.enumType.AssetIssueStatus;
 import com.xyram.ticketingTool.enumType.AssetVendorEnum;
 import com.xyram.ticketingTool.enumType.SoftwareEnum;
 import com.xyram.ticketingTool.service.SoftwareMasterService;
@@ -68,31 +71,94 @@ public class SoftwareMasterServiceImpl implements SoftwareMasterService {
 	}
 
 	@Override
-	public ApiResponse editSoftwareMaster(SoftwareMaster SoftwareMasterRequest) {
+	public ApiResponse editSoftwareMaster(SoftwareMaster softwareMasterRequest,String softwareId) {
 
-		ApiResponse response = new ApiResponse();
-		response = validateSoftwareMasterId(SoftwareMasterRequest);
-
-		if (SoftwareMasterRequest != null) {
-			SoftwareMasterRequest.setSoftwareId(SoftwareMasterRequest.getSoftwareId());
-			SoftwareMasterRequest.setSoftwareName(SoftwareMasterRequest.getSoftwareName());
-			SoftwareMasterRequest.setSoftwareMasterStatus(SoftwareMasterRequest.getSoftwareMasterStatus());
+		ApiResponse response = new ApiResponse(false);
+		
+		
+		SoftwareMaster softwareMaster = softwareRepository.getBysoftId(softwareId);
+		
+		 
+		if(softwareMaster != null) 
+	    {	
+			if(softwareMasterRequest.getSoftwareId() != null)
+			{
+				checkSoftwareId(softwareMasterRequest.getSoftwareId());
+				softwareMaster.setSoftwareId
+				 (softwareMasterRequest.getSoftwareId());
+			}
+			
+			
+			if(softwareMasterRequest.getSoftwareName() != null)
+			{
+				checkSoftwareName(softwareMasterRequest.getSoftwareName());
+				softwareMaster.setSoftwareName
+				(softwareMasterRequest.getSoftwareName());
+			}
+			
+			
+			if(softwareMasterRequest.getSoftwareMasterStatus() != null) {
+				softwareMaster.setSoftwareMasterStatus
+				(softwareMasterRequest.getSoftwareMasterStatus());
+		    }
+		
+			
+		softwareRepository.save(softwareMaster);
+			response.setSuccess(true);
+			response.setMessage(ResponseMessages.SOFTWAREMASTER_EDITED);
+			
 		}
-		SoftwareMaster softwareMasterAdded = softwareRepository.save(SoftwareMasterRequest);
 
-		response.setSuccess(true);
-		response.setMessage(ResponseMessages.EDITED_SOFTWAREMASTER);
-		Map content = new HashMap();
-		content.put("softwareId", softwareMasterAdded.getSoftwareId());
-		response.setContent(content);
-//				} else {
-//					response.setSuccess(false);
-//					response.setMessage(ResponseMessages.INVALID_SOFTWAREDETAILS);
-//					response.setContent(null);
-//				}
-
-		return response;
+		else 
+		{
+			response.setSuccess(false);
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid softwareId");
+			
+		}
+       return response;
+    }
+		
+	
+	private boolean checkSoftwareId(String softwareId) {
+    	SoftwareMaster softwareMaster = softwareRepository.getById(softwareId);
+		if (softwareMaster == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "softwareId id is not valid");
+		}
+		else {
+			return true;
+		}
 	}
+	private boolean checkSoftwareName(String softwareName) {
+		SoftwareMaster softwareMaster = softwareRepository.getBySoftwareMasterName(softwareName);
+		if(softwareName == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"softwareName is not valid");
+		}
+		return true;
+	}
+		
+		
+//		response = validateSoftwareMasterId(softwareMaster);
+//
+//		if (softwareMaster != null) {
+//			softwareMaster.setSoftwareId(softwareMaster.getSoftwareId());
+//			softwareMaster.setSoftwareName(softwareMaster.getSoftwareName());
+//			softwareMaster.setSoftwareMasterStatus(softwareMaster.getSoftwareMasterStatus());
+//		}
+//		SoftwareMaster softwareMasterAdded = softwareRepository.save(softwareMaster);
+//
+//		response.setSuccess(true);
+//		response.setMessage(ResponseMessages.EDITED_SOFTWAREMASTER);
+//		Map content = new HashMap();
+//		content.put("softwareId", softwareMasterAdded.getSoftwareId());
+//		response.setContent(content);
+////				} else {
+////					response.setSuccess(false);
+////					response.setMessage(ResponseMessages.INVALID_SOFTWAREDETAILS);
+////					response.setContent(null);
+////				}
+//
+//		return response;
+//	}
 
 	private ApiResponse validateSoftwareMasterId(SoftwareMaster software) {
 		ApiResponse response = new ApiResponse(false);
@@ -127,19 +193,52 @@ public class SoftwareMasterServiceImpl implements SoftwareMasterService {
 //	}
 
 	@Override
-	public ApiResponse getAllsoftwareMasterList(Pageable peageble) {
-
-		Page<Map> softwareMasterList = softwareRepository.getAllsoftwareMasterList(peageble);
-
-		Map content = new HashMap();
-		content.put("SoftwareMasterList", softwareMasterList);
-		ApiResponse response = new ApiResponse(true);
-		response.setSuccess(true);
+	public ApiResponse getAllsoftwareMaster(Map<String, Object> filter,Pageable peageble) {
 		
-		response.setContent(content);
-		response.setMessage(ResponseMessages.GETALL_SOFTWAREMATER_LIST);
+		
+ApiResponse response = new ApiResponse(false);
+		
+		String softwareMasterStatus = filter.containsKey("softwareMasterStatus") ? ((String) filter.get("softwareMasterStatus")).toUpperCase()
+				: null;
+		
+		
+		SoftwareEnum softwareEnum = null;
+		if(softwareMasterStatus != null) {
+			try {
+				softwareEnum = softwareMasterStatus != null ? SoftwareEnum.toEnum(softwareMasterStatus) : null;
+			} catch (IllegalArgumentException e) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+						filter.get("status").toString() + " is not a valid status");
+			}
+		}
+		
+		
+
+		Page<Map> softwareMaster = softwareRepository.getAllsoftwareMaster(softwareEnum,peageble);
+		if(softwareMaster.getSize() > 0) {
+//		Map content = new HashMap();
+//		content.put("SoftwareMasterList", softwareMaster);
+//		//ApiResponse response = new ApiResponse(true);
+//		response.setSuccess(true);
+//		
+//		response.setContent(content);
+//		response.setMessage(ResponseMessages.GETALL_SOFTWAREMATER_LIST);
+//		return response;
+//	}
+			Map content = new HashMap();
+			content.put("softwareMaster", softwareMaster);
+			response.setContent(content);
+			response.setSuccess(true);
+			response.setMessage("List retreived successfully.");
+		}else {
+			response.setSuccess(false);
+			response.setMessage("List is empty.");	
+		}
 		return response;
 	}
+
+			
+			
 
 	@Override
 	public ApiResponse updatesoftwareMasterStatus(String softwareId, SoftwareEnum softwareEnum) {
@@ -163,8 +262,9 @@ public class SoftwareMasterServiceImpl implements SoftwareMasterService {
 
 		} else {
 			response.setSuccess(false);
-			response.setMessage(ResponseMessages.SOFTWARE_DETAILS_INVALID);
+			//response.setMessage(ResponseMessages.SOFTWARE_DETAILS_INVALID);
 			response.setContent(null);
+			response.setMessage(ResponseMessages.SOFTWARE_DETAILS_INVALID);
 		}
 
 		return response;
