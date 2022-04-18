@@ -49,6 +49,8 @@ public class AssestVendorServiceImpl implements AssetvendorService {
 	
 	@Autowired
 	CurrentUser currentUser;
+	
+	
 
 	private ApiResponse response;
 
@@ -469,6 +471,30 @@ public class AssestVendorServiceImpl implements AssetvendorService {
 		return response;
 
 	}
+
+//	@Override
+//	public ApiResponse searchAssetVendor(String searchString) {
+//		
+//			ApiResponse response = new ApiResponse(false);
+//			List<AssetVendor> vendorList = assetVendorRepository.searchString(searchString, assetvendor.set);
+//			
+//			
+//			
+//			
+//			Map content = new HashMap();
+//			if (vendorList.size() > 0) {
+//				content.put("vendorList", vendorList);
+//				response.setSuccess(true);
+//				response.setContent(content);
+//			} else {
+//				content.put("vendorList", vendorList);
+//				response.setSuccess(false);
+//				response.setContent(content);
+//			}
+//
+//			return response;
+		
+	
 	
 	
 	@Override
