@@ -12,7 +12,7 @@ import com.xyram.ticketingTool.entity.HrCalendarComment;
 @Repository
 public interface HrCalendarCommentRepository extends JpaRepository<HrCalendarComment, String>{
 
-	@Query("Select new map(h.Id as id,h.description as description,h.createdAt as createdAt) from HrCalendarComment h where"
+	@Query("Select new map(h.Id as id,h.description as description,h.createdAt as createdAt,h.createdBy as createdBy) from HrCalendarComment h where"
 			+ " h.scheduleId = :scheduleId")
 	List<Map> getAllScheduleComments(String scheduleId);
 }

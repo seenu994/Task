@@ -32,6 +32,7 @@ import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.enumType.AssetIssueStatus;
 import com.xyram.ticketingTool.enumType.AssetStatus;
 import com.xyram.ticketingTool.enumType.UserStatus;
+import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.AssetIssuesService;
 import com.xyram.ticketingTool.util.ResponseMessages;
 
@@ -52,20 +53,23 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 	@Autowired
 	AssetVendorRepository assetVendorRepository;
 	
-	
+	@Autowired
+	CurrentUser currentUser;
 
 	
 	@Override
 	public ApiResponse addAssetIssues(AssetIssues assetIssues) 
 	{
 		ApiResponse response = new ApiResponse(false);
-		AssetIssues assetIssue = new AssetIssues();
+		//AssetIssues assetIssue = new AssetIssues();
 		response = validateAssetIssues(assetIssues);
 		//response = validateAssetIssueStatus(assetIssues);
 		if(response.isSuccess()) 
 		{
 			if(assetIssues != null)
 			{
+				assetIssues.setCreatedAt(new Date());
+				assetIssues.setCreatedBy(currentUser.getName());
 				assetIssuesRepository.save(assetIssues);
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.ASSET_ISSUES_ADDED_SUCCESSFULLY);
@@ -150,29 +154,30 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 	    {	
 			if(assetIssues.getAssetId() != null)
 			{
-				 checkAssetId(assetIssues.getAssetId());
-				 //assetIssues.setAssetId(assetIssues.getAssetId());
+				 checkAssetId(assetIssuesObj.getAssetId());
+				 assetIssuesObj.setAssetId(assetIssues.getAssetId());
 			}
 			if(assetIssues.getVendorId() != null)
 			{
-				checkVendorId(assetIssues.getVendorId());
-				assetIssues.setVendorId(assetIssues.getVendorId());
+				checkVendorId(assetIssuesObj.getVendorId());
+				assetIssuesObj.setVendorId(assetIssues.getVendorId());
 			}
-			/*if(assetIssues.getComplaintRaisedDate()!= null)
+			if(assetIssues.getComplaintRaisedDate()!= null)
 			{
-				assetIssues.setComplaintRaisedDate(new Date());
-			}*/
+				assetIssues.setComplaintRaisedDate(assetIssues.getComplaintRaisedDate());
+			}
 			if(assetIssues.getAssetIssueStatus() != null)
 			{
-				checkAssetIssuesStatus(assetIssues.getAssetIssueStatus());
-				assetIssues.setAssetIssueStatus(assetIssues.getAssetIssueStatus());
+				checkAssetIssuesStatus(assetIssuesObj.getAssetIssueStatus());
+				assetIssuesObj.setAssetIssueStatus(assetIssues.getAssetIssueStatus());
 			}
 			if(assetIssues.getDescription() != null)
 			{
-				checkDescription(assetIssues.getDescription());
-		       assetIssues.setDescription(assetIssues.getDescription());
+				checkDescription(assetIssuesObj.getDescription());
+				assetIssuesObj.setDescription(assetIssues.getDescription());
 			}
-			
+			assetIssuesObj.setLastUpdatedAt(new Date());
+			assetIssuesObj.setUpdatedBy(currentUser.getName());
 			assetIssuesRepository.save(assetIssuesObj);
 			response.setSuccess(true);
 			response.setMessage(ResponseMessages.ASSET_ISSUES_EDIT_SUCCESSFULLY);
@@ -255,8 +260,12 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 				{
 					checkResolvedDate(assetIssues.getResolvedDate(), assetIssueId);
 					assetIssuesObj.setResolvedDate(assetIssues.getResolvedDate());
-					
 				}
+				assetIssuesObj.setSolution(true);
+				
+				
+				assetIssuesObj.setLastUpdatedAt(new Date());
+				assetIssuesObj.setUpdatedBy(currentUser.getName());
 				assetIssuesRepository.save(assetIssuesObj);
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.RETURN_REPAIR);
@@ -348,17 +357,20 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 				checkResolvedDate(assetIssues.getResolvedDate(),assetIssueId);
 				assetIssuesObj.setResolvedDate(assetIssues.getResolvedDate());
 			}
-		    if(assetIssues.getSolution() != false)
+		    if(assetIssues.getSolution() == false)
 		    {
 		    	//checkSolution(assetIssues.getSolution());
-		    	assetIssues.setSolution(assetIssues.getSolution());
+		    	assetIssuesObj.setSolution(true);
 		    }
 		    else
 		    {
 		    	throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"solution should be mandatory");
 		    }
-	
-		assetIssuesRepository.save(assetIssues);
+	        
+		    assetIssuesObj.setLastUpdatedAt(new Date());
+		    assetIssuesObj.setUpdatedBy(currentUser.getName());
+		    
+		assetIssuesRepository.save(assetIssuesObj);
 		response.setMessage(ResponseMessages.RETURN_DAMAGE);
 		response.setSuccess(true);
 	  }
@@ -487,26 +499,45 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 	}
 
 	/*@Override
-	public ApiResponse getAllAssetIssuesByAssetId(Pageable pageable,String assetId) 
-	{
+	public ApiResponse downloadAllAssetIssues(Map<String, Object> filter) {
 		ApiResponse response = new ApiResponse(false);
-		Asset asset = assetRepository.getAssetById(assetId);
-		AssetIssues assetIssues = new AssetIssues();
-		//Page<Map> assetIssues = assetIssuesRepository.getAllAssetsIssues(null, assetId, assetId, assetId, assetId, pageable)
+
+		String assetIssueStatus = filter.containsKey("assetIssueStatus") ? ((String) filter.get("assetIssueStatus")).toUpperCase()
+					: null;
+		String assetId = filter.containsKey("assetId") ? ((String) filter.get("assetId"))
+				: null;
+		String vendorId = filter.containsKey("vendorId") ? ((String) filter.get("vendorId"))
+				: null;
+		String fromDate = filter.containsKey("fromDate") ? filter.get("fromDate").toString(): null;
+		String toDate = filter.containsKey("toDate") ? filter.get("toDate").toString():null;
 		
-		Map content = new HashMap();
-		content.put("assetIssues", assetIssues);
-		if(content != null)
+		Date parsefromDate = null;
+		Date parsetoDate = null;
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		if(fromDate != null && toDate != null)
 		{
-			response.setSuccess(true);
-			response.setMessage("Asset issues retrived successfully");
-			response.setContent(content);
+			try
+			{
+				parsefromDate = fromDate != null ? dateFormat.parse(fromDate) : null;
+				parsetoDate = toDate != null ? dateFormat.parse(toDate) : null;
+			}
+			catch(ParseException e)
+			{
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid date format date should be yyyy-MM-dd");
+			}
+			
 		}
-		else
-		{
-			response.setSuccess(false);
-			response.setMessage("could not retrive tha data");
+		
+		AssetIssueStatus assetIssuestatus = null;
+		if(assetIssueStatus!=null) {
+			try {
+				assetIssuestatus = assetIssueStatus != null ? AssetIssueStatus.toEnum(assetIssueStatus) : null;
+			} catch (IllegalArgumentException e) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+						filter.get("status").toString() + " is not a valid status");
+			}
 		}
+		
 		
 		return response;
 	}*/

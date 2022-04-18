@@ -63,6 +63,10 @@ public interface JobRepository extends CrudRepository<JobOpenings, Long>, JpaSpe
 
 	@Query(value = "SELECT j from JobOpenings j WHERE j.jobCode =:jobCode ")
 	JobOpenings getJobCode(String jobCode);
+	
+	@Query(value = "SELECT new map(jo.jobCode as jobCodes,jo.Id as  id,jo.jobTitle as jobTitle ) from JobOpenings jo "
+			+ "WHERE lower(jo.jobTitle) LIKE %:searchString% AND jo.jobStatus=:status ")
+	List<Map> searchJobOpenings(String searchString, JobOpeningStatus status);
 
 //	public List<JobOpenings> findByCriteria(String employeeName){
 //        return employeeDAO.findAll(new Specification<Employee>() {

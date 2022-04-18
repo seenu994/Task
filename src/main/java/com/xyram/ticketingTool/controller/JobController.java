@@ -70,6 +70,15 @@ public class JobController {
 		return jobService.getAllJobCodes();
 	}
 	
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/searchJobOpenings",AuthConstants.HR_ADMIN_BASEPATH + "/searchJobOpenings",
+			AuthConstants.DEVELOPER_BASEPATH+ "/searchJobOpenings", AuthConstants.HR_BASEPATH + "/searchJobOpenings",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/searchJobOpenings",AuthConstants.INFRA_USER_BASEPATH + "/searchJobOpenings",
+			AuthConstants.JOB_VENDOR_BASEPATH + "/searchJobOpenings" })
+	public ApiResponse searchJobOpenings(@RequestParam String searchString) {
+		logger.info("Search Job");
+		return jobService.searchJobOpenings(searchString);
+	}
+	
 //	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllJobApplications",AuthConstants.HR_ADMIN_BASEPATH + "/getAllJobApplications",AuthConstants.DEVELOPER_BASEPATH+ "/getAllJobApplications", AuthConstants.HR_BASEPATH + "/getAllJobApplications",AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllJobApplications",AuthConstants.INFRA_USER_BASEPATH + "/getAllJobApplications", AuthConstants.JOB_VENDOR_BASEPATH + "/getAllJobApplications" })
 //	public ApiResponse getAllJobApplications(@RequestParam Map<String, Object> filter,Pageable pageable) {
 //		logger.info("Get All Job");
