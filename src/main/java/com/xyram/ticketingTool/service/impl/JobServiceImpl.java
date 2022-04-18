@@ -1398,7 +1398,7 @@ public class JobServiceImpl implements JobService {
 	@Override
 	public ApiResponse searchJobOpenings(String searchString) {
 		ApiResponse response = new ApiResponse(false);
-		List<Map> jobCodes = jobRepository.searchJobOpenings(searchString.toLowerCase());
+		List<Map> jobCodes = jobRepository.searchJobOpenings(searchString.toLowerCase(), JobOpeningStatus.VACANT);
 		Map res = new HashMap();
 		if (jobCodes != null) {
 			res.put("jobCodes", jobCodes);
