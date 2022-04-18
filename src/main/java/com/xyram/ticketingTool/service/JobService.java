@@ -56,6 +56,8 @@ public interface JobService {
 	ApiResponse getAllJobOfferById(String offerId);
 
 	ApiResponse getAllJobCodes();
+	
+	ApiResponse searchJobOpenings(String searchString);
 
 	ApiResponse getJobInterviewByAppId(String applicationId);
 
