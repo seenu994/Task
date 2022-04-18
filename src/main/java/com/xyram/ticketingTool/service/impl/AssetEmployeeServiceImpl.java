@@ -101,8 +101,12 @@ public class AssetEmployeeServiceImpl implements AssetEmployeeService{
 		else {
 			//checking emp_id in employee table
 			Employee employee = employeeRepository.getByEmpId(assetEmployee.getEmpId());
+			AssetEmployee assetEmployeeObj = assetEmployeeRepository.getEmpById(assetEmployee.getEmpId());
 			if (employee == null) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "employee id is not valid");
+			}
+			else if(assetEmployeeObj != null) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Asset is already assigned to that Employee");
 			}
 		}
 		

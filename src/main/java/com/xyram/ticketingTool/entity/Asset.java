@@ -66,8 +66,8 @@ public class Asset extends AuditModel{
 	@Column(name = "asset_status")
 	private AssetStatus assetStatus = AssetStatus.AVAILABLE;
 	
-	@Column(name = "assigned_to")
-	private String assignedTo;
+//	@Column(name = "assigned_to")
+//	private String assignedTo;
 	
 
 	public String getAssetId() {
@@ -174,13 +174,13 @@ public class Asset extends AuditModel{
 		this.assetStatus = assetStatus;
 	}
 
-	public String getAssignedTo() {
-		return assignedTo;
-	}
-
-	public void setAssignedTo(String assignedTo) {
-		this.assignedTo = assignedTo;
-	}
+//	public String getAssignedTo() {
+//		return assignedTo;
+//	}
+//
+//	public void setAssignedTo(String assignedTo) {
+//		this.assignedTo = assignedTo;
+//	}
 
 	public Asset getBillingDetailByAssetId(Asset assetId2) {
 		// TODO Auto-generated method stub
