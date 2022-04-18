@@ -2,6 +2,7 @@ package com.xyram.ticketingTool.service.impl;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.transaction.Transactional;
@@ -270,4 +271,32 @@ ApiResponse response = new ApiResponse(false);
 		return response;
 
 	}
+	
+	
+	@Override
+	public ApiResponse searchsoftwareId(String softwareId) 
+	{
+		ApiResponse response = new ApiResponse();
+		SoftwareMaster softwareMaster = new SoftwareMaster();
+		softwareMaster.setSoftwareId(softwareId);
+		
+		List<SoftwareMaster> softwareDetails = softwareRepository.searchsoftwareId(softwareId);
+		Map content = new HashMap();
+
+		content.put("softwareDetails", softwareDetails);
+		if(content != null && softwareDetails.size() >0)  {
+			
+			response.setSuccess(true);
+			response.setMessage("softwareId Retrieved successfully");
+			response.setContent(content);
+		}
+		else {
+			response.setSuccess(false);
+			response.setMessage("Could not retrieve softwareId");
+			//response.setContent(content);
+		}
+		return response;
+	}
+	
+	
 }

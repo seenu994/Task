@@ -482,7 +482,7 @@ public class AssestVendorServiceImpl implements AssetvendorService {
 		Map content = new HashMap();
 
 		content.put("vendorDetails", vendorList);
-		if(content != null) {
+		if(content != null && vendorList.size() >0) {
 			response.setSuccess(true);
 			response.setMessage("Asset vendor name Retrieved successfully");
 			response.setContent(content);
@@ -490,6 +490,7 @@ public class AssestVendorServiceImpl implements AssetvendorService {
 		else {
 			response.setSuccess(false);
 			response.setMessage("Could not retrieve vendorname");
+			response.setContent(content);
 		}
 		return response;
 	}

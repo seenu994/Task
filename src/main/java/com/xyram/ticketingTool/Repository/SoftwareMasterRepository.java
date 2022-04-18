@@ -1,4 +1,5 @@
 package com.xyram.ticketingTool.Repository;
+import java.util.List;
 import java.util.Map;
 
 import javax.transaction.Transactional;
@@ -10,6 +11,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import com.xyram.ticketingTool.entity.AssetVendor;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.SoftwareMaster;
 import com.xyram.ticketingTool.enumType.SoftwareEnum;
@@ -35,6 +37,11 @@ public interface SoftwareMasterRepository extends JpaRepository<SoftwareMaster ,
 	@Query("select distinct new map(p.softwareId as softwareId,p.softwareName as softwareName,p.softwareMasterStatus as softwareMasterStatus) from SoftwareMaster p where "
 			+ "(:softwareEnum is null OR p.softwareMasterStatus=:softwareEnum)")
 	Page<Map> getAllsoftwareMaster(SoftwareEnum softwareEnum, Pageable peageble);
+
+	
+		
+	@Query("select distinct p from SoftwareMaster p where p.softwareId = :softwareId")
+	List<SoftwareMaster> searchsoftwareId(String softwareId);
 
 	//SoftwareMaster getById(SoftwareMaster softwareId);
 

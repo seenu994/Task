@@ -68,4 +68,11 @@ public class SoftwareMasterController {
 				+ softwareId);
 		return softwareMasterService.updatesoftwareMasterStatus(softwareId, softwareMasterStatus);
 	}
+	
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/searchsoftwareMaster/{softwareId}",
+			 AuthConstants.INFRA_ADMIN_BASEPATH + "/searchVendor/{vendorName}"})
+	    public ApiResponse searchsoftwareId(@PathVariable String softwareId) {
+			logger.info("Received request to search softwareId");
+			return softwareMasterService.searchsoftwareId(softwareId);
+		}
 }
