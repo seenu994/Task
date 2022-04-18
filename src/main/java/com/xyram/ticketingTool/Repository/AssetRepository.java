@@ -24,8 +24,6 @@ public interface AssetRepository extends JpaRepository<Asset, String>{
 //	@Query("SELECT a from Asset a where a.assetId =:assetId")
 //	Asset getByassetId(String assetId);
 
-
-
 	@Query("SELECT a from Asset a where a.assetId =:assetId")
 	Asset getByAssetId(String assetId);
 	
@@ -53,7 +51,7 @@ public interface AssetRepository extends JpaRepository<Asset, String>{
     @Query("Select distinct new map(a.assetId as assetId,v.vendorName as vendorName, "		
             + "a.brand as brand,a.purchaseDate as purchaseDate,a.modelNo as modelNo,"
     		+ "a.serialNo as serialNo,a.warrantyDate as warrantyDate,a.ram as ram,"
-    	    + "a.assetStatus as assetStatus, a.assignedTo as assignedTo) from Asset a join AssetVendor v "
+     	    + "a.assetStatus as assetStatus, a.assignedTo as assignedTo) from Asset a join AssetVendor v "
     	    + "on a.vendorId = v.vendorId where "
     	    + "(:assetStatus is null OR a.assetStatus=:assetStatus) AND "
 			+ "(:ram is null OR a.ram =:ram) AND "

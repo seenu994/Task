@@ -1,6 +1,7 @@
 package com.xyram.ticketingTool.service.impl;
 
 import java.text.ParseException;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -97,10 +98,14 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 					if(schedule.getCallCount() == null) {
 						schedule.setCallCount(0);
 					}	
+					HrCalendar savedObj = hrCalendarRepository.save(schedule);
+
 					schedule.setStatus("SCHEDULED");
 					response.setSuccess(true);
 					response.setMessage("Schedule created successfully.");
-					hrCalendarRepository.save(schedule);
+					Map content = new HashMap();
+					content.put("scheduleId", savedObj.getId());
+					response.setContent(content);
 				} else {
 					response.setSuccess(false);
 					response.setMessage("Employee reporter not found.");
@@ -219,17 +224,21 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 				}
 				else {
 					response.setSuccess(false);
-					response.setMessage("Future date is allowed and Min 15 minutes prior to the present time is required.");
+					response.setMessage("Only future date is allowed and Min 15 minutes prior to the present time is required.");
 					return response;
 				}
 		
 			}else if(status.equalsIgnoreCase("CANCELLED")) {
+				scheduleObj.setClosed(true);
 				
 			}else if(status.equalsIgnoreCase("CANDIDATE-NOT-SUITS")) {
+				scheduleObj.setClosed(true);
 				
 			}else if(status.equalsIgnoreCase("CANDIDATE-NOT-INTERESTED")) {
+				scheduleObj.setClosed(true);
 				
 			}else if(status.equalsIgnoreCase("CANDIDATE-INTERESTED")) {
+				scheduleObj.setClosed(true);
 				
 			}
 			else {
@@ -244,9 +253,11 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 			cmt.setCreatedBy(currentUser.getUserId());
 			cmt.setUpdatedBy(currentUser.getUserId());
 			cmt.setLastUpdatedAt(new Date());
+			cmtRepository.save(cmt);
 			
 			scheduleObj.setStatus(status.toUpperCase());
 			scheduleObj.setLastUpdatedAt(new Date());
+			
 			hrCalendarRepository.save(scheduleObj);
 			response.setSuccess(true);
 			response.setMessage("Status changed successfully.");

@@ -4,6 +4,7 @@ package com.xyram.ticketingTool.service;
 
 import java.util.Map;
 
+
 import javax.transaction.Transactional;
 
 import org.springframework.data.domain.Pageable;
@@ -46,16 +47,11 @@ public interface AssetIssuesService
 	ApiResponse getAllAssetsIssues(Map<String, Object> filter, Pageable pageable);
 
 
-	ApiResponse getAssetIssues(String assetIssueId);
-
 	ApiResponse searchAssetIssue(String assetIssueId);
 
+	ApiResponse getAssetIssuesById(String assetIssueId);
 
-	
-
-
-
-//ApiResponse getAssetIssues(Pageable pageable);
+	//ApiResponse downloadAllAssetIssues(Map<String, Object> filter);
 	
 }
 	

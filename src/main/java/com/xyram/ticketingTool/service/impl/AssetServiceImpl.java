@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import com.xyram.ticketingTool.enumType.AssetStatus;
 import com.xyram.ticketingTool.enumType.TicketStatus;
+import com.xyram.ticketingTool.request.CurrentUser;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -76,6 +77,9 @@ public class AssetServiceImpl implements AssetService {
 
 	@Autowired
 	AssetVendorRepository assetVendorRepository;
+	
+	@Autowired 
+	CurrentUser currentUser;
 
 	@Override
 	public ApiResponse addasset(Asset asset) {
@@ -83,6 +87,10 @@ public class AssetServiceImpl implements AssetService {
 		response = validateAsset(asset); 
 		if (response.isSuccess()) {
 			if (asset != null) {
+			    asset.setCreatedAt(new Date());
+//			    asset.setLastUpdatedAt(new Date());
+			    asset.setCreatedBy(currentUser.getName());
+//     		    asset.setUpdatedBy(currentUser.getName());
 				assetRepository.save(asset);
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.ASSET_ADDED);
@@ -264,6 +272,8 @@ public class AssetServiceImpl implements AssetService {
 		    assetObj.setMouseAvailable(asset.isMouseAvailable());
 		    assetObj.setPowercordAvailable(asset.isPowercordAvailable());
 		    
+		    assetObj.setLastUpdatedAt(new Date());
+		    assetObj.setUpdatedBy(currentUser.getName());
 			assetRepository.save(assetObj);
 			response.setSuccess(true);
 			response.setMessage(ResponseMessages.ASSET_EDITED);	
