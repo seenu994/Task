@@ -1,7 +1,5 @@
 package com.xyram.ticketingTool.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,9 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
 import com.xyram.ticketingTool.entity.Feature;
-import com.xyram.ticketingTool.entity.Sprint;
 import com.xyram.ticketingTool.service.FeatureService;
-import com.xyram.ticketingTool.service.SprintService;
 import com.xyram.ticketingTool.util.AuthConstants;
 
 @RestController

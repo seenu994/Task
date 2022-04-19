@@ -1,6 +1,5 @@
 package com.xyram.ticketingTool.exception.handler;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,11 +25,15 @@ public class ValidationErrorHandler extends ResponseEntityExceptionHandler {
 
 			String fieldName = ((FieldError) error).getField();
 			String message = error.getDefaultMessage();
+			
 	
 			errors.put(fieldName, message);
 		});
 		return new ResponseEntity<Object>(errors, HttpStatus.BAD_REQUEST);
 	}
+	
+	
+	
 }
 //	}
 //	

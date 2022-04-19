@@ -1,63 +1,82 @@
 package com.xyram.ticketingTool.entity;
 
-import javax.persistence.CascadeType;
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.annotation.CreatedDate;
+
+import com.xyram.ticketingTool.baseData.model.AuditModel;
+import com.xyram.ticketingTool.enumType.AssetIssueStatus;
+import com.xyram.ticketingTool.id.generator.IdGenerator;
+import com.xyram.ticketingTool.id.generator.IdPrefix;
+
 @Entity
-@Table(name="assetIssues")
-public class AssetIssues 
+@Table(name="asset_issues")
+public class AssetIssues extends AuditModel
 {
 	@Id
-    @Column(name="IssueId")
-   public String issueId;
+	@IdPrefix(value = "AI")
+	@GeneratedValue(generator = IdGenerator.ID_GENERATOR)
+	@GenericGenerator(name = IdGenerator.ID_GENERATOR, strategy = "com.xyram.ticketingTool.id.generator.IdGenerator")
+    @Column(name="asset_issue_id")
+    public String assetIssueId;
    
-	@Column(name = "assetId")
+	@Column(name = "asset_id")
     private String assetId;
     
-    @Column(name="ComplaintRaisedDate")
-    public String complaintRaisedDate;
+	@CreatedDate
+    @Column(name="complaint_raised_date", nullable = false, updatable = false)
+    public Date complaintRaisedDate;
     
-    @Column(name="Description")
+    @Column(name="description")
     public String description;
     
-    @Column(name="Solution")
-    public String Solution;
+    @Column(name="solution")
+    public boolean solution;
     
-    @Column(name="Status")
-    public String Status;
     
-	@Column(name = "VendorId")
+    @Enumerated(EnumType.STRING)
+    @Column(name="asset_issue_status")
+    public AssetIssueStatus assetIssueStatus = AssetIssueStatus.OPEN;
+    
+    @Column(name = "vendor_id")
     private String vendorId;
     
-    @Column(name="ResolvedDate")
-    public String resolvedDate;
+    @Column(name="resolved_date")
+    public Date resolvedDate;
+    
+    @Column(name = "comments")
+    public String comments;
 
-	public String getIssueId() {
-		return issueId;
+	public String getAssetIssueId() {
+		return assetIssueId;
 	}
 
-	public void setIssueId(String issueId) {
-		this.issueId = issueId;
+	public void setAssetIssueId(String assetIssueId) {
+		this.assetIssueId = assetIssueId;
 	}
 
 	public String getAssetId() {
 		return assetId;
 	}
 
-	public void setVendorId(String vendorId) {
-		this.vendorId = vendorId;
+	public void setAssetId(String assetId) {
+		this.assetId = assetId;
 	}
 
-	public String getComplaintRaisedDate() {
+	public Date getComplaintRaisedDate() {
 		return complaintRaisedDate;
 	}
 
-	public void setComplaintRaisedDate(String complaintRaisedDate) {
+	public void setComplaintRaisedDate(Date complaintRaisedDate) {
 		this.complaintRaisedDate = complaintRaisedDate;
 	}
 
@@ -69,40 +88,46 @@ public class AssetIssues
 		this.description = description;
 	}
 
-	public String getSolution() {
-		return Solution;
+	public boolean isSolution() {
+		return solution;
 	}
 
-	public void setSolution(String solution) {
-		Solution = solution;
+	public void setSolution(boolean solution) {
+		this.solution = solution;
 	}
 
-	public String getStatus() {
-		return Status;
+	public AssetIssueStatus getAssetIssueStatus() {
+		return assetIssueStatus;
 	}
 
-	public void setStatus(String status) {
-		Status = status;
+	public void setAssetIssueStatus(AssetIssueStatus assetIssueStatus) {
+		this.assetIssueStatus = assetIssueStatus;
 	}
-
-	
 
 	public String getVendorId() {
 		return vendorId;
 	}
 
-	public void setAssetId(String assetId) {
-		this.assetId = assetId;
+	public void setVendorId(String vendorId) {
+		this.vendorId = vendorId;
 	}
 
-	public String getResolvedDate() {
+	public Date getResolvedDate() {
 		return resolvedDate;
 	}
 
-	public void setResolvedDate(String resolvedDate) {
+	public void setResolvedDate(Date resolvedDate) {
 		this.resolvedDate = resolvedDate;
 	}
 
-	
+	public String getComments() {
+		return comments;
+	}
+
+	public void setComments(String comments) {
+		this.comments = comments;
+	}
     
+    
+  
 }

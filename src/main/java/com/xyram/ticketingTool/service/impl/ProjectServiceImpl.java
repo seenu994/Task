@@ -5,31 +5,24 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import javax.transaction.Transactional;
 
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
 import com.xyram.ticketingTool.Repository.FeatureRepository;
 import com.xyram.ticketingTool.Repository.ProjectRepository;
-import com.xyram.ticketingTool.admin.model.User;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.Feature;
 import com.xyram.ticketingTool.entity.ProjectFeature;
 import com.xyram.ticketingTool.entity.Projects;
-import com.xyram.ticketingTool.entity.Role;
 import com.xyram.ticketingTool.enumType.ProjectStatus;
-import com.xyram.ticketingTool.enumType.UserRole;
-import com.xyram.ticketingTool.enumType.UserStatus;
 import com.xyram.ticketingTool.exception.ResourceNotFoundException;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.ProjectFeatureService;
@@ -149,7 +142,7 @@ public class ProjectServiceImpl implements ProjectService {
 			return response;
 		}
 	}
-	
+
 	@Override
 	public ApiResponse getAllProjectsForTickets(String serachString) {
 		/*

@@ -3,12 +3,9 @@ package com.xyram.ticketingTool.service.impl;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.criteria.CriteriaBuilder.In;
 import javax.transaction.Transactional;
 
-import org.checkerframework.checker.guieffect.qual.UIEffect;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;

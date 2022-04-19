@@ -3,7 +3,6 @@ package com.xyram.ticketingTool.service.impl;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -24,13 +23,11 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
 import com.xyram.ticketingTool.Repository.ProjectMemberRepository;
-import com.xyram.ticketingTool.Repository.StoryAttachmentsRespostiory;
 import com.xyram.ticketingTool.Repository.TimesheetRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.ProjectMembers;
 import com.xyram.ticketingTool.entity.TimeSheet;
-import com.xyram.ticketingTool.enumType.TicketStatus;
 import com.xyram.ticketingTool.enumType.TimesheetStatus;
 import com.xyram.ticketingTool.fileupload.FileTransferService;
 import com.xyram.ticketingTool.request.CurrentUser;
@@ -122,7 +119,7 @@ public class TimesheetServiceImpl implements TimesheetService{
 				    else
 				    	break;
 				    
-				    List<TimeSheet> timeSheetList = timesheetRepository.getAllSheetsByDate(sheet.getTimeSheetDate());
+				    List<TimeSheet> timeSheetList = timesheetRepository.getAllSheetsByDate(sheet.getTimeSheetDate(),sheet.getEmployeeId());
 			    	if(timeSheetList != null) {
 			    		Float totalHours = sheet.getHoursSpent();
 			    		for (final TimeSheet sheetEntity : timeSheetList) {
@@ -240,7 +237,7 @@ public class TimesheetServiceImpl implements TimesheetService{
 				    else
 				    	break;
 				    
-				    List<TimeSheet> timeSheetList = timesheetRepository.getAllSheetsByDate(sheet.getTimeSheetDate());
+				    List<TimeSheet> timeSheetList = timesheetRepository.getAllSheetsByDate(sheet.getTimeSheetDate(),sheet.getEmployeeId());
 			    	if(timeSheetList != null) {
 			    		Float totalHours = sheet.getHoursSpent();
 			    		for (final TimeSheet entity : timeSheetList) {
@@ -658,7 +655,7 @@ public class TimesheetServiceImpl implements TimesheetService{
 		ApiResponse response = new ApiResponse(false);
 		TimeSheet sheet = timesheetRepository.getById(sheetId);
 	    if(sheet != null) {
-	    	List<TimeSheet> timeSheetList = timesheetRepository.getAllSheetsByDate(sheet.getTimeSheetDate());
+	    	List<TimeSheet> timeSheetList = timesheetRepository.getAllSheetsByDate(sheet.getTimeSheetDate(),sheet.getEmployeeId());
 	    	if(timeSheetList != null) {
 	    		Float totalHours = hoursSpent;
 	    		for (final TimeSheet sheetEntity : timeSheetList) {

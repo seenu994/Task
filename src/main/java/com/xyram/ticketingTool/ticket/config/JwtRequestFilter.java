@@ -1,7 +1,6 @@
 package com.xyram.ticketingTool.ticket.config;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -14,13 +13,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
-import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.ticket.Service.JwtUserDetailsService;
 import com.xyram.ticketingTool.util.AuthConstants;
-import com.xyram.ticketingTool.util.AuthUtil;
 
 import io.jsonwebtoken.ExpiredJwtException;
 

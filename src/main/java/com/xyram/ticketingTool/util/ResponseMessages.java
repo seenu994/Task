@@ -140,6 +140,119 @@ public interface ResponseMessages {
 	String ASSET_NOT_EDITED = "Asset not edited";
 
 	String ASSET_EDITED = "Asset edited successfully";
+
+	String ASSET_ISSUES_ADDED = "Asset Issues added";
+	
+	String ASSET_ISSUES_NOT_ADDED = "Asset Issues added";
+	
+    String ASSET_ISSUES_EDITED = "Asset Issues added";
+	
+	String ASSET_ISSUES_NOT_EDITED = "Asset Issues added";
+	
+	String ASSET_ISSUES_STATUS_CHANGED = "Asset issues status changed";
+	
+	 String ASSET_ISSUES_STATUS__NOT_CHANGED = "Asset issues status not changed";
+
+	String ASSET_BILL_ADDED = "Asset bill added";
+	String ASSET_BILL_ADDED_SUCCESSFULLY = "Asset bill added successfully";
+	
+	String ASSET_BILL_NOT_ADDED = "Asset bill not  added";
+	
+    String ASSET_BILL_EDITED = "Asset bill added";
+    String ASSET_IS_UNDERWARRENTY_NO_NEED_TO_PAY_ANY_AMOUNT = "asset is underwarrenty no need to pay any amount";
+
+	
+	
+	String VENDORID_IN_VALID = "VendorId is in valid";
+
+	String ADD_ISSUEID = "Enter issueId";
+
+	String ISSUEID_IN_VALID = "issue id is invalid";
+
+	String RETURN_FROM_REPAIR = "return from repair";
+
+	String ASSET_BILL_EDIT_SUCCESSFULLY = "asset bill edited successfully";
+
+	String ASSET_ID_INVALID = "Asset id is invalid";
+
+	String ASSET_PURCHASE_BILL_ADDED_SUCCESSFULLY = "Asset purchase bill added successsfully";
+
+	String ASSET_PURCHASE_BILL_EDIT_SUCCESSFULLY = "Asset purchase bill edited successfully";
+
+	String ASSET_REPAIR_BILL_ADDED_SUCCESSFULLY = "Asset repair bill added successsfully";
+
+	String ASSET_REPAIR_BILL_EDITED_SUCCESSFULLY = "Asset repair bill edited successfully";
+
+	String ID_INVALID = "id is invalid";
+
+	String ASSET_ISSUES_ADDED_SUCCESSFULLY = "Asset issues added successfully";
+
+	String ASSET_ISSUES_EDIT_SUCCESSFULLY = "Asset issues edited successfully";
+
+	String ASSET_ISSUES_ID_IS_INVALID = "A sset issue id is invalid";
+
+	String ASSET_ADDED = "Asset added successfully";
+
+	String ASSET_NOT_ADDED = "Asset not added";
+
+	String ASSET_SOFTWARE_ADDED = "Asset software added successfully";
+
+	String ASSET_SOFTWARE_NOT_ADDED = "Asset Softwarec not added";
+
+	String ASSET_EMPLOYEE_ADDED = "Asset Employee added successfully";
+
+	String ASSET_EMPLOYEE_NOT_ADDED = "Asset Employee not added";
+
+	String ASSET_EMPLOYEE_EDITED = "Asset Employee edited successfully";
+
+	String VENDOR_ADDED = "Vendor added successfully";
+
+	String VENDOR_DETAILS_EDIT = "Vendor details edited successfully";
+
+	String VENDOR_DETAILS_INVALID = "Invalid Vendor Details";
+
+	String VENDORSTATUS_INVALID = "Invalid status";
+
+	String ASSETVENDOR_STATUS_UPDATED = " Status Updated Successfully";
+
+	String ADDED_SOFTWAREID = "Software Id added Successfully";
+
+	String SOFTWAREMASTER_EDITED = "Software master details is edited Successfully";
+
+	String SOFTWARE_STATUS_UPDATED = "Software master status updated Successfully";
+
+	String SOFTWARE_DETAILS_INVALID = "Software Master Details Invalid";
+
+	String GETALL_SOFTWAREMATER_LIST = "Get all software master list";
+
+	String ASSET_RETURNED_FROM_REPAIR_SUCCESSFULLY = "Asset is returned from repair successfully";
+
+	String RETURN_REPAIR = "return asset from repair";
+
+	String ASSET_ISSUE_STATUS_INVALID = "Asset issue status is invalid";
+
+	String ASSET_ISSUE_STATUS_UPDATE = "Asset issue status in updated";
+
+	String GETALL_VENDOR_LIST = "Asset vendor list";
+	String RETURN_DAMAGE = "Asset returned from damage";
+	
+	String ASSET_ISSUE_DIRECTORY = "asset issue directory";
+
+
+	
+
+	
+
+	
+	//Download of asset
+String ASSET_DIRECTORY ="/Documents/assetDetails/";
+	
+	String BASE_DIRECTORY ="../webapps";
+
+	
+
+	
+	
 	
 //	String ANNOUNCEMENT_STATUS_CHANGED = "Announcement status changed successfully";
 //	String ANNOUNCEMENT_STATUS_NOT_CHANGED = "Announcement status not changed";

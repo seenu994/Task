@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import com.xyram.ticketingTool.Repository.DesignationRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
-import com.xyram.ticketingTool.entity.Designation;
 import com.xyram.ticketingTool.service.DesiggnaionService;
 
 /**

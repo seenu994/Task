@@ -4,10 +4,8 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.springframework.stereotype.Component;
 
-import com.xyram.ticketingTool.entity.Story;
 import com.xyram.ticketingTool.entity.StoryComments;
 import com.xyram.ticketingTool.vo.StoryCommentVo;
-import com.xyram.ticketingTool.vo.StoryVo;
 
 @Component
 public class StoryCommentMapper {

@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -35,10 +34,8 @@ import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.Notifications;
 import com.xyram.ticketingTool.entity.ProjectMembers;
 import com.xyram.ticketingTool.entity.Projects;
-import com.xyram.ticketingTool.entity.Ticket;
 import com.xyram.ticketingTool.enumType.NotificationType;
 import com.xyram.ticketingTool.enumType.ProjectMembersStatus;
-import com.xyram.ticketingTool.exception.ResourceNotFoundException;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.response.ProjectAdminResponse;
 import com.xyram.ticketingTool.response.ProjectMemberresponse;

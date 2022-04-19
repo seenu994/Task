@@ -1,30 +1,23 @@
 package com.xyram.ticketingTool.service.impl;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xyram.ticketingTool.Repository.TCProjectModulesRepository;
 import com.xyram.ticketingTool.Repository.TestCaseRepository;
 import com.xyram.ticketingTool.Repository.TestCasesProjRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
-import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.TCProjectModules;
 import com.xyram.ticketingTool.entity.TestCases;
 import com.xyram.ticketingTool.entity.TestCasesProjects;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.TestCasesService;
-import com.xyram.ticketingTool.util.ResponseMessages;
 
 @Service
 public class TestCasesServiceImpl implements TestCasesService {

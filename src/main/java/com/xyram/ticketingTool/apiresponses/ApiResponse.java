@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.xyram.ticketingTool.entity.AssetIssues;
+
 public class ApiResponse {
 	
 	String message;
@@ -12,6 +14,7 @@ public class ApiResponse {
 	
 	Map content;
 	
+	Map fileDetails;
 	
 	public ApiResponse(boolean requiredContent){
 		
@@ -20,6 +23,9 @@ public class ApiResponse {
 		if(requiredContent) {
 			content = new HashMap(); 
 		}
+		
+		fileDetails = new HashMap();
+		
 	}
 
 
@@ -33,8 +39,8 @@ public class ApiResponse {
 	}
 
 
-	public void setMessage(String message) {
-		this.message = message;
+	public void setMessage(String class1) {
+		this.message = class1;
 	}
 
 
@@ -69,6 +75,35 @@ public class ApiResponse {
 		// TODO Auto-generated method stub
 		
 	}
+
+
+	public Object getissueId() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	public Map getFileDetails() {
+		return fileDetails;
+	}
+
+
+	public void setFileDetails(Map fileDetails) {
+		this.fileDetails = fileDetails;
+	}
+
+
+	
+
+
+	
+
+	
+
+
+	
+
+	
 
 
 	

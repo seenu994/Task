@@ -1,12 +1,12 @@
 package com.xyram.ticketingTool.service.impl;
 
 import java.text.ParseException;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -98,10 +98,14 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 					if(schedule.getCallCount() == null) {
 						schedule.setCallCount(0);
 					}	
+					HrCalendar savedObj = hrCalendarRepository.save(schedule);
+
 					schedule.setStatus("SCHEDULED");
 					response.setSuccess(true);
 					response.setMessage("Schedule created successfully.");
-					hrCalendarRepository.save(schedule);
+					Map content = new HashMap();
+					content.put("scheduleId", savedObj.getId());
+					response.setContent(content);
 				} else {
 					response.setSuccess(false);
 					response.setMessage("Employee reporter not found.");

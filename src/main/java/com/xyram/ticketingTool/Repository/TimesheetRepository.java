@@ -4,10 +4,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.Column;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,8 +17,8 @@ import com.xyram.ticketingTool.enumType.TimesheetStatus;
 public interface TimesheetRepository extends JpaRepository<TimeSheet, String>{
 	
 	
-	@Query(value = "SELECT t from TimeSheet t where Date(t.timeSheetDate) = STR_TO_DATE(:sheetDate, '%Y-%m-%d')  ")
-	List<TimeSheet> getAllSheetsByDate(Date sheetDate);
+	@Query(value = "SELECT t from TimeSheet t where Date(t.timeSheetDate) = STR_TO_DATE(:sheetDate, '%Y-%m-%d') and t.employeeId=:employeeId ")
+	List<TimeSheet> getAllSheetsByDate(Date sheetDate, String employeeId);
 	
 
 	@Query(value = "SELECT distinct  new map( t.timeSheetId as timeSheetId,t.employeeId as employeeId,t.timeSheetDate as timeSheetDate, "

@@ -1,6 +1,5 @@
 package com.xyram.ticketingTool.ticket.Service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;

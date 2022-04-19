@@ -11,10 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.xyram.ticketingTool.admin.model.TicketUserDetails;
 import com.xyram.ticketingTool.admin.model.User;
-import com.xyram.ticketingTool.enumType.UserRole;
-import com.xyram.ticketingTool.enumType.UserStatus;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, String> {

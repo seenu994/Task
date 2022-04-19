@@ -1,8 +1,5 @@
 package com.xyram.ticketingTool.controller;
 
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,12 +9,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
-import com.xyram.ticketingTool.entity.JobOpenings;
-import com.xyram.ticketingTool.entity.Platform;
 import com.xyram.ticketingTool.entity.Sprint;
-import com.xyram.ticketingTool.service.JobService;
 import com.xyram.ticketingTool.service.SprintService;
 import com.xyram.ticketingTool.util.AuthConstants;
 

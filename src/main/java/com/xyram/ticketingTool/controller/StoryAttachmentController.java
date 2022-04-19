@@ -1,6 +1,5 @@
 package com.xyram.ticketingTool.controller;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,13 +9,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
-import com.xyram.ticketingTool.entity.StoryComments;
-import com.xyram.ticketingTool.modelMapper.StoryCommentMapper;
 import com.xyram.ticketingTool.service.StoryAttachmentsService;
-import com.xyram.ticketingTool.service.StoryCommentService;
 import com.xyram.ticketingTool.util.AuthConstants;
 import com.xyram.ticketingTool.vo.StoryAttachmentVo;
-import com.xyram.ticketingTool.vo.StoryCommentVo;
 
 @RestController
 public class StoryAttachmentController {
