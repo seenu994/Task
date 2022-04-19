@@ -141,9 +141,12 @@ AssetIssues getAssetIssueStatus();
 + "(:assetIssueStatus is null OR lower(i.assetIssueStatus)=:assetIssueStatus) AND "
 + "(:assetId is null OR i.assetId=:assetId) AND "
 + "(:vendorId is null OR i.vendorId=:vendorId) AND "
++ "(:searchString  is null "
++ " OR i.assetIssueId LIKE %:searchString% "
++ " OR i.vendorId LIKE %:searchString% OR i.assetId LIKE %:searchString%) AND "
 + "(:toDate is null OR Date(i.complaintRaisedDate) <= STR_TO_DATE(:toDate, '%Y-%m-%d')) AND "
 + "(:fromDate is null OR Date(i.complaintRaisedDate) >= STR_TO_DATE(:fromDate, '%Y-%m-%d')) ")
-Page<Map> getAllAssetsIssues(AssetIssueStatus assetIssueStatus, String assetId, String vendorId, String fromDate, String toDate, Pageable pageable);
+Page<Map> getAllAssetsIssues(AssetIssueStatus assetIssueStatus, String assetId, String vendorId, String searchString, String fromDate, String toDate, Pageable pageable);
 
 
 

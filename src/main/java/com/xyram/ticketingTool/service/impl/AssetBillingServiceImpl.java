@@ -140,9 +140,13 @@ public class AssetBillingServiceImpl implements AssetBillingService
 			 
 			 AssetBilling assetBillings = assetBillingRepository.getAssetById(assetBilling.getAssetId());
 			 System.out.println(assetBillings);
-			 if(assetBillings != null)
+			 if(assetBillings == null)
 			 {
-			   throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset id already exists!!!");
+			   throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid asset id!!!");
+			 }
+			 else
+			 {
+				 
 			 }
 			 
 		 }
@@ -320,21 +324,15 @@ public class AssetBillingServiceImpl implements AssetBillingService
 			 if(assetBillingObj.getAssetAmount() != null && assetBillingObj.getAssetAmount().equals(""))
 					 
 			 {
-				 //checkAssetAmount(assetBilling.)
+				 
 				assetBillingObject.setAssetAmount(assetBillingObj.getAssetAmount());
 			 }
-			 else
-			 {
-				 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "enter assetAmount");
-			 }
+			
 		     if(assetBillingObj.getGstAmount() != null && assetBillingObj.getAssetAmount().equals(""))
 			 {
 				 assetBillingObject.setAssetAmount(assetBillingObj.getAssetAmount());
 			 }
-		     else
-		     {
-		    	 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "enter gst");
-		     }
+		     
 		     assetBillingObj.setAmountPaid(true);
 		     
 		        assetBillingObject.setLastUpdatedAt(new Date());

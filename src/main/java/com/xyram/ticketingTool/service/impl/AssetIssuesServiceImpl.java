@@ -260,19 +260,22 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 					checkAssetIssuesStatus(assetIssuesObj.getAssetIssueStatus());
 					assetIssuesObj.setAssetIssueStatus(AssetIssueStatus.CLOSE);
 				}
+				
 				if(assetIssues.getDescription() != null)
 				{
 					checkDescription(assetIssuesObj.getDescription());
 					assetIssuesObj.setDescription(assetIssues.getDescription());
 				}
-				assetIssuesObj.setResolvedDate(new Date());
+				//assetIssuesObj.setResolvedDate(new Date());
 				if(assetIssues.getResolvedDate() != null)
 				{
-					checkResolvedDate(assetIssues.getResolvedDate(), assetIssueId);
-					assetIssuesObj.setResolvedDate(assetIssues.getResolvedDate());
+					//checkResolvedDate(assetIssues.getResolvedDate(), assetIssueId);
+					assetIssuesObj.setResolvedDate(new Date());
 				}
-				if(assetIssues.isSolution() == true)
+				if(assetIssues.isSolution()!= false)
 				{
+					CheckSolution(assetIssuesObj.isSolution());
+					assetIssuesObj.setSolution(true);
 					assetIssuesObj.setComments(assetIssues.getComments());
 					//assetIssuesObj.setSolution(true);
 					//assetIssuesObj.returnFromRepair(assetIssues);
@@ -298,6 +301,11 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 	    }
 		
 
+	private boolean CheckSolution(boolean solution) 
+	{
+		return true;
+	}
+
 	private boolean checkResolvedDate(Date resolvedDate,String assetIssueId) 
 	{
 		
@@ -305,8 +313,10 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 		Date d1 = compaintRaisedDate;
 		System.out.println("d1"+ compaintRaisedDate);
 		Date d2 = resolvedDate;
+		System.out.println(resolvedDate);
+		Date d3 = new Date();
 		
-	    if (d1.after(d2)) 
+	    if (d1.after(d2) && d3.after(d2)) 
 	    {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 						"resolved date should be greater than complaint raised date");
@@ -420,6 +430,8 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 		
 		ApiResponse response = new ApiResponse(false);
 		
+		String searchString = filter.containsKey("searchString") ? ((String) filter.get("searchString"))
+				: null;
 		String assetIssueStatus = filter.containsKey("assetIssueStatus") ? ((String) filter.get("assetIssueStatus")).toUpperCase()
 					: null;
 		String assetId = filter.containsKey("assetId") ? ((String) filter.get("assetId"))
@@ -456,14 +468,14 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 			}
 		}
 				
-		Page<Map> assetIssues = assetIssuesRepository.getAllAssetsIssues(assetIssuestatus, assetId, vendorId, fromDate, toDate, pageable);
+		Page<Map> assetIssues = assetIssuesRepository.getAllAssetsIssues(assetIssuestatus, assetId, vendorId, searchString, fromDate, toDate, pageable);
 		
 		if(assetIssues.getSize() > 0) {
 			Map content = new HashMap();
 			content.put("assetissues", assetIssues);
 			response.setContent(content);
 			response.setSuccess(true);
-			response.setMessage("List retreived successfully.");
+			response.setMessage("Asset Issue List retreived successfully.");
 		}else {
 			response.setSuccess(false);
 			response.setMessage("List is empty.");	
@@ -496,22 +508,6 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
        {
     	   
 	       ApiResponse response = new ApiResponse();
-	       //Map assetIssues = assetIssuesRepository.getByAssetIssueId(assetIssueId);
-	       /*List<AssetIssues> assetIssues = assetIssuesRepository.getAssetIssuesById(assetIssueId);
-	       Map content = new HashMap();
-
-		   content.put("Asset", assetIssues);
-	       if (content != null) 
-	       {
-		       response.setSuccess(true);
-		       System.out.println(assetIssues);
-		       response.setMessage("Asset Issue Retrieved Successfully");
-		       response.setContent(content);
-		   }
-	       else {
-	       response.setSuccess(false);
-	       response.setMessage("Could not retrieve data");
-	       }*/
 	       
 	       List<AssetIssues> assetIssues = assetIssuesRepository.getAssetIssuesById(assetIssueId);
 	       
