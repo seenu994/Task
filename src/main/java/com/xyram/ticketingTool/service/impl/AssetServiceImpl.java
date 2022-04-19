@@ -56,6 +56,7 @@ import com.xyram.ticketingTool.entity.Role;
 import com.xyram.ticketingTool.service.AssetService;
 import com.xyram.ticketingTool.service.EmployeeService;
 import com.xyram.ticketingTool.util.AssetUtil;
+import com.xyram.ticketingTool.util.ExcelUtil;
 import com.xyram.ticketingTool.util.ExcelWriter;
 import com.xyram.ticketingTool.util.ResponseMessages;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
@@ -212,14 +213,14 @@ public class AssetServiceImpl implements AssetService {
 			} 
 			
 			// Validate assignedTo emp_id
-			if (asset.getAssignedTo() != null) {
-				// Validate emp_id
-				              
-				Employee employee = employeeRepository.getByEmpName(asset.getAssignedTo());
-				if (employee == null) {
-					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "employee id is not valid");
-				}
-			 }	
+//			if (asset.getAssignedTo() != null) {
+//				// Validate emp_id
+//				              
+//				Employee employee = employeeRepository.getByEmpName(asset.getAssignedTo());
+//				if (employee == null) {
+//					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "employee id is not valid");
+//				}
+//			 }	
 			response.setSuccess(true);
 			return response;
 		}
@@ -264,10 +265,10 @@ public class AssetServiceImpl implements AssetService {
 		    if(asset.getAssetStatus() != null) {
 		    	assetObj.setAssetStatus(asset.getAssetStatus());
 		    }
-		    if(asset.getAssignedTo()!= null) {
-		    	checkAssignedTo(asset.getAssignedTo());
-		    	assetObj.setAssignedTo(asset.getAssignedTo());
-		    }
+//		    if(asset.getAssignedTo()!= null) {
+//		    	checkAssignedTo(asset.getAssignedTo());
+//		    	assetObj.setAssignedTo(asset.getAssignedTo());
+//		    }
 		    assetObj.setBagAvailable(asset.isBagAvailable());
 		    assetObj.setMouseAvailable(asset.isMouseAvailable());
 		    assetObj.setPowercordAvailable(asset.isPowercordAvailable());
@@ -613,7 +614,7 @@ public class AssetServiceImpl implements AssetService {
 			row.put("Warranty Date", assetList.getWarrantyDate());
 			row.put("Status", assetList.getAssetStatus());
 			row.put("Vendor Name", getVendorName.getVendorName());
-			row.put("Assigned To", assetList.getAssignedTo());
+//			row.put("Assigned To", assetList.getAssignedTo());
 			row.put("Ram Size", assetList.getRam());
 			
 
@@ -623,7 +624,14 @@ public class AssetServiceImpl implements AssetService {
 
 		XSSFWorkbook workbook = ExcelWriter.writeToExcel(excelHeaders, excelData, "Asset Details", null,
 				"Asset Details", 1, 0);
-
+		
+//        try {
+//        	ExcelUtil.saveWorkbook(workbook, "report.xlsx");
+//        }
+//        catch(IOException e){
+//        	e.printStackTrace();
+//        }
+        
 		String filename = new SimpleDateFormat("'asset_details_'yyyyMMddHHmmss'.xlsx'").format(new Date());
 
 		Path fileStorageLocation = Paths.get(ResponseMessages.BASE_DIRECTORY + ResponseMessages.ASSET_DIRECTORY );
@@ -641,7 +649,6 @@ public class AssetServiceImpl implements AssetService {
 		}
 		response.put("fileLocation", ResponseMessages.ASSET_DIRECTORY + filename);
 		return response;
-		
 	}
 	
 

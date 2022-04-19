@@ -50,13 +50,13 @@ public class Asset extends AuditModel{
 	@Column(name = "ram")
 	private String ram;
 	
-	@Column(name = "bag_available")
+	@Column(name = "bag_available", nullable = true)
 	private boolean bagAvailable;
 
-	@Column(name = "powercord_available")
+	@Column(name = "powercord_available", nullable = true)
 	private boolean powercordAvailable;
 
-	@Column(name = "mouse_available")
+	@Column(name = "mouse_available", nullable = true)
 	private boolean mouseAvailable;
 
 	@Column(name = "asset_photo_url", nullable = true)
@@ -64,10 +64,10 @@ public class Asset extends AuditModel{
 	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "asset_status")
-	private AssetStatus assetStatus = AssetStatus.AVAILABLE;
+	private AssetStatus assetStatus;
 	
-	@Column(name = "assigned_to")
-	private String assignedTo;
+//	@Column(name = "assigned_to")
+//	private String assignedTo;
 	
 
 	public String getAssetId() {
@@ -174,13 +174,13 @@ public class Asset extends AuditModel{
 		this.assetStatus = assetStatus;
 	}
 
-	public String getAssignedTo() {
-		return assignedTo;
-	}
-
-	public void setAssignedTo(String assignedTo) {
-		this.assignedTo = assignedTo;
-	}
+//	public String getAssignedTo() {
+//		return assignedTo;
+//	}
+//
+//	public void setAssignedTo(String assignedTo) {
+//		this.assignedTo = assignedTo;
+//	}
 
 	public Asset getBillingDetailByAssetId(Asset assetId2) {
 		// TODO Auto-generated method stub
