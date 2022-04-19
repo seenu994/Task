@@ -317,15 +317,24 @@ public class AssetBillingServiceImpl implements AssetBillingService
 			 {
 				 assetBillingObject.setTransactionDate(new Date());
 			 }
-			 if(assetBillingObj.getAssetAmount() != null)
+			 if(assetBillingObj.getAssetAmount() != null && assetBillingObj.getAssetAmount().equals(""))
+					 
 			 {
 				 //checkAssetAmount(assetBilling.)
 				assetBillingObject.setAssetAmount(assetBillingObj.getAssetAmount());
 			 }
-		     if(assetBillingObj.getGstAmount() != null)
+			 else
+			 {
+				 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "enter assetAmount");
+			 }
+		     if(assetBillingObj.getGstAmount() != null && assetBillingObj.getAssetAmount().equals(""))
 			 {
 				 assetBillingObject.setAssetAmount(assetBillingObj.getAssetAmount());
 			 }
+		     else
+		     {
+		    	 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "enter gst");
+		     }
 		     assetBillingObj.setAmountPaid(true);
 		     
 		        assetBillingObject.setLastUpdatedAt(new Date());
@@ -544,7 +553,29 @@ public ApiResponse addRepairAssetBill(AssetBillingRequest assetBilling) {
 				 checkAssetIssueId(assetBillingObject.getAssetIssueId());
 				 assetBillingObject.setAssetIssueId(assetBillingObj.getAssetIssueId());
 			 }
-			 checkUnderWarrenty1(assetBillingObj,assetBilling);
+			 if(assetBillingObj.getAssetAmount() != null)
+			 {
+				 assetBillingObject.setAssetAmount(assetBillingObj.getAssetAmount());
+			 }
+			 if(assetBillingObj.getGstAmount() != null)
+			 {
+				 assetBillingObject.setGstAmount(assetBillingObj.getGstAmount());
+			 }
+			 if(assetBillingObj.getUnderWarrenty() == true)
+			 {
+				    assetBillingObject.setAssetAmount(null);
+					assetBillingObject.setGstAmount(null);
+					assetBillingObject.setAmountPaid(false);
+			 }
+			 else
+			 {
+				assetBillingObject.setAssetAmount(assetBillingObj.getAssetAmount());
+				assetBillingObject.setGstAmount(assetBillingObj.getGstAmount());
+				assetBillingObject.setAmountPaid(false);
+				
+			 }
+			 //checkUnderWarrenty(assetBillingObject,assetBilling);
+			 //assetBillingObject.setUnderWarrenty(false);
 		     
 		        assetBillingObject.setLastUpdatedAt(new Date());
 		        assetBillingObject.setUpdatedBy(currentUser.getUserId());
@@ -566,8 +597,6 @@ public ApiResponse addRepairAssetBill(AssetBillingRequest assetBilling) {
 		 }
 		return response;
 	}
-
-		
 
 
 	private boolean checkAssetIssueId(String assetIssueId) 
@@ -655,11 +684,24 @@ public ApiResponse addRepairAssetBill(AssetBillingRequest assetBilling) {
 				{
 					assetBillingObj.setTransactionDate(assetBillingObj.getTransactionDate());
 				}
-				if(assetBillingObj.getUnderWarrenty() != false)
+				/*if(assetBillingObj.getUnderWarrenty() != false)
 				{
 					checkUnderWarrenty1(assetBillingObj,assetBilling);
 					billingObj.setUnderWarrenty(assetBillingObj.getUnderWarrenty());
-				}
+				}*/
+				if(assetBillingObj.getUnderWarrenty() == true)
+				 {
+					billingObj.setAssetAmount(null);
+					billingObj.setGstAmount(null);
+					billingObj.setAmountPaid(false);
+				 }
+				 else
+				 {
+					 billingObj.setAssetAmount(assetBillingObj.getAssetAmount());
+					 billingObj.setGstAmount(assetBillingObj.getGstAmount());
+					 billingObj.setAmountPaid(true);
+					
+				 }
                 if(assetBillingObj.getAssetIssueId() != null)
                 {
                 	checkAssetIssueId(billingObj.getAssetIssueId());
@@ -712,21 +754,34 @@ public ApiResponse addRepairAssetBill(AssetBillingRequest assetBilling) {
 
 
 	@Override
-	public ApiResponse getAllAssetBilling(Pageable pageable) {
-		ApiResponse response = new ApiResponse();
-		Page<Map> assetBilling = assetBillingRepository.getAllAssetBilling(pageable);
+	public ApiResponse getAllAssetBillingByAssetId(String assetId) {
+		ApiResponse response = new ApiResponse(false);
+		
+		
+		List<AssetBilling> assetBilling = assetBillingRepository.getAllAssetBillingByAssetId(assetId);
 		Map content = new HashMap();
 		content.put("assetBilling", assetBilling);
-		if(content != null) {
-			response.setSuccess(true);
-			response.setMessage("asset billing data Retrieved Successfully");
-			response.setContent(content);
-		}
+		
+		    if(content != null)
+		    {
+				response.setSuccess(true);
+				response.setMessage("asset billing data Retrieved Successfully");
+				response.setContent(content);
+		   }
 		else {
 			response.setSuccess(false);
 			response.setMessage("Could not retrieve data");
 		}
 		return response;
+		
+		
+	}
+
+
+	@Override
+	public ApiResponse getAllAssetBilling(Map<String, Object> filter, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
 	
