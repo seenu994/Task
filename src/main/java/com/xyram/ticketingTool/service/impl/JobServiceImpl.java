@@ -1394,6 +1394,24 @@ public class JobServiceImpl implements JobService {
 		// TODO Auto-generated method stub
 		return response;
 	}
+	
+	@Override
+	public ApiResponse searchJobOpenings(String searchString) {
+		ApiResponse response = new ApiResponse(false);
+		List<Map> jobCodes = jobRepository.searchJobOpenings(searchString.toLowerCase(), JobOpeningStatus.VACANT);
+		Map res = new HashMap();
+		if (jobCodes != null) {
+			res.put("jobCodes", jobCodes);
+			response.setSuccess(true);
+			response.setMessage(" Jobs Codes retrieved Sucessfully");
+			response.setContent(res);
+		} else {
+			response.setSuccess(false);
+			response.setMessage("Job Codes Not Exist");
+		}
+		// TODO Auto-generated method stub
+		return response;
+	}
 
 	@Override
 	public ApiResponse getJobInterviewByAppId(String applicationId) {

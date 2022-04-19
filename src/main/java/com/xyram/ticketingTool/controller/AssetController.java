@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.itextpdf.text.log.SysoCounter;
@@ -42,21 +43,27 @@ public class AssetController {
 	@Autowired
 	AssetEmployeeService assetEmployeeService;
 	
-	@PostMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/addAsset"})
+	@PostMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/addAsset", 
+			AuthConstants.ADMIN_BASEPATH + "/addAsset",
+	        AuthConstants.INFRA_USER_BASEPATH + "/addAsset"})
 	public ApiResponse addasset(@RequestBody Asset asset) {
 		logger.info("Received request to add Asset");
 		return assetService.addasset(asset);
 	}
 	
-	@PutMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/editAsset/{assetId}"})
+	@PutMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/editAsset/{assetId}",
+			AuthConstants.ADMIN_BASEPATH + "/editAsset/{assetId}",
+			AuthConstants.INFRA_USER_BASEPATH + "/editAsset/{assetId}"})
     public ApiResponse editAsset(@RequestBody Asset asset,@PathVariable String assetId) {
 		logger.info("Received request to edit Asset");
 		return assetService.editAsset(asset,assetId);
 	}
 	
-	@GetMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllAssets"})
-	ApiResponse getAllAssets(@RequestBody Map<String, Object>filter, Pageable pageable) {
-		System.out.println(filter);
+	@GetMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllAssets",
+			AuthConstants.ADMIN_BASEPATH + "/getAllAssets",
+			AuthConstants.INFRA_USER_BASEPATH + "/getAllAssets"})
+	ApiResponse getAllAssets(@RequestParam Map<String, Object>filter, Pageable pageable) {
+//		System.out.println(filter);
 		logger.info("Received request to Get all asset");
 		return assetService.getAllAssets(filter, pageable);
 	}
@@ -68,13 +75,17 @@ public class AssetController {
 //			return assetService.getAllAsset(pageable);
 //	 }
     
-    @GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAssetById/{assetId}"})
+    @GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAssetById/{assetId}",
+    		AuthConstants.INFRA_ADMIN_BASEPATH + "/getAssetById/{assetId}",
+    		AuthConstants.INFRA_USER_BASEPATH + "/getAssetById/{assetId}"})
     public ApiResponse getAssetById(@PathVariable String assetId) {
 	        logger.info("Received request to get Asset by Id");
 			return assetService.getAssetById(assetId);
 	}
     
-    @GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/downloadAssets"})
+    @GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/downloadAssets",
+    		AuthConstants.INFRA_ADMIN_BASEPATH + "/downloadAssets",
+    		AuthConstants.INFRA_USER_BASEPATH + "/downloadAssets"})
 	Map downloadAssets(@RequestBody Map<String, Object> filter) throws ParseException, FileUploadException, IOException {
 		logger.info("Received request to download Asset");
 		return assetService.downloadAssets(filter);

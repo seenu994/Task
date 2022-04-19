@@ -30,19 +30,25 @@ private final Logger logger = LoggerFactory.getLogger(AssetController.class);
 	AssetSoftwareService assetSoftwareService;
 	
 	
-	@PostMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/addAssetSoftware"})
+	@PostMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/addAssetSoftware",
+			AuthConstants.INFRA_USER_BASEPATH + "/addAssetSoftware",
+			AuthConstants.ADMIN_BASEPATH + "/addAssetSoftware"})
 	public ApiResponse addassetSoftware(@RequestBody AssetSoftware assetSoftware) {
 		logger.info("Received request to add Asset Software");
 		return assetSoftwareService.addassetSoftware(assetSoftware);
 	}
 	
-	@PutMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/updateAssetSoftware/{assetId}"})
+	@PutMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/updateAssetSoftware/{assetId}",
+			AuthConstants.INFRA_USER_BASEPATH + "/updateAssetSoftware/{assetId}",
+			AuthConstants.ADMIN_BASEPATH + "/updateAssetSoftware/{assetId}"})
 	ApiResponse updateAssetSoftware(@RequestBody AssetSoftware assetSoftware,@PathVariable String assetId) {
 		logger.info("Received request to update Asset Software");
 		return assetSoftwareService.updateAssetSoftware(assetSoftware, assetId);
 	}
 	
-	@GetMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/getAssetSoftwareById/{assetId}"})
+	@GetMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/getAssetSoftwareById/{assetId}",
+			AuthConstants.ADMIN_BASEPATH + "/getAssetSoftwareById/{assetId}",
+			AuthConstants.INFRA_USER_BASEPATH + "/getAssetSoftwareById/{assetId}"})
     public ApiResponse getAssetSoftwareId(@PathVariable String assetId, Pageable pageable) {
 	        logger.info("Received request to get Asset Software by Id");
 			return assetSoftwareService.getAssetSoftwareById(assetId, pageable);

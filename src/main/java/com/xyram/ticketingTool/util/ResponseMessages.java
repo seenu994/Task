@@ -217,7 +217,7 @@ public interface ResponseMessages {
 
 	String ADDED_SOFTWAREID = "Software Id added Successfully";
 
-	String EDITED_SOFTWAREMASTER = "Software master details is edited Successfully";
+	String SOFTWAREMASTER_EDITED = "Software master details is edited Successfully";
 
 	String SOFTWARE_STATUS_UPDATED = "Software master status updated Successfully";
 
