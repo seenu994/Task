@@ -61,7 +61,7 @@ public class AssetController {
 	@GetMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllAssets",
 			AuthConstants.ADMIN_BASEPATH + "/getAllAssets",
 			AuthConstants.INFRA_USER_BASEPATH + "/getAllAssets"})
-	ApiResponse getAllAssets(@RequestBody Map<String, Object>filter, Pageable pageable) {
+	ApiResponse getAllAssets(@RequestBody (required=false) Map<String, Object>filter, Pageable pageable) {
 		System.out.println(filter);
 		logger.info("Received request to Get all asset");
 		return assetService.getAllAssets(filter, pageable);
