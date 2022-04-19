@@ -71,20 +71,25 @@ public interface AssetBillingRepository extends JpaRepository<AssetBilling, Stri
             + "b.underWarrenty as underWarrenty,b.assetAmount as assetAmount,b.gstAmount as gstAmount,"
     		+ "b.transactionDate as transactionDate,b.vendorId as vendorId,"
     	    + "b.billPhotoUrl as billPhotoUrl, b.assetIssueId as assetIssueId, b.returnDate as returnDate, "
-    	    + "b.amountPaid as amountPaid) from AssetBilling b ")
+    	    + "b.amountPaid as amountPaid) from AssetBilling b left join Asset a on b.assetId = a.assetId where "
+    	    + "(:assetId is null OR b.assetId=:assetId)")
 	
-            Page<Map> getAllAssetBilling(Pageable pageable);
+            Page<Map> getAllAssetBilling(String assetId,Pageable pageable);
 
-
-
-	@Query("Select  1 from AssetBilling b where b.billingType = 'purchase' and b.assetId =:assetId")
-	int getBillingDetailByAssetId(String assetId);
 
 	@Query("select b from AssetBilling b where b.assetId =:assetId")
 	AssetBilling getAssetById(String assetId);
 
 	@Query("Select b.transactionDate from AssetBilling b where b.assetBillId=:assetBillId")
 	Date getTransationDate(String assetBillId);
+
+	@Query("Select b.assetIssueId from AssetBilling b where b.assetIssueId=:assetIssueId")
+	AssetBilling getAssetIssueById(String assetIssueId);
+
+	@Query("Select b from AssetBilling b where b.assetId =:assetId")
+	List<AssetBilling> getAllAssetBillingByAssetId(String assetId);
+
+	
 	
 	
 	

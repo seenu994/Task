@@ -158,6 +158,11 @@ public class AssetBilling extends AuditModel
 		this.assetId = assetId;
 	}
 
+	public int getSize() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 	
 
 	

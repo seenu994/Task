@@ -235,6 +235,8 @@ public interface ResponseMessages {
 
 	String GETALL_VENDOR_LIST = "Asset vendor list";
 	String RETURN_DAMAGE = "Asset returned from damage";
+	
+	String ASSET_ISSUE_DIRECTORY = "asset issue directory";
 
 
 	

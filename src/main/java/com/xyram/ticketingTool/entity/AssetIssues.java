@@ -52,23 +52,9 @@ public class AssetIssues extends AuditModel
     
     @Column(name="resolved_date")
     public Date resolvedDate;
-
-    public String getAssetId() {
-		return assetId;
-	}
-
-	public void setAssetId(String assetId) {
-		this.assetId = assetId;
-	}
-
-	public String getVendorId() {
-		return vendorId;
-	}
-
-	public void setVendorId(String vendorId) {
-		this.vendorId = vendorId;
-	}
-
+    
+    @Column(name = "comments")
+    public String comments;
 
 	public String getAssetIssueId() {
 		return assetIssueId;
@@ -78,14 +64,12 @@ public class AssetIssues extends AuditModel
 		this.assetIssueId = assetIssueId;
 	}
 
-	
-
-	public AssetIssueStatus getAssetIssueStatus() {
-		return assetIssueStatus;
+	public String getAssetId() {
+		return assetId;
 	}
 
-	public void setAssetIssueStatus(AssetIssueStatus assetIssueStatus) {
-		this.assetIssueStatus = assetIssueStatus;
+	public void setAssetId(String assetId) {
+		this.assetId = assetId;
 	}
 
 	public Date getComplaintRaisedDate() {
@@ -104,7 +88,7 @@ public class AssetIssues extends AuditModel
 		this.description = description;
 	}
 
-	public boolean getSolution() {
+	public boolean isSolution() {
 		return solution;
 	}
 
@@ -112,6 +96,21 @@ public class AssetIssues extends AuditModel
 		this.solution = solution;
 	}
 
+	public AssetIssueStatus getAssetIssueStatus() {
+		return assetIssueStatus;
+	}
+
+	public void setAssetIssueStatus(AssetIssueStatus assetIssueStatus) {
+		this.assetIssueStatus = assetIssueStatus;
+	}
+
+	public String getVendorId() {
+		return vendorId;
+	}
+
+	public void setVendorId(String vendorId) {
+		this.vendorId = vendorId;
+	}
 
 	public Date getResolvedDate() {
 		return resolvedDate;
@@ -121,25 +120,14 @@ public class AssetIssues extends AuditModel
 		this.resolvedDate = resolvedDate;
 	}
 
-	
-	
-	
-	
-	
-	public void setassetIssues(String getaId) {
-		// TODO Auto-generated method stub
-		
+	public String getComments() {
+		return comments;
 	}
 
-	public  AssetIssues getAssetIssues() {
-		AssetIssues assetIssues = new AssetIssues();
-		return assetIssues;
+	public void setComments(String comments) {
+		this.comments = comments;
 	}
-
-
-
-	
-	
-	
-
+    
+    
+  
 }
