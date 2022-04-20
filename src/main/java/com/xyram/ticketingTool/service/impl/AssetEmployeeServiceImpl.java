@@ -88,7 +88,7 @@ public class AssetEmployeeServiceImpl implements AssetEmployeeService{
 		} 
 		else {
 		    // checking asset id in asset table
-			Asset asset = assetRepository.getByAssetId(assetEmployee.getAssetId());
+			Asset asset = assetRepository.getAssetById(assetEmployee.getAssetId());
 			if (asset == null) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset id is not valid");
 			}
