@@ -531,7 +531,7 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
        }
 	
  
-	@Override
+	/*@Override
 	public ApiResponse searchAssetIssue(String assetIssueId) 
 	{
 		ApiResponse response = new ApiResponse(false);
@@ -551,7 +551,7 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 			response.setMessage("Could not retrieve data");
 		}
 		return response;
-	}
+	}*/
 
 	@Override
 	public ApiResponse downloadAllAssetIssues(Map<String, Object> filter) {

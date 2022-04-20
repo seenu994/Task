@@ -47,7 +47,7 @@ public interface AssetIssuesService
 	ApiResponse getAllAssetsIssues(Map<String, Object> filter, Pageable pageable);
 
 
-	ApiResponse searchAssetIssue(String assetIssueId);
+	//ApiResponse searchAssetIssue(String assetIssueId);
 
 	ApiResponse getAssetIssuesById(String assetIssueId);
 

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
@@ -54,7 +55,7 @@ public class SoftwareMasterController {
 
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH +"/getAllsoftwareMaster",
 			AuthConstants.INFRA_USER_BASEPATH+"/getAllsoftwareMaster"})
-	public ApiResponse getAllsoftwareMaster(@RequestBody Map<String, Object> filter, Pageable pageable) {
+	public ApiResponse getAllsoftwareMaster(@RequestParam Map<String, Object> filter, Pageable pageable) {
 		logger.info("Received request to getAllsoftwareMasterLust");
 		return softwareMasterService.getAllsoftwareMaster(filter, pageable);
 	}
