@@ -490,8 +490,6 @@ public class AssestVendorServiceImpl implements AssetvendorService {
 
 	}
 
-	
-
 	/*@Override
 	public ApiResponse searchAssetVendor(String searchString) {
 		
