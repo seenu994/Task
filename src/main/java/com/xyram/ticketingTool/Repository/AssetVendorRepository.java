@@ -49,8 +49,8 @@ public interface AssetVendorRepository extends JpaRepository<AssetVendor, String
 			+ "(:city is null OR p.city =:city)")
 	Page<Map> getAllVendor(String vendorId, String country, String city, Pageable peageble);
 
-//@Query("Select distinct p from AssetVendor p where p.vendorName=:vendorName")
-//	List<AssetVendor> searchVendorName(String vendorName);
+@Query("Select distinct p from AssetVendor p where p.vendorName=:vendorName")
+	List<AssetVendor> searchVendorName(String vendorName);
 
 	@Query("select distinct p from AssetVendor p where"
 			+ "(:searchString is null OR p.vendorName LIKE %:searchString% OR p.vendorId like  %:searchString%) ")

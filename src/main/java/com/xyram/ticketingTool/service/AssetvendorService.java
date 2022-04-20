@@ -18,9 +18,9 @@ public interface AssetvendorService {
 	
 	ApiResponse getAllVendor(Map<String, Object> filter,Pageable peageble);
 	
-	//ApiResponse searchVendorName(String vendorName);
+	ApiResponse searchVendorName(String vendorName);
 	
-	ApiResponse searchAssetVendor(String searchString);
+	//ApiResponse searchAssetVendor(String searchString);
 	
 	//ApiResponse updateassetVendorStatus(String vendorId, AssetVendorEnum assetVendorEnum);
 
@@ -29,6 +29,8 @@ public interface AssetvendorService {
 
 
 	ApiResponse updateassetVendorStatus(String vendorId, AssetVendorEnum assetVendorEnum);
+
+	//ApiResponse searchVendorName(String vendorName);
 
 	
 

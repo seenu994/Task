@@ -490,7 +490,9 @@ public class AssestVendorServiceImpl implements AssetvendorService {
 
 	}
 
-	@Override
+	
+
+	/*@Override
 	public ApiResponse searchAssetVendor(String searchString) {
 		
 			ApiResponse response = new ApiResponse(false);
@@ -513,10 +515,10 @@ public class AssestVendorServiceImpl implements AssetvendorService {
 
 			return response;
 		
-	}
+	}*/
 	
 	
-	/*@Override
+	@Override
 	public ApiResponse searchVendorName(String vendorName) 
 	{
 		ApiResponse response = new ApiResponse();
@@ -538,7 +540,7 @@ public class AssestVendorServiceImpl implements AssetvendorService {
 			response.setContent(content);
 		}
 		return response;
-	}*/
+	}
 }
 
 	
