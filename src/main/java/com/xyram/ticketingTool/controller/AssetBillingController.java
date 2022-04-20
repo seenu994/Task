@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -82,12 +83,12 @@ public class AssetBillingController
 		return assetBillingService.returnFromRepair(assetBilling);
 	}
 	
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllAssetBilling",
-			AuthConstants.INFRA_USER_BASEPATH + "/getAllAssetBilling",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllAssetBilling"})
-    public ApiResponse getAllAssetBilling(Pageable pageable) {
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllAssetBillingByAssetId/{assetId}",
+			AuthConstants.INFRA_USER_BASEPATH + "/getAllAssetBillingByAssetId/{assetId}",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllAssetBillingByAssetId/{assetId}"})
+    public ApiResponse getAllAssetBillingByAssetId(@PathVariable String assetId) {
 	        logger.info("Received request to get Asset Billing by Id");
-			return assetBillingService.getAllAssetBilling(pageable);
+			return assetBillingService.getAllAssetBillingByAssetId(assetId);
 	}
     
 }

@@ -31,12 +31,17 @@ public interface AssetBillingService
 
 	ApiResponse editRepairAssetBill(AssetBillingRequest assetBilling);
 
-	
-	ApiResponse getAllAssetBilling(Pageable pageable);
-
-	
+	ApiResponse getAllAssetBilling(Map<String, Object> filter, Pageable pageable);
 
 	ApiResponse returnFromRepair(AssetBillingRequest assetBilling);
+
+	//ApiResponse getAllAssetBillingById(Map<String, Object> filter, Pageable pageable);
+
+	//ApiResponse getAllAssetBillingById(Map<String, Object> filter, Pageable pageable);
+
+	//ApiResponse getAllAssetBillingById(String assetId);
+
+	ApiResponse getAllAssetBillingByAssetId(String assetId);
 	
 
 	//ApiResponse getAllAssetBillingList(Map<String, Object> filter, Pageable pageable);

@@ -47,6 +47,15 @@ public interface AssetRepository extends JpaRepository<Asset, String>{
     @Query("SELECT a from Asset a where a.assetId =:assetId")
 	Asset getAssetById(String assetId);
 
+    @Query("Select distinct new map(a.assetId as assetId,a.vendorId as vendorId,"
+    		+ "a.brand as brand,a.purchaseDate as purchaseDate,a.modelNo as modelNo,"
+    		+ "a.serialNo as serialNo,a.warrantyDate as warrantyDate,a.ram as ram,"
+    		+ "a.bagAvailable as bagAvailable, a.powercordAvailable as powercordAvailable,"
+    		+ "a.mouseAvailable as mouseAvailable, a.assetPhotoUrl as assetPhotoUrl,"
+    		+ "a.assetStatus as assetStatus, CONCAT(e.firstName ,' ', e.lastName) as assignedTo) from Asset a "
+    		+ "left join AssetEmployee b on b.assetId = a.assetId "
+    		+ "left join Employee e on e.eId = b.empId where a.assetId =:assetId")
+	Map getAllAssetById(String assetId);
     
     @Query("Select distinct new map(a.assetId as assetId,v.vendorName as vendorName, "		
             + "a.brand as brand,a.purchaseDate as purchaseDate,a.modelNo as modelNo,"
@@ -59,8 +68,8 @@ public interface AssetRepository extends JpaRepository<Asset, String>{
     	    + "(:brand is null OR a.brand=:brand) AND "
 			+ "(:vendorId is null OR a.vendorId=:vendorId) AND "
     	    + "(:searchString  is null "
-    	    + " OR a.ram LIKE %:searchString%  OR a.brand LIKE %:searchString% "
-    	    + " OR a.vendorId LIKE %:searchString% OR a.assetId LIKE %:searchString%) AND "
+    	    + " OR a.modelNo LIKE %:searchString%  OR a.serialNo LIKE %:searchString% "
+    	    + " OR a.assetId LIKE %:searchString% OR e.firstName LIKE %:searchString% OR e.lastName LIKE %:searchString%) AND "
     	    + "(:fromDateStr is null OR Date(a.purchaseDate) >= STR_TO_DATE(:fromDateStr, '%Y-%m-%d')) AND "
     	    + "(:toDateStr is null OR Date(a.purchaseDate) <= STR_TO_DATE(:toDateStr, '%Y-%m-%d')) ")
 	Page<Map> getAllAssets(String ram, String brand, AssetStatus assetStatus, String vendorId, String searchString, String fromDateStr, String toDateStr, Pageable pageable);

@@ -118,10 +118,14 @@ AssetIssues downloadAssetIssues(Map<String, Object> filter);
 //ApiResponse save(ApiResponse addAssetIssues);*/
 
 
-
-@Query("Select i from AssetIssues i where i.assetIssueId=:assetIssueId")
+@Query("Select i from AssetIssues i where i.assetIssueId =:assetIssueId")
 AssetIssues getAssetIssueById(String assetIssueId);
 
+
+@Query("Select new map(i) from AssetIssues i where i.assetIssueId =:assetIssueId")
+Map getByAssetIssueId(String assetIssueId);
+
+ 
 
 
 @Query("Select i from AssetIssues i where i.assetIssueStatus=:assetIssueStatus")
@@ -131,20 +135,23 @@ AssetIssues getAssetIssueStatus();
 
 @Query("Select distinct new map(i.assetIssueId as assetIssueId, i.complaintRaisedDate as complaintRaisedDate, "
 + "i.description as description, i.solution as solution,i.assetId as assetId, "
-+ "i.assetIssueStatus as assetIssueStatus, i.vendorId as vendorId, "
++ "i.assetIssueStatus as assetIssueStatus, i.vendorId as vendorId, i.comments as comments, "
 + "i.resolvedDate as resolvedDate ) from AssetIssues i left join Asset a on i.assetId = a.assetId "
 + "join AssetVendor v on i.vendorId = v.vendorId where "
 + "(:assetIssueStatus is null OR lower(i.assetIssueStatus)=:assetIssueStatus) AND "
 + "(:assetId is null OR i.assetId=:assetId) AND "
 + "(:vendorId is null OR i.vendorId=:vendorId) AND "
++ "(:searchString  is null "
++ " OR i.assetIssueId LIKE %:searchString% "
++ " OR i.vendorId LIKE %:searchString% OR i.assetId LIKE %:searchString%) AND "
 + "(:toDate is null OR Date(i.complaintRaisedDate) <= STR_TO_DATE(:toDate, '%Y-%m-%d')) AND "
 + "(:fromDate is null OR Date(i.complaintRaisedDate) >= STR_TO_DATE(:fromDate, '%Y-%m-%d')) ")
-Page<Map> getAllAssetsIssues(AssetIssueStatus assetIssueStatus, String assetId, String vendorId, String fromDate, String toDate, Pageable pageable);
+Page<Map> getAllAssetsIssues(AssetIssueStatus assetIssueStatus, String assetId, String vendorId, String searchString, String fromDate, String toDate, Pageable pageable);
 
 
 
 @Query("Select distinct new map(i.assetIssueId as assetIssueId, i.complaintRaisedDate as complaintRaisedDate, "
-+ "i.description as description, i.solution as solution,i.assetId as assetId, "
++ "i.description as description, i.solution as solution,i.assetId as assetId, i.comments as comments, "
 + "i.assetIssueStatus as assetIssueStatus, i.vendorId as vendorId, "
 + "i.resolvedDate as resolvedDate ) from AssetIssues i join Asset a on i.assetId = a.assetId "
 + "join AssetVendor v on i.vendorId = v.vendorId where i.assetIssueId LIKE %:assetIssueId ")
@@ -156,6 +163,22 @@ List<Map> searchAssetIssue(String assetIssueId);
 
 @Query("Select i.complaintRaisedDate from AssetIssues i where i.assetIssueId=:assetIssueId")
 Date getCompaintRaisedDate(String assetIssueId);
+
+@Query("Select distinct new map(i.assetIssueId as assetIssueId, i.complaintRaisedDate as complaintRaisedDate, "
++ "i.description as description, i.solution as solution,i.assetId as assetId, "
++ "i.assetIssueStatus as assetIssueStatus, i.vendorId as vendorId, "
++ "i.resolvedDate as resolvedDate ) from AssetIssues i left join Asset a on i.assetId = a.assetId "
++ "join AssetVendor v on i.vendorId = v.vendorId where "
++ "(:assetIssueStatus is null OR lower(i.assetIssueStatus)=:assetIssueStatus) AND "
++ "(:assetId is null OR i.assetId=:assetId) AND "
++ "(:vendorId is null OR i.vendorId=:vendorId) AND "
++ "(:toDate is null OR Date(i.complaintRaisedDate) <= STR_TO_DATE(:toDate, '%Y-%m-%d')) AND "
++ "(:fromDate is null OR Date(i.complaintRaisedDate) >= STR_TO_DATE(:fromDate, '%Y-%m-%d')) ")
+List<Map> downloadAllAssetIssues(String assetId, String vendorId, String assetIssueStatus, String fromDate,
+		String toDate);
+
+@Query("Select i from AssetIssues i where i.assetIssueId =:assetIssueId")
+List<AssetIssues> getAssetIssuesById(String assetIssueId);
 
 
 

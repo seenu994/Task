@@ -154,6 +154,12 @@ public class AssetServiceImpl implements AssetService {
 		// purchase date Validating
 		if (asset.getPurchaseDate() == null) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "purchase date is mandatory");
+		} else {
+			Date d1 = asset.getPurchaseDate();
+			Date d2 = new Date();
+			if(d1.after(d2)) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "purchase date should be less than current Date");
+			}
 		}
 
 		// model no Validating
@@ -178,12 +184,10 @@ public class AssetServiceImpl implements AssetService {
 		}
 
 		// warranty date Validating
-		if (asset.getWarrantyDate() == null) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "warranty date is mandatory");
-		} else {
+		if (asset.getWarrantyDate() != null) {
 			Date d1 = asset.getPurchaseDate();
 			Date d2 = asset.getWarrantyDate();
-			if (d1.after(d2) || d1.equals(d2)) {
+			if (d1.after(d2) || d1.equals(d2)) 
 				{
 					throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 							"warranty date should be greater than purchase date");
@@ -224,14 +228,14 @@ public class AssetServiceImpl implements AssetService {
 			response.setSuccess(true);
 			return response;
 		}
-	}
+	
 
 	@Override
 	public ApiResponse editAsset(Asset asset,String Id) {
 
 		ApiResponse response = new ApiResponse();
 
-		Asset assetObj = assetRepository.getByAssetId(Id);
+		Asset assetObj = assetRepository.getAssetById(Id);
 		
 		if (assetObj != null) {
 			
@@ -244,11 +248,11 @@ public class AssetServiceImpl implements AssetService {
 		    	assetObj.setBrand(asset.getBrand());
 		    }
 		    if(asset.getPurchaseDate() != null) {
-		    	assetObj.setPurchaseDate(new Date());
+		    	assetObj.setPurchaseDate(asset.getPurchaseDate());
 		    }
 		    if(asset.getWarrantyDate() != null) {
 		    	checkWarrantyDate(asset.getWarrantyDate(), Id);
-		    	assetObj.setWarrantyDate(new Date());
+		    	assetObj.setWarrantyDate(asset.getWarrantyDate());
 		    }
 		    if(asset.getModelNo() != null) {
 		    	checkModelNo(asset.getModelNo());
@@ -415,7 +419,7 @@ public class AssetServiceImpl implements AssetService {
 	@Override
 	public ApiResponse getAssetById(String assetId) {
 		ApiResponse response = new ApiResponse();
-		Asset asset = assetRepository.getAssetById(assetId);
+		Map asset = assetRepository.getAllAssetById(assetId);
 		Map content = new HashMap();
 		content.put("asset", asset);
 		if(content != null) {

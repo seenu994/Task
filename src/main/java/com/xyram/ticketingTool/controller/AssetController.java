@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.itextpdf.text.log.SysoCounter;
@@ -61,8 +62,8 @@ public class AssetController {
 	@GetMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllAssets",
 			AuthConstants.ADMIN_BASEPATH + "/getAllAssets",
 			AuthConstants.INFRA_USER_BASEPATH + "/getAllAssets"})
-	ApiResponse getAllAssets(@RequestBody (required=false) Map<String, Object>filter, Pageable pageable) {
-		System.out.println(filter);
+	ApiResponse getAllAssets(@RequestParam Map<String, Object>filter, Pageable pageable) {
+//		System.out.println(filter);
 		logger.info("Received request to Get all asset");
 		return assetService.getAllAssets(filter, pageable);
 	}

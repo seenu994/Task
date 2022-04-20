@@ -30,6 +30,8 @@ public interface AssetvendorService {
 
 	ApiResponse updateassetVendorStatus(String vendorId, AssetVendorEnum assetVendorEnum);
 
+	//ApiResponse searchVendorName(String vendorName);
+
 	
 
 	

@@ -51,7 +51,6 @@ public class AssestVendorServiceImpl implements AssetvendorService {
 	CurrentUser currentUser;
 	
 	
-
 	private ApiResponse response;
 
 	@Override
@@ -82,21 +81,33 @@ public class AssestVendorServiceImpl implements AssetvendorService {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Mail id is mandatory");
 		}
 			response.setSuccess(true);
-//		String email = assetVendorRepository.filterByEmail(Vendor.getEmail());
+	//String email = assetVendorRepository.filterByEmail(Vendor.getEmail());
 
 		if (!emailValidation(vendor.getEmail())) {
 			response.setMessage(ResponseMessages.EMAIL_INVALID);
 			response.setSuccess(false);
 
 		}
-
+		
 		if (vendor.getMobileNo() == null || vendor.getMobileNo().length() != 10) {
+			
+			
+			
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Vendor Mobile number is mandatory");
-
+	
+		
+		
+//			else {
+//				
+//				response.setMessage("MobileNo =" + vendor.getMobileNo() + "  already exists");
+//
+//			}
+			
 			 //response.setMessage(ResponseMessages.MOBILE_INVALID);
 
 			// response.setSuccess(false);
 		}
+
 
 		else {
 			if (vendor.getVendorName().equals("")) {
@@ -116,11 +127,14 @@ public class AssestVendorServiceImpl implements AssetvendorService {
 				
 			}
 			//return response;
-		}
+		
 		//response.setMessage(ResponseMessages.VENDOR_ADDED);
-
+		}
 		return response;
 	}
+	//return response;
+
+
 
 	private boolean emailValidation(String email) {
 		Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$",
@@ -147,6 +161,9 @@ public class AssestVendorServiceImpl implements AssetvendorService {
 				vendorRequest.setCity(vendor.getCity());
 				vendorRequest.setCountry(vendor.getCountry());
 				vendorRequest.setAssetVendorStatus(vendor.getAssetVendorStatus());
+				vendorRequest.setLastUpdatedAt(new Date());
+				vendorRequest.setUpdatedBy(currentUser.getName());
+				
 				
 				assetVendorRepository.save(vendorRequest);
 				// AssetVendor assetVendorAdded = new AssetVendor();
@@ -428,6 +445,7 @@ public class AssestVendorServiceImpl implements AssetvendorService {
 			// AssetVendor assetVendor = assetVendorRepository.getById(vendorId);
 			if (vendor != null) {
 				// vendorRequest.setAssetVendorStatus(vendor);
+				
 				assetVendorRepository.save(vendor);
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.ASSETVENDOR_STATUS_UPDATED);
@@ -472,29 +490,32 @@ public class AssestVendorServiceImpl implements AssetvendorService {
 
 	}
 
-//	@Override
-//	public ApiResponse searchAssetVendor(String searchString) {
-//		
-//			ApiResponse response = new ApiResponse(false);
-//			List<AssetVendor> vendorList = assetVendorRepository.searchString(searchString, assetvendor.set);
-//			
-//			
-//			
-//			
-//			Map content = new HashMap();
-//			if (vendorList.size() > 0) {
-//				content.put("vendorList", vendorList);
-//				response.setSuccess(true);
-//				response.setContent(content);
-//			} else {
-//				content.put("vendorList", vendorList);
-//				response.setSuccess(false);
-//				response.setContent(content);
-//			}
-//
-//			return response;
-		
 	
+
+	/*@Override
+	public ApiResponse searchAssetVendor(String searchString) {
+		
+			ApiResponse response = new ApiResponse(false);
+			AssetVendor vendorList = assetVendorRepository.searchAssetVendor(searchString);
+				
+			Map content = new HashMap();
+			content.put("vendorList", vendorList);
+			if (content != null ) {
+				
+				//content.put("vendorList", vendorList);
+				response.setSuccess(true);
+				response.setMessage("Asset vendor retrived successfully");
+				response.setContent(content);
+			} else {
+				//content.put("vendorList", vendorList);
+				response.setSuccess(false);
+				//response.setContent(content);
+				response.setMessage("Not retrived the data");
+			}
+
+			return response;
+		
+	}*/
 	
 	
 	@Override
