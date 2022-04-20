@@ -6,23 +6,34 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import com.xyram.ticketingTool.baseData.model.AuditModel;
 import com.xyram.ticketingTool.enumType.AssetSoftwareStatus;
+import com.xyram.ticketingTool.id.generator.IdGenerator;
+import com.xyram.ticketingTool.id.generator.IdPrefix;
 
 @Entity
 @Table(name = "asset_software")
 public class AssetSoftware extends AuditModel {
 	
 	@Id
+	@IdPrefix(value = "ASS")
+	@GeneratedValue(generator = IdGenerator.ID_GENERATOR)
+	@GenericGenerator(name = IdGenerator.ID_GENERATOR, strategy = "com.xyram.ticketingTool.id.generator.IdGenerator")
+	@Column(name = "asset_software_id")
+	private String assetSoftwareId;
+	
 	@Column(name = "asset_id1")
-	private String assetId1;
-
+	private String assetId1; 
+	
 	@Column(name = "software_id")
 	private String softwareId;
-
+	
 	@Column(name = "install_date")
 	private Date installDate;
 

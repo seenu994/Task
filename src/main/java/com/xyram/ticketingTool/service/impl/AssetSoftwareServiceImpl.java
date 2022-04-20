@@ -52,20 +52,17 @@ public class AssetSoftwareServiceImpl implements AssetSoftwareService {
 	
 	if (response.isSuccess()) {
 		if (assetSoftware != null) {
-			
 			assetSoftware.setCreatedAt(new Date());
 			assetSoftware.setCreatedBy(currentUser.getName());
 			assetSoftwareRepository.save(assetSoftware);
 			response.setSuccess(true);
 			response.setMessage(ResponseMessages.ASSET_SOFTWARE_ADDED);
 		}
-
 		else {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.ASSET_SOFTWARE_NOT_ADDED);
 		}
 	}
-
 		return response;
 	}
 
@@ -85,7 +82,7 @@ public class AssetSoftwareServiceImpl implements AssetSoftwareService {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset id is mandatory");
 		} else {
 			// Validate asset
-			Asset asset = assetRepository.getByAssetId(assetSoftware.getAssetId1());
+			Asset asset = assetRepository.getAssetById(assetSoftware.getAssetId1());
 			if (asset == null) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset id is not valid");
 			}
@@ -97,15 +94,25 @@ public class AssetSoftwareServiceImpl implements AssetSoftwareService {
 		} else {
 			// Validate software
 			SoftwareMaster software = softwareMasterRepository.getBysoftId(assetSoftware.getSoftwareId());
-			System.out.println(software);
 			if (software == null) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "software id is not valid");
+			}
+			String assetSoft = assetSoftwareRepository.getSoftByAssetId(assetSoftware.getSoftwareId());
+			if(assetSoft != null) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "software is already installed to that Asset");
 			}
 		}
 		
 		// install date Validating
 		if (assetSoftware.getInstallDate() == null || assetSoftware.getInstallDate().equals("")) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "install date is mandatory");
+		}
+		else {
+			Date d1 = assetSoftware.getInstallDate();
+			Date d2 = new Date();
+			if(d1.after(d2)) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "install date should be less than current date");
+			}
 		}
 		response.setSuccess(true);
  		return response;

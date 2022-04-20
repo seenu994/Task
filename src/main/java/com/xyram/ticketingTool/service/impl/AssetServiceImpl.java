@@ -235,7 +235,7 @@ public class AssetServiceImpl implements AssetService {
 
 		ApiResponse response = new ApiResponse();
 
-		Asset assetObj = assetRepository.getByAssetId(Id);
+		Asset assetObj = assetRepository.getAssetById(Id);
 		
 		if (assetObj != null) {
 			
@@ -419,7 +419,7 @@ public class AssetServiceImpl implements AssetService {
 	@Override
 	public ApiResponse getAssetById(String assetId) {
 		ApiResponse response = new ApiResponse();
-		Asset asset = assetRepository.getAssetById(assetId);
+		Map asset = assetRepository.getAllAssetById(assetId);
 		Map content = new HashMap();
 		content.put("asset", asset);
 		if(content != null) {
