@@ -23,17 +23,19 @@ public interface AssetBillingService
 {
    ApiResponse getAllAssestVendor(String vendorID);
 	
-	ApiResponse addPurchaseAssetBill(AssetBillingRequest assetBilling);
+	ApiResponse addPurchaseAssetBill(AssetBilling assetBilling);
 
-	ApiResponse editPurchaseAssetBill(AssetBillingRequest assetBilling);
+	//ApiResponse editPurchaseAssetBill(AssetBilling assetBilling);
+	ApiResponse editPurchaseAssetBill(AssetBilling assetBilling, String assetBillId);
 
-	ApiResponse addRepairAssetBill(AssetBillingRequest assetBilling);
 
-	ApiResponse editRepairAssetBill(AssetBillingRequest assetBilling);
+	ApiResponse addRepairAssetBill(AssetBilling assetBilling);
 
-	ApiResponse getAllAssetBilling(Map<String, Object> filter, Pageable pageable);
+	ApiResponse editRepairAssetBill(AssetBilling assetBilling, String assetBillId);
 
-	ApiResponse returnFromRepair(AssetBillingRequest assetBilling);
+	//ApiResponse getAllAssetBilling(Map<String, Object> filter, Pageable pageable);
+
+	//ApiResponse returnFromRepair(AssetBilling assetBilling);
 
 	//ApiResponse getAllAssetBillingById(Map<String, Object> filter, Pageable pageable);
 
@@ -42,7 +44,12 @@ public interface AssetBillingService
 	//ApiResponse getAllAssetBillingById(String assetId);
 
 	ApiResponse getAllAssetBillingByAssetId(String assetId);
+
+	ApiResponse returnFromRepair(AssetBilling assetBilling, String assetBillId);
+
 	
+
+		
 
 	//ApiResponse getAllAssetBillingList(Map<String, Object> filter, Pageable pageable);
 
