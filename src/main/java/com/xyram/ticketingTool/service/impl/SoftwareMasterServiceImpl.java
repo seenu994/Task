@@ -24,6 +24,7 @@ import com.xyram.ticketingTool.entity.SoftwareMaster;
 import com.xyram.ticketingTool.enumType.AssetIssueStatus;
 import com.xyram.ticketingTool.enumType.AssetVendorEnum;
 import com.xyram.ticketingTool.enumType.SoftwareEnum;
+import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.SoftwareMasterService;
 import com.xyram.ticketingTool.util.ResponseMessages;
 
@@ -37,6 +38,9 @@ public class SoftwareMasterServiceImpl implements SoftwareMasterService {
 
 	@Autowired
 	SoftwareMasterService softwareMasterServices;
+	
+	@Autowired
+	CurrentUser currentUser;
 
 	@Override
 	public ApiResponse addSoftwareMaster(SoftwareMaster softwareMaster) {
@@ -70,6 +74,44 @@ public class SoftwareMasterServiceImpl implements SoftwareMasterService {
 		}
 		return response;
 	}
+	
+	
+	/*@Override
+	public ApiResponse editSoftwareMaster(SoftwareMaster software,String softwareId) {
+
+		ApiResponse response = new ApiResponse();
+		//response = validateAssetVendor(softwareMasterRequest);
+		SoftwareMaster softwareMasterRequest = softwareRepository.getById(softwareId);
+		if (response.isSuccess()) {
+			if (softwareMasterRequest != null) {
+				softwareMasterRequest.setSoftwareId(software.getSoftwareId());
+				softwareMasterRequest.setSoftwareName(software.getSoftwareName());
+				
+				
+				softwareMasterRequest.setLastUpdatedAt(new Date());
+				softwareMasterRequest.setUpdatedBy(currentUser.getName());
+
+				softwareRepository.save(softwareMasterRequest);
+				// AssetVendor assetVendorAdded = new AssetVendor();
+				response.setSuccess(true);
+				response.setMessage(ResponseMessages.SOFTWAREMASTER_EDITED);
+//				Map content = new HashMap();
+//				content.put("vendorId", assetVendorAdded.getAssetVendor());
+//				response.setContent(content);
+
+			} else {
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.SOFTWARE_DETAILS_INVALID);
+				// response.setContent(null);
+			}
+
+		}
+		return response;
+
+	}*/
+	
+	
+	
 
 	@Override
 	public ApiResponse editSoftwareMaster(SoftwareMaster softwareMasterRequest,String softwareId) {
@@ -167,6 +209,7 @@ public class SoftwareMasterServiceImpl implements SoftwareMasterService {
 
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "SoftwareId is manditory");
 		}
+		
 
 		if (software.getSoftwareName().equals("")) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "SoftwareName is manditory");

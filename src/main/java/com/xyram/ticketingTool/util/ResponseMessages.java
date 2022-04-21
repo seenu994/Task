@@ -1,5 +1,7 @@
 package com.xyram.ticketingTool.util;
 
+
+
 public interface ResponseMessages {
 
 	String PROJECT_NOTEXIST = "Project is not exist.";
@@ -238,8 +240,22 @@ public interface ResponseMessages {
 	
 	String ASSET_ISSUE_DIRECTORY = "asset issue directory";
 
-
+	String VENDOR_NOT_ADDED = "Vendor not added successfully";
+                /* Note Response Message*/
 	
+	String NOTES_CREATED = "Created notes successfully";
+	String NOTES_NOT_CREATED = "Notes not created";
+
+	String NOTES_UPDATED = "Notes updated successfully";
+	String NOTES_NOT_UPDATED = "Notes are not updated";
+	
+	String NOTES_RETRIEVED = "Notes Retrieved Successfully";
+	String NOTES_NOT_RETRIEVED = "Could not retrieve data";
+
+	String DELETE_NOTES = "Notes deleted succuessfull";
+	String NOTES_NOT_FOUND = "Notes not found";
+
+	String DATE_FEILD = "Date feild cannot be empty";
 
 	
 
@@ -248,6 +264,8 @@ public interface ResponseMessages {
 String ASSET_DIRECTORY ="/Documents/assetDetails/";
 	
 	String BASE_DIRECTORY ="../webapps";
+
+	
 
 	
 

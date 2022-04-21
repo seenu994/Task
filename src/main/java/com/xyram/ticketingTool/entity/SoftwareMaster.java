@@ -7,14 +7,15 @@ import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.xyram.ticketingTool.baseData.model.AuditModel;
 import com.xyram.ticketingTool.enumType.SoftwareEnum;
 
 @Entity
 @Table(name = "Software_master")
 
-public class SoftwareMaster {
+public class SoftwareMaster extends AuditModel{ 
 	@Id
-	@Column(name = "software_Id")
+	@Column(name = "software_Id" ,unique =true)
 	private String softwareId;
 
 	@Column(name = "software_name")
