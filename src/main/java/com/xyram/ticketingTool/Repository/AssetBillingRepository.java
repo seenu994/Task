@@ -64,7 +64,7 @@ public interface AssetBillingRepository extends JpaRepository<AssetBilling, Stri
 	Page<Map> getAllAssetBillingList();*/
 
 	@Query("Select b from AssetBilling b where b.assetBillId=:assetBillId")
-	AssetBilling getAssetBillById(@Param("assetBillId") String assetBillId);
+	AssetBilling getAssetBillById(String assetBillId);
 
 
 	@Query("Select distinct new map(b.assetBillId as assetBillId,b.billingType as billingType,"		

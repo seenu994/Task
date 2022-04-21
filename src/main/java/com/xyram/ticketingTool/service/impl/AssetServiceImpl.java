@@ -158,7 +158,7 @@ public class AssetServiceImpl implements AssetService {
 			Date d1 = asset.getPurchaseDate();
 			Date d2 = new Date();
 			if(d1.after(d2)) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "purchase date should be less than current Date");
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "purchase date should be less than or equal to current Date");
 			}
 		}
 
@@ -169,7 +169,7 @@ public class AssetServiceImpl implements AssetService {
 			// validate model no
 			String s1 = asset.getModelNo();
 			if (s1.length() < 7) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "model no is not valid");
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "model no should be greater than 6 characters");
 			}
 		}
 
@@ -179,7 +179,7 @@ public class AssetServiceImpl implements AssetService {
 		} else {
 			// validate serial no
 			if (asset.getSerialNo().length() < 8) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "serial no is not valid");
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "serial no should be greater than 7 characters");
 			}
 		}
 
@@ -248,6 +248,7 @@ public class AssetServiceImpl implements AssetService {
 		    	assetObj.setBrand(asset.getBrand());
 		    }
 		    if(asset.getPurchaseDate() != null) {
+		    	checkPurchaseDate(asset.getPurchaseDate());
 		    	assetObj.setPurchaseDate(asset.getPurchaseDate());
 		    }
 		    if(asset.getWarrantyDate() != null) {
@@ -291,6 +292,17 @@ public class AssetServiceImpl implements AssetService {
 		return response;
 	}
 
+	private boolean checkPurchaseDate(Date purchaseDate) {
+		Date d1 = purchaseDate;
+		Date d2 = new Date();
+		if(d1.after(d2)) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "purchase date should be less than or equal to current Date");
+		}
+		else {
+		  return true;
+		}
+	}
+
 	private boolean checkAssignedTo(String assignedTo) {
     	 Employee employee = employeeRepository.getByEmpName(assignedTo);
 		 if (employee == null) {
@@ -321,7 +333,7 @@ public class AssetServiceImpl implements AssetService {
 	private boolean checkSerialNo(String serialNo) {
      String s1 = serialNo;
      if (s1.length() < 8) {
-		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "serial no is not valid");
+		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "serial no should be greater than 7 characters");
 	 }
      else {
     	 return true;
@@ -330,7 +342,7 @@ public class AssetServiceImpl implements AssetService {
 	private boolean checkModelNo(String modelNo) {
     	 String s1 = modelNo;
 		 if (s1.length() < 7) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "model no is not valid");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "model no should be greater than 6 characters");
 		 }
 		 else {
 			 return true;

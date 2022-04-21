@@ -14,6 +14,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.xyram.ticketingTool.entity.Asset;
+import com.xyram.ticketingTool.entity.AssetBilling;
 import com.xyram.ticketingTool.enumType.AssetStatus;
 
 
@@ -121,6 +122,8 @@ public interface AssetRepository extends JpaRepository<Asset, String>{
     	    + "(:brand is null OR a.brand=:brand) AND "
 			+ "(:vendorId is null OR a.vendorId=:vendorId)")
 	List<Asset> getAllAssetsForDownload(String ram, String brand, AssetStatus status, String vendorId);
+
+	
     
 	/*
 	@Query("Select distinct new map(a.aId as aId,a.vId as vId,"
