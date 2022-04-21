@@ -17,13 +17,15 @@ public interface AssetSoftwareRepository extends JpaRepository<AssetSoftware, St
 	@Query("Select distinct new map(m.softwareName as softwareName,s.installDate as installDate,"		
         + "s.uninstallDate as uninstallDate,s.assetSoftwareStatus as assetSoftwareStatus) "
   	    + " from AssetSoftware s left join SoftwareMaster m on s.softwareId = m.softwareId "
-  	    + " where s.assetId1 =:assetId")
+  	    + " where s.assetId =:assetId")
 	Page<Map> getAssetSoftwareById(String assetId, Pageable pageable);
 
-	@Query("SELECT s from AssetSoftware s where s.assetId1 =:assetId")
-	AssetSoftware getByAssetId(String assetId);
+	@Query("SELECT distinct s from AssetSoftware s where s.assetId =:assetId AND s.softwareId =:softwareId")
+	AssetSoftware getByAssetId(String assetId, String softwareId);
 
-	@Query("select distinct s.softwareId from AssetSoftware s where s.softwareId = :softwareId")
-	String getSoftByAssetId(String softwareId);
+	@Query("SELECT distinct s from AssetSoftware s where s.assetId =:assetId AND s.softwareId =:softwareId")
+	AssetSoftware getSoftByAssetId(String assetId, String softwareId);
+
+	
 
 }

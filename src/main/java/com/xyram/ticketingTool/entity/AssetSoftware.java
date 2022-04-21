@@ -28,8 +28,8 @@ public class AssetSoftware extends AuditModel {
 	@Column(name = "asset_software_id")
 	private String assetSoftwareId;
 	
-	@Column(name = "asset_id1")
-	private String assetId1; 
+	@Column(name = "asset_id")
+	private String assetId; 
 	
 	@Column(name = "software_id")
 	private String softwareId;
@@ -48,12 +48,12 @@ public class AssetSoftware extends AuditModel {
 	@Column(name = "action")
 	private AssetSoftwareStatus action = AssetSoftwareStatus.UNINSTALL;
 
-	public String getAssetId1() {
-		return assetId1;
+	public String getAssetId() {
+		return assetId;
 	}
 
-	public void setAssetId1(String assetId1) {
-		this.assetId1 = assetId1;
+	public void setAssetId1(String assetId) {
+		this.assetId = assetId;
 	}
 
 	public String getSoftwareId() {

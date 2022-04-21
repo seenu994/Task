@@ -50,13 +50,13 @@ public class Asset extends AuditModel{
 	@Column(name = "ram")
 	private String ram;
 	
-	@Column(name = "bag_available", nullable = true)
+	@Column(name = "bag_available")
 	private boolean bagAvailable;
 
-	@Column(name = "powercord_available", nullable = true)
+	@Column(name = "powercord_available")
 	private boolean powercordAvailable;
 
-	@Column(name = "mouse_available", nullable = true)
+	@Column(name = "mouse_available")
 	private boolean mouseAvailable;
 
 	@Column(name = "asset_photo_url", nullable = true)
@@ -64,7 +64,7 @@ public class Asset extends AuditModel{
 	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "asset_status")
-	private AssetStatus assetStatus;
+	private AssetStatus assetStatus = AssetStatus.AVAILABLE;
 	
 //	@Column(name = "assigned_to")
 //	private String assignedTo;
