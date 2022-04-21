@@ -31,8 +31,11 @@ public interface AssetEmployeeRepository extends JpaRepository<AssetEmployee, St
 	@Query("select e.issuedDate from AssetEmployee e where e.assetId = :assetId")
 	Date getIssuedDateById(String assetId);
 
-	@Query("SELECT a from AssetEmployee a where a.empId =:empId")
+	@Query("SELECT distinct a from AssetEmployee a where a.empId =:empId")
 	AssetEmployee getEmpById(String empId);
+ 
+	@Query("select distinct e from AssetEmployee e where e.assetId =:assetId")
+	AssetEmployee getAssetById(String assetId);
 
 //	 @Query("Select distinct new map(a.empId as empId,a.issuedDate as issuedDate,"		
 //	            + "a.bagIssued as bagIssued,a.powercordIssued as powercordIssued,a.mouseIssued as mouseIssued,"

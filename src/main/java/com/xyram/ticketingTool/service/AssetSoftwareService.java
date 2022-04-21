@@ -11,6 +11,6 @@ public interface AssetSoftwareService {
 
 	ApiResponse getAssetSoftwareById(String assetId, Pageable pageable);
 
-	ApiResponse updateAssetSoftware(AssetSoftware assetSoftware, String assetId);
+	ApiResponse updateAssetSoftware(AssetSoftware assetSoftware, String assetId, String softwareId);
 
 }

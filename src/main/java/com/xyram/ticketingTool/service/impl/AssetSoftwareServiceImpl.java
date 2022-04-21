@@ -78,11 +78,11 @@ public class AssetSoftwareServiceImpl implements AssetSoftwareService {
 		
 		
 		// Validate asset id
-		if (assetSoftware.getAssetId1() == null || assetSoftware.getAssetId1().equals("")) {
+		if (assetSoftware.getAssetId() == null || assetSoftware.getAssetId().equals("")) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset id is mandatory");
 		} else {
 			// Validate asset
-			Asset asset = assetRepository.getAssetById(assetSoftware.getAssetId1());
+			Asset asset = assetRepository.getAssetById(assetSoftware.getAssetId());
 			if (asset == null) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset id is not valid");
 			}
@@ -97,7 +97,8 @@ public class AssetSoftwareServiceImpl implements AssetSoftwareService {
 			if (software == null) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "software id is not valid");
 			}
-			String assetSoft = assetSoftwareRepository.getSoftByAssetId(assetSoftware.getSoftwareId());
+			AssetSoftware assetSoft = assetSoftwareRepository.getSoftByAssetId(assetSoftware.getAssetId(), assetSoftware.getSoftwareId());
+			System.out.println(assetSoft);
 			if(assetSoft != null) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "software is already installed to that Asset");
 			}
@@ -111,7 +112,7 @@ public class AssetSoftwareServiceImpl implements AssetSoftwareService {
 			Date d1 = assetSoftware.getInstallDate();
 			Date d2 = new Date();
 			if(d1.after(d2)) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "install date should be less than current date");
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "install date should be less than or equal to current date");
 			}
 		}
 		response.setSuccess(true);
@@ -138,19 +139,20 @@ public class AssetSoftwareServiceImpl implements AssetSoftwareService {
 	}
 
 	@Override
-	public ApiResponse updateAssetSoftware(AssetSoftware assetSoftware, String assetId) {
+	public ApiResponse updateAssetSoftware(AssetSoftware assetSoftware, String assetId, String softwareId) {
 		ApiResponse response = new ApiResponse();
-		AssetSoftware softObj = assetSoftwareRepository.getByAssetId(assetId);
+		AssetSoftware softObj = assetSoftwareRepository.getByAssetId(assetId, softwareId);
+//		System.out.println(softObj);
 		if(softObj != null) {
 //			System.out.println(softObj.getAction());
 			if(softObj.getAction().equals(AssetSoftwareStatus.UNINSTALL)) {
-//				System.out.println("Hello");
+//			System.out.println("Hello");
 				softObj.setAction(AssetSoftwareStatus.INSTALL);
 				softObj.setUninstallDate(new Date());
 				softObj.setAssetSoftwareStatus(AssetSoftwareStatus.INACTIVE);
 			}
 			else {
-//				System.out.println("HAI");
+//			System.out.println("HAI");
 				softObj.setAction(AssetSoftwareStatus.UNINSTALL);
 				softObj.setInstallDate(new Date());
 				softObj.setUninstallDate(null);

@@ -38,12 +38,12 @@ private final Logger logger = LoggerFactory.getLogger(AssetController.class);
 		return assetSoftwareService.addassetSoftware(assetSoftware);
 	}
 	
-	@PutMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/updateAssetSoftware/{assetId}",
-			AuthConstants.INFRA_USER_BASEPATH + "/updateAssetSoftware/{assetId}",
-			AuthConstants.ADMIN_BASEPATH + "/updateAssetSoftware/{assetId}"})
-	ApiResponse updateAssetSoftware(@RequestBody AssetSoftware assetSoftware,@PathVariable String assetId) {
+	@PutMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/updateAssetSoftware/{assetId}/{softwareId}",
+			AuthConstants.INFRA_USER_BASEPATH + "/updateAssetSoftware/{assetId}/{softwareId}",
+			AuthConstants.ADMIN_BASEPATH + "/updateAssetSoftware/{assetId}/{softwareId}"})
+	ApiResponse updateAssetSoftware(@RequestBody AssetSoftware assetSoftware,@PathVariable String assetId, @PathVariable String softwareId ) {
 		logger.info("Received request to update Asset Software");
-		return assetSoftwareService.updateAssetSoftware(assetSoftware, assetId);
+		return assetSoftwareService.updateAssetSoftware(assetSoftware, assetId, softwareId);
 	}
 	
 	@GetMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/getAssetSoftwareById/{assetId}",
