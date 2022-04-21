@@ -238,7 +238,7 @@ public interface ResponseMessages {
 	
 	String ASSET_ISSUE_DIRECTORY = "asset issue directory";
 
-
+	String VENDOR_NOT_ADDED = "Vendor not added successfully";
                 /* Note Response Message*/
 	
 	String NOTES_CREATED = "Created notes successfully";
@@ -262,6 +262,8 @@ public interface ResponseMessages {
 String ASSET_DIRECTORY ="/Documents/assetDetails/";
 	
 	String BASE_DIRECTORY ="../webapps";
+
+	
 
 	
 
