@@ -133,20 +133,20 @@ AssetIssues getAssetIssueStatus();
 
 
 
-@Query("Select distinct new map(i.assetIssueId as assetIssueId, i.complaintRaisedDate as complaintRaisedDate, "
-+ "i.description as description, i.solution as solution,i.assetId as assetId, "
-+ "i.assetIssueStatus as assetIssueStatus, i.vendorId as vendorId, i.comments as comments, "
-+ "i.resolvedDate as resolvedDate ) from AssetIssues i left join Asset a on i.assetId = a.assetId "
-+ "join AssetVendor v on i.vendorId = v.vendorId where "
-+ "(:assetIssueStatus is null OR lower(i.assetIssueStatus)=:assetIssueStatus) AND "
-+ "(:assetId is null OR i.assetId=:assetId) AND "
-+ "(:vendorId is null OR i.vendorId=:vendorId) AND "
-+ "(:searchString  is null "
-+ " OR i.assetIssueId LIKE %:searchString% "
-+ " OR i.vendorId LIKE %:searchString% OR i.assetId LIKE %:searchString%) AND "
-+ "(:toDate is null OR Date(i.complaintRaisedDate) <= STR_TO_DATE(:toDate, '%Y-%m-%d')) AND "
-+ "(:fromDate is null OR Date(i.complaintRaisedDate) >= STR_TO_DATE(:fromDate, '%Y-%m-%d')) ")
-Page<Map> getAllAssetsIssues(AssetIssueStatus assetIssueStatus, String assetId, String vendorId, String searchString, String fromDate, String toDate, Pageable pageable);
+	@Query("Select distinct new map(i.assetIssueId as assetIssueId, i.complaintRaisedDate as complaintRaisedDate, v.vendorName as vendorName, "
+	+ "i.description as description, i.solution as solution,i.assetId as assetId, "
+	+ "i.assetIssueStatus as assetIssueStatus, i.comments as comments, "
+	+ "i.resolvedDate as resolvedDate ) from AssetIssues i left join Asset a on i.assetId = a.assetId "
+	+ "left join AssetVendor v on i.vendorId = v.vendorId where "
+	+ "(:assetIssueStatus is null OR lower(i.assetIssueStatus)=:assetIssueStatus) AND "
+	+ "(:assetId is null OR i.assetId=:assetId) AND "
+	+ "(:vendorId is null OR i.vendorId=:vendorId) AND "
+	+ "(:searchString  is null "
+	+ " OR i.assetIssueId LIKE %:searchString% "
+	+ " OR i.vendorId LIKE %:searchString% OR v.vendorName LIKE %:searchString% OR i.assetId LIKE %:searchString%) AND "
+	+ "(:toDate is null OR Date(i.complaintRaisedDate) <= STR_TO_DATE(:toDate, '%Y-%m-%d')) AND "
+	+ "(:fromDate is null OR Date(i.complaintRaisedDate) >= STR_TO_DATE(:fromDate, '%Y-%m-%d')) ")
+	Page<Map> getAllAssetsIssues(AssetIssueStatus assetIssueStatus, String assetId, String vendorId, String searchString, String fromDate, String toDate, Pageable pageable);
 
 
 

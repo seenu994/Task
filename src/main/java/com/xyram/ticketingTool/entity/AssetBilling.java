@@ -49,7 +49,7 @@ public class AssetBilling extends AuditModel
     @Column(name="bill_photo_url" , nullable = true)
     public String billPhotoUrl;
     
-    @Column(name="issue_id")
+    @Column(name="asset_issue_id")
     public String assetIssueId;
     
     @Column(name="return_date")
@@ -158,11 +158,7 @@ public class AssetBilling extends AuditModel
 		this.assetId = assetId;
 	}
 
-	public int getSize() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
+	
 	
 
 	

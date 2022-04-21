@@ -34,10 +34,10 @@ public class AssetVendor  extends AuditModel{
 	@Column(name = "vendor_name")
 	private String vendorName;
 
-	@Column(name = "mobile_no")
+	@Column(name = "mobile_no" ,unique = true)
 	private String mobileNo;
 
-	@Column(name = "email")
+	@Column(name = "email", unique = true)
 	private String email;
 
 	@Column(name = "city")
