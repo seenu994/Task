@@ -237,17 +237,47 @@ public interface ResponseMessages {
 	String RETURN_DAMAGE = "Asset returned from damage";
 	
 	String ASSET_ISSUE_DIRECTORY = "asset issue directory";
-
-
 	
+	String BRAND_ADDED = "Brand added successfully";
 
+	String BRAND_NOT_ADDED = "Brand not added";
 	
+	String BRAND_EDITED = "Brand edited successfully";
+	
+	String BRAND_NOT_EDITED = "Brand not edited";
+	
+	String BRAND_LIST_RETRIVED = "Brand Retrieved Successfully";
+
+	String RAM_ADDED = "Ram Size Added Successfully";
+	
+	String RAM_NOT_ADDED = "Ram Size not added";
+	
+	String RAM_SIZE_EDITED = "Ram Size edited successfully";
+
+	String RAM_NOT_EDITED = "Ram Size not edited";
+	
+	String RAM_LIST_RETRIVED = "RamSize Retrieved Successfully";
+
 
 	
 	//Download of asset
 String ASSET_DIRECTORY ="/Documents/assetDetails/";
 	
 	String BASE_DIRECTORY ="../webapps";
+
+	
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
 
 	
 

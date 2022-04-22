@@ -47,17 +47,17 @@ public interface AssetRepository extends JpaRepository<Asset, String>{
     @Query("SELECT a from Asset a where a.assetId =:assetId")
 	Asset getAssetById(String assetId);
 
-    @Query("Select distinct new map(a.assetId as assetId,a.vendorId as vendorId,"
+    @Query("Select distinct new map(a.assetId as assetId,v.vendorName as vendorName,"
     		+ "a.brand as brand,a.purchaseDate as purchaseDate,a.modelNo as modelNo,"
     		+ "a.serialNo as serialNo,a.warrantyDate as warrantyDate,a.ram as ram,"
     		+ "a.bagAvailable as bagAvailable, a.powercordAvailable as powercordAvailable,"
     		+ "a.mouseAvailable as mouseAvailable, a.assetPhotoUrl as assetPhotoUrl,"
     		+ "a.assetStatus as assetStatus, CONCAT(e.firstName ,' ', e.lastName) as assignedTo) from Asset a "
-    		+ "left join AssetEmployee b on b.assetId = a.assetId "
+    		+ "left join AssetVendor v on v.vendorId = a.vendorId left join AssetEmployee b on b.assetId = a.assetId "
     		+ "left join Employee e on e.eId = b.empId where a.assetId =:assetId")
 	Map getAllAssetById(String assetId);
     
-    @Query("Select distinct new map(a.assetId as assetId,v.vendorName as vendorName, "		
+      @Query("Select distinct new map(a.assetId as assetId,v.vendorName as vendorName, "		
             + "a.brand as brand,a.purchaseDate as purchaseDate,a.modelNo as modelNo,"
     		+ "a.serialNo as serialNo,a.warrantyDate as warrantyDate,a.ram as ram,"
      	    + "a.assetStatus as assetStatus, CONCAT(e.firstName ,' ', e.lastName) as assignedTo) from Asset a left join AssetVendor v "
@@ -121,6 +121,9 @@ public interface AssetRepository extends JpaRepository<Asset, String>{
     	    + "(:brand is null OR a.brand=:brand) AND "
 			+ "(:vendorId is null OR a.vendorId=:vendorId)")
 	List<Asset> getAllAssetsForDownload(String ram, String brand, AssetStatus status, String vendorId);
+
+    @Query("select a.warrantyDate from Asset a where a.assetId = :id")
+	Date getWarrantyDateById(String id);
     
 	/*
 	@Query("Select distinct new map(a.aId as aId,a.vId as vId,"

@@ -38,6 +38,7 @@ import com.jcraft.jsch.Logger;
 import com.xyram.ticketingTool.Repository.AssetEmployeeRepository;
 import com.xyram.ticketingTool.Repository.AssetRepository;
 import com.xyram.ticketingTool.Repository.AssetVendorRepository;
+import com.xyram.ticketingTool.Repository.BrandRepository;
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
 import com.xyram.ticketingTool.Repository.ProjectRepository;
 import com.xyram.ticketingTool.admin.model.User;
@@ -47,6 +48,7 @@ import com.xyram.ticketingTool.entity.Announcement;
 import com.xyram.ticketingTool.entity.Asset;
 import com.xyram.ticketingTool.entity.AssetEmployee;
 import com.xyram.ticketingTool.entity.AssetVendor;
+import com.xyram.ticketingTool.entity.Brand;
 import com.xyram.ticketingTool.entity.CompanyWings;
 import com.xyram.ticketingTool.entity.DateValidatorUsingDateFormat;
 import com.xyram.ticketingTool.entity.Employee;
@@ -81,6 +83,9 @@ public class AssetServiceImpl implements AssetService {
 	
 	@Autowired 
 	CurrentUser currentUser;
+	
+	@Autowired
+	BrandRepository brandRepository;
 
 	@Override
 	public ApiResponse addasset(Asset asset) {
@@ -96,13 +101,11 @@ public class AssetServiceImpl implements AssetService {
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.ASSET_ADDED);
 			}
-
 			else {
 				response.setSuccess(false);
 				response.setMessage(ResponseMessages.ASSET_NOT_ADDED);
 			}
 		}
-
 		return response;
 	}
 
@@ -138,18 +141,25 @@ public class AssetServiceImpl implements AssetService {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "brand is mandatory");
 		} else {
 			
-			boolean isExist = false;
-			// Check given brand is exist in brandList
-			for (String brand : AssetUtil.brandList) {
-				if(brand.equalsIgnoreCase(asset.getBrand())) {
-					isExist = true;
-					break;
-				}
-			}
-			if (!isExist) {
+			Brand brand = brandRepository.getBrand(asset.getBrand());
+			if(brand == null) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "brand is not valid");
 			}
+			
 		}
+			
+//			boolean isExist = false;
+//			// Check given brand is exist in brandList
+//			for (String brand : AssetUtil.brandList) {
+//				if(brand.equalsIgnoreCase(asset.getBrand())) {
+//					isExist = true;
+//					break;
+//				}
+//			}
+//			if (!isExist) {
+//				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "brand is not valid");
+//			}
+	
 
 		// purchase date Validating
 		if (asset.getPurchaseDate() == null) {
@@ -303,16 +313,16 @@ public class AssetServiceImpl implements AssetService {
 		}
 	}
 
-	private boolean checkAssignedTo(String assignedTo) {
-    	 Employee employee = employeeRepository.getByEmpName(assignedTo);
-		 if (employee == null) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "employee id is not valid");
-		 }
-		 else {
-			 return true;
-		 }
-		
-	}
+//	private boolean checkAssignedTo(String assignedTo) {
+//    	 Employee employee = employeeRepository.getByEmpName(assignedTo);
+//		 if (employee == null) {
+//				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "employee id is not valid");
+//		 }
+//		 else {
+//			 return true;
+//		 }
+//		
+//	}
 
 	private boolean checkRam(String ram1) {
     	 boolean isExist1 = false;
@@ -352,8 +362,9 @@ public class AssetServiceImpl implements AssetService {
 	private boolean checkWarrantyDate(Date warrantyDate,String id) {
 		
 		Date asset = assetRepository.getPurchaseDateById(id);
+		Date assetObj = assetRepository.getWarrantyDateById(id);
 		Date d1 = asset;
-		Date d2 = warrantyDate;
+		Date d2 = assetObj;
 	  
 		if (d1.after(d2) || d1.equals(d2)) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "warranty date should be greater than purchase date");
@@ -364,19 +375,25 @@ public class AssetServiceImpl implements AssetService {
 	}
 
 	private boolean checkBrand(String brand) {
-    	boolean isExist = false;
+//    	boolean isExist = false;
 		// Check given brand is exist in brandList
-		for (String list : AssetUtil.brandList) {
-			if (list.equalsIgnoreCase(brand)) {
-				isExist = true;
-			}
-		}
-		if (!isExist) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "brand is not valid");
-		}
-		else {
+    	
+//    	Brand brandObj = brandRepository.getBrand(brand);
+//		if(brandObj == null) {
+//			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "brand is not valid");
+//		}
+//		else {
 			return true;
-		}
+//		}
+		
+//		for (String list : AssetUtil.brandList) {
+//			if (list.equalsIgnoreCase(brand)) {
+//				isExist = true;
+//			}
+//		}
+//		if (!isExist) {
+//			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "brand is not valid");
+//		}
 		
 	}
 	private boolean checkVId(String vendorId) {
@@ -622,6 +639,7 @@ public class AssetServiceImpl implements AssetService {
 		for (Asset assetList : asset) {
 			Map row = new HashMap();
 			AssetVendor getVendorName = assetVendorRepository.getAssetVendorById(assetList.getVendorId());
+			String getEmployeeName = employeeRepository.getEmpNameById(assetList.getAssetId());
 			row.put("Asset Id", assetList.getAssetId());
 			row.put("Brand", assetList.getBrand());
 			row.put("Serial No", assetList.getSerialNo());
@@ -630,7 +648,7 @@ public class AssetServiceImpl implements AssetService {
 			row.put("Warranty Date", assetList.getWarrantyDate());
 			row.put("Status", assetList.getAssetStatus());
 			row.put("Vendor Name", getVendorName.getVendorName());
-//			row.put("Assigned To", assetList.getAssignedTo());
+			row.put("Assigned To", getEmployeeName);
 			row.put("Ram Size", assetList.getRam());
 			
 

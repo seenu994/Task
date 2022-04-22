@@ -249,7 +249,7 @@ public class AssetEmployeeServiceImpl implements AssetEmployeeService{
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "return date should be greater than issued date");
 		}
 		if(d2.after(d3)) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "return date should be less than current date");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "return date should be less than or equal to current date");
 		}
 		else {
 		  return true;
