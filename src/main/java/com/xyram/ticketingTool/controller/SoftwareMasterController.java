@@ -47,7 +47,7 @@ public class SoftwareMasterController {
 			AuthConstants.INFRA_ADMIN_BASEPATH + "/editSoftwareMaster/{softwareId}" })
 	public ApiResponse editSoftwareMaster(@RequestBody SoftwareMaster SoftwareMasterRequest,
 			@PathVariable String softwareId) {
-		logger.info("received request to edit editSoftwareMaster");
+		logger.info("received request to editSoftwareMaster");
 		return softwareMasterService.editSoftwareMaster(SoftwareMasterRequest, softwareId);
 	}
 	
@@ -69,8 +69,7 @@ public class SoftwareMasterController {
 	
 	
 
-	@PutMapping(value = {
-			AuthConstants.ADMIN_BASEPATH + "/changeSoftwareMasterStatus/{softwareId}/{softwareMasterStatus}",
+	@PutMapping(value = {AuthConstants.ADMIN_BASEPATH + "/changeSoftwareMasterStatus/{softwareId}/{softwareMasterStatus}",
 			AuthConstants.INFRA_USER_BASEPATH + "/changeSoftwareMasterStatus/{softwareId}/{softwareMasterStatus}",
 			AuthConstants.INFRA_ADMIN_BASEPATH + "/changeSoftwareMasterStatus/{softwareId}/{softwareMasterStatus}" })
 
