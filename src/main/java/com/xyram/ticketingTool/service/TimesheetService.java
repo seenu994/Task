@@ -29,6 +29,8 @@ public interface TimesheetService {
 	
 	ApiResponse getAllSheetsByDate(String sheetId,Float hoursSpent);
 
+	ApiResponse deleteTimeSheet(String timeSheetId);
+
 
 
 }

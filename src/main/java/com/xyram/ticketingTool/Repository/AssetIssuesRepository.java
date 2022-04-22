@@ -122,7 +122,11 @@ AssetIssues downloadAssetIssues(Map<String, Object> filter);
 AssetIssues getAssetIssueById(String assetIssueId);
 
 
-@Query("Select new map(i) from AssetIssues i where i.assetIssueId =:assetIssueId")
+//@Query("Select new map(i) from AssetIssues i where i.assetIssueId =:assetIssueId")
+@Query("Select distinct new map(i.assetIssueId as assetIssueId, i.complaintRaisedDate as complaintRaisedDate, v.vendorName as vendorName,"
+		+ "i.description as description, i.solution as solution,i.assetId as assetId, i.vendorId as vendorId,"
+		+ "i.assetIssueStatus as assetIssueStatus, i.comments as comments,"
+		+ "i.resolvedDate as resolvedDate ) from AssetIssues i left join AssetVendor v on i.vendorId = v.vendorId where i.assetIssueId =:assetIssueId")
 Map getByAssetIssueId(String assetIssueId);
 
  
