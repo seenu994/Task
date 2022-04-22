@@ -89,7 +89,10 @@ public class AssetIssuesController
 		return assetIssuesService.getAssetIssuesById(assetIssueId);
 	}
 	
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/downloadAllAssetIssues"})
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/downloadAllAssetIssues",
+	        AuthConstants.INFRA_USER_BASEPATH + "/downloadAllAssetIssues",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/downloadAllAssetIssues"})
+
 	public 	ApiResponse downloadAllAssetIssues(@RequestBody Map<String, Object> filter) 
 	{
 		logger.info("Download all asset issue");

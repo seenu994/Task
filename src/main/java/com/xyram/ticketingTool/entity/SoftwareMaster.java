@@ -4,20 +4,31 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.GenericGenerator;
+
+import com.xyram.ticketingTool.baseData.model.AuditModel;
 import com.xyram.ticketingTool.enumType.SoftwareEnum;
+import com.xyram.ticketingTool.id.generator.IdGenerator;
+import com.xyram.ticketingTool.id.generator.IdPrefix;
 
 @Entity
 @Table(name = "Software_master")
 
-public class SoftwareMaster {
+public class SoftwareMaster extends AuditModel{ 
+	
+	
 	@Id
-	@Column(name = "software_Id")
+	@IdPrefix(value = "SMI_")
+	@GeneratedValue(generator = IdGenerator.ID_GENERATOR)
+	@GenericGenerator(name = IdGenerator.ID_GENERATOR, strategy = "com.xyram.ticketingTool.id.generator.IdGenerator")
+	@Column(name = "software_Id" )
 	private String softwareId;
 
-	@Column(name = "software_name")
+	@Column(name = "software_name" ,unique =true)
 	private String softwareName;
 
 	@Enumerated(EnumType.STRING)

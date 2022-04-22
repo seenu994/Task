@@ -155,9 +155,9 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 	public ApiResponse editAssetIssues(AssetIssues assetIssues,String assetIssueId) 
 	{
 		
-        ApiResponse response = new ApiResponse(false);
+        ApiResponse response = new ApiResponse();
 		//AssetIssues assetIssue;
-		AssetIssues assetIssuesObj = assetIssuesRepository.getAssetIssueById(assetIssues.getAssetIssueId());
+		AssetIssues assetIssuesObj = assetIssuesRepository.getAssetIssueById(assetIssueId);
 		
 		 
 		if(assetIssuesObj != null) 
@@ -169,12 +169,12 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 			}
 			if(assetIssues.getVendorId() != null)
 			{
-				checkVendorId(assetIssuesObj.getVendorId());
+				checkVendorId(assetIssues.getVendorId());
 				assetIssuesObj.setVendorId(assetIssues.getVendorId());
 			}
 			if(assetIssues.getComplaintRaisedDate()!= null)
 			{
-				assetIssues.setComplaintRaisedDate(assetIssues.getComplaintRaisedDate());
+				assetIssuesObj.setComplaintRaisedDate(assetIssues.getComplaintRaisedDate());
 			}
 			if(assetIssues.getAssetIssueStatus() != null)
 			{
@@ -206,7 +206,10 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 
 	private boolean checkDescription(String description) 
 	{
-		
+		if(description == null || description.equals(""))
+		{
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "description is mandatory");
+		}
 		return true;
 		
 	}
@@ -241,41 +244,47 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 	public ApiResponse returnRepair(AssetIssues assetIssues,String assetIssueId) 
 	{
          ApiResponse response = new ApiResponse(false);
-		 AssetIssues assetIssuesObj = assetIssuesRepository.getAssetIssueById(assetIssues.getAssetIssueId());
+		 AssetIssues assetIssuesObj = assetIssuesRepository.getAssetIssueById(assetIssueId);
 		 if(assetIssuesObj != null) 
 		    {	
 				if(assetIssues.getAssetId() != null)
 				{
-					 checkAssetId(assetIssuesObj.getAssetId());
+					 checkAssetId(assetIssues.getAssetId());
 					 assetIssuesObj.setAssetId(assetIssues.getAssetId());
 				}
 				if(assetIssues.getVendorId() != null)
 				{
-					checkVendorId(assetIssuesObj.getVendorId());
+					checkVendorId(assetIssues.getVendorId());
 					assetIssuesObj.setVendorId(assetIssues.getVendorId());
 				}
 				
 				if(assetIssues.getAssetIssueStatus() != null)
 				{
-					checkAssetIssuesStatus(assetIssuesObj.getAssetIssueStatus());
+					checkAssetIssuesStatus(assetIssues.getAssetIssueStatus());
 					assetIssuesObj.setAssetIssueStatus(AssetIssueStatus.CLOSE);
 				}
 				
 				if(assetIssues.getDescription() != null)
 				{
-					checkDescription(assetIssuesObj.getDescription());
-					assetIssuesObj.setDescription(assetIssues.getDescription());
+					checkDescription(assetIssues.getDescription());
+				    assetIssuesObj.setDescription(assetIssues.getDescription());
 				}
-				//assetIssuesObj.setResolvedDate(new Date());
-				if(assetIssues.getResolvedDate() != null)
+				assetIssuesObj.setResolvedDate(new Date());
+				
+				if(assetIssues.isSolution()== false)
 				{
-					//checkResolvedDate(assetIssues.getResolvedDate(), assetIssueId);
-					assetIssuesObj.setResolvedDate(new Date());
+					assetIssuesObj.setComments(null);
 				}
-				if(assetIssues.isSolution()!= false)
+				
+				else
 				{
-					CheckSolution(assetIssuesObj.isSolution());
-					assetIssuesObj.setSolution(true);
+					//CheckSolution(assetIssuesObj.isSolution());
+					//assetIssuesObj.setSolution(true);
+					if(assetIssues.getComments() == null || assetIssues.getComments().equals(""))
+					{
+						throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "comments should be mandatory");
+					}
+				
 					assetIssuesObj.setComments(assetIssues.getComments());
 					//assetIssuesObj.setSolution(true);
 					//assetIssuesObj.returnFromRepair(assetIssues);
@@ -306,7 +315,7 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 		return true;
 	}
 
-	private boolean checkResolvedDate(Date resolvedDate,String assetIssueId) 
+	/*private boolean checkResolvedDate(Date resolvedDate,String assetIssueId) 
 	{
 		
 		Date compaintRaisedDate = assetIssuesRepository.getCompaintRaisedDate(assetIssueId);
@@ -326,7 +335,7 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 			return true;
 		}
 		
-	}
+	}*/
 		
 
 	private boolean checkAssetIssuesStatus(AssetIssueStatus assetIssueStatus)
@@ -349,19 +358,19 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 	public ApiResponse returnDamage(AssetIssues assetIssues,String assetIssueId) 
 	{
          ApiResponse response = new ApiResponse(false);
-		 AssetIssues assetIssuesObj = assetIssuesRepository.getAssetIssueById(assetIssues.getAssetIssueId());
+		 AssetIssues assetIssuesObj = assetIssuesRepository.getAssetIssueById(assetIssueId);
 		 //Asset asset = getAssetById(assetIssues.getAssetId());
 		 
 		if(assetIssues != null) 
 	    {	
 			if(assetIssues.getAssetId() != null)
 			{
-				 checkAssetId(assetIssuesObj.getAssetId());
+				 checkAssetId(assetIssues.getAssetId());
 				 assetIssuesObj.setAssetId(assetIssues.getAssetId());
 			}
 			if(assetIssues.getVendorId() != null)
 			{
-				checkVendorId(assetIssuesObj.getVendorId());
+				checkVendorId(assetIssues.getVendorId());
 				assetIssuesObj.setVendorId(assetIssues.getVendorId());
 			}
 			/*if(assetIssues.getComplaintRaisedDate()!= null)
@@ -370,27 +379,32 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 			}*/
 			if(assetIssues.getDescription() != null)
 			{
-				checkDescription(assetIssuesObj.getDescription());
+				checkDescription(assetIssues.getDescription());
 				assetIssuesObj.setDescription(assetIssues.getDescription());
 			}
 			if(assetIssues.getAssetIssueStatus() != null)
 			{
-				checkAssetIssuesStatus(assetIssuesObj.getAssetIssueStatus());
+				checkAssetIssuesStatus(assetIssues.getAssetIssueStatus());
 				assetIssuesObj.setAssetIssueStatus(AssetIssueStatus.DAMAGE);
 			}
-			if(assetIssues.getResolvedDate()!= null)
-			{
-				checkResolvedDate(assetIssues.getResolvedDate(),assetIssueId);
-				assetIssuesObj.setResolvedDate(assetIssues.getResolvedDate());
-			}
+			assetIssuesObj.setResolvedDate(new Date());
+			//if(assetIssues.getResolvedDate()!= null)
+			//{
+				//checkResolvedDate(assetIssues.getResolvedDate(),assetIssueId);
+				//assetIssuesObj.setResolvedDate(assetIssues.getResolvedDate());
+			//}
 		    if(assetIssues.isSolution() == true)
 		    {
 		    	//checkSolution(assetIssues.getSolution());
+		    	if(assetIssues.getComments() == null || assetIssues.getComments().equals(""))
+		    	{
+		    		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "comments should be mandatory");
+		    	}
 		    	assetIssuesObj.setComments(assetIssues.getComments());;
 		    }
 		    else
 		    {
-		    	throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"solution should be mandatory");
+		    	assetIssuesObj.setComments(null);
 		    }
 	        
 		    assetIssuesObj.setLastUpdatedAt(new Date());

@@ -44,8 +44,9 @@ public interface AssetVendorRepository extends JpaRepository<AssetVendor, String
 //   AssetVendor getVendorName(String vendorName);
 
 	@Query("select distinct new map( p.vendorId as vendorId, p.vendorName as vendorName, p.mobileNo as mobileNo, "
-			+ "p.email as email, p.city as city, p.country as country,p.assetVendorStatus as assetVendorStatus) from AssetVendor p where "
-			+ "(:vendorId is null OR p.vendorId =:vendorId) AND" + "(:country is null OR p.country =:country) AND "
+			+ "p.email as email, p.city as city, p.country as country,p. address as address ,p.assetVendorStatus as assetVendorStatus) from AssetVendor p where "
+			+ "(:vendorId is null OR p.vendorId =:vendorId) AND"  
+			+ "(:country is null OR p.country =:country) AND "
 			+ "(:city is null OR p.city =:city)")
 	Page<Map> getAllVendor(String vendorId, String country, String city, Pageable peageble);
 
