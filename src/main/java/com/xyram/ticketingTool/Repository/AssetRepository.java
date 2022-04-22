@@ -45,7 +45,7 @@ public interface AssetRepository extends JpaRepository<Asset, String>{
 //    		+ "a.assetId =:assetId")
 //	List<Map> searchAsset(String assetId);
 
-    @Query("SELECT a from Asset a where a.assetId =:assetId")
+    @Query("Select a from Asset a where a.assetId=:assetId")
 	Asset getAssetById(String assetId);
 
     @Query("Select distinct new map(a.assetId as assetId,a.vendorId as vendorId,"
@@ -122,6 +122,13 @@ public interface AssetRepository extends JpaRepository<Asset, String>{
     	    + "(:brand is null OR a.brand=:brand) AND "
 			+ "(:vendorId is null OR a.vendorId=:vendorId)")
 	List<Asset> getAllAssetsForDownload(String ram, String brand, AssetStatus status, String vendorId);
+
+   
+    //@Query("Select distinct a from Asset a where a.assetId=:assetId")
+	//Asset getVendorById(String assetId);
+
+    @Query("Select distinct a from Asset a where a.assetId=:assetId and a.vendorId =:vendorId")
+	Asset getVendorById(String assetId, String vendorId);
 
 	
     

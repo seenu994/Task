@@ -137,11 +137,12 @@ public class AssetBillingServiceImpl implements AssetBillingService
 		 }
 		 else
 		 {
-			 AssetVendor assetVendor = assetVendorRepository.getAssetVendorById(assetBilling.getVendorId());
-			 if(assetVendor == null)
+			 Asset asset = assetRepository.getVendorById(assetBilling.getAssetId(), assetBilling.getVendorId());
+			 if(asset == null)
 			 {
 				 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid vendor id");
 			 }
+			 
 		 }
 	
 		
@@ -302,7 +303,7 @@ public class AssetBillingServiceImpl implements AssetBillingService
 			
 			assetBillingRepository.save(assetBillingObject);
 			response.setSuccess(true);
-			response.setMessage(ResponseMessages.ASSET_PURCHASE_BILL_ADDED_SUCCESSFULLY);
+			response.setMessage(ResponseMessages.ASSET_PURCHASE_BILL_EDIT_SUCCESSFULLY);
 			
 		}
 
@@ -567,7 +568,7 @@ public ApiResponse addRepairAssetBill(AssetBilling assetBilling) {
 			 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "billing type is mandatory");
 		}
 		
-		assetBilling.setTransactionDate(new Date());
+		//assetBilling.setTransactionDate(new Date());
 		//validate transactionDate
 		if(assetBilling.getTransactionDate() == null || assetBilling.getTransactionDate().equals(""))
 		{

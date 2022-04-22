@@ -134,7 +134,7 @@ AssetIssues getAssetIssueStatus();
 
 
 	@Query("Select distinct new map(i.assetIssueId as assetIssueId, i.complaintRaisedDate as complaintRaisedDate, v.vendorName as vendorName, "
-	+ "i.description as description, i.solution as solution,i.assetId as assetId, "
+	+ "i.description as description, i.solution as solution,i.assetId as assetId, i.vendorId as vendorId, "
 	+ "i.assetIssueStatus as assetIssueStatus, i.comments as comments, "
 	+ "i.resolvedDate as resolvedDate ) from AssetIssues i left join Asset a on i.assetId = a.assetId "
 	+ "left join AssetVendor v on i.vendorId = v.vendorId where "
