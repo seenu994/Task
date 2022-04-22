@@ -1,4 +1,4 @@
-
+	
 package com.xyram.ticketingTool.util;
 
 public interface ResponseMessages {
@@ -170,17 +170,17 @@ public interface ResponseMessages {
 
 	String ISSUEID_IN_VALID = "issue id is invalid";
 
-	String RETURN_FROM_REPAIR = "Asset is not underwarrenty && asset is return from reapir";
+	String RETURN_FROM_REPAIR = "return from repair";
 
 	String ASSET_BILL_EDIT_SUCCESSFULLY = "asset bill edited successfully";
 
 	String ASSET_ID_INVALID = "Asset id is invalid";
 
-	String ASSET_PURCHASE_BILL_ADDED_SUCCESSFULLY = "Asset is under Warranty & asset purchase bill added successsfully";
+	String ASSET_PURCHASE_BILL_ADDED_SUCCESSFULLY = "Asset purchase bill added successsfully";
 
-	String ASSET_PURCHASE_BILL_EDIT_SUCCESSFULLY = "Asset is underWarrenty & purchase bill edited successfully";
+	String ASSET_PURCHASE_BILL_EDIT_SUCCESSFULLY = "Asset purchase bill edited successfully";
 
-	String ASSET_REPAIR_BILL_ADDED_SUCCESSFULLY = "Asset is underWarrenty && repair bill added successsfully";
+	String ASSET_REPAIR_BILL_ADDED_SUCCESSFULLY = "Asset repair bill added successsfully";
 
 	String ASSET_REPAIR_BILL_EDITED_SUCCESSFULLY = "Asset repair bill edited successfully";
 
@@ -216,7 +216,7 @@ public interface ResponseMessages {
 
 	String ASSETVENDOR_STATUS_UPDATED = " Status Updated Successfully";
 
-	String ADDED_SOFTWAREID = "Software Id added Successfully";
+	String ADDED_SOFTWAREMASTER = "Software  added Successfully";
 
 	String SOFTWAREMASTER_EDITED = "Software master details is edited Successfully";
 
@@ -255,16 +255,6 @@ public interface ResponseMessages {
 	String NOTES_NOT_FOUND = "Notes not found";
 
 	String DATE_FEILD = "Date feild cannot be empty";
-	
-	String ASSET_IS_UNDERWARRENTY = "Asset is underwarrenty";
-
-	String ASSET_IS_NOT_UNDERWARRENTY = "Asset is not underwarrenty";
-
-	String TIME_SHEET_DELETED = "Time sheet deleted";
-	
-	String TIME_SHEET_NOT_DELETED = "Time sheet not deleted";
-	
-	String BILL_ADDED_SUCCESSFULLY = "Asset is not under warranty & bill assed successfully";
 
 	
 
@@ -274,19 +264,8 @@ String ASSET_DIRECTORY ="/Documents/assetDetails/";
 	
 	String BASE_DIRECTORY ="../webapps";
 
-	String BILL_EDITED_SUCCESSFULLY = "asset is not underWarrenty && Asset purchase bill edited successfully ";
-
-	String REPAIR_BILL_ADDED_SUCCESSFULLY = "Asset is not underWarrenty && asset reapir bill added successfully";
-
-	String ASSET_RETURN_REPAIR = "Asset is underwarrenty && asset is returned from repair";
-
-	String RETURNS_REPAIR = "asset is retunred from reapir";
-
-	String ASSET_REPAIR_BILL_EDIT_SUCCESSFULLY = "Asset is underwarrenty && asset repair bill edited successfully";
-
 	
 
-	
 	
 
 	
