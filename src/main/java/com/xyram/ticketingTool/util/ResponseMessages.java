@@ -255,6 +255,7 @@ public interface ResponseMessages {
 	String NOTES_NOT_FOUND = "Notes not found";
 
 	String DATE_FEILD = "Date feild cannot be empty";
+	String ADDED_DESIGNATION = "Designation is added Successfully";
 
 	
 
@@ -263,6 +264,8 @@ public interface ResponseMessages {
 String ASSET_DIRECTORY ="/Documents/assetDetails/";
 	
 	String BASE_DIRECTORY ="../webapps";
+
+	
 
 	
 

@@ -13,4 +13,8 @@ public interface DesignationRepository extends JpaRepository<Designation, String
 	@Query("Select new map(e.Id as id,e.designationName as designationName) from Designation e where Id != 'D7'")
 	Page<Map> getAllDesignationList(Pageable pageable);
 
+	
+//	@Query("Select distinct e from  Designation e where e.Id=:Id")
+//	Designation getDesignationById(String id);
+
 }
