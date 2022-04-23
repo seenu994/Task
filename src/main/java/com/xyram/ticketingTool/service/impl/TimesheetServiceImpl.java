@@ -677,5 +677,35 @@ public class TimesheetServiceImpl implements TimesheetService{
 		return response;
 	}
 
+	@Override
+	public ApiResponse deleteTimeSheet(String timeSheetId) 
+	{
+		ApiResponse response = new ApiResponse(false);
+		TimeSheet timeSheetObj = timesheetRepository.getById(timeSheetId);
+		if(!currentUser.getUserRole().equalsIgnoreCase("TICKETINGTOOL_ADMIN") && !currentUser.getUserId().equalsIgnoreCase(timeSheetObj.getApproverId())) {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.NOT_AUTHORIZED);
+			return response;
+		}
+		if(timeSheetObj != null)
+		{
+               try {
+            	   timesheetRepository.delete(timeSheetObj);
+                   response.setSuccess(true);
+				   response.setMessage(ResponseMessages.TIME_SHEET_DELETED);
+				
+			}catch(Exception e) {
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.TIME_SHEET_NOT_DELETED+" "+e.getMessage());
+			}
+		}
+		else
+		{
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.TIME_SHEET_NOT_DELETED);
+		}
+		return response;
+	}
+    
  
 }
