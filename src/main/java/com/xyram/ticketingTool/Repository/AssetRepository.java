@@ -133,7 +133,7 @@ public interface AssetRepository extends JpaRepository<Asset, String>{
     @Query("select a.warrantyDate from Asset a where a.assetId = :assetId")
 	Date getWarrentyDateById(String assetId);
 
-    @Query("select a.warrantyDate from Asset a where a.assetId = :assetId")
+    @Query("select a.warrantyDate from Asset a where a.assetId = :id")
 	Date getWarrantyDateById(String id);
 	
 
