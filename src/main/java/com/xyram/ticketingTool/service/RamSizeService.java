@@ -13,6 +13,8 @@ public interface RamSizeService {
 	ApiResponse editRamSize(RamSize ramSize, String ramId);
 
 	ApiResponse getAllRamSize(Pageable pageable);
+
+	ApiResponse deleteRam(String ramId);
 	
 	
 

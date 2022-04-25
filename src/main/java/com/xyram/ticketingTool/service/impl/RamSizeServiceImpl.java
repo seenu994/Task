@@ -116,4 +116,23 @@ public class RamSizeServiceImpl implements RamSizeService {
 		}
 		return response;	}
 
+	@Override
+	public ApiResponse deleteRam(String ramId) {
+		ApiResponse response = new ApiResponse(false);
+		RamSize ramObj = ramSizeRepository.getRamById(ramId);
+		if (ramObj != null) {
+//			if(!brandObj.getCreatedBy().equals(currentUser.getUserId())) {
+//				response.setSuccess(false);
+//				response.setMessage("Not authorised to delete this brand");
+//			}
+			ramSizeRepository.delete(ramObj);
+			response.setSuccess(true);
+			response.setMessage("RamSize deleted successfully.");
+		} else {
+			response.setSuccess(false);
+			response.setMessage("Ram Id is not valid.");
+		}
+		return response;
+	}
+
 }

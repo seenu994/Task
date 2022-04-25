@@ -16,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.xyram.ticketingTool.Repository.BrandRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Brand;
+import com.xyram.ticketingTool.entity.HrCalendar;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.BrandService;
 import com.xyram.ticketingTool.util.ResponseMessages;
@@ -111,6 +112,25 @@ public class BrandServiceImpl implements BrandService{
 		else {
 			response.setSuccess(false);
 			response.setMessage("Could not retrieve data");
+		}
+		return response;
+	}
+
+	@Override
+	public ApiResponse deleteBrand(String brandId) {
+		ApiResponse response = new ApiResponse(false);
+		Brand brandObj = brandRepository.getBrandById(brandId);
+		if (brandObj != null) {
+//			if(!brandObj.getCreatedBy().equals(currentUser.getUserId())) {
+//				response.setSuccess(false);
+//				response.setMessage("Not authorised to delete this brand");
+//			}
+			brandRepository.delete(brandObj);
+			response.setSuccess(true);
+			response.setMessage("Brand deleted successfully.");
+		} else {
+			response.setSuccess(false);
+			response.setMessage("Brand Id is not valid.");
 		}
 		return response;
 	}
