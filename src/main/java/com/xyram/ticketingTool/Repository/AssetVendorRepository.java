@@ -44,8 +44,9 @@ public interface AssetVendorRepository extends JpaRepository<AssetVendor, String
 //   AssetVendor getVendorName(String vendorName);
 
 	@Query("select distinct new map( p.vendorId as vendorId, p.vendorName as vendorName, p.mobileNo as mobileNo, "
-			+ "p.email as email, p.city as city, p.country as country,p.assetVendorStatus as assetVendorStatus) from AssetVendor p where "
-			+ "(:vendorId is null OR p.vendorId =:vendorId) AND" + "(:country is null OR p.country =:country) AND "
+			+ "p.email as email, p.city as city, p.country as country,p. address as address ,p.assetVendorStatus as assetVendorStatus) from AssetVendor p where "
+			+ "(:vendorId is null OR p.vendorId =:vendorId) AND"  
+			+ "(:country is null OR p.country =:country) AND "
 			+ "(:city is null OR p.city =:city)")
 	Page<Map> getAllVendor(String vendorId, String country, String city, Pageable peageble);
 
@@ -53,7 +54,9 @@ public interface AssetVendorRepository extends JpaRepository<AssetVendor, String
 	List<AssetVendor> searchVendorName(String vendorName);
 
 	@Query("select distinct p from AssetVendor p where"
-			+ "(:searchString is null OR p.vendorName LIKE %:searchString% OR p.vendorId like  %:searchString%) ")
+			+ "( p.vendorName LIKE %:searchString% OR p.vendorId like  %:searchString%  OR "
+			+ "p.city like %:searchString%  OR  p.country like %:searchString% OR p.mobileNo like  %:searchString% OR "
+			+ "p.address like %:searchString% OR p.email like %:searchString% ) ")
 
 //@Query("select distinct new map (p.vendorId as vendorId, p.vendorName as vendorName,"
 //	+"	p.email as email, p.city as city, p.country as country,p.address as address ,"

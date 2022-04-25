@@ -36,21 +36,15 @@ import com.xyram.ticketingTool.util.ResponseMessages;
 @Service
 @Transactional
 public class AssestVendorServiceImpl implements AssetvendorService {
-	// private static final AssetVendor vendorDetail = null;
-
-	// private static final AssetVendor AssetVendorRequest = null;
-
-	// private static final AssetVendorEnum AssetVendorEnum = null;
-
+	
 	private final Logger logger = LoggerFactory.getLogger(AssestVendorServiceImpl.class);
 
 	@Autowired
 	AssetVendorRepository assetVendorRepository;
-	
+
 	@Autowired
 	CurrentUser currentUser;
-	
-	
+
 	private ApiResponse response;
 
 	@Override
@@ -59,7 +53,7 @@ public class AssestVendorServiceImpl implements AssetvendorService {
 
 		response = validateAssetVendor(vendor);
 		// System.out.println("success"+response.isSuccess());
-		if (true) {
+		if (response.isSuccess()) {
 			// AssetVendor vendorSave = assetVendorRepository.save(vendor);
 			if (vendor != null) {
 				vendor.setCreatedAt(new Date());
@@ -70,6 +64,10 @@ public class AssestVendorServiceImpl implements AssetvendorService {
 				// response.setContent(content);
 
 			}
+			else {
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.VENDOR_NOT_ADDED);
+			}
 
 		}
 		return response;
@@ -77,40 +75,27 @@ public class AssestVendorServiceImpl implements AssetvendorService {
 
 	private ApiResponse validateAssetVendor(AssetVendor vendor) {
 		ApiResponse response = new ApiResponse(false);
-		if (vendor.getEmail() == null)  {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Mail id is mandatory");
+		
+		
+		if (vendor.getEmail() == null || vendor.getEmail().equals("")) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Mail id is mandatory");
 		}
-			response.setSuccess(true);
-	//String email = assetVendorRepository.filterByEmail(Vendor.getEmail());
-
-		if (!emailValidation(vendor.getEmail())) {
-			response.setMessage(ResponseMessages.EMAIL_INVALID);
-			response.setSuccess(false);
-
+		else if (!emailValidation(vendor.getEmail())) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid EmailId");
+		
 		}
 		
-		if (vendor.getMobileNo() == null || vendor.getMobileNo().length() != 10) {
-			
-			
-			
+		if (vendor.getMobileNo() == null || vendor.getMobileNo().equals("") ) {
+
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Vendor Mobile number is mandatory");
-	
-		
-		
-//			else {
-//				
-//				response.setMessage("MobileNo =" + vendor.getMobileNo() + "  already exists");
-//
-//			}
-			
-			 //response.setMessage(ResponseMessages.MOBILE_INVALID);
 
-			// response.setSuccess(false);
 		}
-
-
-		else {
-			if (vendor.getVendorName().equals("")) {
+		else if(vendor.getMobileNo().length() != 10) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "In correct mobile number");	
+			}
+		
+		
+			if (vendor.getVendorName() == null || vendor.getVendorName().equals("")) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Vendor name is mandatory");
 			}
 			if (vendor.getAddress() == null || vendor.getAddress().equals("")) {
@@ -120,31 +105,24 @@ public class AssestVendorServiceImpl implements AssetvendorService {
 			if (vendor.getCity() == null || vendor.getCity().equals("")) {
 
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Vendor city is mandatory");
-		
+
 			}
-			if ( vendor.getCountry().equals("")) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Country is mandatory");
-				
+			if ( vendor.getVendorName() == null || vendor.getCountry().equals("")) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Country is mandatory");
+
 			}
-			//return response;
-		
-		//response.setMessage(ResponseMessages.VENDOR_ADDED);
+			response.setSuccess(true);
+			return response;
 		}
-		return response;
-	}
-	//return response;
-
-
+			
 
 	private boolean emailValidation(String email) {
+		//System.out.println("hello");
 		Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$",
 				Pattern.CASE_INSENSITIVE);
 		Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(email);
-		
 		return matcher.find();
-
 	}
-
 
 	@Override
 	public ApiResponse editassetVendor(AssetVendor vendor, String vendorId) {
@@ -163,8 +141,7 @@ public class AssestVendorServiceImpl implements AssetvendorService {
 				vendorRequest.setAssetVendorStatus(vendor.getAssetVendorStatus());
 				vendorRequest.setLastUpdatedAt(new Date());
 				vendorRequest.setUpdatedBy(currentUser.getName());
-				
-				
+
 				assetVendorRepository.save(vendorRequest);
 				// AssetVendor assetVendorAdded = new AssetVendor();
 				response.setSuccess(true);
@@ -184,179 +161,121 @@ public class AssestVendorServiceImpl implements AssetvendorService {
 
 	}
 
-	
-	/* public ApiResponse editassetVendor(AssetVendor vendor, String vendorId) {
-
-		ApiResponse response = new ApiResponse(false);
-		
-		
-		AssetVendor assetVendor = assetVendorRepository.getAssetVendorById(vendorId);
-		
-		 
-		if(assetVendor != null) 
-	    {	
-			if(vendor.getAddress() != null)
-			{
-				checkAddress(vendor.getAddress());
-				assetVendor.setAddress(vendor.getAddress());
-			}
-			
-			if(assetVendor.getVendorId() != null) {
-				checkVendorById(vendor.getVendorId());
-			}
-			
-			
-			if(assetVendor.getVendorName()!= null)
-			{
-				checkVendorName(vendor.getVendorName());
-				assetVendor.setVendorName(vendor.getVendorName());
-			}
-//			else {
-//				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"VendorName is mandatory");
-//			}
-			
-//			if(assetVendor.getAddress() != null) {
-//				checkAddress(vendor.getAddress());
-//				assetVendor.setAddress(vendor.getAddress());
-//			}
-//			else {
-//				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"adress is mandatory");
-//			}
-			
-			if(assetVendor.getCity() != null) {
-				checkCity(vendor.getCity());
-				assetVendor.setCity(vendor.getCity());
-			}
-//			else {
-//				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"city is mandatory");
-//			}
-			
-			if(assetVendor.getCountry() != null) {
-				checkCountry(vendor.getCountry());
-				assetVendor.setCountry(vendor.getCountry());
-			}
-			
-		if(vendor.getAssetVendorStatus() != null)
-			{
-				checkAssetVendorStatus(vendor.getAssetVendorStatus());
-				assetVendor.setAssetVendorStatus
-				(vendor.getAssetVendorStatus());
-			}
-			
-			 
-			if(assetVendor.getEmail() != null) {
-				emailValidation(vendor.getEmail());
-				
-				assetVendor.setEmail(vendor.getEmail());
-			}
-			
-			if (vendor.getMobileNo() == null || vendor.getMobileNo().length() != 10) {
-				
-				assetVendor.setMobileNo(vendor.getMobileNo());
-			}
-			else {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Vendor mobile number is mandatory");
-			}
-			
-			
-			if(vendor.getVendorId() != null) {
-				assetVendor.setVendorId
-				(vendor.getVendorId());
-		    }
-			
-		
-			
-		assetVendorRepository.save(assetVendor);
-			response.setSuccess(true);
-			response.setMessage(ResponseMessages.VENDOR_DETAILS_EDIT);
-			
-		}
-
-		else 
-		{
-			response.setSuccess(false);
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid vendorId");
-			
-		}
-       return response;
-	    }
+	/*
+	  public ApiResponse editassetVendor(AssetVendor vendor, String vendorId) {
+	  
+	  ApiResponse response = new ApiResponse(false);
+	  
+	  
+	  AssetVendor assetVendor = assetVendorRepository.getAssetVendorById(vendorId);
+	  
+	  
+	  if(assetVendor != null) { if(vendor.getAddress() != null) {
+	  checkAddress(vendor.getAddress());
+	  assetVendor.setAddress(vendor.getAddress()); }
+	  
+	  if(assetVendor.getVendorId() != null) {
+	  checkVendorById(vendor.getVendorId()); }
+	  
+	  
+	  if(assetVendor.getVendorName()!= null) {
+	  checkVendorName(vendor.getVendorName());
+	  assetVendor.setVendorName(vendor.getVendorName()); } // else { // throw new
+	  ResponseStatusException(HttpStatus.BAD_REQUEST,"VendorName is mandatory"); //
+	  }
+	  
+	  // if(assetVendor.getAddress() != null) { //
+	  checkAddress(vendor.getAddress()); //
+	  assetVendor.setAddress(vendor.getAddress()); // } // else { // throw new
+	  ResponseStatusException(HttpStatus.BAD_REQUEST,"adress is mandatory"); // }
+	  
+	  if(assetVendor.getCity() != null) { checkCity(vendor.getCity());
+	  assetVendor.setCity(vendor.getCity()); } // else { // throw new
+	  ResponseStatusException(HttpStatus.BAD_REQUEST,"city is mandatory"); // }
+	  
+	  if(assetVendor.getCountry() != null) { checkCountry(vendor.getCountry());
+	  assetVendor.setCountry(vendor.getCountry()); }
+	  
+	  if(vendor.getAssetVendorStatus() != null) {
+	  checkAssetVendorStatus(vendor.getAssetVendorStatus());
+	  assetVendor.setAssetVendorStatus (vendor.getAssetVendorStatus()); }
+	  
+	  
+	  if(assetVendor.getEmail() != null) { emailValidation(vendor.getEmail());
+	  
+	  assetVendor.setEmail(vendor.getEmail()); }
+	  
+	  if (vendor.getMobileNo() == null || vendor.getMobileNo().length() != 10) {
+	  
+	  assetVendor.setMobileNo(vendor.getMobileNo()); } else { throw new
+	  ResponseStatusException(HttpStatus.
+	  BAD_REQUEST,"Vendor mobile number is mandatory"); }
+	  
+	  
+	  if(vendor.getVendorId() != null) { assetVendor.setVendorId
+	  (vendor.getVendorId()); }
+	  
+	  
+	  
+	  assetVendorRepository.save(assetVendor); response.setSuccess(true);
+	  response.setMessage(ResponseMessages.VENDOR_DETAILS_EDIT);
+	  
+	  }
+	  
+	  else { response.setSuccess(false); throw new
+	  ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid vendorId");
+	  
+	  } return response; }
+	  
+	  
+	  
+	  
+	  private boolean checkCountry(String country) { if(country == null) { throw
+	  new ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid country"); }
+	  return true; }
+	  
+	  
+	  
+	  
+	  private boolean checkCity(String city) { if(city == null) { throw new
+	  ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid city"); } return
+	  true; }
+	  
+	  
+	  private boolean checkAssetVendorStatus(AssetVendorEnum assetVendorEnum) {
+	  AssetVendor assetVendor = new AssetVendor(); if(assetVendorEnum == null) {
+	  throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+	  "AssetVensorStatus is mandetory"); } else { return true;
+	  //assetIssue.setAssetIssueStatus(AssetIssueStatus.CLOSE); } }
+	  
+	  
+	  
+	  private boolean checkAddress(String address) { if(address == null) { throw
+	  new ResponseStatusException(HttpStatus.BAD_REQUEST,"Address is not valid"); }
+	  return true; }
+	  
 	 
-	 
-	 
-	 
-	 private boolean checkCountry(String country) {
-		 if(country == null) {
-			 throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid country");
-		 }
-		 return true;
-	 }
-	
-		
-	
-
-	private boolean checkCity(String city) {
-		if(city == null) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid city");
-		}
-		 return true;
-	}	
-	
-
-	private boolean checkAssetVendorStatus(AssetVendorEnum assetVendorEnum)
-		{
-			AssetVendor assetVendor = new AssetVendor();
-			if(assetVendorEnum == null)
-			{
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "AssetVensorStatus is mandetory");
-			}
-			else
-			{
-				return true;
-				//assetIssue.setAssetIssueStatus(AssetIssueStatus.CLOSE);
-			}
-		}
-	
-			
-		
-		private boolean checkAddress(String address) {
-			if(address == null) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Address is not valid");
-			}
-			return true;
-		}
-		
-		
-	
-
-	 private boolean checkVendorName(String vendorName) {
-			//AssetVendor assetVendor = assetVendorRepository.getVendorName(vendorName);
-			if(vendorName == null) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"VendorName is not valid");
-			}
-			return true;
-		}
-	 
-	 
-	 
-	 private boolean checkVendorId(String vendorId) {
-		// AssetVendor assetVendor = assetVendorRepository.getAssetVendorAddress(address);
-		 if(vendorId == null) {
-			 throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"VendorId is not valid");
-		 }
-		 return true;
-	 }
-	 
-	 private boolean checkVendorId(String vendorId) {
-	    	AssetVendor assetVendor = assetVendorRepository.getVendorById(vendorId);
-			if (assetVendor == null) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "AssetVendor Id is not valid");
-			}
-			else {
-				return true;
-			}
-		}*/
-	 
-	
+	  
+	  
+	  private boolean checkVendorName(String vendorName) { //AssetVendor
+	  assetVendor = assetVendorRepository.getVendorName(vendorName); if(vendorName
+	  == null) { throw new
+	  ResponseStatusException(HttpStatus.BAD_REQUEST,"VendorName is not valid"); }
+	  return true; }
+	  
+	  
+	  
+	  private boolean checkVendorId(String vendorId) { // AssetVendor assetVendor =
+	  assetVendorRepository.getAssetVendorAddress(address); if(vendorId == null) {
+	  throw new
+	  ResponseStatusException(HttpStatus.BAD_REQUEST,"VendorId is not valid"); }
+	  return true; }
+	  
+	  private boolean checkVendorId(String vendorId) { AssetVendor assetVendor =
+	  assetVendorRepository.getVendorById(vendorId); if (assetVendor == null) {
+	  throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+	 "AssetVendor Id is not valid"); } else { return true; } }
+	 */
 
 //	public ApiResponse validateVendorId(AssetVendor vendor) {
 //		ApiResponse response = new ApiResponse(false);
@@ -445,7 +364,7 @@ public class AssestVendorServiceImpl implements AssetvendorService {
 			// AssetVendor assetVendor = assetVendorRepository.getById(vendorId);
 			if (vendor != null) {
 				// vendorRequest.setAssetVendorStatus(vendor);
-				
+
 				assetVendorRepository.save(vendor);
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.ASSETVENDOR_STATUS_UPDATED);
@@ -490,57 +409,49 @@ public class AssestVendorServiceImpl implements AssetvendorService {
 
 	}
 
-	/*@Override
-	public ApiResponse searchAssetVendor(String searchString) {
-		
-			ApiResponse response = new ApiResponse(false);
-			AssetVendor vendorList = assetVendorRepository.searchAssetVendor(searchString);
-				
-			Map content = new HashMap();
-			content.put("vendorList", vendorList);
-			if (content != null ) {
-				
-				//content.put("vendorList", vendorList);
-				response.setSuccess(true);
-				response.setMessage("Asset vendor retrived successfully");
-				response.setContent(content);
-			} else {
-				//content.put("vendorList", vendorList);
-				response.setSuccess(false);
-				//response.setContent(content);
-				response.setMessage("Not retrived the data");
-			}
-
-			return response;
-		
-	}*/
-	
-	
 	@Override
-	public ApiResponse searchVendorName(String vendorName) 
-	{
-		ApiResponse response = new ApiResponse();
-		AssetVendor assetVendor = new AssetVendor();
-		assetVendor.setVendorName(vendorName);
-		
-		List<AssetVendor> vendorList = assetVendorRepository.searchVendorName(vendorName);
+	public ApiResponse searchAssetVendor(String searchString) {
+
+		ApiResponse response = new ApiResponse(false);
+		AssetVendor vendorList = assetVendorRepository.searchAssetVendor(searchString);
+
 		Map content = new HashMap();
+		content.put("vendorList", vendorList);
+		if (content != null) {
 
-		content.put("vendorDetails", vendorList);
-		if(content != null && vendorList.size() >0) {
+			// content.put("vendorList", vendorList);
 			response.setSuccess(true);
-			response.setMessage("Asset vendor name Retrieved successfully");
+			response.setMessage("Asset vendor retrived successfully");
 			response.setContent(content);
-		}
-		else {
+		} else {
+			// content.put("vendorList", vendorList);
 			response.setSuccess(false);
-			response.setMessage("Could not retrieve vendorname");
-			response.setContent(content);
+			// response.setContent(content);
+			response.setMessage("Not retrived the data");
 		}
+
 		return response;
+
 	}
+
+
+	/*  @Override 
+	  public ApiResponse searchVendorName(String vendorName) {
+	  ApiResponse response = new ApiResponse(); 
+	  AssetVendor assetVendor = new AssetVendor(); assetVendor.setVendorName(vendorName);
+	  
+	  List<AssetVendor> vendorList = assetVendorRepository.searchVendorName(vendorName); 
+	  Map content = new HashMap();
+	  content.put("vendorDetails", vendorList); 
+	  if(content != null && vendorList.size() >0) { 
+		  response.setSuccess(true);
+	  response.setMessage("Asset vendor name Retrieved successfully");
+	  response.setContent(content); 
+	  } 
+	  else { 
+		  response.setSuccess(false);
+	  response.setMessage("Could not retrieve vendorname");
+	 response.setContent(content); } return response; }
+	 
+}*/
 }
-
-	
-
-

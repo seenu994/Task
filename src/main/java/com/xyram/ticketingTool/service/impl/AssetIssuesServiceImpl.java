@@ -296,7 +296,7 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 				
 				assetIssuesRepository.save(assetIssuesObj);
 				response.setSuccess(true);
-				response.setMessage(ResponseMessages.RETURN_REPAIR);
+				response.setMessage(ResponseMessages.RETURNS_REPAIR);
 				
 			}
 
@@ -523,7 +523,7 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
     	   
 	       ApiResponse response = new ApiResponse();
 	       
-	       List<AssetIssues> assetIssues = assetIssuesRepository.getAssetIssuesById(assetIssueId);
+	       Map assetIssues = assetIssuesRepository.getByAssetIssueId(assetIssueId);
 	       
 	       if (assetIssues != null && assetIssues.size() > 0) 
 	       {

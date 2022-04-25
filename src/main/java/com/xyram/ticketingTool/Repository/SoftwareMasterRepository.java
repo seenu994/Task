@@ -24,8 +24,8 @@ public interface SoftwareMasterRepository extends JpaRepository<SoftwareMaster ,
 	+ "p.softwareMasterStatus as softwareMasterStatus) from SoftwareMaster p")// where p.softwareMasterStatus != 'INACTIVE'")
 	Page<Map> getAllsoftwareMasterList(Pageable peageble);
 	
-	@Query("Select distinct p from SoftwareMaster p where p.softwareId=:id and p.softwareMasterStatus != 'INACTIVE'")
-	SoftwareMaster getSoftwareById(String id);
+	@Query("Select distinct p from SoftwareMaster p where p.softwareId=:softwareId")
+	SoftwareMaster getSoftwareById(String softwareId);
 
 	@Query("Select distinct p from SoftwareMaster p where p.softwareId=:softwareId")
 	SoftwareMaster getBysoftId(String softwareId);
@@ -36,12 +36,14 @@ public interface SoftwareMasterRepository extends JpaRepository<SoftwareMaster ,
 	
 	@Query("select distinct new map(p.softwareId as softwareId,p.softwareName as softwareName,p.softwareMasterStatus as softwareMasterStatus) from SoftwareMaster p where "
 			+ "(:softwareEnum is null OR p.softwareMasterStatus=:softwareEnum)")
-	Page<Map> getAllsoftwareMaster(SoftwareEnum softwareEnum, Pageable peageble);
+	Page<SoftwareMaster> getAllsoftwareMaster(SoftwareEnum softwareEnum, Pageable peageble);
 
 	
 		
 	@Query("select distinct p from SoftwareMaster p where p.softwareId = :softwareId")
 	List<SoftwareMaster> searchsoftwareId(String softwareId);
+
+	
 
 	//SoftwareMaster getById(SoftwareMaster softwareId);
 
