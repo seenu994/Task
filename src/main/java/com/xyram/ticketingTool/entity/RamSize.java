@@ -23,7 +23,7 @@ public class RamSize extends AuditModel {
 	@Column(name = "ram_id")
 	private String ramId;
 	
-	@Column(name = "ram_size")
+	@Column(name = "ram_size", unique = true)
 	private String ramSize;
 
 	public String getRamId() {

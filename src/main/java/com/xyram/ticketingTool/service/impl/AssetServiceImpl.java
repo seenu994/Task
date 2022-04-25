@@ -41,6 +41,7 @@ import com.xyram.ticketingTool.Repository.AssetVendorRepository;
 import com.xyram.ticketingTool.Repository.BrandRepository;
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
 import com.xyram.ticketingTool.Repository.ProjectRepository;
+import com.xyram.ticketingTool.Repository.RamSizeRepository;
 import com.xyram.ticketingTool.admin.model.User;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
@@ -54,6 +55,7 @@ import com.xyram.ticketingTool.entity.DateValidatorUsingDateFormat;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.JobOpenings;
 import com.xyram.ticketingTool.entity.JobVendorDetails;
+import com.xyram.ticketingTool.entity.RamSize;
 import com.xyram.ticketingTool.entity.Role;
 import com.xyram.ticketingTool.service.AssetService;
 import com.xyram.ticketingTool.service.EmployeeService;
@@ -86,6 +88,9 @@ public class AssetServiceImpl implements AssetService {
 	
 	@Autowired
 	BrandRepository brandRepository;
+	
+	@Autowired
+	RamSizeRepository ramSizeRepository;
 
 	@Override
 	public ApiResponse addasset(Asset asset) {
@@ -139,7 +144,8 @@ public class AssetServiceImpl implements AssetService {
 		// Brand Validating
 		if (asset.getBrand() == null || asset.getBrand().equals("")) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "brand is mandatory");
-		} else {
+		} 
+		else {
 			
 			Brand brand = brandRepository.getBrand(asset.getBrand());
 			if(brand == null) {
@@ -207,19 +213,26 @@ public class AssetServiceImpl implements AssetService {
 			// ram Validating
 			if (asset.getRam() == null || asset.getRam().equals("")) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ram is mandatory");
-			} else {
-				boolean isExist1 = false;
-				// Check given ram is exist in ramList
-				for (String list : AssetUtil.ram) {
-					if (list.equalsIgnoreCase(asset.getRam())) {
-						isExist1 = true;
-						break;
-					}
-				}
-				if (!isExist1) {
-					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ram is not valid");
+			} 
+			else {
+				RamSize ram = ramSizeRepository.getRamSize(asset.getRam());
+				if(ram == null) {
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ram size is not valid");
 				}
 			}
+			
+//				boolean isExist1 = false;
+//				// Check given ram is exist in ramList
+//				for (String list : AssetUtil.ram) {
+//					if (list.equalsIgnoreCase(asset.getRam())) {
+//						isExist1 = true;
+//						break;
+//					}
+//				}
+//				if (!isExist1) {
+//					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ram is not valid");
+//				}
+			
 
 			// Validate asset status
 			if (asset.getAssetStatus() == null) {
@@ -325,20 +338,29 @@ public class AssetServiceImpl implements AssetService {
 //	}
 
 	private boolean checkRam(String ram1) {
-    	 boolean isExist1 = false;
-			// Check given ram is exist in ramList
-			for (String list : AssetUtil.ram) {
-			if (list.equalsIgnoreCase(ram1)) {
-				isExist1 = true;
-			}
-			}
-			if (!isExist1) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ram is not valid");
-			}
-			else {
-				return true;
-			}
+		
+		RamSize ramSize = ramSizeRepository.getRamSize(ram1);
+		if(ramSize == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ram size is not valid");
+		}
+		else {
+			return true;
+		}
 	}
+//    	 boolean isExist1 = false;
+//			// Check given ram is exist in ramList
+//			for (String list : AssetUtil.ram) {
+//			if (list.equalsIgnoreCase(ram1)) {
+//				isExist1 = true;
+//			}
+//			}
+//			if (!isExist1) {
+//				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ram is not valid");
+//			}
+//			else {
+//				return true;
+//			}
+	
 
 	private boolean checkSerialNo(String serialNo) {
      String s1 = serialNo;
@@ -375,6 +397,16 @@ public class AssetServiceImpl implements AssetService {
 	}
 
 	private boolean checkBrand(String brand) {
+		
+		Brand brandObj = brandRepository.getBrand(brand);
+		if(brandObj == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "brand is not valid");
+		}
+		else {
+			return true;
+		}
+	}
+	
 //    	boolean isExist = false;
 		// Check given brand is exist in brandList
     	
@@ -383,7 +415,7 @@ public class AssetServiceImpl implements AssetService {
 //			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "brand is not valid");
 //		}
 //		else {
-			return true;
+		
 //		}
 		
 //		for (String list : AssetUtil.brandList) {
@@ -395,7 +427,6 @@ public class AssetServiceImpl implements AssetService {
 //			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "brand is not valid");
 //		}
 		
-	}
 	private boolean checkVId(String vendorId) {
     	AssetVendor vendor = assetVendorRepository.getVendorById1(vendorId);
 		if (vendor == null) {

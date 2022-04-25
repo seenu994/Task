@@ -23,7 +23,7 @@ public interface BrandRepository extends JpaRepository<Brand, String>{
 	@Query("Select distinct new map(b.brandId as brandId, b.brandName as brandName) from Brand b")
 	Page<Map> getAllBrand(Pageable pageable);
 
-	@Query("Select b from Brand b where b.brand_name =:brand")
+	@Query("Select b from Brand b where b.brandName =:brand")
 	Brand getBrand(String brand);
 	
 	
