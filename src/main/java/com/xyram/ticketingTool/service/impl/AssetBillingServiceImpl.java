@@ -330,7 +330,8 @@ public class AssetBillingServiceImpl implements AssetBillingService
 				 checkAssetId(assetBillingObject.getAssetId());
 				 assetBillingObject.setAssetId(assetBilling.getAssetId());
 			}
-			if(assetBilling.getVendorId() != null) {
+			if(assetBilling.getVendorId() != null) 
+			{
 		    	checkVendorId(assetBilling.getVendorId());
 		    	assetBillingObject.setVendorId(assetBilling.getVendorId());
 		    }
@@ -412,9 +413,11 @@ public class AssetBillingServiceImpl implements AssetBillingService
        return response;
     }
 		 
+
 		
-		 
-		 private boolean checkUnderWarrenty(Boolean underWarrenty) 
+
+
+		private boolean checkUnderWarrenty(Boolean underWarrenty) 
 		 {
 			 if(underWarrenty == null || underWarrenty.equals(""))
 			 {
@@ -1041,10 +1044,12 @@ public ApiResponse addRepairAssetBill(AssetBilling assetBilling) {
 
 	@Override
 	public ApiResponse getAllAssetBillingByAssetId(String assetId) {
-		ApiResponse response = new ApiResponse(false);
+		ApiResponse response = new ApiResponse();
 		
 		
-		List<AssetBilling> assetBilling = assetBillingRepository.getAllAssetBillingByAssetId(assetId);
+		//List<AssetBilling> assetBilling = assetBillingRepository.getAllAssetBillingByAssetId(assetId);
+		//List<AssetBilling> assetBilling = assetBillingRepository.getAllAssetBillingByAssetId(assetId);
+		Map assetBilling = assetBillingRepository.getAllAssetBillingByAssetId(assetId);
 		Map content = new HashMap();
 		content.put("assetBilling", assetBilling);
 		
