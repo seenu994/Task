@@ -26,6 +26,17 @@ public class Brand extends AuditModel{
 	
 	@Column(name = "brand_name", unique = true)
 	private String brandName;
+	
+	@Column(name = "brand_status")
+	private boolean brandStatus;
+
+	public boolean isBrandStatus() {
+		return brandStatus;
+	}
+
+	public void setBrandStatus(boolean brandStatus) {
+		this.brandStatus = brandStatus;
+	}
 
 	public String getBrandId() {
 		return brandId;
