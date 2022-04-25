@@ -76,7 +76,7 @@ public class DesignationServiceImpl implements DesiggnaionService {
 			ApiResponse response = new ApiResponse(false);
 
 			if (designation.getDesignationName().equals("") || designation.getDesignationName() == null) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "desigation  is manditory");
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Designation is manditory");
 			}
 			response.setSuccess(true);
 			return response;

@@ -42,4 +42,6 @@ public class Designation  {
 	public void setDesignationName(String designationName) {
 		this.designationName = designationName;
 	}
+	
+	
 }
