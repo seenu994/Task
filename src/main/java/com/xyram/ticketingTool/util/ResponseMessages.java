@@ -170,19 +170,19 @@ public interface ResponseMessages {
 
 	String ISSUEID_IN_VALID = "issue id is invalid";
 
-	String RETURN_FROM_REPAIR = "return from repair";
+	String RETURN_FROM_REPAIR = "asset is not underwarrenty && asset is return from repair";
 
 	String ASSET_BILL_EDIT_SUCCESSFULLY = "asset bill edited successfully";
 
 	String ASSET_ID_INVALID = "Asset id is invalid";
 
-	String ASSET_PURCHASE_BILL_ADDED_SUCCESSFULLY = "Asset purchase bill added successsfully";
+	String ASSET_PURCHASE_BILL_ADDED_SUCCESSFULLY = "Asset is underWarrenty && asset purchase bill added successsfully";
 
-	String ASSET_PURCHASE_BILL_EDIT_SUCCESSFULLY = "Asset purchase bill edited successfully";
+	String ASSET_PURCHASE_BILL_EDIT_SUCCESSFULLY = "Asset is underWarrenty && Asset purchase bill edited successfully";
 
-	String ASSET_REPAIR_BILL_ADDED_SUCCESSFULLY = "Asset repair bill added successsfully";
+	String ASSET_REPAIR_BILL_ADDED_SUCCESSFULLY = "Asset is underWarrenty && Asset repair bill added successsfully";
 
-	String ASSET_REPAIR_BILL_EDITED_SUCCESSFULLY = "Asset repair bill edited successfully";
+	String ASSET_REPAIR_BILL_EDITED_SUCCESSFULLY = "Asset is underwarrenty && repair bill edited successfully";
 
 	String ID_INVALID = "id is invalid";
 
@@ -263,6 +263,22 @@ public interface ResponseMessages {
 String ASSET_DIRECTORY ="/Documents/assetDetails/";
 	
 	String BASE_DIRECTORY ="../webapps";
+
+	String BILL_EDITED_SUCCESSFULLY = "asset is not underwarrenty && purchase bill edited successfully";
+
+	String REPAIR_BILL_ADDED_SUCCESSFULLY = "asset is not underwarrenty && repair bill addred successfully";
+
+	String ASSET_RETURN_FROM_REPAIR = "Asset is underwarrenty && asset is returned from reapir";
+
+	String BILL_ADDED_SUCCESSFULLY = "asset is not underwarrenty && purchase bill added successfully";
+
+	String RETURNS_REPAIR = "asset is returned from repair";
+
+	String TIME_SHEET_DELETED = "time sheet deleted";
+
+	String TIME_SHEET_NOT_DELETED = "time sheet not deletd";
+
+	String REPAIR_BILL_EDITED_SUCCESSFULLY = "Asset is not underwarrenty && repair bill edited successfully";
 
 	
 
