@@ -54,7 +54,9 @@ public interface AssetVendorRepository extends JpaRepository<AssetVendor, String
 	List<AssetVendor> searchVendorName(String vendorName);
 
 	@Query("select distinct p from AssetVendor p where"
-			+ "(:searchString is null OR p.vendorName LIKE %:searchString% OR p.vendorId like  %:searchString%) ")
+			+ "( p.vendorName LIKE %:searchString% OR p.vendorId like  %:searchString%  OR "
+			+ "p.city like %:searchString%  OR  p.country like %:searchString% OR p.mobileNo like  %:searchString% OR "
+			+ "p.address like %:searchString% OR p.email like %:searchString% ) ")
 
 //@Query("select distinct new map (p.vendorId as vendorId, p.vendorName as vendorName,"
 //	+"	p.email as email, p.city as city, p.country as country,p.address as address ,"

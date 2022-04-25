@@ -36,12 +36,7 @@ import com.xyram.ticketingTool.util.ResponseMessages;
 @Service
 @Transactional
 public class AssestVendorServiceImpl implements AssetvendorService {
-	// private static final AssetVendor vendorDetail = null;
-
-	// private static final AssetVendor AssetVendorRequest = null;
-
-	// private static final AssetVendorEnum AssetVendorEnum = null;
-
+	
 	private final Logger logger = LoggerFactory.getLogger(AssestVendorServiceImpl.class);
 
 	@Autowired
