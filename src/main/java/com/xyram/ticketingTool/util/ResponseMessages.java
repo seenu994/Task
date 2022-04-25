@@ -295,11 +295,13 @@ String ASSET_DIRECTORY ="/Documents/assetDetails/";
 
 	String RETURNS_REPAIR = "asset is returned from repair";
 
-	String TIME_SHEET_DELETED = "time sheet deleted";
-
-	String TIME_SHEET_NOT_DELETED = "time sheet not deletd";
+	
 
 	String REPAIR_BILL_EDITED_SUCCESSFULLY = "Asset is not underwarrenty && repair bill edited successfully";
+
+	String TIME_SHEET_DELETED = "time sheet deleted";
+
+	String TIME_SHEET_NOT_DELETED = "time sheet not deleted";
 
 	
 

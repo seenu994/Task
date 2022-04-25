@@ -25,10 +25,12 @@ import com.xyram.ticketingTool.Repository.EmployeeRepository;
 import com.xyram.ticketingTool.Repository.ProjectMemberRepository;
 import com.xyram.ticketingTool.Repository.TimesheetRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
+import com.xyram.ticketingTool.entity.Announcement;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.ProjectMembers;
 import com.xyram.ticketingTool.entity.TimeSheet;
 import com.xyram.ticketingTool.enumType.TimesheetStatus;
+import com.xyram.ticketingTool.enumType.UserRole;
 import com.xyram.ticketingTool.fileupload.FileTransferService;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.response.ReportExportResponse;
@@ -682,7 +684,8 @@ public class TimesheetServiceImpl implements TimesheetService{
 	{
 		ApiResponse response = new ApiResponse(false);
 		TimeSheet timeSheetObj = timesheetRepository.getById(timeSheetId);
-		if(!currentUser.getUserRole().equalsIgnoreCase("TICKETINGTOOL_ADMIN") && !currentUser.getUserId().equalsIgnoreCase(timeSheetObj.getApproverId())) {
+		//Announcement announcementObj = announcementRepository.findAnnouncementById(announcementId);
+		if(currentUser.getUserRole().equals(UserRole.TICKETINGTOOL_ADMIN)) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.NOT_AUTHORIZED);
 			return response;
