@@ -1,9 +1,9 @@
 package com.xyram.ticketingTool.service.impl;
 
 import java.text.ParseException;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -792,13 +792,13 @@ public ApiResponse addRepairAssetBill(AssetBilling assetBilling) {
 					assetBillingObject.setAssetAmount(null);
 					assetBillingObject.setGstAmount(null);
 					assetBillingObject.setAmountPaid(true);
-					response.setMessage(ResponseMessages.ASSET_REPAIR_BILL_EDIT_SUCCESSFULLY);
+					response.setMessage(ResponseMessages.ASSET_REPAIR_BILL_EDITED_SUCCESSFULLY);
 				}
 				else if(currentDate.after(WarrentyDate))
 				{
 					assetBilling.setUnderWarrenty(false);
 					assetBillingObject.setAmountPaid(true);
-					response.setMessage(ResponseMessages.BILL_EDITED_SUCCESSFULLY);
+					response.setMessage(ResponseMessages.REPAIR_BILL_EDITED_SUCCESSFULLY);
 				}
 				}
 				else {
@@ -813,7 +813,7 @@ public ApiResponse addRepairAssetBill(AssetBilling assetBilling) {
 					 }
 					   assetBillingObject.setAmountPaid(false);
 					assetBillingObject.setAmountPaid(false);
-					response.setMessage(ResponseMessages.BILL_EDITED_SUCCESSFULLY);
+					response.setMessage(ResponseMessages.REPAIR_BILL_EDITED_SUCCESSFULLY);
 				}
 			
 			assetBillingRepository.save(assetBillingObject);
@@ -950,7 +950,7 @@ public ApiResponse addRepairAssetBill(AssetBilling assetBilling) {
 					billingObj.setAssetAmount(null);
 					billingObj.setGstAmount(null);
 					billingObj.setAmountPaid(false);
-					response.setMessage(ResponseMessages.ASSET_RETURN_REPAIR);
+					response.setMessage(ResponseMessages.ASSET_RETURN_FROM_REPAIR);
 				}
 				else if(currentDate.after(WarrentyDate))
 				{
