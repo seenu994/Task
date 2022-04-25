@@ -38,6 +38,7 @@ public class BrandServiceImpl implements BrandService{
 			if (brand != null) {
 			    brand.setCreatedAt(new Date());
 			    brand.setCreatedBy(currentUser.getUserId());
+			    brand.setBrandStatus(true);
 				brandRepository.save(brand);
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.BRAND_ADDED);
@@ -75,6 +76,7 @@ public class BrandServiceImpl implements BrandService{
 		    }
 		   brandObj.setLastUpdatedAt(new Date());
 		   brandObj.setUpdatedBy(currentUser.getUserId());
+		   brandObj.setBrandStatus(brand.isBrandStatus());
 		   brandRepository.save(brandObj);
 		   response.setSuccess(true);
 		   response.setMessage(ResponseMessages.BRAND_EDITED);

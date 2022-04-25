@@ -25,6 +25,17 @@ public class RamSize extends AuditModel {
 	
 	@Column(name = "ram_size", unique = true)
 	private String ramSize;
+	
+	@Column(name = "ram_status")
+	private boolean ramStatus;
+
+	public boolean isRamStatus() {
+		return ramStatus;
+	}
+
+	public void setRamStatus(boolean ramStatus) {
+		this.ramStatus = ramStatus;
+	}
 
 	public String getRamId() {
 		return ramId;

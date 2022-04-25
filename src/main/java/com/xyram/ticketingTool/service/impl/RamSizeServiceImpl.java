@@ -39,6 +39,7 @@ public class RamSizeServiceImpl implements RamSizeService {
 			if (ramSize != null) {
 				ramSize.setCreatedAt(new Date());
 				ramSize.setCreatedBy(currentUser.getUserId());
+				ramSize.setRamStatus(true);
 				ramSizeRepository.save(ramSize);
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.RAM_ADDED);
@@ -76,6 +77,7 @@ public class RamSizeServiceImpl implements RamSizeService {
 		    }
 		   ramObj.setLastUpdatedAt(new Date());
 		   ramObj.setUpdatedBy(currentUser.getUserId());
+		   ramObj.setRamStatus(ramSize.isRamStatus());
 		   ramSizeRepository.save(ramObj);
 		   response.setSuccess(true);
 		   response.setMessage(ResponseMessages.RAM_SIZE_EDITED);

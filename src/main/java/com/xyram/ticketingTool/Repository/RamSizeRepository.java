@@ -21,7 +21,7 @@ public interface RamSizeRepository extends JpaRepository<RamSize, String> {
     @Query("Select r from RamSize r where r.ramId =:ramId")
 	RamSize getRamById(String ramId);
 
-    @Query("Select distinct new map(r.ramId as ramId, r.ramSize as ramSize) from RamSize r")
+    @Query("Select distinct new map(r.ramId as ramId, r.ramSize as ramSize, r.ramStatus as ramStatus) from RamSize r")
 	Page<Map> getAllRam(Pageable pageable);
 
     @Query("Select r from RamSize r where r.ramSize =:ram")
