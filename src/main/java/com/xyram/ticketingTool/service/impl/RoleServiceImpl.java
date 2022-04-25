@@ -59,19 +59,19 @@ public class RoleServiceImpl implements RoleService {
 	public ApiResponse addRole(Role role) {
 		
 		ApiResponse response = new ApiResponse(false);
-		
+		response = validateRole (role);
 		if (role.getRoleName() != null) {
 			
-			if (role.getRoleName().equals("") || role.getRoleName() == null) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Role is manditory");
-			}
+//			if (role.getRoleName().equals("") || role.getRoleName() == null) {
+//				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Role is manditory");
+//			}
 			
 		 Role roles = roleRepository.save(role);
 			response.setMessage(ResponseMessages.ADDED_DESIGNATION);
 			response.setSuccess(true);
 
 			Map content = new HashMap();
-			//content.put("designationId", role.getId()I);
+			
 			content.put("designationName",role.getRoleName());
 			response.setContent(content);
 		}
@@ -85,13 +85,14 @@ public class RoleServiceImpl implements RoleService {
 	public ApiResponse editRoleById(Role Request, String Id) {
 		ApiResponse response = new ApiResponse();
 		Role roleRequest = roleRepository.getById(Id);
+		response = validateRole(Request);
 		if (roleRequest != null) {
 			roleRequest.setId(roleRequest.getId());
 			roleRequest.setRoleName(roleRequest.getRoleName());
 			roleRequest.setDisplayableName(roleRequest.getDisplayableName());
 
-//			designationRequest.setLastUpdatedAt(new Date());
-//			designationRequest.setUpdatedBy(currentUser.getName());
+//			roleRequest.setLastUpdatedAt(new Date());
+//			roleRequest.setUpdatedBy(currentUser.getName());
 
 			roleRepository.save(roleRequest);
 			response.setSuccess(true);
@@ -105,5 +106,18 @@ public class RoleServiceImpl implements RoleService {
 	    return response;
 
 }
+	private ApiResponse validateRole(Role role) {
+		ApiResponse response = new ApiResponse(false);
+
+		if (role.getRoleName().equals("") || role.getRoleName() == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "role  is manditory");
+		}
+		if(role.getDisplayableName().equals("") || role.getDisplayableName() == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"manditory");
+		}
+		response.setSuccess(true);
+		return response;
+	}
+	
 }
 		
