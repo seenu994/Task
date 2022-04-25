@@ -78,4 +78,31 @@ public class RoleServiceImpl implements RoleService {
 		
 		return response;
 	}
+
+
+
+	@Override
+	public ApiResponse editRoleById(Role Request, String Id) {
+		ApiResponse response = new ApiResponse();
+		Role roleRequest = roleRepository.getById(Id);
+		if (roleRequest != null) {
+			//designationRequest.setId(designationRequest.getId());
+			roleRequest.setRoleName(roleRequest.getRoleName());
+
+//			designationRequest.setLastUpdatedAt(new Date());
+//			designationRequest.setUpdatedBy(currentUser.getName());
+
+			roleRepository.save(roleRequest);
+			response.setSuccess(true);
+			response.setMessage(ResponseMessages.SOFTWAREMASTER_EDITED);
+
+		} else {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.SOFTWARE_DETAILS_INVALID);
+			// response.setContent(null);
+		}
+	    return response;
+
 }
+}
+		
