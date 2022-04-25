@@ -86,8 +86,9 @@ public class RoleServiceImpl implements RoleService {
 		ApiResponse response = new ApiResponse();
 		Role roleRequest = roleRepository.getById(Id);
 		if (roleRequest != null) {
-			//designationRequest.setId(designationRequest.getId());
+			roleRequest.setId(roleRequest.getId());
 			roleRequest.setRoleName(roleRequest.getRoleName());
+			roleRequest.setDisplayableName(roleRequest.getDisplayableName());
 
 //			designationRequest.setLastUpdatedAt(new Date());
 //			designationRequest.setUpdatedBy(currentUser.getName());
