@@ -1,4 +1,4 @@
-	
+
 package com.xyram.ticketingTool.util;
 
 public interface ResponseMessages {
@@ -255,7 +255,27 @@ public interface ResponseMessages {
 	String NOTES_NOT_FOUND = "Notes not found";
 
 	String DATE_FEILD = "Date feild cannot be empty";
+	
 	String ADDED_DESIGNATION = "Designation is added Successfully";
+    String BRAND_ADDED = "Brand Added succesfully";
+	
+	String BRAND_NOT_ADDED = "Brand not added";
+	
+	String BRAND_EDITED = "Brand edited successfully";
+	
+	String BRAND_NOT_EDITED = "Brand not edited";
+	
+	String BRAND_LIST_RETRIVED = "List retrieved successfully";
+	
+    String RAM_ADDED = "Ram size added successfully";
+	
+	String RAM_NOT_ADDED = "Ram size not added";
+	
+	String RAM_SIZE_EDITED = "Ram size edited successfully";
+	
+	String RAM_NOT_EDITED = "Ram size not edited";
+	
+	String RAM_LIST_RETRIVED = "Ram list retrieved successfully";
 
 	
 

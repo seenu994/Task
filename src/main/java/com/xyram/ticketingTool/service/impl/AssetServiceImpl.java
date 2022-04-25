@@ -38,8 +38,10 @@ import com.jcraft.jsch.Logger;
 import com.xyram.ticketingTool.Repository.AssetEmployeeRepository;
 import com.xyram.ticketingTool.Repository.AssetRepository;
 import com.xyram.ticketingTool.Repository.AssetVendorRepository;
+import com.xyram.ticketingTool.Repository.BrandRepository;
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
 import com.xyram.ticketingTool.Repository.ProjectRepository;
+import com.xyram.ticketingTool.Repository.RamSizeRepository;
 import com.xyram.ticketingTool.admin.model.User;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
@@ -47,11 +49,13 @@ import com.xyram.ticketingTool.entity.Announcement;
 import com.xyram.ticketingTool.entity.Asset;
 import com.xyram.ticketingTool.entity.AssetEmployee;
 import com.xyram.ticketingTool.entity.AssetVendor;
+import com.xyram.ticketingTool.entity.Brand;
 import com.xyram.ticketingTool.entity.CompanyWings;
 import com.xyram.ticketingTool.entity.DateValidatorUsingDateFormat;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.JobOpenings;
 import com.xyram.ticketingTool.entity.JobVendorDetails;
+import com.xyram.ticketingTool.entity.RamSize;
 import com.xyram.ticketingTool.entity.Role;
 import com.xyram.ticketingTool.service.AssetService;
 import com.xyram.ticketingTool.service.EmployeeService;
@@ -81,6 +85,12 @@ public class AssetServiceImpl implements AssetService {
 	
 	@Autowired 
 	CurrentUser currentUser;
+	
+	@Autowired
+	BrandRepository brandRepository;
+	
+	@Autowired
+	RamSizeRepository ramSizeRepository;
 
 	@Override
 	public ApiResponse addasset(Asset asset) {
@@ -96,13 +106,11 @@ public class AssetServiceImpl implements AssetService {
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.ASSET_ADDED);
 			}
-
 			else {
 				response.setSuccess(false);
 				response.setMessage(ResponseMessages.ASSET_NOT_ADDED);
 			}
 		}
-
 		return response;
 	}
 
@@ -136,20 +144,28 @@ public class AssetServiceImpl implements AssetService {
 		// Brand Validating
 		if (asset.getBrand() == null || asset.getBrand().equals("")) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "brand is mandatory");
-		} else {
+		} 
+		else {
 			
-			boolean isExist = false;
-			// Check given brand is exist in brandList
-			for (String brand : AssetUtil.brandList) {
-				if(brand.equalsIgnoreCase(asset.getBrand())) {
-					isExist = true;
-					break;
-				}
-			}
-			if (!isExist) {
+			Brand brand = brandRepository.getBrand(asset.getBrand());
+			if(brand == null) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "brand is not valid");
 			}
+			
 		}
+			
+//			boolean isExist = false;
+//			// Check given brand is exist in brandList
+//			for (String brand : AssetUtil.brandList) {
+//				if(brand.equalsIgnoreCase(asset.getBrand())) {
+//					isExist = true;
+//					break;
+//				}
+//			}
+//			if (!isExist) {
+//				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "brand is not valid");
+//			}
+	
 
 		// purchase date Validating
 		if (asset.getPurchaseDate() == null) {
@@ -197,19 +213,26 @@ public class AssetServiceImpl implements AssetService {
 			// ram Validating
 			if (asset.getRam() == null || asset.getRam().equals("")) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ram is mandatory");
-			} else {
-				boolean isExist1 = false;
-				// Check given ram is exist in ramList
-				for (String list : AssetUtil.ram) {
-					if (list.equalsIgnoreCase(asset.getRam())) {
-						isExist1 = true;
-						break;
-					}
-				}
-				if (!isExist1) {
-					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ram is not valid");
+			} 
+			else {
+				RamSize ram = ramSizeRepository.getRamSize(asset.getRam());
+				if(ram == null) {
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ram size is not valid");
 				}
 			}
+			
+//				boolean isExist1 = false;
+//				// Check given ram is exist in ramList
+//				for (String list : AssetUtil.ram) {
+//					if (list.equalsIgnoreCase(asset.getRam())) {
+//						isExist1 = true;
+//						break;
+//					}
+//				}
+//				if (!isExist1) {
+//					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ram is not valid");
+//				}
+			
 
 			// Validate asset status
 			if (asset.getAssetStatus() == null) {
@@ -303,32 +326,41 @@ public class AssetServiceImpl implements AssetService {
 		}
 	}
 
-	private boolean checkAssignedTo(String assignedTo) {
-    	 Employee employee = employeeRepository.getByEmpName(assignedTo);
-		 if (employee == null) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "employee id is not valid");
-		 }
-		 else {
-			 return true;
-		 }
-		
-	}
+//	private boolean checkAssignedTo(String assignedTo) {
+//    	 Employee employee = employeeRepository.getByEmpName(assignedTo);
+//		 if (employee == null) {
+//				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "employee id is not valid");
+//		 }
+//		 else {
+//			 return true;
+//		 }
+//		
+//	}
 
 	private boolean checkRam(String ram1) {
-    	 boolean isExist1 = false;
-			// Check given ram is exist in ramList
-			for (String list : AssetUtil.ram) {
-			if (list.equalsIgnoreCase(ram1)) {
-				isExist1 = true;
-			}
-			}
-			if (!isExist1) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ram is not valid");
-			}
-			else {
-				return true;
-			}
+		
+		RamSize ramSize = ramSizeRepository.getRamSize(ram1);
+		if(ramSize == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ram size is not valid");
+		}
+		else {
+			return true;
+		}
 	}
+//    	 boolean isExist1 = false;
+//			// Check given ram is exist in ramList
+//			for (String list : AssetUtil.ram) {
+//			if (list.equalsIgnoreCase(ram1)) {
+//				isExist1 = true;
+//			}
+//			}
+//			if (!isExist1) {
+//				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ram is not valid");
+//			}
+//			else {
+//				return true;
+//			}
+	
 
 	private boolean checkSerialNo(String serialNo) {
      String s1 = serialNo;
@@ -352,8 +384,9 @@ public class AssetServiceImpl implements AssetService {
 	private boolean checkWarrantyDate(Date warrantyDate,String id) {
 		
 		Date asset = assetRepository.getPurchaseDateById(id);
+		Date assetObj = assetRepository.getWarrantyDateById(id);
 		Date d1 = asset;
-		Date d2 = warrantyDate;
+		Date d2 = assetObj;
 	  
 		if (d1.after(d2) || d1.equals(d2)) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "warranty date should be greater than purchase date");
@@ -364,21 +397,36 @@ public class AssetServiceImpl implements AssetService {
 	}
 
 	private boolean checkBrand(String brand) {
-    	boolean isExist = false;
-		// Check given brand is exist in brandList
-		for (String list : AssetUtil.brandList) {
-			if (list.equalsIgnoreCase(brand)) {
-				isExist = true;
-			}
-		}
-		if (!isExist) {
+		
+		Brand brandObj = brandRepository.getBrand(brand);
+		if(brandObj == null) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "brand is not valid");
 		}
 		else {
 			return true;
 		}
-		
 	}
+	
+//    	boolean isExist = false;
+		// Check given brand is exist in brandList
+    	
+//    	Brand brandObj = brandRepository.getBrand(brand);
+//		if(brandObj == null) {
+//			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "brand is not valid");
+//		}
+//		else {
+		
+//		}
+		
+//		for (String list : AssetUtil.brandList) {
+//			if (list.equalsIgnoreCase(brand)) {
+//				isExist = true;
+//			}
+//		}
+//		if (!isExist) {
+//			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "brand is not valid");
+//		}
+		
 	private boolean checkVId(String vendorId) {
     	AssetVendor vendor = assetVendorRepository.getVendorById1(vendorId);
 		if (vendor == null) {
@@ -622,6 +670,7 @@ public class AssetServiceImpl implements AssetService {
 		for (Asset assetList : asset) {
 			Map row = new HashMap();
 			AssetVendor getVendorName = assetVendorRepository.getAssetVendorById(assetList.getVendorId());
+			String getEmployeeName = employeeRepository.getEmpNameById(assetList.getAssetId());
 			row.put("Asset Id", assetList.getAssetId());
 			row.put("Brand", assetList.getBrand());
 			row.put("Serial No", assetList.getSerialNo());
@@ -630,7 +679,7 @@ public class AssetServiceImpl implements AssetService {
 			row.put("Warranty Date", assetList.getWarrantyDate());
 			row.put("Status", assetList.getAssetStatus());
 			row.put("Vendor Name", getVendorName.getVendorName());
-//			row.put("Assigned To", assetList.getAssignedTo());
+			row.put("Assigned To", getEmployeeName);
 			row.put("Ram Size", assetList.getRam());
 			
 
