@@ -443,7 +443,6 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 			response.setSuccess(false);
 			response.setMessage("List is empty.");
 		}
-		
 		return response;
 	}
 
