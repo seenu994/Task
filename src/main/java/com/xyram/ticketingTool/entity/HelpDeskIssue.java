@@ -2,52 +2,55 @@ package com.xyram.ticketingTool.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import com.xyram.ticketingTool.enumType.UserStatus;
 import com.xyram.ticketingTool.id.generator.IdGenerator;
 import com.xyram.ticketingTool.id.generator.IdPrefix;
 
 @Entity
-@Table(name = "designation")
+@Table(name = "Issues")
 
-public class Designation  {
+public class HelpDeskIssue {
 
 	@Id
-	@IdPrefix(value = "DES_")
+	@IdPrefix(value = "ISI")
 	@GeneratedValue(generator = IdGenerator.ID_GENERATOR)
 	@GenericGenerator(name = IdGenerator.ID_GENERATOR, strategy = "com.xyram.ticketingTool.id.generator.IdGenerator")
-	@Column(name="designatin_id")
-	private String Id;
-
-	@Column(name = "designation_name")
-	private String designationName;
+	@Column(name = "issue_Id" )
+	private String issue_Id;
 	
 	
 
+	@Column(name = "IssueName")
+	private String issueName;
 
-	
-	public String getId() {
-		return Id;
+
+
+	public String getIssue_Id() {
+		return issue_Id;
 	}
 
-	public void setId(String id) {
-		Id = id;
+
+
+	public void setIssue_Id(String issue_Id) {
+		this.issue_Id = issue_Id;
 	}
 
-	public String getDesignationName() {
-		return designationName;
+
+
+	public String getIssueName() {
+		return issueName;
 	}
 
-	public void setDesignationName(String designationName) {
-		this.designationName = designationName;
+
+
+	public void setIssueName(String issueName) {
+		this.issueName = issueName;
 	}
-	
+
 	
 }

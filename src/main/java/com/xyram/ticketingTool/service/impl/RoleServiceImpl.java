@@ -72,7 +72,9 @@ public class RoleServiceImpl implements RoleService {
 
 			Map content = new HashMap();
 			
-			content.put("designationName",role.getRoleName());
+			content.put("RoleName",role.getRoleName());
+			content.put("RoleId",role.getId());
+			content.put("DisplayableName",role.getDisplayableName());
 			response.setContent(content);
 		}
 		

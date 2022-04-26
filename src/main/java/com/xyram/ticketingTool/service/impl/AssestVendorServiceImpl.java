@@ -393,16 +393,16 @@ public class AssestVendorServiceImpl implements AssetvendorService {
 			System.out.print(assetVendorEnum.toString());
 			assetVendorRepository.save(assetVendor);
 
-			// Employee employeere=new Employee();z
+			
 
 			response.setSuccess(true);
 			response.setMessage(ResponseMessages.ASSETVENDOR_STATUS_UPDATED);
-			response.setContent(null);
+			//response.setContent(null);
 
 		} else {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.VENDORSTATUS_INVALID);
-			response.setContent(null);
+			//response.setContent(null);
 		}
 
 		return response;

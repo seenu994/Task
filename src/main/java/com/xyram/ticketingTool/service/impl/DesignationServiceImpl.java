@@ -64,6 +64,7 @@ public class DesignationServiceImpl implements DesiggnaionService {
 				Map content = new HashMap();
 				content.put("designationId", designation.getId());
 				content.put("designationName",designation.getDesignationName());
+			//	content.put("designationStatus", designation.getStatus());
 				response.setContent(content);
 			}
 			

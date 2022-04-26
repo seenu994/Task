@@ -50,7 +50,7 @@ public class RoleController {
 		logger.info("Received request to add role");
 		return roleService.addRole(role);
 	}
-	//editRoleById(Role Request, String Id);
+	
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editRoleById/{Id}",AuthConstants.HR_ADMIN_BASEPATH + "/editRoleById/{Id}",
 			AuthConstants.INFRA_USER_BASEPATH + "/editRoleById/{Id}",AuthConstants.HR_BASEPATH + "/editRoleById/{Id}",
 			AuthConstants.INFRA_ADMIN_BASEPATH + "/editRoleById/{Id}", AuthConstants.DEVELOPER_BASEPATH + "/editRoleById/{Id}"})
