@@ -162,7 +162,13 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 	Map getbyAccessToken(String accessToken);
 
 	@Query("SELECT new map(CONCAT(e.firstName ,' ', e.lastName) as ReporterName,e.eId as Id,e.profileUrl as profileUrl,e.userCredientials.id as userId) from Employee e where e.reportingTo = :reportingId")
-	List<Map> getReortingList(String reportingId); 
+	List<Map> getReportingList(String reportingId); 
+	
+	@Query("SELECT new map(CONCAT(e.firstName ,' ', e.lastName) as ReporterName,e.eId as Id,e.profileUrl as profileUrl,e.userCredientials.id as userId) "
+			+ "from Employee e where e.reportingTo = :reportingId and (lower(e.firstName) like %:searchString% or lower(e.lastName) like %:searchString%)")
+	List<Map> searchEmployeeByReportingId(String reportingId, String searchString);
+	
+	
 
 	@Query("Select e from Employee e "
 			+ "INNER JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id ORDER BY e.createdAt DESC")
