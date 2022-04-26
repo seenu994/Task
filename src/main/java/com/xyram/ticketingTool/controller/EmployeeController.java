@@ -271,6 +271,18 @@ class EmployeeController
 		logger.info("Received request to add Employee");
 		return employeeService.getEmployeeByReportingId(reportingId);
 	}
+	
+	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/getEmployeeByReportingId/{reportingId}/{searchString}",
+			AuthConstants.ADMIN_BASEPATH + "/getEmployeeByReportingId/{reportingId}/{searchString",
+			AuthConstants.DEVELOPER_BASEPATH + "/getEmployeeByReportingId/{reportingId}/{searchString",
+			AuthConstants.HR_BASEPATH + "/getEmployeeByReportingId/{reportingId}/{searchString",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/getEmployeeByReportingId/{reportingId}/{searchString",
+			AuthConstants.INFRA_USER_BASEPATH + "/getEmployeeByReportingId/{reportingId}/{searchString",
+			AuthConstants.JOB_VENDOR_BASEPATH + "/getEmployeeByReportingId/{reportingId}/{searchString" })
+	public ApiResponse getEmployeeByReportingId(@PathVariable String reportingId,@PathVariable String searchString) {
+		logger.info("Received request to search Employee");
+		return employeeService.searchEmployeeByReportingId(reportingId,searchString);
+	}
 
 	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/getInfraEmployee/{searchString}",
 			AuthConstants.ADMIN_BASEPATH + "/getInfraEmployee/{searchString}", AuthConstants.DEVELOPER_BASEPATH + "/getInfraEmployee/{searchString}",
