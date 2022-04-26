@@ -263,7 +263,7 @@ public interface ResponseMessages {
 	
 	String BRAND_EDITED = "Brand edited successfully";
 	
-	String BRAND_NOT_EDITED = "Brand not edited";
+	String BRAND_NOT_EDITED = "Invalid Brand Id";
 	
 	String BRAND_LIST_RETRIVED = "List retrieved successfully";
 	

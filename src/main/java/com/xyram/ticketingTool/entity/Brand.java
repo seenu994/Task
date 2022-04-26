@@ -24,7 +24,7 @@ public class Brand extends AuditModel{
 	@Column(name = "brand_id")
 	private String brandId;
 	
-	@Column(name = "brand_name", unique = true)
+	@Column(name = "brand_name")
 	private String brandName;
 	
 	@Column(name = "brand_status")

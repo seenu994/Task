@@ -70,6 +70,8 @@ public interface EmployeeService {
 	ApiResponse getJobVendorType();
 
 	ApiResponse getEmployeeByReportingId(String reportingId);
+	
+	ApiResponse searchEmployeeByReportingId(String reportingId, String searchString);
 
 	ApiResponse getInfraEmployee(String searchString);
 

@@ -50,12 +50,12 @@ public class DesignationServiceImpl implements DesiggnaionService {
 		@Override
 		public ApiResponse addDesignation(Designation designation) {
 			ApiResponse response = new ApiResponse(false);
-			
+			response = validateDesignation(designation);
 			if (designation.getDesignationName() != null) {
 				
-				if (designation.getDesignationName().equals("") || designation.getDesignationName() == null) {
-					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Designation is manditory");
-				}
+//				if (designation.getDesignationName().equals("") || designation.getDesignationName() == null) {
+//					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Designation is manditory");
+//				}
 				
 				Designation designations = designationRepository.save(designation);
 				response.setMessage(ResponseMessages.ADDED_DESIGNATION);
@@ -64,6 +64,7 @@ public class DesignationServiceImpl implements DesiggnaionService {
 				Map content = new HashMap();
 				content.put("designationId", designation.getId());
 				content.put("designationName",designation.getDesignationName());
+			//	content.put("designationStatus", designation.getStatus());
 				response.setContent(content);
 			}
 			
@@ -72,13 +73,28 @@ public class DesignationServiceImpl implements DesiggnaionService {
 		
 		
 		
+		private ApiResponse validateDesignation(Designation designation) {
+			ApiResponse response = new ApiResponse(false);
+
+			if (designation.getDesignationName().equals("") || designation.getDesignationName() == null) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Designation is manditory");
+			}
+			response.setSuccess(true);
+			return response;
+		}
+		
+		
 		@Override
 		public  ApiResponse editDesignation(Designation Request, String Id) {
 
 			ApiResponse response = new ApiResponse();
+			response = validateDesignation(Request);
 				Designation designationRequest = designationRepository.getById(Id);
-				if (designationRequest != null) {
-					//designationRequest.setId(designationRequest.getId());
+				if (designationRequest.getDesignationName() != null) {
+//					if (designationRequest.getDesignationName().equals("") || designationRequest.getDesignationName() == null) {
+//						throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Designation is manditory");
+//					}
+					
 					designationRequest.setDesignationName(Request.getDesignationName());
 
 //					designationRequest.setLastUpdatedAt(new Date());
@@ -87,12 +103,13 @@ public class DesignationServiceImpl implements DesiggnaionService {
 					designationRepository.save(designationRequest);
 					response.setSuccess(true);
 					response.setMessage(ResponseMessages.SOFTWAREMASTER_EDITED);
-
+						
 				} else {
 					response.setSuccess(false);
 					response.setMessage(ResponseMessages.SOFTWARE_DETAILS_INVALID);
 					// response.setContent(null);
 				}
+				
 			    return response;
 
 		}

@@ -7,11 +7,13 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.AssetVendor;
+import com.xyram.ticketingTool.entity.Designation;
 import com.xyram.ticketingTool.entity.Role;
 import com.xyram.ticketingTool.service.RoleService;
 import com.xyram.ticketingTool.util.AuthConstants;
@@ -47,6 +49,15 @@ public class RoleController {
 	  public ApiResponse addRole(@RequestBody Role role) {
 		logger.info("Received request to add role");
 		return roleService.addRole(role);
+	}
+	
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editRoleById/{Id}",AuthConstants.HR_ADMIN_BASEPATH + "/editRoleById/{Id}",
+			AuthConstants.INFRA_USER_BASEPATH + "/editRoleById/{Id}",AuthConstants.HR_BASEPATH + "/editRoleById/{Id}",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/editRoleById/{Id}", AuthConstants.DEVELOPER_BASEPATH + "/editRoleById/{Id}"})
+	public ApiResponse editRoleById(@RequestBody Role Request, @PathVariable String Id) {
+		logger.info("Received request to edit role");
+
+		return roleService.editRoleById(Request,Id);
 	}
 	
 	
