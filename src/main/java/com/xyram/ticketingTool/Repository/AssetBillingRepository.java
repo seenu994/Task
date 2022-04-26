@@ -67,14 +67,14 @@ public interface AssetBillingRepository extends JpaRepository<AssetBilling, Stri
 	AssetBilling getAssetBillById(String assetBillId);
 
 
-	@Query("Select distinct new map(b.assetBillId as assetBillId,b.billingType as billingType,"		
+	/*@Query("Select distinct new map(b.assetBillId as assetBillId,b.billingType as billingType,"		
             + "b.underWarrenty as underWarrenty,b.assetAmount as assetAmount,b.gstAmount as gstAmount,"
     		+ "b.transactionDate as transactionDate,b.vendorId as vendorId,"
     	    + "b.billPhotoUrl as billPhotoUrl, b.assetIssueId as assetIssueId, b.returnDate as returnDate, "
     	    + "b.amountPaid as amountPaid) from AssetBilling b left join Asset a on b.assetId = a.assetId where "
     	    + "(:assetId is null OR b.assetId=:assetId)")
 	
-            Page<Map> getAllAssetBilling(String assetId,Pageable pageable);
+            Page<Map> getAllAssetBilling(String assetId,Pageable pageable);*/
 
 
 	@Query("select b from AssetBilling b where b.assetId =:assetId")
@@ -86,16 +86,14 @@ public interface AssetBillingRepository extends JpaRepository<AssetBilling, Stri
 	@Query("Select b.assetIssueId from AssetBilling b where b.assetIssueId=:assetIssueId")
 	AssetBilling getAssetIssueById(String assetIssueId);
 
-	@Query("Select b from AssetBilling b where b.assetId =:assetId")
-	List<AssetBilling> getAllAssetBillingByAssetId(String assetId);
+	//@Query("Select b from AssetBilling b where b.assetId =:assetId")
+	
+	@Query("Select distinct new map (b.assetBillId as assetBillId,v.vendorName as vendorName,b.assetAmount as assetAmount, b.billingType as billingType, b.amountPaid as amountPaid, "
+	 		+ "b.gstAmount as gstAmount,b.transactionDate as transactionDate, b.underWarrenty as underWarrenty,b.returnDate as returnDate, "
+	 		+ "b.vendorId as vendorId) from AssetBilling b left Join Asset a ON b.assetId = a.assetId "
+	 		+ "left join AssetVendor v on b.vendorId = v.vendorId where b.assetId=:assetId")
+	Map getAllAssetBillingByAssetId(String assetId);
 
-	
-	
-	
-	
-
-	
-	
 	/*@Query("Select assetBilling.issueId from AssetBilling b where b.issueId = :issueId")
 	String filterByIssueId(AssetIssues assetIssues);
 	

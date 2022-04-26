@@ -7,7 +7,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import javax.persistence.Id;
 
-import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.id.IdentifierGenerator;

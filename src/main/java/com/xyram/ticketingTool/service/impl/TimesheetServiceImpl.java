@@ -25,10 +25,12 @@ import com.xyram.ticketingTool.Repository.EmployeeRepository;
 import com.xyram.ticketingTool.Repository.ProjectMemberRepository;
 import com.xyram.ticketingTool.Repository.TimesheetRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
+import com.xyram.ticketingTool.entity.Announcement;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.ProjectMembers;
 import com.xyram.ticketingTool.entity.TimeSheet;
 import com.xyram.ticketingTool.enumType.TimesheetStatus;
+import com.xyram.ticketingTool.enumType.UserRole;
 import com.xyram.ticketingTool.fileupload.FileTransferService;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.response.ReportExportResponse;
@@ -677,5 +679,36 @@ public class TimesheetServiceImpl implements TimesheetService{
 		return response;
 	}
 
+	@Override
+	public ApiResponse deleteTimeSheet(String timeSheetId) 
+	{
+		ApiResponse response = new ApiResponse(false);
+		TimeSheet timeSheetObj = timesheetRepository.getById(timeSheetId);
+		//Announcement announcementObj = announcementRepository.findAnnouncementById(announcementId);
+		if(currentUser.getUserRole().equals(UserRole.TICKETINGTOOL_ADMIN)) {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.NOT_AUTHORIZED);
+			return response;
+		}
+		if(timeSheetObj != null)
+		{
+               try {
+            	   timesheetRepository.delete(timeSheetObj);
+                   response.setSuccess(true);
+				   response.setMessage(ResponseMessages.TIME_SHEET_DELETED);
+				
+			}catch(Exception e) {
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.TIME_SHEET_NOT_DELETED+" "+e.getMessage());
+			}
+		}
+		else
+		{
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.TIME_SHEET_NOT_DELETED);
+		}
+		return response;
+	}
+    
  
 }

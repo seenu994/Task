@@ -1,9 +1,9 @@
 package com.xyram.ticketingTool.service.impl;
 
 import java.text.ParseException;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +45,8 @@ import com.xyram.ticketingTool.service.AssetvendorService;
 //import com.xyram.ticketingTool.service.AssetvendorService;
 import com.xyram.ticketingTool.util.ResponseMessages;
 
+import springfox.documentation.service.ResponseMessage;
+
 @Service
 @Transactional
 public class AssetBillingServiceImpl implements AssetBillingService
@@ -57,8 +59,8 @@ public class AssetBillingServiceImpl implements AssetBillingService
 	@Autowired
 	AssetRepository  assetRepository;
 	
-	@Autowired
-	AssetBillingService assetBillingService;
+	//@Autowired
+	//AssetBillingService assetBillingService;
 	
 	@Autowired
 	AssetvendorService assetVendorService;
@@ -95,9 +97,31 @@ public class AssetBillingServiceImpl implements AssetBillingService
 				assetBilling.setCreatedAt(new Date());
 				assetBilling.setCreatedBy(currentUser.getUserId());
 				
+				    Date purchaseDate = assetRepository.getPurchaseDateById(assetBilling.getAssetId());
+					Date WarrentyDate = assetRepository.getWarrentyDateById(assetBilling.getAssetId());
+					//System.out.println(purchaseDate);
+					//System.out.println(WarrentyDate);
+					Date currentDate = new Date();
+					if(WarrentyDate != null ) {
+					if(WarrentyDate.after(purchaseDate))
+					{
+						assetBilling.setUnderWarrenty(true);
+						response.setMessage(ResponseMessages.ASSET_PURCHASE_BILL_ADDED_SUCCESSFULLY);
+					}
+					else if(currentDate.after(WarrentyDate))
+					{
+						assetBilling.setUnderWarrenty(false);
+						response.setMessage(ResponseMessages.BILL_ADDED_SUCCESSFULLY);
+					}
+					}
+					else {
+						assetBilling.setUnderWarrenty(false);
+						response.setMessage(ResponseMessages.BILL_ADDED_SUCCESSFULLY);
+					}
+				
 				assetBillingRepository.save(assetBilling);
 				response.setSuccess(true);
-				response.setMessage(ResponseMessages.ASSET_PURCHASE_BILL_ADDED_SUCCESSFULLY);
+				//response.setMessage(ResponseMessages.ASSET_PURCHASE_BILL_ADDED_SUCCESSFULLY);
 				
 			}
 		}
@@ -137,11 +161,12 @@ public class AssetBillingServiceImpl implements AssetBillingService
 		 }
 		 else
 		 {
-			 AssetVendor assetVendor = assetVendorRepository.getAssetVendorById(assetBilling.getVendorId());
-			 if(assetVendor == null)
+			 Asset asset = assetRepository.getVendorById(assetBilling.getAssetId(), assetBilling.getVendorId());
+			 if(asset == null)
 			 {
 				 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid vendor id");
 			 }
+			 
 		 }
 	
 		
@@ -193,7 +218,31 @@ public class AssetBillingServiceImpl implements AssetBillingService
 		 {
 			 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "underwarrenty is should be null or empty !!"); 
 		 }
-		
+		 /*else
+		 {
+			    Date purchaseDate = assetRepository.getPurchaseDateById(assetBilling.getAssetId());
+				Date WarrentyDate = assetRepository.getWarrentyDateById(assetBilling.getAssetId());
+				Date currentDate = new Date();
+				
+				if(WarrentyDate.after(purchaseDate))
+				{
+					assetBilling.setUnderWarrenty(true);
+					//response.setMessage("asset is underwarrenty");
+				}
+				else if(purchaseDate.after(WarrentyDate) || purchaseDate.equals(WarrentyDate) || currentDate.after(WarrentyDate))
+				{
+					assetBilling.setUnderWarrenty(false);
+					//response.setMessage("asset is not underWarrenty");
+				}
+				
+				//else if(purchaseDate.(WarrentyDate))
+			
+			 //validateUnderWarrenty1(assetBilling.getUnderWarrenty(), assetBilling.getAssetId());
+			 
+			 //Asset asset = assetRepository.getAssetById(assetBilling.getAssetId());
+			// Date purchaseDate = assetRepository.getPurchaseDateById(assetId);
+			 
+		 }*/
 			 assetBilling.setAmountPaid(true);
 		 //String assetBillId = assetBilling.getAssetBillId();
 		 //checkAmountPaid(assetBilling.isAmountPaid(),assetBillId);
@@ -205,6 +254,30 @@ public class AssetBillingServiceImpl implements AssetBillingService
 
 
 	
+
+	private boolean validateUnderWarrenty1(Boolean underWarrenty, String assetId) 
+	{
+		//ApiResponse response = new ApiResponse();
+		Date purchaseDate = assetRepository.getPurchaseDateById(assetId);
+		Date WarrentyDate = assetRepository.getWarrentyDateById(assetId);
+		Date currentDate = new Date();
+		
+		if(WarrentyDate.after(purchaseDate))
+		{
+			underWarrenty = true;
+			//response.setMessage(ResponseMessages.ASSET_IS_UNDERWARRENTY);
+		}
+		else if(purchaseDate.after(WarrentyDate) || purchaseDate.equals(WarrentyDate) || WarrentyDate.after(currentDate))
+		{
+			underWarrenty = false;
+			//response.setMessage(ResponseMessages.ASSET_IS_NOT_UNDERWARRENTY);
+		}
+		
+		//else if(purchaseDate.(WarrentyDate))
+		return underWarrenty;
+		
+	}
+
 
 	private String getBillingDetailByAssetId(String assetId) {
 		
@@ -257,7 +330,8 @@ public class AssetBillingServiceImpl implements AssetBillingService
 				 checkAssetId(assetBillingObject.getAssetId());
 				 assetBillingObject.setAssetId(assetBilling.getAssetId());
 			}
-			if(assetBilling.getVendorId() != null) {
+			if(assetBilling.getVendorId() != null) 
+			{
 		    	checkVendorId(assetBilling.getVendorId());
 		    	assetBillingObject.setVendorId(assetBilling.getVendorId());
 		    }
@@ -291,18 +365,42 @@ public class AssetBillingServiceImpl implements AssetBillingService
 		    	 checkGstAmount(assetBillingObject.getGstAmount());
 		    	 assetBillingObject.setGstAmount(assetBilling.getGstAmount());
 			 }
-		     if(assetBilling.getUnderWarrenty() != false || assetBilling.getUnderWarrenty().equals(""))
+		     //validateUnderWarrenty1(assetBilling.getUnderWarrenty(), assetBilling.getAssetId());
+		     /*if(assetBilling.getUnderWarrenty() != false || assetBilling.getUnderWarrenty().equals(""))
 		     {
 		    	 checkUnderWarrenty(assetBillingObject.getUnderWarrenty());
 		    	 assetBillingObject.setUnderWarrenty(assetBilling.getUnderWarrenty());
-		     }
-		        assetBillingObject.setAmountPaid(true);
+		     }*/
+		        
 			    assetBillingObject.setLastUpdatedAt(new Date());
 			    assetBillingObject.setUpdatedBy(currentUser.getName());
+		        Date purchaseDate = assetRepository.getPurchaseDateById(assetBilling.getAssetId());
+				Date WarrentyDate = assetRepository.getWarrentyDateById(assetBilling.getAssetId());
+				
+				Date currentDate = new Date();
+				if(WarrentyDate != null ) {
+				if(WarrentyDate.after(purchaseDate))
+				{
+					assetBilling.setUnderWarrenty(true);
+					assetBillingObject.setAmountPaid(true);
+					response.setMessage(ResponseMessages.ASSET_PURCHASE_BILL_EDIT_SUCCESSFULLY);
+				}
+				else if(currentDate.after(WarrentyDate))
+				{
+					assetBilling.setUnderWarrenty(false);
+					assetBillingObject.setAmountPaid(true);
+					response.setMessage(ResponseMessages.BILL_EDITED_SUCCESSFULLY);
+				}
+				}
+				else {
+					assetBilling.setUnderWarrenty(false);
+					assetBillingObject.setAmountPaid(true);
+					response.setMessage(ResponseMessages.BILL_EDITED_SUCCESSFULLY);
+				}
 			
 			assetBillingRepository.save(assetBillingObject);
 			response.setSuccess(true);
-			response.setMessage(ResponseMessages.ASSET_PURCHASE_BILL_ADDED_SUCCESSFULLY);
+			//response.setMessage(ResponseMessages.ASSET_PURCHASE_BILL_EDIT_SUCCESSFULLY);
 			
 		}
 
@@ -315,9 +413,11 @@ public class AssetBillingServiceImpl implements AssetBillingService
        return response;
     }
 		 
+
 		
-		 
-		 private boolean checkUnderWarrenty(Boolean underWarrenty) 
+
+
+		private boolean checkUnderWarrenty(Boolean underWarrenty) 
 		 {
 			 if(underWarrenty == null || underWarrenty.equals(""))
 			 {
@@ -517,12 +617,38 @@ public ApiResponse addRepairAssetBill(AssetBilling assetBilling) {
 			if(assetBilling != null)
 			{
 				assetBilling.setBillingType("repair");
-				
 				assetBilling.setCreatedAt(new Date());
 				assetBilling.setCreatedBy(currentUser.getName());
+				
+				Date purchaseDate = assetRepository.getPurchaseDateById(assetBilling.getAssetId());
+				Date WarrentyDate = assetRepository.getWarrentyDateById(assetBilling.getAssetId());
+				//System.out.println(purchaseDate);
+				//System.out.println(WarrentyDate);
+				Date currentDate = new Date();
+				if(WarrentyDate != null ) {
+				if(WarrentyDate.after(purchaseDate))
+				{
+					assetBilling.setUnderWarrenty(true);
+					assetBilling.setAmountPaid(false);
+					response.setMessage(ResponseMessages.ASSET_REPAIR_BILL_ADDED_SUCCESSFULLY);
+				}
+				else if(currentDate.after(WarrentyDate))
+				{
+					assetBilling.setUnderWarrenty(false);
+					assetBilling.setAmountPaid(false);
+					response.setMessage(ResponseMessages.REPAIR_BILL_ADDED_SUCCESSFULLY);
+				}
+				}
+				else {
+					assetBilling.setUnderWarrenty(false);
+					assetBilling.setAmountPaid(false);
+					response.setMessage(ResponseMessages.REPAIR_BILL_ADDED_SUCCESSFULLY);
+				}
+			
+			
 				assetBilling = assetBillingRepository.save(assetBilling);
 				response.setSuccess(true);
-				response.setMessage(ResponseMessages.ASSET_REPAIR_BILL_ADDED_SUCCESSFULLY);
+				//response.setMessage(ResponseMessages.ASSET_REPAIR_BILL_ADDED_SUCCESSFULLY);
 			}
 		}
 
@@ -567,7 +693,7 @@ public ApiResponse addRepairAssetBill(AssetBilling assetBilling) {
 			 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "billing type is mandatory");
 		}
 		
-		assetBilling.setTransactionDate(new Date());
+		//assetBilling.setTransactionDate(new Date());
 		//validate transactionDate
 		if(assetBilling.getTransactionDate() == null || assetBilling.getTransactionDate().equals(""))
 		{
@@ -579,8 +705,9 @@ public ApiResponse addRepairAssetBill(AssetBilling assetBilling) {
 			 validateTransactionDate(assetBilling.getTransactionDate(),assetBilling.getAssetId());
 			 assetBilling.setTransactionDate(assetBilling.getTransactionDate());
 		}
-		Asset asset = assetRepository.getAssetById(assetBilling.getAssetId());
-		if(assetBilling.getUnderWarrenty() == true || assetBilling.getUnderWarrenty())
+		//Asset asset = assetRepository.getAssetById(assetBilling.getAssetId());
+		//validateUnderWarrenty1(assetBilling.getUnderWarrenty(), assetBilling.getAssetId());
+		if(assetBilling.getUnderWarrenty() == true)
 		 {
 			    assetBilling.setAssetAmount(null);
 			    assetBilling.setGstAmount(null);
@@ -588,8 +715,14 @@ public ApiResponse addRepairAssetBill(AssetBilling assetBilling) {
 		 }
 		 else
 		 {
-			 assetBilling.setAssetAmount(assetBilling.getAssetAmount());
-			 assetBilling.setGstAmount(assetBilling.getGstAmount());
+			 if(assetBilling.getAssetAmount() != null || assetBilling.getAssetAmount().equals(""))
+			 {
+			   assetBilling.setAssetAmount(assetBilling.getAssetAmount());
+			 }
+			 if(assetBilling.getGstAmount() != null || assetBilling.getGstAmount().equals(""))
+			 {
+			   assetBilling.setGstAmount(assetBilling.getGstAmount());
+			 }
 			 assetBilling.setAmountPaid(false);
 			
 		 }
@@ -638,7 +771,7 @@ public ApiResponse addRepairAssetBill(AssetBilling assetBilling) {
 			 {
 				 assetBillingObject.setBillingType("repair"); 
 			 }
-			 if(assetBilling.getTransactionDate() != null || assetBilling.getTransactionDate().equals(""))
+			 if(assetBilling.getTransactionDate() != null)
 			 {
 				 validateTransactionDate(assetBilling.getTransactionDate(),assetBillingObject.getAssetId());
 				 assetBillingObject.setTransactionDate(assetBilling.getTransactionDate());
@@ -648,16 +781,47 @@ public ApiResponse addRepairAssetBill(AssetBilling assetBilling) {
 				 checkAssetIssueId(assetBilling.getAssetIssueId());
 				 assetBillingObject.setAssetIssueId(assetBilling.getAssetIssueId());
 			 }
-			 /*if(assetBillingObj.getAssetAmount() != null || assetBillingObj.getAssetAmount().equals("") )
-			 {
-				 assetBillingObject.setAssetAmount(assetBillingObj.getAssetAmount());
-			 }
-			 if(assetBillingObj.getGstAmount() != null || assetBillingObj.getGstAmount().equals(""))
-			 {
-				 assetBillingObject.setGstAmount(assetBillingObj.getGstAmount());
-			 }*/
-			 Asset asset = assetRepository.getAssetById(assetBilling.getAssetId());
-			 if(assetBilling.getUnderWarrenty() == true || assetBilling.getUnderWarrenty())
+			 assetBillingObject.setLastUpdatedAt(new Date());
+		     assetBillingObject.setUpdatedBy(currentUser.getUserId());
+		        
+			    Date purchaseDate = assetRepository.getPurchaseDateById(assetBilling.getAssetId());
+				Date WarrentyDate = assetRepository.getWarrentyDateById(assetBilling.getAssetId());
+				
+				Date currentDate = new Date();
+				if(WarrentyDate != null ) {
+				if(WarrentyDate.after(purchaseDate))
+				{
+					assetBilling.setUnderWarrenty(true);
+					assetBillingObject.setAssetAmount(null);
+					assetBillingObject.setGstAmount(null);
+					assetBillingObject.setAmountPaid(true);
+					response.setMessage(ResponseMessages.ASSET_REPAIR_BILL_EDITED_SUCCESSFULLY);
+				}
+				else if(currentDate.after(WarrentyDate))
+				{
+					assetBilling.setUnderWarrenty(false);
+					assetBillingObject.setAmountPaid(true);
+					response.setMessage(ResponseMessages.REPAIR_BILL_EDITED_SUCCESSFULLY);
+				}
+				}
+				else {
+					assetBilling.setUnderWarrenty(false);
+					if(assetBilling.getAssetAmount() != null)
+					 {
+					   assetBillingObject.setAssetAmount(assetBilling.getAssetAmount());
+					 }
+					 if(assetBilling.getGstAmount() != null)
+					 {
+					   assetBillingObject.setGstAmount(assetBilling.getGstAmount());
+					 }
+					   assetBillingObject.setAmountPaid(false);
+					assetBillingObject.setAmountPaid(false);
+					response.setMessage(ResponseMessages.REPAIR_BILL_EDITED_SUCCESSFULLY);
+				}
+			
+			assetBillingRepository.save(assetBillingObject);
+			response.setSuccess(true);
+			/* if(assetBilling.getUnderWarrenty() == true)
 			 {
 				    assetBillingObject.setAssetAmount(null);
 					assetBillingObject.setGstAmount(null);
@@ -675,18 +839,18 @@ public ApiResponse addRepairAssetBill(AssetBilling assetBilling) {
 				 }
 				   assetBillingObject.setAmountPaid(false);
 				
-			 }
+			 }*/
 			 //checkUnderWarrenty(assetBillingObject,assetBilling);
 			 //assetBillingObject.setUnderWarrenty(false);
 		     
-		        assetBillingObject.setLastUpdatedAt(new Date());
-		        assetBillingObject.setUpdatedBy(currentUser.getUserId());
+		        //assetBillingObject.setLastUpdatedAt(new Date());
+		       // assetBillingObject.setUpdatedBy(currentUser.getUserId());
 		        
-			   assetBillingRepository.save(assetBillingObject);
+			   //assetBillingRepository.save(assetBillingObject);
 				//AssetBilling assetBillingObject = assetBillingRepository.save(assetBilling);
 
-				response.setSuccess(true);
-				response.setMessage(ResponseMessages.ASSET_REPAIR_BILL_EDITED_SUCCESSFULLY);
+				//response.setSuccess(true);
+				//response.setMessage(ResponseMessages.ASSET_REPAIR_BILL_EDITED_SUCCESSFULLY);
 			  } 
 
           else {
@@ -713,7 +877,7 @@ public ApiResponse addRepairAssetBill(AssetBilling assetBilling) {
 	}
 
 
-	private AssetBilling checkUnderWarrenty1(AssetBilling assetBilling,AssetBillingRequest assetBillingObj) 
+	/*private AssetBilling checkUnderWarrenty1(AssetBilling assetBilling,AssetBillingRequest assetBillingObj) 
 	{
 		if(assetBilling.getUnderWarrenty())
 		{
@@ -733,7 +897,7 @@ public ApiResponse addRepairAssetBill(AssetBilling assetBilling) {
 			return assetBilling;
 		}
 			
-}
+}*/
     @Override
 	public ApiResponse returnFromRepair(AssetBilling assetBilling, String assetBillId) 
 	{
@@ -767,13 +931,60 @@ public ApiResponse addRepairAssetBill(AssetBilling assetBilling) {
 					validateTransactionDate(assetBilling.getTransactionDate(), assetBilling.getAssetId());
 					billingObj.setTransactionDate(assetBilling.getTransactionDate());
 				}
-				/*if(assetBillingObj.getUnderWarrenty() != false)
+				
+				
+                if(assetBilling.getAssetIssueId() != null)
+                {
+                	checkAssetIssueId(assetBilling.getAssetIssueId());
+                	billingObj.setAssetIssueId(assetBilling.getAssetIssueId());
+                }
+                billingObj.setReturnDate(new Date());
+                billingObj.setLastUpdatedAt(new Date());
+                billingObj.setUpdatedBy(currentUser.getName());
+                
+                Date purchaseDate = assetRepository.getPurchaseDateById(assetBilling.getAssetId());
+				Date WarrentyDate = assetRepository.getWarrentyDateById(assetBilling.getAssetId());
+				
+				Date currentDate = new Date();
+				if(WarrentyDate != null ) {
+				if(WarrentyDate.after(purchaseDate))
 				{
-					checkUnderWarrenty1(assetBillingObj,assetBilling);
-					billingObj.setUnderWarrenty(assetBillingObj.getUnderWarrenty());
-				}*/
-				Asset asset = assetRepository.getAssetById(assetBilling.getAssetId());
-				if(assetBilling.getUnderWarrenty() == true)
+					billingObj.setUnderWarrenty(true);
+					billingObj.setAssetAmount(null);
+					billingObj.setGstAmount(null);
+					billingObj.setAmountPaid(false);
+					response.setMessage(ResponseMessages.ASSET_RETURN_FROM_REPAIR);
+				}
+				else if(currentDate.after(WarrentyDate))
+				{
+					 billingObj.setUnderWarrenty(false);
+					if(assetBilling.getAssetAmount() != null)
+					 {
+						billingObj.setAssetAmount(assetBilling.getAssetAmount());
+					 }
+					 if(assetBilling.getGstAmount() != null)
+					 {
+						 billingObj.setGstAmount(assetBilling.getGstAmount());
+					 }
+					billingObj.setAmountPaid(true);
+					response.setMessage(ResponseMessages.RETURN_FROM_REPAIR);
+				}
+				}
+				else {
+					assetBilling.setUnderWarrenty(false);
+					if(assetBilling.getAssetAmount() != null)
+					 {
+						billingObj.setAssetAmount(assetBilling.getAssetAmount());
+					 }
+					 if(assetBilling.getGstAmount() != null)
+					 {
+						 billingObj.setGstAmount(assetBilling.getGstAmount());
+					 }
+					 billingObj.setAmountPaid(false);
+					 billingObj.setAmountPaid(false);
+					response.setMessage(ResponseMessages.RETURN_FROM_REPAIR);
+				}
+                /*if(assetBilling.getUnderWarrenty() == true)
 				 {
 					billingObj.setAssetAmount(null);
 					billingObj.setGstAmount(null);
@@ -793,25 +1004,10 @@ public ApiResponse addRepairAssetBill(AssetBilling assetBilling) {
 					 billingObj.setGstAmount(assetBilling.getGstAmount());
 					 billingObj.setAmountPaid(true);
 					
-				 }
-                if(assetBilling.getAssetIssueId() != null)
-                {
-                	checkAssetIssueId(assetBilling.getAssetIssueId());
-                	billingObj.setAssetIssueId(assetBilling.getAssetIssueId());
-                }
-                billingObj.setReturnDate(new Date());
-				/*if(assetBillingObj.getReturnDate()!= null)
-				{
-					assetBillingObj.setReturnDate(new Date());
-					//assetIssues.setComplaintRaisedDate(new Date())
-					
-				}*/
-                billingObj.setLastUpdatedAt(new Date());
-                billingObj.setUpdatedBy(currentUser.getName());
-                
+				 }*/
 				assetBillingRepository.save(billingObj);
 				response.setSuccess(true);
-				response.setMessage(ResponseMessages.RETURN_REPAIR);
+				//response.setMessage(ResponseMessages.RETURN_REPAIR);
 				
 			}
 
@@ -848,10 +1044,12 @@ public ApiResponse addRepairAssetBill(AssetBilling assetBilling) {
 
 	@Override
 	public ApiResponse getAllAssetBillingByAssetId(String assetId) {
-		ApiResponse response = new ApiResponse(false);
+		ApiResponse response = new ApiResponse();
 		
 		
-		List<AssetBilling> assetBilling = assetBillingRepository.getAllAssetBillingByAssetId(assetId);
+		//List<AssetBilling> assetBilling = assetBillingRepository.getAllAssetBillingByAssetId(assetId);
+		//List<AssetBilling> assetBilling = assetBillingRepository.getAllAssetBillingByAssetId(assetId);
+		Map assetBilling = assetBillingRepository.getAllAssetBillingByAssetId(assetId);
 		Map content = new HashMap();
 		content.put("assetBilling", assetBilling);
 		

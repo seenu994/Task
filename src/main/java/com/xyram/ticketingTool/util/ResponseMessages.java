@@ -1,6 +1,5 @@
+
 package com.xyram.ticketingTool.util;
-
-
 
 public interface ResponseMessages {
 
@@ -171,19 +170,19 @@ public interface ResponseMessages {
 
 	String ISSUEID_IN_VALID = "issue id is invalid";
 
-	String RETURN_FROM_REPAIR = "return from repair";
+	String RETURN_FROM_REPAIR = "asset is not underwarrenty && asset is return from repair";
 
 	String ASSET_BILL_EDIT_SUCCESSFULLY = "asset bill edited successfully";
 
 	String ASSET_ID_INVALID = "Asset id is invalid";
 
-	String ASSET_PURCHASE_BILL_ADDED_SUCCESSFULLY = "Asset purchase bill added successsfully";
+	String ASSET_PURCHASE_BILL_ADDED_SUCCESSFULLY = "Asset is underWarrenty && asset purchase bill added successsfully";
 
-	String ASSET_PURCHASE_BILL_EDIT_SUCCESSFULLY = "Asset purchase bill edited successfully";
+	String ASSET_PURCHASE_BILL_EDIT_SUCCESSFULLY = "Asset is underWarrenty && Asset purchase bill edited successfully";
 
-	String ASSET_REPAIR_BILL_ADDED_SUCCESSFULLY = "Asset repair bill added successsfully";
+	String ASSET_REPAIR_BILL_ADDED_SUCCESSFULLY = "Asset is underWarrenty && Asset repair bill added successsfully";
 
-	String ASSET_REPAIR_BILL_EDITED_SUCCESSFULLY = "Asset repair bill edited successfully";
+	String ASSET_REPAIR_BILL_EDITED_SUCCESSFULLY = "Asset is underwarrenty && repair bill edited successfully";
 
 	String ID_INVALID = "id is invalid";
 
@@ -217,7 +216,7 @@ public interface ResponseMessages {
 
 	String ASSETVENDOR_STATUS_UPDATED = " Status Updated Successfully";
 
-	String ADDED_SOFTWAREID = "Software Id added Successfully";
+	String ADDED_SOFTWAREMASTER = "Software  added Successfully";
 
 	String SOFTWAREMASTER_EDITED = "Software master details is edited Successfully";
 
@@ -256,6 +255,27 @@ public interface ResponseMessages {
 	String NOTES_NOT_FOUND = "Notes not found";
 
 	String DATE_FEILD = "Date feild cannot be empty";
+	
+	String ADDED_DESIGNATION = "Designation is added Successfully";
+    String BRAND_ADDED = "Brand Added succesfully";
+	
+	String BRAND_NOT_ADDED = "Brand not added";
+	
+	String BRAND_EDITED = "Brand edited successfully";
+	
+	String BRAND_NOT_EDITED = "Brand not edited";
+	
+	String BRAND_LIST_RETRIVED = "List retrieved successfully";
+	
+    String RAM_ADDED = "Ram size added successfully";
+	
+	String RAM_NOT_ADDED = "Ram size not added";
+	
+	String RAM_SIZE_EDITED = "Ram size edited successfully";
+	
+	String RAM_NOT_EDITED = "Ram size not edited";
+	
+	String RAM_LIST_RETRIVED = "Ram list retrieved successfully";
 
 	
 
@@ -264,6 +284,26 @@ public interface ResponseMessages {
 String ASSET_DIRECTORY ="/Documents/assetDetails/";
 	
 	String BASE_DIRECTORY ="../webapps";
+
+	String BILL_EDITED_SUCCESSFULLY = "asset is not underwarrenty && purchase bill edited successfully";
+
+	String REPAIR_BILL_ADDED_SUCCESSFULLY = "asset is not underwarrenty && repair bill addred successfully";
+
+	String ASSET_RETURN_FROM_REPAIR = "Asset is underwarrenty && asset is returned from reapir";
+
+	String BILL_ADDED_SUCCESSFULLY = "asset is not underwarrenty && purchase bill added successfully";
+
+	String RETURNS_REPAIR = "asset is returned from repair";
+
+	
+
+	String REPAIR_BILL_EDITED_SUCCESSFULLY = "Asset is not underwarrenty && repair bill edited successfully";
+
+	String TIME_SHEET_DELETED = "time sheet deleted";
+
+	String TIME_SHEET_NOT_DELETED = "time sheet not deleted";
+
+	
 
 	
 
