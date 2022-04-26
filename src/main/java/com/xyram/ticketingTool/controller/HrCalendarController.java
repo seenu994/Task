@@ -1,10 +1,12 @@
 package com.xyram.ticketingTool.controller;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -172,7 +174,7 @@ public class HrCalendarController {
 	@PostMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/downloadAllMySchedulesFromCalendarByStatus",
 			AuthConstants.HR_BASEPATH + "/downloadAllMySchedulesFromCalendarByStatus"			
 			})
-	ApiResponse downloadAllMySchedulesFromCalendarByStatus(@RequestBody Map<String, Object>filter) {
+	Map downloadAllMySchedulesFromCalendarByStatus(@RequestBody Map<String, Object>filter) throws ParseException, FileUploadException, IOException{
 		logger.info("Get all downloadAllMySchedulesFromCalendarByStatus");
 		return hrCalrendarService.downloadAllMySchedulesFromCalendarByStatus(filter);
 	}
@@ -180,7 +182,7 @@ public class HrCalendarController {
 	@PostMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/downloadMyTeamSchedulesFromCalendarByStatus",
 			AuthConstants.HR_BASEPATH + "/downloadMyTeamSchedulesFromCalendarByStatus"			
 			})
-	ApiResponse downloadMyTeamSchedulesFromCalendarByStatus(@RequestBody Map<String, Object>filter) {
+	Map downloadMyTeamSchedulesFromCalendarByStatus(@RequestBody Map<String, Object>filter) throws ParseException, FileUploadException, IOException{
 		logger.info("Get all downloadMyTeamSchedulesFromCalendarByStatus");
 		return hrCalrendarService.downloadMyTeamSchedulesFromCalendarByStatus(filter);
 	}
