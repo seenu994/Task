@@ -55,11 +55,19 @@ public class RamSizeServiceImpl implements RamSizeService {
 	private ApiResponse validateRamSize(RamSize ramSize) {
 		ApiResponse response = new ApiResponse(false);
 
+		String regex = "^[a-zA-Z0-9]+$";
+		RamSize ramObj = ramSizeRepository.getRamSize(ramSize.getRamSize());
 		if (ramSize.getRamSize() == null || ramSize.getRamSize().equals("")) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ram size is mandatory");
 		} 
-		else if(ramSize.getRamSize().length() > 5){
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ram size should not be greater than 5 characters");
+		else if(ramSize.getRamSize().length() < 3 || ramSize.getRamSize().length() > 5){
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ram size should be greater than 2 & less than 6 characters");
+		}
+		else if(!ramSize.getRamSize().matches(regex)) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ram should be alphanumeric characters only");
+		}
+		else if(ramObj != null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ramSize already exists!");
 		}
 		response.setSuccess(true);
 		return response;
@@ -71,7 +79,10 @@ public class RamSizeServiceImpl implements RamSizeService {
 		
 		RamSize ramObj = ramSizeRepository.getRamById(ramId);
 		if(ramObj != null) {
-		   if(ramSize.getRamSize() != null) {
+		   if(ramSize.getRamSize() == null || ramSize.getRamSize().equals("")) { 
+			   throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ram size is mandatory");
+		   } 
+		   else {
 		    checkRamSize(ramSize.getRamSize());
 		    ramObj.setRamSize(ramSize.getRamSize());
 		    }
@@ -90,8 +101,16 @@ public class RamSizeServiceImpl implements RamSizeService {
 	}
 
 	private boolean checkRamSize(String ramSize) {
-		if(ramSize.length() > 5){
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ram size should not be greater than 5 characters");
+		String regex = "^[a-zA-Z0-9]*$";
+		RamSize ramObj = ramSizeRepository.getRamSize(ramSize);
+		if(ramSize.length() < 3 || ramSize.length() > 5){
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ram size should be greater than 2 & less than 6 characters");
+		}
+		else if(!ramSize.matches(regex)) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ram should be alphanumeric characters only");
+		}
+		else if(ramObj != null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ramSize already exists!");
 		}
 		else {
 			return true;
