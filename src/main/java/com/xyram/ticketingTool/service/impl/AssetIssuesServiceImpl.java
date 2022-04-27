@@ -138,7 +138,11 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 		 {
 			 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "description is mandatory");
 		 }
-		 assetIssues.setSolution(false);
+		 if(assetIssues.getDescription().length() < 10)
+		 {
+			 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "description should be greater than 10 characters");
+		 }
+		 
 		 response.setSuccess(true);
 		 return response;
 	}
@@ -183,7 +187,7 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 			}
 			if(assetIssues.getDescription() != null)
 			{
-				checkDescription(assetIssuesObj.getDescription());
+				checkDescription(assetIssues.getDescription());
 				assetIssuesObj.setDescription(assetIssues.getDescription());
 			}
 			assetIssuesObj.setLastUpdatedAt(new Date());
@@ -209,6 +213,10 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 		if(description == null || description.equals(""))
 		{
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "description is mandatory");
+		}
+		if(description.length() < 10)
+		{
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "description should be greater than 10 characters");
 		}
 		return true;
 		
@@ -249,12 +257,12 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 		    {	
 				if(assetIssues.getAssetId() != null)
 				{
-					 checkAssetId(assetIssues.getAssetId());
+					 checksAssetId(assetIssuesObj.getAssetIssueId(), assetIssues.getAssetId());
 					 assetIssuesObj.setAssetId(assetIssues.getAssetId());
 				}
 				if(assetIssues.getVendorId() != null)
 				{
-					checkVendorId(assetIssues.getVendorId());
+					checksVendorId(assetIssuesObj.getAssetIssueId(),assetIssues.getVendorId());
 					assetIssuesObj.setVendorId(assetIssues.getVendorId());
 				}
 				
@@ -271,38 +279,40 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 				}
 				assetIssuesObj.setResolvedDate(new Date());
 				
-				if(assetIssues.isSolution()== false)
+				//assetIssuesObj.setSolution(true);
+				if(assetIssues.isSolution() == true)
 				{
-					assetIssuesObj.setComments(null);
-				}
-				
-				else
-				{
-					//CheckSolution(assetIssuesObj.isSolution());
-					//assetIssuesObj.setSolution(true);
+					assetIssuesObj.setSolution(true);
 					if(assetIssues.getComments() == null || assetIssues.getComments().equals(""))
 					{
 						throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "comments should be mandatory");
 					}
-				
+					
+				    validateComments(assetIssues.getComments());
 					assetIssuesObj.setComments(assetIssues.getComments());
 					//assetIssuesObj.setSolution(true);
 					//assetIssuesObj.returnFromRepair(assetIssues);
 					
 				}
-				
+				else
+				{
+					assetIssuesObj.setSolution(false);
+					assetIssuesObj.setComments(null);
+				}
 				assetIssuesObj.setLastUpdatedAt(new Date());
 				assetIssuesObj.setUpdatedBy(currentUser.getName());
+				System.out.println("solution boolean value :" +  assetIssuesObj.isSolution());
 				
 				assetIssuesRepository.save(assetIssuesObj);
 				response.setSuccess(true);
-				response.setMessage(ResponseMessages.RETURN_REPAIR);
+				response.setMessage(ResponseMessages.RETURNS_REPAIR);
 				
 			}
 
 			else 
 			{
 				response.setSuccess(false);
+				
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid assetIssueId");
 				
 			}
@@ -310,9 +320,46 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 	    }
 		
 
-	private boolean CheckSolution(boolean solution) 
+	private boolean checksVendorId(String assetIssueId, String vendorId) 
 	{
+		if(vendorId == null || vendorId.equals(""))
+		{
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "vendor id mandatory");
+		}
+		AssetIssues assetIssues = assetIssuesRepository.getVendorById(assetIssueId, vendorId);
+		if(assetIssues == null || assetIssues.equals(""))
+		{
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid vendor Id");
+		}
+		else
+		{
+		   return true;
+		}
+	}
+
+	private boolean checksAssetId(String assetIssueId, String assetId) 
+	{
+		AssetIssues assetIssues = assetIssuesRepository.getAssetById(assetIssueId, assetId);
+		if(assetIssues == null || assetIssues.equals(""))
+		{
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid asset Id");
+		}
 		return true;
+		
+	}
+
+	private boolean validateComments(String comments) 
+	{
+		if(comments == null || comments.equals("") || comments.length() < 10)
+		{
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "comments should be manadatory");
+		}
+		if(comments.length() < 10)
+		{
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "comments should be greater than 10 characters");
+		}
+		return true;
+		
 	}
 
 	/*private boolean checkResolvedDate(Date resolvedDate,String assetIssueId) 
@@ -340,7 +387,7 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 
 	private boolean checkAssetIssuesStatus(AssetIssueStatus assetIssueStatus)
 	{
-		AssetIssues assetIssue = new AssetIssues();
+		//AssetIssues assetIssue = new AssetIssues();
 		if(assetIssueStatus == null)
 		{
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Asset issues status is mandetory");
@@ -348,9 +395,7 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 		else
 		{
 			return true;
-			//assetIssue.setAssetIssueStatus(AssetIssueStatus.CLOSE);
 		}
-		
 		
 	}
 	
@@ -365,12 +410,12 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 	    {	
 			if(assetIssues.getAssetId() != null)
 			{
-				 checkAssetId(assetIssues.getAssetId());
+				 checksAssetId(assetIssuesObj.getAssetIssueId(), assetIssues.getAssetId());
 				 assetIssuesObj.setAssetId(assetIssues.getAssetId());
 			}
 			if(assetIssues.getVendorId() != null)
 			{
-				checkVendorId(assetIssues.getVendorId());
+				checksVendorId(assetIssuesObj.getAssetIssueId(),assetIssues.getVendorId());
 				assetIssuesObj.setVendorId(assetIssues.getVendorId());
 			}
 			/*if(assetIssues.getComplaintRaisedDate()!= null)
@@ -393,19 +438,26 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 				//checkResolvedDate(assetIssues.getResolvedDate(),assetIssueId);
 				//assetIssuesObj.setResolvedDate(assetIssues.getResolvedDate());
 			//}
-		    if(assetIssues.isSolution() == true)
-		    {
-		    	//checkSolution(assetIssues.getSolution());
-		    	if(assetIssues.getComments() == null || assetIssues.getComments().equals(""))
-		    	{
-		    		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "comments should be mandatory");
-		    	}
-		    	assetIssuesObj.setComments(assetIssues.getComments());;
-		    }
-		    else
-		    {
-		    	assetIssuesObj.setComments(null);
-		    }
+
+			if(assetIssues.isSolution() == true)
+			{
+				assetIssuesObj.setSolution(true);
+				if(assetIssues.getComments() == null || assetIssues.getComments().equals(""))
+				{
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "comments should be mandatory");
+				}
+				
+			    validateComments(assetIssues.getComments());
+				assetIssuesObj.setComments(assetIssues.getComments());
+				//assetIssuesObj.setSolution(true);
+				//assetIssuesObj.returnFromRepair(assetIssues);
+				
+			}
+			else
+			{
+				assetIssuesObj.setSolution(false);
+				assetIssuesObj.setComments(null);
+			}
 	        
 		    assetIssuesObj.setLastUpdatedAt(new Date());
 		    assetIssuesObj.setUpdatedBy(currentUser.getName());
@@ -523,7 +575,7 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
     	   
 	       ApiResponse response = new ApiResponse();
 	       
-	       List<AssetIssues> assetIssues = assetIssuesRepository.getAssetIssuesById(assetIssueId);
+	       Map assetIssues = assetIssuesRepository.getByAssetIssueId(assetIssueId);
 	       
 	       if (assetIssues != null && assetIssues.size() > 0) 
 	       {
@@ -614,7 +666,7 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 		byte[] blob = ExcelUtil.toBlob(workbook);
 		
 		try {
-			ExcelUtil.saveWorkbook(workbook, "report1.xlsx");
+			ExcelUtil.saveWorkbook(workbook,"assetIssues-report.xlsx");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

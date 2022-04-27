@@ -19,7 +19,9 @@ import org.springframework.web.server.ResponseStatusException;
 import com.xyram.ticketingTool.Repository.SoftwareMasterRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.AssetIssues;
+import com.xyram.ticketingTool.entity.AssetSoftware;
 import com.xyram.ticketingTool.entity.AssetVendor;
+import com.xyram.ticketingTool.entity.Client;
 import com.xyram.ticketingTool.entity.SoftwareMaster;
 import com.xyram.ticketingTool.enumType.AssetIssueStatus;
 import com.xyram.ticketingTool.enumType.AssetVendorEnum;
@@ -38,7 +40,7 @@ public class SoftwareMasterServiceImpl implements SoftwareMasterService {
 
 	@Autowired
 	SoftwareMasterService softwareMasterServices;
-	
+
 	@Autowired
 	CurrentUser currentUser;
 
@@ -46,58 +48,44 @@ public class SoftwareMasterServiceImpl implements SoftwareMasterService {
 	public ApiResponse addSoftwareMaster(SoftwareMaster softwareMaster) {
 
 		ApiResponse response = new ApiResponse(false);
-		response = validateSoftwareMasterId(softwareMaster);
-		if (true) {
 
-			// SoftwareMaster softwareMasterSave = softwareRepository.save(softwareMaster);
-			if (softwareMaster != null) {
+		response = validateSoftwareMaster(softwareMaster);
+		if (softwareMaster.getSoftwareName() != null) {
+			softwareMaster.setCreatedAt(new Date());
+			softwareMaster.setCreatedBy(currentUser.getName());
+			
+			SoftwareMaster softwaremaster = softwareRepository.save(softwareMaster);
+			response.setMessage(ResponseMessages.ADDED_SOFTWAREMASTER);
+			response.setSuccess(true);
 
-				// Map content = new HashMap<>();
-				SoftwareMaster softwareMasterSave = softwareRepository.save(softwareMaster);
-
-				response.setSuccess(true);
-				response.setMessage(ResponseMessages.ASSET_SOFTWARE_ADDED);
-
-			}
-
-			softwareRepository.save(softwareMaster);
-//				response.setSuccess(true);
-//				response.setMessage(ResponseMessages.ASSET_SOFTWARE_ADDED);
-//			}
-//		
-//			else {
-//				response.setSuccess(false);
-//				response.setMessage(ResponseMessages.ASSET_SOFTWARE_NOT_ADDED);
-//			}
-//		
-//		}
+			Map content = new HashMap();
+			content.put("softwareId", softwareMaster.getSoftwareId());
+			content.put("softwareName",softwareMaster.getSoftwareName());
+			content.put("softwareStatus", softwareMaster.getSoftwareMasterStatus());
+			response.setContent(content);
 		}
+
 		return response;
 	}
-	
-	
-	/*@Override
-	public ApiResponse editSoftwareMaster(SoftwareMaster software,String softwareId) {
+
+	@Override
+	public ApiResponse editSoftwareMaster(SoftwareMaster software, String softwareId) {
 
 		ApiResponse response = new ApiResponse();
-		//response = validateAssetVendor(softwareMasterRequest);
-		SoftwareMaster softwareMasterRequest = softwareRepository.getById(softwareId);
+		response = validateSoftwareMaster(software);
 		if (response.isSuccess()) {
+			SoftwareMaster softwareMasterRequest = softwareRepository.getSoftwareById(softwareId);
 			if (softwareMasterRequest != null) {
-				softwareMasterRequest.setSoftwareId(software.getSoftwareId());
+				// softwareMasterRequest.setSoftwareId(software.getSoftwareId());
 				softwareMasterRequest.setSoftwareName(software.getSoftwareName());
-				
-				
+
 				softwareMasterRequest.setLastUpdatedAt(new Date());
 				softwareMasterRequest.setUpdatedBy(currentUser.getName());
 
 				softwareRepository.save(softwareMasterRequest);
-				// AssetVendor assetVendorAdded = new AssetVendor();
+
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.SOFTWAREMASTER_EDITED);
-//				Map content = new HashMap();
-//				content.put("vendorId", assetVendorAdded.getAssetVendor());
-//				response.setContent(content);
 
 			} else {
 				response.setSuccess(false);
@@ -108,146 +96,32 @@ public class SoftwareMasterServiceImpl implements SoftwareMasterService {
 		}
 		return response;
 
-	}*/
-	
-	
-	
-
-	@Override
-	public ApiResponse editSoftwareMaster(SoftwareMaster softwareMasterRequest,String softwareId) {
-
-		ApiResponse response = new ApiResponse(false);
-		
-		
-		SoftwareMaster softwareMaster = softwareRepository.getBysoftId(softwareId);
-		
-		 
-		if(softwareMaster != null) 
-	    {	
-			if(softwareMasterRequest.getSoftwareId() != null)
-			{
-				checkSoftwareId(softwareMasterRequest.getSoftwareId());
-				softwareMaster.setSoftwareId
-				 (softwareMasterRequest.getSoftwareId());
-			}
-			
-			
-			if(softwareMasterRequest.getSoftwareName() != null)
-			{
-				checkSoftwareName(softwareMasterRequest.getSoftwareName());
-				softwareMaster.setSoftwareName
-				(softwareMasterRequest.getSoftwareName());
-			}
-			
-			
-			if(softwareMasterRequest.getSoftwareMasterStatus() != null) {
-				softwareMaster.setSoftwareMasterStatus
-				(softwareMasterRequest.getSoftwareMasterStatus());
-		    }
-		
-			
-		softwareRepository.save(softwareMaster);
-			response.setSuccess(true);
-			response.setMessage(ResponseMessages.SOFTWAREMASTER_EDITED);
-			
-		}
-
-		else 
-		{
-			response.setSuccess(false);
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid softwareId");
-			
-		}
-       return response;
-    }
-		
-	
-	private boolean checkSoftwareId(String softwareId) {
-    	SoftwareMaster softwareMaster = softwareRepository.getById(softwareId);
-		if (softwareMaster == null) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "softwareId id is not valid");
-		}
-		else {
-			return true;
-		}
 	}
-	private boolean checkSoftwareName(String softwareName) {
-		SoftwareMaster softwareMaster = softwareRepository.getBySoftwareMasterName(softwareName);
-		if(softwareName == null) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"softwareName is not valid");
-		}
-		return true;
-	}
-		
-		
-//		response = validateSoftwareMasterId(softwareMaster);
-//
-//		if (softwareMaster != null) {
-//			softwareMaster.setSoftwareId(softwareMaster.getSoftwareId());
-//			softwareMaster.setSoftwareName(softwareMaster.getSoftwareName());
-//			softwareMaster.setSoftwareMasterStatus(softwareMaster.getSoftwareMasterStatus());
-//		}
-//		SoftwareMaster softwareMasterAdded = softwareRepository.save(softwareMaster);
-//
-//		response.setSuccess(true);
-//		response.setMessage(ResponseMessages.EDITED_SOFTWAREMASTER);
-//		Map content = new HashMap();
-//		content.put("softwareId", softwareMasterAdded.getSoftwareId());
-//		response.setContent(content);
-////				} else {
-////					response.setSuccess(false);
-////					response.setMessage(ResponseMessages.INVALID_SOFTWAREDETAILS);
-////					response.setContent(null);
-////				}
-//
-//		return response;
-//	}
 
-	private ApiResponse validateSoftwareMasterId(SoftwareMaster software) {
+	private ApiResponse validateSoftwareMaster(SoftwareMaster software) {
 		ApiResponse response = new ApiResponse(false);
-		if (software.getSoftwareId().equals("")) {
 
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "SoftwareId is manditory");
-		}
-		
-
-		if (software.getSoftwareName().equals("")) {
+		if (software.getSoftwareName().equals("") || software.getSoftwareName() == null) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "SoftwareName is manditory");
 		}
+	
+			
+		
+		response.setSuccess(true);
 		return response;
 	}
-
-//	private ApiResponse validateStatus(SoftwareEnum SoftwareEnum) {
-//		ApiResponse response = new ApiResponse(false);
-//		if (SoftwareEnum == SoftwareEnum.ACTIVE || SoftwareEnum == SoftwareEnum.INACTIVE) {
-//			response.setMessage(ResponseMessages.STATUS_UPDATE);
-//			response.setSuccess(true);
-//			
-//		}
-//
-//		else {
-//			response.setMessage(ResponseMessages.VENDORSTATUS_INVALID);
-//			response.setSuccess(false);
-//		}
-//
-//		response.setSuccess(true);
-//
-//		return response;
-//
-//	}
-
+	
 	@Override
-	public ApiResponse getAllsoftwareMaster(Map<String, Object> filter,Pageable peageble) {
-		
-		
-ApiResponse response = new ApiResponse(false);
-		
-		String softwareMasterStatus = filter.containsKey("softwareMasterStatus") ? ((String) filter.get("softwareMasterStatus")).toUpperCase()
+	public ApiResponse getAllsoftwareMaster(Map<String, Object> filter, Pageable peageble) {
+
+		ApiResponse response = new ApiResponse(false);
+
+		String softwareMasterStatus = filter.containsKey("softwareMasterStatus")
+				? ((String) filter.get("softwareMasterStatus")).toUpperCase()
 				: null;
-		
-		
+
 		SoftwareEnum softwareEnum = null;
-		if(softwareMasterStatus != null) {
+		if (softwareMasterStatus != null) {
 			try {
 				softwareEnum = softwareMasterStatus != null ? SoftwareEnum.toEnum(softwareMasterStatus) : null;
 			} catch (IllegalArgumentException e) {
@@ -255,11 +129,9 @@ ApiResponse response = new ApiResponse(false);
 						filter.get("status").toString() + " is not a valid status");
 			}
 		}
-		
-		
 
-		Page<Map> softwareMaster = softwareRepository.getAllsoftwareMaster(softwareEnum,peageble);
-		if(softwareMaster.getSize() > 0) {
+		Page<SoftwareMaster> softwareMaster = softwareRepository.getAllsoftwareMaster(softwareEnum, peageble);
+		if (softwareMaster.getSize() > 0) {
 //		Map content = new HashMap();
 //		content.put("SoftwareMasterList", softwareMaster);
 //		//ApiResponse response = new ApiResponse(true);
@@ -274,22 +146,18 @@ ApiResponse response = new ApiResponse(false);
 			response.setContent(content);
 			response.setSuccess(true);
 			response.setMessage("List retreived successfully.");
-		}else {
+		} else {
 			response.setSuccess(false);
-			response.setMessage("List is empty.");	
+			response.setMessage("List is empty.");
 		}
 		return response;
 	}
 
-			
-			
-
 	@Override
 	public ApiResponse updatesoftwareMasterStatus(String softwareId, SoftwareEnum softwareEnum) {
-		
-		
+
 		ApiResponse response = new ApiResponse(false);
-		
+
 		SoftwareMaster softwareMaster = softwareRepository.getSoftwareById(softwareId);
 
 		if (softwareMaster != null) {
@@ -298,15 +166,13 @@ ApiResponse response = new ApiResponse(false);
 			System.out.print(softwareEnum.toString());
 			softwareRepository.save(softwareMaster);
 
-			
-
 			response.setSuccess(true);
 			response.setMessage(ResponseMessages.SOFTWARE_STATUS_UPDATED);
 			response.setContent(null);
 
 		} else {
 			response.setSuccess(false);
-			//response.setMessage(ResponseMessages.SOFTWARE_DETAILS_INVALID);
+			// response.setMessage(ResponseMessages.SOFTWARE_DETAILS_INVALID);
 			response.setContent(null);
 			response.setMessage(ResponseMessages.SOFTWARE_DETAILS_INVALID);
 		}
@@ -314,32 +180,28 @@ ApiResponse response = new ApiResponse(false);
 		return response;
 
 	}
-	
-	
+
 	@Override
-	public ApiResponse searchsoftwareId(String softwareId) 
-	{
+	public ApiResponse searchsoftwareId(String softwareId) {
 		ApiResponse response = new ApiResponse();
 		SoftwareMaster softwareMaster = new SoftwareMaster();
 		softwareMaster.setSoftwareId(softwareId);
-		
+
 		List<SoftwareMaster> softwareDetails = softwareRepository.searchsoftwareId(softwareId);
 		Map content = new HashMap();
 
 		content.put("softwareDetails", softwareDetails);
-		if(content != null && softwareDetails.size() >0)  {
-			
+		if (content != null && softwareDetails.size() > 0) {
+
 			response.setSuccess(true);
 			response.setMessage("softwareId Retrieved successfully");
 			response.setContent(content);
-		}
-		else {
+		} else {
 			response.setSuccess(false);
 			response.setMessage("Could not retrieve softwareId");
-			//response.setContent(content);
+			// response.setContent(content);
 		}
 		return response;
 	}
-	
-	
+
 }

@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -145,7 +146,17 @@ public class TimesheetController {
 
 	}
 	
-	
+	@DeleteMapping(value = { AuthConstants.ADMIN_BASEPATH + "/deleteTimeSheet/{timeSheetId}",
+		AuthConstants.HR_ADMIN_BASEPATH + "/deleteTimeSheet/{timeSheetId}",
+		AuthConstants.INFRA_ADMIN_BASEPATH + "/deleteTimeSheet/{timeSheetId}",
+		AuthConstants.INFRA_USER_BASEPATH + "/deleteTimeSheet/{timeSheetId}",
+		AuthConstants.HR_BASEPATH + "/deleteTimeSheet/{timeSheetId}",
+		AuthConstants.DEVELOPER_BASEPATH + "/deleteTimeSheet/{timeSheetId}",
+		})
+	public ApiResponse deleteTimeSheet(@PathVariable String timeSheetId) {
+		logger.info("Received request to deleting time sheet:");
+		return timesheetService.deleteTimeSheet(timeSheetId);
+	}
 
 
 }

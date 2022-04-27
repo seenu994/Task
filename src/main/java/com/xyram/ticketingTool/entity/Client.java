@@ -30,36 +30,36 @@ public class Client extends AuditModel {
 	@Column(name="client_id")
     private String Id;
 
-@Column(name="client_name")
-	private String clientName;
-
-@Enumerated(EnumType.STRING)
-@Column(name = "clientstatus")
-private ClientStatus status = ClientStatus.ACTIVE;
-
-
-public String getId() {
-	return Id;
-}
-
-public void setId(String id) {
-	Id = id;
-}
-
-public String getClientName() {
-	return clientName;
-}
-
-public void setClientName(String clientName) {
-	this.clientName = clientName;
-}
-
-public ClientStatus getStatus() {
-	return status;
-}
-
-public void setStatus(ClientStatus status) {
-	this.status = status;
-}
-}
-
+	@Column(name="client_name", length = 50)
+		private String clientName;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "clientstatus")
+	private ClientStatus status = ClientStatus.ACTIVE;
+	
+	
+	public String getId() {
+		return Id;
+	}
+	
+	public void setId(String id) {
+		Id = id;
+	}
+	
+	public String getClientName() {
+		return clientName;
+	}
+	
+	public void setClientName(String clientName) {
+		this.clientName = clientName;
+	}
+	
+	public ClientStatus getStatus() {
+		return status;
+	}
+	
+	public void setStatus(ClientStatus status) {
+		this.status = status;
+	}
+	}
+	
