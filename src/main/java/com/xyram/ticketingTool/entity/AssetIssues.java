@@ -36,11 +36,11 @@ public class AssetIssues extends AuditModel
     @Column(name="complaint_raised_date", nullable = false, updatable = false)
     public Date complaintRaisedDate;
     
-    @Column(name="description")
+    @Column(name="description", length = 500)
     public String description;
     
     @Column(name="solution")
-    public boolean solution;
+    private boolean solution;
     
     
     @Enumerated(EnumType.STRING)
@@ -53,7 +53,7 @@ public class AssetIssues extends AuditModel
     @Column(name="resolved_date")
     public Date resolvedDate;
     
-    @Column(name = "comments")
+    @Column(name = "comments", length =300)
     public String comments;
 
 	public String getAssetIssueId() {
