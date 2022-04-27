@@ -1,8 +1,16 @@
 package com.xyram.ticketingTool.service.impl;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +20,8 @@ import java.util.regex.Pattern;
 
 import javax.transaction.Transactional;
 
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +38,16 @@ import com.xyram.ticketingTool.Repository.JobRepository;
 import com.xyram.ticketingTool.Repository.UserRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.controller.HrCalendarController;
+import com.xyram.ticketingTool.entity.Asset;
+import com.xyram.ticketingTool.entity.AssetVendor;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.HrCalendar;
 import com.xyram.ticketingTool.entity.HrCalendarComment;
 import com.xyram.ticketingTool.entity.JobOpenings;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.HrCalendarService;
+import com.xyram.ticketingTool.util.ExcelWriter;
+import com.xyram.ticketingTool.util.ResponseMessages;
 
 @Service
 @Transactional
@@ -438,7 +452,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 			content.put("shceduleList", shceduleList);
 			response.setContent(content);
 			response.setSuccess(true);
-			response.setMessage("List retreived successfully.");
+			response.setMessage("List retrieved successfully.");
 		}else {
 			response.setSuccess(false);
 			response.setMessage("List is empty.");
@@ -447,15 +461,161 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	}
 
 	@Override
-	public ApiResponse downloadAllMySchedulesFromCalendarByStatus(Map<String, Object> filter) {
-		// TODO Auto-generated method stub
-		return null;
+	public Map downloadAllMySchedulesFromCalendarByStatus(Map<String, Object> filter) throws ParseException, FileUploadException, IOException{
+	Map response = new HashMap();
+		
+	String jobId = filter.containsKey("jobId") ? ((String) filter.get("jobId"))
+				: null;
+	Boolean closed = filter.containsKey("closed") ? ((Boolean) filter.get("closed"))
+				: false;
+	String status = filter.containsKey("status") ? ((String) filter.get("status")).toLowerCase()
+				: null;
+	String fromDate = filter.containsKey("fromDate") ? filter.get("fromDate").toString() : null;
+	String toDate = filter.containsKey("toDate") ? filter.get("toDate").toString() : null;
+
+	Date parsedfromDate = null;
+	Date parsedtoDate = null;
+	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	
+	if(fromDate != null && toDate != null) {
+		try {
+
+			parsedfromDate = fromDate != null ? dateFormat.parse(fromDate) : null;
+			parsedtoDate = toDate != null ? dateFormat.parse(toDate) : null;
+
+		} catch (ParseException e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid date format date should be yyyy-MM-dd");
+		}
 	}
+	
+	List<HrCalendar> schedule = hrCalendarRepository.downloadAllMySchedulesFromCalendarByStatus(currentUser.getUserId(), jobId,
+			fromDate,  toDate, status, closed);
+	
+	if(schedule.size() > 0) {
+	List excelHeaders = Arrays.asList("Name", "Job code", "Date", "Source", "Status");
+	List excelData = new ArrayList<>();
+	int index = 1;
+	
+	for (HrCalendar scheduleList : schedule) {
+		Map row = new HashMap();
+		
+		row.put("Name", scheduleList.getCandidateName());
+		row.put("Job code", scheduleList.getJobId());
+		row.put("Date", scheduleList.getScheduleDate());
+//		row.put("Time", scheduleList.get);
+		row.put("Source", scheduleList.getSearchedSource());
+		row.put("Status", scheduleList.getStatus());
+		
+		excelData.add(row);
+		index++;
+	} 
+	
+
+	XSSFWorkbook workbook = ExcelWriter.writeToExcel(excelHeaders, excelData, "HrCalendar Details", null,
+			" Details", 1, 0);
+	
+    
+	String filename = new SimpleDateFormat("'HrCalendar_details_'yyyyMMddHHmmss'.xlsx'").format(new Date());
+
+	Path fileStorageLocation = Paths.get(ResponseMessages.BASE_DIRECTORY + ResponseMessages.HR_CALENDAR_DIRECTORY );
+	Files.createDirectories(fileStorageLocation);
+
+	try {
+		FileOutputStream out = new FileOutputStream(
+				new File(ResponseMessages.BASE_DIRECTORY + ResponseMessages.HR_CALENDAR_DIRECTORY + filename));
+		workbook.write(out);
+		out.close();
+//		logger.info(filename + " written successfully on disk.");
+	} catch (Exception e) {
+//		logger.error("Exception occured while saving pincode details" + e.getCause());
+		throw e;
+	}
+	response.put("fileLocation", ResponseMessages.HR_CALENDAR_DIRECTORY + filename);
+	
+	return response;
+	}
+	else {
+		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No Records Found!");
+	}
+}
 
 	@Override
-	public ApiResponse downloadMyTeamSchedulesFromCalendarByStatus(Map<String, Object> filter) {
-		// TODO Auto-generated method stub
-		return null;
+	public Map downloadMyTeamSchedulesFromCalendarByStatus(Map<String, Object> filter) throws ParseException, FileUploadException, IOException{
+		Map response = new HashMap();
+		
+		String jobId = filter.containsKey("jobId") ? ((String) filter.get("jobId"))
+					: null;
+		Boolean closed = filter.containsKey("closed") ? ((Boolean) filter.get("closed"))
+					: false;
+		String status = filter.containsKey("status") ? ((String) filter.get("status")).toLowerCase()
+					: null;
+		String fromDate = filter.containsKey("fromDate") ? filter.get("fromDate").toString() : null;
+		String toDate = filter.containsKey("toDate") ? filter.get("toDate").toString() : null;
+
+		Date parsedfromDate = null;
+		Date parsedtoDate = null;
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		
+		if(fromDate != null && toDate != null) {
+			try {
+
+				parsedfromDate = fromDate != null ? dateFormat.parse(fromDate) : null;
+				parsedtoDate = toDate != null ? dateFormat.parse(toDate) : null;
+
+			} catch (ParseException e) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid date format date should be yyyy-MM-dd");
+			}
+		}
+		
+		List<HrCalendar> schedule = hrCalendarRepository.downloadAllMyTeamSchedulesFromCalendarByStatus(currentUser.getUserId(), jobId,
+				fromDate,  toDate, status, closed);
+		
+		if(schedule.size() > 0) {
+		List excelHeaders = Arrays.asList("Name", "Job code", "Date", "Source", "Status");
+		List excelData = new ArrayList<>();
+		int index = 1;
+		
+		for (HrCalendar scheduleList : schedule) {
+			Map row = new HashMap();
+			
+			row.put("Name", scheduleList.getCandidateName());
+			row.put("Job code", scheduleList.getJobId());
+			row.put("Date", scheduleList.getScheduleDate());
+//			row.put("Time", scheduleList.get);
+			row.put("Source", scheduleList.getSearchedSource());
+			row.put("Status", scheduleList.getStatus());
+			
+			excelData.add(row);
+			index++;
+		} 
+		
+
+		XSSFWorkbook workbook = ExcelWriter.writeToExcel(excelHeaders, excelData, "HrCalendar Details", null,
+				" Details", 1, 0);
+		
+	    
+		String filename = new SimpleDateFormat("'HrCalendar_details_'yyyyMMddHHmmss'.xlsx'").format(new Date());
+
+		Path fileStorageLocation = Paths.get(ResponseMessages.BASE_DIRECTORY + ResponseMessages.HR_CALENDAR_DIRECTORY );
+		Files.createDirectories(fileStorageLocation);
+
+		try {
+			FileOutputStream out = new FileOutputStream(
+					new File(ResponseMessages.BASE_DIRECTORY + ResponseMessages.HR_CALENDAR_DIRECTORY + filename));
+			workbook.write(out);
+			out.close();
+//			logger.info(filename + " written successfully on disk.");
+		} catch (Exception e) {
+//			logger.error("Exception occured while saving pincode details" + e.getCause());
+			throw e;
+		}
+		response.put("fileLocation", ResponseMessages.HR_CALENDAR_DIRECTORY + filename);
+		
+		return response;
+		}
+		else {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No Records Found!");
+		}
 	}
 	
 	public static boolean isValidMobileNo(String str)  

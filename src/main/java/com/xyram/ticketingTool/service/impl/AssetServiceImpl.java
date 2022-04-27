@@ -665,7 +665,7 @@ public class AssetServiceImpl implements AssetService {
 		List<Asset> asset = assetRepository.getAllAssetsForDownload(ram, brand, status, vendorId);
 		
 		if(asset.size() > 0) {
-			System.out.println("hello");
+			//System.out.println("hello");
 		List excelHeaders = Arrays.asList("Asset Id", "Model No", "Brand", "Serial No", "Purchase on", "Warranty Date", "Status", "Ram Size", "Vendor Name", "Assigned To");
 		List excelData = new ArrayList<>();
 		int index = 1;

@@ -94,6 +94,12 @@ public interface AssetBillingRepository extends JpaRepository<AssetBilling, Stri
 	 		+ "left join AssetVendor v on b.vendorId = v.vendorId where b.assetId=:assetId")
 	Map getAllAssetBillingByAssetId(String assetId);
 
+	@Query("Select b from AssetBilling b where b.assetBillId=:assetBillId and b.vendorId=:vendorId")
+	AssetBilling getByVendorId(String assetBillId, String vendorId);
+
+	@Query("Select b from AssetBilling b where b.assetBillId=:assetBillId and b.assetIssueId=:assetIssueId")
+	AssetBilling getAssetIssueById(String assetIssueId, String assetBillId);
+
 	/*@Query("Select assetBilling.issueId from AssetBilling b where b.issueId = :issueId")
 	String filterByIssueId(AssetIssues assetIssues);
 	

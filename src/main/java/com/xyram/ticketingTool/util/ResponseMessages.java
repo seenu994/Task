@@ -1,11 +1,10 @@
-
 package com.xyram.ticketingTool.util;
 
 public interface ResponseMessages {
 
 	String PROJECT_NOTEXIST = "Project is not exist.";
 
-	String TICKET_EXIST = "Ticket Id is  exist";
+	String TICKET_EXIST = "Ticket Id is exist";
 
 	String TICKET_NOT_EXIST = "Ticket Id is not exist";
 	String TICKET_REOPENED = "Ticket re-opened Sucessfully";
@@ -85,7 +84,7 @@ public interface ResponseMessages {
 
 	String FORGOT_PASSOWRD = "Mail Sent Successfully : ";
 
-	String INVALID_EMAIL_ID = "invalid  email id : ";
+	String INVALID_EMAIL_ID = "invalid email id : ";
 
 	String TEST_SAMPLE_1 = "gggggggggggggggg";
 	String TEST_SAMPLE_2 = "hhhhhhhhhhhhhhhh";
@@ -100,7 +99,7 @@ public interface ResponseMessages {
 	String SCHEDULEINIERVIEW_UPDATED = "ScheduleInterview Updated Successfully";
 	String SCHEDULEINIERVIEW_INVALID = "Invalid interview Id";
 	String TICKET_CREATED = "Ticket created successfully";
-	
+
 	String ARTICLE_ADDED = "Artcle created successfully";
 	String ARTICLE_NOT_ADDED = "Artcle not created";
 	String ARTICLE_EDITED = "Artcle edited successfully";
@@ -114,7 +113,7 @@ public interface ResponseMessages {
 	String ARTICLE_LIST_NOT_RETREIVED = "Artcle list not retreived";
 	String ARTICLE_DETAILS_RETREIVED = "Artcle details retreived successfully";
 	String ARTICLE_DETAILS_NOT_RETREIVED = "Artcle details not retreived";
-	
+
 	String ANNOUNCEMENT_ADDED = "Announcement created successfully";
 	String ANNOUNCEMENT_NOT_ADDED = "Announcement not created";
 	String ANNOUNCEMENT_EDITED = "Announcement edited successfully";
@@ -127,7 +126,7 @@ public interface ResponseMessages {
 	String ANNOUNCEMENT_LIST_NOT_RETREIVED = "Announcement list not retreived";
 	String ANNOUNCEMENT_DETAILS_RETREIVED = "Announcement details retreived successfully";
 	String ANNOUNCEMENT_DETAILS_NOT_RETREIVED = "Announcement details not retreived";
-	
+
 	String SHEETS_ADDED = "Time Sheets added successfully";
 	String SHEETS_NOT_ADDED = "Time Sheets not added";
 	String SHEETS_OBJECT_ISSUE = "Time Sheets records are not proper or empty";
@@ -143,27 +142,25 @@ public interface ResponseMessages {
 	String ASSET_EDITED = "Asset edited successfully";
 
 	String ASSET_ISSUES_ADDED = "Asset Issues added";
-	
+
 	String ASSET_ISSUES_NOT_ADDED = "Asset Issues added";
-	
-    String ASSET_ISSUES_EDITED = "Asset Issues added";
-	
+
+	String ASSET_ISSUES_EDITED = "Asset Issues added";
+
 	String ASSET_ISSUES_NOT_EDITED = "Asset Issues added";
-	
+
 	String ASSET_ISSUES_STATUS_CHANGED = "Asset issues status changed";
-	
-	 String ASSET_ISSUES_STATUS__NOT_CHANGED = "Asset issues status not changed";
+
+	String ASSET_ISSUES_STATUS__NOT_CHANGED = "Asset issues status not changed";
 
 	String ASSET_BILL_ADDED = "Asset bill added";
 	String ASSET_BILL_ADDED_SUCCESSFULLY = "Asset bill added successfully";
-	
-	String ASSET_BILL_NOT_ADDED = "Asset bill not  added";
-	
-    String ASSET_BILL_EDITED = "Asset bill added";
-    String ASSET_IS_UNDERWARRENTY_NO_NEED_TO_PAY_ANY_AMOUNT = "asset is underwarrenty no need to pay any amount";
 
-	
-	
+	String ASSET_BILL_NOT_ADDED = "Asset bill not added";
+
+	String ASSET_BILL_EDITED = "Asset bill added";
+	String ASSET_IS_UNDERWARRENTY_NO_NEED_TO_PAY_ANY_AMOUNT = "asset is underwarrenty no need to pay any amount";
+
 	String VENDORID_IN_VALID = "VendorId is in valid";
 
 	String ADD_ISSUEID = "Enter issueId";
@@ -216,7 +213,7 @@ public interface ResponseMessages {
 
 	String ASSETVENDOR_STATUS_UPDATED = " Status Updated Successfully";
 
-	String ADDED_SOFTWAREMASTER = "Software  added Successfully";
+	String ADDED_SOFTWAREMASTER = "Software added Successfully";
 
 	String SOFTWAREMASTER_EDITED = "Software master details is edited Successfully";
 
@@ -236,54 +233,36 @@ public interface ResponseMessages {
 
 	String GETALL_VENDOR_LIST = "Asset vendor list";
 	String RETURN_DAMAGE = "Asset returned from damage";
-	
+
 	String ASSET_ISSUE_DIRECTORY = "asset issue directory";
 
 	String VENDOR_NOT_ADDED = "Vendor not added successfully";
-                /* Note Response Message*/
-	
-	String NOTES_CREATED = "Created notes successfully";
-	String NOTES_NOT_CREATED = "Notes not created";
 
-	String NOTES_UPDATED = "Notes updated successfully";
-	String NOTES_NOT_UPDATED = "Notes are not updated";
-	
-	String NOTES_RETRIEVED = "Notes Retrieved Successfully";
-	String NOTES_NOT_RETRIEVED = "Could not retrieve data";
-
-	String DELETE_NOTES = "Notes deleted succuessfull";
-	String NOTES_NOT_FOUND = "Notes not found";
-
-	String DATE_FEILD = "Date feild cannot be empty";
-	
 	String ADDED_DESIGNATION = "Designation is added Successfully";
-    String BRAND_ADDED = "Brand Added succesfully";
-	
+	String BRAND_ADDED = "Brand Added succesfully";
+
 	String BRAND_NOT_ADDED = "Brand not added";
-	
+
 	String BRAND_EDITED = "Brand edited successfully";
-	
+
 	String BRAND_NOT_EDITED = "Invalid Brand Id";
-	
+
 	String BRAND_LIST_RETRIVED = "List retrieved successfully";
-	
-    String RAM_ADDED = "Ram size added successfully";
-	
+
+	String RAM_ADDED = "Ram size added successfully";
+
 	String RAM_NOT_ADDED = "Ram size not added";
-	
+
 	String RAM_SIZE_EDITED = "Ram size edited successfully";
-	
+
 	String RAM_NOT_EDITED = "Ram size not edited";
-	
+
 	String RAM_LIST_RETRIVED = "Ram list retrieved successfully";
 
-	
+//Download of asset
+	String ASSET_DIRECTORY = "/Documents/assetDetails/";
 
-	
-	//Download of asset
-String ASSET_DIRECTORY ="/Documents/assetDetails/";
-	
-	String BASE_DIRECTORY ="../webapps";
+	String BASE_DIRECTORY = "../webapps";
 
 	String BILL_EDITED_SUCCESSFULLY = "asset is not underwarrenty && purchase bill edited successfully";
 
@@ -295,31 +274,54 @@ String ASSET_DIRECTORY ="/Documents/assetDetails/";
 
 	String RETURNS_REPAIR = "asset is returned from repair";
 
-	
-
 	String REPAIR_BILL_EDITED_SUCCESSFULLY = "Asset is not underwarrenty && repair bill edited successfully";
 
 	String TIME_SHEET_DELETED = "time sheet deleted";
 
 	String TIME_SHEET_NOT_DELETED = "time sheet not deleted";
 
-	
+	String HR_CALENDAR_DIRECTORY = "/Documents/hrCalendarDetails/";
 
-	
+	String PURCHASE_BILL_EDITED_SUCCESSFULLY = "";
 
-	
+	String ASSET_PURCHASE_BILL_EDITED_SUCCESSFULLY = "asset is underwarrenty && purchase bill edited successfully";
 
-	
-	
-	
-//	String ANNOUNCEMENT_STATUS_CHANGED = "Announcement status changed successfully";
-//	String ANNOUNCEMENT_STATUS_NOT_CHANGED = "Announcement status not changed";
-//	String ANNOUNCEMENT_DELETED = "Announcement deleted successfully";
-//	String ANNOUNCEMENT_NOT_DELETED = "Announcement not deleted";
-//	String ANNOUNCEMENT_LIST_RETREIVED = "Announcement list retreived successfully";
-//	String ANNOUNCEMENT_LIST_NOT_RETREIVED = "Announcement list not retreived";
-//	String ANNOUNCEMENT_DETAILS_RETREIVED = "Announcement details retreived successfully";
-//	String ANNOUNCEMENT_DETAILS_NOT_RETREIVED = "Announcement details not retreived";
-	
-	
+	/* Notes Response Messages */
+
+	String NOTES_CREATED = "Created notes successfully";
+	String NOTES_NOT_CREATED = "Notes not created";
+
+	String NOTES_UPDATED = "Notes updated successfully";
+	String NOTES_NOT_UPDATED = "Notes are not updated";
+
+	String NOTES_RETRIEVED = "Notes Retrieved Successfully";
+	String NOTES_NOT_RETRIEVED = "Could not retrieve data";
+
+	String DELETE_NOTES = "Notes deleted succuessfull";
+	String NOTES_NOT_FOUND = "Notes not found";
+
+	String DATE_FEILD = "Date feild cannot be empty";
+
+// Location Response Messages
+	String LOC_ADDED = "Location added successfully";
+	String DELETE_LOCATION = "Location deleted successfully";
+	String LOC_NOT_ADDED = "can't able to add loc";
+	String LOC_UPDATED = "Location updated successfully";
+	String LOCATION_NOT_FOUND = "Location not found";
+
+//Wings Response Messages
+	String WINGS_ADDED = "Wings added successfully";
+	String WINGS_NOT_ADDED = "Can't able to add Wings ";
+	String WINGS_UPDATED = "Wing is updated successfully";
+	String WINGS_NOT_UPDATED = "Check Wings Id";
+
+// String ANNOUNCEMENT_STATUS_CHANGED = "Announcement status changed successfully";
+// String ANNOUNCEMENT_STATUS_NOT_CHANGED = "Announcement status not changed";
+// String ANNOUNCEMENT_DELETED = "Announcement deleted successfully";
+// String ANNOUNCEMENT_NOT_DELETED = "Announcement not deleted";
+// String ANNOUNCEMENT_LIST_RETREIVED = "Announcement list retreived successfully";
+// String ANNOUNCEMENT_LIST_NOT_RETREIVED = "Announcement list not retreived";
+// String ANNOUNCEMENT_DETAILS_RETREIVED = "Announcement details retreived successfully";
+// String ANNOUNCEMENT_DETAILS_NOT_RETREIVED = "Announcement details not retreived";
+
 }

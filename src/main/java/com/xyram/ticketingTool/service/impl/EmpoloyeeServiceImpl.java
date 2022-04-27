@@ -74,7 +74,6 @@ import com.xyram.ticketingTool.util.ResponseMessages;
 
 public class EmpoloyeeServiceImpl implements EmployeeService {
 
-	
 	private static final Logger logger = LoggerFactory.getLogger(EmpoloyeeServiceImpl.class);
 
 	@Autowired
@@ -125,11 +124,9 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 	@Autowired
 	NotificationService notificationService;
-	
-	
+
 	@Autowired
 	FileTransferService fileUploadService;
-
 
 	@Autowired
 	EmailService emailService;
@@ -142,11 +139,9 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 	@Value("${APPLICATION_URL}")
 	private String application_url;
-	
 
 	@Value("${ticket-attachment-base-url}")
 	private String ticketAttachmentBaseUrl;
-
 
 	static ChannelSftp channelSftp = null;
 	static Session session = null;
@@ -162,25 +157,22 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 		response = validateEmployee(employee);
 		System.out.println("username::" + currentUser.getName());
-		
 
 		if (response.isSuccess()) {
 			try {
-				
-			
-				if(!employeeRepository.getbyEmpId(employee.geteId()).isEmpty())
-				{
-			
-				throw new ResponseStatusException(HttpStatus.CONFLICT,"Employee code already Assigned to Existing employee ");
+
+				if (!employeeRepository.getbyEmpId(employee.geteId()).isEmpty()) {
+
+					throw new ResponseStatusException(HttpStatus.CONFLICT,
+							"Employee code already Assigned to Existing employee ");
 				}
-				
-				
+
 				User user = new User();
 				user.setUsername(employee.getEmail());
 				String encodedPassword = new BCryptPasswordEncoder().encode(employee.getPassword());
 				user.setPassword(encodedPassword);
-				if(employee.getFirstName().length() > 3 && employee.getLastName().length() > 0)
-				user.setName(employee.getFirstName() +" " +employee.getLastName());
+				if (employee.getFirstName().length() > 3 && employee.getLastName().length() > 0)
+					user.setName(employee.getFirstName() + " " + employee.getLastName());
 				// Employee employeere=new Employee();
 				Role role = roleRepository.getById(employee.getRoleId());
 				user.setUserRole(role!=null ?role.getRoleName():null);
@@ -281,21 +273,17 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				content.put("employeeId", employeeNew.geteId());
 				response.setContent(content);
 			} catch (ResponseStatusException re) {
-			 throw new  ResponseStatusException(re.getStatus(), re.getReason());
-			}
-			catch (Exception e) {
+				throw new ResponseStatusException(re.getStatus(), re.getReason());
+			} catch (Exception e) {
 				System.out.println("Error Occured :: " + e.getMessage());
 			}
 
 			return response;
 
 		}
-			
-	
 
 		return response;
 	}
-		
 
 	private ApiResponse validateEmployee(Employee employee) {
 		ApiResponse response = new ApiResponse(false);
@@ -335,25 +323,25 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 	@SuppressWarnings("rawtypes")
 	@Override
-	public ApiResponse getAllEmployee(Map<String, Object> filter,Pageable pageable) {
-			
+	public ApiResponse getAllEmployee(Map<String, Object> filter, Pageable pageable) {
+
 		Page<Map> employeeList = null;
-		
-		if(filter == null) {
+
+		if (filter == null) {
 			employeeList = employeeRepository.getAllEmployeeList(pageable);
-		}else {
-			
-			String searchString = filter.containsKey("searchString") ? ((String) filter.get("searchString")).toLowerCase()
+		} else {
+
+			String searchString = filter.containsKey("searchString")
+					? ((String) filter.get("searchString")).toLowerCase()
 					: null;
 			String role = filter.containsKey("role") ? ((String) filter.get("role")) : null;
 			String designation = filter.containsKey("designation") ? ((String) filter.get("designation")) : null;
-			String position = filter.containsKey("position") ? ((String) filter.get("position")).toLowerCase()
-					: null;
-			String wing = filter.containsKey("wing") ? ((String) filter.get("wing"))
-					: null;
-			employeeList = employeeRepository.getAllEmployeeListByFilter(pageable,searchString,role,designation,position,wing); 
+			String position = filter.containsKey("position") ? ((String) filter.get("position")).toLowerCase() : null;
+			String wing = filter.containsKey("wing") ? ((String) filter.get("wing")) : null;
+			employeeList = employeeRepository.getAllEmployeeListByFilter(pageable, searchString, role, designation,
+					position, wing);
 		}
-		
+
 		Map content = new HashMap();
 		content.put("employeeList", employeeList);
 		ApiResponse response = new ApiResponse(true);
@@ -417,7 +405,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			employee.setLastName(employeeRequest.getLastName());
 			employee.setLastUpdatedAt(new Date());
 
-			user.setName(employeeRequest.getFirstName() +" " +employeeRequest.getLastName());
+			user.setName(employeeRequest.getFirstName() + " " + employeeRequest.getLastName());
 			employee.setMiddleName(employeeRequest.getMiddleName());
 			employee.setMobileNumber(employeeRequest.getMobileNumber());
 			employee.setPassword(employeeRequest.getPassword());
@@ -470,8 +458,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public ApiResponse searchEmployeeNotAssignedToProject(String projectid, String clientid, String searchString)
-	{
+	public ApiResponse searchEmployeeNotAssignedToProject(String projectid, String clientid, String searchString) {
 		ApiResponse response = new ApiResponse(false);
 		Projects projectRequest = new Projects();
 		projectRequest.setpId(projectid);
@@ -685,43 +672,40 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		}
 //	       System.out.println(file.);
 		String fileextension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
-		String filename = getRandomFileName() +System.currentTimeMillis();
+		String filename = getRandomFileName() + System.currentTimeMillis();
 		boolean succesResponse = false;
 		try {
 			succesResponse = fileUploadService.uploadFile(file, ticketAttachmentBaseUrl, filename);
-		
 
 		} catch (Exception e) {
 
 			logger.info(e.toString());
 		}
-		
 
 		if (succesResponse) {
 
 			Employee employeeObj = employeeRepository.getbyUserByUserId(userId);
 			if (employeeObj != null) {
 				// employeeObj=new Employee();
-				employeeObj.setProfileUrl(ticketAttachmentBaseUrl +"/"+ filename);
+				employeeObj.setProfileUrl(ticketAttachmentBaseUrl + "/" + filename);
 				employeeRepository.save(employeeObj);
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.EMPLOYEE_PROFILE_UPDATION);
 				response.setContent(null);
 				return response;
-			}
-			else {
+			} else {
 
 				response.setSuccess(false);
 				response.setMessage(ResponseMessages.EMPLOYEE_INVALID);
 				response.setContent(null);
-				
+
 			}
 			return response;
-		} 
-		{
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"unable to upload image");
 		}
-	
+		{
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "unable to upload image");
+		}
+
 	}
 
 	public String getRandomFileName() {
@@ -826,51 +810,49 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			vendorDetails.setUserCredientials(user);
 			vendorDetails.setProfileUrl("https://covidtest.xyramsoft.com/image/ticket-attachment/user-default-pic.png");
 			JobVendorDetails vendorNew = vendorRepository.save(vendorDetails);
-if(vendorNew!=null)
-{
-	Employee empObj = new Employee();
-	List<Employee> EmployeeByRole = employeeRepository.getVendorNotification();
+			if (vendorNew != null) {
+				Employee empObj = new Employee();
+				List<Employee> EmployeeByRole = employeeRepository.getVendorNotification();
 
-	for (Employee employeeNotification : EmployeeByRole) {
-		Map request = new HashMap<>();
-		request.put("id", employeeNotification.geteId());
-		request.put("uid", employeeNotification.getUserCredientials().getUid());
-		request.put("title", "JOB_VENDOR_CREATED");
-		request.put("body", "JOB_VENDOR_CREATED - " + employeeNotification.getRoleId());
-		pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 12,
-				NotificationType.JOB_VENDOR_CREATED.toString()));
+				for (Employee employeeNotification : EmployeeByRole) {
+					Map request = new HashMap<>();
+					request.put("id", employeeNotification.geteId());
+					request.put("uid", employeeNotification.getUserCredientials().getUid());
+					request.put("title", "JOB_VENDOR_CREATED");
+					request.put("body", "JOB_VENDOR_CREATED - " + employeeNotification.getRoleId());
+					pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 12,
+							NotificationType.JOB_VENDOR_CREATED.toString()));
 
-	 // inserting notification details	
-	Notifications notifications = new Notifications();
-	notifications.setNotificationDesc("JOB_VENDOR_CREATED - " + employeeNotification.getFirstName());
-	notifications.setNotificationType(NotificationType.JOB_VENDOR_CREATED);
-	notifications.setSenderId(empObj.getReportingTo());
-	notifications.setReceiverId(userDetail.getUserId());
-	notifications.setSeenStatus(false);
-	notifications.setCreatedBy(userDetail.getUserId());
-	notifications.setCreatedAt(new Date());
-	notifications.setUpdatedBy(userDetail.getUserId());
-	notifications.setLastUpdatedAt(new Date());
+					// inserting notification details
+					Notifications notifications = new Notifications();
+					notifications.setNotificationDesc("JOB_VENDOR_CREATED - " + employeeNotification.getFirstName());
+					notifications.setNotificationType(NotificationType.JOB_VENDOR_CREATED);
+					notifications.setSenderId(empObj.getReportingTo());
+					notifications.setReceiverId(userDetail.getUserId());
+					notifications.setSeenStatus(false);
+					notifications.setCreatedBy(userDetail.getUserId());
+					notifications.setCreatedAt(new Date());
+					notifications.setUpdatedBy(userDetail.getUserId());
+					notifications.setLastUpdatedAt(new Date());
 
-	notificationService.createNotification(notifications);
-	UUID uuid = UUID.randomUUID();
-	String uuidAsString = uuid.toString();
-	if (employeeNotification != null) {
-		String name = null;
+					notificationService.createNotification(notifications);
+					UUID uuid = UUID.randomUUID();
+					String uuidAsString = uuid.toString();
+					if (employeeNotification != null) {
+						String name = null;
 
-		HashMap mailDetails = new HashMap();
-		mailDetails.put("toEmail", employeeNotification.getEmail());
-		mailDetails.put("subject", name + ", " + "Here's your new PASSWORD");
-		mailDetails.put("message", "Hi " + name
-				+ ", \n\n We received a request to reset the password for your Account. \n\n Here's your new PASSWORD Link is: "
-				+ application_url + "/update-password" + "?key=" + uuidAsString
-				+ "\n\n Thanks for helpRing us keep your account secure.\n\n Xyram Software Solutions Pvt Ltd.");
-		emailService.sendMail(mailDetails);
-	}
-	}
+						HashMap mailDetails = new HashMap();
+						mailDetails.put("toEmail", employeeNotification.getEmail());
+						mailDetails.put("subject", name + ", " + "Here's your new PASSWORD");
+						mailDetails.put("message", "Hi " + name
+								+ ", \n\n We received a request to reset the password for your Account. \n\n Here's your new PASSWORD Link is: "
+								+ application_url + "/update-password" + "?key=" + uuidAsString
+								+ "\n\n Thanks for helpRing us keep your account secure.\n\n Xyram Software Solutions Pvt Ltd.");
+						emailService.sendMail(mailDetails);
+					}
+				}
 
-
-			// Assigning default project to Developer
+				// Assigning default project to Developer
 //				if (employee.getRoleId().equals("R3")) {
 //					System.out.println("Inside employee.getRoleId() - " + employee.getRoleId());
 //					ProjectMembers projectMember = new ProjectMembers();
@@ -883,12 +865,13 @@ if(vendorNew!=null)
 //					projectMember.setEmployeeId(employee.geteId());
 //					projectMemberRepository.save(projectMember);
 //				}
-			response.setSuccess(true);
-			response.setMessage(ResponseMessages.EMPLOYEE_ADDED);
-			Map content = new HashMap();
-			content.put("vendorId", vendorNew.getvId());
-			response.setContent(content);
-		}} catch (Exception e) {
+				response.setSuccess(true);
+				response.setMessage(ResponseMessages.EMPLOYEE_ADDED);
+				Map content = new HashMap();
+				content.put("vendorId", vendorNew.getvId());
+				response.setContent(content);
+			}
+		} catch (Exception e) {
 			System.out.println("Error Occured :: " + e.getMessage());
 		}
 
@@ -940,10 +923,11 @@ if(vendorNew!=null)
 	}
 
 	@Override
-	public ApiResponse getJobVendor( Map<String ,Object> filter, Pageable pageable) {
+	public ApiResponse getJobVendor(Map<String, Object> filter, Pageable pageable) {
 		ApiResponse response = new ApiResponse(false);
-		String searchString = filter.containsKey("searchString") ? ((String) filter.get("searchString")).toLowerCase() : null;
-		Page<JobVendorDetails> jobVendors = vendorRepository.getJobVendors(searchString,pageable);
+		String searchString = filter.containsKey("searchString") ? ((String) filter.get("searchString")).toLowerCase()
+				: null;
+		Page<JobVendorDetails> jobVendors = vendorRepository.getJobVendors(searchString, pageable);
 		Map content = new HashMap();
 		content.put("jobVendors", jobVendors);
 		if (content != null) {
@@ -1030,7 +1014,7 @@ if(vendorNew!=null)
 		String id = currentUser.getUserId();
 		if (id != null) {
 			Map employee = employeeRepository.getbyAccessToken(id);
-			                  
+
 			response.setSuccess(true);
 			response.setMessage("Employee Retrieved Successfully");
 			response.setContent(employee);
@@ -1047,45 +1031,45 @@ if(vendorNew!=null)
 		JobVendorDetails vendor = vendorRepository.getById(vendorId);
 		if (vendor != null) {
 			Employee empObj = new Employee();
-		List<Employee> EmployeeByRole = employeeRepository.getVendorNotification();
+			List<Employee> EmployeeByRole = employeeRepository.getVendorNotification();
 
-		for (Employee employeeNotification : EmployeeByRole) {
-			Map request = new HashMap<>();
-			request.put("id", employeeNotification.geteId());
-			request.put("uid", employeeNotification.getUserCredientials().getUid());
-			request.put("title", "JOB_VENDOR_EDITED");
-			request.put("body", "JOB_VENDOR_EDITED - " + employeeNotification.getRoleId());
-			pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 12,
-					NotificationType.JOB_VENDOR_CREATED.toString()));
+			for (Employee employeeNotification : EmployeeByRole) {
+				Map request = new HashMap<>();
+				request.put("id", employeeNotification.geteId());
+				request.put("uid", employeeNotification.getUserCredientials().getUid());
+				request.put("title", "JOB_VENDOR_EDITED");
+				request.put("body", "JOB_VENDOR_EDITED - " + employeeNotification.getRoleId());
+				pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 12,
+						NotificationType.JOB_VENDOR_CREATED.toString()));
 
-		 // inserting notification details	
-		Notifications notifications = new Notifications();
-		notifications.setNotificationDesc("JOB_VENDOR_CREATED - " + employeeNotification.getFirstName());
-		notifications.setNotificationType(NotificationType.JOB_VENDOR_EDITED);
-		notifications.setSenderId(empObj.getReportingTo());
-		notifications.setReceiverId(userDetail.getUserId());
-		notifications.setSeenStatus(false);
-		notifications.setCreatedBy(userDetail.getUserId());
-		notifications.setCreatedAt(new Date());
-		notifications.setUpdatedBy(userDetail.getUserId());
-		notifications.setLastUpdatedAt(new Date());
+				// inserting notification details
+				Notifications notifications = new Notifications();
+				notifications.setNotificationDesc("JOB_VENDOR_CREATED - " + employeeNotification.getFirstName());
+				notifications.setNotificationType(NotificationType.JOB_VENDOR_EDITED);
+				notifications.setSenderId(empObj.getReportingTo());
+				notifications.setReceiverId(userDetail.getUserId());
+				notifications.setSeenStatus(false);
+				notifications.setCreatedBy(userDetail.getUserId());
+				notifications.setCreatedAt(new Date());
+				notifications.setUpdatedBy(userDetail.getUserId());
+				notifications.setLastUpdatedAt(new Date());
 
-		notificationService.createNotification(notifications);
-		UUID uuid = UUID.randomUUID();
-		String uuidAsString = uuid.toString();
-		if (employeeNotification != null) {
-			String name = null;
+				notificationService.createNotification(notifications);
+				UUID uuid = UUID.randomUUID();
+				String uuidAsString = uuid.toString();
+				if (employeeNotification != null) {
+					String name = null;
 
-			HashMap mailDetails = new HashMap();
-			mailDetails.put("toEmail", employeeNotification.getEmail());
-			mailDetails.put("subject", name + ", " + "Here's your new PASSWORD");
-			mailDetails.put("message", "Hi " + name
-					+ ", \n\n We received a request to reset the password for your Account. \n\n Here's your new PASSWORD Link is: "
-					+ application_url + "/update-password" + "?key=" + uuidAsString
-					+ "\n\n Thanks for helpRing us keep your account secure.\n\n Xyram Software Solutions Pvt Ltd.");
-			emailService.sendMail(mailDetails);
-		}
-		}
+					HashMap mailDetails = new HashMap();
+					mailDetails.put("toEmail", employeeNotification.getEmail());
+					mailDetails.put("subject", name + ", " + "Here's your new PASSWORD");
+					mailDetails.put("message", "Hi " + name
+							+ ", \n\n We received a request to reset the password for your Account. \n\n Here's your new PASSWORD Link is: "
+							+ application_url + "/update-password" + "?key=" + uuidAsString
+							+ "\n\n Thanks for helpRing us keep your account secure.\n\n Xyram Software Solutions Pvt Ltd.");
+					emailService.sendMail(mailDetails);
+				}
+			}
 			vendor.setName(vendorRequest.getName());
 			vendor.setEmail(vendorRequest.getEmail());
 			vendor.setMobileNumber(vendorRequest.getMobileNumber());
@@ -1335,8 +1319,8 @@ if(vendorNew!=null)
 			}
 
 			for (EmployeePojo employeeData : employeeList) {
-				User user=new User();
-			user.setCreatedAt(new Date());
+				User user = new User();
+				user.setCreatedAt(new Date());
 				user.setUsername(employeeData.getEmail());
 				String encodedPassword = new BCryptPasswordEncoder().encode(employeeData.getPassword());
 				user.setPassword(encodedPassword);
@@ -1387,11 +1371,12 @@ if(vendorNew!=null)
 				emp.setReportingTo(employeeData.getReportingTo());
 				emp.setRoleId(employeeData.getRoleId());
 				emp.setUpdatedBy(userDetail.getUserId());
-/*				User use = userRepository.getUserByIds(employeeData.getUserId());
-				if (use != null) {
-*/					emp.setUserCredientials(user);
-				
-				//emp.setUserCredientials(employeeData.getUserId());
+				/*
+				 * User use = userRepository.getUserByIds(employeeData.getUserId()); if (use !=
+				 * null) {
+				 */ emp.setUserCredientials(user);
+
+				// emp.setUserCredientials(employeeData.getUserId());
 				CompanyWings wing = wingRepo.getWingByIds(employeeData.getWing_id());
 				if (wing != null) {
 

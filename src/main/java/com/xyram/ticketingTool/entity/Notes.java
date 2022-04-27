@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -30,7 +31,8 @@ public class Notes extends AuditModel {
 	@Column(name = "notes_update_date")
 	private Date  notesUploadedDate;
 	
-	@Column(name = "notes", length = 1000)
+	 @Size(min = 3, max = 1000)
+	@Column(name = "notes")
 	private String notes;
 
 	
