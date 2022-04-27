@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,5 +51,13 @@ public class RamSizeController
 	        logger.info("Received request to get all Ram Size");
 			return ramSizeService.getAllRamSize(pageable);
 	 }
+	
+	 @DeleteMapping(value = { AuthConstants.ADMIN_BASEPATH + "/deleteRam/{ramId}",
+	 			AuthConstants.INFRA_ADMIN_BASEPATH + "/deleteRam/{ramId}",			
+	 			AuthConstants.INFRA_USER_BASEPATH + "/deleteRam/{ramId}"})
+	 ApiResponse deleteRam(@PathVariable String ramId) {
+	 		logger.info("Received request to delete ram size");
+	 		return ramSizeService.deleteRam(ramId);
+	 	}
 	
 }

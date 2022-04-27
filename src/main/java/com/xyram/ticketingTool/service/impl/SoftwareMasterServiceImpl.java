@@ -61,6 +61,7 @@ public class SoftwareMasterServiceImpl implements SoftwareMasterService {
 			Map content = new HashMap();
 			content.put("softwareId", softwareMaster.getSoftwareId());
 			content.put("softwareName",softwareMaster.getSoftwareName());
+			content.put("softwareStatus", softwareMaster.getSoftwareMasterStatus());
 			response.setContent(content);
 		}
 
@@ -103,10 +104,13 @@ public class SoftwareMasterServiceImpl implements SoftwareMasterService {
 		if (software.getSoftwareName().equals("") || software.getSoftwareName() == null) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "SoftwareName is manditory");
 		}
+	
+			
+		
 		response.setSuccess(true);
 		return response;
 	}
-
+	
 	@Override
 	public ApiResponse getAllsoftwareMaster(Map<String, Object> filter, Pageable peageble) {
 

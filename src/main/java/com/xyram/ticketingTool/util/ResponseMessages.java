@@ -178,8 +178,11 @@ public interface ResponseMessages {
 
 	String ASSET_PURCHASE_BILL_ADDED_SUCCESSFULLY = "Asset is underWarrenty && asset purchase bill added successsfully";
 
-	
+	String ASSET_PURCHASE_BILL_EDIT_SUCCESSFULLY = "Asset is underWarrenty && Asset purchase bill edited successfully";
+
 	String ASSET_REPAIR_BILL_ADDED_SUCCESSFULLY = "Asset is underWarrenty && Asset repair bill added successsfully";
+
+	String ASSET_REPAIR_BILL_EDITED_SUCCESSFULLY = "Asset is underwarrenty && repair bill edited successfully";
 
 	String ID_INVALID = "id is invalid";
 
@@ -187,7 +190,7 @@ public interface ResponseMessages {
 
 	String ASSET_ISSUES_EDIT_SUCCESSFULLY = "Asset issues edited successfully";
 
-	String ASSET_ISSUES_ID_IS_INVALID = "Asset issue id is invalid";
+	String ASSET_ISSUES_ID_IS_INVALID = "A sset issue id is invalid";
 
 	String ASSET_ADDED = "Asset added successfully";
 
@@ -260,7 +263,7 @@ public interface ResponseMessages {
 	
 	String BRAND_EDITED = "Brand edited successfully";
 	
-	String BRAND_NOT_EDITED = "Brand not edited";
+	String BRAND_NOT_EDITED = "Invalid Brand Id";
 	
 	String BRAND_LIST_RETRIVED = "List retrieved successfully";
 	
@@ -282,7 +285,8 @@ String ASSET_DIRECTORY ="/Documents/assetDetails/";
 	
 	String BASE_DIRECTORY ="../webapps";
 
-	
+	String BILL_EDITED_SUCCESSFULLY = "asset is not underwarrenty && purchase bill edited successfully";
+
 	String REPAIR_BILL_ADDED_SUCCESSFULLY = "asset is not underwarrenty && repair bill addred successfully";
 
 	String ASSET_RETURN_FROM_REPAIR = "Asset is underwarrenty && asset is returned from reapir";
@@ -293,18 +297,17 @@ String ASSET_DIRECTORY ="/Documents/assetDetails/";
 
 	
 
-	
+	String REPAIR_BILL_EDITED_SUCCESSFULLY = "Asset is not underwarrenty && repair bill edited successfully";
+
 	String TIME_SHEET_DELETED = "time sheet deleted";
 
 	String TIME_SHEET_NOT_DELETED = "time sheet not deleted";
 
-	String ASSET_PURCHASE_BILL_EDITED_SUCCESSFULLY = "Asset is underwarrenty && asset purchase bill edited successfully";
+	String HR_CALENDAR_DIRECTORY = "/Documents/hrCalendarDetails/";
 
-	String PURCHASE_BILL_EDITED_SUCCESSFULLY = "asset is not underwarrenty && asset purchase bill edited successfully";
+	String PURCHASE_BILL_EDITED_SUCCESSFULLY = "";
 
-	String REPAIR_BILL_EDITED_SUCCESSFULLY = "asset is not underwarrenty and asset repair bill edited successfully";
-
-	String ASSET_REPAIR_BILL_EDITED_SUCCESSFULLY = "asset is undewarrenty && asset repair bill edited successfully";
+	String ASSET_PURCHASE_BILL_EDITED_SUCCESSFULLY = "asset is underwarrenty && purchase bill edited successfully";
 
 	
 

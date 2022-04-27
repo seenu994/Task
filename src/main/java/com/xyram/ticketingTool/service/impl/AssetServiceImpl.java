@@ -663,6 +663,9 @@ public class AssetServiceImpl implements AssetService {
 		}
 				
 		List<Asset> asset = assetRepository.getAllAssetsForDownload(ram, brand, status, vendorId);
+		
+		if(asset.size() > 0) {
+			//System.out.println("hello");
 		List excelHeaders = Arrays.asList("Asset Id", "Model No", "Brand", "Serial No", "Purchase on", "Warranty Date", "Status", "Ram Size", "Vendor Name", "Assigned To");
 		List excelData = new ArrayList<>();
 		int index = 1;
@@ -671,21 +674,22 @@ public class AssetServiceImpl implements AssetService {
 			Map row = new HashMap();
 			AssetVendor getVendorName = assetVendorRepository.getAssetVendorById(assetList.getVendorId());
 			String getEmployeeName = employeeRepository.getEmpNameById(assetList.getAssetId());
+			String getStatus = assetRepository.getStatus(assetList.getAssetId());
 			row.put("Asset Id", assetList.getAssetId());
 			row.put("Brand", assetList.getBrand());
 			row.put("Serial No", assetList.getSerialNo());
 			row.put("Model No", assetList.getModelNo());
 			row.put("Purchase on", assetList.getPurchaseDate());
 			row.put("Warranty Date", assetList.getWarrantyDate());
-			row.put("Status", assetList.getAssetStatus());
+			row.put("Status", getStatus);
 			row.put("Vendor Name", getVendorName.getVendorName());
 			row.put("Assigned To", getEmployeeName);
 			row.put("Ram Size", assetList.getRam());
 			
-
 			excelData.add(row);
 			index++;
-		}
+		} 
+		
 
 		XSSFWorkbook workbook = ExcelWriter.writeToExcel(excelHeaders, excelData, "Asset Details", null,
 				"Asset Details", 1, 0);
@@ -714,7 +718,13 @@ public class AssetServiceImpl implements AssetService {
 		}
 		response.put("fileLocation", ResponseMessages.ASSET_DIRECTORY + filename);
 		return response;
+		}
+		else {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No Records Found!");
+		}
 	}
+	
+	
 	
 
 //	@Override

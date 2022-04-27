@@ -13,4 +13,6 @@ public interface BrandService {
 
 	ApiResponse getAllBrand(Pageable pageable);
 
+	ApiResponse deleteBrand(String brandId);
+
 }

@@ -5,22 +5,29 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.Size;
+
+import org.hibernate.annotations.GenericGenerator;
 
 import com.xyram.ticketingTool.baseData.model.AuditModel;
 import com.xyram.ticketingTool.enumType.UserStatus;
+import com.xyram.ticketingTool.id.generator.IdGenerator;
+import com.xyram.ticketingTool.id.generator.IdPrefix;
 
 @Entity
 @Table(name = "role")
 //@TypeDefs({ @TypeDef(name = "StringJsonObject", typeClass = JSONObjectUserType.class) })
 public class Role extends AuditModel {
+	
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
-	@Size( max = 8)
+	@IdPrefix(value = "RI")
+	//@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(generator = IdGenerator.ID_GENERATOR)
+	@GenericGenerator(name = IdGenerator.ID_GENERATOR, strategy = "com.xyram.ticketingTool.id.generator.IdGenerator")
+	
+	//@Size( max = 8)
 	@Column(name="role_id")
 	private String Id;
 
@@ -33,6 +40,10 @@ public class Role extends AuditModel {
 	
 	@Column(name="displayable_name")
 	private String displayableName;
+
+
+
+	
 
 	public String getId() {
 		return Id;
