@@ -595,7 +595,7 @@ public class AssetServiceImpl implements AssetService {
 		byte[] blob = ExcelUtil.toBlob(workbook);
 		
 		try {
-			ExcelUtil.saveWorkbook(workbook, "reports.xlsx");
+			ExcelUtil.saveWorkbook(workbook, "assetDetailsreports.xlsx");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -605,7 +605,7 @@ public class AssetServiceImpl implements AssetService {
 		fileResponse.put("type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 		fileResponse.put("blob", blob);
 		response.setFileDetails(fileResponse);
-		System.out.println(fileResponse);
+		//System.out.println(fileResponse);
 		response.setStatus("success");
 		response.setMessage("report exported Successfully");
 		
@@ -614,7 +614,7 @@ public class AssetServiceImpl implements AssetService {
 	}
 	private Workbook prepareExcelWorkBook(List<Map> assetList) 
 	{
-		List<String> headers = Arrays.asList("Asset Id", "Model No", "Brand", "Serial No", "Purchase on", "Warranty Date", 
+		List<String> headers = Arrays.asList("Asset Id", "Model No", "Brand", "Serial No", "Purchase Date", "Warranty Date", 
 				  "Asset Status", "Ram Size", "Vendor Name", "Assigned To");
 			
 		List data = new ArrayList<>();
@@ -626,22 +626,22 @@ public class AssetServiceImpl implements AssetService {
 //			String getEmployeeName = employeeRepository.getEmpNameById(((Asset) assetList).getAssetId());
 //			String getStatus = assetRepository.getStatus(((Asset) assetList).getAssetId());
 
-			row.put("assetId",assetDetails.get("assetId") != null ? assetDetails.get("assetId").toString(): "");
-			row.put("brand",assetDetails.get("brand") != null ? assetDetails.get("brand").toString(): "");
-			row.put("serialNo",assetDetails.get("serialNo") != null ? assetDetails.get("serialNo").toString(): "");
-			row.put("modelNo",assetDetails.get("modelNo") != null ? assetDetails.get("modelNo").toString(): "");
-			row.put("purchaseOn",assetDetails.get("purchaseDate") != null ? assetDetails.get("purchaseDate").toString(): "");
-			row.put("warrantyDate",assetDetails.get("warrantyDate") != null ? assetDetails.get("warrantyDate").toString(): "");
-			row.put("assetStatus",assetDetails.get("assetStatus") != null ? assetDetails.get("assetStatus").toString(): "");
-			row.put("vendorName",assetDetails.get("vendorName") != null ? assetDetails.get("vendorName").toString(): "");
-			row.put("assignedTo",assetDetails.get("assignedTo") != null ? assetDetails.get("assignedTo").toString(): "");
-			row.put("ramSize",assetDetails.get("ram") != null ? assetDetails.get("ram").toString(): "");
+			row.put("Asset Id",assetDetails.get("assetId") != null ? assetDetails.get("assetId").toString(): "");
+			row.put("Brand",assetDetails.get("brand") != null ? assetDetails.get("brand").toString(): "");
+			row.put("Serial No",assetDetails.get("serialNo") != null ? assetDetails.get("serialNo").toString(): "");
+			row.put("Model No",assetDetails.get("modelNo") != null ? assetDetails.get("modelNo").toString(): "");
+			row.put("Purchase Date",assetDetails.get("purchaseDate") != null ? assetDetails.get("purchaseDate").toString(): "");
+			row.put("Warranty Date",assetDetails.get("warrantyDate") != null ? assetDetails.get("warrantyDate").toString(): "");
+			row.put("Asset Status",assetDetails.get("assetStatus") != null ? assetDetails.get("assetStatus").toString(): "");
+			row.put("Vendor Name",assetDetails.get("vendorName") != null ? assetDetails.get("vendorName").toString(): "");
+			row.put("Assigned To",assetDetails.get("assignedTo") != null ? assetDetails.get("assignedTo").toString(): "");
+			row.put("Ram Size",assetDetails.get("ram") != null ? assetDetails.get("ram").toString(): "");
 			
 			
 			data.add(row);
 
 		}
-        Workbook workbook = ExcelUtil.createSingleSheetWorkbook(ExcelUtil.createSheet("Asset issues report", headers, data));
+        Workbook workbook = ExcelUtil.createSingleSheetWorkbook(ExcelUtil.createSheet("Asset Details report", headers, data));
 
 		return workbook;
 		

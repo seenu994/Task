@@ -5,8 +5,8 @@ import com.xyram.ticketingTool.entity.Role;
 
 public interface RoleService {
 	
-	ApiResponse addRole(Role role);
-	ApiResponse editRoleById(Role Request, String Id);
+	//ApiResponse addRole(Role role);
+	//ApiResponse editRoleById(Role Request, String Id);
 	
 	
  ApiResponse getAllRole() ;

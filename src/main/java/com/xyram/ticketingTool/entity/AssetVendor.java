@@ -22,7 +22,7 @@ public class AssetVendor  extends AuditModel{
 	// private static final String Status = null;
 
 	@Id
-	@IdPrefix(value = "PRO_")
+	@IdPrefix(value = "AVN_")
 	@GeneratedValue(generator = IdGenerator.ID_GENERATOR)
 	@GenericGenerator(name = IdGenerator.ID_GENERATOR, strategy = "com.xyram.ticketingTool.id.generator.IdGenerator")
 	@Column(name = "vendor_id")

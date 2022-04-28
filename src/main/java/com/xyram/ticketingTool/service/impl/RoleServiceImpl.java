@@ -55,7 +55,7 @@ public class RoleServiceImpl implements RoleService {
 
 
 
-	@Override
+	/*@Override
 	public ApiResponse addRole(Role role) {
 		
 		ApiResponse response = new ApiResponse(false);
@@ -67,7 +67,7 @@ public class RoleServiceImpl implements RoleService {
 //			}
 			
 		 Role roles = roleRepository.save(role);
-			response.setMessage(ResponseMessages.ADDED_DESIGNATION);
+			response.setMessage(ResponseMessages.ADDED_ROLE);
 			response.setSuccess(true);
 
 			Map content = new HashMap();
@@ -98,11 +98,11 @@ public class RoleServiceImpl implements RoleService {
 
 			roleRepository.save(roleRequest);
 			response.setSuccess(true);
-			response.setMessage(ResponseMessages.SOFTWAREMASTER_EDITED);
+			response.setMessage(ResponseMessages.ROLE_EDITED);
 
 		} else {
 			response.setSuccess(false);
-			response.setMessage(ResponseMessages.SOFTWARE_DETAILS_INVALID);
+			response.setMessage(ResponseMessages.INVALID_ROLE_DETAILS);
 			// response.setContent(null);
 		}
 	    return response;
@@ -119,7 +119,7 @@ public class RoleServiceImpl implements RoleService {
 		}
 		response.setSuccess(true);
 		return response;
-	}
+	}*/
 	
 }
 		
