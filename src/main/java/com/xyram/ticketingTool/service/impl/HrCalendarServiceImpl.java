@@ -464,8 +464,8 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	public Map downloadAllMySchedulesFromCalendarByStatus(Map<String, Object> filter) throws ParseException, FileUploadException, IOException{
 	Map response = new HashMap();
 		
-	String jobId = filter.containsKey("jobId") ? ((String) filter.get("jobId"))
-				: null;
+//	String jobId = filter.containsKey("jobId") ? ((String) filter.get("jobId"))
+//				: null;
 	Boolean closed = filter.containsKey("closed") ? ((Boolean) filter.get("closed"))
 				: false;
 	String status = filter.containsKey("status") ? ((String) filter.get("status")).toLowerCase()
@@ -488,21 +488,20 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 		}
 	}
 	
-	List<HrCalendar> schedule = hrCalendarRepository.downloadAllMySchedulesFromCalendarByStatus(currentUser.getUserId(), jobId,
-			fromDate,  toDate, status, closed);
+	List<HrCalendar> schedule = hrCalendarRepository.downloadAllMySchedulesFromCalendarByStatus(fromDate, toDate, status, closed);
 	
 	if(schedule.size() > 0) {
-	List excelHeaders = Arrays.asList("Name", "Job code", "Date", "Source", "Status");
+	List excelHeaders = Arrays.asList("Name", "Job code", "Date & Time", "Source", "Status");
 	List excelData = new ArrayList<>();
 	int index = 1;
 	
 	for (HrCalendar scheduleList : schedule) {
 		Map row = new HashMap();
+		String getJobCode = jobRepository.getJobCodeById(scheduleList.getJobId());
 		
 		row.put("Name", scheduleList.getCandidateName());
-		row.put("Job code", scheduleList.getJobId());
-		row.put("Date", scheduleList.getScheduleDate());
-//		row.put("Time", scheduleList.get);
+		row.put("Job Code", getJobCode);
+		row.put("Date & Time", scheduleList.getScheduleDate());
 		row.put("Source", scheduleList.getSearchedSource());
 		row.put("Status", scheduleList.getStatus());
 		
@@ -511,11 +510,11 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	} 
 	
 
-	XSSFWorkbook workbook = ExcelWriter.writeToExcel(excelHeaders, excelData, "HrCalendar Details", null,
-			" Details", 1, 0);
+	XSSFWorkbook workbook = ExcelWriter.writeToExcel(excelHeaders, excelData, "My Schedule Details", null,
+			"My Schedule Details", 1, 0);
 	
     
-	String filename = new SimpleDateFormat("'HrCalendar_details_'yyyyMMddHHmmss'.xlsx'").format(new Date());
+	String filename = new SimpleDateFormat("'MySchedule_details_'yyyyMMddHHmmss'.xlsx'").format(new Date());
 
 	Path fileStorageLocation = Paths.get(ResponseMessages.BASE_DIRECTORY + ResponseMessages.HR_CALENDAR_DIRECTORY );
 	Files.createDirectories(fileStorageLocation);
@@ -543,8 +542,8 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	public Map downloadMyTeamSchedulesFromCalendarByStatus(Map<String, Object> filter) throws ParseException, FileUploadException, IOException{
 		Map response = new HashMap();
 		
-		String jobId = filter.containsKey("jobId") ? ((String) filter.get("jobId"))
-					: null;
+//		String jobId = filter.containsKey("jobId") ? ((String) filter.get("jobId"))
+//					: null;
 		Boolean closed = filter.containsKey("closed") ? ((Boolean) filter.get("closed"))
 					: false;
 		String status = filter.containsKey("status") ? ((String) filter.get("status")).toLowerCase()
@@ -567,21 +566,21 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 			}
 		}
 		
-		List<HrCalendar> schedule = hrCalendarRepository.downloadAllMyTeamSchedulesFromCalendarByStatus(currentUser.getUserId(), jobId,
-				fromDate,  toDate, status, closed);
+		List<HrCalendar> schedule = hrCalendarRepository.downloadAllMyTeamSchedulesFromCalendarByStatus(fromDate,  toDate, status, closed);
 		
 		if(schedule.size() > 0) {
-		List excelHeaders = Arrays.asList("Name", "Job code", "Date", "Source", "Status");
+		List excelHeaders = Arrays.asList("Name", "Job code", "Date & Time", "Scheduled By", "Source", "Status");
 		List excelData = new ArrayList<>();
 		int index = 1;
 		
 		for (HrCalendar scheduleList : schedule) {
 			Map row = new HashMap();
-			
+			String getJobCode = jobRepository.getJobCodeById(scheduleList.getJobId());
 			row.put("Name", scheduleList.getCandidateName());
-			row.put("Job code", scheduleList.getJobId());
+			row.put("Job code", getJobCode);
 			row.put("Date", scheduleList.getScheduleDate());
 //			row.put("Time", scheduleList.get);
+			row.put("Scheduled By", scheduleList.getCreatedBy());
 			row.put("Source", scheduleList.getSearchedSource());
 			row.put("Status", scheduleList.getStatus());
 			
@@ -590,18 +589,18 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 		} 
 		
 
-		XSSFWorkbook workbook = ExcelWriter.writeToExcel(excelHeaders, excelData, "HrCalendar Details", null,
-				" Details", 1, 0);
+		XSSFWorkbook workbook = ExcelWriter.writeToExcel(excelHeaders, excelData, "My Team Schedule Details", null,
+				"My Team Schedule Details", 1, 0);
 		
 	    
-		String filename = new SimpleDateFormat("'HrCalendar_details_'yyyyMMddHHmmss'.xlsx'").format(new Date());
+		String filename = new SimpleDateFormat("'MyTeamSchhedule_details_'yyyyMMddHHmmss'.xlsx'").format(new Date());
 
-		Path fileStorageLocation = Paths.get(ResponseMessages.BASE_DIRECTORY + ResponseMessages.HR_CALENDAR_DIRECTORY );
+		Path fileStorageLocation = Paths.get(ResponseMessages.BASE_DIRECTORY + ResponseMessages.HR_DIRECTORY );
 		Files.createDirectories(fileStorageLocation);
 
 		try {
 			FileOutputStream out = new FileOutputStream(
-					new File(ResponseMessages.BASE_DIRECTORY + ResponseMessages.HR_CALENDAR_DIRECTORY + filename));
+					new File(ResponseMessages.BASE_DIRECTORY + ResponseMessages.HR_DIRECTORY + filename));
 			workbook.write(out);
 			out.close();
 //			logger.info(filename + " written successfully on disk.");
@@ -609,7 +608,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 //			logger.error("Exception occured while saving pincode details" + e.getCause());
 			throw e;
 		}
-		response.put("fileLocation", ResponseMessages.HR_CALENDAR_DIRECTORY + filename);
+		response.put("fileLocation", ResponseMessages.HR_DIRECTORY + filename);
 		
 		return response;
 		}

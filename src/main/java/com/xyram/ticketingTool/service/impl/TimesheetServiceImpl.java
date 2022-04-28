@@ -147,8 +147,10 @@ public class TimesheetServiceImpl implements TimesheetService{
 				    }
 				    timesheetRepository.save(sheet);
 				}
-				if(problemEncountered)
+				if(problemEncountered){
+					response.setSuccess(false);
 					response.setMessage("Some thing went Wrong"+" : "+problemIs);
+				}
 				else
 					response.setMessage("Sheets saved successfully");
 
@@ -266,8 +268,10 @@ public class TimesheetServiceImpl implements TimesheetService{
 				    timesheetRepository.save(sheetEntity);
 				    
 				}
-				if(problemEncountered)
+				if(problemEncountered) {
+					response.setSuccess(false);
 					response.setMessage("Some thing went Wrong"+" : "+problemIs);
+				}
 				else
 					response.setMessage("Sheet Saved Successfully");
 			}else {

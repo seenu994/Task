@@ -40,6 +40,6 @@ public interface AssetService {
 //
 //	ApiResponse getAssetIssuesById(String assetId, Pageable pageable);
 
-	Map downloadAssets(Map<String, Object> filter) throws ParseException, FileUploadException, IOException;
+	ApiResponse downloadAssets(Map<String, Object> filter);
 	
 }

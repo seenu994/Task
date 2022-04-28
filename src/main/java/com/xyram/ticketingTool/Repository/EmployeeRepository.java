@@ -280,7 +280,7 @@ List<Employee> getEmployeeByRole();
 	Employee getByEmpName(String firstName);
 
     @Query("select distinct (CONCAT(e.firstName ,' ', e.lastName)) from Asset a "
-    	    + "left join AssetEmployee b on b.assetId = a.assetId "
+    	    + "left join AssetEmployee b on b.assetId = a.assetId AND b.assetEmployeeStatus != 'INACTIVE' "
     	    + "left join Employee e on e.eId = b.empId where a.assetId =:assetId")
 	String getEmpNameById(String assetId);
 
