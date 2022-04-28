@@ -40,7 +40,7 @@ public interface HrCalendarRepository extends JpaRepository<HrCalendar, String>{
 			+ "(:searchString is null "
 			+ "or lower(a.candidateMobile) like %:searchString% "
 			+ "or lower(a.candidateName) like %:searchString% "
-			+ "or lower(a.jobId) like %:searchString%) "
+			+ "or lower(jo.jobTitle) like %:searchString%) "
 			+ "ORDER BY a.scheduleDate DESC")
 	List<Map> searchInMyShedule(String userId,String searchString);
 	

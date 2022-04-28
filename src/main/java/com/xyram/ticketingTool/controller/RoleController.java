@@ -43,7 +43,7 @@ public class RoleController {
 
 	
 	
-	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/addRole",AuthConstants.HR_ADMIN_BASEPATH + "/addRole",
+	/*@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/addRole",AuthConstants.HR_ADMIN_BASEPATH + "/addRole",
 			AuthConstants.INFRA_USER_BASEPATH + "/addRole", AuthConstants.INFRA_ADMIN_BASEPATH + "/addRole",
 			AuthConstants.HR_BASEPATH + "/addRole",AuthConstants.DEVELOPER_BASEPATH + "/addRole"})
 	  public ApiResponse addRole(@RequestBody Role role) {
@@ -58,7 +58,7 @@ public class RoleController {
 		logger.info("Received request to edit role");
 
 		return roleService.editRoleById(Request,Id);
-	}
+	}*/
 	
 	
 

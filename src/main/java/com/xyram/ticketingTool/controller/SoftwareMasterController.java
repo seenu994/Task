@@ -14,15 +14,14 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.SoftwareMaster;
 import com.xyram.ticketingTool.enumType.SoftwareEnum;
 import com.xyram.ticketingTool.service.SoftwareMasterService;
 import com.xyram.ticketingTool.util.AuthConstants;
-
-@RestController
 @CrossOrigin
+@RestController
+
 
 public class SoftwareMasterController {
 	private final Logger logger = LoggerFactory.getLogger(SoftwareMasterController.class);
