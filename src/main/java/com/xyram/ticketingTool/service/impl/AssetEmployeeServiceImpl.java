@@ -22,6 +22,7 @@ import com.xyram.ticketingTool.entity.Asset;
 import com.xyram.ticketingTool.entity.AssetEmployee;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.enumType.AssetEmployeeStatus;
+import com.xyram.ticketingTool.enumType.ModuleStatus;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.AssetEmployeeService;
 import com.xyram.ticketingTool.util.ResponseMessages;
@@ -52,7 +53,7 @@ public class AssetEmployeeServiceImpl implements AssetEmployeeService{
 		if (response.isSuccess()) {
 			if (assetEmployee != null) {
 				assetEmployee.setCreatedAt(new Date());
-				assetEmployee.setCreatedBy(currentUser.getName());
+				assetEmployee.setCreatedBy(currentUser.getUserId());
 				assetEmployeeRepository.save(assetEmployee);
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.ASSET_EMPLOYEE_ADDED);
@@ -153,11 +154,11 @@ public class AssetEmployeeServiceImpl implements AssetEmployeeService{
 	}
 	
 	@Override
-	public ApiResponse editAssetEmployee(AssetEmployee assetEmployee, String assetId) {
+	public ApiResponse editAssetEmployee(AssetEmployee assetEmployee, String assetEmpId) {
 	
 		ApiResponse response = new ApiResponse();
 		
-		AssetEmployee assetObj1 = assetEmployeeRepository.getByAssetId(assetId);			
+		AssetEmployee assetObj1 = assetEmployeeRepository.getByAssetEmpId(assetEmpId);			
 		if (assetObj1 != null) {
 			
 			if(assetEmployee.getEmpId() != null) {
@@ -174,7 +175,7 @@ public class AssetEmployeeServiceImpl implements AssetEmployeeService{
         	assetObj1.setPowercordIssued(assetEmployee.isPowercordIssued());
         	
         	assetObj1.setLastUpdatedAt(new Date());
-        	assetObj1.setUpdatedBy(currentUser.getName());
+        	assetObj1.setUpdatedBy(currentUser.getUserId());
 			
             assetEmployeeRepository.save(assetObj1);
 			response.setSuccess(true);
@@ -183,7 +184,7 @@ public class AssetEmployeeServiceImpl implements AssetEmployeeService{
 		else {
 			response.setSuccess(false);
 			//response.setMessage(ResponseMessages.ASSET_NOT_EDITED);
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset id is not valid");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "assetEmployee id is not valid");
 		}
 		return response;
 	}
@@ -210,12 +211,12 @@ public class AssetEmployeeServiceImpl implements AssetEmployeeService{
 	}
 
 	@Override
-	public ApiResponse updateAssetEmployee(AssetEmployee assetEmployee, String assetId) {
+	public ApiResponse updateAssetEmployee(AssetEmployee assetEmployee, String assetEmpId) {
 		ApiResponse response = new ApiResponse();
-		AssetEmployee empObj = assetEmployeeRepository.getByAssetId(assetId);
+		AssetEmployee empObj = assetEmployeeRepository.getByAssetEmpId(assetEmpId);
 		if(empObj != null) {
 			if(assetEmployee.getReturnDate() != null) {
-				checkReturnDate(assetEmployee.getReturnDate(), assetId);
+				checkReturnDate(assetEmployee.getReturnDate(), assetEmpId);
 				empObj.setReturnDate(assetEmployee.getReturnDate());
 			}
 			if(assetEmployee.getReturnType() != null) {
@@ -226,21 +227,21 @@ public class AssetEmployeeServiceImpl implements AssetEmployeeService{
 			}
 			
 		    empObj.setLastUpdatedAt(new Date());
-        	empObj.setUpdatedBy(currentUser.getName());
-        	empObj.setAssetEmployeeStatus(AssetEmployeeStatus.INACTIVE);
+        	empObj.setUpdatedBy(currentUser.getUserId());
+        	empObj.setAssetEmployeeStatus(ModuleStatus.INACTIVE);
 			assetEmployeeRepository.save(empObj);
 			response.setSuccess(true);
 			response.setMessage("Asset Employee updated Successfully");
 		}
 		else {
 			response.setSuccess(false);
-			response.setMessage("Invalid Asset Id");
+			response.setMessage("Invalid AssetEmp Id");
 		}
 		return response;
 	}
 
-	private boolean checkReturnDate(Date returnDate, String assetId) {
-		Date assetEmployee = assetEmployeeRepository.getIssuedDateById(assetId);
+	private boolean checkReturnDate(Date returnDate, String assetEmpId) {
+		Date assetEmployee = assetEmployeeRepository.getIssuedDateById(assetEmpId);
 		Date d1 = assetEmployee;
 		Date d2 = returnDate;
 		Date d3 = new Date();

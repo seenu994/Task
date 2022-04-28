@@ -27,6 +27,9 @@ public interface RamSizeRepository extends JpaRepository<RamSize, String> {
     @Query("Select r from RamSize r where r.ramSize =:ram")
 	RamSize getRamSize(String ram);
 
+    @Query("Select r.ramId from RamSize r where r.ramSize =:ramSize")
+	String getRamId(String ramSize);
+
     
 
 	

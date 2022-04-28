@@ -26,6 +26,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.transaction.Transactional;
 
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -100,7 +101,7 @@ public class AssetServiceImpl implements AssetService {
 			if (asset != null) {
 			    asset.setCreatedAt(new Date());
 //			    asset.setLastUpdatedAt(new Date());
-			    asset.setCreatedBy(currentUser.getName());
+			    asset.setCreatedBy(currentUser.getUserId());
 //     		    asset.setUpdatedBy(currentUser.getName());
 				assetRepository.save(asset);
 				response.setSuccess(true);
@@ -302,7 +303,7 @@ public class AssetServiceImpl implements AssetService {
 		    assetObj.setPowercordAvailable(asset.isPowercordAvailable());
 		    
 		    assetObj.setLastUpdatedAt(new Date());
-		    assetObj.setUpdatedBy(currentUser.getName());
+		    assetObj.setUpdatedBy(currentUser.getUserId());
 			assetRepository.save(assetObj);
 			response.setSuccess(true);
 			response.setMessage(ResponseMessages.ASSET_EDITED);	
@@ -564,6 +565,89 @@ public class AssetServiceImpl implements AssetService {
 		return response;
 	}
 
+	@Override
+	public ApiResponse downloadAssets(Map<String, Object> filter){
+		ApiResponse response = new ApiResponse();
+		String ram = filter.containsKey("ram") ? ((String) filter.get("ram"))
+				: null;
+		String brand = filter.containsKey("brand") ? ((String) filter.get("brand"))
+				: null;
+		String vendorId = filter.containsKey("vendorId") ? ((String) filter.get("vendorId"))
+					: null;
+		String assetStatus = filter.containsKey("assetStatus") ? ((String) filter.get("assetStatus")).toUpperCase()
+					: null;
+		
+		AssetStatus status = null;
+		if(assetStatus!=null) {
+			try {
+				status = assetStatus != null ? AssetStatus.toEnum(assetStatus) : null;
+			} catch (IllegalArgumentException e) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+						filter.get("status").toString() + " is not a valid status");
+			}
+		}
+				
+		List<Map> assetList = assetRepository.getAllAssetsForDownload(ram, brand, status, vendorId);
+		Map<String, Object> fileResponse = new HashMap<>();
+
+		Workbook workbook = prepareExcelWorkBook(assetList);
+        
+		byte[] blob = ExcelUtil.toBlob(workbook);
+		
+		try {
+			ExcelUtil.saveWorkbook(workbook, "reports.xlsx");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		fileResponse.put("fileName", "assetDetails-report.xlsx");
+		fileResponse.put("type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+		fileResponse.put("blob", blob);
+		response.setFileDetails(fileResponse);
+		System.out.println(fileResponse);
+		response.setStatus("success");
+		response.setMessage("report exported Successfully");
+		
+		return response;
+	
+	}
+	private Workbook prepareExcelWorkBook(List<Map> assetList) 
+	{
+		List<String> headers = Arrays.asList("Asset Id", "Model No", "Brand", "Serial No", "Purchase on", "Warranty Date", 
+				  "Asset Status", "Ram Size", "Vendor Name", "Assigned To");
+			
+		List data = new ArrayList<>();
+
+		for (Map assetDetails : assetList) 
+		{
+            Map row = new HashMap<>();
+//            AssetVendor getVendorName = assetVendorRepository.getAssetVendorById(assetList.getVendorId());
+//			String getEmployeeName = employeeRepository.getEmpNameById(((Asset) assetList).getAssetId());
+//			String getStatus = assetRepository.getStatus(((Asset) assetList).getAssetId());
+
+			row.put("assetId",assetDetails.get("assetId") != null ? assetDetails.get("assetId").toString(): "");
+			row.put("brand",assetDetails.get("brand") != null ? assetDetails.get("brand").toString(): "");
+			row.put("serialNo",assetDetails.get("serialNo") != null ? assetDetails.get("serialNo").toString(): "");
+			row.put("modelNo",assetDetails.get("modelNo") != null ? assetDetails.get("modelNo").toString(): "");
+			row.put("purchaseOn",assetDetails.get("purchaseDate") != null ? assetDetails.get("purchaseDate").toString(): "");
+			row.put("warrantyDate",assetDetails.get("warrantyDate") != null ? assetDetails.get("warrantyDate").toString(): "");
+			row.put("assetStatus",assetDetails.get("assetStatus") != null ? assetDetails.get("assetStatus").toString(): "");
+			row.put("vendorName",assetDetails.get("vendorName") != null ? assetDetails.get("vendorName").toString(): "");
+			row.put("assignedTo",assetDetails.get("assignedTo") != null ? assetDetails.get("assignedTo").toString(): "");
+			row.put("ramSize",assetDetails.get("ram") != null ? assetDetails.get("ram").toString(): "");
+			
+			
+			data.add(row);
+
+		}
+        Workbook workbook = ExcelUtil.createSingleSheetWorkbook(ExcelUtil.createSheet("Asset issues report", headers, data));
+
+		return workbook;
+		
+	}
+	
+
 //	@Override
 //	public ApiResponse getAssetEmployeeById(String assetId, Pageable pageable) {
 //		ApiResponse response = new ApiResponse();
@@ -639,7 +723,7 @@ public class AssetServiceImpl implements AssetService {
 //		}
 //		return response;
 //	}
-
+/*
 	@Override
 	public Map downloadAssets(Map<String, Object> filter) throws ParseException, FileUploadException, IOException {
 		Map response = new HashMap();
@@ -724,7 +808,7 @@ public class AssetServiceImpl implements AssetService {
 		}
 	}
 	
-	
+	*/
 	
 
 //	@Override

@@ -303,7 +303,9 @@ String ASSET_DIRECTORY ="/Documents/assetDetails/";
 
 	String TIME_SHEET_NOT_DELETED = "time sheet not deleted";
 
-	String HR_CALENDAR_DIRECTORY = "/Documents/hrCalendarDetails/";
+	String HR_CALENDAR_DIRECTORY = "/Documents/MyScheduleDetails/";
+
+	String HR_DIRECTORY = "/Documents/MyTeamScheduleDetails/";
 
 	
 

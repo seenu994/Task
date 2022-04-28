@@ -36,20 +36,20 @@ public class AssetEmployeeController {
 		return assetEmployeeService.addAssetEmployee(assetEmployee);
 	}
 	
-	@PutMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/editAssetEmployee/{assetId}",
-			AuthConstants.INFRA_USER_BASEPATH + "/editAssetEmployee/{assetId}",
-			AuthConstants.ADMIN_BASEPATH + "/editAssetEmployee/{assetId}"})
-    public ApiResponse editAssetEmployee(@RequestBody AssetEmployee assetEmployee, @PathVariable String assetId) {
+	@PutMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/editAssetEmployee/{assetEmpId}",
+			AuthConstants.INFRA_USER_BASEPATH + "/editAssetEmployee/{assetEmpId}",
+			AuthConstants.ADMIN_BASEPATH + "/editAssetEmployee/{assetEmpId}"})
+    public ApiResponse editAssetEmployee(@RequestBody AssetEmployee assetEmployee, @PathVariable String assetEmpId) {
 		logger.info("Received request to edit asset employee");
-		return assetEmployeeService.editAssetEmployee(assetEmployee, assetId);
+		return assetEmployeeService.editAssetEmployee(assetEmployee, assetEmpId);
 	}
 	
-	@PutMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/updateAssetEmployee/{assetId}",
-			AuthConstants.INFRA_USER_BASEPATH + "/updateAssetEmployee/{assetId}",
-			AuthConstants.ADMIN_BASEPATH + "/updateAssetEmployee/{assetId}"})
-	ApiResponse updateAssetEmployee(@RequestBody AssetEmployee assetEmployee,@PathVariable String assetId) {
+	@PutMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/updateAssetEmployee/{assetEmpId}",
+			AuthConstants.INFRA_USER_BASEPATH + "/updateAssetEmployee/{assetEmpId}",
+			AuthConstants.ADMIN_BASEPATH + "/updateAssetEmployee/{assetEmpId}"})
+	ApiResponse updateAssetEmployee(@RequestBody AssetEmployee assetEmployee,@PathVariable String assetEmpId) {
 		logger.info("Received request to update Asset Employee");
-		return assetEmployeeService.updateAssetEmployee(assetEmployee, assetId);
+		return assetEmployeeService.updateAssetEmployee(assetEmployee, assetEmpId);
 	}
 		
 	@GetMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/getAssetEmployeeById/{assetId}",

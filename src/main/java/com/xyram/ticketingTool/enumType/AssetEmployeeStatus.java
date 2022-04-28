@@ -11,9 +11,7 @@ public enum AssetEmployeeStatus {
 	REPAIR("REPAIR"),
 	EXCHANGE("EXCHANGE"),
 	RESIGNED("RESIGNED"),
-	RETURN("RETURN"),
-	ACTIVE("ACTIVE"),
-	INACTIVE("INACTIVE");
+	RETURN("RETURN");
 	private String value;
 
 	

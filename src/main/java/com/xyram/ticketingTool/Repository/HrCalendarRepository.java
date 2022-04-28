@@ -61,25 +61,22 @@ public interface HrCalendarRepository extends JpaRepository<HrCalendar, String>{
 			String fromDate, String toDate, String status,Boolean closed,Pageable pageable);
 	
 	@Query("Select distinct a from HrCalendar a "
-			+ "left join JobOpenings jo on a.jobId = jo.id where a.createdBy = :userId and "
+			+ "left join JobOpenings jo on a.jobId = jo.id where "
 			+ "(:toDate is null OR Date(a.scheduleDate) <= STR_TO_DATE(:toDate, '%Y-%m-%d')) AND "
 			+ "(:fromDate is null OR Date(a.scheduleDate) >= STR_TO_DATE(:fromDate, '%Y-%m-%d')) AND "
 			+ "(:status is null OR lower(a.status)=:status) AND "
-			+ "(:jobId is null OR a.jobId=:jobId) AND "
 			+ "(:closed is null OR a.closed=:closed) ORDER BY a.scheduleDate DESC")
-	List<HrCalendar> downloadAllMySchedulesFromCalendarByStatus(String userId,String jobId, 
-			String fromDate, String toDate, String status,Boolean closed);
+	List<HrCalendar> downloadAllMySchedulesFromCalendarByStatus(String fromDate, String toDate, 
+			String status,Boolean closed);
 	
 	  @Query("Select distinct a from HrCalendar a "
-			+ "left join Employee ee on a.createdBy = ee.userCredientials.id "
-			+ "left join JobOpenings jo on a.jobId = jo.id where a.reportingTo = :userId and "
+			+ "left join JobOpenings jo on a.jobId = jo.id where "
 			+ "(:toDate is null OR Date(a.scheduleDate) <= STR_TO_DATE(:toDate, '%Y-%m-%d')) AND "
 			+ "(:fromDate is null OR Date(a.scheduleDate) >= STR_TO_DATE(:fromDate, '%Y-%m-%d')) AND "
 			+ "(:status is null OR lower(a.status)=:status) AND "
-			+ "(:jobId is null OR a.jobId=:jobId) AND "
 			+ "(:closed is null OR a.closed=:closed) ORDER BY a.scheduleDate DESC")
-	List<HrCalendar> downloadAllMyTeamSchedulesFromCalendarByStatus(String userId,String jobId, 
-		String fromDate, String toDate, String status, Boolean closed);
+	List<HrCalendar> downloadAllMyTeamSchedulesFromCalendarByStatus(String fromDate, String toDate, 
+			      String status, Boolean closed);
 	
 	@Query("Select new map(h.Id as id,h.candidateMobile as candidateMobile,h.status as status) from HrCalendar h")
 	Page<Map> getAllHrCalendarSchedules(Pageable pageable);

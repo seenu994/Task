@@ -139,6 +139,11 @@ public interface JobRepository extends CrudRepository<JobOpenings, Long>, JpaSpe
 			+ " Or lower(j.minExp) LIKE %:searchString%) ORDER BY j.createdAt DESC")		
 	Page<List<Map>> getAllOpeningsWithoutPackage(String searchString, JobOpeningStatus status, String wing, String userRole,
 		 Pageable pageable);
+
+
+
+	@Query(value = "SELECT j.jobCode from JobOpenings j WHERE j.Id =:jobId ")
+	String getJobCodeById(String jobId);
 	
 	
 	
