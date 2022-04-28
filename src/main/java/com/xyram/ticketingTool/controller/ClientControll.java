@@ -29,20 +29,20 @@ public class ClientControll {
 	@Autowired
 	private ClientService clientService;
 
-	@PostMapping("/addClient")
+	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/addClient"})
 	public ApiResponse addClient(@RequestBody Client clientRequest) {
 		
 		return clientService.addClient(clientRequest);
 	}
 	
-	@PutMapping("/editClient/{clientId}")
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editClient/{clientId}"})
 	public ApiResponse editClient(@RequestBody Client clientRequest,@PathVariable String clientId ) {
 	
 		return clientService.editClient(clientId,clientRequest);
 	}
 	
-	
-	@PutMapping("/{clientId}/status/{userstatus}")
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/{clientId}/status/{userstatus}"})
+	//@PutMapping("/{clientId}/status/{userstatus}")
 	public ApiResponse updateClientStatus(@PathVariable String clientId, @PathVariable ClientStatus userstatus) {
 	
 		return clientService.updateClientStatus(clientId, userstatus);

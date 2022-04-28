@@ -145,6 +145,7 @@ public interface AssetRepository extends JpaRepository<Asset, String>{
 	String getStatus(String assetId);
 	
 	
+    
 
 	
     
