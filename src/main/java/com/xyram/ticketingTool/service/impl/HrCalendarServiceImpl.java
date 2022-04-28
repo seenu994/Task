@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
 
 import javax.transaction.Transactional;
 
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.slf4j.Logger;
@@ -46,6 +47,7 @@ import com.xyram.ticketingTool.entity.HrCalendarComment;
 import com.xyram.ticketingTool.entity.JobOpenings;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.HrCalendarService;
+import com.xyram.ticketingTool.util.ExcelUtil;
 import com.xyram.ticketingTool.util.ExcelWriter;
 import com.xyram.ticketingTool.util.ResponseMessages;
 
@@ -459,7 +461,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 		}
 		return response;
 	}
-
+/*
 	@Override
 	public Map downloadAllMySchedulesFromCalendarByStatus(Map<String, Object> filter) throws ParseException, FileUploadException, IOException{
 	Map response = new HashMap();
@@ -537,7 +539,8 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No Records Found!");
 	}
 }
-
+*/
+	/*
 	@Override
 	public Map downloadMyTeamSchedulesFromCalendarByStatus(Map<String, Object> filter) throws ParseException, FileUploadException, IOException{
 		Map response = new HashMap();
@@ -616,7 +619,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No Records Found!");
 		}
 	}
-	
+	*/
 	public static boolean isValidMobileNo(String str)  
 	{  
 		//(0/91): number starts with (0/91)  
@@ -756,6 +759,165 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 		}
 
 		return response;
+	}
+
+	@Override
+	public ApiResponse downloadAllMySchedulesFromCalendarByStatus(Map<String, Object> filter) {
+		ApiResponse response = new ApiResponse();
+//		String jobId = filter.containsKey("jobId") ? ((String) filter.get("jobId"))
+//				: null;
+//		String employeeId = filter.containsKey("employeeId") ? ((String) filter.get("employeeId"))
+//				: null;
+		Boolean closed = filter.containsKey("closed") ? ((Boolean) filter.get("closed"))
+				: false;
+	    String status = filter.containsKey("status") ? ((String) filter.get("status")).toLowerCase()
+				: null;
+	    String fromDate = filter.containsKey("fromDate") ? filter.get("fromDate").toString() : null;
+	    String toDate = filter.containsKey("toDate") ? filter.get("toDate").toString() : null;
+
+	Date parsedfromDate = null;
+	Date parsedtoDate = null;
+	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	
+	if(fromDate != null && toDate != null) {
+		try {
+
+			parsedfromDate = fromDate != null ? dateFormat.parse(fromDate) : null;
+			parsedtoDate = toDate != null ? dateFormat.parse(toDate) : null;
+
+		} catch (ParseException e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid date format date should be yyyy-MM-dd");
+		}
+	}
+	
+	List<Map> myScheduleList = hrCalendarRepository.downloadAllMySchedulesFromCalendarByStatus(fromDate, toDate, status, closed);
+	Map<String, Object> fileResponse = new HashMap<>();
+
+	Workbook workbook = prepareExcelWorkBook(myScheduleList);
+    
+	byte[] blob = ExcelUtil.toBlob(workbook);
+	
+	try {
+		ExcelUtil.saveWorkbook(workbook, "mySchedulereports.xlsx");
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+
+	fileResponse.put("fileName", "myScheduleDetails-report.xlsx");
+	fileResponse.put("type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+	fileResponse.put("blob", blob);
+	response.setFileDetails(fileResponse);
+	//System.out.println(fileResponse);
+	response.setStatus("success");
+	response.setMessage("report exported Successfully");
+	
+		return response;
+	}
+	private Workbook prepareExcelWorkBook(List<Map> myScheduleList) 
+	{
+		List<String> headers = Arrays.asList("Name", "Job code", "Date & Time", "Source", "Status");
+			
+		List data = new ArrayList<>();
+
+		for (Map mySchedule : myScheduleList) 
+		{
+            Map row = new HashMap<>();
+
+			row.put("Name",mySchedule.get("candidateName") != null ? mySchedule.get("candidateName").toString(): "");
+			row.put("Job code",mySchedule.get("jobCode") != null ? mySchedule.get("jobCode").toString(): "");
+			row.put("Date & Time",mySchedule.get("scheduleDate") != null ? mySchedule.get("scheduleDate").toString(): "");
+			row.put("Source",mySchedule.get("searchedSource") != null ? mySchedule.get("searchedSource").toString(): "");
+			row.put("Status",mySchedule.get("status") != null ? mySchedule.get("status").toString(): "");
+			
+			data.add(row);
+
+		}
+        Workbook workbook = ExcelUtil.createSingleSheetWorkbook(ExcelUtil.createSheet("My Schedule report", headers, data));
+
+		return workbook;
+		
+	}
+
+	@Override
+	public ApiResponse downloadMyTeamSchedulesFromCalendarByStatus(Map<String, Object> filter) {
+		ApiResponse response = new ApiResponse();
+//		String jobId = filter.containsKey("jobId") ? ((String) filter.get("jobId"))
+//				: null;
+//		String employeeId = filter.containsKey("employeeId") ? ((String) filter.get("employeeId"))
+//				: null;
+		Boolean closed = filter.containsKey("closed") ? ((Boolean) filter.get("closed"))
+				: false;
+	String status = filter.containsKey("status") ? ((String) filter.get("status")).toLowerCase()
+				: null;
+	String fromDate = filter.containsKey("fromDate") ? filter.get("fromDate").toString() : null;
+	String toDate = filter.containsKey("toDate") ? filter.get("toDate").toString() : null;
+
+	Date parsedfromDate = null;
+	Date parsedtoDate = null;
+	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	
+	if(fromDate != null && toDate != null) {
+		try {
+
+			parsedfromDate = fromDate != null ? dateFormat.parse(fromDate) : null;
+			parsedtoDate = toDate != null ? dateFormat.parse(toDate) : null;
+
+		} catch (ParseException e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid date format date should be yyyy-MM-dd");
+		}
+	}
+	
+	List<Map> myTeamScheduleList = hrCalendarRepository.downloadAllMyTeamSchedulesFromCalendarByStatus(currentUser.getUserId(),
+			                                            fromDate,  toDate, status, closed);
+	Map<String, Object> fileResponse = new HashMap<>();
+
+	Workbook workbook = prepareExcelWorkBookTeam(myTeamScheduleList);
+    
+	byte[] blob = ExcelUtil.toBlob(workbook);
+	
+	try {
+		ExcelUtil.saveWorkbook(workbook, "myTeamSchedulereports.xlsx");
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+
+	fileResponse.put("fileName", "myTeamSchedule-report.xlsx");
+	fileResponse.put("type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+	fileResponse.put("blob", blob);
+	response.setFileDetails(fileResponse);
+	//System.out.println(fileResponse);
+	response.setStatus("success");
+	response.setMessage("report exported Successfully");
+	
+		return response;
+	}
+	private Workbook prepareExcelWorkBookTeam(List<Map> myTeamScheduleList) 
+	{
+		List<String> headers = Arrays.asList("Name", "Job code", "Date & Time", "Scheduled By", "Source", "Status");
+			
+		List data = new ArrayList<>();
+
+		for (Map myTeamSchedule : myTeamScheduleList) 
+		{
+            Map row = new HashMap<>();
+
+			row.put("Name",myTeamSchedule.get("candidateName") != null ? myTeamSchedule.get("candidateName").toString(): "");
+			row.put("Job code",myTeamSchedule.get("jobCode") != null ? myTeamSchedule.get("jobCode").toString(): "");
+			row.put("Date & Time",myTeamSchedule.get("scheduleDate") != null ? myTeamSchedule.get("scheduleDate").toString(): "");
+			row.put("Scheduled By",myTeamSchedule.get("scheduledBy") != null ? myTeamSchedule.get("scheduledBy").toString(): "");
+			row.put("Source",myTeamSchedule.get("searchedSource") != null ? myTeamSchedule.get("searchedSource").toString(): "");
+			row.put("Status",myTeamSchedule.get("status") != null ? myTeamSchedule.get("status").toString(): "");
+			
+			
+			data.add(row);
+
+		}
+        Workbook workbook = ExcelUtil.createSingleSheetWorkbook(ExcelUtil.createSheet("My Team Schedule report", headers, data));
+
+		return workbook;
+		
 	}
 
 }

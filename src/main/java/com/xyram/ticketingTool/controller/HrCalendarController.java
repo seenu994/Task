@@ -174,7 +174,7 @@ public class HrCalendarController {
 	@PostMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/downloadAllMySchedulesFromCalendarByStatus",
 			AuthConstants.HR_BASEPATH + "/downloadAllMySchedulesFromCalendarByStatus"			
 			})
-	Map downloadAllMySchedulesFromCalendarByStatus(@RequestBody Map<String, Object>filter) throws ParseException, FileUploadException, IOException{
+	ApiResponse downloadAllMySchedulesFromCalendarByStatus(@RequestBody Map<String, Object>filter) {
 		logger.info("Get all downloadAllMySchedulesFromCalendarByStatus");
 		return hrCalrendarService.downloadAllMySchedulesFromCalendarByStatus(filter);
 	}
@@ -182,7 +182,7 @@ public class HrCalendarController {
 	@PostMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/downloadMyTeamSchedulesFromCalendarByStatus",
 			AuthConstants.HR_BASEPATH + "/downloadMyTeamSchedulesFromCalendarByStatus"			
 			})
-	Map downloadMyTeamSchedulesFromCalendarByStatus(@RequestBody Map<String, Object>filter) throws ParseException, FileUploadException, IOException{
+	ApiResponse downloadMyTeamSchedulesFromCalendarByStatus(@RequestBody Map<String, Object>filter) {
 		logger.info("Get all downloadMyTeamSchedulesFromCalendarByStatus");
 		return hrCalrendarService.downloadMyTeamSchedulesFromCalendarByStatus(filter);
 	}
