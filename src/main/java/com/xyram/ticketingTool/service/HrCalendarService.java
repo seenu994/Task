@@ -41,8 +41,8 @@ public interface HrCalendarService {
 	
 	ApiResponse getAllMyTeamSchedulesFromCalendarByStatus(Map<String, Object>filter, Pageable pageable);
 	
-	Map downloadAllMySchedulesFromCalendarByStatus(Map<String, Object>filter) throws ParseException, FileUploadException, IOException;
+	ApiResponse downloadAllMySchedulesFromCalendarByStatus(Map<String, Object>filter);
 	
-	Map downloadMyTeamSchedulesFromCalendarByStatus(Map<String, Object>filter) throws ParseException, FileUploadException, IOException;
+	ApiResponse downloadMyTeamSchedulesFromCalendarByStatus(Map<String, Object>filter);
 
 }

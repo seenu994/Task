@@ -280,7 +280,34 @@ public interface ResponseMessages {
 
 	String TIME_SHEET_NOT_DELETED = "time sheet not deleted";
 
+	String ADDED_ROLE = "Role is added Successfully";
 	String HR_CALENDAR_DIRECTORY = "/Documents/MyScheduleDetails/";
+
+	String ROLE_EDITED = "Role is edited successfully";
+
+	String INVALID_ROLE_DETAILS = "Role details Invalid";
+
+	String SOFTWAREMASTER_NOT_ADDED = "SoftwareMaster is not added";
+
+	String CITY_EDITED = "city details edited Successfully";
+
+	String CITY_DETAILS_INVALID = "Invalid City Details ";
+
+	String CITY_ADDED = "Added City";
+
+	String CITY_NOT_ADDED = "Not added City";
+
+	String CITY_LIST_RETRIVED = "List retrieved Successfully";
+
+	String COUNTRY_LIST_RETRIVED = "List retrieved Successfully";
+
+	String ADDED_ISSUE = "Issue is added Successfully";
+
+	String ISSUE_NOT_ADDED = "Issue not added";
+
+	String EDIT_ISSUE = "Issue is edited Successfully";
+
+	String ISSUES_LIST_RETRIVED = "List retrieved Successfully";
 
 	String HR_DIRECTORY = "/Documents/MyTeamScheduleDetails/";
 
