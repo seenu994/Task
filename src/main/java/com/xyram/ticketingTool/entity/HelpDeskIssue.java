@@ -12,7 +12,7 @@ import com.xyram.ticketingTool.id.generator.IdGenerator;
 import com.xyram.ticketingTool.id.generator.IdPrefix;
 
 @Entity
-@Table(name = "Issues")
+@Table(name = "issues")
 
 public class HelpDeskIssue {
 
@@ -21,36 +21,30 @@ public class HelpDeskIssue {
 	@GeneratedValue(generator = IdGenerator.ID_GENERATOR)
 	@GenericGenerator(name = IdGenerator.ID_GENERATOR, strategy = "com.xyram.ticketingTool.id.generator.IdGenerator")
 	@Column(name = "issue_Id" )
-	private String issue_Id;
+	private String issueId;
 	
 	
 
-	@Column(name = "IssueName")
-	private String issueName;
-
-
-
-	public String getIssue_Id() {
-		return issue_Id;
+	public String getIssueId() {
+		return issueId;
 	}
 
-
-
-	public void setIssue_Id(String issue_Id) {
-		this.issue_Id = issue_Id;
+	public void setIssueId(String issueId) {
+		this.issueId = issueId;
 	}
-
-
 
 	public String getIssueName() {
 		return issueName;
 	}
 
-
-
 	public void setIssueName(String issueName) {
 		this.issueName = issueName;
 	}
 
+	@Column(name = "issue_name")
+	private String issueName;
+
 	
 }
+
+	

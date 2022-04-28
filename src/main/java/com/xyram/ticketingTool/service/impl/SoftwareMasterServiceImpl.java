@@ -50,23 +50,33 @@ public class SoftwareMasterServiceImpl implements SoftwareMasterService {
 		ApiResponse response = new ApiResponse(false);
 
 		response = validateSoftwareMaster(softwareMaster);
-		if (softwareMaster.getSoftwareName() != null) {
+		if (softwareMaster != null) {
 			softwareMaster.setCreatedAt(new Date());
 			softwareMaster.setCreatedBy(currentUser.getName());
 			
 			SoftwareMaster softwaremaster = softwareRepository.save(softwareMaster);
-			response.setMessage(ResponseMessages.ADDED_SOFTWAREMASTER);
 			response.setSuccess(true);
-
-			Map content = new HashMap();
-			content.put("softwareId", softwareMaster.getSoftwareId());
-			content.put("softwareName",softwareMaster.getSoftwareName());
-			content.put("softwareStatus", softwareMaster.getSoftwareMasterStatus());
-			response.setContent(content);
+			response.setMessage(ResponseMessages.ADDED_SOFTWAREMASTER);
+		}
+		else {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.SOFTWAREMASTER_NOT_ADDED);
 		}
 
-		return response;
-	}
+	
+	return response;
+}
+			
+
+//			Map content = new HashMap();
+//			content.put("softwareId", softwareMaster.getSoftwareId());
+//			content.put("softwareName",softwareMaster.getSoftwareName());
+//			content.put("softwareStatus", softwareMaster.getSoftwareMasterStatus());
+//			response.setContent(content);
+//		}
+//
+//		return response;
+//	}
 
 	@Override
 	public ApiResponse editSoftwareMaster(SoftwareMaster software, String softwareId) {
