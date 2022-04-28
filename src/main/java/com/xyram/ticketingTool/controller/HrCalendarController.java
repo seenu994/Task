@@ -98,8 +98,8 @@ public class HrCalendarController {
 		return hrCalrendarService.changeScheduleStatus(scheduleId,comment,status,dt);
 	}
 	
-	@PostMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/updateScheduleCallCounter",
-			AuthConstants.HR_BASEPATH + "/updateScheduleCallCounter"			
+	@PostMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/updateScheduleCallCounter/{scheduleId}",
+			AuthConstants.HR_BASEPATH + "/updateScheduleCallCounter/{scheduleId}"			
 			})
 	ApiResponse updateScheduleCallCounter( @PathVariable String scheduleId) {
 		logger.info("Updating Update Call COunter");
