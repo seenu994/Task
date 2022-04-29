@@ -41,7 +41,7 @@ public class Asset extends AuditModel{
 	@Column(name = "model_no")
 	private String modelNo;
 	
-	@Column(name = "serial_no", unique = true)
+	@Column(name = "serial_no")
 	private String serialNo;
 
 	@Column(name = "warranty_date")
