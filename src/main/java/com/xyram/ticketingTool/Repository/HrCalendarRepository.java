@@ -20,7 +20,7 @@ public interface HrCalendarRepository extends JpaRepository<HrCalendar, String>{
 //	getAllMySchedulesFromCalendarByStatus
 	
 	@Query("Select distinct new map( a.Id as id,a.candidateMobile as mobile,a.candidateName as name,a.status as status, "
-			+ "a.createdAt as createdAt, a.scheduleDate as scheduleDate, a.searchedSource as searchedSource, "
+			+ "a.createdAt as createdAt,a.createdBy as createdBy,a.scheduleDate as scheduleDate, a.searchedSource as searchedSource, "
 			+ "a.jobId as jobId,jo.jobTitle as jobTitle, a.closed as closed,a.callCount as callCount,a.reportingTo as reportingTo, "
 			+ "a.createdAt as createdAt,a.lastUpdatedAt as lastUpdatedAt) from HrCalendar a "
 			+ "left join JobOpenings jo on a.jobId = jo.id where a.createdBy = :userId and "
@@ -42,7 +42,7 @@ public interface HrCalendarRepository extends JpaRepository<HrCalendar, String>{
 	List<Map> getCandidateHistory(String mobileNo);
 	
 	@Query("Select distinct new map( a.Id as id,a.candidateMobile as mobile,a.candidateName as name,a.status as status, "
-			+ "a.createdAt as createdAt, a.scheduleDate as scheduleDate, a.searchedSource as searchedSource, "
+			+ "a.createdAt as createdAt,a.scheduleDate as scheduleDate, a.searchedSource as searchedSource, "
 			+ "a.jobId as jobId,jo.jobTitle as jobTitle, a.closed as closed,a.callCount as callCount,a.reportingTo as reportingTo, "
 			+ "a.createdAt as createdAt,a.createdBy as createdBy,a.lastUpdatedAt as lastUpdatedAt) from HrCalendar a "
 			+ "left join JobOpenings jo on a.jobId = jo.id where a.createdBy = :userId and "
@@ -55,7 +55,7 @@ public interface HrCalendarRepository extends JpaRepository<HrCalendar, String>{
 	
 	@Query("Select distinct new map( a.Id as id,a.candidateMobile as mobile,a.candidateName as name,a.status as status, "
 			+ "a.createdAt as createdAt, a.scheduleDate as scheduleDate, a.searchedSource as searchedSource, "
-			+ "a.jobId as jobId,jo.jobTitle as jobTitle, a.closed as closed,a.callCount as callCount,a.reportingTo as reportingTo, "
+			+ "a.jobId as jobId,jo.jobTitle as jobTitle,a.createdBy as createdBy, a.closed as closed,a.callCount as callCount,a.reportingTo as reportingTo, "
 			+ "concat(ee.firstName,' ', ee.lastName) as scheduledBy, "
 			+ "a.createdAt as createdAt,a.lastUpdatedAt as lastUpdatedAt) from HrCalendar a "
 			+ "left join Employee ee on a.createdBy = ee.userCredientials.id "
