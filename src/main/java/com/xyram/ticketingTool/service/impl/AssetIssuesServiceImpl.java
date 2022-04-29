@@ -138,9 +138,9 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 		 {
 			 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "description is mandatory");
 		 }
-		 if(assetIssues.getDescription().length() < 10)
+		 if(assetIssues.getDescription().length() < 10 || (assetIssues.getDescription().length() > 500))
 		 {
-			 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "description should be greater than 10 characters");
+			 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "description should be greater than 10 characters and less than 500 characters");
 		 }
 		 
 		 response.setSuccess(true);
@@ -156,13 +156,16 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 
 	
 	
-	public ApiResponse editAssetIssues(AssetIssues assetIssues,String assetIssueId) 
+	public ApiResponse editAssetIssues(AssetIssues assetIssues, String assetIssueId) 
 	{
 		
-        ApiResponse response = new ApiResponse();
+        ApiResponse response = new ApiResponse(false);
 		//AssetIssues assetIssue;
 		AssetIssues assetIssuesObj = assetIssuesRepository.getAssetIssueById(assetIssueId);
 		
+		System.out.println(assetIssues);
+		
+		if(assetIssues.equals(null)) {
 		 
 		if(assetIssuesObj != null) 
 	    {	
@@ -197,7 +200,7 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 			response.setMessage(ResponseMessages.ASSET_ISSUES_EDIT_SUCCESSFULLY);
 			
 		}
-
+		}
 		else 
 		{
 			response.setSuccess(false);
@@ -214,9 +217,9 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 		{
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "description is mandatory");
 		}
-		if(description.length() < 10)
+		if(description.length() < 10 || description.length() > 500)
 		{
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "description should be greater than 10 characters");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "description should be greater than 10 characters and less than 500 characters");
 		}
 		return true;
 		
@@ -224,6 +227,10 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 
 	private boolean checkVendorId(String vendorId) 
 	{
+		if(vendorId == null || vendorId.equals(""))
+		{
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "vendor id is mandatory");
+		}
 		AssetVendor assetVendor = assetVendorRepository.getVendorById(vendorId);
 		if(assetVendor == null || assetVendor.equals(""))
 		{
@@ -237,10 +244,14 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 
 	private boolean checkAssetId(String assetId) 
 	{
+		if(assetId == null || assetId.equals(""))
+		{
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset id is mandatory");
+		}
 		Asset asset = assetRepository.getByAssetId(assetId);
 		if(asset == null || asset.equals(""))
 		{
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset id is not valid");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset id is invalid");
 		}
 		else
 		{
@@ -339,24 +350,29 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 
 	private boolean checksAssetId(String assetIssueId, String assetId) 
 	{
+		if(assetId == "" || assetId == null)
+		{
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset id is mandatory");
+		}
 		AssetIssues assetIssues = assetIssuesRepository.getAssetById(assetIssueId, assetId);
 		if(assetIssues == null || assetIssues.equals(""))
 		{
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid asset Id");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid asset id");
 		}
+		
 		return true;
 		
 	}
 
 	private boolean validateComments(String comments) 
 	{
-		if(comments == null || comments.equals("") || comments.length() < 10)
+		if(comments == null || comments.equals(""))
 		{
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "comments should be manadatory");
 		}
-		if(comments.length() < 10)
+		if(comments.length() < 10 || comments.length() > 300)
 		{
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "comments should be greater than 10 characters");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "comments should be greater than 10 characters and less than 300 characters");
 		}
 		return true;
 		
@@ -624,12 +640,12 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 		ApiResponse response = new ApiResponse();
 
 		String assetIssueStatus = filter.containsKey("assetIssueStatus") ? ((String) filter.get("assetIssueStatus")).toUpperCase()
-					: null;
+				: null;
 		String assetId = filter.containsKey("assetId") ? ((String) filter.get("assetId"))
 				: null;
 		String vendorId = filter.containsKey("vendorId") ? ((String) filter.get("vendorId"))
 				: null;
-		String fromDate = filter.containsKey("fromDate") ? filter.get("fromDate").toString(): null;
+		/*String fromDate = filter.containsKey("fromDate") ? filter.get("fromDate").toString(): null;
 		String toDate = filter.containsKey("toDate") ? filter.get("toDate").toString():null;
 		
 		Date parsefromDate = null;
@@ -647,18 +663,46 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid date format date should be yyyy-MM-dd");
 			}
 			
+		}*/
+		String fromDateStr = filter.containsKey("fromDate") ? ((String) filter.get("fromDate")).toLowerCase()
+				: null;
+		Date fromDate = null;
+		if(fromDateStr!=null) {
+			try {
+				fromDate=new SimpleDateFormat("yyyy-MM-dd").parse(fromDateStr);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}  
 		}
 		
-		AssetIssueStatus assetIssuestatus = null;
+		String toDateStr = filter.containsKey("toDate") ? ((String) filter.get("toDate")).toLowerCase()
+				: null;
+		Date toDate = null;
+		if(toDateStr!=null) {
+			try {
+				toDate=new SimpleDateFormat("yyyy-MM-dd").parse(toDateStr);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}  
+		}
+		
+		if(toDate == null || fromDate == null) {
+			response.setMessage("From or To dates are missing");
+			response.setStatus("failure");
+		}
+		AssetIssueStatus status = null;
 		if(assetIssueStatus!=null) {
 			try {
-				assetIssuestatus = assetIssueStatus != null ? AssetIssueStatus.toEnum(assetIssueStatus) : null;
+				status = assetIssueStatus != null ? AssetIssueStatus.toEnum(assetIssueStatus) : null;
+				System.out.println(status);
 			} catch (IllegalArgumentException e) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 						filter.get("status").toString() + " is not a valid status");
 			}
 		}
-		List<Map> assetIssuesList = assetIssuesRepository.downloadAllAssetIssues(assetId, vendorId, assetIssueStatus,fromDate, toDate);
+		List<Map> assetIssuesList = assetIssuesRepository.downloadAllAssetIssues(status,assetId, vendorId, fromDateStr, toDateStr);
 		Map<String, Object> fileResponse = new HashMap<>();
 
 		Workbook workbook = prepareExcelWorkBook(assetIssuesList);
@@ -672,7 +716,8 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 			e.printStackTrace();
 		}
 
-		fileResponse.put("fileName", "assetIssues-report.xlsx");
+		//fileResponse.put("fileName", "assetIssues-report.xlsx");
+		fileResponse.put("fileName", "assetIssues-report-"+fromDateStr+"-"+toDateStr+".xlsx");
 		fileResponse.put("type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 		fileResponse.put("blob", blob);
 		response.setFileDetails(fileResponse);
@@ -687,7 +732,7 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 	private Workbook prepareExcelWorkBook(List<Map> assetIssuesList) 
 	{
 		List<String> headers = Arrays.asList("assetIssueId","assetId","vendorId","complaintRaisedDate","description","solution","assetIssueStatus",
-				"resolvedDate");
+				"resolvedDate","comments");
 		List data = new ArrayList<>();
 
 		for (Map assetIssue : assetIssuesList) 
@@ -702,6 +747,8 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 			row.put("solution",assetIssue.get("solution") != null ? assetIssue.get("solution").toString(): "");
 			row.put("assetIssueStatus",assetIssue.get("assetIssueStatus") != null ? assetIssue.get("assetIssueStatus").toString(): "");
 			row.put("resolvedDate",assetIssue.get("resolvedDate") != null ? assetIssue.get("resolvedDate").toString(): "");
+			row.put("comments",assetIssue.get("comments") != null ? assetIssue.get("comments").toString(): "");
+			
 			
 			data.add(row);
 

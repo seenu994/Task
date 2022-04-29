@@ -154,11 +154,11 @@ AssetIssues getAssetIssueStatus();
 
 
 
-@Query("Select distinct new map(i.assetIssueId as assetIssueId, i.complaintRaisedDate as complaintRaisedDate, "
-+ "i.description as description, i.solution as solution,i.assetId as assetId, i.comments as comments, "
-+ "i.assetIssueStatus as assetIssueStatus, i.vendorId as vendorId, "
-+ "i.resolvedDate as resolvedDate ) from AssetIssues i join Asset a on i.assetId = a.assetId "
-+ "join AssetVendor v on i.vendorId = v.vendorId where i.assetIssueId LIKE %:assetIssueId ")
+	@Query("Select distinct new map(i.assetIssueId as assetIssueId, i.complaintRaisedDate as complaintRaisedDate, "
+	+ "i.description as description, i.solution as solution,i.assetId as assetId, i.comments as comments, "
+	+ "i.assetIssueStatus as assetIssueStatus, i.vendorId as vendorId, "
+	+ "i.resolvedDate as resolvedDate ) from AssetIssues i join Asset a on i.assetId = a.assetId "
+	+ "join AssetVendor v on i.vendorId = v.vendorId where i.assetIssueId LIKE %:assetIssueId ")
 
 List<Map> searchAssetIssue(String assetIssueId);
 
@@ -168,32 +168,44 @@ List<Map> searchAssetIssue(String assetIssueId);
 @Query("Select i.complaintRaisedDate from AssetIssues i where i.assetIssueId=:assetIssueId")
 Date getCompaintRaisedDate(String assetIssueId);
 
+	/*@Query("Select distinct new map(i.assetIssueId as assetIssueId, i.complaintRaisedDate as complaintRaisedDate, "
+	+ "i.description as description, i.solution as solution,i.assetId as assetId, i.comments as comments, "
+	+ "i.assetIssueStatus as assetIssueStatus, i.vendorId as vendorId, "
+	+ "i.resolvedDate as resolvedDate ) from AssetIssues i left join Asset a on i.assetId = a.assetId "
+	+ "left join AssetVendor v on i.vendorId = v.vendorId where "
+	+ "(:assetIssueStatus is null OR lower(i.assetIssueStatus)=:assetIssueStatus) AND "
+	+ "(:assetId is null OR i.assetId=:assetId) AND "
+	+ "(:vendorId is null OR i.vendorId=:vendorId) AND "
+	+ "(:toDate is null OR Date(i.complaintRaisedDate) <= STR_TO_DATE(:toDate, '%Y-%m-%d')) AND "
+	+ "(:fromDate is null OR Date(i.complaintRaisedDate) >= STR_TO_DATE(:fromDate, '%Y-%m-%d')) ")
+	List<Map> downloadAllAssetIssues(String assetId, String vendorId, String assetIssueStatus, String fromDate,
+			String toDate);*/
+
 @Query("Select distinct new map(i.assetIssueId as assetIssueId, i.complaintRaisedDate as complaintRaisedDate, "
-+ "i.description as description, i.solution as solution,i.assetId as assetId, i.comments as comments, "
-+ "i.assetIssueStatus as assetIssueStatus, i.vendorId as vendorId, "
-+ "i.resolvedDate as resolvedDate ) from AssetIssues i left join Asset a on i.assetId = a.assetId "
-+ "join AssetVendor v on i.vendorId = v.vendorId where "
-+ "(:assetIssueStatus is null OR lower(i.assetIssueStatus)=:assetIssueStatus) AND "
-+ "(:assetId is null OR i.assetId=:assetId) AND "
-+ "(:vendorId is null OR i.vendorId=:vendorId) AND "
-+ "(:toDate is null OR Date(i.complaintRaisedDate) <= STR_TO_DATE(:toDate, '%Y-%m-%d')) AND "
-+ "(:fromDate is null OR Date(i.complaintRaisedDate) >= STR_TO_DATE(:fromDate, '%Y-%m-%d')) ")
-List<Map> downloadAllAssetIssues(String assetId, String vendorId, String assetIssueStatus, String fromDate,
-		String toDate);
+		+ "i.description as description, i.solution as solution,i.assetId as assetId, i.vendorId as vendorId, "
+		+ "i.assetIssueStatus as assetIssueStatus, i.comments as comments, "
+		+ "i.resolvedDate as resolvedDate ) from AssetIssues i left join Asset a on i.assetId = a.assetId "
+		+ "left join AssetVendor v on i.vendorId = v.vendorId where "
+		+ "(:status is null OR i.assetIssueStatus=:status) AND "
+		+ "(:assetId is null OR i.assetId=:assetId) AND "
+		+ "(:vendorId is null OR i.vendorId=:vendorId) AND "
+		+ "(:toDate is null OR Date(i.complaintRaisedDate) <= STR_TO_DATE(:toDate, '%Y-%m-%d')) AND "
+		+ "(:fromDate is null OR Date(i.complaintRaisedDate) >= STR_TO_DATE(:fromDate, '%Y-%m-%d')) ")
+List<Map> downloadAllAssetIssues(AssetIssueStatus status, String assetId, String vendorId, String fromDate, String toDate);
 
 //@Query("Select i from AssetIssues i where i.assetIssueId =:assetIssueId")
-@Query("Select distinct new map(i.assetIssueId as assetIssueId, i.complaintRaisedDate as complaintRaisedDate, v.vendorName as vendorName, "
-+ "i.description as description, i.solution as solution,i.assetId as assetId, "
-+ "i.assetIssueStatus as assetIssueStatus, i.vendorId as vendorId, "
-+ "i.resolvedDate as resolvedDate ) from AssetIssues i left join Asset a on i.assetId = a.assetId "
-+ "join AssetVendor v on i.vendorId = v.vendorId where i.assetIssueId=:assetIssueId")
-List<AssetIssues> getAssetIssuesById(String assetIssueId);
+	@Query("Select distinct new map(i.assetIssueId as assetIssueId, i.complaintRaisedDate as complaintRaisedDate, v.vendorName as vendorName, "
+	+ "i.description as description, i.solution as solution,i.assetId as assetId, "
+	+ "i.assetIssueStatus as assetIssueStatus, i.vendorId as vendorId, "
+	+ "i.resolvedDate as resolvedDate ) from AssetIssues i left join Asset a on i.assetId = a.assetId "
+	+ "join AssetVendor v on i.vendorId = v.vendorId where i.assetIssueId=:assetIssueId")
+	List<AssetIssues> getAssetIssuesById(String assetIssueId);
 
-@Query("Select i from AssetIssues i where i.assetIssueId=:assetIssueId and i.vendorId=:vendorId")
-AssetIssues getVendorById(String assetIssueId, String vendorId);
-
-@Query("Select i from AssetIssues i where i.assetIssueId=:assetIssueId and i.assetId=:assetId")
-AssetIssues getAssetById(String assetIssueId, String assetId);
+	@Query("Select i from AssetIssues i where i.assetIssueId=:assetIssueId and i.vendorId=:vendorId")
+	AssetIssues getVendorById(String assetIssueId, String vendorId);
+	
+	@Query("Select i from AssetIssues i where i.assetIssueId=:assetIssueId and i.assetId=:assetId")
+	AssetIssues getAssetById(String assetIssueId, String assetId);
 
 
 
