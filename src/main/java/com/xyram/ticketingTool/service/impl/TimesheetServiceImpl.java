@@ -151,10 +151,10 @@ public class TimesheetServiceImpl implements TimesheetService{
 					response.setSuccess(false);
 					response.setMessage("Some thing went Wrong"+" : "+problemIs);
 				}
-				else
+				else {
 					response.setMessage("Sheets saved successfully");
-
-			    response.setSuccess(true);
+					response.setSuccess(true);
+				}
 			}else {
 				response.setSuccess(false);
 				response.setMessage(ResponseMessages.SHEETS_OBJECT_ISSUE);
