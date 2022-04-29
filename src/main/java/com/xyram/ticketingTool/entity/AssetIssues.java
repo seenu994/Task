@@ -53,7 +53,7 @@ public class AssetIssues extends AuditModel
     @Column(name="resolved_date")
     public Date resolvedDate;
     
-    @Column(name = "comments", length =300)
+    @Column(name = "comments", length = 300)
     public String comments;
 
 	public String getAssetIssueId() {
