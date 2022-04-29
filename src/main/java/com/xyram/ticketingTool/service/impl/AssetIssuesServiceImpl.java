@@ -21,6 +21,8 @@ import javax.transaction.Transactional;
 
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -52,15 +54,12 @@ import com.xyram.ticketingTool.util.ResponseMessages;
 @Transactional
 public class AssetIssuesServiceImpl implements AssetIssuesService
 {
-	//private static final ApiResponse assetIssues = null;
+	private static final Logger logger = LoggerFactory.getLogger(AssetIssuesServiceImpl.class);
 	@Autowired
 	AssetIssuesRepository  assetIssuesRepository;
 	
 	@Autowired
 	AssetRepository  assetRepository;
-	
-	@Autowired
-	AssetIssuesService assetIssuesService;
 	
 	@Autowired
 	AssetVendorRepository assetVendorRepository;
@@ -138,9 +137,9 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 		 {
 			 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "description is mandatory");
 		 }
-		 if(assetIssues.getDescription().length() < 10 || (assetIssues.getDescription().length() > 500))
+		 if(assetIssues.getDescription().length() <= 10 || (assetIssues.getDescription().length() >= 500))
 		 {
-			 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "description should be greater than 10 characters and less than 500 characters");
+			 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "description length should be minimum 10 characters and max 500 characters");
 		 }
 		 
 		 response.setSuccess(true);
@@ -162,10 +161,6 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
         ApiResponse response = new ApiResponse(false);
 		//AssetIssues assetIssue;
 		AssetIssues assetIssuesObj = assetIssuesRepository.getAssetIssueById(assetIssueId);
-		
-		System.out.println(assetIssues);
-		
-		if(assetIssues.equals(null)) {
 		 
 		if(assetIssuesObj != null) 
 	    {	
@@ -200,7 +195,7 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 			response.setMessage(ResponseMessages.ASSET_ISSUES_EDIT_SUCCESSFULLY);
 			
 		}
-		}
+		
 		else 
 		{
 			response.setSuccess(false);
@@ -217,9 +212,9 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 		{
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "description is mandatory");
 		}
-		if(description.length() < 10 || description.length() > 500)
+		if(description.length() <= 10 || description.length() >= 500)
 		{
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "description should be greater than 10 characters and less than 500 characters");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "description length should be minimum 10 characters and max 500 characters");
 		}
 		return true;
 		
@@ -370,9 +365,9 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 		{
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "comments should be manadatory");
 		}
-		if(comments.length() < 10 || comments.length() > 300)
+		if(comments.length() <= 10 || comments.length() >= 300)
 		{
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "comments should be greater than 10 characters and less than 300 characters");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "comments length should be minimum 10 characters and max 300 characters");
 		}
 		return true;
 		

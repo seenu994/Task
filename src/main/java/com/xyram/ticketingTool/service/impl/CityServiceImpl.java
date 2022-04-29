@@ -60,8 +60,13 @@ public class CityServiceImpl  implements CityService {
 	private ApiResponse validateCity(City city) {
 		ApiResponse response = new ApiResponse(false);
 		
+		
+		City  cityRequest = cityRepository.getCityName(city.getCityName());
 		if(city.getCityName() == null || city.getCityName().equals("")) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"City name is mandatory");
+		}
+		if(cityRequest != null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, " CityName already exists!");
 		}
 		
 		if (city.getCountryCode() == null || city.getCountryCode().equals("")) {

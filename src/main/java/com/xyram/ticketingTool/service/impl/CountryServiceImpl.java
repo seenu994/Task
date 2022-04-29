@@ -15,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.xyram.ticketingTool.Repository.CountryRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
+import com.xyram.ticketingTool.entity.Asset;
 import com.xyram.ticketingTool.entity.City;
 import com.xyram.ticketingTool.entity.Country;
 import com.xyram.ticketingTool.request.CurrentUser;
@@ -57,14 +58,25 @@ public class CountryServiceImpl implements CountryService{
 
 	private ApiResponse validateCountry(Country country) {
 		ApiResponse response = new ApiResponse(false);
-		//String regex = "[a-zA-Z]+";
-		//Brand brandObj = cityRepository.getCity(city.getCityName());
+		Country  countryRequest = countryRepository.getCountryName(country.getCountryName());
 		if (country.getCountryName() == null || country.getCountryName().equals("")) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "countryName is mandatory");
 		} 
+		if(countryRequest != null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, " CountryName already exists!");
+		}
+		 
+		
+		Country countryObj = countryRepository.getCountryCode(country.getCountryCode());
 		if(country.getCountryCode() == null || country.getCountryCode().equals("")) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"country code is mandatory");
 		}
+		else {
+			if(countryObj != null) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"CountryCode is already exist!");
+			}
+		}
+		
 		response.setSuccess(true);
 		return response;
 		}
