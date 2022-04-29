@@ -32,6 +32,15 @@ public interface HrCalendarRepository extends JpaRepository<HrCalendar, String>{
 	Page<Map> getAllMySchedulesFromCalendarByStatus(String userId,String jobId, 
 			String fromDate, String toDate, String status,Boolean closed,Pageable pageable);
 	
+	@Query("Select distinct new map( a.Id as id,a.status as status,a.scheduleDate as scheduleDate,a.closed as closed, "
+			+ "concat(ee.firstName,' ', ee.lastName) as scheduledBy) from HrCalendar a "
+			+ "left join Employee ee on a.createdBy = ee.userCredientials.id "
+			+ "left join HrCalendarComment hc on a.id = hc.scheduleId where a.createdBy = :userId and "
+			+ "(:searchString is null "
+			+ "or lower(a.candidateMobile) like %:mobileNo% "
+			+ "ORDER BY a.scheduleDate DESC")
+	List<Map> getCandidateHistory(String mobileNo);
+	
 	@Query("Select distinct new map( a.Id as id,a.candidateMobile as mobile,a.candidateName as name,a.status as status, "
 			+ "a.createdAt as createdAt, a.scheduleDate as scheduleDate, a.searchedSource as searchedSource, "
 			+ "a.jobId as jobId,jo.jobTitle as jobTitle, a.closed as closed,a.callCount as callCount,a.reportingTo as reportingTo, "

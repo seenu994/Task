@@ -153,6 +153,14 @@ public class HrCalendarController {
 	ApiResponse searchSchedulesInCalender(@PathVariable String searchString) {
 		logger.info("Get all getAllMySchedulesFromCalendarByStatus");
 		return hrCalrendarService.searchSchedulesInCalender(searchString);
+	} 
+	
+	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/searchSchedulesInCalender/{searchString}",
+			AuthConstants.HR_BASEPATH + "/searchSchedulesInCalender/{searchString}"			
+			})
+	ApiResponse getCandidateHistory(@PathVariable String mobileNo) {
+		logger.info("Get all getCandidateHistory");
+		return hrCalrendarService.getCandidateHistory(mobileNo);
 	}
 	
 	@PostMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/getAllMySchedulesFromCalendarByStatus",
