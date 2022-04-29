@@ -1,9 +1,12 @@
 package com.xyram.ticketingTool.controller;
 
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -32,16 +35,22 @@ public class EmployeeLocationController {
 	}
 
 	/// updateLocation{/id}/location{/location}
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/{id}/{location}",
-			AuthConstants.HR_ADMIN_BASEPATH + "/{id}/{location}", AuthConstants.HR_BASEPATH + "/{id}/{location}" })
-	public ApiResponse updateLocation(@RequestParam @PathVariable String id, EmployeeLocation location) {
+	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/updateLocation/{id}",
+			AuthConstants.HR_ADMIN_BASEPATH + "/updateLocation/{id}", AuthConstants.HR_BASEPATH + "/updateLocation/{id}" })
+	public ApiResponse updateLocation(@PathVariable String id, @RequestBody EmployeeLocation location) {
 		logger.info("Request for updating Location");
 		return employeeLocationService.updateLocation(id, location);
 	}
 
-	@DeleteMapping(value = { AuthConstants.ADMIN_BASEPATH, AuthConstants.HR_ADMIN_BASEPATH, AuthConstants.HR_BASEPATH })
-	public ApiResponse deleteLocation(@RequestParam String id) {
-		logger.info("Request for delete location");
-		return employeeLocationService.deleteLocation(id);
+//	@DeleteMapping(value = { AuthConstants.ADMIN_BASEPATH, AuthConstants.HR_ADMIN_BASEPATH, AuthConstants.HR_BASEPATH })
+//	public ApiResponse deleteLocation(@RequestParam String id) {
+//		logger.info("Request for delete location");
+//		return employeeLocationService.deleteLocation(id);
+//	}
+	
+	@GetMapping(value = {AuthConstants.ADMIN_BASEPATH+ "/getAllLocation", AuthConstants.HR_ADMIN_BASEPATH+ "/getAllLocation", AuthConstants.HR_BASEPATH+ "/getAllLocation" })
+	public ApiResponse getAllLocation(Map<String,Object> filter) {
+		logger.info("Request for get all location");
+		return employeeLocationService.getAllLocation(filter);
 	}
 }

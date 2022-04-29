@@ -31,20 +31,20 @@ public class ClientControll {
 
 	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/addClient"})
 	public ApiResponse addClient(@RequestBody Client clientRequest) {
-		
+		logger.info("received request to add client");
 		return clientService.addClient(clientRequest);
 	}
 	
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editClient/{clientId}"})
 	public ApiResponse editClient(@RequestBody Client clientRequest,@PathVariable String clientId ) {
-	
+		logger.info("received request to edit client");
 		return clientService.editClient(clientId,clientRequest);
 	}
 	
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/{clientId}/status/{userstatus}"})
 	//@PutMapping("/{clientId}/status/{userstatus}")
 	public ApiResponse updateClientStatus(@PathVariable String clientId, @PathVariable ClientStatus userstatus) {
-	
+		logger.info("received request to update client status");
 		return clientService.updateClientStatus(clientId, userstatus);
 	}
 

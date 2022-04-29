@@ -28,7 +28,7 @@ import com.xyram.ticketingTool.util.AuthConstants;
 @CrossOrigin
 public class AssetIssuesController
 {
-	private final Logger logger = LoggerFactory.getLogger(EmployeeController.class);
+	private final Logger logger = LoggerFactory.getLogger(AssetIssuesController.class);
 	
 	@Autowired
 	AssetIssuesService assetIssuesService ; 
@@ -107,5 +107,10 @@ public class AssetIssuesController
 		logger.info("received request to edit assetIssues");
 		return assetIssuesService.searchAssetIssue(assetIssueId);
 	}*/
+	
+	
+	
+	
+	
 
 }

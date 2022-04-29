@@ -347,6 +347,31 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 		return response;
 	}
 	
+	
+	@Override
+	public ApiResponse getCandidateHistory(String mobileNo) {
+		ApiResponse response = new ApiResponse(false);
+		if(mobileNo.length() != 10) {
+			response.setSuccess(false);
+			response.setMessage("Not a Valid Mobile No.");
+			return response;
+		}
+		List<Map> shceduleList = hrCalendarRepository.getCandidateHistory( mobileNo);
+		
+		if(shceduleList.size() > 0) {
+			Map content = new HashMap();
+			content.put("shceduleList", shceduleList);
+			response.setContent(content);
+			response.setSuccess(true);
+			response.setMessage("List retreived successfully.");
+		}else {
+			response.setSuccess(false);
+			response.setMessage("List is empty.");
+		}
+		
+		return response;
+	}
+	
 	@Override
 	public ApiResponse searchSchedulesInCalender(String searchString) {
 		ApiResponse response = new ApiResponse(false);

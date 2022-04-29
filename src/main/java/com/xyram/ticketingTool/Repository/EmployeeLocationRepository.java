@@ -1,5 +1,8 @@
 package com.xyram.ticketingTool.Repository;
 
+import java.util.List;
+import java.util.Map;
+
 import javax.transaction.Transactional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,6 +24,10 @@ public interface EmployeeLocationRepository extends JpaRepository<EmployeeLocati
 
 	@Query("Select l from EmployeeLocation l where l.id =:id")
 	EmployeeLocation getEmployeeLocation(String id);
+
+	@Query("Select new map(e.id as id,e.locationName as location_name)from EmployeeLocation e  where "
+			+ "(:searchString is null Or lower(e.locationName) LIKE %:searchString% )")
+	List<Map> getAllLocation(String searchString);
 
 	//String getLocationName(String id);
 

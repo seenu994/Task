@@ -173,20 +173,16 @@ public class AssetBillingServiceImpl implements AssetBillingService
 		 {
 			 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "billing type is mandatory");
 		 }
-		 if(!assetBilling.getBillingType().matches("^[a-zA-Z]+"))
+		
+		 if(!assetBilling.getBillingType().equals("purchase"))
 		 {
-			 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "billing type should not contain any special characters"); 
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "billing type should be equal to purchase");
 		 }
-		 //if(assetBilling.getBillingType() != "purchase")
-		 //{
-			// throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid billingType");
-		 //}
 		
 	   //validate transactionDate
 		if(assetBilling.getTransactionDate() == null || assetBilling.getTransactionDate().equals(""))
 		 {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "transaction date is mandatory !!");
-		 
 		 }
 		 else
 		 {
@@ -341,31 +337,41 @@ public class AssetBillingServiceImpl implements AssetBillingService
 		    	assetBillingObject.setVendorId(assetBilling.getVendorId());
 		    }
 			
-			if(assetBilling.getBillingType() == null || (assetBilling.getBillingType().equals("")))
+			 if(assetBilling.getBillingType() == null || (assetBilling.getBillingType().equals("")))
 			 {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "bill type is mandatory");
 				 
 			 }
-			 if(!assetBilling.getBillingType().matches("^[a-zA-Z]+"))
+			 
+			 if(!assetBilling.getBillingType().equals("purchase"))
 			 {
-				 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "billing type should not contain any special characters"); 
+				 throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"billing type should be equal to purchase");
 			 }
-			else
-			{
-				assetBillingObject.setBillingType("purchase");
-			}
-			if(assetBilling.getTransactionDate() == null && assetBilling.getTransactionDate().equals(""))
-			{
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "transactionDate ");
-			}
+			 assetBillingObject.setBillingType("purchase");
+			/* if(assetBilling.getTransactionDate() == null || assetBilling.getTransactionDate().equals(""))
+			 {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "bill type is mandatory");
+				 
+			 }
 			else
 			{
 				 validateTransactionDate(assetBilling.getTransactionDate(),assetBillingObject.getAssetId());
 				 assetBillingObject.setTransactionDate(assetBilling.getTransactionDate());
-			}
+			}*/
+			 if(assetBilling.getTransactionDate() == null || assetBilling.getTransactionDate().equals(""))
+			 {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "transaction date is mandatory !!");
+			 
+			 }
+			 else
+			 {
+				  //assetBilling.setTransactionDate(new Date());
+				 validateTransactionDate(assetBilling.getTransactionDate(),assetBillingObject.getAssetId());
+				 assetBillingObject.setTransactionDate(assetBilling.getTransactionDate());
+			 }
 			if(assetBilling.getAssetAmount() != null)
 			 {
-				checkAssetAmount(assetBillingObject.getAssetAmount());
+				 checkAssetAmount(assetBillingObject.getAssetAmount());
 				 assetBillingObject.setAssetAmount(assetBilling.getAssetAmount());
 			 }
 			
@@ -474,6 +480,10 @@ public class AssetBillingServiceImpl implements AssetBillingService
 
 	private boolean validateTransactionDate(Date transactionDate,String assetId) 
 	{
+		if(transactionDate == null || transactionDate.equals(""))
+		{
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "transactionDate is mandatory");
+		}
 		Date d1 =  transactionDate;
 		Date d2 = new Date();
 		Date purchaseDate = assetRepository.getPurchaseDateById(assetId);
@@ -656,9 +666,10 @@ public ApiResponse addRepairAssetBill(AssetBilling assetBilling) {
 		{
 			 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "billing type is mandatory");
 		}
-		 if(!assetBilling.getBillingType().matches("^[a-zA-Z]+"))
+		 
+		 if(!assetBilling.getBillingType().equals("repair"))
 		 {
-			 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "billing type should not contain any special characters"); 
+			 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "billing type should be equal to repair"); 
 		 }
 		//assetBilling.setTransactionDate(new Date());
 		//validate transactionDate
@@ -726,18 +737,25 @@ public ApiResponse addRepairAssetBill(AssetBilling assetBilling) {
 			 }
 			 if(assetBilling.getBillingType() == null || assetBilling.getBillingType().equals(""))
 			 {
-				 throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"billing type should not be null or empty");
+				 throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"billing type is mandatory");
 				 
 			 }
-			 if(!assetBilling.getBillingType().matches("^[a-zA-Z]+"))
+			 //if(!assetBilling.getBillingType().matches("^[a-zA-Z]+"))
+			// {
+				 //throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "billing type should not contain any special characters"); 
+			 //}
+			 
+				 if(!assetBilling.getBillingType().equals("repair"))
+				 {
+					 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "billing type should be equal to repair");  
+				 }
+				 assetBillingObject.setBillingType("repair"); 
+			 
+			 if(assetBilling.getTransactionDate() == null || assetBilling.getTransactionDate().equals(""))
 			 {
-				 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "billing type should not contain any special characters"); 
+				 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "transactionDate is mandatory");
 			 }
 			 else
-			 {
-				 assetBillingObject.setBillingType("repair"); 
-			 }
-			 if(assetBilling.getTransactionDate() != null)
 			 {
 				 validateTransactionDate(assetBilling.getTransactionDate(),assetBillingObject.getAssetId());
 				 assetBillingObject.setTransactionDate(assetBilling.getTransactionDate());
@@ -805,6 +823,10 @@ public ApiResponse addRepairAssetBill(AssetBilling assetBilling) {
 
 	private boolean checkAssetIssueId(String assetIssueId) 
 	{
+		if(assetIssueId == null || assetIssueId.equals(""))
+		{
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset issueId is manadatory");
+		}
 		AssetIssues issueId = assetIssuesRepository.getAssetIssueById(assetIssueId);
 		if(issueId == null || issueId.equals(""))
 		{
@@ -860,14 +882,16 @@ public ApiResponse addRepairAssetBill(AssetBilling assetBilling) {
 				{
 					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "billing type is manadatory");
 				}
-				 if(!assetBilling.getBillingType().matches("^[a-zA-Z]+"))
+				 //if(!assetBilling.getBillingType().matches("^[a-zA-Z]+"))
+				 //{
+					 //throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "billing type should not contain any special characters"); 
+				 //}
+				 if(!assetBilling.getBillingType().equals("return"))
 				 {
-					 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "billing type should not contain any special characters"); 
+					 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "billing type should be equal to return");
 				 }
-				else
-				{
 					billingObj.setBillingType("return");
-				}
+				
 				if(assetBilling.getTransactionDate() != null)
 				{
 					validateTransactionDate(assetBilling.getTransactionDate(), assetBilling.getAssetId());

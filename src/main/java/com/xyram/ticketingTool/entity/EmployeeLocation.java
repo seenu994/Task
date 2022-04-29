@@ -25,6 +25,17 @@ public class EmployeeLocation extends AuditModel {
 
 	@Column(name = "location_name")
 	private String locationName;
+	
+	@Column(name = "status")
+	private boolean status;
+
+	public boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
 
 	public String getId() {
 		return id;
