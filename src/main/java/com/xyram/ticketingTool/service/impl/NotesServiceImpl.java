@@ -38,9 +38,9 @@ public class NotesServiceImpl implements NotesService {
 		ApiResponse response = new ApiResponse(false);
 		Notes notes = notesRepository.getNotes(new Date(), currentUser.getScopeId());
 		if (notes != null) {
-			
+
 			notes.setUpdatedBy(currentUser.getScopeId());
-			notes.setNotesUploadedDate(new Date());
+			// notes.setNotesUploadedDate(new Date());
 			notes.setLastUpdatedAt(new Date());
 			notes.setNotes(noteRequest.getNotes());
 
@@ -81,9 +81,10 @@ public class NotesServiceImpl implements NotesService {
 	@Override
 	public Page<Map> getAllNotes(Map<String, Object> filter, Pageable pageable) {
 		ApiResponse response = new ApiResponse(false);
-		
+
 		String searchString = filter.containsKey("searchString") ? ((String) filter.get("searchString")) : null;
-		//String note = filter.containsKey("notes") ? ((String) filter.get("notes")) : null;
+		// String note = filter.containsKey("notes") ? ((String) filter.get("notes")) :
+		// null;
 
 		String fromDateStr = filter.containsKey("fromDate") ? ((String) filter.get("fromDate")).toLowerCase() : null;
 		Date fromDate = null;
@@ -109,7 +110,8 @@ public class NotesServiceImpl implements NotesService {
 			response.setMessage(ResponseMessages.DATE_FEILD);
 		}
 
-		Page<Map> notesObj = notesRepository.getAllNotes(searchString, fromDateStr, toDateStr,pageable,currentUser.getScopeId());
+		Page<Map> notesObj = notesRepository.getAllNotes(searchString, fromDateStr, toDateStr, pageable,
+				currentUser.getScopeId());
 
 		if (notesObj.getSize() > 0) {
 			System.out.println(notesObj);
@@ -130,18 +132,16 @@ public class NotesServiceImpl implements NotesService {
 	public ApiResponse deleteNotes(Date paramDate) {
 		ApiResponse response = new ApiResponse(false);
 		Notes notesObj = notesRepository.getNotes(paramDate, currentUser.getScopeId());
-		if(notesObj!=null ) {
-		 notesRepository.deleteNotes(paramDate, currentUser.getScopeId());
-					response.setSuccess(true);
-					response.setMessage(ResponseMessages.DELETE_NOTES);
-					response.setContent(null);
-	}else {
-		response.setSuccess(false);
-		response.setMessage(ResponseMessages.NOTES_NOT_FOUND);
-	}
+		if (notesObj != null) {
+			notesRepository.deleteNotes(paramDate, currentUser.getScopeId());
+			response.setSuccess(true);
+			response.setMessage(ResponseMessages.DELETE_NOTES);
+			response.setContent(null);
+		} else {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.NOTES_NOT_FOUND);
+		}
 		return response;
 	}
-	
-	//public ApiResponse validateDate(Date)
 
 }

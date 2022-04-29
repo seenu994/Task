@@ -295,9 +295,9 @@ public interface ResponseMessages {
 	String NOTES_NOT_UPDATED = "Notes are not updated";
 
 	String NOTES_RETRIEVED = "Notes Retrieved Successfully";
-	String NOTES_NOT_RETRIEVED = "Could not retrieve data";
+	String NOTES_NOT_RETRIEVED = "Notes not found";
 
-	String DELETE_NOTES = "Notes deleted succuessfull";
+	String DELETE_NOTES = "Notes deleted succuessfully";
 	String NOTES_NOT_FOUND = "Notes not found";
 
 	String DATE_FEILD = "Date feild cannot be empty";
@@ -305,7 +305,7 @@ public interface ResponseMessages {
 // Location Response Messages
 	String LOC_ADDED = "Location added successfully";
 	String DELETE_LOCATION = "Location deleted successfully";
-	String LOC_NOT_ADDED = "can't able to add loc";
+	String LOC_NOT_ADDED = "can't able to add location";
 	String LOC_UPDATED = "Location updated successfully";
 	String LOCATION_NOT_FOUND = "Location not found";
 
