@@ -57,9 +57,6 @@ public class AssetBillingServiceImpl implements AssetBillingService
 	@Autowired
 	AssetRepository  assetRepository;
 	
-	//@Autowired
-	//AssetBillingService assetBillingService;
-	
 	@Autowired
 	AssetvendorService assetVendorService;
 	
@@ -176,7 +173,7 @@ public class AssetBillingServiceImpl implements AssetBillingService
 		
 		 if(!assetBilling.getBillingType().equals("purchase"))
 		 {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "billing type should be equal to purchase");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid billing type");
 		 }
 		
 	   //validate transactionDate
@@ -345,7 +342,7 @@ public class AssetBillingServiceImpl implements AssetBillingService
 			 
 			 if(!assetBilling.getBillingType().equals("purchase"))
 			 {
-				 throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"billing type should be equal to purchase");
+				 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid billing type");
 			 }
 			 assetBillingObject.setBillingType("purchase");
 			/* if(assetBilling.getTransactionDate() == null || assetBilling.getTransactionDate().equals(""))
@@ -653,8 +650,8 @@ public ApiResponse addRepairAssetBill(AssetBilling assetBilling) {
 		 }
 		 else
 		 {
-			 AssetIssues assetId = assetIssuesRepository.getVendorById(assetBilling.getVendorId(), assetBilling.getAssetIssueId());
-			 if(assetId == null)
+			 AssetIssues vendorId = assetIssuesRepository.getVendorById(assetBilling.getAssetIssueId(), assetBilling.getVendorId());
+			 if(vendorId == null)
 			 {
 				 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid vendor id");
 			 }
@@ -669,7 +666,7 @@ public ApiResponse addRepairAssetBill(AssetBilling assetBilling) {
 		 
 		 if(!assetBilling.getBillingType().equals("repair"))
 		 {
-			 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "billing type should be equal to repair"); 
+			 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid billing type"); 
 		 }
 		//assetBilling.setTransactionDate(new Date());
 		//validate transactionDate
@@ -747,7 +744,7 @@ public ApiResponse addRepairAssetBill(AssetBilling assetBilling) {
 			 
 				 if(!assetBilling.getBillingType().equals("repair"))
 				 {
-					 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "billing type should be equal to repair");  
+					 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid billing type");  
 				 }
 				 assetBillingObject.setBillingType("repair"); 
 			 
@@ -888,7 +885,7 @@ public ApiResponse addRepairAssetBill(AssetBilling assetBilling) {
 				 //}
 				 if(!assetBilling.getBillingType().equals("return"))
 				 {
-					 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "billing type should be equal to return");
+					 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid billing type");
 				 }
 					billingObj.setBillingType("return");
 				
