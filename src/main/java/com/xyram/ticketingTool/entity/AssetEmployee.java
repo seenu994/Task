@@ -6,11 +6,17 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import com.xyram.ticketingTool.baseData.model.AuditModel;
 import com.xyram.ticketingTool.enumType.AssetEmployeeStatus;
+import com.xyram.ticketingTool.enumType.ModuleStatus;
+import com.xyram.ticketingTool.id.generator.IdGenerator;
+import com.xyram.ticketingTool.id.generator.IdPrefix;
 
 
 @Entity
@@ -18,6 +24,12 @@ import com.xyram.ticketingTool.enumType.AssetEmployeeStatus;
 public class AssetEmployee extends AuditModel {
 	
 	@Id
+	@IdPrefix(value = "AE")
+	@GeneratedValue(generator = IdGenerator.ID_GENERATOR)
+	@GenericGenerator(name = IdGenerator.ID_GENERATOR, strategy = "com.xyram.ticketingTool.id.generator.IdGenerator")
+	@Column(name = "asset_emp_id")
+	private String assetEmpId;
+	
 	@Column(name = "asset_id")
 	private String assetId;
 	
@@ -48,7 +60,7 @@ public class AssetEmployee extends AuditModel {
 	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "asset_employee_status")
-	private AssetEmployeeStatus assetEmployeeStatus = AssetEmployeeStatus.ACTIVE;
+	private ModuleStatus assetEmployeeStatus = ModuleStatus.ACTIVE;
 
 	public String getAssetId() {
 		return assetId;
@@ -122,12 +134,14 @@ public class AssetEmployee extends AuditModel {
 		this.returnType = returnType;
 	}
 
-	public AssetEmployeeStatus getAssetEmployeeStatus() {
+	public ModuleStatus getAssetEmployeeStatus() {
 		return assetEmployeeStatus;
 	}
 
-	public void setAssetEmployeeStatus(AssetEmployeeStatus assetEmployeeStatus) {
+	public void setAssetEmployeeStatus(ModuleStatus assetEmployeeStatus) {
 		this.assetEmployeeStatus = assetEmployeeStatus;
 	}
+
+	
 
 }

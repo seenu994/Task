@@ -13,18 +13,29 @@ import com.xyram.ticketingTool.id.generator.IdGenerator;
 import com.xyram.ticketingTool.id.generator.IdPrefix;
 
 @Entity
-@Table(name="location")
-public class EmployeeLocation extends AuditModel{
-	
+@Table(name = "employee_location")
+public class EmployeeLocation extends AuditModel {
+
 	@Id
-	@IdPrefix(value="LOC")
+	@IdPrefix(value = "LOC")
 	@GeneratedValue(generator = IdGenerator.ID_GENERATOR)
 	@GenericGenerator(name = IdGenerator.ID_GENERATOR, strategy = "com.xyram.ticketingTool.id.generator.IdGenerator")
-	@Column(name="id")
+	@Column(name = "id")
 	private String id;
+
+	@Column(name = "location_name")
+	private String locationName;
 	
-	@Column(name="location")
-	private String location;
+	@Column(name = "status")
+	private boolean status;
+
+	public boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
 
 	public String getId() {
 		return id;
@@ -34,14 +45,12 @@ public class EmployeeLocation extends AuditModel{
 		this.id = id;
 	}
 
-	public String getLocation() {
-		return location;
+	public String getLocationName() {
+		return locationName;
 	}
 
-	public void setLocation(String location) {
-		this.location = location;
+	public void setLocationName(String locationName) {
+		this.locationName = locationName;
 	}
-	
-	
 
 }

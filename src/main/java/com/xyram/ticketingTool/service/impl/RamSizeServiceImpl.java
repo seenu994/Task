@@ -83,7 +83,7 @@ public class RamSizeServiceImpl implements RamSizeService {
 			   throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ram size is mandatory");
 		   } 
 		   else {
-		    checkRamSize(ramSize.getRamSize());
+		    checkRamSize(ramSize.getRamSize(), ramId);
 		    ramObj.setRamSize(ramSize.getRamSize());
 		    }
 		   ramObj.setLastUpdatedAt(new Date());
@@ -100,21 +100,24 @@ public class RamSizeServiceImpl implements RamSizeService {
 		return response;
 	}
 
-	private boolean checkRamSize(String ramSize) {
+	private boolean checkRamSize(String ramSize, String ramId) {
 		String regex = "^[a-zA-Z0-9]*$";
 		RamSize ramObj = ramSizeRepository.getRamSize(ramSize);
+		String ram = ramSizeRepository.getRamId(ramSize);
+		
 		if(ramSize.length() < 3 || ramSize.length() > 5){
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ram size should be greater than 2 & less than 6 characters");
 		}
-		else if(!ramSize.matches(regex)) {
+		if(!ramSize.matches(regex)) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ram should be alphanumeric characters only");
 		}
-		else if(ramObj != null) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ramSize already exists!");
+		if(!ramId.equals(ram)) {
+		     if(ramObj != null) {
+			    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ramSize already exists!");
+		    }
 		}
-		else {
-			return true;
-		}
+	    return true;
+	
 	}
 
 	@Override
