@@ -30,4 +30,8 @@ public interface CountryRepository  extends JpaRepository<Country, String>{
 	@Query("Select distinct c from Country c where c.countryId=:countryId")
 	Country getCountryById1(String countryId);
 	
+	
+	@Query("Select distinct c from Country c where c.countryCode=:countryCode")
+	Country getCountryCode(String countryCode);
+
 }

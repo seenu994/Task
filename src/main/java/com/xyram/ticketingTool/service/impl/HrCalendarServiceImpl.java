@@ -816,8 +816,8 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	}
 	
 	List<Map> myScheduleList = hrCalendarRepository.downloadAllMySchedulesFromCalendarByStatus(fromDate, toDate, status, closed);
+	
 	Map<String, Object> fileResponse = new HashMap<>();
-
 	Workbook workbook = prepareExcelWorkBook(myScheduleList);
     
 	byte[] blob = ExcelUtil.toBlob(workbook);

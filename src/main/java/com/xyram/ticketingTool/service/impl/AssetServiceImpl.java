@@ -100,9 +100,7 @@ public class AssetServiceImpl implements AssetService {
 		if (response.isSuccess()) {
 			if (asset != null) {
 			    asset.setCreatedAt(new Date());
-//			    asset.setLastUpdatedAt(new Date());
 			    asset.setCreatedBy(currentUser.getUserId());
-//     		    asset.setUpdatedBy(currentUser.getName());
 				assetRepository.save(asset);
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.ASSET_ADDED);
@@ -191,12 +189,16 @@ public class AssetServiceImpl implements AssetService {
 		}
 
 		// serial no Validating
+		Asset assetObj = assetRepository.getAssetBySerialNo(asset.getSerialNo());
 		if (asset.getSerialNo() == null || asset.getSerialNo().equals("")) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "serial no is mandatory");
 		} else {
 			// validate serial no
 			if (asset.getSerialNo().length() < 8) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "serial no should be greater than 7 characters");
+			}
+			if(assetObj != null) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Serial No already exists!");
 			}
 		}
 
@@ -364,17 +366,21 @@ public class AssetServiceImpl implements AssetService {
 	
 
 	private boolean checkSerialNo(String serialNo) {
-     String s1 = serialNo;
-     if (s1.length() < 8) {
+   
+     Asset assetObj = assetRepository.getAssetBySerialNo(serialNo);
+     if (serialNo.length() < 8) {
 		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "serial no should be greater than 7 characters");
 	 }
+     if(assetObj != null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Serial No already exists!");
+		}
      else {
     	 return true;
-     }
+       }
 	}
 	private boolean checkModelNo(String modelNo) {
-    	 String s1 = modelNo;
-		 if (s1.length() < 7) {
+ 
+		 if (modelNo.length() < 7) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "model no should be greater than 6 characters");
 		 }
 		 else {
@@ -575,7 +581,7 @@ public class AssetServiceImpl implements AssetService {
 		String vendorId = filter.containsKey("vendorId") ? ((String) filter.get("vendorId"))
 					: null;
 		String assetStatus = filter.containsKey("assetStatus") ? ((String) filter.get("assetStatus")).toUpperCase()
-					: null;
+					: null; 
 		
 		AssetStatus status = null;
 		if(assetStatus!=null) {
@@ -610,6 +616,7 @@ public class AssetServiceImpl implements AssetService {
 		response.setMessage("report exported Successfully");
 		
 		return response;
+		
 	
 	}
 	private Workbook prepareExcelWorkBook(List<Map> assetList) 
