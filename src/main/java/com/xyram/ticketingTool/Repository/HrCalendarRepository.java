@@ -32,6 +32,14 @@ public interface HrCalendarRepository extends JpaRepository<HrCalendar, String>{
 	Page<Map> getAllMySchedulesFromCalendarByStatus(String userId,String jobId, 
 			String fromDate, String toDate, String status,Boolean closed,Pageable pageable);
 	
+	@Query("Select distinct new map( a.Id as id,a.status as status,a.scheduleDate as scheduleDate,a.closed as closed, "
+			+ "concat(ee.firstName,' ', ee.lastName) as scheduledBy) from HrCalendar a "
+			+ "left join Employee ee on a.createdBy = ee.userCredientials.id "
+			+ "left join HrCalendarComment hc on a.id = hc.scheduleId where "
+			+ "a.candidateMobile like %:mobileNo% "
+			+ "ORDER BY a.scheduleDate DESC")
+	List<Map> getCandidateHistory(String mobileNo);
+	
 	@Query("Select distinct new map( a.Id as id,a.candidateMobile as mobile,a.candidateName as name,a.status as status, "
 			+ "a.createdAt as createdAt,a.scheduleDate as scheduleDate, a.searchedSource as searchedSource, "
 			+ "a.jobId as jobId,jo.jobTitle as jobTitle, a.closed as closed,a.callCount as callCount,a.reportingTo as reportingTo, "
@@ -65,7 +73,7 @@ public interface HrCalendarRepository extends JpaRepository<HrCalendar, String>{
 			+ "a.closed as closed, jo.jobCode as jobCode) from HrCalendar a left join JobOpenings jo on a.jobId = jo.id where "
 			+ "(:toDate is null OR Date(a.scheduleDate) <= STR_TO_DATE(:toDate, '%Y-%m-%d')) AND "
 			+ "(:fromDate is null OR Date(a.scheduleDate) >= STR_TO_DATE(:fromDate, '%Y-%m-%d')) AND "
-			+ "(:status is null OR lower(a.status)=:status) AND "
+			+ "(:status is null OR a.status=:status) AND "
 			+ "(:closed is null OR a.closed=:closed) ORDER BY a.scheduleDate DESC")
 			List<Map> downloadAllMySchedulesFromCalendarByStatus(String fromDate, String toDate, String status,Boolean closed);
 	
@@ -76,7 +84,7 @@ public interface HrCalendarRepository extends JpaRepository<HrCalendar, String>{
 			+ "where a.reportingTo = :userId AND "
 			+ "(:toDate is null OR Date(a.scheduleDate) <= STR_TO_DATE(:toDate, '%Y-%m-%d')) AND "
 			+ "(:fromDate is null OR Date(a.scheduleDate) >= STR_TO_DATE(:fromDate, '%Y-%m-%d')) AND "
-			+ "(:status is null OR lower(a.status)=:status) AND "
+			+ "(:status is null OR a.status=:status) AND "
 			+ "(:closed is null OR a.closed=:closed) ORDER BY a.scheduleDate DESC")
 			List<Map> downloadAllMyTeamSchedulesFromCalendarByStatus(String userId,
 			String fromDate, String toDate, String status,Boolean closed);

@@ -121,7 +121,7 @@ public interface AssetRepository extends JpaRepository<Asset, String>{
      	    + "a.assetStatus as assetStatus, CONCAT(e.firstName ,' ', e.lastName) as assignedTo) from Asset a left join AssetVendor v "
     	    + "on v.vendorId = a.vendorId left join AssetEmployee b on b.assetId = a.assetId AND b.assetEmployeeStatus != 'INACTIVE' "
     	    + " left join Employee e on e.eId = b.empId where "
-    	    + "(:status is null OR lower(a.assetStatus)=:status) AND "
+    	    + "(:status is null OR a.assetStatus=:status) AND "
 			+ "(:ram is null OR a.ram=:ram) AND "
     	    + "(:brand is null OR a.brand=:brand) AND "
 			+ "(:vendorId is null OR a.vendorId=:vendorId)")
@@ -143,6 +143,9 @@ public interface AssetRepository extends JpaRepository<Asset, String>{
     
     @Query("select a.assetStatus from Asset a where a.assetId =:assetId")
 	String getStatus(String assetId);
+
+    @Query("select a from Asset a where a.serialNo =:serialNo")
+	Asset getAssetBySerialNo(String serialNo);
 	
 	
     
