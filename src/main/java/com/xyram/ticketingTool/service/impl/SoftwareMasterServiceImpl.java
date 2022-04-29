@@ -18,13 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.xyram.ticketingTool.Repository.SoftwareMasterRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
-import com.xyram.ticketingTool.entity.AssetIssues;
-import com.xyram.ticketingTool.entity.AssetSoftware;
-import com.xyram.ticketingTool.entity.AssetVendor;
-import com.xyram.ticketingTool.entity.Client;
 import com.xyram.ticketingTool.entity.SoftwareMaster;
-import com.xyram.ticketingTool.enumType.AssetIssueStatus;
-import com.xyram.ticketingTool.enumType.AssetVendorEnum;
 import com.xyram.ticketingTool.enumType.SoftwareEnum;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.SoftwareMasterService;
@@ -33,7 +27,7 @@ import com.xyram.ticketingTool.util.ResponseMessages;
 @Service
 @Transactional
 public class SoftwareMasterServiceImpl implements SoftwareMasterService {
-	private final Logger logger = LoggerFactory.getLogger(AssestVendorServiceImpl.class);
+	private final Logger logger = LoggerFactory.getLogger(SoftwareMasterServiceImpl.class);
 
 	@Autowired
 	SoftwareMasterRepository softwareRepository;

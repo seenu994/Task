@@ -73,7 +73,7 @@ public interface HrCalendarRepository extends JpaRepository<HrCalendar, String>{
 			+ "a.closed as closed, jo.jobCode as jobCode) from HrCalendar a left join JobOpenings jo on a.jobId = jo.id where "
 			+ "(:toDate is null OR Date(a.scheduleDate) <= STR_TO_DATE(:toDate, '%Y-%m-%d')) AND "
 			+ "(:fromDate is null OR Date(a.scheduleDate) >= STR_TO_DATE(:fromDate, '%Y-%m-%d')) AND "
-			+ "(:status is null OR lower(a.status)=:status) AND "
+			+ "(:status is null OR a.status=:status) AND "
 			+ "(:closed is null OR a.closed=:closed) ORDER BY a.scheduleDate DESC")
 			List<Map> downloadAllMySchedulesFromCalendarByStatus(String fromDate, String toDate, String status,Boolean closed);
 	
@@ -84,7 +84,7 @@ public interface HrCalendarRepository extends JpaRepository<HrCalendar, String>{
 			+ "where a.reportingTo = :userId AND "
 			+ "(:toDate is null OR Date(a.scheduleDate) <= STR_TO_DATE(:toDate, '%Y-%m-%d')) AND "
 			+ "(:fromDate is null OR Date(a.scheduleDate) >= STR_TO_DATE(:fromDate, '%Y-%m-%d')) AND "
-			+ "(:status is null OR lower(a.status)=:status) AND "
+			+ "(:status is null OR a.status=:status) AND "
 			+ "(:closed is null OR a.closed=:closed) ORDER BY a.scheduleDate DESC")
 			List<Map> downloadAllMyTeamSchedulesFromCalendarByStatus(String userId,
 			String fromDate, String toDate, String status,Boolean closed);
