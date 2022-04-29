@@ -155,8 +155,8 @@ public class HrCalendarController {
 		return hrCalrendarService.searchSchedulesInCalender(searchString);
 	} 
 	
-	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/searchSchedulesInCalender/{searchString}",
-			AuthConstants.HR_BASEPATH + "/searchSchedulesInCalender/{searchString}"			
+	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/searchSchedulesInCalender/{mobileNo}",
+			AuthConstants.HR_BASEPATH + "/searchSchedulesInCalender/{mobileNo}"			
 			})
 	ApiResponse getCandidateHistory(@PathVariable String mobileNo) {
 		logger.info("Get all getCandidateHistory");
