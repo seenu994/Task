@@ -1,5 +1,6 @@
 package com.xyram.ticketingTool.service.impl;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,10 +16,9 @@ import org.springframework.web.server.ResponseStatusException;
 import com.xyram.ticketingTool.Repository.CityRepository;
 import com.xyram.ticketingTool.Repository.CountryRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
-import com.xyram.ticketingTool.entity.AssetVendor;
-import com.xyram.ticketingTool.entity.Brand;
 import com.xyram.ticketingTool.entity.City;
 import com.xyram.ticketingTool.entity.Country;
+import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.CityService;
 import com.xyram.ticketingTool.util.ResponseMessages;
 
@@ -33,17 +33,19 @@ public class CityServiceImpl  implements CityService {
 	@Autowired
 	CountryRepository countryRepository;
 	
+	@Autowired
+	CurrentUser currentUser;
 	
 	public ApiResponse addcity(City city) {
 		ApiResponse response = new ApiResponse(false);
 		response = validateCity(city); 
 		if (response.isSuccess()) {
 			if (city != null) {
-				//city.setCreatedAt(new Date());
-				//city.setCreatedBy(currentUser.getUserId());
-				city.setCityStatus(null);
-				cityRepository.save(city);
-				response.setSuccess(true);
+				city.setCreatedAt(new Date());
+			    city.setCreatedBy(currentUser.getUserId());
+				 city.setCityStatus(true);
+					cityRepository.save(city);
+					response.setSuccess(true);
 				response.setMessage(ResponseMessages.CITY_ADDED);
 			}
 			else {
@@ -58,17 +60,23 @@ public class CityServiceImpl  implements CityService {
 	private ApiResponse validateCity(City city) {
 		ApiResponse response = new ApiResponse(false);
 		
+		if(city.getCityName() == null || city.getCityName().equals("")) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"City name is mandatory");
+		}
+		
 		if (city.getCountryCode() == null || city.getCountryCode().equals("")) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "countryCode is mandatory");
 		} else {
-			// Validate Vendor
-			Country country = countryRepository.getCountryById1(city.getCountryCode());
+			
+			Country country = countryRepository.getCountryCode(city.getCountryCode());
 			if (country == null) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "countryCode is not valid");
 			}
 			}
-		return response;
-		}
+		
+	    response.setSuccess(true);
+	    return response;
+	}
 
 
 
@@ -84,8 +92,8 @@ public class CityServiceImpl  implements CityService {
 				// softwareMasterRequest.setSoftwareId(software.getSoftwareId());
 				cityRequest.setCityName(city.getCityName());
 
-				//cityRequest.setLastUpdatedAt(new Date());
-				//cityRequest.setUpdatedBy(currentUser.getName());
+				cityRequest.setLastUpdatedAt(new Date());
+				cityRequest.setUpdatedBy(currentUser.getName());
 
 				cityRepository.save(cityRequest);
 

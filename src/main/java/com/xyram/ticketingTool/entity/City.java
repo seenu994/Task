@@ -8,13 +8,14 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.xyram.ticketingTool.baseData.model.AuditModel;
 import com.xyram.ticketingTool.id.generator.IdGenerator;
 import com.xyram.ticketingTool.id.generator.IdPrefix;
 
 
 @Entity
 @Table(name = "city")
-public class City {
+public class City extends AuditModel{ 
 	
 	
 	@Id
@@ -28,7 +29,7 @@ public class City {
 	private String cityName;
 	
 	@Column(name = "city_status")
-	private String cityStatus;
+	private boolean cityStatus;
 	
 	@Column(name = "country_code")
 	private String countryCode;
@@ -41,11 +42,13 @@ public class City {
 		this.countryCode = countryCode;
 	}
 
-	public String getCityStatus() {
+
+
+	public boolean isCityStatus() {
 		return cityStatus;
 	}
 
-	public void setCityStatus(String cityStatus) {
+	public void setCityStatus(boolean cityStatus) {
 		this.cityStatus = cityStatus;
 	}
 
