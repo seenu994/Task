@@ -30,7 +30,7 @@ public class Client extends AuditModel {
 	@Column(name="client_id")
     private String Id;
 
-	@Column(name="client_name", length = 50)
+	@Column(name="client_name", length = 30)
 		private String clientName;
 	
 	@Enumerated(EnumType.STRING)
