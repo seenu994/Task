@@ -136,6 +136,11 @@ public class TimesheetServiceImpl implements TimesheetService{
 				    
 				    Employee employee = empRepository.getByEmpId(currentUser.getScopeId());
 				    Employee reportor = empRepository.getByEmpId(employee.getReportingTo());
+				    if(reportor == null) {
+				    	problemEncountered = true;
+				    	problemIs += "Employee doesnt have a Reporting Manager."+" : "+problemIs;
+				    	break;
+				    }
 				    sheet.setApproverId(reportor.getUserCredientials().getId());
 				    if(sheet.getEmployeeId() == null) {
 				    	sheet.setEmployeeId(currentUser.getUserId());
@@ -196,6 +201,11 @@ public class TimesheetServiceImpl implements TimesheetService{
 				    sheetEntity.setStatus(TimesheetStatus.PENDING);
 				    Employee employee = empRepository.getByEmpId(currentUser.getScopeId());
 				    Employee reportor = empRepository.getByEmpId(employee.getReportingTo());
+				    if(reportor == null) {
+				    	problemEncountered = true;
+				    	problemIs += "Employee doesnt have a Reporting Manager."+" : "+problemIs;
+				    	break;
+				    }
 				    sheetEntity.setApproverId(reportor.getUserCredientials().getId());
 				    
 				    sheetEntity.setHoursSpent(sheet.getHoursSpent());

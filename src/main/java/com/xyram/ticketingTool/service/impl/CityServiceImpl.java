@@ -13,9 +13,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.xyram.ticketingTool.Repository.CityRepository;
+import com.xyram.ticketingTool.Repository.CountryRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
+import com.xyram.ticketingTool.entity.AssetVendor;
 import com.xyram.ticketingTool.entity.Brand;
 import com.xyram.ticketingTool.entity.City;
+import com.xyram.ticketingTool.entity.Country;
 import com.xyram.ticketingTool.service.CityService;
 import com.xyram.ticketingTool.util.ResponseMessages;
 
@@ -26,6 +29,9 @@ public class CityServiceImpl  implements CityService {
 	
 	@Autowired
 	CityRepository cityRepository;
+	
+	@Autowired
+	CountryRepository countryRepository;
 	
 	
 	public ApiResponse addcity(City city) {
@@ -51,23 +57,19 @@ public class CityServiceImpl  implements CityService {
 	
 	private ApiResponse validateCity(City city) {
 		ApiResponse response = new ApiResponse(false);
-		//String regex = "[a-zA-Z]+";
-		//Brand brandObj = cityRepository.getCity(city.getCityName());
-		if (city.getCityName() == null || city.getCityName().equals("")) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "city is mandatory");
-		} 
-//		else if(brand.getBrandName().length() < 2 || brand.getBrandName().length() > 10){
-//			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "brand character length should be greater than 1 and less than 11");
-//		}
-//		else if(!brand.getBrandName().matches(regex)) {
-//			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "brand name should be character only");
-//		}
-//		else if(brandObj != null) {
-//			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "brand name already exists");
-//		}
-		response.setSuccess(true);
+		
+		if (city.getCountryCode() == null || city.getCountryCode().equals("")) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "countryCode is mandatory");
+		} else {
+			// Validate Vendor
+			Country country = countryRepository.getCountryById1(city.getCountryCode());
+			if (country == null) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "countryCode is not valid");
+			}
+			}
 		return response;
 		}
+
 
 
 	@Override

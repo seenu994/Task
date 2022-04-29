@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import com.xyram.ticketingTool.entity.AssetVendor;
 import com.xyram.ticketingTool.entity.City;
 import com.xyram.ticketingTool.entity.Country;
  
@@ -25,5 +26,8 @@ public interface CountryRepository  extends JpaRepository<Country, String>{
 	@Query("Select distinct new map(c.countryId as countryId, c.countryName as countryName, c.countryStatus as countryStatus) from Country c")
 	Page<Map> getAllCountry(Pageable pageable); 
 
+	
+	@Query("Select distinct c from Country c where c.countryId=:countryId")
+	Country getCountryById1(String countryId);
 	
 }

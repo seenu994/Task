@@ -12,28 +12,26 @@ import com.xyram.ticketingTool.baseData.model.AuditModel;
 import com.xyram.ticketingTool.id.generator.IdGenerator;
 import com.xyram.ticketingTool.id.generator.IdPrefix;
 
-
 @Entity
 @Table(name = "company_wings")
-public class CompanyWings extends AuditModel{
- /*
-  * `skill_id` varchar(255) NOT NULL,
-  `skill_name` varchar(255) NOT NULL,
-  `status` varchar(255) DEFAULT NULL,
-  */
-	
+public class CompanyWings extends AuditModel {
+	/*
+	 * `skill_id` varchar(255) NOT NULL, `skill_name` varchar(255) NOT NULL,
+	 * `status` varchar(255) DEFAULT NULL,
+	 */
+
 	@Id
 	@IdPrefix(value = "WIN_")
 	@GeneratedValue(generator = IdGenerator.ID_GENERATOR)
 	@GenericGenerator(name = IdGenerator.ID_GENERATOR, strategy = "com.xyram.ticketingTool.id.generator.IdGenerator")
-	@Column(name="wing_id")
+	@Column(name = "wing_id")
 	private String Id;
-	
-	@Column(name="wing_name")
+
+	@Column(name = "wing_name")
 	private String wingName;
-	
-	@Column(name="status")
-	private String status;
+
+	@Column(name = "status")
+	private boolean status;
 
 	public String getId() {
 		return Id;
@@ -51,13 +49,12 @@ public class CompanyWings extends AuditModel{
 		this.wingName = wingName;
 	}
 
-	public String getStatus() {
+	public boolean isStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(boolean status) {
 		this.status = status;
 	}
-	
-	
+
 }

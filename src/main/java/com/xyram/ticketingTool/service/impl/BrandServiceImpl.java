@@ -34,7 +34,7 @@ public class BrandServiceImpl implements BrandService{
 	@Override
 	public ApiResponse addbrand(Brand brand) {
 		ApiResponse response = new ApiResponse(false);
-		response = validateAsset(brand); 
+		response = validateBrand(brand); 
 		if (response.isSuccess()) {
 			if (brand != null) {
 			    brand.setCreatedAt(new Date());
@@ -52,7 +52,7 @@ public class BrandServiceImpl implements BrandService{
 		return response;
 	}
 
-	private ApiResponse validateAsset(Brand brand) {
+	private ApiResponse validateBrand(Brand brand) {
 		ApiResponse response = new ApiResponse(false);
 		String regex = "[a-zA-Z]+";
 		Brand brandObj = brandRepository.getBrand(brand.getBrandName());
@@ -77,12 +77,14 @@ public class BrandServiceImpl implements BrandService{
 	public ApiResponse editbrand(Brand brand, String brandId) {
 		ApiResponse response = new ApiResponse(false);
 		Brand brandObj = brandRepository.getBrandById(brandId);
+
+		
 		if(brandObj != null) {
 		   if(brand.getBrandName() == null || brand.getBrandName().equals("")) {
 			   throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "brand is mandatory");
 		    }
 		   else {
-			   checkBrandName(brand.getBrandName());
+			   checkBrandName(brand.getBrandName(), brandId);
 			   brandObj.setBrandName(brand.getBrandName());
 		   }
 		   brandObj.setLastUpdatedAt(new Date());
@@ -98,22 +100,25 @@ public class BrandServiceImpl implements BrandService{
 		}
 		return response;
 	}
-	private boolean checkBrandName(String brandName) {
+	
+		private boolean checkBrandName(String brandName, String brandId) {
+	   
 		String regex = "[a-zA-Z]+";
 		Brand brandObj = brandRepository.getBrand(brandName);
-		
+		String brandObject = brandRepository.getBrandName(brandName);
+
 		if(brandName.length() < 2 || brandName.length() > 10){
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "brand character length should be greater than 1 and less than 11");
 		}
-		else if (!brandName.matches(regex)) {
+		if (!brandName.matches(regex)) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "brand name should be character only");
 		   }
-		else if(brandObj != null) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "brand name already exists");
+		if(!brandId.equals(brandObject)) {
+		    if(brandObj != null) {
+			  throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "brand already exists!");
+		    }
 		}
-		else {
-			return true;
-		}
+		return true;
 	}
 
 	@Override

@@ -32,6 +32,8 @@ public class CountryServiceImpl implements CountryService{
 			response = validateCountry(country); 
 			if (response.isSuccess()) {
 				if (country != null) {
+					
+					
 					//city.setCreatedAt(new Date());
 					//city.setCreatedBy(currentUser.getUserId());
 				country.setCountryStatus(null);
@@ -55,6 +57,9 @@ public class CountryServiceImpl implements CountryService{
 		if (country.getCountryName() == null || country.getCountryName().equals("")) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "country is mandatory");
 		} 
+		if(country.getCountryCode() == null || country.getCountryCode().equals("")) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"country code is mandatory");
+		}
 		response.setSuccess(true);
 		return response;
 		}

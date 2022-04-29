@@ -123,7 +123,7 @@ AssetIssues getAssetIssueById(String assetIssueId);
 
 
 //@Query("Select new map(i) from AssetIssues i where i.assetIssueId =:assetIssueId")
-@Query("Select distinct new map(i.assetIssueId as assetIssueId, i.complaintRaisedDate as complaintRaisedDate, v.vendorName as vendorName,"
+@Query("Select distinct new map(i.assetIssueId as assetIssueId, i.complaintRaisedDate as complaintRaisedDate, v.vendorName as vendorName, "
 		+ "i.description as description, i.solution as solution,i.assetId as assetId, i.vendorId as vendorId,"
 		+ "i.assetIssueStatus as assetIssueStatus, i.comments as comments,"
 		+ "i.resolvedDate as resolvedDate ) from AssetIssues i left join AssetVendor v on i.vendorId = v.vendorId where i.assetIssueId =:assetIssueId")
@@ -169,7 +169,7 @@ List<Map> searchAssetIssue(String assetIssueId);
 Date getCompaintRaisedDate(String assetIssueId);
 
 @Query("Select distinct new map(i.assetIssueId as assetIssueId, i.complaintRaisedDate as complaintRaisedDate, "
-+ "i.description as description, i.solution as solution,i.assetId as assetId, "
++ "i.description as description, i.solution as solution,i.assetId as assetId, i.comments as comments, "
 + "i.assetIssueStatus as assetIssueStatus, i.vendorId as vendorId, "
 + "i.resolvedDate as resolvedDate ) from AssetIssues i left join Asset a on i.assetId = a.assetId "
 + "join AssetVendor v on i.vendorId = v.vendorId where "
@@ -188,6 +188,12 @@ List<Map> downloadAllAssetIssues(String assetId, String vendorId, String assetIs
 + "i.resolvedDate as resolvedDate ) from AssetIssues i left join Asset a on i.assetId = a.assetId "
 + "join AssetVendor v on i.vendorId = v.vendorId where i.assetIssueId=:assetIssueId")
 List<AssetIssues> getAssetIssuesById(String assetIssueId);
+
+@Query("Select i from AssetIssues i where i.assetIssueId=:assetIssueId and i.vendorId=:vendorId")
+AssetIssues getVendorById(String assetIssueId, String vendorId);
+
+@Query("Select i from AssetIssues i where i.assetIssueId=:assetIssueId and i.assetId=:assetId")
+AssetIssues getAssetById(String assetIssueId, String assetId);
 
 
 

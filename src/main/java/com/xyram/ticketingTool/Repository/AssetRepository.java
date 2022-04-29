@@ -54,7 +54,7 @@ public interface AssetRepository extends JpaRepository<Asset, String>{
     		+ "a.bagAvailable as bagAvailable, a.powercordAvailable as powercordAvailable,"
     		+ "a.mouseAvailable as mouseAvailable, a.assetPhotoUrl as assetPhotoUrl,"
     		+ "a.assetStatus as assetStatus, CONCAT(e.firstName ,' ', e.lastName) as assignedTo) from Asset a "
-    		+ "left join AssetVendor v on v.vendorId = a.vendorId left join AssetEmployee b on b.assetId = a.assetId "
+    		+ "left join AssetVendor v on v.vendorId = a.vendorId left join AssetEmployee b on b.assetId = a.assetId AND b.assetEmployeeStatus != 'INACTIVE'"
     		+ "left join Employee e on e.eId = b.empId where a.assetId =:assetId")
 	Map getAllAssetById(String assetId);
     
@@ -62,7 +62,7 @@ public interface AssetRepository extends JpaRepository<Asset, String>{
             + "a.brand as brand,a.purchaseDate as purchaseDate,a.modelNo as modelNo,"
     		+ "a.serialNo as serialNo,a.warrantyDate as warrantyDate,a.ram as ram,"
      	    + "a.assetStatus as assetStatus, CONCAT(e.firstName ,' ', e.lastName) as assignedTo) from Asset a left join AssetVendor v "
-    	    + "on v.vendorId = a.vendorId left join AssetEmployee b on b.assetId = a.assetId "
+    	    + "on v.vendorId = a.vendorId left join AssetEmployee b on b.assetId = a.assetId AND b.assetEmployeeStatus != 'INACTIVE' "
     	    + " left join Employee e on e.eId = b.empId where "
     	    + "(:assetStatus is null OR a.assetStatus=:assetStatus) AND "
 			+ "(:ram is null OR a.ram =:ram) AND "
@@ -115,13 +115,17 @@ public interface AssetRepository extends JpaRepository<Asset, String>{
 //    	    + "on a.assetId = i.assetId where i.assetId =:assetId")
 //	List<Map> getAssetIssuesById(String assetId, Pageable pageable);
 
-    @Query("Select distinct a from Asset a join AssetVendor v "
-    	    + "on a.vendorId = v.vendorId where "
+    @Query("Select distinct new map(a.assetId as assetId,v.vendorName as vendorName, "		
+            + "a.brand as brand,a.purchaseDate as purchaseDate,a.modelNo as modelNo,"
+    		+ "a.serialNo as serialNo,a.warrantyDate as warrantyDate,a.ram as ram,"
+     	    + "a.assetStatus as assetStatus, CONCAT(e.firstName ,' ', e.lastName) as assignedTo) from Asset a left join AssetVendor v "
+    	    + "on v.vendorId = a.vendorId left join AssetEmployee b on b.assetId = a.assetId AND b.assetEmployeeStatus != 'INACTIVE' "
+    	    + " left join Employee e on e.eId = b.empId where "
     	    + "(:status is null OR lower(a.assetStatus)=:status) AND "
 			+ "(:ram is null OR a.ram=:ram) AND "
     	    + "(:brand is null OR a.brand=:brand) AND "
 			+ "(:vendorId is null OR a.vendorId=:vendorId)")
-	List<Asset> getAllAssetsForDownload(String ram, String brand, AssetStatus status, String vendorId);
+	List<Map> getAllAssetsForDownload(String ram, String brand, AssetStatus status, String vendorId);
 
    
     //@Query("Select distinct a from Asset a where a.assetId=:assetId")
@@ -141,6 +145,7 @@ public interface AssetRepository extends JpaRepository<Asset, String>{
 	String getStatus(String assetId);
 	
 	
+    
 
 	
     

@@ -29,6 +29,17 @@ public class City {
 	
 	@Column(name = "city_status")
 	private String cityStatus;
+	
+	@Column(name = "country_code")
+	private String countryCode;
+
+	public String getCountryCode() {
+		return countryCode;
+	}
+
+	public void setCountryCode(String countryCode) {
+		this.countryCode = countryCode;
+	}
 
 	public String getCityStatus() {
 		return cityStatus;
