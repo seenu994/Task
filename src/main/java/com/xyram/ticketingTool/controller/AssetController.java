@@ -87,7 +87,7 @@ public class AssetController {
     @GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/downloadAssets",
     		AuthConstants.INFRA_ADMIN_BASEPATH + "/downloadAssets",
     		AuthConstants.INFRA_USER_BASEPATH + "/downloadAssets"})
-	Map downloadAssets(@RequestBody Map<String, Object> filter) throws ParseException, FileUploadException, IOException {
+	public ApiResponse downloadAssets(@RequestBody Map<String, Object> filter) {
 		logger.info("Received request to download Asset");
 		return assetService.downloadAssets(filter);
 	}

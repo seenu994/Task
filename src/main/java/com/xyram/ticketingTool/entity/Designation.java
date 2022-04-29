@@ -10,6 +10,8 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.xyram.ticketingTool.enumType.DesignationEnum;
+import com.xyram.ticketingTool.enumType.SoftwareEnum;
 import com.xyram.ticketingTool.enumType.UserStatus;
 import com.xyram.ticketingTool.id.generator.IdGenerator;
 import com.xyram.ticketingTool.id.generator.IdPrefix;
@@ -30,9 +32,20 @@ public class Designation  {
 	private String designationName;
 	
 	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "designationStatus")
+	private DesignationEnum designationStatus = DesignationEnum.ACTIVE;
 
 
 	
+	public DesignationEnum getDesignationStatus() {
+		return designationStatus;
+	}
+
+	public void setDesignationStatus(DesignationEnum designationStatus) {
+		this.designationStatus = designationStatus;
+	}
+
 	public String getId() {
 		return Id;
 	}

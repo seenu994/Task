@@ -21,7 +21,7 @@ import com.xyram.ticketingTool.enumType.SoftwareEnum;
 public interface SoftwareMasterRepository extends JpaRepository<SoftwareMaster , String> {
   
 	@Query("select new map(p.softwareId as softwareId,p.softwareName as softwareName," 
-	+ "p.softwareMasterStatus as softwareMasterStatus) from SoftwareMaster p")// where p.softwareMasterStatus != 'INACTIVE'")
+	+ "p.softwareMasterStatus as softwareMasterStatus) from SoftwareMaster p where p.softwareMasterStatus != 'INACTIVE'")
 	Page<Map> getAllsoftwareMasterList(Pageable peageble);
 	
 	@Query("Select distinct p from SoftwareMaster p where p.softwareId=:softwareId")

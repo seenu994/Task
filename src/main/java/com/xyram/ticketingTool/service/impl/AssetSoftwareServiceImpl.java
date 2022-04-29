@@ -53,7 +53,7 @@ public class AssetSoftwareServiceImpl implements AssetSoftwareService {
 	if (response.isSuccess()) {
 		if (assetSoftware != null) {
 			assetSoftware.setCreatedAt(new Date());
-			assetSoftware.setCreatedBy(currentUser.getName());
+			assetSoftware.setCreatedBy(currentUser.getUserId());
 			assetSoftwareRepository.save(assetSoftware);
 			response.setSuccess(true);
 			response.setMessage(ResponseMessages.ASSET_SOFTWARE_ADDED);
@@ -160,7 +160,7 @@ public class AssetSoftwareServiceImpl implements AssetSoftwareService {
 			}
 			//System.out.println(softObj.getAction());
 			softObj.setLastUpdatedAt(new Date());
-			softObj.setUpdatedBy(currentUser.getName());
+			softObj.setUpdatedBy(currentUser.getUserId());
 			assetSoftwareRepository.save(softObj);
 			response.setSuccess(true);
 			response.setMessage("Asset Sofware updated Successfully");

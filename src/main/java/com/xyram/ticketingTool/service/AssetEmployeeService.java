@@ -11,9 +11,9 @@ public interface AssetEmployeeService {
 
 	ApiResponse addAssetEmployee(AssetEmployee assetEmployee);
 
-	ApiResponse editAssetEmployee(AssetEmployee assetEmployee, String assetId);
+	ApiResponse editAssetEmployee(AssetEmployee assetEmployee, String assetEmpId);
 
-	ApiResponse updateAssetEmployee(AssetEmployee assetEmployee, String assetId);
+	ApiResponse updateAssetEmployee(AssetEmployee assetEmployee, String assetEmpId);
 
 	ApiResponse getAssetEmployeeById(String assetId, Pageable pageable);
 }

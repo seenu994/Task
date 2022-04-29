@@ -26,6 +26,12 @@ public interface BrandRepository extends JpaRepository<Brand, String>{
 	@Query("Select b from Brand b where b.brandName =:brand")
 	Brand getBrand(String brand);
 	
+	@Query("Select b.brandId from Brand b where b.brandName =:brandName")
+	String getBrandName(String brandName);
+
+	@Query("Select b.brandName from Brand b where b.brandId =:brandId")      
+	String getBrandNameById(String brandId);
+	
 	
 
 }
