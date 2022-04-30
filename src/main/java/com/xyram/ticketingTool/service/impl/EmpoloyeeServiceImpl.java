@@ -209,7 +209,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				employee.setCreatedAt(new Date());
 				employee.setLastUpdatedAt(new Date());
 				employee.setUserCredientials(user);
-				employee.setProfileUrl("https://covidtest.xyramsoft.com/image/ticket-attachment/user-default-pic.png");
+				employee.setProfileUrl("https://tool.xyramsoft.com/image/ticket-attachment/user-default-pic.png");
 				Employee employeeNew = employeeRepository.save(employee);
 				User useredit = userRepository.getById(user.getId());
 				useredit.setScopeId(employeeNew.geteId());
@@ -808,7 +808,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 //				vendorDetails.setCreatedAt(new Date());
 //				vendorDetails.setLastUpdatedAt(new Date());
 			vendorDetails.setUserCredientials(user);
-			vendorDetails.setProfileUrl("https://covidtest.xyramsoft.com/image/ticket-attachment/user-default-pic.png");
+			vendorDetails.setProfileUrl("https://tool.xyramsoft.com/image/ticket-attachment/user-default-pic.png");
 			JobVendorDetails vendorNew = vendorRepository.save(vendorDetails);
 			if (vendorNew != null) {
 				Employee empObj = new Employee();
