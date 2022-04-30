@@ -146,6 +146,9 @@ public interface AssetRepository extends JpaRepository<Asset, String>{
 
     @Query("select a from Asset a where a.serialNo =:serialNo")
 	Asset getAssetBySerialNo(String serialNo);
+
+    @Query("select a.assetId from Asset a where a.serialNo =:serialNo")
+	String getAssetIdBySerialNo(String serialNo);
 	
 	
     

@@ -834,7 +834,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	fileResponse.put("blob", blob);
 	response.setFileDetails(fileResponse);
 	//System.out.println(fileResponse);
-	response.setStatus("success");
+	response.setSuccess(true);
 	response.setMessage("report exported Successfully");
 	
 		return response;
@@ -913,7 +913,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	fileResponse.put("blob", blob);
 	response.setFileDetails(fileResponse);
 	//System.out.println(fileResponse);
-	response.setStatus("success");
+	response.setSuccess(true);
 	response.setMessage("report exported Successfully");
 	
 		return response;
