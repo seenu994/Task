@@ -3,6 +3,7 @@ package com.xyram.ticketingTool.service.impl;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,7 +129,7 @@ public class DesignationServiceImpl implements DesiggnaionService {
 		public ApiResponse searchDesignation(String searchString) {
 			
 			ApiResponse response = new ApiResponse(false);
-			Page<Map> designations = designationRepository.searchDesignation(searchString);
+			List<Map> designations = designationRepository.searchDesignation(searchString);
 
 			Map content = new HashMap();
 			content.put("designations", designations);

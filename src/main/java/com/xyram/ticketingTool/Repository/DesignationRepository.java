@@ -1,5 +1,6 @@
 package com.xyram.ticketingTool.Repository;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.Page;
@@ -28,7 +29,7 @@ public interface DesignationRepository extends JpaRepository<Designation, String
 			+ "( e.designationName LIKE %:searchString%  ) ")
 
 			
-	Page<Map> searchDesignation(String searchString);
+	List<Map> searchDesignation(String searchString);
 
 
 	@Query("select e from Designation e where e.designationName =:designationName")
