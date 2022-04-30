@@ -136,46 +136,38 @@ public class JobServiceImpl implements JobService {
 		if (jobObj.getWings() != null && jobObj.getWings().getId() != null) {
 			CompanyWings wing = companyWingsRepository.getById(jobObj.getWings().getId());
 			if (wing != null)
-
 			{
 				jobObj.setWings(wing);
 			}
-
 			else {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wing does not exist");
 			}
 		}
+		
 		if (userDetail.getUserRole().equals("HR_ADMIN")) {
 			Employee employeeDetails = employeeRepository.getByEmpId(userDetail.getScopeId());
 			jobObj.setUpdatedBy(employeeDetails.getFirstName() + "" + employeeDetails.getLastName());
 		} else {
 			jobObj.setUpdatedBy(userDetail.getName());
 		}
+		
 		jobObj.setCreatedAt(new Date());
 		jobObj.setFilledPositions(0);
 		jobObj.setCreatedBy(userDetail.getUserId());
 		jobObj.setJobStatus(JobOpeningStatus.VACANT);
+		
 		boolean jobCodeValidate = jobRepository.findb(jobObj.getJobCode());
 		if (jobCodeValidate == false) {
-
 			jobObj.setJobCode(jobObj.getJobCode());
 
 		} else {
 			response.setMessage("job code =" + jobObj.getJobCode() + "  already exists");
-
 			return response;
-
 		}
-		if (jobRepository.save(jobObj) != null) {
-
-				response.setSuccess(true);
-				response.setMessage("New Job Opening Created");
-			}
-		 else {
-			response.setSuccess(false);
-			response.setMessage("New Job Opening Not Created");
-		}
-
+		
+		jobRepository.save(jobObj);	
+		response.setSuccess(true);
+		response.setMessage("New Job Opening Created");
 		return response;
 	}
 
@@ -206,15 +198,11 @@ public class JobServiceImpl implements JobService {
 		
 		if(userDetail.getUserRole().equals("HR_ADMIN") || userDetail.getUserRole().equals("JOB_VENDOR") ||
 				userDetail.getUserRole().equals("HR"))
-		{
-			
-			jobOpening = jobRepository.getAllOpenings(searchString, statusApp, wing,
+		{		
+			jobOpeningList = jobRepository.getAllOpenings(searchString, statusApp, wing,
 					userDetail.getUserRole(), pageable);
-			
 			content.put("jobsList", jobOpening);
-			
 		}else {
-
 			jobOpeningList = jobRepository.getAllOpeningsWithoutPackage(searchString, statusApp, wing,
 					userDetail.getUserRole(), pageable);
 			content.put("jobsList", jobOpeningList);

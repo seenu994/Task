@@ -162,7 +162,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 				Date toDateTime = new Date();
 				long diff = schedule.getScheduleDate().getTime() - toDateTime.getTime();//as given
 
-				long diffMinutes = diff / (60 * 1000) % 60; 
+				long diffMinutes = diff / (60 * 1000); 
 				if(diffMinutes < 15) {
 					response.setSuccess(false);
 					response.setMessage("A future date is permitted, and minimum 15 minutes prior to the current time is required.");
