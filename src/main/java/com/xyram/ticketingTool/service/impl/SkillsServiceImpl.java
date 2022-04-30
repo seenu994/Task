@@ -56,7 +56,7 @@ public class SkillsServiceImpl implements SkillsService{
 
 	private ApiResponse validateSkills(Skills skills) {
 		ApiResponse response = new ApiResponse(false);
-		String regex = "[a-zA-Z]+";
+//		String regex = "[a-zA-Z]+ ";
 		Skills skill = skillsRepository.getSkills(skills.getSkillName());
 		if (skills.getSkillName() == null || skills.getSkillName().equals("")) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "skills is mandatory");
@@ -64,9 +64,9 @@ public class SkillsServiceImpl implements SkillsService{
 		else if(skills.getSkillName().length() < 3){
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Skill character length should be greater than 2");
 		}
-		else if(!skills.getSkillName().matches(regex)) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Skill Name should be character only");
-		}
+//		else if(!skills.getSkillName().matches(regex)) {
+//			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Skill Name should be character only");
+//		}
 		else if(skill != null) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Skill Name already exists");
 		}
@@ -101,16 +101,16 @@ public class SkillsServiceImpl implements SkillsService{
 		return response;	}
 
 	private boolean checkSkills(String skillName, String skillId) {
-		String regex = "[a-zA-Z]+";
+//		String regex = "[a-zA-Z]+";
 		Skills skill = skillsRepository.getSkills(skillName);
-		Skills skillObj = skillsRepository.getSkillId(skillName);
+		String skillObj = skillsRepository.getSkillId(skillName);
 		if(skillName.length() < 3){
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Skill character length should be greater than 2");
 		}
-		if(!skillName.matches(regex)) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Skill Name should be character only");
-		}
-		if(!skill.equals(skillObj)) {
+//		if(!skillName.matches(regex)) {
+//			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Skill Name should be character only");
+//		}
+		if(!skillId.equals(skillObj)) {
 		    if(skill != null) {
 			   throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Skill Name already exists");
 		   }
@@ -129,7 +129,7 @@ public class SkillsServiceImpl implements SkillsService{
 		if(content != null) {
 			response.setSuccess(true);
 			response.setContent(content);
-			response.setMessage("Skills List Retrieved");
+			response.setMessage("Skills List Retrieved Successfully");
 		}
 		else {
 			response.setSuccess(false);
@@ -147,7 +147,7 @@ public class SkillsServiceImpl implements SkillsService{
 		content.put("skills", skills);
 		if (content != null) {
 			response.setSuccess(true);
-			response.setMessage("Skills retrieved successfully");
+			response.setMessage("Search Skills retrieved successfully");
 			response.setContent(content);
 		} else {
 			response.setSuccess(false);

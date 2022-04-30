@@ -39,7 +39,7 @@ private final Logger logger = LoggerFactory.getLogger(BrandController.class);
         return skillsService.editSkills(skills, skillId);
 	}
 	
-	 @GetMapping(value = {AuthConstants.ADMIN_BASEPATH + "/getAllSkills"})
+	 @GetMapping(value = {AuthConstants.HR_ADMIN_BASEPATH + "/getAllSkills"})
      public ApiResponse getAllSkills(Pageable pageable) {
  	        logger.info("Received request to get all Skills");
  			return skillsService.getAllSkills(pageable);
