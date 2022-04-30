@@ -14,6 +14,13 @@ public interface DesignationRepository extends JpaRepository<Designation, String
 	Page<Map> getAllDesignationList(Pageable pageable);
 
 	
+	
+	@Query("select distinct e from Designation e where"
+			+ "( e.designationName LIKE %:searchString% OR e.Id like  %:searchString% ) ")
+			
+	Designation searchDesignation(String searchString);
+
+	
 //	@Query("Select distinct e from  Designation e where e.Id=:Id")
 //	Designation getDesignationById(String id);
 

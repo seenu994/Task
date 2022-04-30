@@ -14,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.xyram.ticketingTool.Repository.DesignationRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
+import com.xyram.ticketingTool.entity.AssetVendor;
 import com.xyram.ticketingTool.entity.Designation;
 import com.xyram.ticketingTool.entity.SoftwareMaster;
 import com.xyram.ticketingTool.service.DesiggnaionService;
@@ -113,4 +114,33 @@ public class DesignationServiceImpl implements DesiggnaionService {
 			    return response;
 
 		}
+
+
+
+
+		@Override
+		public ApiResponse searchDesignation(String searchString) {
+			
+			ApiResponse response = new ApiResponse(false);
+			Designation designation = designationRepository.searchDesignation(searchString);
+
+			Map content = new HashMap();
+			content.put("designation", designation);
+			if (content != null) {
+
+				
+				response.setSuccess(true);
+				response.setMessage("Designation retrived successfully");
+				response.setContent(content);
+			} else {
+				
+				response.setSuccess(false);
+				
+				response.setMessage("Not retrived the data");
+			}
+
+			return response;
+
+		}
+
 }
