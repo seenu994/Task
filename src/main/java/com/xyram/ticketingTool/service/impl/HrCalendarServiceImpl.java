@@ -841,7 +841,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	}
 	private Workbook prepareExcelWorkBook(List<Map> myScheduleList) 
 	{
-		List<String> headers = Arrays.asList("Name", "Job code", "job Title", "Date & Time", "Source", "Status");
+		List<String> headers = Arrays.asList("Name", "Job code", "Job Title", "Date & Time", "Source", "Status");
 			
 		List data = new ArrayList<>();
 
@@ -921,7 +921,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	}
 	private Workbook prepareExcelWorkBookTeam(List<Map> myTeamScheduleList) 
 	{
-		List<String> headers = Arrays.asList("Name", "Job code", "job Title", "Date & Time", "Scheduled By", "Source", "Status");
+		List<String> headers = Arrays.asList("Name", "Job code", "Job Title", "Date & Time", "Scheduled By", "Source", "Status");
 			
 		List data = new ArrayList<>();
 
