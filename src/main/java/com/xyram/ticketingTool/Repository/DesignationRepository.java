@@ -10,13 +10,19 @@ import org.springframework.data.jpa.repository.Query;
 import com.xyram.ticketingTool.entity.Designation;
 
 public interface DesignationRepository extends JpaRepository<Designation, String> {
-	@Query("Select new map(e.Id as id,e.designationName as designationName) from Designation e where Id != 'D7'")
+	@Query("Select new map(e.Id as id,e.designationName as designationName,"
+			+"e.designationStatus as designationStatus ) from Designation e where e.designationStatus !=  'INACTIVE'")
 	Page<Map> getAllDesignationList(Pageable pageable);
 
 	
 	
+//	@Query("select new map(p.softwareId as softwareId,p.softwareName as softwareName," 
+//			+ "p.softwareMasterStatus as softwareMasterStatus) from SoftwareMaster p where p.softwareMasterStatus != 'INACTIVE'")
+//			Page<Map> getAllsoftwareMasterList(Pageable peageble);
+//	
+	
 	@Query("select distinct e from Designation e where"
-			+ "( e.designationName LIKE %:searchString% OR e.Id like  %:searchString% ) ")
+			+ "( e.designationName LIKE %:searchString%) ")
 			
 	Designation searchDesignation(String searchString);
 

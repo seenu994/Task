@@ -15,7 +15,7 @@ public interface DesiggnaionService {
 	
 	ApiResponse editDesignation(Designation Request, String Id);
 	ApiResponse getAllDesignation(Pageable pageable);
-	ApiResponse searchDesignation(String searchString);
+	ApiResponse searchDesignationByName(String designationName);
 	}
 
 
