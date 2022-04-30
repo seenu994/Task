@@ -44,5 +44,12 @@ private final Logger logger = LoggerFactory.getLogger(BrandController.class);
  	        logger.info("Received request to get all Skills");
  			return skillsService.getAllSkills(pageable);
  	 }
+	 
+	 @GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/searchSkills/{searchString}"})
+		public ApiResponse searchSkills(@PathVariable String searchString) {
+			logger.info("Received request to search Skills");
+			return skillsService.searchSkills(searchString);
+		}
+
 
 }

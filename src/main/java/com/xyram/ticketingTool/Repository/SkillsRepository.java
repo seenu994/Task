@@ -1,5 +1,6 @@
 package com.xyram.ticketingTool.Repository;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.Page;
@@ -22,6 +23,9 @@ public interface SkillsRepository extends JpaRepository<Skills, String>{
 
 	@Query("Select distinct new map(s.skillId as skillId, s.skillName as skillName, s.skillStatus as skillStatus) from Skills s")
 	Page<Map> getAllSkills(Pageable pageable);
+
+	@Query("select distinct s from Skills s where s.skillName LIKE %:searchString%")
+	List<Map> searchSkills(String searchString);
 	
 	
 

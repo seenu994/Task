@@ -2,6 +2,7 @@ package com.xyram.ticketingTool.service.impl;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.transaction.Transactional;
@@ -133,6 +134,24 @@ public class SkillsServiceImpl implements SkillsService{
 		else {
 			response.setSuccess(false);
 			response.setMessage("Could not retrieve data");
+		}
+		return response;
+	}
+
+	@Override
+	public ApiResponse searchSkills(String searchString) {
+		ApiResponse response = new ApiResponse(false);
+		List<Map> skills = skillsRepository.searchSkills(searchString);
+
+		Map content = new HashMap();
+		content.put("skills", skills);
+		if (content != null) {
+			response.setSuccess(true);
+			response.setMessage("Skills retrieved successfully");
+			response.setContent(content);
+		} else {
+			response.setSuccess(false);
+			response.setMessage("could not retrieve the data");
 		}
 		return response;
 	}

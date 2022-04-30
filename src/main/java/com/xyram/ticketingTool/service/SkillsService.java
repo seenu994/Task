@@ -13,4 +13,6 @@ public interface SkillsService {
 
 	ApiResponse getAllSkills(Pageable pageable);
 
+	ApiResponse searchSkills(String searchString);
+
 }
