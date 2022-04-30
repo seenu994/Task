@@ -3,6 +3,7 @@ package com.xyram.ticketingTool.service.impl;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.xyram.ticketingTool.Repository.DesignationRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
+import com.xyram.ticketingTool.entity.AssetVendor;
+import com.xyram.ticketingTool.entity.City;
 import com.xyram.ticketingTool.entity.Designation;
 import com.xyram.ticketingTool.entity.SoftwareMaster;
 import com.xyram.ticketingTool.service.DesiggnaionService;
@@ -76,8 +79,13 @@ public class DesignationServiceImpl implements DesiggnaionService {
 		private ApiResponse validateDesignation(Designation designation) {
 			ApiResponse response = new ApiResponse(false);
 
+			Designation designationObj  = designationRepository.getDesignationName(designation.getDesignationName());
 			if (designation.getDesignationName().equals("") || designation.getDesignationName() == null) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Designation is manditory");
+			}
+			
+			if(designationObj != null) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, " DesignationName already exists!");
 			}
 			response.setSuccess(true);
 			return response;
@@ -102,15 +110,44 @@ public class DesignationServiceImpl implements DesiggnaionService {
 
 					designationRepository.save(designationRequest);
 					response.setSuccess(true);
-					response.setMessage(ResponseMessages.SOFTWAREMASTER_EDITED);
+					response.setMessage(ResponseMessages.DESIGNATION_EDITED);
 						
 				} else {
 					response.setSuccess(false);
-					response.setMessage(ResponseMessages.SOFTWARE_DETAILS_INVALID);
+					response.setMessage(ResponseMessages.DESIGNATION_DETAILS_INVALID);
 					// response.setContent(null);
 				}
 				
 			    return response;
 
 		}
+
+
+
+
+		@Override
+		public ApiResponse searchDesignation(String searchString) {
+			
+			ApiResponse response = new ApiResponse(false);
+			List<Map> designations = designationRepository.searchDesignation(searchString);
+
+			Map content = new HashMap();
+			content.put("designations", designations);
+			if (content != null) {
+
+				
+				response.setSuccess(true);
+				response.setMessage("Designation retrived successfully");
+				response.setContent(content);
+			} else {
+				
+				response.setSuccess(false);
+				
+				response.setMessage("Not retrived the data");
+			}
+
+			return response;
+
+		}
+
 }

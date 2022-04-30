@@ -313,13 +313,14 @@ String ASSET_DIRECTORY ="/Documents/assetDetails/";
 
 	String CITY_DETAILS_INVALID = "Invalid City Details ";
 
-	String CITY_ADDED = "Added City";
+	String CITY_ADDED = "City Added Successfully";
 
-	String CITY_NOT_ADDED = "City Added Successfully";
+	String CITY_NOT_ADDED = "City not added";
 	String COUNTRY_ADDED = "Country Added Successfully";
     String COUNTRY_NOT_ADDED = "Country not added";
+    String COUNTRY_EDITED = "Country Details  edited Successfully";
 	String CITY_LIST_RETRIVED = "List retrieved Successfully";
-
+	String COUNTRY_DETAILS_INVALID = "Country details Invalid" ;
 	String COUNTRY_LIST_RETRIVED = "List retrieved Successfully";
 
 	String WINGS_ADDED = "Wings added successfully";
@@ -343,6 +344,12 @@ String ASSET_DIRECTORY ="/Documents/assetDetails/";
 		String ISSUES_LIST_RETRIVED = "List retrieved Successfully";
 
 		String SOFTWAREMASTER_NOT_ADDED = "software master not added";
+
+		String DESIGNATION_EDITED = "Designation is added Successfully";
+
+		String DESIGNATION_DETAILS_INVALID = "Invalid Designation details";
+
+		
 
 
 	

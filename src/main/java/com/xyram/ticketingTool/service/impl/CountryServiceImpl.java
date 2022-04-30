@@ -1,5 +1,6 @@
 package com.xyram.ticketingTool.service.impl;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,8 +15,10 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.xyram.ticketingTool.Repository.CountryRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
+import com.xyram.ticketingTool.entity.Asset;
 import com.xyram.ticketingTool.entity.City;
 import com.xyram.ticketingTool.entity.Country;
+import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.CountryService;
 import com.xyram.ticketingTool.util.ResponseMessages;
 @Service
@@ -24,6 +27,9 @@ public class CountryServiceImpl implements CountryService{
 
 	@Autowired
 	CountryRepository countryRepository;
+	
+	@Autowired
+	CurrentUser currentUser;
 	
 	public ApiResponse addcountry(Country country) {
 	
@@ -34,16 +40,16 @@ public class CountryServiceImpl implements CountryService{
 				if (country != null) {
 					
 					
-					//city.setCreatedAt(new Date());
-					//city.setCreatedBy(currentUser.getUserId());
-				country.setCountryStatus(null);
+					country.setCreatedAt(new Date());
+					country.setCreatedBy(currentUser.getUserId());
+				country.setCountryStatus(true);
 					countryRepository.save(country);
 					response.setSuccess(true);
-					response.setMessage(ResponseMessages.CITY_ADDED);
+					response.setMessage(ResponseMessages.COUNTRY_ADDED);
 				}
 				else {
 					response.setSuccess(false);
-					response.setMessage(ResponseMessages.CITY_NOT_ADDED);
+					response.setMessage(ResponseMessages.COUNTRY_NOT_ADDED);
 				}
 			}
 			return response;
@@ -52,14 +58,25 @@ public class CountryServiceImpl implements CountryService{
 
 	private ApiResponse validateCountry(Country country) {
 		ApiResponse response = new ApiResponse(false);
-		//String regex = "[a-zA-Z]+";
-		//Brand brandObj = cityRepository.getCity(city.getCityName());
+		Country  countryRequest = countryRepository.getCountryName(country.getCountryName());
 		if (country.getCountryName() == null || country.getCountryName().equals("")) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "country is mandatory");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "countryName is mandatory");
 		} 
+		if(countryRequest != null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, " CountryName already exists!");
+		}
+		 
+		
+		Country countryObj = countryRepository.getCountryCode(country.getCountryCode());
 		if(country.getCountryCode() == null || country.getCountryCode().equals("")) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"country code is mandatory");
 		}
+		else {
+			if(countryObj != null) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"CountryCode is already exist!");
+			}
+		}
+		
 		response.setSuccess(true);
 		return response;
 		}
@@ -80,11 +97,11 @@ public class CountryServiceImpl implements CountryService{
 				countryRepository.save(countryRequest);
 
 				response.setSuccess(true);
-				response.setMessage(ResponseMessages.CITY_EDITED);
+				response.setMessage(ResponseMessages.COUNTRY_EDITED);
 
 			} else {
 				response.setSuccess(false);
-				response.setMessage(ResponseMessages.CITY_DETAILS_INVALID);
+				response.setMessage(ResponseMessages.COUNTRY_DETAILS_INVALID);
 				// response.setContent(null);
 			}
 
