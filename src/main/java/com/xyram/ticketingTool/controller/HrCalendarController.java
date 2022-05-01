@@ -57,6 +57,14 @@ public class HrCalendarController {
 	ApiResponse deleteScheduleInCalendar(@PathVariable String scheduleId) {
 		logger.info("Deleting Hr Schedule");
 		return hrCalrendarService.deleteScheduleInCalendar(scheduleId);
+	} 
+	
+	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/getScheduleDetail/{scheduleId}",
+			AuthConstants.HR_BASEPATH + "/getScheduleDetail/{scheduleId}"			
+			})
+	ApiResponse getScheduleDetail(@PathVariable String scheduleId) {
+		logger.info("Get Schedule Detail");
+		return hrCalrendarService.getScheduleDetail(scheduleId);
 	}
 	
 	@PostMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/doReScheduleInCalendar/{scheduleId}/scheduleDate/{scheduleDate}",
