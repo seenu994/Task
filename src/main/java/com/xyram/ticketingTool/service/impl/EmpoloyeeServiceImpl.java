@@ -175,6 +175,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 					user.setName(employee.getFirstName() + " " + employee.getLastName());
 				// Employee employeere=new Employee();
 				Role role = roleRepository.getById(employee.getRoleId());
+				user.setUserRole(role!=null ?role.getRoleName():null);
 				/*
 				 * if (role != null) { try {
 				 * 
@@ -208,31 +209,37 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				employee.setCreatedAt(new Date());
 				employee.setLastUpdatedAt(new Date());
 				employee.setUserCredientials(user);
-				employee.setProfileUrl("https://covidtest.xyramsoft.com/image/ticket-attachment/user-default-pic.png");
+				employee.setProfileUrl("https://tool.xyramsoft.com/image/ticket-attachment/user-default-pic.png");
 				Employee employeeNew = employeeRepository.save(employee);
 				User useredit = userRepository.getById(user.getId());
 				useredit.setScopeId(employeeNew.geteId());
 				userRepository.save(useredit);
 
 				// sending notification starts here..!
+				
+				
 				List<Map> EmployeeList = employeeRepository.getEmployeeBYReportingToId(employee.getReportingTo());
-				Employee emp = new Employee();
+		
+				
+				
+				if (!EmployeeList.isEmpty())
+				{
 
 				for (Map employeeNotification : EmployeeList) {
 					Map request = new HashMap<>();
 					request.put("id", employeeNotification.get("id"));
 					request.put("uid", employeeNotification.get("uid"));
 					request.put("title", "EMPLOYEE CREATED");
-					request.put("body", " employee Created - " + emp.getFirstName());
+					request.put("body", " employee Created - " + employeeNew.getFirstName());
 					pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 12,
 							NotificationType.EMPLOYEE_CREATED.toString()));
 
 				}
 				// inserting notification details
 				Notifications notifications = new Notifications();
-				notifications.setNotificationDesc("employee created - " + emp.getFirstName());
+				notifications.setNotificationDesc("employee created - " + employeeNew.getFirstName());
 				notifications.setNotificationType(NotificationType.EMPLOYEE_CREATED);
-				notifications.setSenderId(emp.getReportingTo());
+				notifications.setSenderId(employeeNew.getReportingTo());
 				notifications.setReceiverId(userDetail.getUserId());
 				notifications.setSeenStatus(false);
 				notifications.setCreatedBy(userDetail.getUserId());
@@ -241,13 +248,16 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				notifications.setLastUpdatedAt(new Date());
 
 				notificationService.createNotification(notifications);
+				}
 				UUID uuid = UUID.randomUUID();
 				String uuidAsString = uuid.toString();
-				if (emp != null) {
+				
+			
+				if (employeeNew != null & false) {
 					String name = null;
 
 					HashMap mailDetails = new HashMap();
-					mailDetails.put("toEmail", employee.getEmail());
+					mailDetails.put("toEmail", employeeNew.getEmail());
 					mailDetails.put("subject", name + ", " + "Here's your new PASSWORD");
 					mailDetails.put("message", "Hi " + name
 							+ ", \n\n We received a request to reset the password for your Account. \n\n Here's your new PASSWORD Link is: "
@@ -798,7 +808,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 //				vendorDetails.setCreatedAt(new Date());
 //				vendorDetails.setLastUpdatedAt(new Date());
 			vendorDetails.setUserCredientials(user);
-			vendorDetails.setProfileUrl("https://covidtest.xyramsoft.com/image/ticket-attachment/user-default-pic.png");
+			vendorDetails.setProfileUrl("https://tool.xyramsoft.com/image/ticket-attachment/user-default-pic.png");
 			JobVendorDetails vendorNew = vendorRepository.save(vendorDetails);
 			if (vendorNew != null) {
 				Employee empObj = new Employee();

@@ -101,7 +101,9 @@ public interface JobRepository extends CrudRepository<JobOpenings, Long>, JpaSpe
 
 
 
-	@Query(value = " SELECT j from JobOpenings "
+	@Query(value = " SELECT new map(j.Id as Id, j.jobDescription as jobDescription , j.jobCode as jobCode, j.jobTitle as jobTitle , "
+			+ "j.jobSkills as jobSkills , w.wingName as wingName, j.jobCode as jobCode, j.maxExp as maxExp, j.minExp as minExp, j.totalOpenings as totalOpenings ,"
+			+ " j.filledPositions as filledPositions, j.jobStatus as jobStatus,j.jobSalary as jobSalary) from JobOpenings "
 			+ " j left join j.wings as w  where"
 			+ " (:wing is null or  lower(w.wingName)=:wing ) and "
 			+ "(:status is null or j.jobStatus=:status) and "
@@ -114,10 +116,9 @@ public interface JobRepository extends CrudRepository<JobOpenings, Long>, JpaSpe
 			+"  Or lower(w.wingName) Like %:searchString%"
 			+"  Or lower(j.jobDescription) Like %:searchString%"
 			+"  Or lower(j.jobCode) Like %:searchString%"
-			+"  Or str(j.jobSalary) Like %:searchString%"
 			+"  Or lower(j.maxExp) Like %:searchString%"
 			+ " Or lower(j.minExp) LIKE %:searchString%) ORDER BY j.createdAt DESC")		
-	Page<JobOpenings> getAllOpenings(String searchString, JobOpeningStatus status, String wing, String userRole,
+	Page<List<Map>> getAllOpenings(String searchString, JobOpeningStatus status, String wing, String userRole,
 		 Pageable pageable);
 	
 	@Query(value = " SELECT new map(j.Id as Id, j.jobDescription as jobDescription , j.jobCode as jobCode, j.jobTitle as jobTitle , "

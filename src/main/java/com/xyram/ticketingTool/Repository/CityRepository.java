@@ -25,6 +25,9 @@ public interface CityRepository  extends JpaRepository<City, String>{
 	@Query("Select distinct new map(c.cityId as cityId, c.cityName as cityName, c.cityStatus as cityStatus) from City c")
 	Page<Map> getAllCity(Pageable pageable);
 
+	@Query("select c from City c where c.cityName =:cityName")
+	City getCityName(String cityName);
+
 	
 	
 

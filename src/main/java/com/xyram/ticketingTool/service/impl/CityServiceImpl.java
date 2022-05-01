@@ -60,8 +60,13 @@ public class CityServiceImpl  implements CityService {
 	private ApiResponse validateCity(City city) {
 		ApiResponse response = new ApiResponse(false);
 		
+		
+		City  cityRequest = cityRepository.getCityName(city.getCityName());
 		if(city.getCityName() == null || city.getCityName().equals("")) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"City name is mandatory");
+		}
+		if(cityRequest != null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, " CityName already exists!");
 		}
 		
 		if (city.getCountryCode() == null || city.getCountryCode().equals("")) {
@@ -89,7 +94,7 @@ public class CityServiceImpl  implements CityService {
 		if (response.isSuccess()) {
 			City cityRequest = cityRepository.getCityById(cityId);
 			if (cityRequest != null) {
-				// softwareMasterRequest.setSoftwareId(software.getSoftwareId());
+				
 				cityRequest.setCityName(city.getCityName());
 
 				cityRequest.setLastUpdatedAt(new Date());
@@ -138,10 +143,7 @@ public class CityServiceImpl  implements CityService {
 		ApiResponse response = new ApiResponse(false);
 		City cityObj = cityRepository.getCityById(cityId);
 		if (cityObj != null) {
-//			if(!brandObj.getCreatedBy().equals(currentUser.getUserId())) {
-//				response.setSuccess(false);
-//				response.setMessage("Not authorised to delete this brand");
-//			}
+			
 			cityRepository.delete(cityObj);
 			response.setSuccess(true);
 			response.setMessage("City deleted successfully.");

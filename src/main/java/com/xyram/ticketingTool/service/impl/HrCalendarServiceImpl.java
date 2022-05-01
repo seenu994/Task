@@ -96,7 +96,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 				Date toDateTime = new Date();
 				long diff = schedule.getScheduleDate().getTime() - toDateTime.getTime();//as given
 
-				long diffMinutes = diff / (60 * 1000) % 60; 
+				long diffMinutes = diff / (60 * 1000) ; 
 				if(diffMinutes < 15) {
 					response.setSuccess(false);
 					response.setMessage("A future date is permitted, and minimum 15 minutes prior to the current time is required.");
@@ -162,7 +162,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 				Date toDateTime = new Date();
 				long diff = schedule.getScheduleDate().getTime() - toDateTime.getTime();//as given
 
-				long diffMinutes = diff / (60 * 1000) % 60; 
+				long diffMinutes = diff / (60 * 1000); 
 				if(diffMinutes < 15) {
 					response.setSuccess(false);
 					response.setMessage("A future date is permitted, and minimum 15 minutes prior to the current time is required.");
@@ -815,7 +815,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 		}
 	}
 	
-	List<Map> myScheduleList = hrCalendarRepository.downloadAllMySchedulesFromCalendarByStatus(fromDate, toDate, status, closed);
+	List<Map> myScheduleList = hrCalendarRepository.downloadAllMySchedulesFromCalendarByStatus(currentUser.getUserId(), fromDate, toDate, status, closed);
 	
 	Map<String, Object> fileResponse = new HashMap<>();
 	Workbook workbook = prepareExcelWorkBook(myScheduleList);
@@ -834,14 +834,14 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	fileResponse.put("blob", blob);
 	response.setFileDetails(fileResponse);
 	//System.out.println(fileResponse);
-	response.setStatus("success");
+	response.setSuccess(true);
 	response.setMessage("report exported Successfully");
 	
 		return response;
 	}
 	private Workbook prepareExcelWorkBook(List<Map> myScheduleList) 
 	{
-		List<String> headers = Arrays.asList("Name", "Job code", "Date & Time", "Source", "Status");
+		List<String> headers = Arrays.asList("Name", "Job code", "Job Title", "Date & Time", "Source", "Status");
 			
 		List data = new ArrayList<>();
 
@@ -851,6 +851,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 
 			row.put("Name",mySchedule.get("candidateName") != null ? mySchedule.get("candidateName").toString(): "");
 			row.put("Job code",mySchedule.get("jobCode") != null ? mySchedule.get("jobCode").toString(): "");
+			row.put("Job Title",mySchedule.get("jobTitle") != null ? mySchedule.get("jobTitle").toString(): "");
 			row.put("Date & Time",mySchedule.get("scheduleDate") != null ? mySchedule.get("scheduleDate").toString(): "");
 			row.put("Source",mySchedule.get("searchedSource") != null ? mySchedule.get("searchedSource").toString(): "");
 			row.put("Status",mySchedule.get("status") != null ? mySchedule.get("status").toString(): "");
@@ -913,14 +914,14 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	fileResponse.put("blob", blob);
 	response.setFileDetails(fileResponse);
 	//System.out.println(fileResponse);
-	response.setStatus("success");
+	response.setSuccess(true);
 	response.setMessage("report exported Successfully");
 	
 		return response;
 	}
 	private Workbook prepareExcelWorkBookTeam(List<Map> myTeamScheduleList) 
 	{
-		List<String> headers = Arrays.asList("Name", "Job code", "Date & Time", "Scheduled By", "Source", "Status");
+		List<String> headers = Arrays.asList("Name", "Job code", "Job Title", "Date & Time", "Scheduled By", "Source", "Status");
 			
 		List data = new ArrayList<>();
 
@@ -930,11 +931,11 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 
 			row.put("Name",myTeamSchedule.get("candidateName") != null ? myTeamSchedule.get("candidateName").toString(): "");
 			row.put("Job code",myTeamSchedule.get("jobCode") != null ? myTeamSchedule.get("jobCode").toString(): "");
+			row.put("Job Title",myTeamSchedule.get("jobTitle") != null ? myTeamSchedule.get("jobTitle").toString(): "");
 			row.put("Date & Time",myTeamSchedule.get("scheduleDate") != null ? myTeamSchedule.get("scheduleDate").toString(): "");
 			row.put("Scheduled By",myTeamSchedule.get("scheduledBy") != null ? myTeamSchedule.get("scheduledBy").toString(): "");
 			row.put("Source",myTeamSchedule.get("searchedSource") != null ? myTeamSchedule.get("searchedSource").toString(): "");
 			row.put("Status",myTeamSchedule.get("status") != null ? myTeamSchedule.get("status").toString(): "");
-			
 			
 			data.add(row);
 
