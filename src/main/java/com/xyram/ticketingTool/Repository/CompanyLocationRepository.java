@@ -10,22 +10,22 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.xyram.ticketingTool.entity.EmployeeLocation;
+import com.xyram.ticketingTool.entity.CompanyLocation;
 
 @Repository
 @Transactional
-public interface EmployeeLocationRepository extends JpaRepository<EmployeeLocation, String> {
+public interface CompanyLocationRepository extends JpaRepository<CompanyLocation, String> {
 
 	// EmployeeLocation createLocation(String location);
 
 	@Modifying
-	@Query("Delete from EmployeeLocation l where l.id =:id")
+	@Query("Delete from CompanyLocation l where l.id =:id")
 	void deleteLocation(String id);
 
-	@Query("Select l from EmployeeLocation l where l.id =:id")
-	EmployeeLocation getEmployeeLocation(String id);
+	@Query("Select l from CompanyLocation l where l.id =:id")
+	CompanyLocation getCompanyLocation(String id);
 
-	@Query("Select new map(e.id as id,e.locationName as location_name)from EmployeeLocation e  where "
+	@Query("Select new map(e.id as id,e.locationName as location_name)from CompanyLocation e  where "
 			+ "(:searchString is null Or lower(e.locationName) LIKE %:searchString% )")
 	List<Map> getAllLocation(String searchString);
 

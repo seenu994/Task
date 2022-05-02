@@ -294,6 +294,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 				response.setMessage("Not authorised to edit this schedule.");
 			}
 			scheduleObj.setCallCount(scheduleObj.getCallCount()+1);
+			scheduleObj.setLastUpdatedAt(new Date());
 			hrCalendarRepository.save(scheduleObj);
 			response.setSuccess(true);
 			response.setMessage("Updated schedule call counter successfully.");
@@ -314,7 +315,8 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 				response.setSuccess(false);
 				response.setMessage("Not authorised to edit this schedule.");
 			}
-			
+			scheduleObj.setLastUpdatedAt(new Date());
+			hrCalendarRepository.save(scheduleObj);
 			HrCalendarComment cmt = new HrCalendarComment();
 			cmt.setScheduleId(scheduleId);
 			cmt.setDescription(comment);
@@ -368,6 +370,43 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 			response.setSuccess(false);
 			response.setMessage("List is empty.");
 		}
+		
+		return response;
+	} 
+	
+	@Override
+	public ApiResponse getScheduleDetail(String scheduleId) {
+		ApiResponse response = new ApiResponse(false);
+		
+		HrCalendar scheduleObj = hrCalendarRepository.getById(scheduleId);
+		if(scheduleObj != null) {
+			Map content = new HashMap();
+			content.put("schedule", scheduleObj);
+			response.setContent(content);
+			response.setSuccess(true);
+			response.setMessage("Retreived successfully.");
+		}else {
+			response.setSuccess(false);
+			response.setMessage("Schedule not found.");
+		}
+		
+//		if(mobileNo.length() != 10) {
+//			response.setSuccess(false);
+//			response.setMessage("Not a Valid Mobile No.");
+//			return response;
+//		}
+//		List<Map> shceduleList = hrCalendarRepository.getCandidateHistory( mobileNo);
+//		
+//		if(shceduleList.size() > 0) {
+//			Map content = new HashMap();
+//			content.put("shceduleList", shceduleList);
+//			response.setContent(content);
+//			response.setSuccess(true);
+//			response.setMessage("List retreived successfully.");
+//		}else {
+//			response.setSuccess(false);
+//			response.setMessage("List is empty.");
+//		}
 		
 		return response;
 	}
