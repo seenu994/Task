@@ -28,10 +28,10 @@ public class Notes extends AuditModel {
 	@Column(name = "id")
 	private String id;
 	
-	@Column(name = "notes_update_date")
+	@Column(name = "notes_uploaded_date")
 	private Date  notesUploadedDate;
 	
-	 @Size(min = 3, max = 1000)
+	// @Size(min = 10, max = 1000)
 	@Column(name = "notes")
 	private String notes;
 

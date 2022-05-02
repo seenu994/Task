@@ -15,7 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.xyram.ticketingTool.Repository.CompanyWingsRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.CompanyWings;
-import com.xyram.ticketingTool.entity.EmployeeLocation;
+import com.xyram.ticketingTool.entity.CompanyLocation;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.CompanyWingService;
 import com.xyram.ticketingTool.util.ResponseMessages;

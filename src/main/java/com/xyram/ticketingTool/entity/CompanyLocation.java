@@ -13,8 +13,8 @@ import com.xyram.ticketingTool.id.generator.IdGenerator;
 import com.xyram.ticketingTool.id.generator.IdPrefix;
 
 @Entity
-@Table(name = "employee_location")
-public class EmployeeLocation extends AuditModel {
+@Table(name = "company_location")
+public class CompanyLocation extends AuditModel {
 
 	@Id
 	@IdPrefix(value = "LOC")

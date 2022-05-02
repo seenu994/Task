@@ -3,14 +3,14 @@ package com.xyram.ticketingTool.service;
 import java.util.Map;
 
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
-import com.xyram.ticketingTool.entity.EmployeeLocation;
+import com.xyram.ticketingTool.entity.CompanyLocation;
 
 
-public interface EmployeeLocationService {
+public interface CompanyLocationService {
 
-	ApiResponse createLocation(EmployeeLocation location);
+	ApiResponse createLocation(CompanyLocation location);
 	
-	ApiResponse updateLocation(String id,EmployeeLocation location);
+	ApiResponse updateLocation(String id,CompanyLocation location);
 	
 	//ApiResponse deleteLocation(String id);
 	
