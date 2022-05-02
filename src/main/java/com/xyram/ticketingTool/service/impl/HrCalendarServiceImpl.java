@@ -83,7 +83,6 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	public ApiResponse createScheduleInCalendar(HrCalendar schedule) {
 		// TODO Auto-generated method stub
 		ApiResponse response = new ApiResponse(false);
-
 		if (schedule != null) {
 			if (validateSchedule(schedule)) {
 				if(schedule.getJobId() != null) {
@@ -385,7 +384,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	public ApiResponse getScheduleDetail(String scheduleId) {
 		ApiResponse response = new ApiResponse(false);
 		
-		HrCalendar scheduleObj = hrCalendarRepository.findById(scheduleId).get();
+		List<Map> scheduleObj = hrCalendarRepository.getScheduleById(scheduleId);
 		if(scheduleObj != null) {
 			//Map content = new HashMap();
 			//content.put("schedule", scheduleObj);
@@ -724,7 +723,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 			cmt.setLastUpdatedAt(new Date());
 			cmtRepository.save(cmt);
 
-			
+
 			response.setSuccess(true);
 			response.setMessage("Comment added successfully.");
 		} else {

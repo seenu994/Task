@@ -720,7 +720,7 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 		response.setStatus("success");
 		response.setMessage("report exported Successfully");
 
-		
+		response.setSuccess(true);
 		return response;
 	}
 
