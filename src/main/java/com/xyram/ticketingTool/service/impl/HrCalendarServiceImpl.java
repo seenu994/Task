@@ -852,13 +852,13 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	byte[] blob = ExcelUtil.toBlob(workbook);
 	
 	try {
-		ExcelUtil.saveWorkbook(workbook, "mySchedulereports.xlsx");
+		ExcelUtil.saveWorkbook(workbook, "MySchedulereports.xlsx");
 	} catch (IOException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
 
-	fileResponse.put("fileName", "myScheduleDetails-report.xlsx");
+	fileResponse.put("fileName", "MyScheduleDetails-report.xlsx");
 	fileResponse.put("type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 	fileResponse.put("blob", blob);
 	response.setFileDetails(fileResponse);
@@ -932,13 +932,13 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	byte[] blob = ExcelUtil.toBlob(workbook);
 	
 	try {
-		ExcelUtil.saveWorkbook(workbook, "myTeamSchedulereports.xlsx");
+		ExcelUtil.saveWorkbook(workbook, "MyTeamSchedulereports.xlsx");
 	} catch (IOException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
 
-	fileResponse.put("fileName", "myTeamSchedule-report.xlsx");
+	fileResponse.put("fileName", "MyTeamSchedule-report.xlsx");
 	fileResponse.put("type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 	fileResponse.put("blob", blob);
 	response.setFileDetails(fileResponse);
