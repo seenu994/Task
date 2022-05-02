@@ -24,9 +24,7 @@ public interface DesignationRepository extends JpaRepository<Designation, String
 	
 	@Query("select distinct e from Designation e where"
 
-			+ "( e.designationName LIKE %:searchString%) "
-
-			+ "( e.designationName LIKE %:searchString%  ) ")
+			+ "( e.designationName LIKE %:searchString%) ")
 
 			
 	List<Map> searchDesignation(String searchString);
