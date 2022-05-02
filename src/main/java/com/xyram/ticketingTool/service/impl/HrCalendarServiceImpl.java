@@ -32,6 +32,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
 import com.xyram.ticketingTool.Repository.HrCalendarCommentRepository;
 import com.xyram.ticketingTool.Repository.HrCalendarRepository;
@@ -93,14 +94,16 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 						return response;
 					}
 				}
-				Date toDateTime = new Date();
-				long diff = schedule.getScheduleDate().getTime() - toDateTime.getTime();//as given
+				if(schedule.getIs_scheduled()) {
+					Date toDateTime = new Date();
+					long diff = schedule.getScheduleDate().getTime() - toDateTime.getTime();//as given
 
-				long diffMinutes = diff / (60 * 1000) ; 
-				if(diffMinutes < 15) {
-					response.setSuccess(false);
-					response.setMessage("A future date is permitted, and minimum 15 minutes prior to the current time is required.");
-					return response;
+					long diffMinutes = diff / (60 * 1000) ; 
+					if(diffMinutes < 15) {
+						response.setSuccess(false);
+						response.setMessage("A future date is permitted, and minimum 15 minutes prior to the current time is required.");
+						return response;
+					}
 				}
 				
 				Employee employee = employeeRepository.getByEmpId(currentUser.getScopeId());
@@ -142,7 +145,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	public ApiResponse editScheduleInCalendar(HrCalendar schedule) {
 
 		ApiResponse response = new ApiResponse(false);
-		HrCalendar scheduleObj = hrCalendarRepository.getById(schedule.getId());
+		HrCalendar scheduleObj = hrCalendarRepository.findById(schedule.getId()).get();
 		if (schedule != null && scheduleObj != null) {
 			if(!scheduleObj.getCreatedBy().equals(currentUser.getUserId())) {
 				response.setSuccess(false);
@@ -159,15 +162,18 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 						return response;
 					}
 				}
-				Date toDateTime = new Date();
-				long diff = schedule.getScheduleDate().getTime() - toDateTime.getTime();//as given
+				if(schedule.getIs_scheduled()) {
+					Date toDateTime = new Date();
+					long diff = schedule.getScheduleDate().getTime() - toDateTime.getTime();//as given
 
-				long diffMinutes = diff / (60 * 1000); 
-				if(diffMinutes < 15) {
-					response.setSuccess(false);
-					response.setMessage("A future date is permitted, and minimum 15 minutes prior to the current time is required.");
-					return response;
+					long diffMinutes = diff / (60 * 1000); 
+					if(diffMinutes < 15) {
+						response.setSuccess(false);
+						response.setMessage("A future date is permitted, and minimum 15 minutes prior to the current time is required.");
+						return response;
+					}
 				}
+				
 				if (reportor != null) {
 					scheduleObj.setUpdatedBy(currentUser.getUserId());
 					scheduleObj.setLastUpdatedAt(new Date());
@@ -176,6 +182,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 					scheduleObj.setCandidateMobile(schedule.getCandidateMobile());
 					scheduleObj.setCandidateName(schedule.getCandidateName());
 					scheduleObj.setJobId(schedule.getJobId());
+					scheduleObj.setIs_scheduled(schedule.getIs_scheduled());
 					scheduleObj.setScheduleDate(schedule.getScheduleDate());
 					if(schedule.getSearchedSource() != null)
 						scheduleObj.setSearchedSource(schedule.getSearchedSource());
@@ -202,7 +209,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	@Override
 	public ApiResponse deleteScheduleInCalendar(String scheduleId) {
 		ApiResponse response = new ApiResponse(false);
-		HrCalendar scheduleObj = hrCalendarRepository.getById(scheduleId);
+		HrCalendar scheduleObj = hrCalendarRepository.findById(scheduleId).get();
 		if (scheduleObj != null) {
 			if(!scheduleObj.getCreatedBy().equals(currentUser.getUserId())) {
 				response.setSuccess(false);
@@ -224,7 +231,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	public ApiResponse changeScheduleStatus(String scheduleId, String comment, String status, Date scheduleDate) {
 		ApiResponse response = new ApiResponse(false);
 		//"CANDIDATE-NOT-INTERESTED","CANDIDATE-NOT-PICKED","CANDIDATE-NOT-SUITS"
-		HrCalendar scheduleObj = hrCalendarRepository.getById(scheduleId);
+		HrCalendar scheduleObj = hrCalendarRepository.findById(scheduleId).get();
 		if (scheduleObj != null) {
 			if(!scheduleObj.getCreatedBy().equals(currentUser.getUserId())) {
 				response.setSuccess(false);
@@ -287,7 +294,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	@Override
 	public ApiResponse updateScheduleCallCounter(String scheduleId) {
 		ApiResponse response = new ApiResponse(false);
-		HrCalendar scheduleObj = hrCalendarRepository.getById(scheduleId);
+		HrCalendar scheduleObj = hrCalendarRepository.findById(scheduleId).get();
 		if (scheduleObj != null) {
 			if(!scheduleObj.getCreatedBy().equals(currentUser.getUserId())) {
 				response.setSuccess(false);
@@ -309,7 +316,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	@Override
 	public ApiResponse addCommentToSchedule(String scheduleId, String comment) {
 		ApiResponse response = new ApiResponse(false);
-		HrCalendar scheduleObj = hrCalendarRepository.getById(scheduleId);
+		HrCalendar scheduleObj = hrCalendarRepository.findById(scheduleId).get();
 		if (scheduleObj != null) {
 			if(!scheduleObj.getCreatedBy().equals(currentUser.getUserId())) {
 				response.setSuccess(false);
@@ -378,36 +385,19 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	public ApiResponse getScheduleDetail(String scheduleId) {
 		ApiResponse response = new ApiResponse(false);
 		
-		HrCalendar scheduleObj = hrCalendarRepository.getById(scheduleId);
+		HrCalendar scheduleObj = hrCalendarRepository.findById(scheduleId).get();
 		if(scheduleObj != null) {
-			Map content = new HashMap();
-			content.put("schedule", scheduleObj);
-			response.setContent(content);
+			//Map content = new HashMap();
+			//content.put("schedule", scheduleObj);
+			ObjectMapper oMapper = new ObjectMapper();
+			Map<String, Object> map = oMapper.convertValue(scheduleObj, Map.class);
+			response.setContent(map);
 			response.setSuccess(true);
 			response.setMessage("Retreived successfully.");
 		}else {
 			response.setSuccess(false);
 			response.setMessage("Schedule not found.");
-		}
-		
-//		if(mobileNo.length() != 10) {
-//			response.setSuccess(false);
-//			response.setMessage("Not a Valid Mobile No.");
-//			return response;
-//		}
-//		List<Map> shceduleList = hrCalendarRepository.getCandidateHistory( mobileNo);
-//		
-//		if(shceduleList.size() > 0) {
-//			Map content = new HashMap();
-//			content.put("shceduleList", shceduleList);
-//			response.setContent(content);
-//			response.setSuccess(true);
-//			response.setMessage("List retreived successfully.");
-//		}else {
-//			response.setSuccess(false);
-//			response.setMessage("List is empty.");
-//		}
-		
+		}		
 		return response;
 	}
 	
@@ -718,7 +708,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	@Override
 	public ApiResponse doReScheduleInCalendar(String scheduleId, String comment) {
 		ApiResponse response = new ApiResponse(false);
-		HrCalendar scheduleObj = hrCalendarRepository.getById(scheduleId);
+		HrCalendar scheduleObj = hrCalendarRepository.findById(scheduleId).get();
 		if (scheduleObj != null) {
 			if(!scheduleObj.getCreatedBy().equals(currentUser.getUserId())) {
 				response.setSuccess(false);
@@ -754,13 +744,14 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 			response.setMessage("Comment not exist.");
 			return response;
 		}
-		HrCalendar scheduleObj = hrCalendarRepository.getById(cmt.getScheduleId());
+		HrCalendar scheduleObj = hrCalendarRepository.findById(cmt.getScheduleId()).get();
 		if (scheduleObj != null) {
 			if(!scheduleObj.getCreatedBy().equals(currentUser.getUserId())) {
 				response.setSuccess(false);
 				response.setMessage("Not authorised to edit this comment.");
 			}
-			
+			scheduleObj.setLastUpdatedAt(new Date());
+			hrCalendarRepository.save(scheduleObj);
 			cmt.setDescription(comment);
 			cmt.setUpdatedBy(currentUser.getUserId());
 			cmt.setLastUpdatedAt(new Date());
@@ -784,7 +775,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 			response.setMessage("Comment not exist.");
 			return response;
 		}
-		HrCalendar scheduleObj = hrCalendarRepository.getById(cmt.getScheduleId());
+		HrCalendar scheduleObj = hrCalendarRepository.findById(cmt.getScheduleId()).get();
 		if (scheduleObj != null) {
 			if(!scheduleObj.getCreatedBy().equals(currentUser.getUserId())) {
 				response.setSuccess(false);
@@ -805,7 +796,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	public ApiResponse getAllScheduleComments(String scheduleId) {
 		ApiResponse response = new ApiResponse(false);
 		
-		HrCalendar scheduleObj = hrCalendarRepository.getById(scheduleId);
+		HrCalendar scheduleObj = hrCalendarRepository.findById(scheduleId).get();
 		if (scheduleObj != null) {
 			if(!scheduleObj.getCreatedBy().equals(currentUser.getUserId())) {
 				response.setSuccess(false);

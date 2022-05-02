@@ -51,6 +51,17 @@ public class HrCalendar extends AuditModel{
 	
 	@Column(name = "reporting_to")
 	private String reportingTo;
+	
+	@Column(name = "is_scheduled")
+	private Boolean is_scheduled;
+
+	public Boolean getIs_scheduled() {
+		return is_scheduled;
+	}
+
+	public void setIs_scheduled(Boolean is_scheduled) {
+		this.is_scheduled = is_scheduled;
+	}
 
 	public Integer getCallCount() {
 		return callCount;
