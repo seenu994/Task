@@ -82,7 +82,6 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	public ApiResponse createScheduleInCalendar(HrCalendar schedule) {
 		// TODO Auto-generated method stub
 		ApiResponse response = new ApiResponse(false);
-
 		if (schedule != null) {
 			if (validateSchedule(schedule)) {
 				if(schedule.getJobId() != null) {
@@ -95,8 +94,9 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 				}
 				Date toDateTime = new Date();
 				long diff = schedule.getScheduleDate().getTime() - toDateTime.getTime();//as given
-
-				long diffMinutes = diff / (60 * 1000) ; 
+           
+				long diffMinutes = diff / (60 * 1000); 
+			
 				if(diffMinutes < 15) {
 					response.setSuccess(false);
 					response.setMessage("A future date is permitted, and minimum 15 minutes prior to the current time is required.");
@@ -695,7 +695,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 			cmt.setLastUpdatedAt(new Date());
 			cmtRepository.save(cmt);
 
-			
+
 			response.setSuccess(true);
 			response.setMessage("Comment added successfully.");
 		} else {
