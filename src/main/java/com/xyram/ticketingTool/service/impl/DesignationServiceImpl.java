@@ -129,20 +129,16 @@ public class DesignationServiceImpl implements DesiggnaionService {
 		public 	ApiResponse searchDesignationByName(String searchString) {
 			
 			ApiResponse response = new ApiResponse(false);
-			List<Map> designations = designationRepository.searchDesignation(searchString);
+			List<Map> designations = designationRepository.searchDesignation(searchString.toLowerCase());
 
 			Map content = new HashMap();
 			content.put("designations", designations);
-			if (content != null) {
-
-				
+			if (content != null) {	
 				response.setSuccess(true);
 				response.setMessage("Designation retrived successfully");
 				response.setContent(content);
 			} else {
-				
 				response.setSuccess(false);
-				
 				response.setMessage("Not retrived the data");
 			}
 

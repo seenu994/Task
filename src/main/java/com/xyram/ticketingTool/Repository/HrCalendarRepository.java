@@ -70,18 +70,19 @@ public interface HrCalendarRepository extends JpaRepository<HrCalendar, String>{
 	
 	@Query("Select distinct new map(a.candidateName as candidateName,a.status as status,"
 			+ "a.scheduleDate as scheduleDate, a.searchedSource as searchedSource,"
-			+ "a.closed as closed, jo.jobCode as jobCode) from HrCalendar a left join JobOpenings jo on a.jobId = jo.id where "
+			+ "a.closed as closed, jo.jobCode as jobCode, jo.jobTitle as jobTitle) from HrCalendar a left join JobOpenings jo on a.jobId = jo.id where "
+			+ "a.createdBy = :userId AND "
 			+ "(:toDate is null OR Date(a.scheduleDate) <= STR_TO_DATE(:toDate, '%Y-%m-%d')) AND "
 			+ "(:fromDate is null OR Date(a.scheduleDate) >= STR_TO_DATE(:fromDate, '%Y-%m-%d')) AND "
 			+ "(:status is null OR a.status=:status) AND "
 			+ "(:closed is null OR a.closed=:closed) ORDER BY a.scheduleDate DESC")
-			List<Map> downloadAllMySchedulesFromCalendarByStatus(String fromDate, String toDate, String status,Boolean closed);
+			List<Map> downloadAllMySchedulesFromCalendarByStatus(String userId, String fromDate, String toDate, String status,Boolean closed);
 	
 	@Query("Select distinct new map(a.candidateName as candidateName,a.status as status,"
 			+ "a.scheduleDate as scheduleDate, a.searchedSource as searchedSource,jo.jobCode as jobCode,"
-			+ "a.closed as closed,concat(ee.firstName,' ', ee.lastName) as scheduledBy) from HrCalendar a "
+			+ "jo.jobTitle as jobTitle,a.closed as closed,concat(ee.firstName,' ', ee.lastName) as scheduledBy) from HrCalendar a "
 			+ "left join JobOpenings jo on a.jobId = jo.id left join Employee ee on a.createdBy = ee.userCredientials.id "
-			+ "where a.reportingTo = :userId AND "
+			+ "where a.reportingTo =:userId AND " 
 			+ "(:toDate is null OR Date(a.scheduleDate) <= STR_TO_DATE(:toDate, '%Y-%m-%d')) AND "
 			+ "(:fromDate is null OR Date(a.scheduleDate) >= STR_TO_DATE(:fromDate, '%Y-%m-%d')) AND "
 			+ "(:status is null OR a.status=:status) AND "
