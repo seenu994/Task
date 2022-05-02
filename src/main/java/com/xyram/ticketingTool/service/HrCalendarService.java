@@ -37,6 +37,8 @@ public interface HrCalendarService {
 	
 	ApiResponse getCandidateHistory(String mobileNo);
 	
+	ApiResponse getScheduleDetail(String scheduleId);
+	
 	ApiResponse getAllHrScheduleStatus();
 	
 	ApiResponse getAllMySchedulesFromCalendarByStatus(Map<String, Object>filter, Pageable pageable);

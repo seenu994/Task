@@ -286,7 +286,7 @@ public class AssetServiceImpl implements AssetService {
 		    	assetObj.setModelNo(asset.getModelNo());
 		    }
 		    if(asset.getSerialNo() != null) {
-		    	checkSerialNo(asset.getSerialNo());
+		    	checkSerialNo(asset.getSerialNo(), Id);
 		    	assetObj.setSerialNo(asset.getSerialNo());
 		    }
 		    if(asset.getRam() != null) {
@@ -365,18 +365,20 @@ public class AssetServiceImpl implements AssetService {
 //			}
 	
 
-	private boolean checkSerialNo(String serialNo) {
+	private boolean checkSerialNo(String serialNo, String Id) {
    
      Asset assetObj = assetRepository.getAssetBySerialNo(serialNo);
+     String asset = assetRepository.getAssetIdBySerialNo(serialNo);
+    
      if (serialNo.length() < 8) {
 		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "serial no should be greater than 7 characters");
 	 }
+     if(!Id.equals(asset)) {
      if(assetObj != null) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Serial No already exists!");
 		}
-     else {
-    	 return true;
-       }
+     }
+     return true;
 	}
 	private boolean checkModelNo(String modelNo) {
  
@@ -553,7 +555,7 @@ public class AssetServiceImpl implements AssetService {
 		} 
 		
 		
-				
+	
 		Page<Map> asset = assetRepository.getAllAssets(ram, brand, status, vendorId, searchString, fromDateStr, toDateStr, pageable);
 		
 		if(asset.getSize() > 0) {
@@ -612,12 +614,10 @@ public class AssetServiceImpl implements AssetService {
 		fileResponse.put("blob", blob);
 		response.setFileDetails(fileResponse);
 		//System.out.println(fileResponse);
-		response.setStatus("success");
+		response.setSuccess(true);
 		response.setMessage("report exported Successfully");
 		
 		return response;
-		
-	
 	}
 	private Workbook prepareExcelWorkBook(List<Map> assetList) 
 	{

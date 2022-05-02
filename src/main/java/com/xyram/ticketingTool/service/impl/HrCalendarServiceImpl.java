@@ -294,6 +294,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 				response.setMessage("Not authorised to edit this schedule.");
 			}
 			scheduleObj.setCallCount(scheduleObj.getCallCount()+1);
+			scheduleObj.setLastUpdatedAt(new Date());
 			hrCalendarRepository.save(scheduleObj);
 			response.setSuccess(true);
 			response.setMessage("Updated schedule call counter successfully.");
@@ -314,7 +315,8 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 				response.setSuccess(false);
 				response.setMessage("Not authorised to edit this schedule.");
 			}
-			
+			scheduleObj.setLastUpdatedAt(new Date());
+			hrCalendarRepository.save(scheduleObj);
 			HrCalendarComment cmt = new HrCalendarComment();
 			cmt.setScheduleId(scheduleId);
 			cmt.setDescription(comment);
@@ -368,6 +370,43 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 			response.setSuccess(false);
 			response.setMessage("List is empty.");
 		}
+		
+		return response;
+	} 
+	
+	@Override
+	public ApiResponse getScheduleDetail(String scheduleId) {
+		ApiResponse response = new ApiResponse(false);
+		
+		HrCalendar scheduleObj = hrCalendarRepository.getById(scheduleId);
+		if(scheduleObj != null) {
+			Map content = new HashMap();
+			content.put("schedule", scheduleObj);
+			response.setContent(content);
+			response.setSuccess(true);
+			response.setMessage("Retreived successfully.");
+		}else {
+			response.setSuccess(false);
+			response.setMessage("Schedule not found.");
+		}
+		
+//		if(mobileNo.length() != 10) {
+//			response.setSuccess(false);
+//			response.setMessage("Not a Valid Mobile No.");
+//			return response;
+//		}
+//		List<Map> shceduleList = hrCalendarRepository.getCandidateHistory( mobileNo);
+//		
+//		if(shceduleList.size() > 0) {
+//			Map content = new HashMap();
+//			content.put("shceduleList", shceduleList);
+//			response.setContent(content);
+//			response.setSuccess(true);
+//			response.setMessage("List retreived successfully.");
+//		}else {
+//			response.setSuccess(false);
+//			response.setMessage("List is empty.");
+//		}
 		
 		return response;
 	}
@@ -815,7 +854,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 		}
 	}
 	
-	List<Map> myScheduleList = hrCalendarRepository.downloadAllMySchedulesFromCalendarByStatus(fromDate, toDate, status, closed);
+	List<Map> myScheduleList = hrCalendarRepository.downloadAllMySchedulesFromCalendarByStatus(currentUser.getUserId(), fromDate, toDate, status, closed);
 	
 	Map<String, Object> fileResponse = new HashMap<>();
 	Workbook workbook = prepareExcelWorkBook(myScheduleList);
@@ -834,14 +873,14 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	fileResponse.put("blob", blob);
 	response.setFileDetails(fileResponse);
 	//System.out.println(fileResponse);
-	response.setStatus("success");
+	response.setSuccess(true);
 	response.setMessage("report exported Successfully");
 	
 		return response;
 	}
 	private Workbook prepareExcelWorkBook(List<Map> myScheduleList) 
 	{
-		List<String> headers = Arrays.asList("Name", "Job code", "Date & Time", "Source", "Status");
+		List<String> headers = Arrays.asList("Name", "Job code", "Job Title", "Date & Time", "Source", "Status");
 			
 		List data = new ArrayList<>();
 
@@ -851,6 +890,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 
 			row.put("Name",mySchedule.get("candidateName") != null ? mySchedule.get("candidateName").toString(): "");
 			row.put("Job code",mySchedule.get("jobCode") != null ? mySchedule.get("jobCode").toString(): "");
+			row.put("Job Title",mySchedule.get("jobTitle") != null ? mySchedule.get("jobTitle").toString(): "");
 			row.put("Date & Time",mySchedule.get("scheduleDate") != null ? mySchedule.get("scheduleDate").toString(): "");
 			row.put("Source",mySchedule.get("searchedSource") != null ? mySchedule.get("searchedSource").toString(): "");
 			row.put("Status",mySchedule.get("status") != null ? mySchedule.get("status").toString(): "");
@@ -913,14 +953,14 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	fileResponse.put("blob", blob);
 	response.setFileDetails(fileResponse);
 	//System.out.println(fileResponse);
-	response.setStatus("success");
+	response.setSuccess(true);
 	response.setMessage("report exported Successfully");
 	
 		return response;
 	}
 	private Workbook prepareExcelWorkBookTeam(List<Map> myTeamScheduleList) 
 	{
-		List<String> headers = Arrays.asList("Name", "Job code", "Date & Time", "Scheduled By", "Source", "Status");
+		List<String> headers = Arrays.asList("Name", "Job code", "Job Title", "Date & Time", "Scheduled By", "Source", "Status");
 			
 		List data = new ArrayList<>();
 
@@ -930,11 +970,11 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 
 			row.put("Name",myTeamSchedule.get("candidateName") != null ? myTeamSchedule.get("candidateName").toString(): "");
 			row.put("Job code",myTeamSchedule.get("jobCode") != null ? myTeamSchedule.get("jobCode").toString(): "");
+			row.put("Job Title",myTeamSchedule.get("jobTitle") != null ? myTeamSchedule.get("jobTitle").toString(): "");
 			row.put("Date & Time",myTeamSchedule.get("scheduleDate") != null ? myTeamSchedule.get("scheduleDate").toString(): "");
 			row.put("Scheduled By",myTeamSchedule.get("scheduledBy") != null ? myTeamSchedule.get("scheduledBy").toString(): "");
 			row.put("Source",myTeamSchedule.get("searchedSource") != null ? myTeamSchedule.get("searchedSource").toString(): "");
 			row.put("Status",myTeamSchedule.get("status") != null ? myTeamSchedule.get("status").toString(): "");
-			
 			
 			data.add(row);
 
