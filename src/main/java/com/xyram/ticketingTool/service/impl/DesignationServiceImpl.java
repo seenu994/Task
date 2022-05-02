@@ -122,10 +122,7 @@ public class DesignationServiceImpl implements DesiggnaionService {
 
 		}
 
-
-
-
-		@Override
+        @Override
 		public ApiResponse searchDesignation(String searchString) {
 			
 			ApiResponse response = new ApiResponse(false);

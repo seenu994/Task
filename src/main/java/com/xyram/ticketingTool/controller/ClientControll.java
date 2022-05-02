@@ -50,7 +50,16 @@ public class ClientControll {
 
 	@GetMapping(value= {AuthConstants.ADMIN_BASEPATH +"/getAllClient",AuthConstants.INFRA_ADMIN_BASEPATH +"/getAllClient"})
 	public ApiResponse getAllClient(Pageable pageable) {
-		logger.info("indide Client controller :: getAllClient");
+		logger.info("inside Client controller :: getAllClient");
 		return clientService.getAllClient(pageable);
 	}
+	
+	
+	 @GetMapping(value= {AuthConstants.ADMIN_BASEPATH +"/searchClient/{searchString}"})
+	public ApiResponse searchClient(@PathVariable String searchString) {
+		logger.info("inside client controller :: searchClient");
+		return clientService.searchClient(searchString);
+	}
+	 
+	
 }

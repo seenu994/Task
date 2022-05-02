@@ -17,6 +17,8 @@ ApiResponse editClient(String clientId, Client clientRequest);
 
 
 ApiResponse getAllClient(Pageable pageable);
+
+ApiResponse searchClient(String searchString);
 		
 	
 }

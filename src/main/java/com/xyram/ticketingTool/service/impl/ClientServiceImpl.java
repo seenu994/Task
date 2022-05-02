@@ -2,6 +2,7 @@ package com.xyram.ticketingTool.service.impl;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.transaction.Transactional;
@@ -49,12 +50,7 @@ public class ClientServiceImpl implements ClientService {
 				clientRepository.save(clientRequest);
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.CLIENT_CREATED);
-				/*assetIssues.setCreatedAt(new Date());
-				assetIssues.setCreatedBy(currentUser.getName());
-				assetIssuesRepository.save(assetIssues);
-				response.setSuccess(true);
-				response.setMessage(ResponseMessages.ASSET_ISSUES_ADDED_SUCCESSFULLY);*/
-	
+				
 				//Map content = new HashMap();
 				//content.put("clientId", clientRequest.getId());
 				//response.setContent(content);
@@ -181,5 +177,26 @@ public class ClientServiceImpl implements ClientService {
 	    	   response.setMessage("could not retrieve data");
 	       }
 	       return  response;
+	}
+
+	@Override
+	public ApiResponse searchClient(String searchString) 
+	{
+		ApiResponse response = new ApiResponse(false);
+		List<Map> client = clientRepository.serchClient(searchString);
+
+		Map content = new HashMap();
+		content.put("client", client);
+		if (content != null) {	
+			response.setSuccess(true);
+			response.setMessage("client retrived successfully");
+			response.setContent(content);
+		} else {
+			response.setSuccess(false);
+			response.setMessage("Not retrived the data");
+		}
+
+		return response;
+
 	}
 }

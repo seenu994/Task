@@ -1,5 +1,6 @@
 package com.xyram.ticketingTool.Repository;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.Page;
@@ -20,4 +21,13 @@ public interface ClientRepository extends JpaRepository<Client, String> {
 
 	@Query("Select c from Client c where Id=:clientId")
 	Client getClientById(String clientId);
+
+	/*@Query("Select new map(c.Id as id,c.clientName as clientName,c.status as status) from Client c "
+			+ "(:searchString  is null "
+			+ "c.clientName LIKE %:searchString% OR "
+			+ "status is null OR c.status=:status LIKE %:searchString% )")*/
+	
+	@Query("select distinct new map(c.Id as id,c.clientName as clientName, c.status as status) from Client c where "
+			+ "lower(c.clientName) LIKE %:searchString% OR c.status LIKE %:searchString% ")
+	List<Map> serchClient(String searchString);
 }
