@@ -12,35 +12,35 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.xyram.ticketingTool.Repository.EmployeeLocationRepository;
+import com.xyram.ticketingTool.Repository.CompanyLocationRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
-import com.xyram.ticketingTool.entity.EmployeeLocation;
+import com.xyram.ticketingTool.entity.CompanyLocation;
 import com.xyram.ticketingTool.request.CurrentUser;
-import com.xyram.ticketingTool.service.EmployeeLocationService;
+import com.xyram.ticketingTool.service.CompanyLocationService;
 import com.xyram.ticketingTool.util.ResponseMessages;
 
 @Service
 @Transactional
-public class EmployeeLocationServiceImpl implements EmployeeLocationService {
+public class CompanyLocationServiceImpl implements CompanyLocationService {
 
 	@Autowired
-	EmployeeLocationRepository employeeLocationRepository;
+	CompanyLocationRepository companyLocationRepository;
 
 	@Autowired
-	EmployeeLocationService employeeLocationService;
+	CompanyLocationService companyLocationService;
 
 	@Autowired
 	CurrentUser currentUser;
 
 	@Override
-	public ApiResponse createLocation(EmployeeLocation location) {
+	public ApiResponse createLocation(CompanyLocation location) {
 		ApiResponse response = new ApiResponse(false);
 		response = validateLocation(location);
 		if (location != null) {
 			location.setCreatedAt(new Date());
 			location.setCreatedBy(currentUser.getName());
 			location.setStatus(true);
-			employeeLocationRepository.save(location);
+			companyLocationRepository.save(location);
 			response.setSuccess(true);
 			response.setMessage(ResponseMessages.LOC_ADDED);
 		} else {
@@ -67,16 +67,16 @@ public class EmployeeLocationServiceImpl implements EmployeeLocationService {
 //	}
 
 	@Override
-	public ApiResponse updateLocation(String id, EmployeeLocation location) {
+	public ApiResponse updateLocation(String id, CompanyLocation location) {
 		ApiResponse response = new ApiResponse(false);
 		response = validateLocation(location);
-		EmployeeLocation locationObj = employeeLocationRepository.getEmployeeLocation(id);
+		CompanyLocation locationObj = companyLocationRepository.getCompanyLocation(id);
 		if (locationObj != null) {
 			locationObj.setLastUpdatedAt(new Date());
 			locationObj.setUpdatedBy(currentUser.getName());
 			locationObj.setLocationName(location.getLocationName());
 			locationObj.setStatus(location.isStatus());
-			employeeLocationRepository.save(locationObj);
+			companyLocationRepository.save(locationObj);
 			response.setSuccess(true);
 			response.setMessage(ResponseMessages.LOC_UPDATED);
 			response.setContent(null);
@@ -88,10 +88,10 @@ public class EmployeeLocationServiceImpl implements EmployeeLocationService {
 		return response;
 	}
 
-	private ApiResponse validateLocation(EmployeeLocation location) {
+	private ApiResponse validateLocation(CompanyLocation location) {
 		ApiResponse response = new ApiResponse(false);
 		if (location.getLocationName() == null || location.getLocationName().equals("")) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Employee Location is mandatory");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Company Location is mandatory");
 		}
 		return response;
 	}
@@ -100,7 +100,7 @@ public class EmployeeLocationServiceImpl implements EmployeeLocationService {
 	public ApiResponse getAllLocation(Map<String, Object> filter) {
 		String searchString = filter.containsKey("searchString") ? filter.get("searchString").toString().toLowerCase()
 				: null;
-		List<Map> locationList = employeeLocationRepository.getAllLocation(searchString);
+		List<Map> locationList = companyLocationRepository.getAllLocation(searchString);
 		Map content = new HashMap();
 		content.put("locationList", locationList);
 		ApiResponse response = new ApiResponse(true);
