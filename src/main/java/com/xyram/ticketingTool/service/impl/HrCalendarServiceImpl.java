@@ -378,7 +378,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	public ApiResponse getScheduleDetail(String scheduleId) {
 		ApiResponse response = new ApiResponse(false);
 		
-		HrCalendar scheduleObj = hrCalendarRepository.getById(scheduleId);
+		List<Map> scheduleObj = hrCalendarRepository.getScheduleById(scheduleId);
 		if(scheduleObj != null) {
 			Map content = new HashMap();
 			content.put("schedule", scheduleObj);
