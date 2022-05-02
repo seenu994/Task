@@ -96,7 +96,7 @@ public interface HrCalendarRepository extends JpaRepository<HrCalendar, String>{
 	@Query("Select distinct new map(a.Id as id, a.createdAt as createdAt, a.lastUpdatedAt as lastUpdatedAt,"
 			+ "a.status as status, a.callCount as callCount, a.scheduleDate as scheduleDate) from HrCalendar a "
 			+ "where a.Id =:scheduleId")
-	List<Map> getScheduleById(String scheduleId);
+	Map getScheduleById(String scheduleId);
 
 	
 }

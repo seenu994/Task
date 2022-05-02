@@ -384,13 +384,13 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	public ApiResponse getScheduleDetail(String scheduleId) {
 		ApiResponse response = new ApiResponse(false);
 		
-		List<Map> scheduleObj = hrCalendarRepository.getScheduleById(scheduleId);
+		Map scheduleObj = hrCalendarRepository.getScheduleById(scheduleId);
 		if(scheduleObj != null) {
-			//Map content = new HashMap();
-			//content.put("schedule", scheduleObj);
-			ObjectMapper oMapper = new ObjectMapper();
-			Map<String, Object> map = oMapper.convertValue(scheduleObj, Map.class);
-			response.setContent(map);
+			Map content = new HashMap();
+			content.put("schedule", scheduleObj);
+//			ObjectMapper oMapper = new ObjectMapper();
+//			Map<String, Object> map = oMapper.convertValue(scheduleObj, Map.class);
+			response.setContent(content);
 			response.setSuccess(true);
 			response.setMessage("Retreived successfully.");
 		}else {
