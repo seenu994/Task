@@ -14,7 +14,9 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -845,9 +847,11 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	}
 	
 	List<Map> myScheduleList = hrCalendarRepository.downloadAllMySchedulesFromCalendarByStatus(currentUser.getUserId(), fromDate, toDate, status, closed);
-	
+   
 	Map<String, Object> fileResponse = new HashMap<>();
 	Workbook workbook = prepareExcelWorkBook(myScheduleList);
+//	String input = GMTWithNormalFormat(myScheduleList.get("scheduleDate") != null ? myScheduleList.get("scheduleDate").toString(): "");
+//	System.out.println(input);
     
 	byte[] blob = ExcelUtil.toBlob(workbook);
 	
@@ -868,6 +872,19 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	
 		return response;
 	}
+	public static String getScheduleDate(String input) {
+        try {
+            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            inputFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            Date date = inputFormat.parse(input);
+            SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            return outputFormat.format(date);
+        } catch (Exception ignore) {
+            //cannot happen in this example
+            //Log.e("Exception", ignore.toString());
+        }
+        return "";
+    }
 	private Workbook prepareExcelWorkBook(List<Map> myScheduleList) 
 	{
 		List<String> headers = Arrays.asList("Name", "Job code", "Job Title", "Date & Time", "Source", "Status");
@@ -877,11 +894,12 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 		for (Map mySchedule : myScheduleList) 
 		{
             Map row = new HashMap<>();
-
+            String scheduleDate = getScheduleDate(mySchedule.get("scheduleDate").toString());
+			
 			row.put("Name",mySchedule.get("candidateName") != null ? mySchedule.get("candidateName").toString(): "");
 			row.put("Job code",mySchedule.get("jobCode") != null ? mySchedule.get("jobCode").toString(): "");
 			row.put("Job Title",mySchedule.get("jobTitle") != null ? mySchedule.get("jobTitle").toString(): "");
-			row.put("Date & Time",mySchedule.get("scheduleDate") != null ? mySchedule.get("scheduleDate").toString(): "");
+			row.put("Date & Time",scheduleDate != null ? scheduleDate.toString(): "");
 			row.put("Source",mySchedule.get("searchedSource") != null ? mySchedule.get("searchedSource").toString(): "");
 			row.put("Status",mySchedule.get("status") != null ? mySchedule.get("status").toString(): "");
 			
@@ -948,6 +966,32 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	
 		return response;
 	}
+//	public static String GMTWithNormalTimeFormat(String input) {
+//        try {
+//            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+//            Date date = inputFormat.parse(input);
+//            inputFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+//            SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//            outputFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+//            return outputFormat.format(date);
+//        } catch (Exception ignore) {
+//         //   Log.e("Exception", ignore.toString());
+//        }
+//        return "";
+//    }
+	public static String getDate(String input) {
+        try {
+            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            inputFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            Date date = inputFormat.parse(input);
+            SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            return outputFormat.format(date);
+        } catch (Exception ignore) {
+            //cannot happen in this example
+            //Log.e("Exception", ignore.toString());
+        }
+        return "";
+    }
 	private Workbook prepareExcelWorkBookTeam(List<Map> myTeamScheduleList) 
 	{
 		List<String> headers = Arrays.asList("Name", "Job code", "Job Title", "Date & Time", "Scheduled By", "Source", "Status");
@@ -957,11 +1001,13 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 		for (Map myTeamSchedule : myTeamScheduleList) 
 		{
             Map row = new HashMap<>();
-
+            String scheduleDate = getDate(myTeamSchedule.get("scheduleDate").toString());
+//            System.out.println(scheduleDate);
+            
 			row.put("Name",myTeamSchedule.get("candidateName") != null ? myTeamSchedule.get("candidateName").toString(): "");
 			row.put("Job code",myTeamSchedule.get("jobCode") != null ? myTeamSchedule.get("jobCode").toString(): "");
 			row.put("Job Title",myTeamSchedule.get("jobTitle") != null ? myTeamSchedule.get("jobTitle").toString(): "");
-			row.put("Date & Time",myTeamSchedule.get("scheduleDate") != null ? myTeamSchedule.get("scheduleDate").toString(): "");
+			row.put("Date & Time",scheduleDate != null ? scheduleDate.toString(): "");
 			row.put("Scheduled By",myTeamSchedule.get("scheduledBy") != null ? myTeamSchedule.get("scheduledBy").toString(): "");
 			row.put("Source",myTeamSchedule.get("searchedSource") != null ? myTeamSchedule.get("searchedSource").toString(): "");
 			row.put("Status",myTeamSchedule.get("status") != null ? myTeamSchedule.get("status").toString(): "");
