@@ -69,11 +69,11 @@ public class ClientServiceImpl implements ClientService {
 		}
 		if(clientRequest.getClientName().length() < 3 || clientRequest.getClientName().length() > 30)
 		{
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "client name should be greater than 2 characters and less than 30 characters!!");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "client name should be minimum 3 characters and maximum 30 characters!!");
 		}
 		if(!clientRequest.getClientName().matches("^[a-z 0 -9 A-Z]+"))
 		{
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"client name should not contain numbers and special characters");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"client name should not contain any special characters");
 		}
 		Client clients = clientRepository.getClientName(clientRequest.getClientName());
 		if(clients != null)
