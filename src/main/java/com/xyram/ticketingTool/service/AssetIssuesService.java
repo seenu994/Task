@@ -24,32 +24,13 @@ public interface AssetIssuesService
     
     ApiResponse editAssetIssues(AssetIssues assetIssues, String assetIssueId);
     
-    
-    //ApiResponse searchAssetIssues(Pageable pageable,String issueId);
-    
-    
-    
-
-	//ApiResponse changeAssetIssuesStatus(String Status, String issueId);
-	
-	//ApiResponse downloadAllAssetIssues(Map<String, Object> filter);*/
-
-	
-   //ApiResponse getAssetIssues(Pageable pageable);
-
-    //ApiResponse getAssetIssues(AssetIssues assetIssues);
-
-
-	ApiResponse returnRepair(AssetIssues assetIssues, String assetIssueId);
+    ApiResponse returnRepair(AssetIssues assetIssues, String assetIssueId);
 
 	ApiResponse returnDamage(AssetIssues assetIssues,String assetIssueId);
 
 	ApiResponse getAllAssetsIssues(Map<String, Object> filter, Pageable pageable);
 
-
-	//ApiResponse searchAssetIssue(String assetIssueId);
-
-	ApiResponse getAssetIssuesById(String assetIssueId);
+    ApiResponse getAssetIssuesById(String assetIssueId);
 
 	ApiResponse downloadAllAssetIssues(Map<String, Object> filter);
 	
