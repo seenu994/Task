@@ -15,4 +15,6 @@ public interface BrandService {
 
 	ApiResponse deleteBrand(String brandId);
 
+	ApiResponse searchBrand(String searchString);
+
 }
