@@ -15,7 +15,7 @@ public interface CompanyWingsRepository extends JpaRepository<CompanyWings, Stri
 	CompanyWings getWingById(String id);
 
 	@Query("Select new map(e.Id as wing_id,e.wingName as wing_name)from CompanyWings e  where "
-			+ "(:searchString is null Or lower(e.wingName) LIKE %:searchString% )")
+			+ "(:searchString is null Or lower(e.wingName) LIKE %:searchString% )order by e.wingName ASC")
 	List<Map> getAllWing( String searchString);
 	
 	@Query(value = "SELECT j from CompanyWings j WHERE j.Id = :wing_id ")
