@@ -59,5 +59,13 @@ public class RamSizeController
 	 		logger.info("Received request to delete ram size");
 	 		return ramSizeService.deleteRam(ramId);
 	 	}
+	 
+	 @GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/searchRamSize/{searchString}",
+			 AuthConstants.INFRA_ADMIN_BASEPATH + "/searchRamSize/{searchString}",
+			 AuthConstants.INFRA_USER_BASEPATH + "/searchRamSize/{searchString}"})
+		public ApiResponse searchRamSize(@PathVariable String searchString) {
+			logger.info("Received request to search Ram Size");
+			return ramSizeService.searchRamSize(searchString);
+		}
 	
 }

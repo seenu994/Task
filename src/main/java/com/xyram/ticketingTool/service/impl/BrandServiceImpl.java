@@ -2,6 +2,7 @@ package com.xyram.ticketingTool.service.impl;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.transaction.Transactional;
@@ -157,6 +158,25 @@ public class BrandServiceImpl implements BrandService{
 			response.setMessage("Brand Id is not valid.");
 		}
 		return response;
+	}
+
+	@Override
+	public ApiResponse searchBrand(String searchString) {
+		ApiResponse response = new ApiResponse(false);
+		List<Map> brand = brandRepository.searchBrand(searchString);
+
+		Map content = new HashMap();
+		content.put("brand", brand);
+		if (content != null) {
+			response.setSuccess(true);
+			response.setMessage("Search Brand retrieved successfully");
+			response.setContent(content);
+		} else {
+			response.setSuccess(false);
+			response.setMessage("could not retrieve the data");
+		}
+		return response;
+		
 	}
 	
 }

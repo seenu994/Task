@@ -1,5 +1,6 @@
 package com.xyram.ticketingTool.Repository;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.transaction.Transactional;
@@ -30,8 +31,7 @@ public interface RamSizeRepository extends JpaRepository<RamSize, String> {
     @Query("Select r.ramId from RamSize r where r.ramSize =:ramSize")
 	String getRamId(String ramSize);
 
-    
-
-	
+    @Query("select distinct new map(r.ramId as ramId, r.ramSize as ramSize) from RamSize r where r.ramSize LIKE %:searchString%")
+	List<Map> searchRamSize(String searchString);
 
 }

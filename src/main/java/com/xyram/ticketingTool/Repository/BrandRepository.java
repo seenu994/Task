@@ -1,5 +1,6 @@
 package com.xyram.ticketingTool.Repository;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.transaction.Transactional;
@@ -31,7 +32,8 @@ public interface BrandRepository extends JpaRepository<Brand, String>{
 
 	@Query("Select b.brandName from Brand b where b.brandId =:brandId")      
 	String getBrandNameById(String brandId);
-	
-	
 
+	@Query("select distinct new map(b.brandId as brandId, b.brandName as brandName) from Brand b where b.brandName LIKE %:searchString%")
+	List<Map> searchBrand(String searchString);
+	
 }

@@ -560,26 +560,6 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 		return response;
 	}
 
-	/*@Override
-	public ApiResponse getAssetIssuesById(String assetIssueId) 
-	{
-		ApiResponse response = new ApiResponse();
-		AssetIssues assetIssues = assetIssuesRepository.getAssetIssueById(assetIssueId);
-		System.out.println(assetIssues);
-		Map content = new HashMap();
-		content.put("assetIssues", assetIssues);
-		if(content != null) {
-			response.setSuccess(true);
-			response.setMessage("Asset Issues Retrieved Successfully");
-			response.setContent(content);
-			
-		}
-		else {
-			response.setSuccess(false);
-			response.setMessage("Could not retrieve data");
-		}
-		return response;
-	}*/
        @Override
        public ApiResponse getAssetIssuesById(String assetIssueId) 
        {
@@ -606,29 +586,6 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 	       
 	       return response;
        }
-	
- 
-	/*@Override
-	public ApiResponse searchAssetIssue(String assetIssueId) 
-	{
-		ApiResponse response = new ApiResponse(false);
-		AssetIssues assetIssues = new AssetIssues();
-		assetIssues.setAssetIssueId(assetIssueId);
-		List<Map> assetIssuesList = assetIssuesRepository.searchAssetIssue(assetIssueId);
-		Map content = new HashMap();
-
-		content.put("AssetIssuesList", assetIssuesList);
-		if(content != null) {
-			response.setSuccess(true);
-			response.setMessage("Asset issue Retrieved successfully");
-			response.setContent(content);
-		}
-		else {
-			response.setSuccess(false);
-			response.setMessage("Could not retrieve data");
-		}
-		return response;
-	}*/
 
 	@Override
 	public ApiResponse downloadAllAssetIssues(Map<String, Object> filter) {
@@ -640,25 +597,7 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 				: null;
 		String vendorId = filter.containsKey("vendorId") ? ((String) filter.get("vendorId"))
 				: null;
-		/*String fromDate = filter.containsKey("fromDate") ? filter.get("fromDate").toString(): null;
-		String toDate = filter.containsKey("toDate") ? filter.get("toDate").toString():null;
 		
-		Date parsefromDate = null;
-		Date parsetoDate = null;
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		if(fromDate != null && toDate != null)
-		{
-			try
-			{
-				parsefromDate = fromDate != null ? dateFormat.parse(fromDate) : null;
-				parsetoDate = toDate != null ? dateFormat.parse(toDate) : null;
-			}
-			catch(ParseException e)
-			{
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid date format date should be yyyy-MM-dd");
-			}
-			
-		}*/
 		String fromDateStr = filter.containsKey("fromDate") ? ((String) filter.get("fromDate")).toLowerCase()
 				: null;
 		Date fromDate = null;
@@ -705,14 +644,14 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 		byte[] blob = ExcelUtil.toBlob(workbook);
 		
 		try {
-			ExcelUtil.saveWorkbook(workbook,"assetIssues-report.xlsx");
+			ExcelUtil.saveWorkbook(workbook,"AssetIssues-report.xlsx");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 		//fileResponse.put("fileName", "assetIssues-report.xlsx");
-		fileResponse.put("fileName", "assetIssues-report-"+fromDateStr+"-"+toDateStr+".xlsx");
+		fileResponse.put("fileName", "AssetIssues-report-"+fromDateStr+"-"+toDateStr+".xlsx");
 		fileResponse.put("type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 		fileResponse.put("blob", blob);
 		response.setFileDetails(fileResponse);
@@ -751,95 +690,6 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
         Workbook workbook = ExcelUtil.createSingleSheetWorkbook(ExcelUtil.createSheet("Asset issues report", headers, data));
 
 		return workbook;
-		
 	}
-	/*
-	 * public ApiResponse downloadAllAssetIssues(Map<String, Object> filter) {
-		ApiResponse response = new ApiResponse();
-		
-		String assetIssueStatus = filter.containsKey("assetIssueStatus") ? ((String) filter.get("assetIssueStatus")).toUpperCase()
-					: null;
-		String assetId = filter.containsKey("assetId") ? ((String) filter.get("assetId"))
-				: null;
-		String vendorId = filter.containsKey("vendorId") ? ((String) filter.get("vendorId"))
-				: null;
-		String fromDate = filter.containsKey("fromDate") ? filter.get("fromDate").toString(): null;
-		String toDate = filter.containsKey("toDate") ? filter.get("toDate").toString():null;
-		
-		Date parsefromDate = null;
-		Date parsetoDate = null;
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		if(fromDate != null && toDate != null)
-		{
-			try
-			{
-				parsefromDate = fromDate != null ? dateFormat.parse(fromDate) : null;
-				parsetoDate = toDate != null ? dateFormat.parse(toDate) : null;
-			}
-			catch(ParseException e)
-			{
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid date format date should be yyyy-MM-dd");
-			}
-			
-		}
-		
-		AssetIssueStatus assetIssuestatus = null;
-		if(assetIssueStatus!=null) {
-			try {
-				assetIssuestatus = assetIssueStatus != null ? AssetIssueStatus.toEnum(assetIssueStatus) : null;
-			} catch (IllegalArgumentException e) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-						filter.get("status").toString() + " is not a valid status");
-			}
-		}
-		List<AssetIssues>assetIssuesList = assetIssuesRepository.downloadAllAssetIssues(assetId, vendorId, assetIssueStatus,fromDate, toDate);
-		
-		List excelHeaders = Arrays.asList("Asset IssueId", "Asset Id", "Vendor Name","complaint Raised Date", "Description", "Resolved Date", "Asset Issue Status", "Solution", "Comments");
-		List excelData = new ArrayList<>();
-		int index = 1;
-		for (AssetIssues assetIssue : assetIssuesList) 
-		{
-            Map row = new HashMap<>();
-
-			AssetVendor getVendorName = assetVendorRepository.getAssetVendorById(assetList.getVendorId());
-			
-			row.put("Asset IssueId", assetIssuesList.getAssetIssueId());
-			row.put("Asset Id", assetIssuesList.getAssetId());
-			row.put("Vendor Name", getVendorName.getVendorName());
-			row.put("complaint Raised Date", assetIssuesList.getComplaint Raised Date());
-			row.put("Description", assetIssuesList.getDescription());
-			row.put("Resolved Date", assetIssuesList.getResolvedDate());
-			row.put("Purchase on", assetIssuesList.getPurchaseDate());
-			row.put("Warranty Date", assetIssuesList.getWarrantyDate());
-			row.put("Asset Issue Status", assetIssuesList.getAssetIssueStatus());
-			row.put("Solution", assetIssuesList.getSolution());
-			row.put("Comments", assetIssuesList.getComments());
-			
-			
-			excelData.add(row);
-			index++;
-		}
-
-		XSSFWorkbook workbook = ExcelWriter.writeToExcel(excelHeaders, excelData, "Asset Details", null,
-				"Asset Details", 1, 0);
-
-		String filename = new SimpleDateFormat("'asset _issue_details_'yyyyMMddHHmmss'.xlsx'").format(new Date());
-
-		Path fileStorageLocation = Paths.get(ResponseMessages.BASE_DIRECTORY + ResponseMessages.ASSET_ISSUE_DIRECTORY );
-		Files.createDirectories(fileStorageLocation);
-
-		try {
-			FileOutputStream out = new FileOutputStream(
-					new File(ResponseMessages.BASE_DIRECTORY + ResponseMessages.ASSET_ISSUE_DIRECTORY + filename));
-			workbook.write(out);
-			out.close();
-//			logger.info(filename + " written successfully on disk.");
-		} catch (Exception e) {
-//			logger.error("Exception occured while saving pincode details" + e.getCause());
-			throw e;
-		}
-		response.put("fileLocation", ResponseMessages.ASSET_ISSUE_DIRECTORY + filename);
-		return response;
-	 */
 }
 	
