@@ -122,11 +122,21 @@ public class ClientServiceImpl implements ClientService {
 		Client client = clientRepository.getClientById(clientId);
 		if(client != null)
 		{
-			if (clientRequest.getClientName() != null) 
+			if(clientRequest.getClientName() != null) 
 			{
-				response = validateClient(clientRequest);
+				validateClientName(client.getId(),clientRequest.getClientName());
 				client.setClientName(clientRequest.getClientName());
-			}	
+				//response = validateClient(clientRequest);
+				//client.setClientName(clientRequest.getClientName());
+			}
+			if(clientRequest.getStatus() != null)
+			{
+				client.setStatus(clientRequest.getStatus());
+			}
+			clientRequest.setLastUpdatedAt(new Date());
+			clientRequest.setUpdatedBy(currentUser.getUserId());
+			
+			
 				clientRepository.save(client);
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.CLIENT_UPDATED);
@@ -141,7 +151,26 @@ public class ClientServiceImpl implements ClientService {
 		return response;
 	}
 	
-	private ApiResponse validateStatus(ClientStatus userstatus) {
+	private boolean validateClientName(String id, String clientName) 
+	{
+		if(clientName == null || clientName.equals(""))
+		{
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "client name is mandatory !!");
+		}
+		if(clientName.length() < 3 || clientName.length() > 30)
+		{
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "client name should be minimum 3 characters and maximum 30 characters!!");
+		}
+		if(!clientName.matches("^[a-z 0 -9 A-Z]+"))
+		{
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"client name should not contain any special characters");
+		}
+		
+		return true;
+	}
+
+	private ApiResponse validateStatus(ClientStatus userstatus) 
+	{
 		ApiResponse response = new ApiResponse(false);
 		if (userstatus != ClientStatus.ACTIVE || userstatus != ClientStatus.INACTIVE) {
 			response.setMessage(ResponseMessages.USERSTATUS_INVALID);
