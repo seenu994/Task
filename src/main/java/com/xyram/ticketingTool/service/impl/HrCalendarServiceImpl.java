@@ -837,7 +837,6 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	
 	if(fromDate != null && toDate != null) {
 		try {
-
 			parsedfromDate = fromDate != null ? dateFormat.parse(fromDate) : null;
 			parsedtoDate = toDate != null ? dateFormat.parse(toDate) : null;
 
