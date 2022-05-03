@@ -58,6 +58,14 @@ public class BrandController {
  		logger.info("Received request to delete brand");
  		return brandService.deleteBrand(brandId);
  	}
+    
+    @GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/searchBrand/{searchString}",
+    		AuthConstants.INFRA_ADMIN_BASEPATH + "/searchBrand/{searchString}",
+    		AuthConstants.INFRA_USER_BASEPATH + "/searchBrand/{searchString}"})
+	public ApiResponse searchBrand(@PathVariable String searchString) {
+		logger.info("Received request to search Brand");
+		return brandService.searchBrand(searchString);
+	}
 
 }
 	
