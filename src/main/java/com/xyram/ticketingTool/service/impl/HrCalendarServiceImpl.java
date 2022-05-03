@@ -94,14 +94,16 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 					}
 				}
 				if(schedule.getIs_scheduled()) {
+					
 					Date toDateTime = new Date();
 					long diff = schedule.getScheduleDate().getTime() - toDateTime.getTime();//as given
-
-					long diffMinutes = diff / (60 * 1000) ; 
-					if(diffMinutes < 15) {
-						response.setSuccess(false);
-						response.setMessage("A future date is permitted, and minimum 15 minutes prior to the current time is required.");
-						return response;
+					if(schedule.getScheduleDate().getDate() == toDateTime.getDate()) {
+						long diffMinutes = diff / (60 * 1000) ; 
+						if(diffMinutes < 15) {
+							response.setSuccess(false);
+							response.setMessage("A future date is permitted, and minimum 15 minutes prior to the current time is required.");
+							return response;
+						}
 					}
 				}
 				
@@ -165,11 +167,13 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 					Date toDateTime = new Date();
 					long diff = schedule.getScheduleDate().getTime() - toDateTime.getTime();//as given
 
-					long diffMinutes = diff / (60 * 1000); 
-					if(diffMinutes < 15) {
-						response.setSuccess(false);
-						response.setMessage("A future date is permitted, and minimum 15 minutes prior to the current time is required.");
-						return response;
+					if(schedule.getScheduleDate().getDate() == toDateTime.getDate()) {
+						long diffMinutes = diff / (60 * 1000) ; 
+						if(diffMinutes < 15) {
+							response.setSuccess(false);
+							response.setMessage("A future date is permitted, and minimum 15 minutes prior to the current time is required.");
+							return response;
+						}
 					}
 				}
 				
@@ -240,9 +244,13 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 				Date toDateTime = new Date();
 				long diff = scheduleDate.getTime() - toDateTime.getTime();//as given
 
-				long diffMinutes = diff / (60 * 1000) % 60; 
-				if(diffMinutes > 15) {
-					scheduleObj.setScheduleDate(scheduleDate);
+				if(scheduleObj.getScheduleDate().getDate() == toDateTime.getDate()) {
+					long diffMinutes = diff / (60 * 1000) ; 
+					if(diffMinutes < 15) {
+						response.setSuccess(false);
+						response.setMessage("A future date is permitted, and minimum 15 minutes prior to the current time is required.");
+						return response;
+					}
 				}
 				else {
 					response.setSuccess(false);
