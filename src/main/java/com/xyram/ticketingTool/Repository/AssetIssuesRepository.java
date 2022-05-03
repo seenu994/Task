@@ -52,7 +52,7 @@ public interface AssetIssuesRepository extends JpaRepository<AssetIssues, String
 // List<Map> getAssetIssues(Pageable pageable);
 
 
-ApiResponse save(ApiResponse addAssetIssues);
+     ApiResponse save(ApiResponse addAssetIssues);
 
 /*@Query("Select distinct new map(i.assetIssue as assetIssue, i.complaintRaisedDate as complaintRaisedDate, "
 + "i.description as description, i.solution as solution,i.aId as aId, "
@@ -123,17 +123,17 @@ AssetIssues getAssetIssueById(String assetIssueId);
 
 
 //@Query("Select new map(i) from AssetIssues i where i.assetIssueId =:assetIssueId")
-@Query("Select distinct new map(i.assetIssueId as assetIssueId, i.complaintRaisedDate as complaintRaisedDate, v.vendorName as vendorName, "
+       @Query("Select distinct new map(i.assetIssueId as assetIssueId, i.complaintRaisedDate as complaintRaisedDate, v.vendorName as vendorName, "
 		+ "i.description as description, i.solution as solution,i.assetId as assetId, i.vendorId as vendorId,"
 		+ "i.assetIssueStatus as assetIssueStatus, i.comments as comments,"
 		+ "i.resolvedDate as resolvedDate ) from AssetIssues i left join AssetVendor v on i.vendorId = v.vendorId where i.assetIssueId =:assetIssueId")
-Map getByAssetIssueId(String assetIssueId);
+        Map getByAssetIssueId(String assetIssueId);
 
  
 
 
-@Query("Select i from AssetIssues i where i.assetIssueStatus=:assetIssueStatus")
-AssetIssues getAssetIssueStatus();
+	@Query("Select i from AssetIssues i where i.assetIssueStatus=:assetIssueStatus")
+	AssetIssues getAssetIssueStatus();
 
 
 
