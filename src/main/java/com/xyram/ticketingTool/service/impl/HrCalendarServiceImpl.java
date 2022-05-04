@@ -874,7 +874,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	public static String getScheduleDate(String input) {
         try {
             SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            inputFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+            inputFormat.setTimeZone(TimeZone.getTimeZone("IST"));
             Date date = inputFormat.parse(input);
             SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             return outputFormat.format(date);
@@ -981,7 +981,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	public static String getDate(String input) {
         try {
             SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            inputFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+            inputFormat.setTimeZone(TimeZone.getTimeZone("IST"));
             Date date = inputFormat.parse(input);
             SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             return outputFormat.format(date);
