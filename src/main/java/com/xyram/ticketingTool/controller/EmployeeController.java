@@ -93,7 +93,7 @@ class EmployeeController
 			AuthConstants.DEVELOPER_BASEPATH + "/getAllEmployee",
 			AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllEmployee" })
 	public ApiResponse getAllEmployee(@RequestBody(required=false) Map<String,Object> filter, Pageable pageable) {
-		logger.info("indide CatagoryController :: getAllCatagory");
+		logger.info("inside getAllEmployee");
 		return employeeService.getAllEmployee(filter,pageable);
 	}
 
