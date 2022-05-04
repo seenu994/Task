@@ -59,6 +59,14 @@ private final Logger logger = LoggerFactory.getLogger(CountryController.class);
  		logger.info("Received request to delete country");
  		return countyService.deletecountry(countryId);
  	}
+	
+	@GetMapping(value = {AuthConstants.ADMIN_BASEPATH + "/searchCountry/{countryName}",
+			 AuthConstants.INFRA_ADMIN_BASEPATH + "/searchCountry/{countryName}",
+            AuthConstants.INFRA_USER_BASEPATH + "/searchCountry/{countryName}"})
+	 public ApiResponse searchCountry(@PathVariable String countryName) {
+			logger.info("Received request to search Country");
+			return countyService.searchCountry(countryName);
+	 }
 		 
 
 }

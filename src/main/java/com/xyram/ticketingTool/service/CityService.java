@@ -12,5 +12,5 @@ public interface CityService {
 	ApiResponse editcity(City city, String cityId);
 	ApiResponse getAllCity(Pageable pageable);
 	ApiResponse deleteCity(String cityId);
-
+	ApiResponse searchCity(String searchString);
 }

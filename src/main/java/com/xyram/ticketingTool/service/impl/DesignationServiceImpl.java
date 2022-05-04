@@ -19,6 +19,7 @@ import com.xyram.ticketingTool.entity.AssetVendor;
 import com.xyram.ticketingTool.entity.City;
 import com.xyram.ticketingTool.entity.Designation;
 import com.xyram.ticketingTool.entity.SoftwareMaster;
+import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.DesiggnaionService;
 import com.xyram.ticketingTool.util.ResponseMessages;
 
@@ -33,7 +34,8 @@ public class DesignationServiceImpl implements DesiggnaionService {
 	@Autowired
 	DesignationRepository designationRepository;
 	
-
+	@Autowired
+	CurrentUser currentUser;
 	
 	
 		@Override
@@ -59,7 +61,8 @@ public class DesignationServiceImpl implements DesiggnaionService {
 //				if (designation.getDesignationName().equals("") || designation.getDesignationName() == null) {
 //					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Designation is manditory");
 //				}
-				
+				designation.setCreatedAt(new Date());
+				designation.setCreatedBy(currentUser.getName());
 				Designation designations = designationRepository.save(designation);
 				response.setMessage(ResponseMessages.ADDED_DESIGNATION);
 				response.setSuccess(true);
@@ -78,11 +81,17 @@ public class DesignationServiceImpl implements DesiggnaionService {
 		
 		private ApiResponse validateDesignation(Designation designation) {
 			ApiResponse response = new ApiResponse(false);
-
+			String regex = "[a-z A-Z]+";
 			Designation designationObj  = designationRepository.getDesignationName(designation.getDesignationName());
 			if (designation.getDesignationName().equals("") || designation.getDesignationName() == null) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Designation is manditory");
 			}
+			if(!designation.getDesignationName().matches(regex)) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "DesignationName should not allow character");
+			}
+			 if(designation.getDesignationName().length() < 5 || designation.getDesignationName().length() > 50){
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "DesignationName length should be greater than 4 and less than 51");
+				}
 			
 			if(designationObj != null) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, " DesignationName already exists!");
@@ -97,7 +106,8 @@ public class DesignationServiceImpl implements DesiggnaionService {
 
 			ApiResponse response = new ApiResponse();
 			response = validateDesignation(Request);
-				Designation designationRequest = designationRepository.getById(Id);
+				Designation designationRequest = designationRepository.getById(Id)
+;
 				if (designationRequest.getDesignationName() != null) {
 //					if (designationRequest.getDesignationName().equals("") || designationRequest.getDesignationName() == null) {
 //						throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Designation is manditory");
@@ -105,9 +115,8 @@ public class DesignationServiceImpl implements DesiggnaionService {
 					
 					designationRequest.setDesignationName(Request.getDesignationName());
 
-//					designationRequest.setLastUpdatedAt(new Date());
-//					designationRequest.setUpdatedBy(currentUser.getName());
-
+					designationRequest.setLastUpdatedAt(new Date());
+					designationRequest.setUpdatedBy(currentUser.getName());
 					designationRepository.save(designationRequest);
 					response.setSuccess(true);
 					response.setMessage(ResponseMessages.DESIGNATION_EDITED);

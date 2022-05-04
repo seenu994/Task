@@ -180,7 +180,7 @@ public interface ResponseMessages {
 
 	String ASSET_PURCHASE_BILL_EDIT_SUCCESSFULLY = "Asset is underWarrenty and Asset purchase bill edited successfully";
 
-	String ASSET_REPAIR_BILL_ADDED_SUCCESSFULLY = "Asset is underWarrenty and Asset repair bill added successsfully";
+	
 
 	String ASSET_REPAIR_BILL_EDITED_SUCCESSFULLY = "Asset is underwarrenty and repair bill edited successfully";
 
@@ -287,7 +287,7 @@ String ASSET_DIRECTORY ="/Documents/assetDetails/";
 
 	String BILL_EDITED_SUCCESSFULLY = "asset is not underwarrenty and purchase bill edited successfully";
 
-	String REPAIR_BILL_ADDED_SUCCESSFULLY = "asset is not underwarrenty and repair bill addred successfully";
+	
 
 	String ASSET_RETURN_FROM_REPAIR = "Asset is underwarrenty and asset is returned from reapir";
 
@@ -345,10 +345,15 @@ String ASSET_DIRECTORY ="/Documents/assetDetails/";
 
 		String SOFTWAREMASTER_NOT_ADDED = "software master not added";
 
-		String DESIGNATION_EDITED = "Designation is added Successfully";
+		String DESIGNATION_EDITED = "Designation is edited Successfully";
 
 		String DESIGNATION_DETAILS_INVALID = "Invalid Designation details";
 
+		String ASSET_REPAIR_BILL_ADDED_SUCCESSFULLY = "Asset is underwarrenty and asset repair bill added successfully";
+
+		String REPAIR_BILL_ADDED_SUCCESSFULLY = "Asset is not underwarrenty and asset repair bill added successfully";
+
+		
 		
 
 

@@ -10,6 +10,7 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.xyram.ticketingTool.baseData.model.AuditModel;
 import com.xyram.ticketingTool.enumType.DesignationEnum;
 import com.xyram.ticketingTool.enumType.SoftwareEnum;
 import com.xyram.ticketingTool.enumType.UserStatus;
@@ -19,7 +20,7 @@ import com.xyram.ticketingTool.id.generator.IdPrefix;
 @Entity
 @Table(name = "designation")
 
-public class Designation  {
+public class Designation extends AuditModel {
 
 	@Id
 	@IdPrefix(value = "DES_")
