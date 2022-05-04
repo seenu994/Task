@@ -345,7 +345,7 @@ String ASSET_DIRECTORY ="/Documents/assetDetails/";
 
 		String SOFTWAREMASTER_NOT_ADDED = "software master not added";
 
-		String DESIGNATION_EDITED = "Designation is added Successfully";
+		String DESIGNATION_EDITED = "Designation is edited Successfully";
 
 		String DESIGNATION_DETAILS_INVALID = "Invalid Designation details";
 

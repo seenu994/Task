@@ -78,11 +78,17 @@ public class DesignationServiceImpl implements DesiggnaionService {
 		
 		private ApiResponse validateDesignation(Designation designation) {
 			ApiResponse response = new ApiResponse(false);
-
+			String regex = "[a-z A-Z]+";
 			Designation designationObj  = designationRepository.getDesignationName(designation.getDesignationName());
 			if (designation.getDesignationName().equals("") || designation.getDesignationName() == null) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Designation is manditory");
 			}
+			if(!designation.getDesignationName().matches(regex)) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "DesignationName should not allow character");
+			}
+			 if(designation.getDesignationName().length() < 5 || designation.getDesignationName().length() > 50){
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "DesignationName length should be greater than 4 and less than 51");
+				}
 			
 			if(designationObj != null) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, " DesignationName already exists!");

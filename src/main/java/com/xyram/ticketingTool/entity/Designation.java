@@ -25,7 +25,7 @@ public class Designation  {
 	@IdPrefix(value = "DES_")
 	@GeneratedValue(generator = IdGenerator.ID_GENERATOR)
 	@GenericGenerator(name = IdGenerator.ID_GENERATOR, strategy = "com.xyram.ticketingTool.id.generator.IdGenerator")
-	@Column(name="designatin_id")
+	@Column(name="designation_id")
 	private String Id;
 
 	@Column(name = "designation_name")
