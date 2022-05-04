@@ -74,7 +74,7 @@ public interface HrCalendarRepository extends JpaRepository<HrCalendar, String>{
 			+ "(:status is null OR lower(a.status)=:status) AND "
 			+ "(:jobId is null OR a.jobId=:jobId) AND "
 			+ "(:closed is null OR a.closed=:closed) ORDER BY a.scheduleDate ASC")
-	Page<Map> getAllMyTeamSchedulesFromCalendarByStatus(String userId,String employeeId,String jobId, 
+	Page<Map> getAllMyTeamSchedulesFromCalendarByStatus(String userId,String employeeId,String jobId,
 			String fromDate, String toDate, String status,Boolean closed,Pageable pageable);
 	
 	@Query("Select distinct new map(a.candidateName as candidateName,a.status as status,"

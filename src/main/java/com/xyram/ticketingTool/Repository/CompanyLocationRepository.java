@@ -26,7 +26,7 @@ public interface CompanyLocationRepository extends JpaRepository<CompanyLocation
 	CompanyLocation getCompanyLocation(String id);
 
 	@Query("Select new map(e.id as id,e.locationName as location_name)from CompanyLocation e  where "
-			+ "(:searchString is null Or lower(e.locationName) LIKE %:searchString% )")
+			+ "(:searchString is null Or lower(e.locationName) LIKE %:searchString% )order by e.locationName ASC")
 	List<Map> getAllLocation(String searchString);
 
 	//String getLocationName(String id);
