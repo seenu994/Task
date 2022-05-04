@@ -71,7 +71,7 @@ public class DesignationController {
 			AuthConstants.INFRA_ADMIN_BASEPATH + "/searchDesignation/{designationName}" })
 	public ApiResponse searchDesignation(@PathVariable String designationName) {
 		logger.info("Received request to search designation ");
-		return desiggnaionService.searchDesignationByName(designationName);
+		return desiggnaionService.searchDesignation(designationName);
 	}
 
 }
