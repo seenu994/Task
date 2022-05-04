@@ -949,7 +949,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 		HrCalendarTimeZone.getDate("+05:30");
 		cal.set(Calendar.SECOND, HrCalendarTimeZone.getDate("+05:30"));
 	 
-				System.out.println(cal.getTime());
+			//	System.out.println(cal.getTime());
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
