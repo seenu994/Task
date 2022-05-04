@@ -19,7 +19,7 @@ public interface DesignationRepository extends JpaRepository<Designation, String
 //			+ " from Designation e where e.designationStatus != 'INACTIVE'")
 //	Page<Map> getAllDesignationList(Pageable pageable);
 	
-	@Query("select distinct new map(e.Id as id,e.designationName as designationName) from Designation e where "
+	@Query("select distinct new map(e.Id as id,e.designationName as designationName,e.designationStatus as designationStatus) from Designation e where "
 			+ "lower(e.designationName) LIKE %:searchString% ")
 			List<Map> searchDesignation(String searchString);
 

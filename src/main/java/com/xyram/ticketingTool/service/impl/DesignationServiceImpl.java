@@ -19,6 +19,7 @@ import com.xyram.ticketingTool.entity.AssetVendor;
 import com.xyram.ticketingTool.entity.City;
 import com.xyram.ticketingTool.entity.Designation;
 import com.xyram.ticketingTool.entity.SoftwareMaster;
+import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.DesiggnaionService;
 import com.xyram.ticketingTool.util.ResponseMessages;
 
@@ -33,7 +34,8 @@ public class DesignationServiceImpl implements DesiggnaionService {
 	@Autowired
 	DesignationRepository designationRepository;
 	
-
+	@Autowired
+	CurrentUser currentUser;
 	
 	
 		@Override
@@ -59,7 +61,8 @@ public class DesignationServiceImpl implements DesiggnaionService {
 //				if (designation.getDesignationName().equals("") || designation.getDesignationName() == null) {
 //					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Designation is manditory");
 //				}
-				
+				designation.setCreatedAt(new Date());
+				designation.setCreatedBy(currentUser.getName());
 				Designation designations = designationRepository.save(designation);
 				response.setMessage(ResponseMessages.ADDED_DESIGNATION);
 				response.setSuccess(true);
@@ -112,9 +115,8 @@ public class DesignationServiceImpl implements DesiggnaionService {
 					
 					designationRequest.setDesignationName(Request.getDesignationName());
 
-//					designationRequest.setLastUpdatedAt(new Date());
-//					designationRequest.setUpdatedBy(currentUser.getName());
-
+					designationRequest.setLastUpdatedAt(new Date());
+					designationRequest.setUpdatedBy(currentUser.getName());
 					designationRepository.save(designationRequest);
 					response.setSuccess(true);
 					response.setMessage(ResponseMessages.DESIGNATION_EDITED);
