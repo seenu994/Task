@@ -98,14 +98,16 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 					}
 				}
 				if(schedule.getIs_scheduled()) {
+					
 					Date toDateTime = new Date();
 					long diff = schedule.getScheduleDate().getTime() - toDateTime.getTime();//as given
-
-					long diffMinutes = diff / (60 * 1000) ; 
-					if(diffMinutes < 15) {
-						response.setSuccess(false);
-						response.setMessage("A future date is permitted, and minimum 15 minutes prior to the current time is required.");
-						return response;
+					if(schedule.getScheduleDate().getDate() == toDateTime.getDate()) {
+						long diffMinutes = diff / (60 * 1000) ; 
+						if(diffMinutes < 15) {
+							response.setSuccess(false);
+							response.setMessage("A future date is permitted, and minimum 15 minutes prior to the current time is required.");
+							return response;
+						}
 					}
 				}
 				
@@ -145,7 +147,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	}
 	
 	@Override
-	public ApiResponse editScheduleInCalendar(HrCalendar schedule) {
+	public ApiResponse editScheduleInCalendar(Boolean validateDateTime,HrCalendar schedule) {
 
 		ApiResponse response = new ApiResponse(false);
 		HrCalendar scheduleObj = hrCalendarRepository.findById(schedule.getId()).get();
@@ -165,15 +167,17 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 						return response;
 					}
 				}
-				if(schedule.getIs_scheduled()) {
+				if(schedule.getIs_scheduled() && validateDateTime) {
 					Date toDateTime = new Date();
 					long diff = schedule.getScheduleDate().getTime() - toDateTime.getTime();//as given
 
-					long diffMinutes = diff / (60 * 1000); 
-					if(diffMinutes < 15) {
-						response.setSuccess(false);
-						response.setMessage("A future date is permitted, and minimum 15 minutes prior to the current time is required.");
-						return response;
+					if(schedule.getScheduleDate().getDate() == toDateTime.getDate()) {
+						long diffMinutes = diff / (60 * 1000) ; 
+						if(diffMinutes < 15) {
+							response.setSuccess(false);
+							response.setMessage("A future date is permitted, and minimum 15 minutes prior to the current time is required.");
+							return response;
+						}
 					}
 				}
 				
@@ -244,16 +248,21 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 				Date toDateTime = new Date();
 				long diff = scheduleDate.getTime() - toDateTime.getTime();//as given
 
-				long diffMinutes = diff / (60 * 1000) % 60; 
-				if(diffMinutes > 15) {
-					scheduleObj.setScheduleDate(scheduleDate);
+				if(scheduleDate.getDate() == toDateTime.getDate()) {
+					long diffMinutes = diff / (60 * 1000) ; 
+					if(diffMinutes < 15) {
+						response.setSuccess(false);
+						response.setMessage("A future date is permitted, and minimum 15 minutes prior to the current time is required. "+scheduleObj.getScheduleDate().getDate()+"-"+toDateTime.getDate());
+						return response;
+					}
 				}
-				else {
-					response.setSuccess(false);
-					response.setMessage("Only future date is allowed and Min 15 minutes prior to the present time is required.");
-					return response;
-				}
-		
+//				else {
+//					response.setSuccess(false);
+//					response.setMessage("Only future date is allowed and Min 15 minutes prior to the present time is required.");
+//					return response;
+//				}
+				scheduleObj.setScheduleDate(scheduleDate);
+				scheduleObj.setClosed(false);
 			}else if(status.equalsIgnoreCase("CANCELLED")) {
 				scheduleObj.setClosed(true);
 				
@@ -280,6 +289,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 			cmt.setUpdatedBy(currentUser.getUserId());
 			cmt.setLastUpdatedAt(new Date());
 			cmtRepository.save(cmt);
+			
 			
 			scheduleObj.setStatus(status.toUpperCase());
 			scheduleObj.setLastUpdatedAt(new Date());
@@ -401,6 +411,37 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 			response.setSuccess(false);
 			response.setMessage("Schedule not found.");
 		}		
+		return response;
+	}
+	
+	
+	@Override
+	public ApiResponse searchMyTeamSchedulesInCalender(String searchString) {
+		ApiResponse response = new ApiResponse(false);
+		if(searchString.length() == 0) {
+			response.setSuccess(false);
+			response.setMessage("Search String is empty.");
+			return response;
+		}
+		Employee reportor = employeeRepository.getByEmpId(currentUser.getUserId());
+		if(reportor == null) {
+			response.setSuccess(false);
+			response.setMessage("Reporter Not Found.");
+			return response;
+		}
+		List<Map> shceduleList = hrCalendarRepository.searchInMyTeamShedule(reportor.getUserCredientials().getId(),searchString);
+		
+		if(shceduleList.size() > 0) {
+			Map content = new HashMap();
+			content.put("shceduleList", shceduleList);
+			response.setContent(content);
+			response.setSuccess(true);
+			response.setMessage("List retreived successfully.");
+		}else {
+			response.setSuccess(false);
+			response.setMessage("List is empty.");
+		}
+		
 		return response;
 	}
 	

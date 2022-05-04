@@ -28,7 +28,7 @@ public class Country extends AuditModel{
 	@Column(name =  "country_name")
 	private String countryName;
 	
-	@Column(name = "country_code" ,unique = true)
+	@Column(name = "country_code")
 	private String countryCode;
 	 
 	public String getCountryCode() {

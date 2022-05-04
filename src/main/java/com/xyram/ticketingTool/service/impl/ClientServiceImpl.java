@@ -75,7 +75,7 @@ public class ClientServiceImpl implements ClientService {
 		{
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"client name should not contain any special characters");
 		}
-		Client clients = clientRepository.getClientName(clientRequest.getClientName());
+		Client clients = clientRepository.getClientsName(clientRequest.getClientName());
 		if(clients != null)
 		{
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "client name is already exist !!");
@@ -151,8 +151,10 @@ public class ClientServiceImpl implements ClientService {
 		return response;
 	}
 	
-	private boolean validateClientName(String id, String clientName) 
+	private boolean validateClientName(String Id, String clientName) 
 	{
+		Client clients = clientRepository.getClient(clientName);
+		String client = clientRepository.getClientName(clientName);
 		if(clientName == null || clientName.equals(""))
 		{
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "client name is mandatory !!");
@@ -165,7 +167,11 @@ public class ClientServiceImpl implements ClientService {
 		{
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"client name should not contain any special characters");
 		}
-		
+		if(!Id.equals(client)) {
+		    if(clients != null) {
+			  throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "brand already exists!");
+		    }
+		}
 		return true;
 	}
 
@@ -216,11 +222,14 @@ public class ClientServiceImpl implements ClientService {
 
 		Map content = new HashMap();
 		content.put("client", client);
-		if (content != null) {	
+		if (content != null) 
+		{	
 			response.setSuccess(true);
 			response.setMessage("client retrived successfully");
 			response.setContent(content);
-		} else {
+		} 
+		else 
+		{
 			response.setSuccess(false);
 			response.setMessage("Not retrived the data");
 		}

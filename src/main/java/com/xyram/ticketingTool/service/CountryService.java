@@ -12,4 +12,5 @@ public interface CountryService {
     ApiResponse editcountry(Country country ,String countryId);
     ApiResponse getAllcountry(Pageable pageable);
     ApiResponse deletecountry(String countryId);
+    ApiResponse searchCountry(String searchString);
 }

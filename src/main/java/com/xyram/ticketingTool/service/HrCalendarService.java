@@ -16,7 +16,7 @@ public interface HrCalendarService {
 	
 	ApiResponse createScheduleInCalendar(HrCalendar schedule);
 	
-	ApiResponse editScheduleInCalendar(HrCalendar schedule);
+	ApiResponse editScheduleInCalendar(Boolean validateDateTime,HrCalendar schedule);
 	
 	ApiResponse deleteScheduleInCalendar(String scheduleId);
 	
@@ -35,6 +35,8 @@ public interface HrCalendarService {
 	ApiResponse getAllScheduleComments(String scheduleId);
 	
 	ApiResponse searchSchedulesInCalender(String searchString);
+	
+	ApiResponse searchMyTeamSchedulesInCalender(String searchString);
 	
 	ApiResponse getCandidateHistory(String mobileNo);
 	

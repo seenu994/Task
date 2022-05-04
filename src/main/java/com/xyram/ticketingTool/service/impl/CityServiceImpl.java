@@ -2,6 +2,7 @@ package com.xyram.ticketingTool.service.impl;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.transaction.Transactional;
@@ -16,6 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.xyram.ticketingTool.Repository.CityRepository;
 import com.xyram.ticketingTool.Repository.CountryRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
+import com.xyram.ticketingTool.entity.AssetVendor;
 import com.xyram.ticketingTool.entity.City;
 import com.xyram.ticketingTool.entity.Country;
 import com.xyram.ticketingTool.request.CurrentUser;
@@ -59,15 +61,22 @@ public class CityServiceImpl  implements CityService {
 	
 	private ApiResponse validateCity(City city) {
 		ApiResponse response = new ApiResponse(false);
-		
-		
-		City  cityRequest = cityRepository.getCityName(city.getCityName());
+	City  cityRequest = cityRepository.getCityName(city.getCityName());
+	String regex = "[a-z A-Z]+";
 		if(city.getCityName() == null || city.getCityName().equals("")) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"City name is mandatory");
 		}
+		if(!city.getCityName().matches(regex)) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "city name should be character only");
+		}
+		
 		if(cityRequest != null) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, " CityName already exists!");
 		}
+		if(city.getCityName().length() < 2 || city.getCityName().length() > 15){
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "city character length should be greater than 1 and less than 16");
+		}
+		
 		
 		if (city.getCountryCode() == null || city.getCountryCode().equals("")) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "countryCode is mandatory");
@@ -96,6 +105,7 @@ public class CityServiceImpl  implements CityService {
 			if (cityRequest != null) {
 				
 				cityRequest.setCityName(city.getCityName());
+				//cityRequest.setCountryCode(city.getCountryCode());
 
 				cityRequest.setLastUpdatedAt(new Date());
 				cityRequest.setUpdatedBy(currentUser.getName());
@@ -152,6 +162,32 @@ public class CityServiceImpl  implements CityService {
 			response.setMessage("city Id is not valid.");
 		}
 		return response;
+	}
+
+
+	@Override
+	public ApiResponse searchCity(String searchString) {
+		
+		ApiResponse response = new ApiResponse(false);
+		
+		List<Map> city = cityRepository.searchCity(searchString);
+
+		Map content = new HashMap();
+		content.put("city", city);
+		if (content != null) {			
+			response.setSuccess(true);
+			response.setMessage("City retrived successfully");
+			response.setContent(content);
+			
+		} else {
+			
+			response.setSuccess(false);
+			
+			response.setMessage("Not retrived the data");
+		}
+
+		return response;
+		
 	}
 		
 

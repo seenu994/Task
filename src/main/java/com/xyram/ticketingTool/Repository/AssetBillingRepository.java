@@ -100,6 +100,13 @@ public interface AssetBillingRepository extends JpaRepository<AssetBilling, Stri
 	@Query("Select b from AssetBilling b where b.assetBillId=:assetBillId and b.assetIssueId=:assetIssueId")
 	AssetBilling getAssetIssueById(String assetBillId, String assetIssueId);
 
+	@Query("Select b from AssetBilling b where b.gstAmount=:gstAmount")
+	AssetBilling getGstAmount(Double gstAmount);
+	
+	@Query("Select b.assetAmount from AssetBilling b where b.assetAmount=:assetAmount")
+	AssetBilling getAssetAmount(Double assetAmount);
+
+
 	/*@Query("Select assetBilling.issueId from AssetBilling b where b.issueId = :issueId")
 	String filterByIssueId(AssetIssues assetIssues);
 	
