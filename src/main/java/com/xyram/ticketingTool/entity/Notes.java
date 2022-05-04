@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -26,6 +28,7 @@ public class Notes extends AuditModel {
 	@Column(name = "id")
 	private String id;
 
+	@Temporal(TemporalType.DATE)
 	@Column(name = "notes_uploaded_date")
 	private Date notesUploadedDate;
 
