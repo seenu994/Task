@@ -43,12 +43,12 @@ public class HrCalendarController {
 	}
 	
 	@PostMapping(value = { 
-			AuthConstants.HR_ADMIN_BASEPATH + "/editScheduleInCalendar",
-			AuthConstants.HR_BASEPATH + "/editScheduleInCalendar"			
+			AuthConstants.HR_ADMIN_BASEPATH + "/editScheduleInCalendar/{validateDateTime}",
+			AuthConstants.HR_BASEPATH + "/editScheduleInCalendar/{validateDateTime}"			
 			})
-	ApiResponse editScheduleInCalendar(@RequestBody HrCalendar schedule) {
+	ApiResponse editScheduleInCalendar(@PathVariable Boolean validateDateTime,@RequestBody HrCalendar schedule) {
 		logger.info("Editing Hr Schedule");
-		return hrCalrendarService.editScheduleInCalendar(schedule);
+		return hrCalrendarService.editScheduleInCalendar(validateDateTime,schedule);
 	}
 	
 	@DeleteMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/deleteScheduleInCalendar/{scheduleId}",
@@ -161,6 +161,14 @@ public class HrCalendarController {
 	ApiResponse searchSchedulesInCalender(@PathVariable String searchString) {
 		logger.info("Get all getAllMySchedulesFromCalendarByStatus");
 		return hrCalrendarService.searchSchedulesInCalender(searchString);
+	} 
+	
+	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/searchMyTeamSchedulesInCalender/{searchString}",
+			AuthConstants.HR_BASEPATH + "/searchMyTeamSchedulesInCalender/{searchString}"			
+			})
+	ApiResponse searchMyTeamSchedulesInCalender(@PathVariable String searchString) {
+		logger.info("Get all searchMyTeamSchedulesInCalender");
+		return hrCalrendarService.searchMyTeamSchedulesInCalender(searchString);
 	} 
 	
 	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/getCandidateHistory/{mobileNo}",

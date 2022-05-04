@@ -145,7 +145,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	}
 	
 	@Override
-	public ApiResponse editScheduleInCalendar(HrCalendar schedule) {
+	public ApiResponse editScheduleInCalendar(Boolean validateDateTime,HrCalendar schedule) {
 
 		ApiResponse response = new ApiResponse(false);
 		HrCalendar scheduleObj = hrCalendarRepository.findById(schedule.getId()).get();
@@ -165,7 +165,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 						return response;
 					}
 				}
-				if(schedule.getIs_scheduled()) {
+				if(schedule.getIs_scheduled() && validateDateTime) {
 					Date toDateTime = new Date();
 					long diff = schedule.getScheduleDate().getTime() - toDateTime.getTime();//as given
 
@@ -409,6 +409,37 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 			response.setSuccess(false);
 			response.setMessage("Schedule not found.");
 		}		
+		return response;
+	}
+	
+	
+	@Override
+	public ApiResponse searchMyTeamSchedulesInCalender(String searchString) {
+		ApiResponse response = new ApiResponse(false);
+		if(searchString.length() == 0) {
+			response.setSuccess(false);
+			response.setMessage("Search String is empty.");
+			return response;
+		}
+		Employee reportor = employeeRepository.getByEmpId(currentUser.getUserId());
+		if(reportor == null) {
+			response.setSuccess(false);
+			response.setMessage("Reporter Not Found.");
+			return response;
+		}
+		List<Map> shceduleList = hrCalendarRepository.searchInMyTeamShedule(reportor.getUserCredientials().getId(),searchString);
+		
+		if(shceduleList.size() > 0) {
+			Map content = new HashMap();
+			content.put("shceduleList", shceduleList);
+			response.setContent(content);
+			response.setSuccess(true);
+			response.setMessage("List retreived successfully.");
+		}else {
+			response.setSuccess(false);
+			response.setMessage("List is empty.");
+		}
+		
 		return response;
 	}
 	
