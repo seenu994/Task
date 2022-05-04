@@ -53,6 +53,14 @@ public class CityController {
  			return cityService.getAllCity(pageable);
  	 }
 	 
+	 @GetMapping(value = {AuthConstants.ADMIN_BASEPATH + "/searchCity/{cityName}",
+			 AuthConstants.INFRA_ADMIN_BASEPATH + "/searchCity/{cityName}",
+             AuthConstants.INFRA_USER_BASEPATH + "/searchCity/{cityName}"})
+	 public ApiResponse searchCity(@PathVariable String cityName) {
+			logger.info("Received request to search City");
+			return cityService.searchCity(cityName);
+	 }
+	 
 	 @DeleteMapping(value = { AuthConstants.ADMIN_BASEPATH + "/deleteCity/{cityId}",
 	 			AuthConstants.INFRA_ADMIN_BASEPATH + "/deleteCity/{cityId}",			
 	 			AuthConstants.INFRA_USER_BASEPATH + "/deleteCity/{cityId}"})
@@ -60,5 +68,4 @@ public class CityController {
 	 		logger.info("Received request to delete city");
 	 		return cityService.deleteCity(cityId);
 	 	}
-
 }

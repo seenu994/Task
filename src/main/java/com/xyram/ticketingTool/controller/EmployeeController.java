@@ -249,7 +249,7 @@ class EmployeeController
 			AuthConstants.INFRA_USER_BASEPATH + "/getEmployeeByAccessToken",
 			AuthConstants.JOB_VENDOR_BASEPATH + "/getEmployeeByAccessToken" })
 	public ApiResponse getListByAccessToken() {
-		logger.info("Received request to add Employee");
+		logger.info("Received request to getEmployeeByAccessToken");
 		return employeeService.getListByAccessToken();
 	}
 

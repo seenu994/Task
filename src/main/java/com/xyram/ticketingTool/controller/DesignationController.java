@@ -66,12 +66,12 @@ public class DesignationController {
 		return desiggnaionService.editDesignation(Request,Id);
 	}
 	
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/searchDesignation/{searchString}",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/searchDesignation/{searchString}",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/searchDesignation/{searchString}" })
-	public ApiResponse searchDesignation(@PathVariable String searchString) {
-		logger.info("Received request to search vendor ");
-		return desiggnaionService.searchDesignation(searchString);
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/searchDesignation/{designationName}",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/searchDesignation/{designationName}",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/searchDesignation/{designationName}" })
+	public ApiResponse searchDesignation(@PathVariable String designationName) {
+		logger.info("Received request to search designation ");
+		return desiggnaionService.searchDesignation(designationName);
 	}
 
 }

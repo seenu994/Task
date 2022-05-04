@@ -1,5 +1,6 @@
 package com.xyram.ticketingTool.Repository;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.transaction.Transactional;
@@ -35,7 +36,35 @@ public interface CountryRepository  extends JpaRepository<Country, String>{
 	@Query("Select distinct c from Country c where c.countryCode=:countryCode")
 	Country getCountryCode(String countryCode);
 
+	@Query("Select distinct c from Country c where c.countryCode=:countryCode")
+	String getCountryCodes(String countryCode);
 	
 	@Query("select c from Country c where c.countryName =:countryName")
 	Country getCountryName(String countryName);
+
+
+
+	@Query("select distinct new map(c.countryName as countryName,c.countryId as countryId,c.countryCode as countryCode) from Country c where "
+			  + "lower(c.countryName) LIKE %:searchString% ")
+	List<Map> searchCountry(String searchString);
 }
+
+//@Query("select c.countryId as countryId from Country c where c.countryName=:countryName")
+//	String getCountryId(String countryName);
+
+
+
+/*@Query("Select c.countryId from Country c where c.countryName =:countryName ")
+String getCountryNames(String countryName);
+
+@Query("Select c from Country c where c.countryName =:country ")
+Country getCountry(String country);
+
+
+@Query("Select c from Country c where c.countryCode =:country ")
+Country getCountries(String country);
+
+@Query("Select c.countryId from Country c where c.countryCode =:countryCode ")
+
+String getCountryCodes(String countryCode);
+}*/

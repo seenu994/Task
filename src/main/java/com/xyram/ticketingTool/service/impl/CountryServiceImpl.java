@@ -2,6 +2,7 @@ package com.xyram.ticketingTool.service.impl;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.transaction.Transactional;
@@ -15,8 +16,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.xyram.ticketingTool.Repository.CountryRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
-import com.xyram.ticketingTool.entity.Asset;
-import com.xyram.ticketingTool.entity.City;
 import com.xyram.ticketingTool.entity.Country;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.CountryService;
@@ -58,24 +57,41 @@ public class CountryServiceImpl implements CountryService{
 
 	private ApiResponse validateCountry(Country country) {
 		ApiResponse response = new ApiResponse(false);
+		String regex = "[a-z A-Z]+";
 		Country  countryRequest = countryRepository.getCountryName(country.getCountryName());
+		
+		
 		if (country.getCountryName() == null || country.getCountryName().equals("")) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "countryName is mandatory");
-		} 
+		}
+		
+		
+		if(!country.getCountryName().matches(regex)) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "country name should be character only");
+		}
+		
+		
 		if(countryRequest != null) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, " CountryName already exists!");
 		}
+		
+		
+		 if(country.getCountryName().length() < 2 || country.getCountryName().length() > 15){
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "country character length should be greater than 1 and less than 16");
+			}
 		 
 		
-		Country countryObj = countryRepository.getCountryCode(country.getCountryCode());
+		// Country countryObj = countryRepository.getById(country.getCountryName());
+		//String countryObjs = countryRepository.getCountryCodes(country.getCountryCode());
 		if(country.getCountryCode() == null || country.getCountryCode().equals("")) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"country code is mandatory");
 		}
-		else {
-			if(countryObj != null) {
+		//if(!country.equals(countryObjs)) {
+			
+		 if(countryRequest != null) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"CountryCode is already exist!");
 			}
-		}
+		
 		
 		response.setSuccess(true);
 		return response;
@@ -88,11 +104,11 @@ public class CountryServiceImpl implements CountryService{
 		if (response.isSuccess()) {
 			Country countryRequest = countryRepository.getCountryById(countryId);
 			if (countryRequest != null) {
-				// softwareMasterRequest.setSoftwareId(software.getSoftwareId());
+				
 				countryRequest.setCountryName(country.getCountryName());
 
-				//cityRequest.setLastUpdatedAt(new Date());
-				//cityRequest.setUpdatedBy(currentUser.getName());
+				countryRequest.setLastUpdatedAt(new Date());
+				countryRequest.setUpdatedBy(currentUser.getName());
 
 				countryRepository.save(countryRequest);
 
@@ -133,11 +149,7 @@ public class CountryServiceImpl implements CountryService{
 	public ApiResponse deletecountry(String countryId) {
 		ApiResponse response = new ApiResponse(false);
 		Country countryObj = countryRepository.getCountryById(countryId);
-		if (countryObj != null) {
-//			if(!brandObj.getCreatedBy().equals(currentUser.getUserId())) {
-//				response.setSuccess(false);
-//				response.setMessage("Not authorised to delete this brand");
-//			}
+		if (countryObj != null) {		
 			countryRepository.delete(countryObj);
 			response.setSuccess(true);
 			response.setMessage("Country deleted successfully.");
@@ -147,10 +159,32 @@ public class CountryServiceImpl implements CountryService{
 		}
 		return response;
 	}
-		
-		
 
+
+	@Override
+	public ApiResponse searchCountry(String searchString) {
+		ApiResponse response = new ApiResponse(false);
 		
+		List<Map> country = countryRepository.searchCountry(searchString);
+
+		Map content = new HashMap();
+		content.put("Country", country);
+		if (content != null) {			
+			response.setSuccess(true);
+			response.setMessage("Country retrived successfully");
+			response.setContent(content);
+			
+		} else {
+			
+			response.setSuccess(false);
+			
+			response.setMessage("Not retrived the data");
+		}
+
+		return response;
+		
+	}
+	
 	}
 	
 	
