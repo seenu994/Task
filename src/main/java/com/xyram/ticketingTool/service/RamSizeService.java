@@ -15,6 +15,8 @@ public interface RamSizeService {
 	ApiResponse getAllRamSize(Pageable pageable);
 
 	ApiResponse deleteRam(String ramId);
+
+	ApiResponse searchRamSize(String searchString);
 	
 	
 

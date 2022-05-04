@@ -29,7 +29,7 @@ public interface NotesRepository extends JpaRepository<Notes, String> {
 			+ "(:fromDate is null OR Date(n.notesUploadedDate) >= STR_TO_DATE(:fromDate, '%Y-%m-%d')) AND "
 			+ "(:toDate is null OR Date(n.notesUploadedDate) <= STR_TO_DATE(:toDate, '%Y-%m-%d')) AND "
 			+ "(:searchString is null OR n.notes LIKE %:searchString%) AND "
-			+ " n.createdBy=:scopeId")
+			+ "( n.createdBy=:scopeId) order by n.notesUploadedDate DESC")
 	Page<Map> getAllNotes(String searchString, String fromDate, String toDate, Pageable pageable, String scopeId);
 
 	@Modifying

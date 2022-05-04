@@ -98,19 +98,4 @@ public class AssetIssuesController
 		logger.info("Download all asset issue");
 		return assetIssuesService.downloadAllAssetIssues(filter);
 	}
-		
-	/*@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/searchAssetIssue/{assetIssueId}",
-			AuthConstants.INFRA_USER_BASEPATH + "/searchAssetIssue/{assetIssueId}",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/searchAssetIssue/{assetIssueId}"})
-	public ApiResponse searchAssetIssue(@PathVariable String assetIssueId)
-	{
-		logger.info("received request to edit assetIssues");
-		return assetIssuesService.searchAssetIssue(assetIssueId);
-	}*/
-	
-	
-	
-	
-	
-
 }

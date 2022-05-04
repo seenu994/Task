@@ -122,11 +122,8 @@ public class DesignationServiceImpl implements DesiggnaionService {
 
 		}
 
-
-
-
-		@Override
-		public 	ApiResponse searchDesignationByName(String searchString) {
+        @Override
+		public ApiResponse searchDesignation(String searchString) {
 			
 			ApiResponse response = new ApiResponse(false);
 			List<Map> designations = designationRepository.searchDesignation(searchString.toLowerCase());

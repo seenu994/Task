@@ -88,8 +88,8 @@ public interface AssetBillingRepository extends JpaRepository<AssetBilling, Stri
 
 	//@Query("Select b from AssetBilling b where b.assetId =:assetId")
 	
-	@Query("Select distinct new map (b.assetBillId as assetBillId,v.vendorName as vendorName,b.assetAmount as assetAmount, b.billingType as billingType, b.amountPaid as amountPaid, "
-	 		+ "b.gstAmount as gstAmount,b.transactionDate as transactionDate, b.underWarrenty as underWarrenty,b.returnDate as returnDate, "
+	@Query("Select new map (b.assetBillId as assetBillId,v.vendorName as vendorName,b.assetAmount as assetAmount, b.billingType as billingType, b.amountPaid as amountPaid, "
+	 		+ "b.gstAmount as gstAmount,b.transactionDate as transactionDate, b.underWarrenty as underWarrenty,b.returnDate as returnDate, b.assetIssueId as assetIssueId, "
 	 		+ "b.vendorId as vendorId) from AssetBilling b left Join Asset a ON b.assetId = a.assetId "
 	 		+ "left join AssetVendor v on b.vendorId = v.vendorId where b.assetId=:assetId")
 	Map getAllAssetBillingByAssetId(String assetId);
@@ -98,7 +98,14 @@ public interface AssetBillingRepository extends JpaRepository<AssetBilling, Stri
 	AssetBilling getByVendorId(String assetBillId, String vendorId);
 
 	@Query("Select b from AssetBilling b where b.assetBillId=:assetBillId and b.assetIssueId=:assetIssueId")
-	AssetBilling getAssetIssueById(String assetIssueId, String assetBillId);
+	AssetBilling getAssetIssueById(String assetBillId, String assetIssueId);
+
+	@Query("Select b from AssetBilling b where b.gstAmount=:gstAmount")
+	AssetBilling getGstAmount(Double gstAmount);
+	
+	@Query("Select b.assetAmount from AssetBilling b where b.assetAmount=:assetAmount")
+	AssetBilling getAssetAmount(Double assetAmount);
+
 
 	/*@Query("Select assetBilling.issueId from AssetBilling b where b.issueId = :issueId")
 	String filterByIssueId(AssetIssues assetIssues);

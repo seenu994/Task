@@ -2,6 +2,7 @@ package com.xyram.ticketingTool.service.impl;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.transaction.Transactional;
@@ -153,6 +154,24 @@ public class RamSizeServiceImpl implements RamSizeService {
 		} else {
 			response.setSuccess(false);
 			response.setMessage("Ram Id is not valid.");
+		}
+		return response;
+	}
+
+	@Override
+	public ApiResponse searchRamSize(String searchString) {
+		ApiResponse response = new ApiResponse(false);
+		List<Map> ramSize = ramSizeRepository.searchRamSize(searchString);
+
+		Map content = new HashMap();
+		content.put("ramSize", ramSize);
+		if (content != null) {
+			response.setSuccess(true);
+			response.setMessage("Search Ram Size retrieved successfully");
+			response.setContent(content);
+		} else {
+			response.setSuccess(false);
+			response.setMessage("could not retrieve the data");
 		}
 		return response;
 	}

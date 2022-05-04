@@ -14,7 +14,9 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,6 +34,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
 import com.xyram.ticketingTool.Repository.HrCalendarCommentRepository;
 import com.xyram.ticketingTool.Repository.HrCalendarRepository;
@@ -82,7 +85,6 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	public ApiResponse createScheduleInCalendar(HrCalendar schedule) {
 		// TODO Auto-generated method stub
 		ApiResponse response = new ApiResponse(false);
-
 		if (schedule != null) {
 			if (validateSchedule(schedule)) {
 				if(schedule.getJobId() != null) {
@@ -93,14 +95,16 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 						return response;
 					}
 				}
-				Date toDateTime = new Date();
-				long diff = schedule.getScheduleDate().getTime() - toDateTime.getTime();//as given
+				if(schedule.getIs_scheduled()) {
+					Date toDateTime = new Date();
+					long diff = schedule.getScheduleDate().getTime() - toDateTime.getTime();//as given
 
-				long diffMinutes = diff / (60 * 1000) ; 
-				if(diffMinutes < 15) {
-					response.setSuccess(false);
-					response.setMessage("A future date is permitted, and minimum 15 minutes prior to the current time is required.");
-					return response;
+					long diffMinutes = diff / (60 * 1000) ; 
+					if(diffMinutes < 15) {
+						response.setSuccess(false);
+						response.setMessage("A future date is permitted, and minimum 15 minutes prior to the current time is required.");
+						return response;
+					}
 				}
 				
 				Employee employee = employeeRepository.getByEmpId(currentUser.getScopeId());
@@ -142,7 +146,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	public ApiResponse editScheduleInCalendar(HrCalendar schedule) {
 
 		ApiResponse response = new ApiResponse(false);
-		HrCalendar scheduleObj = hrCalendarRepository.getById(schedule.getId());
+		HrCalendar scheduleObj = hrCalendarRepository.findById(schedule.getId()).get();
 		if (schedule != null && scheduleObj != null) {
 			if(!scheduleObj.getCreatedBy().equals(currentUser.getUserId())) {
 				response.setSuccess(false);
@@ -159,15 +163,18 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 						return response;
 					}
 				}
-				Date toDateTime = new Date();
-				long diff = schedule.getScheduleDate().getTime() - toDateTime.getTime();//as given
+				if(schedule.getIs_scheduled()) {
+					Date toDateTime = new Date();
+					long diff = schedule.getScheduleDate().getTime() - toDateTime.getTime();//as given
 
-				long diffMinutes = diff / (60 * 1000); 
-				if(diffMinutes < 15) {
-					response.setSuccess(false);
-					response.setMessage("A future date is permitted, and minimum 15 minutes prior to the current time is required.");
-					return response;
+					long diffMinutes = diff / (60 * 1000); 
+					if(diffMinutes < 15) {
+						response.setSuccess(false);
+						response.setMessage("A future date is permitted, and minimum 15 minutes prior to the current time is required.");
+						return response;
+					}
 				}
+				
 				if (reportor != null) {
 					scheduleObj.setUpdatedBy(currentUser.getUserId());
 					scheduleObj.setLastUpdatedAt(new Date());
@@ -176,6 +183,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 					scheduleObj.setCandidateMobile(schedule.getCandidateMobile());
 					scheduleObj.setCandidateName(schedule.getCandidateName());
 					scheduleObj.setJobId(schedule.getJobId());
+					scheduleObj.setIs_scheduled(schedule.getIs_scheduled());
 					scheduleObj.setScheduleDate(schedule.getScheduleDate());
 					if(schedule.getSearchedSource() != null)
 						scheduleObj.setSearchedSource(schedule.getSearchedSource());
@@ -202,7 +210,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	@Override
 	public ApiResponse deleteScheduleInCalendar(String scheduleId) {
 		ApiResponse response = new ApiResponse(false);
-		HrCalendar scheduleObj = hrCalendarRepository.getById(scheduleId);
+		HrCalendar scheduleObj = hrCalendarRepository.findById(scheduleId).get();
 		if (scheduleObj != null) {
 			if(!scheduleObj.getCreatedBy().equals(currentUser.getUserId())) {
 				response.setSuccess(false);
@@ -224,7 +232,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	public ApiResponse changeScheduleStatus(String scheduleId, String comment, String status, Date scheduleDate) {
 		ApiResponse response = new ApiResponse(false);
 		//"CANDIDATE-NOT-INTERESTED","CANDIDATE-NOT-PICKED","CANDIDATE-NOT-SUITS"
-		HrCalendar scheduleObj = hrCalendarRepository.getById(scheduleId);
+		HrCalendar scheduleObj = hrCalendarRepository.findById(scheduleId).get();
 		if (scheduleObj != null) {
 			if(!scheduleObj.getCreatedBy().equals(currentUser.getUserId())) {
 				response.setSuccess(false);
@@ -287,7 +295,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	@Override
 	public ApiResponse updateScheduleCallCounter(String scheduleId) {
 		ApiResponse response = new ApiResponse(false);
-		HrCalendar scheduleObj = hrCalendarRepository.getById(scheduleId);
+		HrCalendar scheduleObj = hrCalendarRepository.findById(scheduleId).get();
 		if (scheduleObj != null) {
 			if(!scheduleObj.getCreatedBy().equals(currentUser.getUserId())) {
 				response.setSuccess(false);
@@ -309,7 +317,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	@Override
 	public ApiResponse addCommentToSchedule(String scheduleId, String comment) {
 		ApiResponse response = new ApiResponse(false);
-		HrCalendar scheduleObj = hrCalendarRepository.getById(scheduleId);
+		HrCalendar scheduleObj = hrCalendarRepository.findById(scheduleId).get();
 		if (scheduleObj != null) {
 			if(!scheduleObj.getCreatedBy().equals(currentUser.getUserId())) {
 				response.setSuccess(false);
@@ -378,36 +386,19 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	public ApiResponse getScheduleDetail(String scheduleId) {
 		ApiResponse response = new ApiResponse(false);
 		
-		HrCalendar scheduleObj = hrCalendarRepository.getById(scheduleId);
+		Map scheduleObj = hrCalendarRepository.getScheduleById(scheduleId);
 		if(scheduleObj != null) {
 			Map content = new HashMap();
 			content.put("schedule", scheduleObj);
+//			ObjectMapper oMapper = new ObjectMapper();
+//			Map<String, Object> map = oMapper.convertValue(scheduleObj, Map.class);
 			response.setContent(content);
 			response.setSuccess(true);
 			response.setMessage("Retreived successfully.");
 		}else {
 			response.setSuccess(false);
 			response.setMessage("Schedule not found.");
-		}
-		
-//		if(mobileNo.length() != 10) {
-//			response.setSuccess(false);
-//			response.setMessage("Not a Valid Mobile No.");
-//			return response;
-//		}
-//		List<Map> shceduleList = hrCalendarRepository.getCandidateHistory( mobileNo);
-//		
-//		if(shceduleList.size() > 0) {
-//			Map content = new HashMap();
-//			content.put("shceduleList", shceduleList);
-//			response.setContent(content);
-//			response.setSuccess(true);
-//			response.setMessage("List retreived successfully.");
-//		}else {
-//			response.setSuccess(false);
-//			response.setMessage("List is empty.");
-//		}
-		
+		}		
 		return response;
 	}
 	
@@ -718,7 +709,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	@Override
 	public ApiResponse doReScheduleInCalendar(String scheduleId, String comment) {
 		ApiResponse response = new ApiResponse(false);
-		HrCalendar scheduleObj = hrCalendarRepository.getById(scheduleId);
+		HrCalendar scheduleObj = hrCalendarRepository.findById(scheduleId).get();
 		if (scheduleObj != null) {
 			if(!scheduleObj.getCreatedBy().equals(currentUser.getUserId())) {
 				response.setSuccess(false);
@@ -734,7 +725,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 			cmt.setLastUpdatedAt(new Date());
 			cmtRepository.save(cmt);
 
-			
+
 			response.setSuccess(true);
 			response.setMessage("Comment added successfully.");
 		} else {
@@ -754,13 +745,14 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 			response.setMessage("Comment not exist.");
 			return response;
 		}
-		HrCalendar scheduleObj = hrCalendarRepository.getById(cmt.getScheduleId());
+		HrCalendar scheduleObj = hrCalendarRepository.findById(cmt.getScheduleId()).get();
 		if (scheduleObj != null) {
 			if(!scheduleObj.getCreatedBy().equals(currentUser.getUserId())) {
 				response.setSuccess(false);
 				response.setMessage("Not authorised to edit this comment.");
 			}
-			
+			scheduleObj.setLastUpdatedAt(new Date());
+			hrCalendarRepository.save(scheduleObj);
 			cmt.setDescription(comment);
 			cmt.setUpdatedBy(currentUser.getUserId());
 			cmt.setLastUpdatedAt(new Date());
@@ -784,7 +776,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 			response.setMessage("Comment not exist.");
 			return response;
 		}
-		HrCalendar scheduleObj = hrCalendarRepository.getById(cmt.getScheduleId());
+		HrCalendar scheduleObj = hrCalendarRepository.findById(cmt.getScheduleId()).get();
 		if (scheduleObj != null) {
 			if(!scheduleObj.getCreatedBy().equals(currentUser.getUserId())) {
 				response.setSuccess(false);
@@ -805,7 +797,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	public ApiResponse getAllScheduleComments(String scheduleId) {
 		ApiResponse response = new ApiResponse(false);
 		
-		HrCalendar scheduleObj = hrCalendarRepository.getById(scheduleId);
+		HrCalendar scheduleObj = hrCalendarRepository.findById(scheduleId).get();
 		if (scheduleObj != null) {
 			if(!scheduleObj.getCreatedBy().equals(currentUser.getUserId())) {
 				response.setSuccess(false);
@@ -845,7 +837,6 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	
 	if(fromDate != null && toDate != null) {
 		try {
-
 			parsedfromDate = fromDate != null ? dateFormat.parse(fromDate) : null;
 			parsedtoDate = toDate != null ? dateFormat.parse(toDate) : null;
 
@@ -855,20 +846,22 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	}
 	
 	List<Map> myScheduleList = hrCalendarRepository.downloadAllMySchedulesFromCalendarByStatus(currentUser.getUserId(), fromDate, toDate, status, closed);
-	
+   
 	Map<String, Object> fileResponse = new HashMap<>();
 	Workbook workbook = prepareExcelWorkBook(myScheduleList);
+//	String input = GMTWithNormalFormat(myScheduleList.get("scheduleDate") != null ? myScheduleList.get("scheduleDate").toString(): "");
+//	System.out.println(input);
     
 	byte[] blob = ExcelUtil.toBlob(workbook);
 	
 	try {
-		ExcelUtil.saveWorkbook(workbook, "mySchedulereports.xlsx");
+		ExcelUtil.saveWorkbook(workbook, "MySchedulereports.xlsx");
 	} catch (IOException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
 
-	fileResponse.put("fileName", "myScheduleDetails-report.xlsx");
+	fileResponse.put("fileName", "MyScheduleDetails-report.xlsx");
 	fileResponse.put("type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 	fileResponse.put("blob", blob);
 	response.setFileDetails(fileResponse);
@@ -878,6 +871,19 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	
 		return response;
 	}
+	public static String getScheduleDate(String input) {
+        try {
+            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            inputFormat.setTimeZone(TimeZone.getTimeZone("IST"));
+            Date date = inputFormat.parse(input);
+            SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            return outputFormat.format(date);
+        } catch (Exception ignore) {
+            //cannot happen in this example
+            //Log.e("Exception", ignore.toString());
+        }
+        return "";
+    }
 	private Workbook prepareExcelWorkBook(List<Map> myScheduleList) 
 	{
 		List<String> headers = Arrays.asList("Name", "Job code", "Job Title", "Date & Time", "Source", "Status");
@@ -887,11 +893,12 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 		for (Map mySchedule : myScheduleList) 
 		{
             Map row = new HashMap<>();
-
+            String scheduleDate = getScheduleDate(mySchedule.get("scheduleDate").toString());
+			
 			row.put("Name",mySchedule.get("candidateName") != null ? mySchedule.get("candidateName").toString(): "");
 			row.put("Job code",mySchedule.get("jobCode") != null ? mySchedule.get("jobCode").toString(): "");
 			row.put("Job Title",mySchedule.get("jobTitle") != null ? mySchedule.get("jobTitle").toString(): "");
-			row.put("Date & Time",mySchedule.get("scheduleDate") != null ? mySchedule.get("scheduleDate").toString(): "");
+			row.put("Date & Time",scheduleDate != null ? scheduleDate.toString(): "");
 			row.put("Source",mySchedule.get("searchedSource") != null ? mySchedule.get("searchedSource").toString(): "");
 			row.put("Status",mySchedule.get("status") != null ? mySchedule.get("status").toString(): "");
 			
@@ -942,13 +949,13 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	byte[] blob = ExcelUtil.toBlob(workbook);
 	
 	try {
-		ExcelUtil.saveWorkbook(workbook, "myTeamSchedulereports.xlsx");
+		ExcelUtil.saveWorkbook(workbook, "MyTeamSchedulereports.xlsx");
 	} catch (IOException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
 
-	fileResponse.put("fileName", "myTeamSchedule-report.xlsx");
+	fileResponse.put("fileName", "MyTeamSchedule-report.xlsx");
 	fileResponse.put("type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 	fileResponse.put("blob", blob);
 	response.setFileDetails(fileResponse);
@@ -958,6 +965,32 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	
 		return response;
 	}
+//	public static String GMTWithNormalTimeFormat(String input) {
+//        try {
+//            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+//            Date date = inputFormat.parse(input);
+//            inputFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+//            SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//            outputFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+//            return outputFormat.format(date);
+//        } catch (Exception ignore) {
+//         //   Log.e("Exception", ignore.toString());
+//        }
+//        return "";
+//    }
+	public static String getDate(String input) {
+        try {
+            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            inputFormat.setTimeZone(TimeZone.getTimeZone("IST"));
+            Date date = inputFormat.parse(input);
+            SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            return outputFormat.format(date);
+        } catch (Exception ignore) {
+            //cannot happen in this example
+            //Log.e("Exception", ignore.toString());
+        }
+        return "";
+    }
 	private Workbook prepareExcelWorkBookTeam(List<Map> myTeamScheduleList) 
 	{
 		List<String> headers = Arrays.asList("Name", "Job code", "Job Title", "Date & Time", "Scheduled By", "Source", "Status");
@@ -967,11 +1000,13 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 		for (Map myTeamSchedule : myTeamScheduleList) 
 		{
             Map row = new HashMap<>();
-
+            String scheduleDate = getDate(myTeamSchedule.get("scheduleDate").toString());
+//            System.out.println(scheduleDate);
+            
 			row.put("Name",myTeamSchedule.get("candidateName") != null ? myTeamSchedule.get("candidateName").toString(): "");
 			row.put("Job code",myTeamSchedule.get("jobCode") != null ? myTeamSchedule.get("jobCode").toString(): "");
 			row.put("Job Title",myTeamSchedule.get("jobTitle") != null ? myTeamSchedule.get("jobTitle").toString(): "");
-			row.put("Date & Time",myTeamSchedule.get("scheduleDate") != null ? myTeamSchedule.get("scheduleDate").toString(): "");
+			row.put("Date & Time",scheduleDate != null ? scheduleDate.toString(): "");
 			row.put("Scheduled By",myTeamSchedule.get("scheduledBy") != null ? myTeamSchedule.get("scheduledBy").toString(): "");
 			row.put("Source",myTeamSchedule.get("searchedSource") != null ? myTeamSchedule.get("searchedSource").toString(): "");
 			row.put("Status",myTeamSchedule.get("status") != null ? myTeamSchedule.get("status").toString(): "");

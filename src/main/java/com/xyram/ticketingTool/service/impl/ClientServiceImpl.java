@@ -2,6 +2,7 @@ package com.xyram.ticketingTool.service.impl;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.transaction.Transactional;
@@ -49,12 +50,7 @@ public class ClientServiceImpl implements ClientService {
 				clientRepository.save(clientRequest);
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.CLIENT_CREATED);
-				/*assetIssues.setCreatedAt(new Date());
-				assetIssues.setCreatedBy(currentUser.getName());
-				assetIssuesRepository.save(assetIssues);
-				response.setSuccess(true);
-				response.setMessage(ResponseMessages.ASSET_ISSUES_ADDED_SUCCESSFULLY);*/
-	
+				
 				//Map content = new HashMap();
 				//content.put("clientId", clientRequest.getId());
 				//response.setContent(content);
@@ -73,13 +69,13 @@ public class ClientServiceImpl implements ClientService {
 		}
 		if(clientRequest.getClientName().length() < 3 || clientRequest.getClientName().length() > 30)
 		{
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "client name should be greater than 2 characters and less than 30 characters!!");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "client name should be minimum 3 characters and maximum 30 characters!!");
 		}
 		if(!clientRequest.getClientName().matches("^[a-z 0 -9 A-Z]+"))
 		{
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"client name should not contain numbers and special characters");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"client name should not contain any special characters");
 		}
-		Client clients = clientRepository.getClientName(clientRequest.getClientName());
+		Client clients = clientRepository.getClientsName(clientRequest.getClientName());
 		if(clients != null)
 		{
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "client name is already exist !!");
@@ -126,11 +122,21 @@ public class ClientServiceImpl implements ClientService {
 		Client client = clientRepository.getClientById(clientId);
 		if(client != null)
 		{
-			if (clientRequest.getClientName() != null) 
+			if(clientRequest.getClientName() != null) 
 			{
-				response = validateClient(clientRequest);
+				validateClientName(client.getId(),clientRequest.getClientName());
 				client.setClientName(clientRequest.getClientName());
-			}	
+				//response = validateClient(clientRequest);
+				//client.setClientName(clientRequest.getClientName());
+			}
+			if(clientRequest.getStatus() != null)
+			{
+				client.setStatus(clientRequest.getStatus());
+			}
+			clientRequest.setLastUpdatedAt(new Date());
+			clientRequest.setUpdatedBy(currentUser.getUserId());
+			
+			
 				clientRepository.save(client);
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.CLIENT_UPDATED);
@@ -145,7 +151,32 @@ public class ClientServiceImpl implements ClientService {
 		return response;
 	}
 	
-	private ApiResponse validateStatus(ClientStatus userstatus) {
+	private boolean validateClientName(String Id, String clientName) 
+	{
+		Client clients = clientRepository.getClient(clientName);
+		String client = clientRepository.getClientName(clientName);
+		if(clientName == null || clientName.equals(""))
+		{
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "client name is mandatory !!");
+		}
+		if(clientName.length() < 3 || clientName.length() > 30)
+		{
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "client name should be minimum 3 characters and maximum 30 characters!!");
+		}
+		if(!clientName.matches("^[a-z 0 -9 A-Z]+"))
+		{
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"client name should not contain any special characters");
+		}
+		if(!Id.equals(client)) {
+		    if(clients != null) {
+			  throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "brand already exists!");
+		    }
+		}
+		return true;
+	}
+
+	private ApiResponse validateStatus(ClientStatus userstatus) 
+	{
 		ApiResponse response = new ApiResponse(false);
 		if (userstatus != ClientStatus.ACTIVE || userstatus != ClientStatus.INACTIVE) {
 			response.setMessage(ResponseMessages.USERSTATUS_INVALID);
@@ -181,5 +212,29 @@ public class ClientServiceImpl implements ClientService {
 	    	   response.setMessage("could not retrieve data");
 	       }
 	       return  response;
+	}
+
+	@Override
+	public ApiResponse searchClient(String searchString) 
+	{
+		ApiResponse response = new ApiResponse(false);
+		List<Map> client = clientRepository.serchClient(searchString);
+
+		Map content = new HashMap();
+		content.put("client", client);
+		if (content != null) 
+		{	
+			response.setSuccess(true);
+			response.setMessage("client retrived successfully");
+			response.setContent(content);
+		} 
+		else 
+		{
+			response.setSuccess(false);
+			response.setMessage("Not retrived the data");
+		}
+
+		return response;
+
 	}
 }
