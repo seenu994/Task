@@ -946,8 +946,8 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 				scheduleDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(mySchedule.get("scheduleDate").toString());
 				
 		cal.setTime(scheduleDate);
-		HrCalendarTimeZone.getDate("+05:30");
-		cal.set(Calendar.SECOND, HrCalendarTimeZone.getDate("+05:30"));
+		HrCalendarTimeZone.getDate(userZone);
+		cal.set(Calendar.SECOND, HrCalendarTimeZone.getDate(userZone));
 	 
 			//	System.out.println(cal.getTime());
 			} catch (ParseException e) {
@@ -1071,8 +1071,8 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 				scheduleDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(myTeamSchedule.get("scheduleDate").toString());
 				
 		cal.setTime(scheduleDate);
-		HrCalendarTimeZone.getDate("+05:30");
-		cal.set(Calendar.SECOND, HrCalendarTimeZone.getDate("+05:30"));
+		HrCalendarTimeZone.getDate(userZone);
+		cal.set(Calendar.SECOND, HrCalendarTimeZone.getDate(userZone));
 	 
 				System.out.println(cal.getTime());
 			} catch (ParseException e) {
