@@ -1,6 +1,7 @@
 package com.xyram.ticketingTool.service.impl;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.transaction.Transactional;
@@ -16,7 +17,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.xyram.ticketingTool.Repository.HelpdeskIssueRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
-import com.xyram.ticketingTool.entity.HelpDeskIssue;
+import com.xyram.ticketingTool.entity.Country;
+import com.xyram.ticketingTool.entity.HelpDeskIssueTypes;
+import com.xyram.ticketingTool.entity.SoftwareMaster;
 import com.xyram.ticketingTool.service.HelpDeskIssueService;
 import com.xyram.ticketingTool.util.ResponseMessages;
 
@@ -30,24 +33,23 @@ public class HelpdeskServiceImpl implements HelpDeskIssueService {
 	@Autowired
 	HelpdeskIssueRepository helpdeskIssueRepository;
 
-	@Autowired
-	HelpDeskIssueService helpDeskIssueService;
+	
 
 	@Override
-	public ApiResponse addIssue(HelpDeskIssue helpDeskIssue) {
+	public ApiResponse addIssueType(HelpDeskIssueTypes helpDeskIssueTypes) {
 		
 		
 		ApiResponse response = new ApiResponse(false);
 		
-		response = validateIssue(helpDeskIssue);
+		response = validateIssue(helpDeskIssueTypes);
 		if (response.isSuccess()) {
-			System.out.println("Hello");
+			
 		
-		if (helpDeskIssue != null) {
+		if (helpDeskIssueTypes != null) {
 			//helpDeskIssue.setCreatedAt(new Date());
 			//helpDeskIssue.setCreatedBy(currentUser.getName());
-			
-			helpdeskIssueRepository.save(helpDeskIssue);
+			helpDeskIssueTypes.setHelpdeskStatus(true);
+			helpdeskIssueRepository.save(helpDeskIssueTypes);
 			response.setSuccess(true);
 			response.setMessage(ResponseMessages.ADDED_ISSUE);
 		}
@@ -60,11 +62,14 @@ public class HelpdeskServiceImpl implements HelpDeskIssueService {
 }
 	
 	
-	private ApiResponse validateIssue(HelpDeskIssue helpDeskIssue) {
+	private ApiResponse validateIssue(HelpDeskIssueTypes helpDeskIssueTypes) {
 		ApiResponse response = new ApiResponse(false);
-
-		if (helpDeskIssue.getIssueName().equals("") || helpDeskIssue.getIssueName() == null) {
+		HelpDeskIssueTypes  issuesRequest = helpdeskIssueRepository.getByIssue(helpDeskIssueTypes.getHelpdeskIssueType());
+		if (helpDeskIssueTypes.getHelpdeskIssueType().equals("") || helpDeskIssueTypes.getHelpdeskIssueType() == null) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "issue is manditory");
+		}
+		if(issuesRequest != null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Issue is already exist");
 		}
 		
 		
@@ -74,18 +79,18 @@ public class HelpdeskServiceImpl implements HelpDeskIssueService {
 
 
 	@Override
-	public ApiResponse editIssue(HelpDeskIssue Request, String issue_Id) {
+	public ApiResponse editIssueType(HelpDeskIssueTypes Request, String issueTypeId) {
 		ApiResponse response = new ApiResponse(false);
 		response = validateIssue(Request);
 		//HelpDeskIssue issueRequest = helpdeskIssueRepository.getByIssueId(issue_Id);
 		if (response.isSuccess()) {
-			HelpDeskIssue issueRequest = helpdeskIssueRepository.getByIssueId(issue_Id);
+			HelpDeskIssueTypes issueRequest = helpdeskIssueRepository.getByIssueId(issueTypeId);
 			if (issueRequest != null) {
-				issueRequest.setIssueName(Request.getIssueName());
+				issueRequest.setHelpdeskIssueType(Request.getHelpdeskIssueType());
 				
-				
+				issueRequest.setHelpdeskStatus(Request.isHelpdeskStatus());
 				helpdeskIssueRepository.save(issueRequest);
-				// AssetVendor assetVendorAdded = new AssetVendor();
+				
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.EDIT_ISSUE);
 //				Map content = new HashMap();
@@ -122,6 +127,34 @@ public class HelpdeskServiceImpl implements HelpDeskIssueService {
 		}
 		return response;
 	}
+
+
+	@Override
+	public ApiResponse searchhelpdeskIssueType(String searchString) {
+		
+ApiResponse response = new ApiResponse(false);
+
+		List<Map> issueObj = helpdeskIssueRepository.searchhelpdeskIssueType(searchString);
+
+		Map content = new HashMap();
+		content.put("issueObj", issueObj);
+		if (content != null) {			
+			response.setSuccess(true);
+			response.setMessage("Country retrived successfully");
+			response.setContent(content);
+			
+		} else {
+			
+			response.setSuccess(false);
+			
+			response.setMessage("Not retrived the data");
+		}
+
+		return response;
+		
+	}
+	
+		
 		
 
 
