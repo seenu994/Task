@@ -1,5 +1,6 @@
 package com.xyram.ticketingTool.service;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.Map;
 
@@ -13,7 +14,7 @@ public interface NotesService {
 
 	ApiResponse getNotes(Date paramDate);
 
-	ApiResponse createNotes(Notes noteRequest);
+	ApiResponse createNotes(Notes noteRequest) throws ParseException;
 	
 	Page<Map> getAllNotes(Map<String, Object> filter, Pageable pageable );
 	

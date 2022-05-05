@@ -1,6 +1,7 @@
 package com.xyram.ticketingTool.controller;
 
 import java.sql.Date;
+import java.text.ParseException;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -33,7 +34,7 @@ public class NotesController {
 	@PostMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/createNotes",
 			AuthConstants.HR_ADMIN_BASEPATH + "/createNotes", AuthConstants.DEVELOPER_BASEPATH + "/createNotes",
 			AuthConstants.INFRA_USER_BASEPATH + "/createNotes", AuthConstants.HR_BASEPATH + "/createNotes" })
-	public ApiResponse createNotes(@RequestBody Notes notes) {
+	public ApiResponse createNotes(@RequestBody Notes notes) throws ParseException {
 		logger.info("Creating Notes");
 		return notesService.createNotes(notes);
 	}
@@ -44,7 +45,6 @@ public class NotesController {
 	public ApiResponse getNotes(@RequestParam Date paramDate) {
 		logger.info("Received request for get notes");
 		return notesService.getNotes(paramDate);
-
 	}
 
 	@GetMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllNotes",
