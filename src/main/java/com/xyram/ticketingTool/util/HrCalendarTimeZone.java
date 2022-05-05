@@ -4,7 +4,7 @@ public interface HrCalendarTimeZone {
 	
 	public static int getDate(String zone)
 	{
-		String plus=zone.contains("+")?"+":"-";
+		  String plus=zone.contains("+")?"+":"-";
 		  String timeZone[]=  zone.split(":");
 		  String minutes=timeZone[1];
 		  String hours=timeZone[0];
@@ -13,7 +13,7 @@ public interface HrCalendarTimeZone {
 		  long hrs=       Long.valueOf(hours);
 		  long min=Long.valueOf(minutes);
 		  int sec=(int) ((hrs*60*60)+(min*60));
-		return sec;
+	   	  return sec;
 	}
 
 }
