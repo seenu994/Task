@@ -70,7 +70,7 @@ public class DesignationServiceImpl implements DesiggnaionService {
 				Map content = new HashMap();
 				content.put("designationId", designation.getId());
 				content.put("designationName",designation.getDesignationName());
-			//	content.put("designationStatus", designation.getStatus());
+				content.put("designationStatus", designation.getDesignationStatus());
 				response.setContent(content);
 			}
 			
@@ -106,8 +106,8 @@ public class DesignationServiceImpl implements DesiggnaionService {
 
 			ApiResponse response = new ApiResponse();
 			response = validateDesignation(Request);
-				Designation designationRequest = designationRepository.getById(Id)
-;
+				Designation designationRequest = designationRepository.getById(Id);
+
 				if (designationRequest.getDesignationName() != null) {
 //					if (designationRequest.getDesignationName().equals("") || designationRequest.getDesignationName() == null) {
 //						throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Designation is manditory");
