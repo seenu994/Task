@@ -33,10 +33,6 @@ public class AssetIssuesController
 	@Autowired
 	AssetIssuesService assetIssuesService ; 
 	
-	/*@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/createAnnouncement",
-			AuthConstants.HR_ADMIN_BASEPATH + "/createAnnouncement",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/createAnnouncement" })*/
-	
 	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/addAssetIssues",
 			AuthConstants.INFRA_USER_BASEPATH + "/addAssetIssues",
 			AuthConstants.INFRA_ADMIN_BASEPATH + "/addAssetIssues"})
@@ -74,7 +70,7 @@ public class AssetIssuesController
 	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllAssetsIssues",
 			AuthConstants.INFRA_USER_BASEPATH + "/getAllAssetsIssues",
 			AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllAssetsIssues"})
-	ApiResponse getAllAssetsIssues(@RequestParam(required=false) Map<String, Object>filter, Pageable pageable) {
+	ApiResponse getAllAssetsIssues(@RequestParam Map<String, Object>filter, Pageable pageable) {
 		System.out.println(filter);
 		logger.info("Received request to Get all asset issues");
 		return assetIssuesService.getAllAssetsIssues(filter,pageable);
