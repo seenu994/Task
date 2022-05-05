@@ -307,7 +307,7 @@ String ASSET_DIRECTORY ="/Documents/assetDetails/";
 
 	String PURCHASE_BILL_EDITED_SUCCESSFULLY = "asset is not underwarrenty and purchase bill edited successfully";
 
-	String ASSET_PURCHASE_BILL_EDITED_SUCCESSFULLY = "asset is underwarrenty and purchase bill edited successfully";
+	
 
 	String CITY_EDITED = "city details edited Successfully";
 
@@ -352,6 +352,8 @@ String ASSET_DIRECTORY ="/Documents/assetDetails/";
 		String ASSET_REPAIR_BILL_ADDED_SUCCESSFULLY = "Asset is underwarrenty and asset repair bill added successfully";
 
 		String REPAIR_BILL_ADDED_SUCCESSFULLY = "Asset is not underwarrenty and asset repair bill added successfully";
+
+		String ASSET_PURCHASE_BILL_EDITED_SUCCESSFULLY = "Asset is underwarrenty and purchase bill edited successfully";
 
 		
 		
