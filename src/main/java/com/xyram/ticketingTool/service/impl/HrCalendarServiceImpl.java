@@ -423,13 +423,13 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 			response.setMessage("Search String is empty.");
 			return response;
 		}
-		Employee reportor = employeeRepository.getByEmpId(currentUser.getUserId());
-		if(reportor == null) {
-			response.setSuccess(false);
-			response.setMessage("Reporter Not Found.");
-			return response;
-		}
-		List<Map> shceduleList = hrCalendarRepository.searchInMyTeamShedule(reportor.getUserCredientials().getId(),searchString);
+//		Employee reportor = employeeRepository.getByEmpId(currentUser.getUserId());
+//		if(reportor == null) {
+//			response.setSuccess(false);
+//			response.setMessage("Reporter Not Found.");
+//			return response;
+//		}
+		List<Map> shceduleList = hrCalendarRepository.searchInMyTeamShedule(currentUser.getUserId(),searchString);
 		
 		if(shceduleList.size() > 0) {
 			Map content = new HashMap();
