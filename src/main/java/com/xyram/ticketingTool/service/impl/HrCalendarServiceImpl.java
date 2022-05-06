@@ -166,6 +166,9 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 						response.setMessage("Job Id not found.");
 						return response;
 					}
+				}else {
+					response.setSuccess(false);
+					response.setMessage("Job Id not found.");
 				}
 				if(schedule.getIs_scheduled() && validateDateTime) {
 					Date toDateTime = new Date();
@@ -915,19 +918,19 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	
 		return response;
 	}
-	public static String getScheduleDate(String input) {
-        try {
-            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            inputFormat.setTimeZone(TimeZone.getTimeZone("IST"));
-            Date date = inputFormat.parse(input);
-            SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            return outputFormat.format(date);
-        } catch (Exception ignore) {
-            //cannot happen in this example
-            //Log.e("Exception", ignore.toString());
-        }
-        return "";
-    }
+//	public static String getScheduleDate(String input) {
+//        try {
+//            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//            inputFormat.setTimeZone(TimeZone.getTimeZone("IST"));
+//            Date date = inputFormat.parse(input);
+//            SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//            return outputFormat.format(date);
+//        } catch (Exception ignore) {
+//            //cannot happen in this example
+//            //Log.e("Exception", ignore.toString());
+//        }
+//        return "";
+//    }
 	private Workbook prepareExcelWorkBook(List<Map> myScheduleList, String userZone) 
 	{
 		List<String> headers = Arrays.asList("Name", "Job code", "Job Title", "Date & Time", "Source", "Status");
@@ -946,7 +949,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 				scheduleDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(mySchedule.get("scheduleDate").toString());
 				
 		cal.setTime(scheduleDate);
-		HrCalendarTimeZone.getDate(userZone);
+//		HrCalendarTimeZone.getDate(userZone);
 		cal.set(Calendar.SECOND, HrCalendarTimeZone.getDate(userZone));
 	 
 			//	System.out.println(cal.getTime());
@@ -1070,11 +1073,10 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	
 				scheduleDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(myTeamSchedule.get("scheduleDate").toString());
 				
-		cal.setTime(scheduleDate);
-		HrCalendarTimeZone.getDate(userZone);
-		cal.set(Calendar.SECOND, HrCalendarTimeZone.getDate(userZone));
+		        cal.setTime(scheduleDate);
+		        cal.set(Calendar.SECOND, HrCalendarTimeZone.getDate(userZone));
 	 
-				System.out.println(cal.getTime());
+//				System.out.println(cal.getTime());
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

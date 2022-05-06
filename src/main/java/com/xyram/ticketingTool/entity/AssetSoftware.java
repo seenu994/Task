@@ -52,7 +52,7 @@ public class AssetSoftware extends AuditModel {
 		return assetId;
 	}
 
-	public void setAssetId1(String assetId) {
+	public void setAssetId(String assetId) {
 		this.assetId = assetId;
 	}
 

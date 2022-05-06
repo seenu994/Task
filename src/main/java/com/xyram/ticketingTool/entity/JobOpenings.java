@@ -50,7 +50,7 @@ public class JobOpenings extends AuditModel{
 	@Column(name="job_title")
 	private String jobTitle;
 	
-	@Column(name="job_description")
+	@Column(name="job_description", length = 5000)
 	private String jobDescription;
 
 	@Column(name="job_skills")
@@ -109,6 +109,8 @@ public class JobOpenings extends AuditModel{
 	public void setJobTitle(String jobTitle) {
 		this.jobTitle = jobTitle;
 	}
+
+	
 
 	public String getJobDescription() {
 		return jobDescription;
