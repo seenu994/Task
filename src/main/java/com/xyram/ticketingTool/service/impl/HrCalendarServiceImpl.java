@@ -946,7 +946,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 				scheduleDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(mySchedule.get("scheduleDate").toString());
 				
 		cal.setTime(scheduleDate);
-		HrCalendarTimeZone.getDate(userZone);
+//		HrCalendarTimeZone.getDate(userZone);
 		cal.set(Calendar.SECOND, HrCalendarTimeZone.getDate(userZone));
 	 
 			//	System.out.println(cal.getTime());
