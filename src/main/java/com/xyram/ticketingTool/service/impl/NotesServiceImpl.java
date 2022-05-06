@@ -11,14 +11,10 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
-
 import com.xyram.ticketingTool.Repository.NotesRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Notes;
-import com.xyram.ticketingTool.entity.TicketAttachment;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.NotesService;
 import com.xyram.ticketingTool.util.ResponseMessages;
@@ -37,8 +33,8 @@ public class NotesServiceImpl implements NotesService {
 	public ApiResponse createNotes(Notes noteRequest) throws ParseException {
 		ApiResponse response = new ApiResponse(false);
 		Notes notes = notesRepository.getNotes(new Date(), currentUser.getScopeId());
+		System.out.println(notes);
 		if (notes != null) {
-
 			notes.setUpdatedBy(currentUser.getScopeId());
 			// notes.setNotesUploadedDate(new Date());
 			notes.setLastUpdatedAt(new Date());
