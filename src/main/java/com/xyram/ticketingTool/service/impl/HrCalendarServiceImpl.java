@@ -166,6 +166,9 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 						response.setMessage("Job Id not found.");
 						return response;
 					}
+				}else {
+					response.setSuccess(false);
+					response.setMessage("Job Id not found.");
 				}
 				if(schedule.getIs_scheduled() && validateDateTime) {
 					Date toDateTime = new Date();
