@@ -28,7 +28,7 @@ import com.xyram.ticketingTool.entity.Employee;
 public interface AssetBillingRepository extends JpaRepository<AssetBilling, String>
 {
 
-	ApiResponse save(ApiResponse addAssetBilling);
+//	ApiResponse save(ApiResponse addAssetBilling);
 	
 	/*@Query("SELECT b from AssetBilling b where b.aId = :aId")
 	AssetBilling getById(Asset getaId);*/
