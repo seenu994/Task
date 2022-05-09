@@ -35,7 +35,13 @@ public class NotesServiceImpl implements NotesService {
 
 	@Override
 	public ApiResponse createNotes(Notes noteRequest) throws ParseException {
+		
 		ApiResponse response = new ApiResponse(false);
+		if(noteRequest == null) {
+			response.setMessage("Notes Description is null");
+			return response;
+		}
+
 		Notes notes = notesRepository.getNotes(new Date(), currentUser.getScopeId());
 		if (notes != null) {
 
