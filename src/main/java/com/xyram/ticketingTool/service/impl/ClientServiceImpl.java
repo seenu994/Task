@@ -169,7 +169,7 @@ public class ClientServiceImpl implements ClientService {
 		}
 		if(!Id.equals(client)) {
 		    if(clients != null) {
-			  throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "brand already exists!");
+			  throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "client name already exists!");
 		    }
 		}
 		return true;

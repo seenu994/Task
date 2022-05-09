@@ -55,7 +55,7 @@ public interface HrCalendarRepository extends JpaRepository<HrCalendar, String>{
 			+ "a.createdAt as createdAt,a.createdBy as createdBy,a.lastUpdatedAt as lastUpdatedAt) from HrCalendar a "
 			+ "left join JobOpenings jo on a.jobId = jo.id where a.createdBy = :userId and "
 			+ "(:searchString is null "
-			+ "or a.candidateMobile = :searchString "
+			+ "or a.candidateMobile like %:searchString% "
 			+ "or lower(a.candidateName) like %:searchString% "
 			+ "or lower(jo.jobTitle) like %:searchString%) "
 			+ "ORDER BY a.scheduleDate ASC")
@@ -67,7 +67,7 @@ public interface HrCalendarRepository extends JpaRepository<HrCalendar, String>{
 			+ "a.createdAt as createdAt,a.createdBy as createdBy,a.lastUpdatedAt as lastUpdatedAt) from HrCalendar a "
 			+ "left join JobOpenings jo on a.jobId = jo.id where (a.reportingTo = :reporterId or a.createdBy = :reporterId) and  "
 			+ "(:searchString is null "
-			+ "or a.candidateMobile = :searchString "
+			+ "or a.candidateMobile like %:searchString% "
 			+ "or lower(a.candidateName) like %:searchString% "
 			+ "or lower(jo.jobTitle) like %:searchString%) "
 			+ "ORDER BY a.scheduleDate ASC")

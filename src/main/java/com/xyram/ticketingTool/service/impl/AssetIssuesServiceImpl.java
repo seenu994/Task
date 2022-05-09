@@ -429,10 +429,10 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 				checksVendorId(assetIssuesObj.getAssetIssueId(),assetIssues.getVendorId());
 				assetIssuesObj.setVendorId(assetIssues.getVendorId());
 			}
-			/*if(assetIssues.getComplaintRaisedDate()!= null)
-			{
-				assetIssues.setComplaintRaisedDate(new Date());
-			}*/
+//			if(assetIssues.getComplaintRaisedDate()!= null)
+//			{
+//				assetIssues.setComplaintRaisedDate(assetIssuesObj.getComplaintRaisedDate());
+//			}
 			if(assetIssues.getDescription() != null)
 			{
 				checkDescription(assetIssues.getDescription());
