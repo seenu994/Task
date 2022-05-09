@@ -50,7 +50,7 @@ public class NotesController {
 	@GetMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllNotes",
 			AuthConstants.HR_ADMIN_BASEPATH + "/getAllNotes", AuthConstants.DEVELOPER_BASEPATH + "/getAllNotes",
 			AuthConstants.INFRA_USER_BASEPATH + "/getAllNotes", AuthConstants.HR_BASEPATH + "/getAllNotes" })
-	Page<Map> getAllAssets(@RequestParam Map<String, Object> filter, Pageable pageable) {
+	Page<Map> getAllNotes(@RequestParam Map<String, Object> filter, Pageable pageable) {
 		System.out.println(filter);
 		logger.info("Received request to Get all Notes");
 		return notesService.getAllNotes(filter, pageable);
