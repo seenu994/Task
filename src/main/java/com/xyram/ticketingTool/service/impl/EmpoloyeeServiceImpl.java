@@ -30,6 +30,7 @@ import com.jcraft.jsch.Session;
 import com.xyram.ticketingTool.Communication.PushNotificationCall;
 import com.xyram.ticketingTool.Communication.PushNotificationRequest;
 import com.xyram.ticketingTool.Repository.CompanyWingsRepository;
+import com.xyram.ticketingTool.Repository.DesignationRepository;
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
 import com.xyram.ticketingTool.Repository.PermissionRepository;
 import com.xyram.ticketingTool.Repository.ProjectMemberRepository;
@@ -43,6 +44,7 @@ import com.xyram.ticketingTool.admin.model.User;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.email.EmailService;
 import com.xyram.ticketingTool.entity.CompanyWings;
+import com.xyram.ticketingTool.entity.Designation;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.JobVendorDetails;
 import com.xyram.ticketingTool.entity.Notifications;
@@ -87,6 +89,9 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 	@Autowired
 	RoleRepository roleRepository;
+	
+	@Autowired
+	DesignationRepository designationRepository;
 
 	@Autowired
 	CurrentUser currentUser;
@@ -206,6 +211,23 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				if (wing != null) {
 					employee.setWings(wing);
 				}
+				
+				Designation designation = designationRepository.getDesignationNames(employee.getDesignationId());
+				if(designation != null) {
+					employee.setDesignationId(employee.getDesignationId());
+				}
+				else  {
+					if(designation == null) {
+						throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "designationName is not valid");
+						
+					}
+					
+				
+				
+				String reportingTo = userRepository.getUserById(employee.getUserCredientials().getId());
+				if(reportingTo != null) {
+					employee.setReportingTo(reportingTo);
+				}
 				employee.setCreatedAt(new Date());
 				employee.setLastUpdatedAt(new Date());
 				employee.setUserCredientials(user);
@@ -267,12 +289,15 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				}
 				// end of the notification part...!
 
+
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.EMPLOYEE_ADDED);
 				Map content = new HashMap();
 				content.put("employeeId", employeeNew.geteId());
 				response.setContent(content);
-			} catch (ResponseStatusException re) {
+				}
+			}
+			 catch (ResponseStatusException re) {
 				throw new ResponseStatusException(re.getStatus(), re.getReason());
 			} catch (Exception e) {
 				System.out.println("Error Occured :: " + e.getMessage());
