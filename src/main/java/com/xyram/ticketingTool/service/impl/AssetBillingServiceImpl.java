@@ -240,11 +240,15 @@ public class AssetBillingServiceImpl implements AssetBillingService {
 				checkAssetId(assetBillingObject.getAssetId());
 				assetBillingObject.setAssetId(assetBilling.getAssetId());
 			}
-			if (assetBilling.getVendorId() != null) {
+
+			if (assetBilling.getVendorId() != null || !(assetBilling.getVendorId().equals(""))) {
 				checksVendorId(assetBillingObject.getAssetBillId(), assetBilling.getVendorId());
 				assetBillingObject.setVendorId(assetBilling.getVendorId());
 			}
-
+			else
+			{
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "vendor id is mandatory");
+			}
 			if (assetBilling.getBillingType() == null || (assetBilling.getBillingType().equals(""))) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "bill type is mandatory");
 
@@ -328,14 +332,14 @@ public class AssetBillingServiceImpl implements AssetBillingService {
 	}
 
 	private void checksVendorId(String assetBillId, String vendorId) {
-		if (vendorId == null || vendorId.equals("")) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "vendorId is mandatory");
-		} else {
+//		if (vendorId == null || vendorId.equals("")) {
+//			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "vendorId is mandatory");
+//		} else {
 			AssetBilling assetBilling = assetBillingRepository.getByVendorId(assetBillId, vendorId);
 			if (assetBilling == null || assetBilling.equals("")) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid vendorId");
 			}
-		}
+		//}
 
 	}
 
@@ -396,9 +400,9 @@ public class AssetBillingServiceImpl implements AssetBillingService {
 	 */
 
 	private boolean checkAssetId(String assetId) {
-		if (assetId == null || assetId.equals("")) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset id is mandatory");
-		}
+//		if (assetId == null || assetId.equals("")) {
+//			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset id is mandatory");
+//		}
 		Asset asset = assetRepository.getByAssetId(assetId);
 		if (asset == null || asset.equals("")) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset id is not valid");
@@ -408,9 +412,9 @@ public class AssetBillingServiceImpl implements AssetBillingService {
 	}
 
 	private boolean checkVendorId(String vendorId, String assetIssueId) {
-		if (vendorId == null || vendorId.equals("")) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "vendor id is mandatory");
-		}
+//		if (vendorId == null || vendorId.equals("")) {
+//			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "vendor id is mandatory");
+//		}
 		AssetIssues assetVendor = assetIssuesRepository.getVendorById(vendorId, assetIssueId);
 		if (assetVendor == null || assetVendor.equals("")) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "vendor id is not valid");
@@ -460,12 +464,20 @@ public class AssetBillingServiceImpl implements AssetBillingService {
 				if (WarrentyDate != null) {
 					if (currentDate.after(WarrentyDate)) {
 						assetBilling.setUnderWarrenty(false);
-						if (assetBilling.getAssetAmount() != null) {
-							validateAssetAmount(assetBilling.getAssetAmount());
+						if (assetBilling.getAssetAmount() == null || (assetBilling.getAssetAmount().equals("")))
+						{
+							throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset amount is mandatory");
+						}
+						else
+						{
 							assetBilling.setAssetAmount(assetBilling.getAssetAmount());
 						}
-						if (assetBilling.getGstAmount() != null) {
-							validateGstAmount(assetBilling.getGstAmount());
+						if (assetBilling.getGstAmount() == null || (assetBilling.getGstAmount().equals("")))
+						{
+							throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "gst amount is mandatory");
+						}
+						else
+						{
 							assetBilling.setGstAmount(assetBilling.getGstAmount());
 						}
 						assetBilling.setAmountPaid(false);
@@ -506,22 +518,22 @@ public class AssetBillingServiceImpl implements AssetBillingService {
 		return response;
 	}
 
-	private boolean validateGstAmount(Double gstAmount) {
-		if (gstAmount == null || gstAmount.equals("")) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "gst amount is mandatory !!");
-		}
-		return true;
-
-	}
-
-	private boolean validateAssetAmount(Double assetAmount) {
-		if (assetAmount == null || assetAmount.equals("") || assetAmount.equals("null")) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset amount is mandatory !!");
-		}
-
-		return true;
-
-}
+//	private boolean validateGstAmount(Double gstAmount) {
+//		if (gstAmount == null || gstAmount.equals("")) {
+//			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "gst amount is mandatory !!");
+//		}
+//		return true;
+//
+//	}
+//
+//	private boolean validateAssetAmount(Double assetAmount) {
+//		if (assetAmount == null || assetAmount.equals("") || assetAmount.equals("null")) {
+//			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset amount is mandatory !!");
+//		}
+//
+//		return true;
+//
+//}
 
 
 	private ApiResponse validateAssetBillings(AssetBilling assetBilling) {
@@ -550,7 +562,18 @@ public class AssetBillingServiceImpl implements AssetBillingService {
 			}
 
 		}
-
+		if (assetBilling.getAssetIssueId() == null || assetBilling.getAssetIssueId().equals(""))
+        {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset issueId is mandatory");
+		}
+		else
+		{
+			AssetIssues asstIssue = assetIssuesRepository.getAssetIssueById(assetBilling.getAssetIssueId());
+			if(asstIssue == null || asstIssue.equals(""))
+			{
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid asset issue id");
+			}
+		}
 		// validate billingtype
 		if (assetBilling.getBillingType() == null || assetBilling.getBillingType().equals("")) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "billing type is mandatory");
@@ -601,9 +624,14 @@ public class AssetBillingServiceImpl implements AssetBillingService {
 				checksAssetId(assetBilling.getAssetIssueId(), assetBillingObject.getAssetId());
 				assetBillingObject.setAssetId(assetBilling.getAssetId());
 			}
-			if (assetBilling.getVendorId() != null) {
+	
+			if (assetBilling.getVendorId() != null || !(assetBilling.getVendorId().equals(""))) {
 				checksVendorId(assetBillingObject.getAssetBillId(), assetBilling.getVendorId());
 				assetBillingObject.setVendorId(assetBilling.getVendorId());
+			}
+			else
+			{
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "vendor id is mandatory");
 			}
 			if (assetBilling.getBillingType() == null || assetBilling.getBillingType().equals("")) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "billing type is mandatory");
@@ -621,9 +649,13 @@ public class AssetBillingServiceImpl implements AssetBillingService {
 				validateTransactionDate(assetBilling.getTransactionDate(), assetBillingObject.getAssetId());
 				assetBillingObject.setTransactionDate(assetBilling.getTransactionDate());
 			}
-			if (assetBilling.getAssetIssueId() != null) {
+			if (assetBilling.getAssetIssueId() != null || !(assetBilling.getAssetIssueId().equals(""))) {
 				checkAssetIssueId(assetBilling.getAssetIssueId());
 				assetBillingObject.setAssetIssueId(assetBilling.getAssetIssueId());
+			}
+			else
+			{
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset issueId is mandatory");
 			}
 			assetBillingObject.setLastUpdatedAt(new Date());
 			assetBillingObject.setUpdatedBy(currentUser.getUserId());
@@ -695,12 +727,12 @@ public class AssetBillingServiceImpl implements AssetBillingService {
 	}
 
 	private boolean checkAssetIssueId(String assetIssueId) {
-		if (assetIssueId == null || assetIssueId.equals("")) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset issueId is manadatory");
-		}
+//		if (assetIssueId == null || assetIssueId.equals("")) {
+//			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset issueId is manadatory");
+//		}
 		AssetIssues issueId = assetIssuesRepository.getAssetIssueById(assetIssueId);
 		if (issueId == null || issueId.equals("")) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset issueId is not valid");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid asset issue id");
 		}
 		return true;
 
@@ -731,11 +763,15 @@ public class AssetBillingServiceImpl implements AssetBillingService {
 				checkAssetId(billingObj.getAssetId());
 				billingObj.setAssetId(assetBilling.getAssetId());
 			}
-			if (assetBilling.getVendorId() != null) {
+			
+			if (assetBilling.getVendorId() != null || !assetBilling.getVendorId().equals("")) {
 				checksVendorId(billingObj.getAssetBillId(), assetBilling.getVendorId());
 				billingObj.setVendorId(assetBilling.getVendorId());
 			}
-
+			else
+			{
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "vendor id is mandatory");
+			}
 			if (assetBilling.getBillingType() == null || assetBilling.getBillingType().equals("")) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "billing type is manadatory");
 			}
@@ -754,9 +790,13 @@ public class AssetBillingServiceImpl implements AssetBillingService {
 				billingObj.setTransactionDate(assetBilling.getTransactionDate());
 			}
 
-			if (assetBilling.getAssetIssueId() != null) {
+			if (assetBilling.getAssetIssueId() != null || !(assetBilling.getAssetIssueId().equals(""))) {
 				checksAssetIssueId(billingObj.getAssetBillId(), assetBilling.getAssetIssueId());
 				billingObj.setAssetIssueId(assetBilling.getAssetIssueId());
+			}
+			else
+			{
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset issue id is mandatory");
 			}
 			billingObj.setReturnDate(new Date());
 			billingObj.setLastUpdatedAt(new Date());
@@ -826,9 +866,9 @@ public class AssetBillingServiceImpl implements AssetBillingService {
 	private boolean checksVendorsId(String assetIssueId, String vendorId) {
 		// AssetBilling assetBilling =
 		// assetBillingRepository.getByVendorId(assetIssueId, vendorId);
-		if (vendorId == null || vendorId.equals("")) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "vendor id is mandatory");
-		}
+//		if (vendorId == null || vendorId.equals("")) {
+//			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "vendor id is mandatory");
+//		}
 		AssetBilling assetBilling = assetBillingRepository.getByVendorId(assetIssueId, vendorId);
 		if (assetBilling == null || assetBilling.equals("")) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "vendor id is invalid");
@@ -837,15 +877,14 @@ public class AssetBillingServiceImpl implements AssetBillingService {
 	}
 
 	private boolean checksAssetIssueId(String assetBillId, String assetIssueId) {
-		if (assetIssueId == null || assetIssueId.equals("")) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset issueId is mandatory");
-		} else {
+//		if (assetIssueId == null || assetIssueId.equals("")) {
+//			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset issueId is mandatory");
+//		} 
 			AssetBilling issueId = assetBillingRepository.getAssetIssueById(assetBillId, assetIssueId);
 			if (issueId == null || issueId.equals("")) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid asset issueId");
 			}
 
-		}
 		return false;
 	}
 
