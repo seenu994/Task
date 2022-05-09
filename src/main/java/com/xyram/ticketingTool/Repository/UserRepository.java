@@ -40,6 +40,9 @@ public interface UserRepository extends JpaRepository<User, String> {
 	
 	User getUserByIds(String userId);
 
+	@Query("select u from User u where u.id =:id")
+	String getUserById(String id);
+
 }
 
 /*

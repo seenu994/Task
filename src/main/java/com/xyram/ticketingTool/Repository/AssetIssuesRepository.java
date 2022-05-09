@@ -35,15 +35,11 @@ import com.xyram.ticketingTool.entity.AssetIssues;
 import com.xyram.ticketingTool.enumType.AssetIssueStatus;
 import com.xyram.ticketingTool.enumType.AssetStatus;
 
-
-
-
-
 @Repository
 @Transactional
 public interface AssetIssuesRepository extends JpaRepository<AssetIssues, String>
 {
-// @Query("Select distinct new map(i.issueId as issueId, i.complaintRaisedDate as complaintRaisedDate, "
+// @Query("Select distinct new map(i.issueId as issueId, i.complaintRaisedDate as complaintRaisedDate "
 // + "i.description as description, i.solution as solution,a.aId as aId, "
 // + "i.status as status, i.vendorId as vendorId, "
 // + "i.resolvedDate as resolvedDate ,"
