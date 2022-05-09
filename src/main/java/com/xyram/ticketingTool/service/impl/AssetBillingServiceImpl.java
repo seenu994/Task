@@ -70,7 +70,7 @@ public class AssetBillingServiceImpl implements AssetBillingService
 	@Override
 	public ApiResponse addPurchaseAssetBill(AssetBilling assetBilling) 
 	{
-		ApiResponse response = new ApiResponse();
+		ApiResponse response = new ApiResponse(false);
 		
 		response = validateAssetBilling(assetBilling);
 		

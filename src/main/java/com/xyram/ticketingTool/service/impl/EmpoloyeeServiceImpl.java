@@ -267,6 +267,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				}
 				// end of the notification part...!
 
+
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.EMPLOYEE_ADDED);
 				Map content = new HashMap();
