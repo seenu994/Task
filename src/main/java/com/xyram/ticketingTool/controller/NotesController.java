@@ -51,6 +51,7 @@ public class NotesController {
 			AuthConstants.HR_ADMIN_BASEPATH + "/getAllNotes", AuthConstants.DEVELOPER_BASEPATH + "/getAllNotes",
 			AuthConstants.INFRA_USER_BASEPATH + "/getAllNotes", AuthConstants.HR_BASEPATH + "/getAllNotes" })
 	Page<Map> getAllNotes(@RequestParam Map<String, Object> filter, Pageable pageable) {
+
 		logger.info("Received request to Get all Notes");
 		return notesService.getAllNotes(filter, pageable);
 	}

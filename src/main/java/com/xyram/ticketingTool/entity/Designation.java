@@ -20,7 +20,8 @@ import com.xyram.ticketingTool.id.generator.IdPrefix;
 @Entity
 @Table(name = "designation")
 
-public class Designation extends AuditModel {
+public class Designation extends AuditModel
+{
 
 	@Id
 	@IdPrefix(value = "DES_")

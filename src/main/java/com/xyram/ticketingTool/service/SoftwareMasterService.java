@@ -18,7 +18,7 @@ ApiResponse searchsoftwareId(String softwareId);
 
 ApiResponse updatesoftwareMasterStatus(String softwareId, SoftwareEnum softwareEnum);
 //ApiResponse getAllsoftwareMasterList(Map<String, Object> filter, Pageable pageable);
-//ApiResponse getAssetIssues(String assetIssueId);
+
 
 
 
