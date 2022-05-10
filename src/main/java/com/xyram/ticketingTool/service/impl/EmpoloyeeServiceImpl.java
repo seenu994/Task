@@ -43,6 +43,7 @@ import com.xyram.ticketingTool.Repository.VendorTypeRepository;
 import com.xyram.ticketingTool.admin.model.User;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.email.EmailService;
+import com.xyram.ticketingTool.entity.AssetVendor;
 import com.xyram.ticketingTool.entity.CompanyWings;
 import com.xyram.ticketingTool.entity.Designation;
 import com.xyram.ticketingTool.entity.Employee;
@@ -89,7 +90,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 	@Autowired
 	RoleRepository roleRepository;
-	
+
 	@Autowired
 	DesignationRepository designationRepository;
 
@@ -176,11 +177,12 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				user.setUsername(employee.getEmail());
 				String encodedPassword = new BCryptPasswordEncoder().encode(employee.getPassword());
 				user.setPassword(encodedPassword);
-				if (employee.getFirstName().length() > 3 && employee.getLastName().length() > 0)
+				if (employee.getFirstName().length() > 3 && employee.getLastName().length() > 0) {
 					user.setName(employee.getFirstName() + " " + employee.getLastName());
+					
 				// Employee employeere=new Employee();
 				Role role = roleRepository.getById(employee.getRoleId());
-				user.setUserRole(role!=null ?role.getRoleName():null);
+				user.setUserRole(role != null ? role.getRoleName() : null);
 				/*
 				 * if (role != null) { try {
 				 * 
@@ -211,23 +213,39 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				if (wing != null) {
 					employee.setWings(wing);
 				}
-				
-				Designation designation = designationRepository.getDesignationNames(employee.getDesignationId());
-				if(designation != null) {
-					employee.setDesignationId(employee.getDesignationId());
-				}
-				else  {
-					if(designation == null) {
-						throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "designationName is not valid");
-						
-					}
-					
-				
-				
-				String reportingTo = userRepository.getUserById(employee.getUserCredientials().getId());
-				if(reportingTo != null) {
-					employee.setReportingTo(reportingTo);
-				}
+
+//				if (employee.getDesignationId() == null || employee.getDesignationId().equals("")) {
+//					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "designationId is mandatory");
+//				} else {
+//
+//					Designation designation = designationRepository.getDesignationNames(employee.getDesignationId());
+//					if (designation != null) {
+//						employee.setDesignationId(employee.getDesignationId());
+//					}
+//					if (designation == null) {
+//						throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "designationId is not valid");
+//					}
+//				}
+//				
+//		if (employee.getDesignationId() == null || employee.getDesignationId().equals("")) {
+//			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "DesignationId is mandatory");
+//			}
+//				
+//				Designation designation = designationRepository.getDesignationNames(employee.getDesignationId());
+//				if(designation != null ) {
+//					employee.setDesignationId(employee.getDesignationId());
+//				}
+//				else  {
+//					if(designation == null) {
+//						throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "designationName is not valid");
+//						
+//					}
+//					
+
+//				String reportingTo = userRepository.getUserById(employee.getUserCredientials().getId());
+//				if (reportingTo != null) {
+//					employee.setReportingTo(reportingTo);
+//				}
 				employee.setCreatedAt(new Date());
 				employee.setLastUpdatedAt(new Date());
 				employee.setUserCredientials(user);
@@ -238,43 +256,38 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				userRepository.save(useredit);
 
 				// sending notification starts here..!
-				
-				
+
 				List<Map> EmployeeList = employeeRepository.getEmployeeBYReportingToId(employee.getReportingTo());
-		
-				
-				
-				if (!EmployeeList.isEmpty())
-				{
 
-				for (Map employeeNotification : EmployeeList) {
-					Map request = new HashMap<>();
-					request.put("id", employeeNotification.get("id"));
-					request.put("uid", employeeNotification.get("uid"));
-					request.put("title", "EMPLOYEE CREATED");
-					request.put("body", " employee Created - " + employeeNew.getFirstName());
-					pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 12,
-							NotificationType.EMPLOYEE_CREATED.toString()));
+				if (!EmployeeList.isEmpty()) {
 
-				}
-				// inserting notification details
-				Notifications notifications = new Notifications();
-				notifications.setNotificationDesc("employee created - " + employeeNew.getFirstName());
-				notifications.setNotificationType(NotificationType.EMPLOYEE_CREATED);
-				notifications.setSenderId(employeeNew.getReportingTo());
-				notifications.setReceiverId(userDetail.getUserId());
-				notifications.setSeenStatus(false);
-				notifications.setCreatedBy(userDetail.getUserId());
-				notifications.setCreatedAt(new Date());
-				notifications.setUpdatedBy(userDetail.getUserId());
-				notifications.setLastUpdatedAt(new Date());
+					for (Map employeeNotification : EmployeeList) {
+						Map request = new HashMap<>();
+						request.put("id", employeeNotification.get("id"));
+						request.put("uid", employeeNotification.get("uid"));
+						request.put("title", "EMPLOYEE CREATED");
+						request.put("body", " employee Created - " + employeeNew.getFirstName());
+						pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request,
+								12, NotificationType.EMPLOYEE_CREATED.toString()));
 
-				notificationService.createNotification(notifications);
+					}
+					// inserting notification details
+					Notifications notifications = new Notifications();
+					notifications.setNotificationDesc("employee created - " + employeeNew.getFirstName());
+					notifications.setNotificationType(NotificationType.EMPLOYEE_CREATED);
+					notifications.setSenderId(employeeNew.getReportingTo());
+					notifications.setReceiverId(userDetail.getUserId());
+					notifications.setSeenStatus(false);
+					notifications.setCreatedBy(userDetail.getUserId());
+					notifications.setCreatedAt(new Date());
+					notifications.setUpdatedBy(userDetail.getUserId());
+					notifications.setLastUpdatedAt(new Date());
+
+					notificationService.createNotification(notifications);
 				}
 				UUID uuid = UUID.randomUUID();
 				String uuidAsString = uuid.toString();
-				
-			
+
 				if (employeeNew != null & false) {
 					String name = null;
 
@@ -289,25 +302,24 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				}
 				// end of the notification part...!
 
-
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.EMPLOYEE_ADDED);
 				Map content = new HashMap();
 				content.put("employeeId", employeeNew.geteId());
 				response.setContent(content);
-				}
 			}
-			 catch (ResponseStatusException re) {
+			}
+			catch (ResponseStatusException re) {
 				throw new ResponseStatusException(re.getStatus(), re.getReason());
 			} catch (Exception e) {
 				System.out.println("Error Occured :: " + e.getMessage());
 			}
 
-			return response;
+			 return response;
 
-		}
-
+		} 
 		return response;
+
 	}
 
 	private ApiResponse validateEmployee(Employee employee) {
@@ -318,6 +330,18 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 			response.setSuccess(false);
 		}
+		if (employee.getDesignationId() == null || employee.getDesignationId().equals("")) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "designationId is mandatory");
+		} else {
+
+			Designation designation = designationRepository.getDesignationNames(employee.getDesignationId());
+			if (designation != null) {
+				employee.setDesignationId(employee.getDesignationId());
+			}
+			if (designation == null) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "designationId is not valid");
+			}
+		
 
 		else if (employee.getMobileNumber().length() != 10) {
 			response.setMessage(ResponseMessages.MOBILE_INVALID);
@@ -334,7 +358,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 			response.setSuccess(true);
 		}
-
+		}
 		return response;
 	}
 
@@ -1151,11 +1175,12 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 		return response;
 
-	} 
+	}
+
 	@Override
 	public ApiResponse searchEmployeeByReportingId(String reportingId, String searchString) {
 		ApiResponse response = new ApiResponse(false);
-		List<Map> reportees = employeeRepository.searchEmployeeByReportingId(reportingId,searchString);
+		List<Map> reportees = employeeRepository.searchEmployeeByReportingId(reportingId, searchString);
 		Map content = new HashMap();
 		content.put("reportees", reportees);
 		if (content != null) {
