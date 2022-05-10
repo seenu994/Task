@@ -90,12 +90,17 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 		if (schedule != null) {
 			if (validateSchedule(schedule)) {
 				if(schedule.getJobId() != null) {
-					JobOpenings job = jobRepository.getById(schedule.getJobId());
+					Map job = jobRepository.getJobById(schedule.getJobId());
 					if(job == null) {
 						response.setSuccess(false);
 						response.setMessage("Job Id not found.");
 						return response;
 					}
+				}
+				else {
+					response.setSuccess(false);
+					response.setMessage("Job Id not found.");
+					return response;
 				}
 				if(schedule.getIs_scheduled()) {
 					
@@ -160,7 +165,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 				Employee employee = employeeRepository.getByEmpId(currentUser.getScopeId());
 				Employee reportor = employeeRepository.getByEmpId(employee.getReportingTo());
 				if(schedule.getJobId() != null) {
-					JobOpenings job = jobRepository.getById(schedule.getJobId());
+					Map job = jobRepository.getJobById(schedule.getJobId());
 					if(job == null) {
 						response.setSuccess(false);
 						response.setMessage("Job Id not found.");
@@ -169,6 +174,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 				}else {
 					response.setSuccess(false);
 					response.setMessage("Job Id not found.");
+					return response;
 				}
 				if(schedule.getIs_scheduled() && validateDateTime) {
 					Date toDateTime = new Date();

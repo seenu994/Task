@@ -20,4 +20,8 @@ public interface CompanyWingsRepository extends JpaRepository<CompanyWings, Stri
 	
 	@Query(value = "SELECT j from CompanyWings j WHERE j.Id = :wing_id ")
 	CompanyWings getWingByIds(String wing_id);
+	
+	
+	@Query("select j from CompanyWings j where j.Id =:wingName")
+	CompanyWings getWingName(String wingName) ;
 	}

@@ -29,6 +29,14 @@ public interface CompanyLocationRepository extends JpaRepository<CompanyLocation
 			+ "(:searchString is null Or lower(e.locationName) LIKE %:searchString% )order by e.locationName ASC")
 	List<Map> getAllLocation(String searchString);
 
+	//CompanyLocation getCompanyLocations(String location);
+
+	
+	@Query("select l from CompanyLocation l where l.id =:locationName")
+	CompanyLocation getCompanyLocations(String locationName);
+	
+	
+	
 	//String getLocationName(String id);
 
 }
