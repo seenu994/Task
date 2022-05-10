@@ -44,6 +44,11 @@ public class ArticleServiceImpl implements ArticleService{
 		if(article != null) {
 			
 //			try {
+			if(article.getDescription().length() > 5000) {
+				response.setSuccess(false);
+				response.setMessage("Description length exceeded. Only 5000 characters will allow");
+				return response;
+			}
 				article.setCreatedBy(currentUser.getUserId());
 				article.setUserId(currentUser.getUserId());
 				article.setUserName(currentUser.getFirstName());
@@ -83,6 +88,11 @@ public class ArticleServiceImpl implements ArticleService{
 		
 		if(articleObj != null) {		
 			try {
+				if(article.getDescription().length() > 5000) {
+					response.setSuccess(false);
+					response.setMessage("Description length exceeded. Only 5000 characters will allow");
+					return response;
+				}
 				articleObj.setTitle(article.getTitle());
 				articleObj.setDescription(article.getDescription());
 				articleObj.setSearchLabels(article.getSearchLabels());
