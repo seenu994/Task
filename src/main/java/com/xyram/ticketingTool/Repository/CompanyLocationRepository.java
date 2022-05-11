@@ -32,7 +32,7 @@ public interface CompanyLocationRepository extends JpaRepository<CompanyLocation
 	//CompanyLocation getCompanyLocations(String location);
 
 	
-	@Query("select l from CompanyLocation l where l.id =:locationName")
+	@Query("select l from CompanyLocation l where l.locationName =:locationName")
 	CompanyLocation getCompanyLocations(String locationName);
 	
 	
