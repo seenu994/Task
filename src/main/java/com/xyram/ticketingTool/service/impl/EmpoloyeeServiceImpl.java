@@ -29,6 +29,7 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 import com.xyram.ticketingTool.Communication.PushNotificationCall;
 import com.xyram.ticketingTool.Communication.PushNotificationRequest;
+import com.xyram.ticketingTool.Repository.CompanyLocationRepository;
 import com.xyram.ticketingTool.Repository.CompanyWingsRepository;
 import com.xyram.ticketingTool.Repository.DesignationRepository;
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
@@ -44,6 +45,7 @@ import com.xyram.ticketingTool.admin.model.User;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.email.EmailService;
 import com.xyram.ticketingTool.entity.AssetVendor;
+import com.xyram.ticketingTool.entity.CompanyLocation;
 import com.xyram.ticketingTool.entity.CompanyWings;
 import com.xyram.ticketingTool.entity.Designation;
 import com.xyram.ticketingTool.entity.Employee;
@@ -65,6 +67,7 @@ import com.xyram.ticketingTool.service.NotificationService;
 import com.xyram.ticketingTool.service.TicketAttachmentService;
 import com.xyram.ticketingTool.ticket.config.PermissionConfig;
 import com.xyram.ticketingTool.util.BulkUploadExcelUtil;
+import com.xyram.ticketingTool.util.EmployeeUtil;
 import com.xyram.ticketingTool.util.ResponseMessages;
 
 /**
@@ -117,6 +120,9 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 	@Autowired
 	VendorTypeRepository vendorRepo;
+	
+	@Autowired
+	CompanyLocationRepository companyLocationRepository;
 
 	@Autowired
 	EmpoloyeeServiceImpl employeeServiceImpl;
@@ -210,37 +216,11 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				employee.setCreatedBy(currentUser.getUserId());
 				employee.setUpdatedBy(currentUser.getUserId());
 				CompanyWings wing = wingRepo.getWingById(employee.getWings().getId());
-				if (wing != null) {
-					employee.setWings(wing);
-				}
+//				if (wing != null) {
+//					employee.setWings(wing);
+//				}
 
-//				if (employee.getDesignationId() == null || employee.getDesignationId().equals("")) {
-//					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "designationId is mandatory");
-//				} else {
-//
-//					Designation designation = designationRepository.getDesignationNames(employee.getDesignationId());
-//					if (designation != null) {
-//						employee.setDesignationId(employee.getDesignationId());
-//					}
-//					if (designation == null) {
-//						throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "designationId is not valid");
-//					}
-//				}
-//				
-//		if (employee.getDesignationId() == null || employee.getDesignationId().equals("")) {
-//			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "DesignationId is mandatory");
-//			}
-//				
-//				Designation designation = designationRepository.getDesignationNames(employee.getDesignationId());
-//				if(designation != null ) {
-//					employee.setDesignationId(employee.getDesignationId());
-//				}
-//				else  {
-//					if(designation == null) {
-//						throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "designationName is not valid");
-//						
-//					}
-//					
+
 
 //				String reportingTo = userRepository.getUserById(employee.getUserCredientials().getId());
 //				if (reportingTo != null) {
@@ -324,12 +304,61 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 	private ApiResponse validateEmployee(Employee employee) {
 		ApiResponse response = new ApiResponse(false);
+		String regex = "[a-z A-Z]+";
 		String email = employeeRepository.filterByEmail(employee.getEmail());
 		if (!emailValidation(employee.getEmail())) {
 			response.setMessage(ResponseMessages.EMAIL_INVALID);
 
 			response.setSuccess(false);
 		}
+		
+		if (employee.getFirstName() == null || employee.getFirstName().equals("")) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "FirstName is mandatory");
+		}
+		if(!employee.getFirstName().matches(regex)) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name should be character only");
+		}
+		
+		if (employee.getLastName() == null || employee.getLastName().equals("")) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "LastName is mandatory");
+		}
+		if(!employee.getLastName().matches(regex)) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "LastName should be character only");
+		}
+		if (employee.getPosition() == null || employee.getPosition().equals("")) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "position is mandatory");
+		}
+		
+		
+		if (employee.getLocation() == null || employee.getLocation().equals("")) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Location is mandatory");
+		} 
+		else {
+			//Designation designation = designationRepository.getDesignationNames(employee.getDesignationId());
+			CompanyLocation companyLocation = companyLocationRepository.getCompanyLocations(employee.getLocation());
+			if (companyLocation != null) {
+				employee.setLocation(employee.getLocation());
+			}
+			if (companyLocation == null) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "location is not valid");
+			}
+		}
+		
+		if (employee.getRoleId() == null || employee.getRoleId().equals("")) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "RoleId is mandatory");
+		} else {
+
+			Role role = roleRepository.getRoleName(employee.getRoleId());
+			if (role != null) {
+				employee.setRoleId(employee.getRoleId());
+			}
+			if (role == null) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "RoleId is not valid");
+			}
+			
+		}
+		
+		
 		if (employee.getDesignationId() == null || employee.getDesignationId().equals("")) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "designationId is mandatory");
 		} else {
@@ -341,24 +370,73 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			if (designation == null) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "designationId is not valid");
 			}
-		
-
-		else if (employee.getMobileNumber().length() != 10) {
-			response.setMessage(ResponseMessages.MOBILE_INVALID);
-
-			response.setSuccess(false);
 		}
+		
+		if(employee.getPosition() != null) {
+			boolean isExist = false;
 
-		else if (email != null) {
+			for (String position : EmployeeUtil.position) {
+				if(position.equalsIgnoreCase(employee.getPosition())) {
+					isExist = true;
+					break;
+				}
+			}
+			if (!isExist) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Position is not available");
+			}
+	
+		}
+		
+			
+			if (employee.getWings()== null || employee.getWings().equals("")) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "wings is mandatory");
+			} else {
+
+				CompanyWings companyWings = wingRepo.getWingName(employee.getWings().getId());
+				if (companyWings != null) {
+					employee.setWings(employee.getWings());
+				}
+				if (companyWings == null) {
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "wingsId is not valid");
+				}
+				
+			
+			}
+			
+			if (employee.getMobileNumber() == null || employee.getMobileNumber().equals("")) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "MobileNumber is mandatory");
+			}
+			
+			else if(employee.getMobileNumber().length() != 10) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "In correct mobile number");	
+			}
+
+//		else if (employee.getMobileNumber().length() != 10) {
+//			response.setMessage(ResponseMessages.MOBILE_INVALID);
+//
+//			response.setSuccess(false);
+//		}
+			
+			if (employee.getEmail() == null || employee.getEmail().equals("")) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Mail id is mandatory");
+			}
+			else if (!emailValidation(employee.getEmail())) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid EmailId");
+			
+			}
+
+	else if (email != null) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "email already exists!!!");
 		}
 
-		else {
-			response.setMessage(ResponseMessages.EMPLOYEE_ADDED);
-
-			response.setSuccess(true);
-		}
-		}
+//		else {
+//			response.setMessage(ResponseMessages.EMPLOYEE_ADDED);
+//
+		response.setSuccess(true);
+	
+		
+		
+		
 		return response;
 	}
 

@@ -84,7 +84,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 //	@Query("Select distinct new map(e.eId as id, e.firstName as firstName, e.lastName as lastName) from Employee e "
 //			+ "where e.status = 'ACTIVE' and e.email like %:searchString% ")
 	@Query("Select new map(e.eId as id,e.email as email,e.firstName as firstName,e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId, "
-			+ "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,d.designationName as designationName,e.location as location,e.position as position,e.wings as wings,e.profileUrl as profileUrl) from Employee e "
+			+ "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,d.designationName as designationName,e.location as location,e.position as position,e.wings as wings,e.profileUrl as profileUrl,e.userCredientials.name as reportingTo) from Employee e "
 			+ "left join e.wings w left JOIN Role r On e.roleId = r.Id left JOIN  Designation d On e.designationId=d.Id where r.Id !='R1' and (e.email like %:searchString% or e.firstName like %:searchString% or e.middleName like %:searchString% or e.lastName like %:searchString% or d.designationName like %:searchString%  or e.id like %:searchString% "
 			+ "  or e.mobileNumber like %:searchString%  or w.wingName like %:searchString% or e.location like %:searchString%  or e.position like %:searchString%)")
 	List<Map> searchEmployee(@Param("searchString") String searchString);
