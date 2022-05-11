@@ -119,6 +119,29 @@ public interface HrCalendarRepository extends JpaRepository<HrCalendar, String>{
 			+ "a.status as status, a.callCount as callCount, a.scheduleDate as scheduleDate) from HrCalendar a "
 			+ "where a.Id =:scheduleId")
 	Map getScheduleById(String scheduleId);
+	
+	
+	@Query("Select distinct new map(a.Id as id, a.candidateMobile as candidateMobile, a.candidateName as candidateName,"
+			+ "a.scheduleDate as scheduleDate, a.searchedSource as searchedSource, a.jobId as jobId,a.status as status,a.closed as closed,"
+			+ "a.callCount as callCount,a.reportingTo as reportingTo,a.is_scheduled as is_scheduled) from HrCalendar a ")
+	Page<Map> getHrcalender(Pageable pageable);
+	
+	
+	@Query("Select distinct new map( a.Id as id,a.candidateMobile as mobile,a.candidateName as name,a.status as status, "
+			+ "a.createdAt as createdAt,a.scheduleDate as scheduleDate, a.searchedSource as searchedSource, "
+			+ "a.jobId as jobId,jo.jobTitle as jobTitle, a.closed as closed,a.callCount as callCount,a.reportingTo as reportingTo, "
+			+ "a.createdAt as createdAt,a.createdBy as createdBy,a.lastUpdatedAt as lastUpdatedAt) from HrCalendar a "
+			+ "left join JobOpenings jo on a.jobId = jo.id where a.createdBy = :userId and "
+			+ "(:searchString is null "
+			+ "or a.candidateMobile like %:searchString% "
+			+ "or lower(a.candidateName) like %:searchString% "
+			+ "or lower(jo.jobTitle) like %:searchString%) "
+			+ "ORDER BY a.scheduleDate ASC")	 
+			
+
+	List<Map> searchhrCalender(String userId, String searchString);
+
+	
 
 	
 }

@@ -51,5 +51,8 @@ public interface HrCalendarService {
 	ApiResponse downloadAllMySchedulesFromCalendarByStatus(Map<String, Object>filter);
 	
 	ApiResponse downloadMyTeamSchedulesFromCalendarByStatus(Map<String, Object>filter);
-
+	
+	ApiResponse getAllhrCalender(Pageable pageable);
+	
+	ApiResponse searchhrCalender(String searchString);
 }
