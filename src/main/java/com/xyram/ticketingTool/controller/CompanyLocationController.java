@@ -34,7 +34,6 @@ public class CompanyLocationController {
 		return companyLocationService.createLocation(location);
 	}
 
-	/// updateLocation{/id}/location{/location}
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/updateLocation/{id}",
 			AuthConstants.HR_ADMIN_BASEPATH + "/updateLocation/{id}", AuthConstants.HR_BASEPATH + "/updateLocation/{id}" })
 	public ApiResponse updateLocation(@PathVariable String id, @RequestBody CompanyLocation location) {
