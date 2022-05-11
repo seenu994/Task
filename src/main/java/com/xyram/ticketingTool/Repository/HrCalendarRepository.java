@@ -95,7 +95,7 @@ public interface HrCalendarRepository extends JpaRepository<HrCalendar, String>{
 			+ "a.createdBy = :userId AND "
 			+ "(:toDate is null OR Date(CONVERT_TZ(a.scheduleDate,'+00:00', :userZone)) <= STR_TO_DATE(:toDate, '%Y-%m-%d')) AND "
 			+ "(:fromDate is null OR Date(CONVERT_TZ(a.scheduleDate,'+00:00', :userZone)) >= STR_TO_DATE(:fromDate, '%Y-%m-%d')) AND "
-			+ "(:status is null OR a.status=:status) AND "
+			+ "(:status is null OR lower(a.status)=:status) AND "
 			+ "(:closed is null OR a.closed=:closed) ORDER BY a.scheduleDate ASC")
 			List<Map> downloadAllMySchedulesFromCalendarByStatus(String userId, String fromDate, String toDate, String status,Boolean closed, String userZone);
 	
@@ -106,9 +106,10 @@ public interface HrCalendarRepository extends JpaRepository<HrCalendar, String>{
 			+ "where a.reportingTo =:userId AND " 
 			+ "(:toDate is null OR Date(CONVERT_TZ(a.scheduleDate,'+00:00', :userZone)) <= STR_TO_DATE(:toDate, '%Y-%m-%d')) AND "
 			+ "(:fromDate is null OR Date(CONVERT_TZ(a.scheduleDate,'+00:00',:userZone)) >= STR_TO_DATE(:fromDate, '%Y-%m-%d')) AND "
-			+ "(:status is null OR a.status=:status) AND "
+			+ "(:employeeId is null OR a.createdBy=:employeeId) AND "
+			+ "(:status is null OR lower(a.status)=:status) AND "
 			+ "(:closed is null OR a.closed=:closed) ORDER BY a.scheduleDate ASC")
-			List<Map> downloadAllMyTeamSchedulesFromCalendarByStatus(String userId,
+			List<Map> downloadAllMyTeamSchedulesFromCalendarByStatus(String userId,String employeeId,
 			String fromDate, String toDate, String status,Boolean closed, String userZone);
 	
 	@Query("Select new map(h.Id as id,h.candidateMobile as candidateMobile,h.status as status) from HrCalendar h")
