@@ -178,6 +178,15 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 					throw new ResponseStatusException(HttpStatus.CONFLICT,
 							"Employee code already Assigned to Existing employee ");
 				}
+				
+//				if (employee.geteId() == null || employee.geteId().equals("")) {
+//					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "EmployeeId is mandatory");
+//				}
+//				
+//				if(!employee.geteId().matches("^[a-z 0 -9 A-Z]+"))
+//				{
+//					throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"EmployeeId should not contain any special characters");
+//				}
 
 				User user = new User();
 				user.setUsername(employee.getEmail());
@@ -222,10 +231,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 
 
-//				String reportingTo = userRepository.getUserById(employee.getUserCredientials().getId());
-//				if (reportingTo != null) {
-//					employee.setReportingTo(reportingTo);
-//				}
+
 				employee.setCreatedAt(new Date());
 				employee.setLastUpdatedAt(new Date());
 				employee.setUserCredientials(user);
@@ -325,16 +331,14 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		if(!employee.getLastName().matches(regex)) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "LastName should be character only");
 		}
-		if (employee.getPosition() == null || employee.getPosition().equals("")) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "position is mandatory");
-		}
+		
 		
 		
 		if (employee.getLocation() == null || employee.getLocation().equals("")) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Location is mandatory");
 		} 
 		else {
-			//Designation designation = designationRepository.getDesignationNames(employee.getDesignationId());
+			
 			CompanyLocation companyLocation = companyLocationRepository.getCompanyLocations(employee.getLocation());
 			if (companyLocation != null) {
 				employee.setLocation(employee.getLocation());
@@ -370,6 +374,10 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			if (designation == null) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "designationId is not valid");
 			}
+		}
+		
+		if (employee.getPosition() == null || employee.getPosition().equals("")) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "position is mandatory");
 		}
 		
 		if(employee.getPosition() != null) {

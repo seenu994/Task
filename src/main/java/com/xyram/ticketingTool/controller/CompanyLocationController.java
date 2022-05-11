@@ -28,14 +28,19 @@ public class CompanyLocationController {
 	CompanyLocationService companyLocationService;
 
 	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/createLocation",
-			AuthConstants.HR_ADMIN_BASEPATH + "/createLocation", AuthConstants.HR_BASEPATH + "/createLocation" })
+			AuthConstants.HR_ADMIN_BASEPATH + "/createLocation",
+			AuthConstants.HR_BASEPATH + "/createLocation",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/createLocation" })
+		
 	public ApiResponse createLocation(@RequestBody CompanyLocation location) {
 		logger.info("Request for creating Location");
 		return companyLocationService.createLocation(location);
 	}
 
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/updateLocation/{id}",
-			AuthConstants.HR_ADMIN_BASEPATH + "/updateLocation/{id}", AuthConstants.HR_BASEPATH + "/updateLocation/{id}" })
+			AuthConstants.HR_ADMIN_BASEPATH + "/updateLocation/{id}", 
+			AuthConstants.HR_BASEPATH + "/updateLocation/{id}",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/updateLocation/{id}" })
 	public ApiResponse updateLocation(@PathVariable String id, @RequestBody CompanyLocation location) {
 		logger.info("Request for updating Location");
 		return companyLocationService.updateLocation(id, location);
@@ -47,7 +52,10 @@ public class CompanyLocationController {
 //		return employeeLocationService.deleteLocation(id);
 //	}
 	
-	@GetMapping(value = {AuthConstants.ADMIN_BASEPATH+ "/getAllLocation", AuthConstants.HR_ADMIN_BASEPATH+ "/getAllLocation", AuthConstants.HR_BASEPATH+ "/getAllLocation" })
+	@GetMapping(value = {AuthConstants.ADMIN_BASEPATH+ "/getAllLocation",
+			AuthConstants.HR_ADMIN_BASEPATH+ "/getAllLocation", 
+			AuthConstants.HR_BASEPATH+ "/getAllLocation",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllLocation" })
 	public ApiResponse getAllLocation(Map<String,Object> filter) {
 		logger.info("Request for get all location");
 		return companyLocationService.getAllLocation(filter);
