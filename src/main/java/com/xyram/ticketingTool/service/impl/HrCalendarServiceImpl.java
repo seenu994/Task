@@ -1106,4 +1106,49 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 		
 	}
 
-}
+	@Override
+	public ApiResponse getAllhrCalender(Pageable pageable) {
+		ApiResponse response = new ApiResponse();
+		Page<Map> hrcalender = hrCalendarRepository.getHrcalender(pageable);
+	
+		Map content = new HashMap();
+		content.put("hrcalender", hrcalender);
+		if(content != null) {
+			response.setSuccess(true);
+			response.setContent(content);
+			response.setMessage(ResponseMessages.HRCALENDER_LIST_RETRIVED);
+		}
+		else {
+			response.setSuccess(false);
+			response.setMessage("Could not retrieve data");
+		}
+		return response;
+	}
+
+	@Override
+	public ApiResponse searchhrCalender(String searchString) {
+		ApiResponse response = new ApiResponse();
+		List<Map> hrCalender = hrCalendarRepository.searchhrCalender(currentUser.getUserId(),searchString);
+
+		Map content = new HashMap();
+		content.put("hrCalender",hrCalender );
+		if (content != null) {
+
+			
+			response.setSuccess(true);
+			response.setMessage("hr calender details retrived successfully");
+			response.setContent(content);
+		} else {
+			
+			response.setSuccess(false);
+			// response.setContent(content);
+			response.setMessage("Not retrived the data");
+		}
+
+		return response;
+
+	}
+	}
+	
+		
+

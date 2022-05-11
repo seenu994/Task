@@ -211,6 +211,24 @@ public class HrCalendarController {
 		return hrCalrendarService.downloadMyTeamSchedulesFromCalendarByStatus(filter);
 	}
 	
+	@GetMapping(value = {AuthConstants.HR_ADMIN_BASEPATH + "/getAllhrCalender",
+	   		  AuthConstants.HR_BASEPATH + "/getAllhrCalender", AuthConstants.ADMIN_BASEPATH + "/getAllhrCalender"})
+	     public ApiResponse getAllhrCalender(Pageable pageable) {
+	 	        logger.info("Received request to get all calender");
+	 			return hrCalrendarService.getAllhrCalender(pageable);
+	}
+	 			
+	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/searchhrCalender/{searchString}",
+			AuthConstants.HR_BASEPATH + "/searchhrCalender/{searchString}",
+			AuthConstants.ADMIN_BASEPATH + "/searchhrCalender/{searchString}" })
+	public ApiResponse searchhrCalender(@PathVariable String searchString) {
+		logger.info("Received request to search hrCalender ");
+		return hrCalrendarService.searchhrCalender(searchString);
+	}
+
+
+	 	 }
 	
 	
-}
+	
+
