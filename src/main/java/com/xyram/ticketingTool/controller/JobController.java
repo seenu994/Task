@@ -40,6 +40,8 @@ public class JobController {
 	@Autowired
 	JobService jobService;
 	
+	
+	
 	@PostMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/editJob/{jobId}",AuthConstants.ADMIN_BASEPATH + "/editJob/{jobId}" })
 	public ApiResponse editJob(@PathVariable String jobId,@RequestBody JobOpenings jobObj) {
 		logger.info("Creating Job");
