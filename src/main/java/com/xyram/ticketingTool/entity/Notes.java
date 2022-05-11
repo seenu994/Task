@@ -28,7 +28,7 @@ public class Notes extends AuditModel {
 	@Column(name = "id")
 	private String id;
 
-	//@Temporal(TemporalType.DATE)
+	// @Temporal(TemporalType.DATE)
 	@Column(name = "notes_uploaded_date")
 	private Date notesUploadedDate;
 

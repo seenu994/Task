@@ -25,13 +25,13 @@ public interface DesignationRepository extends JpaRepository<Designation, String
 
 
 	@Query("select e from Designation e where e.designationName =:designationName")
-	String getDesignationName(String designationName);
+	Designation getDesignationName(String designationName);
 	
-	@Query("select e from Designation e where e.designationName =:designationName")
-	Designation getDesignationName(Designation designationName);
-	
-	
+	@Query("select e from Designation e where e.Id =:designationName")
+	Designation getDesignationNames(String designationName);
 
+
+	
 	
 //	@Query("Select distinct e from  Designation e where e.Id=:Id")
 //	Designation getDesignationById(String id);

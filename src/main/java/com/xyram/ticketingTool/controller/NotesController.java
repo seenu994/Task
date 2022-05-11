@@ -34,7 +34,7 @@ public class NotesController {
 	@PostMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/createNotes",
 			AuthConstants.HR_ADMIN_BASEPATH + "/createNotes", AuthConstants.DEVELOPER_BASEPATH + "/createNotes",
 			AuthConstants.INFRA_USER_BASEPATH + "/createNotes", AuthConstants.HR_BASEPATH + "/createNotes" })
-	public ApiResponse createNotes(@RequestBody Notes notes) throws ParseException {
+	public ApiResponse createNotes(@RequestBody Notes notes) throws ParseException  {
 		logger.info("Creating Notes");
 		return notesService.createNotes(notes);
 	}
@@ -50,8 +50,8 @@ public class NotesController {
 	@GetMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllNotes",
 			AuthConstants.HR_ADMIN_BASEPATH + "/getAllNotes", AuthConstants.DEVELOPER_BASEPATH + "/getAllNotes",
 			AuthConstants.INFRA_USER_BASEPATH + "/getAllNotes", AuthConstants.HR_BASEPATH + "/getAllNotes" })
-	Page<Map> getAllAssets(@RequestParam Map<String, Object> filter, Pageable pageable) {
-		System.out.println(filter);
+	Page<Map> getAllNotes(@RequestParam Map<String, Object> filter, Pageable pageable) {
+
 		logger.info("Received request to Get all Notes");
 		return notesService.getAllNotes(filter, pageable);
 	}

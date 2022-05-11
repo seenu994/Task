@@ -164,15 +164,19 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 		 
 		if(assetIssuesObj != null) 
 	    {	
-			if(assetIssues.getAssetId() != null)
+			if(assetIssues.getAssetId() != null || !(assetIssues.getAssetId().equals("")))
 			{
 				 checkAssetId(assetIssuesObj.getAssetId());
 				 assetIssuesObj.setAssetId(assetIssues.getAssetId());
 			}
-			if(assetIssues.getVendorId() != null)
+			if(assetIssues.getVendorId() != null || !(assetIssues.getVendorId().equals("")))
 			{
 				checkVendorId(assetIssues.getVendorId());
 				assetIssuesObj.setVendorId(assetIssues.getVendorId());
+			}
+			else
+			{
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"vendor id is mandatory");
 			}
 			if(assetIssues.getComplaintRaisedDate()!= null)
 			{
@@ -180,13 +184,17 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 			}
 			if(assetIssues.getAssetIssueStatus() != null)
 			{
-				checkAssetIssuesStatus(assetIssuesObj.getAssetIssueStatus());
+				//(assetIssuesObj.getAssetIssueStatus());
 				assetIssuesObj.setAssetIssueStatus(assetIssues.getAssetIssueStatus());
 			}
-			if(assetIssues.getDescription() != null)
+			if(assetIssues.getDescription() != null || !assetIssues.getDescription().equals(""))
 			{
 				checkDescription(assetIssues.getDescription());
 				assetIssuesObj.setDescription(assetIssues.getDescription());
+			}
+			else
+			{
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"description is mandatory");
 			}
 			assetIssuesObj.setLastUpdatedAt(new Date());
 			assetIssuesObj.setUpdatedBy(currentUser.getName());
@@ -208,10 +216,10 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 
 	private boolean checkDescription(String description) 
 	{
-		if(description == null || description.equals(""))
-		{
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "description is mandatory");
-		}
+//		if(description == null || description.equals(""))
+//		{
+//			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "description is mandatory");
+//		}
 		if(description.length() <= 10 || description.length() >= 500)
 		{
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "description length should be minimum 10 characters and max 500 characters");
@@ -222,10 +230,10 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 
 	private boolean checkVendorId(String vendorId) 
 	{
-		if(vendorId == null || vendorId.equals(""))
-		{
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "vendor id is mandatory");
-		}
+//		if(vendorId == null || vendorId.equals(""))
+//		{
+//			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "vendor id is mandatory");
+//		}
 		AssetVendor assetVendor = assetVendorRepository.getVendorById(vendorId);
 		if(assetVendor == null || assetVendor.equals(""))
 		{
@@ -239,10 +247,10 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 
 	private boolean checkAssetId(String assetId) 
 	{
-		if(assetId == null || assetId.equals(""))
-		{
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset id is mandatory");
-		}
+//		if(assetId == null || assetId.equals(""))
+//		{
+//			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset id is mandatory");
+//		}
 		Asset asset = assetRepository.getByAssetId(assetId);
 		if(asset == null || asset.equals(""))
 		{
@@ -261,27 +269,34 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 		 AssetIssues assetIssuesObj = assetIssuesRepository.getAssetIssueById(assetIssueId);
 		 if(assetIssuesObj != null) 
 		    {	
-				if(assetIssues.getAssetId() != null)
+				if(assetIssues.getAssetId() != null || !assetIssues.getAssetId().equals(""))
 				{
 					 checksAssetId(assetIssuesObj.getAssetIssueId(), assetIssues.getAssetId());
 					 assetIssuesObj.setAssetId(assetIssues.getAssetId());
 				}
-				if(assetIssues.getVendorId() != null)
+				if(assetIssues.getVendorId() != null || !assetIssues.getVendorId().equals(""))
 				{
 					checksVendorId(assetIssuesObj.getAssetIssueId(),assetIssues.getVendorId());
 					assetIssuesObj.setVendorId(assetIssues.getVendorId());
 				}
-				
+				else
+				{
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "vendor Id mandatory");
+				}
 				if(assetIssues.getAssetIssueStatus() != null)
 				{
-					checkAssetIssuesStatus(assetIssues.getAssetIssueStatus());
+					//checkAssetIssuesStatus(assetIssues.getAssetIssueStatus());
 					assetIssuesObj.setAssetIssueStatus(AssetIssueStatus.CLOSE);
 				}
 				
-				if(assetIssues.getDescription() != null)
+				if(assetIssues.getDescription() != null || !(assetIssues.getDescription().equals("")))
 				{
 					checkDescription(assetIssues.getDescription());
 				    assetIssuesObj.setDescription(assetIssues.getDescription());
+				}
+				else
+				{
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "description should be mandatory");
 				}
 				assetIssuesObj.setResolvedDate(new Date());
 				
@@ -328,10 +343,10 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 
 	private boolean checksVendorId(String assetIssueId, String vendorId) 
 	{
-		if(vendorId == null || vendorId.equals(""))
-		{
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "vendor id mandatory");
-		}
+//		if(vendorId == null || vendorId.equals(""))
+//		{
+//			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "vendor id mandatory");
+//		}
 		AssetIssues assetIssues = assetIssuesRepository.getVendorById(assetIssueId, vendorId);
 		if(assetIssues == null || assetIssues.equals(""))
 		{
@@ -345,10 +360,10 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 
 	private boolean checksAssetId(String assetIssueId, String assetId) 
 	{
-		if(assetId == "" || assetId == null)
-		{
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset id is mandatory");
-		}
+//		if(assetId == "" || assetId == null)
+//		{
+//			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset id is mandatory");
+//		}
 		AssetIssues assetIssues = assetIssuesRepository.getAssetById(assetIssueId, assetId);
 		if(assetIssues == null || assetIssues.equals(""))
 		{
@@ -361,10 +376,10 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 
 	private boolean validateComments(String comments) 
 	{
-		if(comments == null || comments.equals(""))
-		{
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "comments should be manadatory");
-		}
+//		if(comments == null || comments.equals(""))
+//		{
+//			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "comments should be manadatory");
+//		}
 		if(comments.length() <= 10 || comments.length() >= 300)
 		{
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "comments length should be minimum 10 characters and max 300 characters");
@@ -396,19 +411,19 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 	}*/
 		
 
-	private boolean checkAssetIssuesStatus(AssetIssueStatus assetIssueStatus)
-	{
-		//AssetIssues assetIssue = new AssetIssues();
-		if(assetIssueStatus == null)
-		{
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Asset issues status is mandetory");
-		}
-		else
-		{
-			return true;
-		}
-		
-	}
+//	private boolean checkAssetIssuesStatus(AssetIssueStatus assetIssueStatus)
+//	{
+//		//AssetIssues assetIssue = new AssetIssues();
+//		if(assetIssueStatus == null)
+//		{
+//			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Asset issues status is mandetory");
+//		}
+//		else
+//		{
+//			return true;
+//		}
+//		
+//	}
 	
 	@Override
 	public ApiResponse returnDamage(AssetIssues assetIssues,String assetIssueId) 
@@ -419,28 +434,37 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 		 
 		if(assetIssues != null) 
 	    {	
-			if(assetIssues.getAssetId() != null)
+			if(assetIssues.getAssetId() != null || !(assetIssues.getAssetId().equals("")))
 			{
 				 checksAssetId(assetIssuesObj.getAssetIssueId(), assetIssues.getAssetId());
 				 assetIssuesObj.setAssetId(assetIssues.getAssetId());
 			}
-			if(assetIssues.getVendorId() != null)
+		
+			if(assetIssues.getVendorId() != null || !(assetIssues.getVendorId().equals("")))
 			{
 				checksVendorId(assetIssuesObj.getAssetIssueId(),assetIssues.getVendorId());
 				assetIssuesObj.setVendorId(assetIssues.getVendorId());
+			}
+			else
+			{
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "vendor id is mandetory");
 			}
 //			if(assetIssues.getComplaintRaisedDate()!= null)
 //			{
 //				assetIssues.setComplaintRaisedDate(assetIssuesObj.getComplaintRaisedDate());
 //			}
-			if(assetIssues.getDescription() != null)
+			if(assetIssues.getDescription() != null || !(assetIssues.getDescription().equals("")))
 			{
 				checkDescription(assetIssues.getDescription());
 				assetIssuesObj.setDescription(assetIssues.getDescription());
 			}
+			else
+			{
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "description is mandetory");	
+			}
 			if(assetIssues.getAssetIssueStatus() != null)
 			{
-				checkAssetIssuesStatus(assetIssues.getAssetIssueStatus());
+				//checkAssetIssuesStatus(assetIssues.getAssetIssueStatus());
 				assetIssuesObj.setAssetIssueStatus(AssetIssueStatus.DAMAGE);
 			}
 			assetIssuesObj.setResolvedDate(new Date());
@@ -476,7 +500,8 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 		assetIssuesRepository.save(assetIssuesObj);
 		response.setMessage(ResponseMessages.RETURN_DAMAGE);
 		response.setSuccess(true);
-	  }
+
+	    }
 		else
 		{
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"invalid assetIssueId");
