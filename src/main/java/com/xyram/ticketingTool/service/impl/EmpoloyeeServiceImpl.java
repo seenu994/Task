@@ -826,7 +826,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			Employee employeeObj = employeeRepository.getbyUserByUserId(userId);
 			if (employeeObj != null) {
 				// employeeObj=new Employee();
-				employeeObj.setProfileUrl(ticketAttachmentBaseUrl + "/" + filename);
+				employeeObj.setProfileUrl("https://tool.xyramsoft.com"+ticketAttachmentBaseUrl + "/" + filename);
 				employeeRepository.save(employeeObj);
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.EMPLOYEE_PROFILE_UPDATION);
