@@ -29,6 +29,7 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 import com.xyram.ticketingTool.Communication.PushNotificationCall;
 import com.xyram.ticketingTool.Communication.PushNotificationRequest;
+import com.xyram.ticketingTool.Repository.CompanyLocationRepository;
 import com.xyram.ticketingTool.Repository.CompanyWingsRepository;
 import com.xyram.ticketingTool.Repository.DesignationRepository;
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
@@ -43,6 +44,8 @@ import com.xyram.ticketingTool.Repository.VendorTypeRepository;
 import com.xyram.ticketingTool.admin.model.User;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.email.EmailService;
+import com.xyram.ticketingTool.entity.AssetVendor;
+import com.xyram.ticketingTool.entity.CompanyLocation;
 import com.xyram.ticketingTool.entity.CompanyWings;
 import com.xyram.ticketingTool.entity.Designation;
 import com.xyram.ticketingTool.entity.Employee;
@@ -64,6 +67,7 @@ import com.xyram.ticketingTool.service.NotificationService;
 import com.xyram.ticketingTool.service.TicketAttachmentService;
 import com.xyram.ticketingTool.ticket.config.PermissionConfig;
 import com.xyram.ticketingTool.util.BulkUploadExcelUtil;
+import com.xyram.ticketingTool.util.EmployeeUtil;
 import com.xyram.ticketingTool.util.ResponseMessages;
 
 /**
@@ -89,7 +93,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 	@Autowired
 	RoleRepository roleRepository;
-	
+
 	@Autowired
 	DesignationRepository designationRepository;
 
@@ -116,6 +120,9 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 	@Autowired
 	VendorTypeRepository vendorRepo;
+	
+	@Autowired
+	CompanyLocationRepository companyLocationRepository;
 
 	@Autowired
 	EmpoloyeeServiceImpl employeeServiceImpl;
@@ -176,11 +183,12 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				user.setUsername(employee.getEmail());
 				String encodedPassword = new BCryptPasswordEncoder().encode(employee.getPassword());
 				user.setPassword(encodedPassword);
-				if (employee.getFirstName().length() > 3 && employee.getLastName().length() > 0)
+				if (employee.getFirstName().length() > 3 && employee.getLastName().length() > 0) {
 					user.setName(employee.getFirstName() + " " + employee.getLastName());
+					
 				// Employee employeere=new Employee();
 				Role role = roleRepository.getById(employee.getRoleId());
-				user.setUserRole(role!=null ?role.getRoleName():null);
+				user.setUserRole(role != null ? role.getRoleName() : null);
 				/*
 				 * if (role != null) { try {
 				 * 
@@ -208,26 +216,16 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				employee.setCreatedBy(currentUser.getUserId());
 				employee.setUpdatedBy(currentUser.getUserId());
 				CompanyWings wing = wingRepo.getWingById(employee.getWings().getId());
-				if (wing != null) {
-					employee.setWings(wing);
-				}
-				
-				Designation designation = designationRepository.getDesignationNames(employee.getDesignationId());
-				if(designation != null) {
-					employee.setDesignationId(employee.getDesignationId());
-				}
-				else  {
-					if(designation == null) {
-						throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "designationName is not valid");
-						
-					}
-					
-				
-				
-				String reportingTo = userRepository.getUserById(employee.getUserCredientials().getId());
-				if(reportingTo != null) {
-					employee.setReportingTo(reportingTo);
-				}
+//				if (wing != null) {
+//					employee.setWings(wing);
+//				}
+
+
+
+//				String reportingTo = userRepository.getUserById(employee.getUserCredientials().getId());
+//				if (reportingTo != null) {
+//					employee.setReportingTo(reportingTo);
+//				}
 				employee.setCreatedAt(new Date());
 				employee.setLastUpdatedAt(new Date());
 				employee.setUserCredientials(user);
@@ -238,43 +236,38 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				userRepository.save(useredit);
 
 				// sending notification starts here..!
-				
-				
+
 				List<Map> EmployeeList = employeeRepository.getEmployeeBYReportingToId(employee.getReportingTo());
-		
-				
-				
-				if (!EmployeeList.isEmpty())
-				{
 
-				for (Map employeeNotification : EmployeeList) {
-					Map request = new HashMap<>();
-					request.put("id", employeeNotification.get("id"));
-					request.put("uid", employeeNotification.get("uid"));
-					request.put("title", "EMPLOYEE CREATED");
-					request.put("body", " employee Created - " + employeeNew.getFirstName());
-					pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 12,
-							NotificationType.EMPLOYEE_CREATED.toString()));
+				if (!EmployeeList.isEmpty()) {
 
-				}
-				// inserting notification details
-				Notifications notifications = new Notifications();
-				notifications.setNotificationDesc("employee created - " + employeeNew.getFirstName());
-				notifications.setNotificationType(NotificationType.EMPLOYEE_CREATED);
-				notifications.setSenderId(employeeNew.getReportingTo());
-				notifications.setReceiverId(userDetail.getUserId());
-				notifications.setSeenStatus(false);
-				notifications.setCreatedBy(userDetail.getUserId());
-				notifications.setCreatedAt(new Date());
-				notifications.setUpdatedBy(userDetail.getUserId());
-				notifications.setLastUpdatedAt(new Date());
+					for (Map employeeNotification : EmployeeList) {
+						Map request = new HashMap<>();
+						request.put("id", employeeNotification.get("id"));
+						request.put("uid", employeeNotification.get("uid"));
+						request.put("title", "EMPLOYEE CREATED");
+						request.put("body", " employee Created - " + employeeNew.getFirstName());
+						pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request,
+								12, NotificationType.EMPLOYEE_CREATED.toString()));
 
-				notificationService.createNotification(notifications);
+					}
+					// inserting notification details
+					Notifications notifications = new Notifications();
+					notifications.setNotificationDesc("employee created - " + employeeNew.getFirstName());
+					notifications.setNotificationType(NotificationType.EMPLOYEE_CREATED);
+					notifications.setSenderId(employeeNew.getReportingTo());
+					notifications.setReceiverId(userDetail.getUserId());
+					notifications.setSeenStatus(false);
+					notifications.setCreatedBy(userDetail.getUserId());
+					notifications.setCreatedAt(new Date());
+					notifications.setUpdatedBy(userDetail.getUserId());
+					notifications.setLastUpdatedAt(new Date());
+
+					notificationService.createNotification(notifications);
 				}
 				UUID uuid = UUID.randomUUID();
 				String uuidAsString = uuid.toString();
-				
-			
+
 				if (employeeNew != null & false) {
 					String name = null;
 
@@ -289,52 +282,161 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				}
 				// end of the notification part...!
 
-
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.EMPLOYEE_ADDED);
 				Map content = new HashMap();
 				content.put("employeeId", employeeNew.geteId());
 				response.setContent(content);
-				}
 			}
-			 catch (ResponseStatusException re) {
+			}
+			catch (ResponseStatusException re) {
 				throw new ResponseStatusException(re.getStatus(), re.getReason());
 			} catch (Exception e) {
 				System.out.println("Error Occured :: " + e.getMessage());
 			}
 
-			return response;
+			 return response;
 
-		}
-
+		} 
 		return response;
+
 	}
 
 	private ApiResponse validateEmployee(Employee employee) {
 		ApiResponse response = new ApiResponse(false);
+		String regex = "[a-z A-Z]+";
 		String email = employeeRepository.filterByEmail(employee.getEmail());
 		if (!emailValidation(employee.getEmail())) {
 			response.setMessage(ResponseMessages.EMAIL_INVALID);
 
 			response.setSuccess(false);
 		}
-
-		else if (employee.getMobileNumber().length() != 10) {
-			response.setMessage(ResponseMessages.MOBILE_INVALID);
-
-			response.setSuccess(false);
+		
+		if (employee.getFirstName() == null || employee.getFirstName().equals("")) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "FirstName is mandatory");
 		}
+		if(!employee.getFirstName().matches(regex)) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name should be character only");
+		}
+		
+		if (employee.getLastName() == null || employee.getLastName().equals("")) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "LastName is mandatory");
+		}
+		if(!employee.getLastName().matches(regex)) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "LastName should be character only");
+		}
+		if (employee.getPosition() == null || employee.getPosition().equals("")) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "position is mandatory");
+		}
+		
+		
+		if (employee.getLocation() == null || employee.getLocation().equals("")) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Location is mandatory");
+		} 
+		else {
+			//Designation designation = designationRepository.getDesignationNames(employee.getDesignationId());
+			CompanyLocation companyLocation = companyLocationRepository.getCompanyLocations(employee.getLocation());
+			if (companyLocation != null) {
+				employee.setLocation(employee.getLocation());
+			}
+			if (companyLocation == null) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "location is not valid");
+			}
+		}
+		
+		if (employee.getRoleId() == null || employee.getRoleId().equals("")) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "RoleId is mandatory");
+		} else {
 
-		else if (email != null) {
+			Role role = roleRepository.getRoleName(employee.getRoleId());
+			if (role != null) {
+				employee.setRoleId(employee.getRoleId());
+			}
+			if (role == null) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "RoleId is not valid");
+			}
+			
+		}
+		
+		
+		if (employee.getDesignationId() == null || employee.getDesignationId().equals("")) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "designationId is mandatory");
+		} else {
+
+			Designation designation = designationRepository.getDesignationNames(employee.getDesignationId());
+			if (designation != null) {
+				employee.setDesignationId(employee.getDesignationId());
+			}
+			if (designation == null) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "designationId is not valid");
+			}
+		}
+		
+		if(employee.getPosition() != null) {
+			boolean isExist = false;
+
+			for (String position : EmployeeUtil.position) {
+				if(position.equalsIgnoreCase(employee.getPosition())) {
+					isExist = true;
+					break;
+				}
+			}
+			if (!isExist) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Position is not available");
+			}
+	
+		}
+		
+			
+			if (employee.getWings()== null || employee.getWings().equals("")) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "wings is mandatory");
+			} else {
+
+				CompanyWings companyWings = wingRepo.getWingName(employee.getWings().getId());
+				if (companyWings != null) {
+					employee.setWings(employee.getWings());
+				}
+				if (companyWings == null) {
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "wingsId is not valid");
+				}
+				
+			
+			}
+			
+			if (employee.getMobileNumber() == null || employee.getMobileNumber().equals("")) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "MobileNumber is mandatory");
+			}
+			
+			else if(employee.getMobileNumber().length() != 10) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "In correct mobile number");	
+			}
+
+//		else if (employee.getMobileNumber().length() != 10) {
+//			response.setMessage(ResponseMessages.MOBILE_INVALID);
+//
+//			response.setSuccess(false);
+//		}
+			
+			if (employee.getEmail() == null || employee.getEmail().equals("")) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Mail id is mandatory");
+			}
+			else if (!emailValidation(employee.getEmail())) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid EmailId");
+			
+			}
+
+	else if (email != null) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "email already exists!!!");
 		}
 
-		else {
-			response.setMessage(ResponseMessages.EMPLOYEE_ADDED);
-
-			response.setSuccess(true);
-		}
-
+//		else {
+//			response.setMessage(ResponseMessages.EMPLOYEE_ADDED);
+//
+		response.setSuccess(true);
+	
+		
+		
+		
 		return response;
 	}
 
@@ -534,6 +636,10 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	@Override
 	public ApiResponse searchEmployee(String searchString) {
 		ApiResponse response = new ApiResponse(false);
+		
+		//Map employee = employeeRepository.getEmployeeBYId(searchString);
+		//List<Map> reportees = employeeRepository.getReportingList(employeeId);
+		
 		List<Map> employeeList = employeeRepository.searchEmployee(searchString);
 		Map content = new HashMap();
 		if (employeeList.size() > 0) {
@@ -1151,11 +1257,12 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 		return response;
 
-	} 
+	}
+
 	@Override
 	public ApiResponse searchEmployeeByReportingId(String reportingId, String searchString) {
 		ApiResponse response = new ApiResponse(false);
-		List<Map> reportees = employeeRepository.searchEmployeeByReportingId(reportingId,searchString);
+		List<Map> reportees = employeeRepository.searchEmployeeByReportingId(reportingId, searchString);
 		Map content = new HashMap();
 		content.put("reportees", reportees);
 		if (content != null) {
