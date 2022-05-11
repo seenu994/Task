@@ -986,8 +986,8 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 		ApiResponse response = new ApiResponse();
 //		String jobId = filter.containsKey("jobId") ? ((String) filter.get("jobId"))
 //				: null;
-//		String employeeId = filter.containsKey("employeeId") ? ((String) filter.get("employeeId"))
-//				: null;
+		String employeeId = filter.containsKey("employeeId") ? ((String) filter.get("employeeId"))
+				: null;
 		Boolean closed = filter.containsKey("closed") ? ((Boolean) filter.get("closed"))
 				: false;
 	String status = filter.containsKey("status") ? ((String) filter.get("status")).toLowerCase()
@@ -1010,7 +1010,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 		}
 	}
 	
-	List<Map> myTeamScheduleList = hrCalendarRepository.downloadAllMyTeamSchedulesFromCalendarByStatus(currentUser.getUserId(),
+	List<Map> myTeamScheduleList = hrCalendarRepository.downloadAllMyTeamSchedulesFromCalendarByStatus(currentUser.getUserId(), employeeId,
 			                                            fromDate,  toDate, status, closed, userZone);
 	Map<String, Object> fileResponse = new HashMap<>();
 
