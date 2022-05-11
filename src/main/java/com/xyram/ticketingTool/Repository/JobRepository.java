@@ -42,7 +42,7 @@ public interface JobRepository extends CrudRepository<JobOpenings, Long>, JpaSpe
 	JobOpenings getJobOpeningFromCode(String jobCode);
 
 	@Query(value = "SELECT jo.job_code as jobCode,jo.job_title as jobTitle,jo.job_description as jobDescription,jo.notify_vendor as notifyVendor"
-			+ ",jo.job_skills as jobSkills,jo.total_openings as jobOpenings,jo.filled_positions as jobPositions,"
+			+ "jo.job_skills as jobSkills,jo.total_openings as jobOpenings,jo.filled_positions as jobPositions,"
 			+ "jo.min_exp as jobMinExperience,jo.max_exp as jobMaxExperience,jo.wing_id as jobWing,jo.status as jobstatus,"
 			+ "jo.salary as jobSalary,jo.created_at as jobCreatedAt,jo.created_by as jobCreatedBy,jo.last_updated_at as jobLastUpdatedAt,"
 			+ "jo.updated_by as jobLastUpdatedBy,e.frist_name as name, u.user_role as role,"

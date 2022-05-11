@@ -33,7 +33,12 @@ public class CompanyWingServiceImpl implements CompanyWingService {
 	@Override
 	public ApiResponse createWing(CompanyWings wings) {
 		ApiResponse response = new ApiResponse(false);
-		response = validateWing(wings);
+		//response = validateWing(wings);
+		if (wings.getWingName() == null|| wings.getWingName().equals("")  ) {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.WINGS_NOT_UPDATED+":"+"Wing Name is Mandatory");
+			return response;
+		}
 		if (wings != null) {
 			wings.setCreatedAt(new Date());
 			wings.setCreatedBy(currentUser.getName());
@@ -64,10 +69,15 @@ public class CompanyWingServiceImpl implements CompanyWingService {
 	@Override
 	public ApiResponse updateWing(String id, CompanyWings wings) {
 		ApiResponse response = new ApiResponse();
-		response = validateWing(wings);
+//		response = validateWing(wings);
 		CompanyWings wingObj = wingRepo.getWingById(id);
+		if (wings.getWingName() == null|| wings.getWingName().equals("")  ) {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.WINGS_NOT_UPDATED+":"+"Wing Name is Mandatory");
+			return response;
+		}
 		if (wingObj != null) {
-				wings.setUpdatedBy(currentUser.getName());
+			    wingObj.setUpdatedBy(currentUser.getName());
 				wingObj.setLastUpdatedAt(new Date());
 				wingObj.setWingName(wings.getWingName());
 				wingObj.setStatus(wings.isStatus());
@@ -83,11 +93,11 @@ public class CompanyWingServiceImpl implements CompanyWingService {
 		return response;
 	}
 	
-	private ApiResponse validateWing(CompanyWings wings) {
-		ApiResponse response = new ApiResponse(false);
-		if (wings.getWingName() == null|| wings.getWingName().equals("")  ) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wing name is mandatory");
-		}
-		return response;
-	}
+//	private ApiResponse validateWing(CompanyWings wings) {
+//		ApiResponse response = new ApiResponse(false);
+//		if (wings.getWingName() == null|| wings.getWingName().equals("")  ) {
+//			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wing name is mandatory");
+//		}
+//		return response;
+//	}
 }

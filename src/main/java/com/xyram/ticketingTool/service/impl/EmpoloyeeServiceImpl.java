@@ -393,9 +393,9 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			} else {
 
 				CompanyWings companyWings = wingRepo.getWingName(employee.getWings().getId());
-				if (companyWings != null) {
-					employee.setWings(employee.getWings());
-				}
+//				if (companyWings != null) {
+//					employee.setWings(employee.getWings());
+//				}
 				if (companyWings == null) {
 					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "wingsId is not valid");
 				}

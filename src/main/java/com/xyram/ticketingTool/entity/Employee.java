@@ -76,7 +76,7 @@ public class Employee extends AuditModel {
 	@Column(name="position")
 	private String position;
 	
-	@OneToOne(cascade = {  CascadeType.ALL})
+	@OneToOne(cascade = {  CascadeType.MERGE})
 	@JoinColumn(name = "wing_id")
     private CompanyWings wings;
 	
