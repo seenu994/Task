@@ -30,6 +30,7 @@ import com.jcraft.jsch.Session;
 import com.xyram.ticketingTool.Communication.PushNotificationCall;
 import com.xyram.ticketingTool.Communication.PushNotificationRequest;
 import com.xyram.ticketingTool.Repository.CompanyWingsRepository;
+import com.xyram.ticketingTool.Repository.DesignationRepository;
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
 import com.xyram.ticketingTool.Repository.PermissionRepository;
 import com.xyram.ticketingTool.Repository.ProjectMemberRepository;
@@ -43,6 +44,7 @@ import com.xyram.ticketingTool.admin.model.User;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.email.EmailService;
 import com.xyram.ticketingTool.entity.CompanyWings;
+import com.xyram.ticketingTool.entity.Designation;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.JobVendorDetails;
 import com.xyram.ticketingTool.entity.Notifications;
@@ -106,6 +108,9 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	@Autowired
 	UserPermissionRepository userPermissionConfig;
 
+	@Autowired
+	DesignationRepository designationRepository;
+	
 	@Autowired
 	RoleMasterRepository masterRepo;
 
@@ -206,6 +211,14 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				if (wing != null) {
 					employee.setWings(wing);
 				}
+				String designation = designationRepository.getDesignationName(employee.getDesignationId());
+				if(designation != null) {
+					employee.setDesignationId(designation);
+				}
+				String reportingTo = userRepository.getUserById(employee.getUserCredientials().getId());
+				if(reportingTo != null) {
+					employee.setReportingTo(reportingTo);
+				}
 				employee.setCreatedAt(new Date());
 				employee.setLastUpdatedAt(new Date());
 				employee.setUserCredientials(user);
@@ -233,7 +246,6 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 					request.put("body", " employee Created - " + employeeNew.getFirstName());
 					pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 12,
 							NotificationType.EMPLOYEE_CREATED.toString()));
-
 				}
 				// inserting notification details
 				Notifications notifications = new Notifications();
@@ -303,6 +315,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		else if (email != null) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "email already exists!!!");
 		}
+		
 
 		else {
 			response.setMessage(ResponseMessages.EMPLOYEE_ADDED);
