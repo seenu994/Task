@@ -44,6 +44,11 @@ public class ArticleServiceImpl implements ArticleService{
 		if(article != null) {
 			
 //			try {
+			if(article.getDescription().length() > 5000) {
+				response.setSuccess(false);
+				response.setMessage("Description length exceeded. Only 5000 characters will allow");
+				return response;
+			}
 				article.setCreatedBy(currentUser.getUserId());
 				article.setUserId(currentUser.getUserId());
 				article.setUserName(currentUser.getFirstName());
@@ -83,6 +88,11 @@ public class ArticleServiceImpl implements ArticleService{
 		
 		if(articleObj != null) {		
 			try {
+				if(article.getDescription().length() > 5000) {
+					response.setSuccess(false);
+					response.setMessage("Description length exceeded. Only 5000 characters will allow");
+					return response;
+				}
 				articleObj.setTitle(article.getTitle());
 				articleObj.setDescription(article.getDescription());
 				articleObj.setSearchLabels(article.getSearchLabels());
@@ -224,15 +234,15 @@ public class ArticleServiceImpl implements ArticleService{
 		ApiResponse response = new ApiResponse(false);
 		
 		Page<Map> list = null;
-		
+		searchString = searchString.replaceAll("[-+.^:,]!@#$%&*()_~`/","");
 		if(currentUser.getUserRole().equalsIgnoreCase("TICKETINGTOOL_ADMIN"))
 		{
 			response.setMessage(ResponseMessages.ARTICLE_LIST_RETREIVED+" For Super admin");
-			list = articleRepository.searchAllArticles(pageable,searchString);
+			list = articleRepository.searchAllArticles(pageable,searchString.toLowerCase());
 		}
 		else {
 			response.setMessage(ResponseMessages.ARTICLE_LIST_RETREIVED+" For employees");
-			list = articleRepository.searchAllActiveArticles(pageable,searchString);
+			list = articleRepository.searchAllActiveArticles(pageable,searchString.toLowerCase());
 		}
 		
 		if(list.getSize() > 0) {

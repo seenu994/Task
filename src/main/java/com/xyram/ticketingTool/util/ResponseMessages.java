@@ -355,6 +355,8 @@ String ASSET_DIRECTORY ="/Documents/assetDetails/";
 
 		String ASSET_PURCHASE_BILL_EDITED_SUCCESSFULLY = "Asset is underwarrenty and purchase bill edited successfully";
 
+		String HRCALENDER_LIST_RETRIVED = "List retrieved Successfully";
+
 		
 		
 
