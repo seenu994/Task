@@ -1,5 +1,6 @@
 package com.xyram.ticketingTool.service;
 
+import java.util.Date;
 import java.util.Map;
 
 import org.springframework.data.domain.Pageable;
@@ -16,5 +17,5 @@ public interface ReminderService {
 
 	ApiResponse getAllReminder(Pageable pageable);
 
-	ApiResponse getRemindersByDate(Map<String, Object> filter, Pageable pageable);
+	ApiResponse getRemindersByDate(Date paramDate);
 }

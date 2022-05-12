@@ -20,7 +20,7 @@ public class Reminder extends AuditModel {
 	@GeneratedValue(generator = IdGenerator.ID_GENERATOR)
 	@GenericGenerator(name = IdGenerator.ID_GENERATOR, strategy = "com.xyram.ticketingTool.id.generator.IdGenerator")
 	@Column(name = "id")
-	private String ReminderId;
+	private String reminderId;
 
 	@Column(name = "user_name", nullable = false)
 	private String userName;
@@ -88,11 +88,11 @@ public class Reminder extends AuditModel {
 	}
 
 	public String getReminderId() {
-		return ReminderId;
+		return reminderId;
 	}
 
-	public void setReminderId(String ReminderId) {
-		this.ReminderId = ReminderId;
+	public void setReminderId(String reminderId) {
+		this.reminderId = reminderId;
 	}
 
 }

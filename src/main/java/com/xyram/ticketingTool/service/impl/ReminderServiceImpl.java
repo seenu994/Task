@@ -31,6 +31,7 @@ import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Articles;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.JobInterviews;
+import com.xyram.ticketingTool.entity.Notes;
 import com.xyram.ticketingTool.entity.Notifications;
 import com.xyram.ticketingTool.entity.Reminder;
 import com.xyram.ticketingTool.entity.ReminderLog;
@@ -57,7 +58,7 @@ public class ReminderServiceImpl implements ReminderService {
 	PushNotificationRequest pushNotificationRequest;
 	@Autowired
 	ReminderlogRepository reminderlogRepository;
-	
+
 	@Autowired
 	UserRepository userRepository;
 
@@ -89,7 +90,6 @@ public class ReminderServiceImpl implements ReminderService {
 					reminderLog.setuId(user.getUid());
 					reminderLog.setUserId(user.getId());
 					reminderlogRepository.save(reminderLog);
-						
 
 					// inserting notification details
 					Notifications notifications = new Notifications();
@@ -139,7 +139,7 @@ public class ReminderServiceImpl implements ReminderService {
 		ApiResponse response = new ApiResponse(false);
 
 //		ReminderRepository ReminderObject = reminderRepository.getById(ReminderId);
-		Reminder ReminderObject = reminderRepository.findReminderById(ReminderReq.getReminderId());
+		Reminder ReminderObject = reminderRepository.findReminderById(ReminderId);
 		System.out.println("ReminderId::" + ReminderObject);
 //		if (currentUser.getUserRole().equals("TICKETINGTOOL_ADMIN")) {
 //			response.setSuccess(false);
@@ -174,16 +174,17 @@ public class ReminderServiceImpl implements ReminderService {
 	}
 
 	@Override
-	public ApiResponse deleteReminder(String ReminderId) {
+	public ApiResponse deleteReminder(String reminderId) {
 		ApiResponse response = new ApiResponse(false);
 
 //		ReminderRepository ReminderObject = reminderRepository.getById(ReminderId);
-		ReminderRepository ReminderObject = (ReminderRepository) reminderRepository.getById(ReminderId);
-
+		Reminder ReminderObject = reminderRepository.findReminderById(reminderId);
+	
+		System.out.println("ReminderId::" + ReminderObject + reminderId);
 		if (ReminderObject != null) {
 			try {
 
-				reminderRepository.deleteById(ReminderId);
+				reminderRepository.deleteReminder(reminderId);
 
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.Reminder_DELETED);
@@ -223,44 +224,24 @@ public class ReminderServiceImpl implements ReminderService {
 	}
 
 	@Override
-	public ApiResponse getRemindersByDate(Map<String, Object> filter, Pageable pageable) {
-//		ApiResponse response = new ApiResponse(false);
-//
-//		String fromDate = filter.containsKey("fromDate") ? filter.get("fromDate").toString() : null;
-//		String toDate = filter.containsKey("toDate") ? filter.get("toDate").toString() : null;
-//
-//		Date parsedfromDate = null;
-//		Date parsedtoDate = null;
-//		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//
-//		if (fromDate != null && toDate != null) {
-//			try {
-//
-//				parsedfromDate = fromDate != null ? dateFormat.parse(fromDate) : null;
-//				parsedtoDate = toDate != null ? dateFormat.parse(toDate) : null;
-//
-//			} catch (ParseException e) {
-//				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-//						"Invalid date format date should be yyyy-MM-dd");
-//			}
-//		}
-//
-//		Page<Map> reminderList = reminderRepository.getReminderByDate(currentUser.getUserId(), fromDate, toDate,
-//				pageable);
-//
-//		if (reminderList.getSize() > 0) {
-//			Map content = new HashMap();
-//			content.put("shceduleList", reminderList);
-//			response.setContent(content);
-//			response.setSuccess(true);
-//			response.setMessage("List retreived successfully.");
-//		} else {
-//			response.setSuccess(false);
-//			response.setMessage("List is empty.");
-//		}
-//
-//		return response;
+	public ApiResponse getRemindersByDate(Date paramDate) {
+		System.out.println("param Dte::" + paramDate);
+		ApiResponse response = new ApiResponse(false);
+		List<Map> list = null;
+		list = reminderRepository.getRemindersByDateValue(paramDate, currentUser.getUserId());
+		Map content = new HashMap();
+		content.put("Reminders", list);
+		if (content != null) {
+			response.setSuccess(true);
+			response.setMessage(ResponseMessages.Reminder_LIST_RETRIEVED);
+			response.setContent(content);
+		} else {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.Reminder_LIST_NOT_RETRIEVED);
+		}
 
-		return null;
+		return response;
 	}
+
+
 }
