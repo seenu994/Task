@@ -90,12 +90,17 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 		if (schedule != null) {
 			if (validateSchedule(schedule)) {
 				if(schedule.getJobId() != null) {
-					JobOpenings job = jobRepository.getById(schedule.getJobId());
+					Map job = jobRepository.getJobById(schedule.getJobId());
 					if(job == null) {
 						response.setSuccess(false);
 						response.setMessage("Job Id not found.");
 						return response;
 					}
+				}
+				else {
+					response.setSuccess(false);
+					response.setMessage("Job Id not found.");
+					return response;
 				}
 				if(schedule.getIs_scheduled()) {
 					
@@ -160,12 +165,16 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 				Employee employee = employeeRepository.getByEmpId(currentUser.getScopeId());
 				Employee reportor = employeeRepository.getByEmpId(employee.getReportingTo());
 				if(schedule.getJobId() != null) {
-					JobOpenings job = jobRepository.getById(schedule.getJobId());
+					Map job = jobRepository.getJobById(schedule.getJobId());
 					if(job == null) {
 						response.setSuccess(false);
 						response.setMessage("Job Id not found.");
 						return response;
 					}
+				}else {
+					response.setSuccess(false);
+					response.setMessage("Job Id not found.");
+					return response;
 				}
 				if(schedule.getIs_scheduled() && validateDateTime) {
 					Date toDateTime = new Date();
@@ -915,19 +924,19 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	
 		return response;
 	}
-	public static String getScheduleDate(String input) {
-        try {
-            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            inputFormat.setTimeZone(TimeZone.getTimeZone("IST"));
-            Date date = inputFormat.parse(input);
-            SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            return outputFormat.format(date);
-        } catch (Exception ignore) {
-            //cannot happen in this example
-            //Log.e("Exception", ignore.toString());
-        }
-        return "";
-    }
+//	public static String getScheduleDate(String input) {
+//        try {
+//            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//            inputFormat.setTimeZone(TimeZone.getTimeZone("IST"));
+//            Date date = inputFormat.parse(input);
+//            SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//            return outputFormat.format(date);
+//        } catch (Exception ignore) {
+//            //cannot happen in this example
+//            //Log.e("Exception", ignore.toString());
+//        }
+//        return "";
+//    }
 	private Workbook prepareExcelWorkBook(List<Map> myScheduleList, String userZone) 
 	{
 		List<String> headers = Arrays.asList("Name", "Job code", "Job Title", "Date & Time", "Source", "Status");
@@ -946,7 +955,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 				scheduleDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(mySchedule.get("scheduleDate").toString());
 				
 		cal.setTime(scheduleDate);
-		HrCalendarTimeZone.getDate(userZone);
+//		HrCalendarTimeZone.getDate(userZone);
 		cal.set(Calendar.SECOND, HrCalendarTimeZone.getDate(userZone));
 	 
 			//	System.out.println(cal.getTime());
@@ -977,8 +986,8 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 		ApiResponse response = new ApiResponse();
 //		String jobId = filter.containsKey("jobId") ? ((String) filter.get("jobId"))
 //				: null;
-//		String employeeId = filter.containsKey("employeeId") ? ((String) filter.get("employeeId"))
-//				: null;
+		String employeeId = filter.containsKey("employeeId") ? ((String) filter.get("employeeId"))
+				: null;
 		Boolean closed = filter.containsKey("closed") ? ((Boolean) filter.get("closed"))
 				: false;
 	String status = filter.containsKey("status") ? ((String) filter.get("status")).toLowerCase()
@@ -1001,7 +1010,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 		}
 	}
 	
-	List<Map> myTeamScheduleList = hrCalendarRepository.downloadAllMyTeamSchedulesFromCalendarByStatus(currentUser.getUserId(),
+	List<Map> myTeamScheduleList = hrCalendarRepository.downloadAllMyTeamSchedulesFromCalendarByStatus(currentUser.getUserId(), employeeId,
 			                                            fromDate,  toDate, status, closed, userZone);
 	Map<String, Object> fileResponse = new HashMap<>();
 
@@ -1070,11 +1079,10 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	
 				scheduleDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(myTeamSchedule.get("scheduleDate").toString());
 				
-		cal.setTime(scheduleDate);
-		HrCalendarTimeZone.getDate(userZone);
-		cal.set(Calendar.SECOND, HrCalendarTimeZone.getDate(userZone));
+		        cal.setTime(scheduleDate);
+		        cal.set(Calendar.SECOND, HrCalendarTimeZone.getDate(userZone));
 	 
-				System.out.println(cal.getTime());
+//				System.out.println(cal.getTime());
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -1098,4 +1106,49 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 		
 	}
 
-}
+	@Override
+	public ApiResponse getAllhrCalender(Pageable pageable) {
+		ApiResponse response = new ApiResponse();
+		Page<Map> hrcalender = hrCalendarRepository.getHrcalender(pageable);
+	
+		Map content = new HashMap();
+		content.put("hrcalender", hrcalender);
+		if(content != null) {
+			response.setSuccess(true);
+			response.setContent(content);
+			response.setMessage(ResponseMessages.HRCALENDER_LIST_RETRIVED);
+		}
+		else {
+			response.setSuccess(false);
+			response.setMessage("Could not retrieve data");
+		}
+		return response;
+	}
+
+	@Override
+	public ApiResponse searchhrCalender(String searchString) {
+		ApiResponse response = new ApiResponse();
+		List<Map> hrCalender = hrCalendarRepository.searchhrCalender(currentUser.getUserId(),searchString);
+
+		Map content = new HashMap();
+		content.put("hrCalender",hrCalender );
+		if (content != null) {
+
+			
+			response.setSuccess(true);
+			response.setMessage("hr calender details retrived successfully");
+			response.setContent(content);
+		} else {
+			
+			response.setSuccess(false);
+			// response.setContent(content);
+			response.setMessage("Not retrived the data");
+		}
+
+		return response;
+
+	}
+	}
+	
+		
+

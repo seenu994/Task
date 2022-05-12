@@ -36,7 +36,8 @@ public interface AnnouncementRepository extends JpaRepository<Announcement, Stri
 	
 	@Query("Select distinct new map( a.announcementId as announcementId,a.title as title,a.searchLabels as searchLabels,a.status as status,a.userId as userId,"
 			+ " a.userName as userName, a.createdAt as createdAt,a.lastUpdatedAt as lastUpdatedAt,"
-			+ " a.UpdatedBy as UpdatedBy, a.createdBy as createdBy) from Announcement a where a.title like %:searchString% or a.description like %:searchString% "
+			+ " a.UpdatedBy as UpdatedBy, a.createdBy as createdBy) from Announcement a where "
+			+ " (LOWER(a.title) like %:searchString% or LOWER(a.description) like %:searchString%) "
 			+ " ORDER BY a.createdAt DESC")
 	Page<Map> searchAllAnnouncements(Pageable pageable, String searchString);
 	

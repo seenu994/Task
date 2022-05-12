@@ -11,10 +11,10 @@ public class testing {
 		  String hours=timeZone[0];
 		 minutes=plus+minutes;
 				  
-		  long hrs=       Long.valueOf(hours);
+		  long hrs=Long.valueOf(hours);
 		  long min=Long.valueOf(minutes);
 		  Long sec=(hrs*60*60)+(min*60);
-		return null;
+		return sec;
 	}
 	
 	public static void main(String args[]) {

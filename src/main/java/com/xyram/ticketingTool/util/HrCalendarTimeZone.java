@@ -10,7 +10,7 @@ public interface HrCalendarTimeZone {
 		  String hours=timeZone[0];
 		  minutes=plus+minutes;
 				  
-		  long hrs=       Long.valueOf(hours);
+		  long hrs=Long.valueOf(hours);
 		  long min=Long.valueOf(minutes);
 		  int sec=(int) ((hrs*60*60)+(min*60));
 	   	  return sec;

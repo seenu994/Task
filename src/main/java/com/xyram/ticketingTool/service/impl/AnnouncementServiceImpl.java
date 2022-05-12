@@ -225,15 +225,15 @@ public class AnnouncementServiceImpl implements AnnouncementService{
 		ApiResponse response = new ApiResponse(false);
 		
 		Page<Map> list = null;
-		
+		searchString = searchString.replaceAll("[-+.^:,]!@#$%&*()_~`/","");
 		if(currentUser.getUserRole().equalsIgnoreCase("TICKETINGTOOL_ADMIN"))
 		{
 			response.setMessage(ResponseMessages.ANNOUNCEMENT_LIST_RETREIVED+" For Super admin");
-			list = announcementRepository.searchAllAnnouncements(pageable,searchString);
+			list = announcementRepository.searchAllAnnouncements(pageable,searchString.toLowerCase());
 		}
 		else {
 			response.setMessage(ResponseMessages.ANNOUNCEMENT_LIST_RETREIVED+" For employees");
-			list = announcementRepository.searchAllActiveAnnouncements(pageable,searchString);
+			list = announcementRepository.searchAllActiveAnnouncements(pageable,searchString.toLowerCase());
 		}
 		
 		if(list.getSize() > 0) {

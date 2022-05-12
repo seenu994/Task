@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -21,72 +22,66 @@ import com.xyram.ticketingTool.id.generator.IdPrefix;
 
 @Entity
 @Table(name = "job_openings")
-public class JobOpenings extends AuditModel{
-	
+public class JobOpenings extends AuditModel {
+
 	/*
-	 * `job_code` varchar(255) NOT NULL DEFAULT '',
-  `job_title` varchar(255) NOT NULL DEFAULT '',
-  `job_description` varchar(5000) DEFAULT NULL,
-  `job_skills` varchar(255) NOT NULL DEFAULT '',
-  `total_openings` smallint(255) NOT NULL,
-  `filled_positions` smallint(255) DEFAULT NULL,
-  `min_exp` smallint(255) NOT NULL,
-  `max_exp` smallint(255) NOT NULL,
-  `wing_id` varchar(255) DEFAULT NULL,
-  `status` varchar(255) DEFAULT NULL,
-  `salary` int(255) DEFAULT NULL,
+	 * `job_code` varchar(255) NOT NULL DEFAULT '', `job_title` varchar(255) NOT
+	 * NULL DEFAULT '', `job_description` varchar(5000) DEFAULT NULL, `job_skills`
+	 * varchar(255) NOT NULL DEFAULT '', `total_openings` smallint(255) NOT NULL,
+	 * `filled_positions` smallint(255) DEFAULT NULL, `min_exp` smallint(255) NOT
+	 * NULL, `max_exp` smallint(255) NOT NULL, `wing_id` varchar(255) DEFAULT NULL,
+	 * `status` varchar(255) DEFAULT NULL, `salary` int(255) DEFAULT NULL,
 	 */
-	
+
 	@Id
 	@IdPrefix(value = "JOBOP_")
 	@GeneratedValue(generator = IdGenerator.ID_GENERATOR)
 	@GenericGenerator(name = IdGenerator.ID_GENERATOR, strategy = "com.xyram.ticketingTool.id.generator.IdGenerator")
-	@Column(name="job_id")
+	@Column(name = "job_id")
 	private String Id;
 
-	@Column(name="job_code")
+	@Column(name = "job_code")
 	private String jobCode;
-	
-	@Column(name="job_title")
+
+	@Column(name = "job_title")
 	private String jobTitle;
-	
-	@Column(name="job_description")
+
+	@Column(name = "job_description", length = 5000)
 	private String jobDescription;
 
-	@Column(name="job_skills")
+	@Column(name = "job_skills")
 	private String jobSkills;
-	
-	@Column(name="total_openings")
+
+	@Column(name = "total_openings")
 	private Integer totalOpenings;
-	
-	@Column(name="filled_positions")
+
+	@Column(name = "filled_positions")
 	private Integer filledPositions;
-	
-	@Column(name="min_exp")
+
+	@Column(name = "min_exp")
 	private Integer minExp;
-	
-	@Column(name="max_exp")
+
+	@Column(name = "max_exp")
 	private Integer maxExp;
-	
+
 	@Transient
 	private double salaryPackage;
-	
-	@OneToOne(cascade = {  CascadeType.ALL})
+
+	@OneToOne(cascade = { CascadeType.ALL })
 	@JoinColumn(name = "wing_id")
-    private CompanyWings wings;
-	
+	private CompanyWings wings;
+
 	@Enumerated(EnumType.STRING)
-	@Column(name="status")
+	@Column(name = "status")
 	private JobOpeningStatus jobStatus = JobOpeningStatus.VACANT;
 
-	@Column(name="salary")
+	@Column(name = "salary")
 	private double jobSalary;
-	
-	@Column(name="vendor_view")
+
+	@Column(name = "vendor_view")
 	private Integer vendor_view = 0;
-	
-	
-	@Column(name="notify_vendor",nullable = false, columnDefinition = "TINYINT(1)")
+
+	@Column(name = "notify_vendor", nullable = false, columnDefinition = "TINYINT(1)")
 	private boolean notifyVendor = false;
 
 	public String getId() {
@@ -100,7 +95,6 @@ public class JobOpenings extends AuditModel{
 	public String getJobTitle() {
 		return jobTitle;
 	}
-
 
 	public void setJobSalary(double jobSalary) {
 		this.jobSalary = jobSalary;
@@ -122,8 +116,8 @@ public class JobOpenings extends AuditModel{
 		return jobSkills;
 	}
 
-	public void setJobSkills(String jobSkills) {
-		this.jobSkills = jobSkills;
+	public void setJobSkills(String skill) {
+		this.jobSkills = skill;
 	}
 
 	public Integer getTotalOpenings() {
@@ -181,13 +175,7 @@ public class JobOpenings extends AuditModel{
 	public void setJobCode(String jobCode) {
 		this.jobCode = jobCode;
 	}
-	
-	
-	
 
-	
-
-	
 	public Integer getVendor_view() {
 		return vendor_view;
 	}
@@ -195,10 +183,6 @@ public class JobOpenings extends AuditModel{
 	public void setVendor_view(Integer vendor_view) {
 		this.vendor_view = vendor_view;
 	}
-
-	
-
-	
 
 	public boolean isNotifyVendor() {
 		return notifyVendor;
@@ -220,8 +204,4 @@ public class JobOpenings extends AuditModel{
 		this.salaryPackage = salaryPackage;
 	}
 
-
-	
-	
-	
 }
