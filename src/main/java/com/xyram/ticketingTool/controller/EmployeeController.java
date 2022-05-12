@@ -121,7 +121,7 @@ class EmployeeController
 			AuthConstants.DEVELOPER_BASEPATH + "/editEmployee/{employeeId}",
 			AuthConstants.HR_ADMIN_BASEPATH + "/editEmployee/{employeeId}" })
 	public ApiResponse editEmployee(@RequestBody Employee employeeRequest, @PathVariable String employeeId) {
-		logger.info("indide ProductController :: getAllemployee");
+		logger.info("indide edit employee");
 		return employeeService.editEmployee(employeeId, employeeRequest);
 	}
 
@@ -131,7 +131,7 @@ class EmployeeController
 			AuthConstants.HR_BASEPATH + "/getEmployee/{employeeId}",
 			AuthConstants.HR_ADMIN_BASEPATH + "/getEmployee/{employeeId}"})
 	public ApiResponse getEmployeeDetails(@PathVariable String employeeId) {
-		logger.info("indide ProductController :: getEmployee");
+		logger.info("indide getEmployeeDetails");
 		return employeeService.getEmployeeDetails(employeeId);
 	}
 
@@ -142,7 +142,7 @@ class EmployeeController
 			AuthConstants.HR_ADMIN_BASEPATH + "/getEmployeeDetails/{employeeId}",
 			AuthConstants.HR_BASEPATH + "/getEmployeeDetails/{employeeId}", })
 	public ApiResponse getEmployeeDetailsById(@PathVariable String employeeId) {
-		logger.info("indide ProductController :: getAllemployee");
+		logger.info("indide getEmployeeDetailsById ");
 		return employeeService.getEmployeeDetailsById(employeeId);
 	}
 
