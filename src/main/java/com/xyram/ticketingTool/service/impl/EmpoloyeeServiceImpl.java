@@ -343,6 +343,16 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		}
 		
 		
+		if(employee.getReportingTo() == null || employee.getReportingTo().equals("") ) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Reporting to is manditory");
+		}
+		//Brand brand = brandRepository.getBrand(asset.getBrand());
+		Employee employe = employeeRepository.getEmployeeBYReportingToId(employee.getEmployeeBYReportingToId());
+		if(employe == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Reporting to Id is not valid");
+		}
+		
+		
 
 
 		if (employee.getRoleId() == null || employee.getRoleId().equals("")) {
