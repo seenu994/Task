@@ -42,7 +42,8 @@ public class ReminderScheduler {
 			request.put("body", "REMINDER SENT - " + e.getDescription());
 			pushNotificationCall.restCallToNotification(
 					pushNotificationRequest.PushNotification(request, 20, NotificationType.REMINDER_SENT.toString()));
-
+			
+			reminderlogRepository.deleteReminderlog(e.getReminderlogId());
 		});
 
 	}

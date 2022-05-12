@@ -20,6 +20,8 @@ public class ReminderLog {
 	@GenericGenerator(name = IdGenerator.ID_GENERATOR, strategy = "com.xyram.ticketingTool.id.generator.IdGenerator")
 	@Column(name = "id")
 	private String reminderlogId;
+	
+	
 	@Column(name = "userId")
 	private String userId;
 
