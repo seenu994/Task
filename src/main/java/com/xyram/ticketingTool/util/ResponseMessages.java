@@ -353,8 +353,16 @@ String ASSET_DIRECTORY ="/Documents/assetDetails/";
 
 		String REPAIR_BILL_ADDED_SUCCESSFULLY = "Asset is not underwarrenty and asset repair bill added successfully";
 
+	//Reminder Response Messages
 		
-		
+		String Reminder_ADDED = "Reminder added successfully";
+		String Reminder_NOT_ADDED = "Reminder not added";
+		String Reminder_DELETED = "Reminder deleted successfully";
+		String Reminder_NOT_DELETED = "Reminder not deleted";
+		String Reminder_UPDATED = "Reminder updated successfully";
+		String Reminder_NOT_UPDATED = "Reminder not updated";
+		String Reminder_LIST_RETRIEVED = "Reminder list retrieved successfully";
+		String Reminder_LIST_NOT_RETRIEVED = "Reminder list not retrieved";
 
 
 	
