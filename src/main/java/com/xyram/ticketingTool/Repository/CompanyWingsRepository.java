@@ -23,5 +23,5 @@ public interface CompanyWingsRepository extends JpaRepository<CompanyWings, Stri
 	
 	
 	@Query("select j from CompanyWings j where j.Id =:wingName")
-	CompanyWings getWingName(String wingName) ;
+	CompanyWings getWingName(String string) ;
 	}

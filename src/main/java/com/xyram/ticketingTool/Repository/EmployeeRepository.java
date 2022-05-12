@@ -144,9 +144,13 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 
 	@Query("Select e.email from Employee e where e.email = :email")
 	String filterByEmail(String email);
-
-	@Query("SELECT e from Employee e where e.eId = :employeeId")
+	
+	
+	@Query("select e from Employee e")
+	//@Query("SELECT e from Employee e where e.eId = :employeeId")
 	List<Employee> getbyEmpId(String employeeId);
+	
+	
 
 	@Query("Select new map(e.eId as id,e.email as email,e.firstName as firstName,e. profileUrl as profileUrl, e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId,e.location as location,e.position as position,e.wings as wings, "
 			+ "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,d.designationName as designationName,e.reportingTo as reportingTo,CONCAT(ee.firstName ,' ', ee.lastName) as ReporterName,ee.profileUrl as ReporterURL,e.createdAt as createdAt,e.createdBy as createdBy) from Employee e left join Employee ee On ee.eId = e.reportingTo  "

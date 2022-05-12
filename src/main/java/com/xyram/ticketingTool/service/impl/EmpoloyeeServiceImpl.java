@@ -45,6 +45,7 @@ import com.xyram.ticketingTool.admin.model.User;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.email.EmailService;
 import com.xyram.ticketingTool.entity.AssetVendor;
+import com.xyram.ticketingTool.entity.Brand;
 import com.xyram.ticketingTool.entity.CompanyLocation;
 import com.xyram.ticketingTool.entity.CompanyWings;
 import com.xyram.ticketingTool.entity.Designation;
@@ -340,6 +341,20 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "location is not valid");
 			}
 		}
+		
+		
+//		
+//		if (asset.getBrand() == null || asset.getBrand().equals("")) {
+//			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "brand is mandatory");
+//		} 
+//		else {
+//			
+//			Brand brand = brandRepository.getBrand(asset.getBrand());
+//			if(brand == null) {
+//				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "brand is not valid");
+//			}
+//			
+//		}
 
 		if (employee.getRoleId() == null || employee.getRoleId().equals("")) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "RoleId is mandatory");
@@ -392,10 +407,11 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		}
 		if (employee.getWings() != null && employee.getWings().getId() != null) {
 			CompanyWings companyWings = wingRepo.getWingName(employee.getWings().getId());
-			
+		
 			if (companyWings != null) {
 				employee.setWings(companyWings);
-			} else {
+			}
+			else {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wing does not exist");
 			}
 		}
