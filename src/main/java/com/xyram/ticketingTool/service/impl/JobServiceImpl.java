@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -1543,13 +1544,16 @@ public class JobServiceImpl implements JobService {
 		}
 
 		if (jobObj.getJobSkills() != null) {
-			Skills skill = skillsRepository.getSkills(jobObj.getJobSkills());
+			if (jobObj.getJobSkills() != null) {
+				Skills skill = skillsRepository.getSkills(jobObj.getJobSkills());
 
-			if (skill != null) {
-				jobObj.setJobSkills(jobObj.getJobSkills());
-			} else {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Skill does not exist");
+				if (skill != null) {
+					jobObj.setJobSkills(jobObj.getJobSkills());
+				} else {
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Skill does not exist");
+				}
 			}
+
 		}
 
 //		if(jobObj.getTotalOpenings() == null || jobObj.getTotalOpenings().equals("")) {
