@@ -141,10 +141,11 @@ public class JobServiceImpl implements JobService {
 
 	@Override
 	public ApiResponse createJob(JobOpenings jobObj) {
-		ApiResponse response = new ApiResponse(false);
+		ApiResponse response = new ApiResponse(true);
 
 		response = validate(jobObj);
-		if (!response.isSuccess()) {
+		if (response.getMessage() != null && response.getMessage() != "") {
+//			response.setMessage("Front End Did Wrong...Not Me");
 			return response;
 		}
 		if (userDetail.getUserRole().equals("HR_ADMIN")) {
@@ -158,6 +159,8 @@ public class JobServiceImpl implements JobService {
 		jobObj.setFilledPositions(0);
 		jobObj.setCreatedBy(userDetail.getUserId());
 		jobObj.setJobStatus(JobOpeningStatus.VACANT);
+		CompanyWings wing = companyWingsRepository.getById(jobObj.getWings().getId());
+		jobObj.setWings(wing);
 
 		boolean jobCodeValidate = jobRepository.findb(jobObj.getJobCode());
 		if (jobCodeValidate == false) {
@@ -862,7 +865,8 @@ public class JobServiceImpl implements JobService {
 		ApiResponse response = new ApiResponse(false);
 
 		response = validate(jobObj);
-		if (!response.isSuccess()) {
+		if (response.getMessage() != null && response.getMessage() != "") {
+//			response.setMessage("Front End Did Wrong...Not Me");
 			return response;
 		}
 
@@ -1498,7 +1502,7 @@ public class JobServiceImpl implements JobService {
 
 	// validation
 	private ApiResponse validate(JobOpenings jobObj) {
-		ApiResponse response = new ApiResponse(false);
+		ApiResponse response = new ApiResponse(true);
 
 		String regex = "[a-z A-Z]+";
 		if (jobObj.getJobTitle() == null || jobObj.getJobTitle().equals("")) {
@@ -1531,10 +1535,8 @@ public class JobServiceImpl implements JobService {
 		}
 
 		if (jobObj.getTotalOpenings() == null || jobObj.getTotalOpenings().equals("")) {
-
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.JOB_TTOTAL_OPENINGS);
-
 		}
 
 		if (jobObj.getWings() == null || jobObj.getWings().getId().equals("")) {
@@ -1545,9 +1547,7 @@ public class JobServiceImpl implements JobService {
 
 		if (jobObj.getWings() != null && jobObj.getWings().getId() != null) {
 			CompanyWings wing = companyWingsRepository.getWingById(jobObj.getWings().getId());
-			if (wing != null) {
-				jobObj.setWings(wing);
-			} else {
+			if(wing == null) {
 				response.setSuccess(false);
 				response.setMessage(ResponseMessages.WINGS_EXI);
 			}
@@ -1571,10 +1571,8 @@ public class JobServiceImpl implements JobService {
 				}
 	        }
 			if(isWrong) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Skill does not exist");
-
-			}else {
-				jobObj.setJobSkills(jobObj.getJobSkills());
+				response.setSuccess(false);
+				response.setMessage("Skill does not exist");
 			}
 		}
 		return response;
