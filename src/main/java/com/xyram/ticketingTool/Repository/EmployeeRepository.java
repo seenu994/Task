@@ -21,9 +21,9 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 
 	@Query("Select distinct new map(e.eId as id,e.email as email,e. profileUrl as profileUrl, e.userCredientials.id as userId , e.firstName as firstName,e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId, "
 			+ "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,d.designationName as designationName,e.profileUrl as profileUrl,e.createdAt as createdAt,e.location as location,e.position as position,e.wings as wings,e.reportingTo as reportingTo,CONCAT(ee.firstName ,' ', ee.lastName) as ReporterName,c.locationName as locationName) from Employee e "
-			+ "left JOIN Employee ee ON ee.eId = e.reportingTo "
+			+ "left JOIN Employee ee ON ee.eId = e.reportingTo   left JOIN  CompanyLocation c On e.location=c.id  "
 			
-			+ "left JOIN Role r On e.roleId = r.Id left JOIN  Designation d On e.designationId=d.Id   left JOIN  CompanyLocation c On e.location=c.id  ORDER BY e.createdAt DESC")
+			+ "left JOIN Role r On e.roleId = r.Id left JOIN  Designation d On e.designationId=d.Id ORDER BY e.createdAt DESC")
 	Page<Map> getAllEmployeeList(Pageable pageable);
 	
 	@Query("Select distinct new map(e.eId as id,e.email as email, e. profileUrl as profileUrl, e.userCredientials.id as userId , e.firstName as firstName,e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId, "
