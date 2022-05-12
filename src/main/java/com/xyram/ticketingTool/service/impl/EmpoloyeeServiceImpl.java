@@ -184,10 +184,10 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 //					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "EmployeeId is mandatory");
 //				}
 
-				if (!employee.geteId().matches("^[a-z 0 -9 A-Z]+")) {
-					throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-							"EmployeeId should not contain any special characters");
-				}
+//				if (!employee.geteId().matches("^[a-z 0 -9 A-Z]+")) {
+//					throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+//							"EmployeeId should not contain any special characters");
+//				}
 
 				User user = new User();
 				user.setUsername(employee.getEmail());
@@ -350,9 +350,9 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		} else {
 
 			Role role = roleRepository.getRoleName(employee.getRoleId());
-			if (role != null) {
-				employee.setRoleId(employee.getRoleId());
-			}
+			//if (role != null) {
+				//employee.setRoleId(employee.getRoleId());
+			//}
 			if (role == null) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "RoleId is not valid");
 			}
@@ -364,13 +364,15 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		} else {
 
 			Designation designation = designationRepository.getDesignationNames(employee.getDesignationId());
-			if (designation != null) {
-				employee.setDesignationId(employee.getDesignationId());
-			}
+			//if (designation != null) {
+				//employee.setDesignationId(employee.getDesignationId());
+			//}
 			if (designation == null) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "designationId is not valid");
 			}
 		}
+		
+
 
 		if (employee.getPosition() == null || employee.getPosition().equals("")) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "position is mandatory");
