@@ -1560,17 +1560,22 @@ public class JobServiceImpl implements JobService {
 		}
 
 		if (jobObj.getJobSkills() != null) {
-			if (jobObj.getJobSkills() != null) {
-				Skills skill = skillsRepository.getSkills(jobObj.getJobSkills());
-
-				if (skill != null) {
-					jobObj.setJobSkills(jobObj.getJobSkills());
-				} else {
-					response.setSuccess(false);
-					response.setMessage(ResponseMessages.JOB_SKILL_EXI);
+			String str = jobObj.getJobSkills();
+			List<String> allSkills = Arrays.asList(str.split(","));
+			Boolean isWrong = false;
+			for (int i = 0; i < allSkills.size(); i++) {
+				Skills skill = skillsRepository.getSkills(allSkills.get(i));
+				if (skill == null) {
+					isWrong = true;
+					break;
 				}
-			}
+	        }
+			if(isWrong) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Skill does not exist");
 
+			}else {
+				jobObj.setJobSkills(jobObj.getJobSkills());
+			}
 		}
 		return response;
 	}
