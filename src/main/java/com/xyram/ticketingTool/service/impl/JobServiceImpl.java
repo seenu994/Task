@@ -1495,7 +1495,7 @@ public class JobServiceImpl implements JobService {
 		ApiResponse response = new ApiResponse(false);
 
 		String regex = "[a-z A-Z]+";
-		String regexr = "^[0-9]*$";
+//		String regexr = "^[0-9]*$";
 		// Pattern validOpenings = Pattern.compile("^\\d+$");
 		// Pattern.compile("^\\d+$")
 		if (jobObj.getJobTitle() == null || jobObj.getJobTitle().equals("")) {
