@@ -356,6 +356,29 @@ String ASSET_DIRECTORY ="/Documents/assetDetails/";
 		String ASSET_PURCHASE_BILL_EDITED_SUCCESSFULLY = "Asset is underwarrenty and purchase bill edited successfully";
 
 		String HRCALENDER_LIST_RETRIVED = "List retrieved Successfully";
+		
+		//job openings
+		String JOB_TITLE = "Job title is mandatory";
+
+		String JOB_TITLE_CHAR = "Title should be character only";
+
+		String JOB_TITLE_LEN = "Job title length should be Min 3 cahracter and Max 100 character";
+
+		String JOB_TITLE_DES ="Description is mandatory";
+
+		String JOB_TITLE_DES_LEN ="Description length should be Min 7 and Max 5000 ";
+
+		String JOB_CODE = "Job code is mandatory";
+
+		String JOB_TTOTAL_OPENINGS =  "Total openings is mandatory";
+
+		String WINGS_MAN = "Wing is mandatory";
+
+		String WINGS_EXI = "Wing does not exist";
+
+		String JOB_SKILL = "Job skills are mandatory";
+
+		String JOB_SKILL_EXI = "Skill does not exist";
 
 		
 		
