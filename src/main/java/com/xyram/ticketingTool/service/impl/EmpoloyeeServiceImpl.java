@@ -343,18 +343,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		}
 		
 		
-//		
-//		if (asset.getBrand() == null || asset.getBrand().equals("")) {
-//			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "brand is mandatory");
-//		} 
-//		else {
-//			
-//			Brand brand = brandRepository.getBrand(asset.getBrand());
-//			if(brand == null) {
-//				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "brand is not valid");
-//			}
-//			
-//		}
+
 
 		if (employee.getRoleId() == null || employee.getRoleId().equals("")) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "RoleId is mandatory");
@@ -401,6 +390,8 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			}
 
 		}
+		
+		
 
 		if (employee.getWings() == null || employee.getWings().getId().equals("")) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wing is mandatory");
@@ -415,6 +406,8 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wing does not exist");
 			}
 		}
+		
+		
 
 		if (employee.getMobileNumber() == null || employee.getMobileNumber().equals("")) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "MobileNumber is mandatory");
@@ -1021,7 +1014,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	@Override
 	public ApiResponse getEmployeeDetails(String employeeId) {
 		ApiResponse response = new ApiResponse(false);
-		List<Employee> employee = employeeRepository.getbyEmpId(employeeId);
+		List<Map> employee = employeeRepository.getbyEmpId(employeeId);
 		Map content = new HashMap();
 		content.put("employeeDetails", employee);
 		if (employee != null) {
