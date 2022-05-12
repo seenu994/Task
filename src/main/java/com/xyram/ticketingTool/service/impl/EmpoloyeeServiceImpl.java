@@ -45,6 +45,7 @@ import com.xyram.ticketingTool.admin.model.User;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.email.EmailService;
 import com.xyram.ticketingTool.entity.AssetVendor;
+import com.xyram.ticketingTool.entity.Brand;
 import com.xyram.ticketingTool.entity.CompanyLocation;
 import com.xyram.ticketingTool.entity.CompanyWings;
 import com.xyram.ticketingTool.entity.Designation;
@@ -182,10 +183,11 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 //				if (employee.geteId() == null || employee.geteId().equals("")) {
 //					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "EmployeeId is mandatory");
 //				}
-//				
-//				if(!employee.geteId().matches("^[a-z 0 -9 A-Z]+"))
-//				{
-//					throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"EmployeeId should not contain any special characters");
+
+
+//				if (!employee.geteId().matches("^[a-z 0 -9 A-Z]+")) {
+//					throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+//							"EmployeeId should not contain any special characters");
 //				}
 
 				User user = new User();
@@ -352,9 +354,6 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		} else {
 
 			Role role = roleRepository.getRoleName(employee.getRoleId());
-//			if (role != null) {
-//				employee.setRoleId(employee.getRoleId());
-//			}
 			if (role == null) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "RoleId is not valid");
 			}
@@ -367,9 +366,9 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		} else {
 
 			Designation designation = designationRepository.getDesignationNames(employee.getDesignationId());
-			if (designation != null) {
-				employee.setDesignationId(employee.getDesignationId());
-			}
+			//if (designation != null) {
+				//employee.setDesignationId(employee.getDesignationId());
+			//}
 			if (designation == null) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "designationId is not valid");
 			}
@@ -393,32 +392,30 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			}
 	
 		}
-		
-			
-			if (employee.getWings()!=null || employee.getWings().getId()!=null) {
-				
-				CompanyWings companyWings = wingRepo.getWingName(employee.getWings().getId());
-//				if (companyWings != null) {
-//					employee.setWings(employee.getWings());
-//				}
-				if (companyWings == null) {
-					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "wingsId is not valid");
-				}
-				
-			} else {
 
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "wing is mandatory");
-				
-			
+		if (employee.getWings() == null || employee.getWings().getId().equals("")) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wing is mandatory");
+		}
+		if (employee.getWings() != null && employee.getWings().getId() != null) {
+			CompanyWings companyWings = wingRepo.getWingName(employee.getWings().getId());
+		
+			if (companyWings != null) {
+				employee.setWings(companyWings);
 			}
-			
-			if (employee.getMobileNumber() == null || employee.getMobileNumber().equals("")) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "MobileNumber is mandatory");
+			else {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wing does not exist");
 			}
-			
-			else if(employee.getMobileNumber().length() != 10) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "In correct mobile number");	
-			}
+		}
+		
+		
+
+		if (employee.getMobileNumber() == null || employee.getMobileNumber().equals("")) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "MobileNumber is mandatory");
+		}
+
+		else if (employee.getMobileNumber().length() != 10) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "In correct mobile number");
+		}
 
 //		else if (employee.getMobileNumber().length() != 10) {
 //			response.setMessage(ResponseMessages.MOBILE_INVALID);
@@ -1022,7 +1019,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	@Override
 	public ApiResponse getEmployeeDetails(String employeeId) {
 		ApiResponse response = new ApiResponse(false);
-		List<Employee> employee = employeeRepository.getbyEmpId(employeeId);
+		List<Map> employee = employeeRepository.getbyEmpId(employeeId);
 		Map content = new HashMap();
 		content.put("employeeDetails", employee);
 		if (employee != null) {

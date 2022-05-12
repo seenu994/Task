@@ -42,13 +42,13 @@ public class JobController {
 	
 	
 	
-	@PostMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/editJob/{jobId}",AuthConstants.ADMIN_BASEPATH + "/editJob/{jobId}" })
+	@PostMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/editJob/{jobId}" })
 	public ApiResponse editJob(@PathVariable String jobId,@RequestBody JobOpenings jobObj) {
 		logger.info("Creating Job");
 		return jobService.editJob(jobId,jobObj);
 	} 
 	
-	@PostMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/createJob",AuthConstants.ADMIN_BASEPATH + "/createJob" })
+	@PostMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/createJob"})
 	public ApiResponse createJob(@RequestBody JobOpenings jobObj) {
 		logger.info("Creating Job");
 		return jobService.createJob(jobObj);
