@@ -392,7 +392,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		}
 		if (employee.getWings() != null && employee.getWings().getId() != null) {
 			CompanyWings companyWings = wingRepo.getWingName(employee.getWings().getId());
-			// getById(jobObj.getWings().getId());
+			
 			if (companyWings != null) {
 				employee.setWings(companyWings);
 			} else {
