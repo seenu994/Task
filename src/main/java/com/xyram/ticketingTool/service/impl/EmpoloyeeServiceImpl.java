@@ -121,7 +121,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 	@Autowired
 	VendorTypeRepository vendorRepo;
-	
+
 	@Autowired
 	CompanyLocationRepository companyLocationRepository;
 
@@ -172,46 +172,45 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		if (response.getMessage() != null && response.getMessage() != "") {
 			return response;
 		}
+		// Email Validation starts here
+		if (employee.getEmail() == null || employee.getEmail().equals("")) {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.MAILID_MAN);
+			return response;
+		}
+		if (!emailValidation(employee.getEmail())) {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.INVAL_MAIL_ID);
+		}
+
+		String email = employeeRepository.filterByEmail(employee.getEmail());
+		if (email != null) {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.MAIL_ID_EXI);
+		}
 		System.out.println("username::" + currentUser.getName());
 
-		if (response.isSuccess()) {
-			try {
+//		if (response.isSuccess()) {
+		try {
 
-				if (!employeeRepository.getbyEmpId(employee.geteId()).isEmpty()) {
+			if (!employeeRepository.getbyEmpId(employee.geteId()).isEmpty()) {
 
-					response.setSuccess(false);
-					response.setMessage(ResponseMessages.EMP_CODE);
-				
-				}
-				
-//				if (employee.geteId() == null || employee.geteId().equals("")) {
-//					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "EmployeeId is mandatory");
-//				}
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.EMP_CODE);
 
+			}
 
-//				if (!employee.geteId().matches("^[a-z 0 -9 A-Z]+")) {
-//					throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-//							"EmployeeId should not contain any special characters");
-//				}
+			User user = new User();
+			user.setUsername(employee.getEmail());
+			String encodedPassword = new BCryptPasswordEncoder().encode(employee.getPassword());
+			user.setPassword(encodedPassword);
+			if (employee.getFirstName().length() > 3 && employee.getLastName().length() > 0) {
+				user.setName(employee.getFirstName() + " " + employee.getLastName());
 
-				User user = new User();
-				user.setUsername(employee.getEmail());
-				String encodedPassword = new BCryptPasswordEncoder().encode(employee.getPassword());
-				user.setPassword(encodedPassword);
-				if (employee.getFirstName().length() > 3 && employee.getLastName().length() > 0) {
-					user.setName(employee.getFirstName() + " " + employee.getLastName());
-					
 				// Employee employeere=new Employee();
 				Role role = roleRepository.getById(employee.getRoleId());
 				user.setUserRole(role != null ? role.getRoleName() : null);
-				/*
-				 * if (role != null) { try {
-				 * 
-				 * user.setUserRole(role.getRoleName()); } catch (Exception e) { throw new
-				 * ResponseStatusException(HttpStatus.BAD_REQUEST, role.getRoleName() +
-				 * " is not a valid status"); } } else { throw new
-				 * ResourceNotFoundException("invalid user role "); }
-				 */
+
 				Integer permission = permissionConfig.setDefaultPermissions(user.getUserRole().toString());
 				user.setPermission(permission);
 				user.setStatus(UserStatus.ACTIVE);
@@ -294,61 +293,54 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				content.put("employeeId", employeeNew.geteId());
 				response.setContent(content);
 			}
-			}
-			catch (ResponseStatusException re) {
-				throw new ResponseStatusException(re.getStatus(), re.getReason());
-			} catch (Exception e) {
-				System.out.println("Error Occured :: " + e.getMessage());
-			}
+		} catch (ResponseStatusException re) {
+			throw new ResponseStatusException(re.getStatus(), re.getReason());
+		} catch (Exception e) {
+			System.out.println("Error Occured :: " + e.getMessage());
+		}
 
-			 return response;
-
-		} 
 		return response;
 
+//		}
 	}
 
 	private ApiResponse validateEmployee(Employee employee) {
-		ApiResponse response = new ApiResponse(false);
-		
+		ApiResponse response = new ApiResponse(true);
+
 		String regex = "[a-z A-Z]+";
-		String email = employeeRepository.filterByEmail(employee.getEmail());
 		if (!emailValidation(employee.getEmail())) {
 			response.setMessage(ResponseMessages.EMAIL_INVALID);
 
 			response.setSuccess(false);
 		}
-		
+
 		if (employee.getFirstName() == null || employee.getFirstName().equals("")) {
-			
+
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.FIRST_NAME_MAN);
-			
+
 		}
-		if(!employee.getFirstName().matches(regex)) {
+		if (!employee.getFirstName().matches(regex)) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.FIRST_NAME_CHAR);
 		}
-		
+
 		if (employee.getLastName() == null || employee.getLastName().equals("")) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.LAST_NAME_MAN);
 
 		}
-		if(!employee.getLastName().matches(regex)) {
+		if (!employee.getLastName().matches(regex)) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.LAST_NAME_CHAR);
-		
+
 		}
-		
-		
-		
+
 		if (employee.getLocation() == null || employee.getLocation().equals("")) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.LOC_MAN);
-		} 
-		else {
-			
+		} else {
+
 			CompanyLocation companyLocation = companyLocationRepository.getCompanyLocations(employee.getLocation());
 			if (companyLocation != null) {
 				employee.setLocation(employee.getLocation());
@@ -356,10 +348,10 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			if (companyLocation == null) {
 				response.setSuccess(false);
 				response.setMessage(ResponseMessages.LOC_NOT_VALID);
-				
+
 			}
 		}
-		
+
 		if (employee.getRoleId() == null || employee.getRoleId().equals("")) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.ROLE_ID_MAN);
@@ -370,35 +362,31 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				response.setSuccess(false);
 				response.setMessage(ResponseMessages.ROLE_ID_NOT_VAL);
 			}
-			
+
 		}
-		
-		
+
 		if (employee.getDesignationId() == null || employee.getDesignationId().equals("")) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.DES_ID_MAN);
 		} else {
 
 			Designation designation = designationRepository.getDesignationNames(employee.getDesignationId());
-			//if (designation != null) {
-				//employee.setDesignationId(employee.getDesignationId());
-			//}
 			if (designation == null) {
 				response.setSuccess(false);
 				response.setMessage(ResponseMessages.DES_ID_NOT_VAL);
 			}
 		}
-		
+
 		if (employee.getPosition() == null || employee.getPosition().equals("")) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.POSITION_MAN);
 		}
-		
-		if(employee.getPosition() != null) {
+
+		if (employee.getPosition() != null) {
 			boolean isExist = false;
 
 			for (String position : EmployeeUtil.position) {
-				if(position.equalsIgnoreCase(employee.getPosition())) {
+				if (position.equalsIgnoreCase(employee.getPosition())) {
 					isExist = true;
 					break;
 				}
@@ -407,7 +395,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				response.setSuccess(false);
 				response.setMessage(ResponseMessages.POSITION_NOT_VAL);
 			}
-	
+
 		}
 
 		if (employee.getWings() == null || employee.getWings().getId().equals("")) {
@@ -416,22 +404,19 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		}
 		if (employee.getWings() != null && employee.getWings().getId() != null) {
 			CompanyWings companyWings = wingRepo.getWingName(employee.getWings().getId());
-		
+
 			if (companyWings != null) {
 				employee.setWings(companyWings);
-			}
-			else {
+			} else {
 				response.setSuccess(false);
 				response.setMessage(ResponseMessages.WING_NOT_EXI);
 			}
 		}
-		
-		
 
 		if (employee.getMobileNumber() == null || employee.getMobileNumber().equals("")) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.MOB_NUM_MAN);
-			
+
 		}
 
 		else if (employee.getMobileNumber().length() != 10) {
@@ -439,33 +424,18 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			response.setMessage(ResponseMessages.INCORRECT_MOB);
 		}
 
-//		else if (employee.getMobileNumber().length() != 10) {
-//			response.setMessage(ResponseMessages.MOBILE_INVALID);
-//
-//			response.setSuccess(false);
-//		}
-			
-			if (employee.getEmail() == null || employee.getEmail().equals("")) {
-				response.setSuccess(false);
-				response.setMessage(ResponseMessages.MAILID_MAN);
+		if (employee.getReportingTo() == null || employee.getReportingTo().isEmpty()) {
+			response.setSuccess(true);
+		} else {
+			Employee employe = employeeRepository.getByEmpIdE(employee.getReportingTo());
+			if (employe == null) {
 				
-			}
-			else if (!emailValidation(employee.getEmail())) {
 				response.setSuccess(false);
-				response.setMessage(ResponseMessages.INVAL_MAIL_ID);
+				response.setMessage(ResponseMessages.NOT_VALID);
 			}
 
-	else if (email != null) {
-		response.setSuccess(false);
-		response.setMessage(ResponseMessages.MAIL_ID_EXI);
 		}
 
-//		else {
-//			response.setMessage(ResponseMessages.EMPLOYEE_ADDED);
-//		}
-		response.setSuccess(true);
-	
-		
 		return response;
 	}
 
@@ -553,13 +523,13 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	@Override
 	public ApiResponse editEmployee(String employeeId, Employee employeeRequest) {
 		ApiResponse response = new ApiResponse(false);
-		
-		// response = validateEmployee(employeeRequest);
-		
+
+		response = validateEmployee(employeeRequest);
+
 		if (response.getMessage() != null && response.getMessage() != "") {
 			return response;
 		}
-		
+
 		Employee employee = employeeRepository.getById(employeeId);
 		User user = userRepository.getById(employee.getUserCredientials().getId());
 
@@ -582,8 +552,10 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 //				response.setMessage("Wing is not Exist");
 //			}
 			employee.setRoleId(employeeRequest.getRoleId());
+
 			Role role = roleRepository.getById(employeeRequest.getRoleId());
 			employee.setDesignationId(employeeRequest.getDesignationId());
+
 			user.setUserRole(role.getRoleName());
 			userRepository.save(user);
 			employeeRepository.save(employee);
@@ -673,10 +645,10 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	@Override
 	public ApiResponse searchEmployee(String searchString) {
 		ApiResponse response = new ApiResponse(false);
-		
-		//Map employee = employeeRepository.getEmployeeBYId(searchString);
-		//List<Map> reportees = employeeRepository.getReportingList(employeeId);
-		
+
+		// Map employee = employeeRepository.getEmployeeBYId(searchString);
+		// List<Map> reportees = employeeRepository.getReportingList(employeeId);
+
 		List<Map> employeeList = employeeRepository.searchEmployee(searchString);
 		Map content = new HashMap();
 		if (employeeList.size() > 0) {
@@ -843,7 +815,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		String filename = getRandomFileName() + System.currentTimeMillis();
 		boolean succesResponse = false;
 		try {
-			succesResponse = fileUploadService.uploadFile(file, ticketAttachmentBaseUrl, filename+""+fileextension);
+			succesResponse = fileUploadService.uploadFile(file, ticketAttachmentBaseUrl, filename + "" + fileextension);
 
 		} catch (Exception e) {
 
@@ -855,7 +827,8 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			Employee employeeObj = employeeRepository.getbyUserByUserId(userId);
 			if (employeeObj != null) {
 				// employeeObj=new Employee();
-				employeeObj.setProfileUrl("https://tool.xyramsoft.com:444"+ticketAttachmentBaseUrl + "/" + filename+fileextension);
+				employeeObj.setProfileUrl(
+						"https://tool.xyramsoft.com:444" + ticketAttachmentBaseUrl + "/" + filename + fileextension);
 				employeeRepository.save(employeeObj);
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.EMPLOYEE_PROFILE_UPDATION);
