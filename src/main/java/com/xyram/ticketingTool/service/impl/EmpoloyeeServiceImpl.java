@@ -433,18 +433,6 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			response.setMessage(ResponseMessages.INCORRECT_MOB);
 		}
 
-		if (employee.getReportingTo() == null || employee.getReportingTo().isEmpty()) {
-			response.setSuccess(true);
-		} else {
-			Employee employe = employeeRepository.getByEmpIdE(employee.getReportingTo());
-			if (employe == null) {
-				
-				response.setSuccess(false);
-				response.setMessage(ResponseMessages.NOT_VALID);
-			}
-
-		}
-
 		return response;
 	}
 
