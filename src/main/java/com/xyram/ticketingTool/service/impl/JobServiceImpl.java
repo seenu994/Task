@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -140,10 +141,13 @@ public class JobServiceImpl implements JobService {
 
 	@Override
 	public ApiResponse createJob(JobOpenings jobObj) {
-		ApiResponse response = new ApiResponse(false);
+		ApiResponse response = new ApiResponse(true);
 
 		response = validate(jobObj);
-
+		if (response.getMessage() != null && response.getMessage() != "") {
+//			response.setMessage("Front End Did Wrong...Not Me");
+			return response;
+		}
 		if (userDetail.getUserRole().equals("HR_ADMIN")) {
 			Employee employeeDetails = employeeRepository.getByEmpId(userDetail.getScopeId());
 			jobObj.setUpdatedBy(employeeDetails.getFirstName() + "" + employeeDetails.getLastName());
@@ -155,6 +159,8 @@ public class JobServiceImpl implements JobService {
 		jobObj.setFilledPositions(0);
 		jobObj.setCreatedBy(userDetail.getUserId());
 		jobObj.setJobStatus(JobOpeningStatus.VACANT);
+		CompanyWings wing = companyWingsRepository.getById(jobObj.getWings().getId());
+		jobObj.setWings(wing);
 
 		boolean jobCodeValidate = jobRepository.findb(jobObj.getJobCode());
 		if (jobCodeValidate == false) {
@@ -859,6 +865,10 @@ public class JobServiceImpl implements JobService {
 		ApiResponse response = new ApiResponse(false);
 
 		response = validate(jobObj);
+		if (response.getMessage() != null && response.getMessage() != "") {
+//			response.setMessage("Front End Did Wrong...Not Me");
+			return response;
+		}
 
 		JobOpenings jobOpening = jobRepository.getById(jobId);
 		if (jobOpening != null) {
@@ -1492,75 +1502,79 @@ public class JobServiceImpl implements JobService {
 
 	// validation
 	private ApiResponse validate(JobOpenings jobObj) {
-		ApiResponse response = new ApiResponse(false);
+		ApiResponse response = new ApiResponse(true);
 
 		String regex = "[a-z A-Z]+";
-//		String regexr = "^[0-9]*$";
-		// Pattern validOpenings = Pattern.compile("^\\d+$");
-		// Pattern.compile("^\\d+$")
 		if (jobObj.getJobTitle() == null || jobObj.getJobTitle().equals("")) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Job title is mandatory");
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.JOB_TITLE);
 		}
 		if (!jobObj.getJobTitle().matches(regex)) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Title should be character only");
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.JOB_TITLE_CHAR);
+
 		}
 		if (jobObj.getJobTitle().length() < 3 || jobObj.getJobTitle().length() > 100) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-					"Job title length should be Min 3 cahracter and Max 100 character");
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.JOB_TITLE_LEN);
 		}
 		if (jobObj.getJobDescription() == null || jobObj.getJobDescription().equals("")) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Description is mandatory");
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.JOB_TITLE_DES);
+
 		}
 		if (jobObj.getJobDescription().length() < 10 || jobObj.getJobDescription().length() > 5000) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-					"Description length should be Min 7 and Max 5000 ");
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.JOB_TITLE_DES_LEN);
 		}
 
 		if (jobObj.getJobCode() == null || jobObj.getJobCode().equals("")) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Job code is mandatory");
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.JOB_CODE);
+
 		}
 
 		if (jobObj.getTotalOpenings() == null || jobObj.getTotalOpenings().equals("")) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Total openings is mandatory");
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.JOB_TTOTAL_OPENINGS);
 		}
 
 		if (jobObj.getWings() == null || jobObj.getWings().getId().equals("")) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wing is mandatory");
+
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.WINGS_MAN);
 		}
 
 		if (jobObj.getWings() != null && jobObj.getWings().getId() != null) {
 			CompanyWings wing = companyWingsRepository.getWingById(jobObj.getWings().getId());
-			// getById(jobObj.getWings().getId());
-			if (wing != null) {
-				jobObj.setWings(wing);
-			} else {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wing does not exist");
+			if(wing == null) {
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.WINGS_EXI);
 			}
 		}
 
 		if (jobObj.getJobSkills() == null || jobObj.getJobSkills().equals("")) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Job skills are mandatory");
+
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.JOB_SKILL);
 		}
 
 		if (jobObj.getJobSkills() != null) {
-			Skills skill = skillsRepository.getSkills(jobObj.getJobSkills());
-
-			if (skill != null) {
-				jobObj.setJobSkills(jobObj.getJobSkills());
-			} else {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Skill does not exist");
+			String str = jobObj.getJobSkills();
+			List<String> allSkills = Arrays.asList(str.split(","));
+			Boolean isWrong = false;
+			for (int i = 0; i < allSkills.size(); i++) {
+				Skills skill = skillsRepository.getSkills(allSkills.get(i));
+				if (skill == null) {
+					isWrong = true;
+					break;
+				}
+	        }
+			if(isWrong) {
+				response.setSuccess(false);
+				response.setMessage("Skill does not exist");
 			}
 		}
-
-//		if(jobObj.getTotalOpenings() == null || jobObj.getTotalOpenings().equals("")) {
-//			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Total Openings Mandatory");
-//		}
-//		if(jobObj.getMaxExp()==null || jobObj.getMaxExp().equals("")) {
-//			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Maximum experience is Mandatory");
-//		}
-//		if(jobObj.getMinExp() == null || jobObj.getMinExp().equals("")) {
-//			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Minimum experience is Mandatory");
-//		}
 		return response;
 	}
 

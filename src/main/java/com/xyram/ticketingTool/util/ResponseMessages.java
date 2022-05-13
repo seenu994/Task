@@ -356,6 +356,72 @@ String ASSET_DIRECTORY ="/Documents/assetDetails/";
 		String ASSET_PURCHASE_BILL_EDITED_SUCCESSFULLY = "Asset is underwarrenty and purchase bill edited successfully";
 
 		String HRCALENDER_LIST_RETRIVED = "List retrieved Successfully";
+		
+		//job openings
+		String JOB_TITLE = "Job title is mandatory";
+
+		String JOB_TITLE_CHAR = "Title should be character only";
+
+		String JOB_TITLE_LEN = "Job title length should be Min 3 cahracter and Max 100 character";
+
+		String JOB_TITLE_DES ="Description is mandatory";
+
+		String JOB_TITLE_DES_LEN ="Description length should be Min 7 and Max 5000 ";
+
+		String JOB_CODE = "Job code is mandatory";
+
+		String JOB_TTOTAL_OPENINGS =  "Total openings is mandatory";
+
+		String WINGS_MAN = "Wing is mandatory";
+
+		String WINGS_EXI = "Wing does not exist";
+
+		String JOB_SKILL = "Job skills are mandatory";
+
+		String JOB_SKILL_EXI = "Skill does not exist";
+		
+		//Employee service
+		String EMP_CODE = "Employee code already Assigned to Existing employee ";
+
+		String FIRST_NAME_MAN = "FirstName is mandatory";
+
+		String FIRST_NAME_CHAR = "Name should be character only";
+
+		String LAST_NAME_CHAR = "LastName should be character only";
+
+		String LAST_NAME_MAN = "LastName is mandatory";
+
+		String LOC_MAN = "Location is mandatory";
+
+		String LOC_NOT_VALID = "location is not valid";
+
+		String ROLE_ID_MAN = "RoleId is mandatory";
+
+		String ROLE_ID_NOT_VAL = "RoleId is not valid";
+
+		String DES_ID_MAN = "designationId is mandatory";
+
+		String DES_ID_NOT_VAL ="designationId is not valid";
+
+		String POSITION_MAN = "position is mandatory";
+
+		String POSITION_NOT_VAL = "Position is not available" ;
+
+		String WING_MAN = "Wing is mandatory";
+
+		String WING_NOT_EXI = "Wing does not exist";
+
+		String MOB_NUM_MAN = "MobileNumber is mandatory";
+
+		String INCORRECT_MOB = "In correct mobile number";
+
+		String MAILID_MAN = "Mail id is mandatory";
+
+		String INVAL_MAIL_ID = "Invalid EmailId";
+
+		String MAIL_ID_EXI = "email already exists!!!";
+
+		String UPLOAD_IMAGE = "unable to upload image";
 
 		String EMPLOYEE_NOT_ADDED = "Employee not added";
 

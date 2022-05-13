@@ -120,7 +120,7 @@ public interface JobRepository extends CrudRepository<JobOpenings, Long>, JpaSpe
 			+"  Or lower(j.jobDescription) Like %:searchString%"
 			+"  Or lower(j.jobCode) Like %:searchString%"
 			+"  Or lower(j.maxExp) Like %:searchString%"
-			+ " Or lower(j.minExp) LIKE %:searchString%) ORDER BY j.createdAt DESC")		
+			+ " Or lower(j.minExp) LIKE %:searchString%) ORDER BY j.createdAt ASC")		
 	Page<List<Map>> getAllOpenings(String searchString, JobOpeningStatus status, String wing, String userRole,
 		 Pageable pageable);
 	
@@ -140,7 +140,7 @@ public interface JobRepository extends CrudRepository<JobOpenings, Long>, JpaSpe
 			+"  Or lower(j.jobDescription) Like %:searchString%"
 			+"  Or lower(j.jobCode) Like %:searchString%"
 			+"  Or lower(j.maxExp) Like %:searchString%"
-			+ " Or lower(j.minExp) LIKE %:searchString%) ORDER BY j.createdAt DESC")		
+			+ " Or lower(j.minExp) LIKE %:searchString%) ORDER BY j.createdAt ASC")		
 	Page<List<Map>> getAllOpeningsWithoutPackage(String searchString, JobOpeningStatus status, String wing, String userRole,
 		 Pageable pageable);
 
