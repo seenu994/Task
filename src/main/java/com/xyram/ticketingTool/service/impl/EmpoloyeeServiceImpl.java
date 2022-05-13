@@ -310,9 +310,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 	private ApiResponse validateEmployee(Employee employee) {
 		ApiResponse response = new ApiResponse(false);
-		if (response.getMessage() != null && response.getMessage() != "") {
-			return response;
-		}
+		
 		String regex = "[a-z A-Z]+";
 		String email = employeeRepository.filterByEmail(employee.getEmail());
 		if (!emailValidation(employee.getEmail())) {
@@ -464,11 +462,9 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 //		else {
 //			response.setMessage(ResponseMessages.EMPLOYEE_ADDED);
-//
+//		}
 		response.setSuccess(true);
 	
-		
-		
 		
 		return response;
 	}
