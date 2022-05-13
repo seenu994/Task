@@ -44,6 +44,7 @@ import com.xyram.ticketingTool.Repository.VendorTypeRepository;
 import com.xyram.ticketingTool.admin.model.User;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.email.EmailService;
+import com.xyram.ticketingTool.entity.AssetSoftware;
 import com.xyram.ticketingTool.entity.AssetVendor;
 import com.xyram.ticketingTool.entity.Brand;
 import com.xyram.ticketingTool.entity.CompanyLocation;
@@ -167,7 +168,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	public ApiResponse addemployee(Employee employee) {
 
 		ApiResponse response = new ApiResponse(false);
-
+     response = validateMailId(employee);
 		response = validateEmployee(employee);
 		System.out.println("username::" + currentUser.getName());
 
@@ -188,6 +189,9 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 //					throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 //							"EmployeeId should not contain any special characters");
 //				}
+				
+				
+			
 
 				User user = new User();
 				user.setUsername(employee.getEmail());
@@ -292,6 +296,9 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 					content.put("employeeId", employeeNew.geteId());
 					response.setContent(content);
 				}
+				
+//				response.setSuccess(false);
+//				response.setMessage(ResponseMessages.EMPLOYEE_NOT_ADDED);
 			} catch (ResponseStatusException re) {
 				throw new ResponseStatusException(re.getStatus(), re.getReason());
 			} catch (Exception e) {
@@ -304,16 +311,33 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		return response;
 
 	}
-
-	private ApiResponse validateEmployee(Employee employee) {
+	private ApiResponse validateMailId(Employee employee) {
 		ApiResponse response = new ApiResponse(false);
-		String regex = "[a-z A-Z]+";
 		String email = employeeRepository.filterByEmail(employee.getEmail());
 		if (!emailValidation(employee.getEmail())) {
 			response.setMessage(ResponseMessages.EMAIL_INVALID);
 
 			response.setSuccess(false);
 		}
+		
+			
+			return response;
+		}
+		
+		
+
+		
+
+	
+	private ApiResponse validateEmployee(Employee employee) {
+		ApiResponse response = new ApiResponse(false);
+		String regex = "[a-z A-Z]+";
+		//String email = employeeRepository.filterByEmail(employee.getEmail());
+		//if (!emailValidation(employee.getEmail())) {
+			//response.setMessage(ResponseMessages.EMAIL_INVALID);
+
+			//response.setSuccess(false);
+		//}
 
 		if (employee.getFirstName() == null || employee.getFirstName().equals("")) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "FirstName is mandatory");
@@ -328,6 +352,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		if (!employee.getLastName().matches(regex)) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "LastName should be character only");
 		}
+		
 
 		if (employee.getLocation() == null || employee.getLocation().equals("")) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Location is mandatory");
@@ -343,18 +368,23 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		}
 		
 		
-		if(employee.getReportingTo() == null || employee.getReportingTo().equals("") ) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Reporting to is manditory");
-		}
-		//Brand brand = brandRepository.getBrand(asset.getBrand());
-		Employee employe = employeeRepository.getEmployeeBYReportingToId(employee.getEmployeeBYReportingToId());
-		if(employe == null) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Reporting to Id is not valid");
-		}
 		
-		
-
-
+		if(employee.getReportingTo() == null || employee.getReportingTo().isEmpty() ) 
+		{
+			response.setSuccess(true);
+			}
+		else {
+			
+			Employee employe = employeeRepository.getByEmpId1(employee.getReportingTo());
+			if(employe == null) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"EmployeeId to Id is not valid");
+			}else{
+					
+				response.setSuccess(true);
+			}
+			
+		}
+	
 		if (employee.getRoleId() == null || employee.getRoleId().equals("")) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "RoleId is mandatory");
 		} else {
@@ -435,20 +465,18 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 //			response.setSuccess(false);
 //		}
 
-		if (employee.getEmail() == null || employee.getEmail().equals("")) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Mail id is mandatory");
-		} else if (!emailValidation(employee.getEmail())) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid EmailId");
-
-		}
-
-		else if (email != null) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "email already exists!!!");
-		}
-
-//		else {
-//			response.setMessage(ResponseMessages.EMPLOYEE_ADDED);
+//		if (employee.getEmail() == null || employee.getEmail().equals("")) {
+//			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Mail id is mandatory");
+//		} else if (!emailValidation(employee.getEmail())) {
+//			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid EmailId");
 //
+//		}
+		
+//		else if (employee.getEmail() != null) {
+//			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "email already exists!!!");
+//		}
+
+
 		response.setSuccess(true);
 
 		return response;

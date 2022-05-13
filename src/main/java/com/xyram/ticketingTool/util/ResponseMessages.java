@@ -22,7 +22,7 @@ public interface ResponseMessages {
 	String TICKET_ALREADY_CANCELLED = "Ticket is already Cancelled.";
 	String TICKET_ALREADY_RESOLVED = "Ticket is already Resolved.";
 	String TICKET_ADDED = "Ticket Added Successfully.";
-	String TICKET_NOT_IN_REVIEW = "Ticket is notin review state.";
+	String TICKET_NOT_IN_REVIEW = "Ticket is not in review state.";
 	String TICKET_RESOLUTION_UPDATED = "Ticket resolution updated successfully.";
 	String TICKET_RESOLUTION_NOT_UPDATED = "Ticket resolution not updated.";
 
@@ -356,6 +356,8 @@ String ASSET_DIRECTORY ="/Documents/assetDetails/";
 		String ASSET_PURCHASE_BILL_EDITED_SUCCESSFULLY = "Asset is underwarrenty and purchase bill edited successfully";
 
 		String HRCALENDER_LIST_RETRIVED = "List retrieved Successfully";
+
+		String EMPLOYEE_NOT_ADDED = "Employee not added";
 
 		
 		
