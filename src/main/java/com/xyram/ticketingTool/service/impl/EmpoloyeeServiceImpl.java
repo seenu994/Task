@@ -397,6 +397,15 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			}
 
 		}
+		
+		if(employee.getReportingTo() != null && employee.getReportingTo().length() > 0) {
+			Employee empObj = employeeRepository.getByEmpIdE(employee.getReportingTo());
+			if(empObj == null) {
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.NOT_VALID);
+				return response;
+			}
+		}
 
 		if (employee.getWings() == null || employee.getWings().getId().equals("")) {
 			response.setSuccess(false);
@@ -422,18 +431,6 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		else if (employee.getMobileNumber().length() != 10) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.INCORRECT_MOB);
-		}
-
-		if (employee.getReportingTo() == null || employee.getReportingTo().isEmpty()) {
-			response.setSuccess(true);
-		} else {
-			Employee employe = employeeRepository.getByEmpIdE(employee.getReportingTo());
-			if (employe == null) {
-				
-				response.setSuccess(false);
-				response.setMessage(ResponseMessages.NOT_VALID);
-			}
-
 		}
 
 		return response;
