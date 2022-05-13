@@ -169,6 +169,9 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		ApiResponse response = new ApiResponse(false);
 
 		response = validateEmployee(employee);
+		if (response.getMessage() != null && response.getMessage() != "") {
+			return response;
+		}
 		System.out.println("username::" + currentUser.getName());
 
 		if (response.isSuccess()) {
@@ -176,8 +179,9 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 				if (!employeeRepository.getbyEmpId(employee.geteId()).isEmpty()) {
 
-					throw new ResponseStatusException(HttpStatus.CONFLICT,
-							"Employee code already Assigned to Existing employee ");
+					response.setSuccess(false);
+					response.setMessage(ResponseMessages.EMP_CODE);
+				
 				}
 				
 //				if (employee.geteId() == null || employee.geteId().equals("")) {
@@ -228,11 +232,6 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				employee.setUpdatedBy(currentUser.getUserId());
 				CompanyWings wing = wingRepo.getWingById(employee.getWings().getId());
 				employee.setWings(wing);
-	
-
-
-
-
 				employee.setCreatedAt(new Date());
 				employee.setLastUpdatedAt(new Date());
 				employee.setUserCredientials(user);
@@ -311,6 +310,9 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 	private ApiResponse validateEmployee(Employee employee) {
 		ApiResponse response = new ApiResponse(false);
+		if (response.getMessage() != null && response.getMessage() != "") {
+			return response;
+		}
 		String regex = "[a-z A-Z]+";
 		String email = employeeRepository.filterByEmail(employee.getEmail());
 		if (!emailValidation(employee.getEmail())) {
@@ -320,23 +322,32 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		}
 		
 		if (employee.getFirstName() == null || employee.getFirstName().equals("")) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "FirstName is mandatory");
+			
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.FIRST_NAME_MAN);
+			
 		}
 		if(!employee.getFirstName().matches(regex)) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name should be character only");
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.FIRST_NAME_CHAR);
 		}
 		
 		if (employee.getLastName() == null || employee.getLastName().equals("")) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "LastName is mandatory");
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.LAST_NAME_MAN);
+
 		}
 		if(!employee.getLastName().matches(regex)) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "LastName should be character only");
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.LAST_NAME_CHAR);
+		
 		}
 		
 		
 		
 		if (employee.getLocation() == null || employee.getLocation().equals("")) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Location is mandatory");
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.LOC_MAN);
 		} 
 		else {
 			
@@ -345,24 +356,29 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				employee.setLocation(employee.getLocation());
 			}
 			if (companyLocation == null) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "location is not valid");
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.LOC_NOT_VALID);
+				
 			}
 		}
 		
 		if (employee.getRoleId() == null || employee.getRoleId().equals("")) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "RoleId is mandatory");
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.ROLE_ID_MAN);
 		} else {
 
 			Role role = roleRepository.getRoleName(employee.getRoleId());
 			if (role == null) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "RoleId is not valid");
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.ROLE_ID_NOT_VAL);
 			}
 			
 		}
 		
 		
 		if (employee.getDesignationId() == null || employee.getDesignationId().equals("")) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "designationId is mandatory");
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.DES_ID_MAN);
 		} else {
 
 			Designation designation = designationRepository.getDesignationNames(employee.getDesignationId());
@@ -370,12 +386,14 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				//employee.setDesignationId(employee.getDesignationId());
 			//}
 			if (designation == null) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "designationId is not valid");
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.DES_ID_NOT_VAL);
 			}
 		}
 		
 		if (employee.getPosition() == null || employee.getPosition().equals("")) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "position is mandatory");
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.POSITION_MAN);
 		}
 		
 		if(employee.getPosition() != null) {
@@ -388,13 +406,15 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				}
 			}
 			if (!isExist) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Position is not available");
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.POSITION_NOT_VAL);
 			}
 	
 		}
 
 		if (employee.getWings() == null || employee.getWings().getId().equals("")) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wing is mandatory");
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.WING_MAN);
 		}
 		if (employee.getWings() != null && employee.getWings().getId() != null) {
 			CompanyWings companyWings = wingRepo.getWingName(employee.getWings().getId());
@@ -403,18 +423,22 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				employee.setWings(companyWings);
 			}
 			else {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wing does not exist");
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.WING_NOT_EXI);
 			}
 		}
 		
 		
 
 		if (employee.getMobileNumber() == null || employee.getMobileNumber().equals("")) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "MobileNumber is mandatory");
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.MOB_NUM_MAN);
+			
 		}
 
 		else if (employee.getMobileNumber().length() != 10) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "In correct mobile number");
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.INCORRECT_MOB);
 		}
 
 //		else if (employee.getMobileNumber().length() != 10) {
@@ -424,15 +448,18 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 //		}
 			
 			if (employee.getEmail() == null || employee.getEmail().equals("")) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Mail id is mandatory");
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.MAILID_MAN);
+				
 			}
 			else if (!emailValidation(employee.getEmail())) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid EmailId");
-			
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.INVAL_MAIL_ID);
 			}
 
 	else if (email != null) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "email already exists!!!");
+		response.setSuccess(false);
+		response.setMessage(ResponseMessages.MAIL_ID_EXI);
 		}
 
 //		else {
@@ -530,6 +557,13 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	@Override
 	public ApiResponse editEmployee(String employeeId, Employee employeeRequest) {
 		ApiResponse response = new ApiResponse(false);
+		
+		// response = validateEmployee(employeeRequest);
+		
+		if (response.getMessage() != null && response.getMessage() != "") {
+			return response;
+		}
+		
 		Employee employee = employeeRepository.getById(employeeId);
 		User user = userRepository.getById(employee.getUserCredientials().getId());
 
@@ -547,10 +581,10 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			employee.setPosition(employeeRequest.getPosition());
 			CompanyWings wingObj = new CompanyWings();
 			CompanyWings wing = wingRepo.getWingById(employeeRequest.getWings().getId());
-			if (wing == null) {
-				response.setSuccess(false);
-				response.setMessage("Wing is not Exist");
-			}
+//			if (wing == null) {
+//				response.setSuccess(false);
+//				response.setMessage("Wing is not Exist");
+//			}
 			employee.setRoleId(employeeRequest.getRoleId());
 			Role role = roleRepository.getById(employeeRequest.getRoleId());
 			employee.setDesignationId(employeeRequest.getDesignationId());
@@ -841,8 +875,10 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			return response;
 		}
 		{
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "unable to upload image");
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.UPLOAD_IMAGE);
 		}
+		return response;
 
 	}
 
