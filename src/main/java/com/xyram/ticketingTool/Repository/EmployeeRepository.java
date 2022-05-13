@@ -13,7 +13,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.xyram.ticketingTool.admin.model.User;
-import com.xyram.ticketingTool.entity.CompanyLocation;
 import com.xyram.ticketingTool.entity.Employee;
 
 @Repository
@@ -296,15 +295,12 @@ List<Employee> getEmployeeByRole();
     	    + "left join Employee e on e.eId = b.empId where a.assetId =:assetId")
 	String getEmpNameById(String assetId);
 
-
-
-    
-//    @Query("select e from Employee e where e.eId =:eId")
-//	Employee getByEmpId1(Employee eId);
-
-    
     @Query("select e from Employee e where e.eId =:eId")
-	Employee getByEmpId1(String eId);
+	Employee getByEmpIdE(String eId);
+	
+
+	
+
 	
 
 	/*

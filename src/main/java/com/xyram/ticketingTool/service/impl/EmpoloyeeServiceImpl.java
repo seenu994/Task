@@ -44,7 +44,6 @@ import com.xyram.ticketingTool.Repository.VendorTypeRepository;
 import com.xyram.ticketingTool.admin.model.User;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.email.EmailService;
-import com.xyram.ticketingTool.entity.AssetSoftware;
 import com.xyram.ticketingTool.entity.AssetVendor;
 import com.xyram.ticketingTool.entity.Brand;
 import com.xyram.ticketingTool.entity.CompanyLocation;
@@ -168,206 +167,178 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	public ApiResponse addemployee(Employee employee) {
 
 		ApiResponse response = new ApiResponse(false);
-     response = validateMailId(employee);
+
 		response = validateEmployee(employee);
-		System.out.println("username::" + currentUser.getName());
-
-		if (response.isSuccess()) {
-			try {
-
-				if (!employeeRepository.getbyEmpId(employee.geteId()).isEmpty()) {
-
-					throw new ResponseStatusException(HttpStatus.CONFLICT,
-							"Employee code already Assigned to Existing employee ");
-				}
-
-//				if (employee.geteId() == null || employee.geteId().equals("")) {
-//					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "EmployeeId is mandatory");
-//				}
-
-//				if (!employee.geteId().matches("^[a-z 0 -9 A-Z]+")) {
-//					throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-//							"EmployeeId should not contain any special characters");
-//				}
-				
-				
-			
-
-				User user = new User();
-				user.setUsername(employee.getEmail());
-				String encodedPassword = new BCryptPasswordEncoder().encode(employee.getPassword());
-				user.setPassword(encodedPassword);
-				if (employee.getFirstName().length() > 3 && employee.getLastName().length() > 0) {
-					user.setName(employee.getFirstName() + " " + employee.getLastName());
-
-					// Employee employeere=new Employee();
-					Role role = roleRepository.getById(employee.getRoleId());
-					user.setUserRole(role != null ? role.getRoleName() : null);
-					/*
-					 * if (role != null) { try {
-					 * 
-					 * user.setUserRole(role.getRoleName()); } catch (Exception e) { throw new
-					 * ResponseStatusException(HttpStatus.BAD_REQUEST, role.getRoleName() +
-					 * " is not a valid status"); } } else { throw new
-					 * ResourceNotFoundException("invalid user role "); }
-					 */
-					Integer permission = permissionConfig.setDefaultPermissions(user.getUserRole().toString());
-					user.setPermission(permission);
-					user.setStatus(UserStatus.ACTIVE);
-					System.out.println(user.getEmail() + "::" + user.getUsername() + "::" + user.getCreatedAt());
-					User newUser = userRepository.save(user);
-					UserPermissions permissions = new UserPermissions();
-					permissions.setEmpModPermission(permissionConfig.getEMPLOYEES_PERMISSION());
-					permissions.setProjectModPermission(permissionConfig.getPROJECTS_PERMISSION());
-					permissions.setTicketModPermission(permissionConfig.getTICKETS_PERMISSION());
-					permissions.setJobOpeningModPermission(permissionConfig.getJOBOPENINGS_PERMISSION());
-					permissions.setJobInterviewsModPermission(permissionConfig.getJOBINTERVIEWS_PERMISSION());
-					permissions.setJobAppModPermission(permissionConfig.getJOBAPPLICATIONS_PERMISSION());
-					permissions.setJobOfferModPermission(permissionConfig.getJOBOFFERS_PERMISSION());
-					permissions.setJobVendorsModPermission(permissionConfig.getJOBVENDORS_PERMISSION());
-					permissions.setUserId(newUser.getId());
-					userPermissionConfig.save(permissions);
-					employee.setCreatedBy(currentUser.getUserId());
-					employee.setUpdatedBy(currentUser.getUserId());
-					CompanyWings wing = wingRepo.getWingById(employee.getWings().getId());
-//				if (wing != null) {
-//					employee.setWings(wing);
-//				}
-
-					employee.setCreatedAt(new Date());
-					employee.setLastUpdatedAt(new Date());
-					employee.setUserCredientials(user);
-					employee.setProfileUrl("https://tool.xyramsoft.com/image/ticket-attachment/user-default-pic.png");
-					Employee employeeNew = employeeRepository.save(employee);
-					User useredit = userRepository.getById(user.getId());
-					useredit.setScopeId(employeeNew.geteId());
-					userRepository.save(useredit);
-
-					// sending notification starts here..!
-
-					List<Map> EmployeeList = employeeRepository.getEmployeeBYReportingToId(employee.getReportingTo());
-
-					if (!EmployeeList.isEmpty()) {
-
-						for (Map employeeNotification : EmployeeList) {
-							Map request = new HashMap<>();
-							request.put("id", employeeNotification.get("id"));
-							request.put("uid", employeeNotification.get("uid"));
-							request.put("title", "EMPLOYEE CREATED");
-							request.put("body", " employee Created - " + employeeNew.getFirstName());
-							pushNotificationCall.restCallToNotification(pushNotificationRequest
-									.PushNotification(request, 12, NotificationType.EMPLOYEE_CREATED.toString()));
-
-						}
-						// inserting notification details
-						Notifications notifications = new Notifications();
-						notifications.setNotificationDesc("employee created - " + employeeNew.getFirstName());
-						notifications.setNotificationType(NotificationType.EMPLOYEE_CREATED);
-						notifications.setSenderId(employeeNew.getReportingTo());
-						notifications.setReceiverId(userDetail.getUserId());
-						notifications.setSeenStatus(false);
-						notifications.setCreatedBy(userDetail.getUserId());
-						notifications.setCreatedAt(new Date());
-						notifications.setUpdatedBy(userDetail.getUserId());
-						notifications.setLastUpdatedAt(new Date());
-
-						notificationService.createNotification(notifications);
-					}
-					UUID uuid = UUID.randomUUID();
-					String uuidAsString = uuid.toString();
-
-					if (employeeNew != null & false) {
-						String name = null;
-
-						HashMap mailDetails = new HashMap();
-						mailDetails.put("toEmail", employeeNew.getEmail());
-						mailDetails.put("subject", name + ", " + "Here's your new PASSWORD");
-						mailDetails.put("message", "Hi " + name
-								+ ", \n\n We received a request to reset the password for your Account. \n\n Here's your new PASSWORD Link is: "
-								+ application_url + "/update-password" + "?key=" + uuidAsString
-								+ "\n\n Thanks for helping us keep your account secure.\n\n Xyram Software Solutions Pvt Ltd.");
-						emailService.sendMail(mailDetails);
-					}
-					// end of the notification part...!
-
-					response.setSuccess(true);
-					response.setMessage(ResponseMessages.EMPLOYEE_ADDED);
-					Map content = new HashMap();
-					content.put("employeeId", employeeNew.geteId());
-					response.setContent(content);
-				}
-				
-//				response.setSuccess(false);
-//				response.setMessage(ResponseMessages.EMPLOYEE_NOT_ADDED);
-			} catch (ResponseStatusException re) {
-				throw new ResponseStatusException(re.getStatus(), re.getReason());
-			} catch (Exception e) {
-				System.out.println("Error Occured :: " + e.getMessage());
-			}
-
+		if (response.getMessage() != null && response.getMessage() != "") {
 			return response;
-
 		}
-		return response;
-
-	}
-	private ApiResponse validateMailId(Employee employee) {
-		ApiResponse response = new ApiResponse(false);
-		String email = employeeRepository.filterByEmail(employee.getEmail());
-		if (!emailValidation(employee.getEmail())) {
-			response.setMessage(ResponseMessages.EMAIL_INVALID);
-		}
+		// Email Validation starts here
 		if (employee.getEmail() == null || employee.getEmail().equals("")) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.MAILID_MAN);
-			
+			return response;
 		}
-		else if (!emailValidation(employee.getEmail())) {
+		if (!emailValidation(employee.getEmail())) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.INVAL_MAIL_ID);
 		}
 
-else if (email != null) {
-	response.setSuccess(false);
-	response.setMessage(ResponseMessages.MAIL_ID_EXI);
+		String email = employeeRepository.filterByEmail(employee.getEmail());
+		if (email != null) {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.MAIL_ID_EXI);
+		}
+		System.out.println("username::" + currentUser.getName());
+
+//		if (response.isSuccess()) {
+		try {
+
+			if (!employeeRepository.getbyEmpId(employee.geteId()).isEmpty()) {
+
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.EMP_CODE);
+
+			}
+
+			User user = new User();
+			user.setUsername(employee.getEmail());
+			String encodedPassword = new BCryptPasswordEncoder().encode(employee.getPassword());
+			user.setPassword(encodedPassword);
+			if (employee.getFirstName().length() > 3 && employee.getLastName().length() > 0) {
+				user.setName(employee.getFirstName() + " " + employee.getLastName());
+
+				// Employee employeere=new Employee();
+				Role role = roleRepository.getById(employee.getRoleId());
+				user.setUserRole(role != null ? role.getRoleName() : null);
+
+				Integer permission = permissionConfig.setDefaultPermissions(user.getUserRole().toString());
+				user.setPermission(permission);
+				user.setStatus(UserStatus.ACTIVE);
+				System.out.println(user.getEmail() + "::" + user.getUsername() + "::" + user.getCreatedAt());
+				User newUser = userRepository.save(user);
+				UserPermissions permissions = new UserPermissions();
+				permissions.setEmpModPermission(permissionConfig.getEMPLOYEES_PERMISSION());
+				permissions.setProjectModPermission(permissionConfig.getPROJECTS_PERMISSION());
+				permissions.setTicketModPermission(permissionConfig.getTICKETS_PERMISSION());
+				permissions.setJobOpeningModPermission(permissionConfig.getJOBOPENINGS_PERMISSION());
+				permissions.setJobInterviewsModPermission(permissionConfig.getJOBINTERVIEWS_PERMISSION());
+				permissions.setJobAppModPermission(permissionConfig.getJOBAPPLICATIONS_PERMISSION());
+				permissions.setJobOfferModPermission(permissionConfig.getJOBOFFERS_PERMISSION());
+				permissions.setJobVendorsModPermission(permissionConfig.getJOBVENDORS_PERMISSION());
+				permissions.setUserId(newUser.getId());
+				userPermissionConfig.save(permissions);
+				employee.setCreatedBy(currentUser.getUserId());
+				employee.setUpdatedBy(currentUser.getUserId());
+				CompanyWings wing = wingRepo.getWingById(employee.getWings().getId());
+				employee.setWings(wing);
+				employee.setCreatedAt(new Date());
+				employee.setLastUpdatedAt(new Date());
+				employee.setUserCredientials(user);
+				employee.setProfileUrl("https://tool.xyramsoft.com:444/image/ticket-attachment/user-default-pic.png");
+				Employee employeeNew = employeeRepository.save(employee);
+				User useredit = userRepository.getById(user.getId());
+				useredit.setScopeId(employeeNew.geteId());
+				userRepository.save(useredit);
+
+				// sending notification starts here..!
+
+				List<Map> EmployeeList = employeeRepository.getEmployeeBYReportingToId(employee.getReportingTo());
+
+				if (!EmployeeList.isEmpty()) {
+
+					for (Map employeeNotification : EmployeeList) {
+						Map request = new HashMap<>();
+						request.put("id", employeeNotification.get("id"));
+						request.put("uid", employeeNotification.get("uid"));
+						request.put("title", "EMPLOYEE CREATED");
+						request.put("body", " employee Created - " + employeeNew.getFirstName());
+						pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request,
+								12, NotificationType.EMPLOYEE_CREATED.toString()));
+
+					}
+					// inserting notification details
+					Notifications notifications = new Notifications();
+					notifications.setNotificationDesc("employee created - " + employeeNew.getFirstName());
+					notifications.setNotificationType(NotificationType.EMPLOYEE_CREATED);
+					notifications.setSenderId(employeeNew.getReportingTo());
+					notifications.setReceiverId(userDetail.getUserId());
+					notifications.setSeenStatus(false);
+					notifications.setCreatedBy(userDetail.getUserId());
+					notifications.setCreatedAt(new Date());
+					notifications.setUpdatedBy(userDetail.getUserId());
+					notifications.setLastUpdatedAt(new Date());
+
+					notificationService.createNotification(notifications);
+				}
+				UUID uuid = UUID.randomUUID();
+				String uuidAsString = uuid.toString();
+
+				if (employeeNew != null & false) {
+					String name = null;
+
+					HashMap mailDetails = new HashMap();
+					mailDetails.put("toEmail", employeeNew.getEmail());
+					mailDetails.put("subject", name + ", " + "Here's your new PASSWORD");
+					mailDetails.put("message", "Hi " + name
+							+ ", \n\n We received a request to reset the password for your Account. \n\n Here's your new PASSWORD Link is: "
+							+ application_url + "/update-password" + "?key=" + uuidAsString
+							+ "\n\n Thanks for helping us keep your account secure.\n\n Xyram Software Solutions Pvt Ltd.");
+					emailService.sendMail(mailDetails);
+				}
+				// end of the notification part...!
+
+				response.setSuccess(true);
+				response.setMessage(ResponseMessages.EMPLOYEE_ADDED);
+				Map content = new HashMap();
+				content.put("employeeId", employeeNew.geteId());
+				response.setContent(content);
+			}
+		} catch (ResponseStatusException re) {
+			throw new ResponseStatusException(re.getStatus(), re.getReason());
+		} catch (Exception e) {
+			System.out.println("Error Occured :: " + e.getMessage());
+		}
+
+		return response;
+
+//		}
 	}
+
+	private ApiResponse validateEmployee(Employee employee) {
+		ApiResponse response = new ApiResponse(true);
+
+		String regex = "[a-z A-Z]+";
+		if (!emailValidation(employee.getEmail())) {
+			response.setMessage(ResponseMessages.EMAIL_INVALID);
+
 			response.setSuccess(false);
 		}
-		
-			
-			
-		
-
-		
-
-	
-	private ApiResponse validateEmployee(Employee employee) {
-		ApiResponse response = new ApiResponse(false);
-		String regex = "[a-z A-Z]+";
-		//String email = employeeRepository.filterByEmail(employee.getEmail());
-		//if (!emailValidation(employee.getEmail())) {
-			//response.setMessage(ResponseMessages.EMAIL_INVALID);
-
-			//response.setSuccess(false);
-		//}
 
 		if (employee.getFirstName() == null || employee.getFirstName().equals("")) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "FirstName is mandatory");
+
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.FIRST_NAME_MAN);
+
 		}
 		if (!employee.getFirstName().matches(regex)) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name should be character only");
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.FIRST_NAME_CHAR);
 		}
 
 		if (employee.getLastName() == null || employee.getLastName().equals("")) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "LastName is mandatory");
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.LAST_NAME_MAN);
+
 		}
 		if (!employee.getLastName().matches(regex)) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "LastName should be character only");
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.LAST_NAME_CHAR);
+
 		}
-		
 
 		if (employee.getLocation() == null || employee.getLocation().equals("")) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Location is mandatory");
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.LOC_MAN);
 		} else {
 
 			CompanyLocation companyLocation = companyLocationRepository.getCompanyLocations(employee.getLocation());
@@ -375,59 +346,40 @@ else if (email != null) {
 				employee.setLocation(employee.getLocation());
 			}
 			if (companyLocation == null) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "location is not valid");
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.LOC_NOT_VALID);
+
 			}
 		}
-		
-		
-		
-		if(employee.getReportingTo() == null || employee.getReportingTo().isEmpty() ) 
-		{
-			response.setSuccess(true);
-			}
-		else {
-			
-			Employee employe = employeeRepository.getByEmpId1(employee.getReportingTo());
-			if(employe == null) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"EmployeeId to Id is not valid");
-			}else{
-					
-				response.setSuccess(true);
-			}
-			
-		}
-	
+
 		if (employee.getRoleId() == null || employee.getRoleId().equals("")) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "RoleId is mandatory");
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.ROLE_ID_MAN);
 		} else {
 
 			Role role = roleRepository.getRoleName(employee.getRoleId());
-			//if (role != null) {
-				//employee.setRoleId(employee.getRoleId());
-			//}
 			if (role == null) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "RoleId is not valid");
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.ROLE_ID_NOT_VAL);
 			}
 
 		}
 
 		if (employee.getDesignationId() == null || employee.getDesignationId().equals("")) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "designationId is mandatory");
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.DES_ID_MAN);
 		} else {
 
 			Designation designation = designationRepository.getDesignationNames(employee.getDesignationId());
-			//if (designation != null) {
-				//employee.setDesignationId(employee.getDesignationId());
-			//}
 			if (designation == null) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "designationId is not valid");
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.DES_ID_NOT_VAL);
 			}
 		}
-		
-
 
 		if (employee.getPosition() == null || employee.getPosition().equals("")) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "position is mandatory");
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.POSITION_MAN);
 		}
 
 		if (employee.getPosition() != null) {
@@ -440,56 +392,49 @@ else if (email != null) {
 				}
 			}
 			if (!isExist) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Position is not available");
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.POSITION_NOT_VAL);
 			}
 
 		}
-		
-		
 
 		if (employee.getWings() == null || employee.getWings().getId().equals("")) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wing is mandatory");
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.WING_MAN);
 		}
 		if (employee.getWings() != null && employee.getWings().getId() != null) {
 			CompanyWings companyWings = wingRepo.getWingName(employee.getWings().getId());
-		
+
 			if (companyWings != null) {
 				employee.setWings(companyWings);
-			}
-			else {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wing does not exist");
+			} else {
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.WING_NOT_EXI);
 			}
 		}
-		
-		
 
 		if (employee.getMobileNumber() == null || employee.getMobileNumber().equals("")) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "MobileNumber is mandatory");
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.MOB_NUM_MAN);
+
 		}
 
 		else if (employee.getMobileNumber().length() != 10) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "In correct mobile number");
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.INCORRECT_MOB);
 		}
 
-//		else if (employee.getMobileNumber().length() != 10) {
-//			response.setMessage(ResponseMessages.MOBILE_INVALID);
-//
-//			response.setSuccess(false);
-//		}
+		if (employee.getReportingTo() == null || employee.getReportingTo().isEmpty()) {
+			response.setSuccess(true);
+		} else {
+			Employee employe = employeeRepository.getByEmpIdE(employee.getReportingTo());
+			if (employe == null) {
+				
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.NOT_VALID);
+			}
 
-//		if (employee.getEmail() == null || employee.getEmail().equals("")) {
-//			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Mail id is mandatory");
-//		} else if (!emailValidation(employee.getEmail())) {
-//			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid EmailId");
-//
-//		}
-		
-//		else if (employee.getEmail() != null) {
-//			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "email already exists!!!");
-//		}
-
-
-		response.setSuccess(true);
+		}
 
 		return response;
 	}
@@ -578,6 +523,13 @@ else if (email != null) {
 	@Override
 	public ApiResponse editEmployee(String employeeId, Employee employeeRequest) {
 		ApiResponse response = new ApiResponse(false);
+
+		response = validateEmployee(employeeRequest);
+
+		if (response.getMessage() != null && response.getMessage() != "") {
+			return response;
+		}
+
 		Employee employee = employeeRepository.getById(employeeId);
 		User user = userRepository.getById(employee.getUserCredientials().getId());
 
@@ -595,12 +547,15 @@ else if (email != null) {
 			employee.setPosition(employeeRequest.getPosition());
 			CompanyWings wingObj = new CompanyWings();
 			CompanyWings wing = wingRepo.getWingById(employeeRequest.getWings().getId());
-			if (wing != null) {
-				employee.setWings(wing);
-			}
+//			if (wing == null) {
+//				response.setSuccess(false);
+//				response.setMessage("Wing is not Exist");
+//			}
 			employee.setRoleId(employeeRequest.getRoleId());
+
 			Role role = roleRepository.getById(employeeRequest.getRoleId());
 			employee.setDesignationId(employeeRequest.getDesignationId());
+
 			user.setUserRole(role.getRoleName());
 			userRepository.save(user);
 			employeeRepository.save(employee);
@@ -860,7 +815,7 @@ else if (email != null) {
 		String filename = getRandomFileName() + System.currentTimeMillis();
 		boolean succesResponse = false;
 		try {
-			succesResponse = fileUploadService.uploadFile(file, ticketAttachmentBaseUrl, filename);
+			succesResponse = fileUploadService.uploadFile(file, ticketAttachmentBaseUrl, filename + "" + fileextension);
 
 		} catch (Exception e) {
 
@@ -872,7 +827,8 @@ else if (email != null) {
 			Employee employeeObj = employeeRepository.getbyUserByUserId(userId);
 			if (employeeObj != null) {
 				// employeeObj=new Employee();
-				employeeObj.setProfileUrl("https://tool.xyramsoft.com"+ticketAttachmentBaseUrl + "/" + filename);
+				employeeObj.setProfileUrl(
+						"https://tool.xyramsoft.com:444" + ticketAttachmentBaseUrl + "/" + filename + fileextension);
 				employeeRepository.save(employeeObj);
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.EMPLOYEE_PROFILE_UPDATION);
@@ -888,8 +844,10 @@ else if (email != null) {
 			return response;
 		}
 		{
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "unable to upload image");
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.UPLOAD_IMAGE);
 		}
+		return response;
 
 	}
 
@@ -993,7 +951,7 @@ else if (email != null) {
 //				vendorDetails.setCreatedAt(new Date());
 //				vendorDetails.setLastUpdatedAt(new Date());
 			vendorDetails.setUserCredientials(user);
-			vendorDetails.setProfileUrl("https://tool.xyramsoft.com/image/ticket-attachment/user-default-pic.png");
+			vendorDetails.setProfileUrl("https://tool.xyramsoft.com:444/image/ticket-attachment/user-default-pic.png");
 			JobVendorDetails vendorNew = vendorRepository.save(vendorDetails);
 			if (vendorNew != null) {
 				Employee empObj = new Employee();
