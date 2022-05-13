@@ -423,7 +423,7 @@ String ASSET_DIRECTORY ="/Documents/assetDetails/";
 
 		String UPLOAD_IMAGE = "unable to upload image";
 
-		String NOT_VALID = "Reportees is not valid";
+		String NOT_VALID = "Reportor is not valid";
 
 		
 		

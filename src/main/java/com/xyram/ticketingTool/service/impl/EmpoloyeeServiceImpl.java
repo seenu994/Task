@@ -397,6 +397,15 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			}
 
 		}
+		
+		if(employee.getReportingTo() != null && employee.getReportingTo().length() > 0) {
+			Employee empObj = employeeRepository.getByEmpIdE(employee.getReportingTo());
+			if(empObj == null) {
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.NOT_VALID);
+				return response;
+			}
+		}
 
 		if (employee.getWings() == null || employee.getWings().getId().equals("")) {
 			response.setSuccess(false);
