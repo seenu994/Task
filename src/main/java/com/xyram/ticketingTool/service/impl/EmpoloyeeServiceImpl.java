@@ -173,6 +173,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			return response;
 		}
 		// Email Validation starts here
+	    
 		if (employee.getEmail() == null || employee.getEmail().equals("")) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.MAILID_MAN);
@@ -205,6 +206,14 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			String encodedPassword = new BCryptPasswordEncoder().encode(employee.getPassword());
 			user.setPassword(encodedPassword);
 			if (employee.getFirstName().length() > 3 && employee.getLastName().length() > 0) {
+				
+				employee.setFirstName(employee.getFirstName().trim());
+				String name = employee.getFirstName();
+				String firstLetter = name.substring(0, 1);
+			    String remainingLetters = name.substring(1, name.length());
+			    firstLetter = firstLetter.toUpperCase();
+			    employee.setFirstName(firstLetter + remainingLetters);
+			    
 				user.setName(employee.getFirstName() + " " + employee.getLastName());
 
 				// Employee employeere=new Employee();
@@ -314,7 +323,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			response.setSuccess(false);
 		}
 
-		if (employee.getFirstName() == null || employee.getFirstName().equals("")) {
+		if (employee.getFirstName() == null || employee.getFirstName().equals("") || employee.getFirstName().length()>3) {
 
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.FIRST_NAME_MAN);
@@ -325,7 +334,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			response.setMessage(ResponseMessages.FIRST_NAME_CHAR);
 		}
 
-		if (employee.getLastName() == null || employee.getLastName().equals("")) {
+		if (employee.getLastName() == null || employee.getLastName().equals("") || employee.getLastName().length() > 0) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.LAST_NAME_MAN);
 
@@ -535,6 +544,13 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			employee.setLastName(employeeRequest.getLastName());
 			employee.setLastUpdatedAt(new Date());
 
+			employee.setFirstName(employee.getFirstName().trim());
+			String name = employee.getFirstName();
+			String firstLetter = name.substring(0, 1);
+		    String remainingLetters = name.substring(1, name.length());
+		    firstLetter = firstLetter.toUpperCase();
+		    employee.setFirstName(firstLetter + remainingLetters);
+			
 			user.setName(employeeRequest.getFirstName() + " " + employeeRequest.getLastName());
 			employee.setMiddleName(employeeRequest.getMiddleName());
 			employee.setMobileNumber(employeeRequest.getMobileNumber());
