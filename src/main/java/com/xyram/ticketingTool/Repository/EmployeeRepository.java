@@ -295,6 +295,10 @@ List<Employee> getEmployeeByRole();
     	    + "left join Employee e on e.eId = b.empId where a.assetId =:assetId")
 	String getEmpNameById(String assetId);
 
+    @Query("select e from Employee e where e.eId =:eId")
+	Employee getByEmpIdE(String eId);
+	
+
 	
 
 	

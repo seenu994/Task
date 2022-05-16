@@ -34,7 +34,7 @@ public class ReminderScheduler {
 	public void reminderJob() {
 		List<ReminderLog> getAllLogs = reminderlogRepository.getAllLogs();
 		getAllLogs.forEach((e) -> {
-			System.out.println("element ::"+ e);
+			System.out.println("element ::" + e);
 			Map<Object, Object> request = new HashMap<>();
 			request.put("id", e.getUserId());
 			request.put("uid", e.getuId());
@@ -42,7 +42,7 @@ public class ReminderScheduler {
 			request.put("body", "REMINDER SENT - " + e.getDescription());
 			pushNotificationCall.restCallToNotification(
 					pushNotificationRequest.PushNotification(request, 20, NotificationType.REMINDER_SENT.toString()));
-			
+
 			reminderlogRepository.deleteReminderlog(e.getReminderlogId());
 		});
 
