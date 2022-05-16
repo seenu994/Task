@@ -47,4 +47,28 @@ public class ReminderScheduler {
 		});
 
 	}
+	
+	@Scheduled(cron = "0 */5 * * * *")
+    public void sendNotificationForRemindersFor5Mins() {
+		
+		// Get all Reminders from Now to Half an hour.
+		// Pick latest record for each employee
+		// Send Notification.
+	}
+	
+	@Scheduled(cron = "0 */10 * * * *")
+    public void sendNotificationForRemindersFor10Mins() {
+		
+		// Get all Reminders from Now to Half an hour.
+		// Pick latest record for each employee
+		// Send Notification.
+	}
+	
+	@Scheduled(cron = "0 */15 * * * *")
+    public void sendNotificationForRemindersFor15Mins() {
+		
+		// Get all Reminders from Now to Half an hour.
+		// Pick latest record for each employee
+		// Send Notification.
+	}
 }

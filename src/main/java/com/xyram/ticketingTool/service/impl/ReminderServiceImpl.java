@@ -66,25 +66,43 @@ public class ReminderServiceImpl implements ReminderService {
 	ReminderScheduler reminderScheduler;
 
 	@Override
-	public ApiResponse createReminder(Reminder Reminder) {
+	public ApiResponse createReminder(Reminder reminder) {
 		ApiResponse response = new ApiResponse(false);
-		if (Reminder != null) {
+		if (reminder != null) {
 
-			Reminder.setCreatedBy(currentUser.getUserId());
-			Reminder.setUserId(currentUser.getUserId());
-			Reminder.setUserName(currentUser.getFirstName());
-			Reminder.setUpdatedBy(currentUser.getUserId());
-			Reminder.setCreatedAt(new Date());
-			Reminder.setLastUpdatedAt(new Date());
-			Reminder reminderNew = reminderRepository.save(Reminder);
+			reminder.setCreatedBy(currentUser.getUserId());
+			reminder.setUserId(currentUser.getUserId());
+			reminder.setUserName(currentUser.getFirstName());
+			reminder.setUpdatedBy(currentUser.getUserId());
+			reminder.setCreatedAt(new Date());
+			reminder.setLastUpdatedAt(new Date());
+			reminder.setIsHost(true);
+			Reminder reminderNew = reminderRepository.save(reminder);
+			
+			// Sending Notifications
 			ArrayList<String> notifyMemberArr = new ArrayList<String>();
-			notifyMemberArr.add(Reminder.getNotifyMembers());
+			notifyMemberArr.add(reminder.getNotifyMembers());
 			notifyMemberArr.forEach(ele -> {
 				System.out.println(ele);
 
 				User user = userRepository.getById(ele);
 
 				if (user != null) {
+					
+					Reminder teamReminders = new Reminder();
+					teamReminders.setCreatedBy(currentUser.getUserId());
+					teamReminders.setUserId(user.getId());
+					teamReminders.setUserName(currentUser.getFirstName());
+					teamReminders.setUpdatedBy(currentUser.getUserId());
+					teamReminders.setCreatedAt(new Date());
+					teamReminders.setLastUpdatedAt(new Date());
+					teamReminders.setIsHost(false);
+					
+					teamReminders.setUserId(user.getId());
+					teamReminders.setTitle(reminder.getTitle());
+					reminderRepository.save(teamReminders);
+
+					
 					ReminderLog reminderLog = new ReminderLog();
 					reminderLog.setDescription("REMINDER SENT");
 					reminderLog.setuId(user.getUid());
@@ -105,15 +123,8 @@ public class ReminderServiceImpl implements ReminderService {
 
 					notificationService.createNotification(notifications);
 				}
-				UUID uuid = UUID.randomUUID();
-				String uuidAsString = uuid.toString();
-
-//				if (reminderNew != null & false) {
-//					String name = null;
-//
-//					HashMap mailDetails = new HashMap();
-//			
-//				}
+//				UUID uuid = UUID.randomUUID();
+//				String uuidAsString = uuid.toString();
 			});
 			System.out.println("Reminder notifyMemberArr::" + notifyMemberArr);
 

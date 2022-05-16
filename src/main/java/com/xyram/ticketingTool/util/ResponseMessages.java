@@ -427,7 +427,7 @@ String ASSET_DIRECTORY ="/Documents/assetDetails/";
 
 		
 		String Reminder_ADDED = "Reminder added successfully";
-		String Reminder_NOT_ADDED = "Reminder not added";
+		String Reminder_NOT_ADDED = "Reminder not added. Object is not proper";
 		String Reminder_DELETED = "Reminder deleted successfully";
 		String Reminder_NOT_DELETED = "Reminder not deleted";
 		String Reminder_UPDATED = "Reminder updated successfully";
