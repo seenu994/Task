@@ -82,7 +82,7 @@ public class DesignationServiceImpl implements DesiggnaionService {
 		private ApiResponse validateDesignation(Designation designation) {
 			ApiResponse response = new ApiResponse(false);
 			String regex = "[a-z A-Z]+";
-			String designationObj  = designationRepository.getDesignationName(designation.getDesignationName());
+			Designation designationObj  = designationRepository.getDesignationName(designation.getDesignationName());
 			if (designation.getDesignationName().equals("") || designation.getDesignationName() == null) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Designation is manditory");
 			}
