@@ -283,12 +283,12 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				String uuidAsString = uuid.toString();
 
 				if (employeeNew != null & false) {
-					String name = null;
+					String name2 = null;
 
 					HashMap mailDetails = new HashMap();
 					mailDetails.put("toEmail", employeeNew.getEmail());
 					mailDetails.put("subject", name + ", " + "Here's your new PASSWORD");
-					mailDetails.put("message", "Hi " + name
+					mailDetails.put("message", "Hi " + name2
 							+ ", \n\n We received a request to reset the password for your Account. \n\n Here's your new PASSWORD Link is: "
 							+ application_url + "/update-password" + "?key=" + uuidAsString
 							+ "\n\n Thanks for helping us keep your account secure.\n\n Xyram Software Solutions Pvt Ltd.");
