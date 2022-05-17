@@ -405,6 +405,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				response.setMessage(ResponseMessages.NOT_VALID);
 				return response;
 			}
+			
 		}
 
 		if (employee.getWings() == null || employee.getWings().getId().equals("")) {
@@ -542,12 +543,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			employee.setReportingTo(employeeRequest.getReportingTo());
 			employee.setLocation(employeeRequest.getLocation());
 			employee.setPosition(employeeRequest.getPosition());
-			CompanyWings wingObj = new CompanyWings();
-			CompanyWings wing = wingRepo.getWingById(employeeRequest.getWings().getId());
-//			if (wing == null) {
-//				response.setSuccess(false);
-//				response.setMessage("Wing is not Exist");
-//			}
+			employee.setWings(employeeRequest.getWings());
 			employee.setRoleId(employeeRequest.getRoleId());
 
 			Role role = roleRepository.getById(employeeRequest.getRoleId());

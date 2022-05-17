@@ -100,7 +100,7 @@ public interface ResponseMessages {
 	String SCHEDULEINIERVIEW_UPDATED = "ScheduleInterview Updated Successfully";
 	String SCHEDULEINIERVIEW_INVALID = "Invalid interview Id";
 	String TICKET_CREATED = "Ticket created successfully";
-	
+
 	String ARTICLE_ADDED = "Artcle created successfully";
 	String ARTICLE_NOT_ADDED = "Artcle not created";
 	String ARTICLE_EDITED = "Artcle edited successfully";
@@ -114,7 +114,7 @@ public interface ResponseMessages {
 	String ARTICLE_LIST_NOT_RETREIVED = "Artcle list not retreived";
 	String ARTICLE_DETAILS_RETREIVED = "Artcle details retreived successfully";
 	String ARTICLE_DETAILS_NOT_RETREIVED = "Artcle details not retreived";
-	
+
 	String ANNOUNCEMENT_ADDED = "Announcement created successfully";
 	String ANNOUNCEMENT_NOT_ADDED = "Announcement not created";
 	String ANNOUNCEMENT_EDITED = "Announcement edited successfully";
@@ -127,7 +127,7 @@ public interface ResponseMessages {
 	String ANNOUNCEMENT_LIST_NOT_RETREIVED = "Announcement list not retreived";
 	String ANNOUNCEMENT_DETAILS_RETREIVED = "Announcement details retreived successfully";
 	String ANNOUNCEMENT_DETAILS_NOT_RETREIVED = "Announcement details not retreived";
-	
+
 	String SHEETS_ADDED = "Time Sheets added successfully";
 	String SHEETS_NOT_ADDED = "Time Sheets not added";
 	String SHEETS_OBJECT_ISSUE = "Time Sheets records are not proper or empty";
@@ -143,27 +143,25 @@ public interface ResponseMessages {
 	String ASSET_EDITED = "Asset edited successfully";
 
 	String ASSET_ISSUES_ADDED = "Asset Issues added";
-	
+
 	String ASSET_ISSUES_NOT_ADDED = "Asset Issues added";
-	
-    String ASSET_ISSUES_EDITED = "Asset Issues added";
-	
+
+	String ASSET_ISSUES_EDITED = "Asset Issues added";
+
 	String ASSET_ISSUES_NOT_EDITED = "Asset Issues added";
-	
+
 	String ASSET_ISSUES_STATUS_CHANGED = "Asset issues status changed";
-	
-	 String ASSET_ISSUES_STATUS__NOT_CHANGED = "Asset issues status not changed";
+
+	String ASSET_ISSUES_STATUS__NOT_CHANGED = "Asset issues status not changed";
 
 	String ASSET_BILL_ADDED = "Asset bill added";
 	String ASSET_BILL_ADDED_SUCCESSFULLY = "Asset bill added successfully";
-	
-	String ASSET_BILL_NOT_ADDED = "Asset bill not  added";
-	
-    String ASSET_BILL_EDITED = "Asset bill added";
-    String ASSET_IS_UNDERWARRENTY_NO_NEED_TO_PAY_ANY_AMOUNT = "asset is underwarrenty no need to pay any amount";
 
-	
-	
+	String ASSET_BILL_NOT_ADDED = "Asset bill not  added";
+
+	String ASSET_BILL_EDITED = "Asset bill added";
+	String ASSET_IS_UNDERWARRENTY_NO_NEED_TO_PAY_ANY_AMOUNT = "asset is underwarrenty no need to pay any amount";
+
 	String VENDORID_IN_VALID = "VendorId is in valid";
 
 	String ADD_ISSUEID = "Enter issueId";
@@ -179,8 +177,6 @@ public interface ResponseMessages {
 	String ASSET_PURCHASE_BILL_ADDED_SUCCESSFULLY = "Asset is underWarrenty and asset purchase bill added successsfully";
 
 	String ASSET_PURCHASE_BILL_EDIT_SUCCESSFULLY = "Asset is underWarrenty and Asset purchase bill edited successfully";
-
-	
 
 	String ASSET_REPAIR_BILL_EDITED_SUCCESSFULLY = "Asset is underwarrenty and repair bill edited successfully";
 
@@ -236,18 +232,18 @@ public interface ResponseMessages {
 
 	String GETALL_VENDOR_LIST = "Asset vendor list";
 	String RETURN_DAMAGE = "Asset returned from damage";
-	
+
 	String ASSET_ISSUE_DIRECTORY = "asset issue directory";
 
 	String VENDOR_NOT_ADDED = "Vendor not added successfully";
-                /* Note Response Message*/
-	
+	/* Note Response Message */
+
 	String NOTES_CREATED = "Created notes successfully";
 	String NOTES_NOT_CREATED = "Notes not created";
 
 	String NOTES_UPDATED = "Notes updated successfully";
 	String NOTES_NOT_UPDATED = "Notes are not updated";
-	
+
 	String NOTES_RETRIEVED = "Notes Retrieved Successfully";
 	String NOTES_NOT_RETRIEVED = "Could not retrieve data";
 
@@ -255,47 +251,40 @@ public interface ResponseMessages {
 	String NOTES_NOT_FOUND = "Notes not found";
 
 	String DATE_FEILD = "Date feild cannot be empty";
-	
+
 	String ADDED_DESIGNATION = "Designation is added Successfully";
-    String BRAND_ADDED = "Brand Added succesfully";
-	
+	String BRAND_ADDED = "Brand Added succesfully";
+
 	String BRAND_NOT_ADDED = "Brand not added";
-	
+
 	String BRAND_EDITED = "Brand edited successfully";
-	
+
 	String BRAND_NOT_EDITED = "Invalid Brand Id";
-	
+
 	String BRAND_LIST_RETRIVED = "List retrieved successfully";
-	
-    String RAM_ADDED = "Ram size added successfully";
-	
+
+	String RAM_ADDED = "Ram size added successfully";
+
 	String RAM_NOT_ADDED = "Ram size not added";
-	
+
 	String RAM_SIZE_EDITED = "Ram size edited successfully";
-	
+
 	String RAM_NOT_EDITED = "Ram size not edited";
-	
+
 	String RAM_LIST_RETRIVED = "Ram list retrieved successfully";
 
-	
+	// Download of asset
+	String ASSET_DIRECTORY = "/Documents/assetDetails/";
 
-	
-	//Download of asset
-String ASSET_DIRECTORY ="/Documents/assetDetails/";
-	
-	String BASE_DIRECTORY ="../webapps";
+	String BASE_DIRECTORY = "../webapps";
 
 	String BILL_EDITED_SUCCESSFULLY = "asset is not underwarrenty and purchase bill edited successfully";
-
-	
 
 	String ASSET_RETURN_FROM_REPAIR = "Asset is underwarrenty and asset is returned from reapir";
 
 	String BILL_ADDED_SUCCESSFULLY = "asset is not underwarrenty and purchase bill added successfully";
 
 	String RETURNS_REPAIR = "asset is returned from repair";
-
-	
 
 	String REPAIR_BILL_EDITED_SUCCESSFULLY = "Asset is not underwarrenty and repair bill edited successfully";
 
@@ -307,8 +296,6 @@ String ASSET_DIRECTORY ="/Documents/assetDetails/";
 
 	String PURCHASE_BILL_EDITED_SUCCESSFULLY = "asset is not underwarrenty and purchase bill edited successfully";
 
-	
-
 	String CITY_EDITED = "city details edited Successfully";
 
 	String CITY_DETAILS_INVALID = "Invalid City Details ";
@@ -317,121 +304,114 @@ String ASSET_DIRECTORY ="/Documents/assetDetails/";
 
 	String CITY_NOT_ADDED = "City not added";
 	String COUNTRY_ADDED = "Country Added Successfully";
-    String COUNTRY_NOT_ADDED = "Country not added";
-    String COUNTRY_EDITED = "Country Details  edited Successfully";
+	String COUNTRY_NOT_ADDED = "Country not added";
+	String COUNTRY_EDITED = "Country Details  edited Successfully";
 	String CITY_LIST_RETRIVED = "List retrieved Successfully";
-	String COUNTRY_DETAILS_INVALID = "Country details Invalid" ;
+	String COUNTRY_DETAILS_INVALID = "Country details Invalid";
 	String COUNTRY_LIST_RETRIVED = "List retrieved Successfully";
 
 	String WINGS_ADDED = "Wings added successfully";
 	String WINGS_NOT_ADDED = "Can't able to add Wings ";
 	String WINGS_UPDATED = "Wing is updated successfully";
 	String WINGS_NOT_UPDATED = "Check Wings Id";
-	
+
 	// Location Response Messages
-		String LOC_ADDED = "Location added successfully";
-		String DELETE_LOCATION = "Location deleted successfully";
-		String LOC_NOT_ADDED = "can't able to add loc";
-		String LOC_UPDATED = "Location updated successfully";
-		String LOCATION_NOT_FOUND = "Location not found";
-		
-		String ADDED_ISSUE = "Issue is added Successfully";
+	String LOC_ADDED = "Location added successfully";
+	String DELETE_LOCATION = "Location deleted successfully";
+	String LOC_NOT_ADDED = "can't able to add loc";
+	String LOC_UPDATED = "Location updated successfully";
+	String LOCATION_NOT_FOUND = "Location not found";
 
-		String ISSUE_NOT_ADDED = "Issue not added";
+	String ADDED_ISSUE = "Issue is added Successfully";
 
-		String EDIT_ISSUE = "Issue is edited Successfully";
+	String ISSUE_NOT_ADDED = "Issue not added";
 
-		String ISSUES_LIST_RETRIVED = "List retrieved Successfully";
+	String EDIT_ISSUE = "Issue is edited Successfully";
 
-		String SOFTWAREMASTER_NOT_ADDED = "software master not added";
+	String ISSUES_LIST_RETRIVED = "List retrieved Successfully";
 
-		String DESIGNATION_EDITED = "Designation is edited Successfully";
+	String SOFTWAREMASTER_NOT_ADDED = "software master not added";
 
-		String DESIGNATION_DETAILS_INVALID = "Invalid Designation details";
+	String DESIGNATION_EDITED = "Designation is edited Successfully";
 
-		String ASSET_REPAIR_BILL_ADDED_SUCCESSFULLY = "Asset is underwarrenty and asset repair bill added successfully";
+	String DESIGNATION_DETAILS_INVALID = "Invalid Designation details";
 
-		String REPAIR_BILL_ADDED_SUCCESSFULLY = "Asset is not underwarrenty and asset repair bill added successfully";
+	String ASSET_REPAIR_BILL_ADDED_SUCCESSFULLY = "Asset is underwarrenty and asset repair bill added successfully";
 
-		String ASSET_PURCHASE_BILL_EDITED_SUCCESSFULLY = "Asset is underwarrenty and purchase bill edited successfully";
+	String REPAIR_BILL_ADDED_SUCCESSFULLY = "Asset is not underwarrenty and asset repair bill added successfully";
 
-		String HRCALENDER_LIST_RETRIVED = "List retrieved Successfully";
-		
-		//job openings
-		String JOB_TITLE = "Job title is mandatory";
+	String ASSET_PURCHASE_BILL_EDITED_SUCCESSFULLY = "Asset is underwarrenty and purchase bill edited successfully";
 
-		String JOB_TITLE_CHAR = "Title should be character only";
+	String HRCALENDER_LIST_RETRIVED = "List retrieved Successfully";
 
-		String JOB_TITLE_LEN = "Job title length should be Min 3 cahracter and Max 100 character";
+	// job openings
+	String JOB_TITLE = "Job title is mandatory";
 
-		String JOB_TITLE_DES ="Description is mandatory";
+	String JOB_TITLE_CHAR = "Title should be character only";
 
-		String JOB_TITLE_DES_LEN ="Description length should be Min 7 and Max 5000 ";
+	String JOB_TITLE_LEN = "Job title length should be Min 3 cahracter and Max 100 character";
 
-		String JOB_CODE = "Job code is mandatory";
+	String JOB_TITLE_DES = "Description is mandatory";
 
-		String JOB_TTOTAL_OPENINGS =  "Total openings is mandatory";
+	String JOB_TITLE_DES_LEN = "Description length should be Min 7 and Max 5000 ";
 
-		String WINGS_MAN = "Wing is mandatory";
+	String JOB_CODE = "Job code is mandatory";
 
-		String WINGS_EXI = "Wing does not exist";
+	String JOB_TTOTAL_OPENINGS = "Total openings is mandatory";
 
-		String JOB_SKILL = "Job skills are mandatory";
+	String WINGS_MAN = "Wing is mandatory";
 
-		String JOB_SKILL_EXI = "Skill does not exist";
-		
-		//Employee service
-		String EMP_CODE = "Employee code already Assigned to Existing employee ";
+	String WINGS_EXI = "Wing does not exist";
 
-		String FIRST_NAME_MAN = "FirstName is mandatory";
+	String JOB_SKILL = "Job skills are mandatory";
 
-		String FIRST_NAME_CHAR = "Name should be character only";
+	String JOB_SKILL_EXI = "Skill does not exist";
 
-		String LAST_NAME_CHAR = "LastName should be character only";
+	// Employee service
+	String EMP_CODE = "Employee code already Assigned to Existing employee ";
 
-		String LAST_NAME_MAN = "LastName is mandatory";
+	String FIRST_NAME_MAN = "FirstName is mandatory";
 
-		String LOC_MAN = "Location is mandatory";
+	String FIRST_NAME_CHAR = "Name should be character only";
 
-		String LOC_NOT_VALID = "location is not valid";
+	String LAST_NAME_CHAR = "LastName should be character only";
 
-		String ROLE_ID_MAN = "RoleId is mandatory";
+	String LAST_NAME_MAN = "LastName is mandatory";
 
-		String ROLE_ID_NOT_VAL = "RoleId is not valid";
+	String LOC_MAN = "Location is mandatory";
 
-		String DES_ID_MAN = "designationId is mandatory";
+	String LOC_NOT_VALID = "Location is not valid";
 
-		String DES_ID_NOT_VAL ="designationId is not valid";
+	String ROLE_ID_MAN = "RoleId is mandatory";
 
-		String POSITION_MAN = "position is mandatory";
+	String ROLE_ID_NOT_VAL = "RoleId is not valid";
 
-		String POSITION_NOT_VAL = "Position is not available" ;
+	String DES_ID_MAN = "Designation is mandatory";
 
-		String WING_MAN = "Wing is mandatory";
+	String DES_ID_NOT_VAL = "Designation is not valid";
 
-		String WING_NOT_EXI = "Wing does not exist";
+	String POSITION_MAN = "position is mandatory";
 
-		String MOB_NUM_MAN = "MobileNumber is mandatory";
+	String POSITION_NOT_VAL = "Position is not available";
 
-		String INCORRECT_MOB = "In correct mobile number";
+	String WING_MAN = "Wing is mandatory";
 
-		String MAILID_MAN = "Mail id is mandatory";
+	String WING_NOT_EXI = "Wing does not exist";
 
-		String INVAL_MAIL_ID = "Invalid EmailId";
+	String MOB_NUM_MAN = "MobileNumber is mandatory";
 
-		String MAIL_ID_EXI = "email already exists!!!";
+	String INCORRECT_MOB = "In correct mobile number";
 
-		String UPLOAD_IMAGE = "unable to upload image";
+	String MAILID_MAN = "Mail id is mandatory";
 
-		String NOT_VALID = "Reportor is not valid";
+	String INVAL_MAIL_ID = "Invalid EmailId";
 
-		
-		
+	String MAIL_ID_EXI = "email already exists!!!";
 
+	String UPLOAD_IMAGE = "unable to upload image";
 
-	
-	
-	
+	String NOT_VALID = "Reportor is not valid";
+
 //	String ANNOUNCEMENT_STATUS_CHANGED = "Announcement status changed successfully";
 //	String ANNOUNCEMENT_STATUS_NOT_CHANGED = "Announcement status not changed";
 //	String ANNOUNCEMENT_DELETED = "Announcement deleted successfully";
@@ -440,6 +420,5 @@ String ASSET_DIRECTORY ="/Documents/assetDetails/";
 //	String ANNOUNCEMENT_LIST_NOT_RETREIVED = "Announcement list not retreived";
 //	String ANNOUNCEMENT_DETAILS_RETREIVED = "Announcement details retreived successfully";
 //	String ANNOUNCEMENT_DETAILS_NOT_RETREIVED = "Announcement details not retreived";
-	
-	
+
 }
