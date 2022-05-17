@@ -36,13 +36,15 @@ public interface ArticleRepository extends JpaRepository<Articles, String>{
 	
 	@Query("Select distinct new map( a.articleId as articleId,a.title as title,a.searchLabels as searchLabels,a.status as status,a.userId as userId,"
 			+ " a.userName as userName, a.createdAt as createdAt,a.lastUpdatedAt as lastUpdatedAt,"
-			+ " a.UpdatedBy as UpdatedBy, a.createdBy as createdBy) from Articles a where a.title like %:searchString% or a.description like %:searchString% "
+			+ " a.UpdatedBy as UpdatedBy, a.createdBy as createdBy) from Articles a where "
+			+ "( LOWER(a.title) like %:searchString% or LOWER(a.description) like %:searchString% ) "
 			+ " ORDER BY a.createdAt DESC")
 	Page<Map> searchAllArticles(Pageable pageable, String searchString);
 	
 	@Query("Select distinct new map( a.articleId as articleId,a.title as title,a.searchLabels as searchLabels,a.status as status,a.userId as userId,"
 			+ " a.userName as userName, a.createdAt as createdAt,a.lastUpdatedAt as lastUpdatedAt,"
-			+ " a.UpdatedBy as UpdatedBy, a.createdBy as createdBy) from Articles a where a.status = 'ACTIVE' and (a.title like %:searchString% or a.description like %:searchString% or a.searchLabels like %:searchString%) "
+			+ " a.UpdatedBy as UpdatedBy, a.createdBy as createdBy) from Articles a where a.status = 'ACTIVE' and "
+			+ "(LOWER(a.title) like %:searchString% or LOWER(a.description) like %:searchString% or a.searchLabels like %:searchString%) "
 			+ " ORDER BY a.createdAt DESC")
 	Page<Map> searchAllActiveArticles(Pageable pageable, String searchString);
 	

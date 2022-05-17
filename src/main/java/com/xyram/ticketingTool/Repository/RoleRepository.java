@@ -16,6 +16,10 @@ public interface RoleRepository extends JpaRepository< Role, String>{
 	@Query("Select new map(e.Id as id,e.roleName as roleName,e.status as status) from Role e WHERE e.id NOT IN ('R1', 'R7') ")
 	List<Map> getAllRoleList();
 
+	
+	@Query("select e from Role e where e.Id =:roleId")
+	Role getRoleName(String roleId);
+
 }
 
 

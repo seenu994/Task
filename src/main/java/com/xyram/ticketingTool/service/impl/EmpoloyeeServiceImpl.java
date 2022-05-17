@@ -29,6 +29,7 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 import com.xyram.ticketingTool.Communication.PushNotificationCall;
 import com.xyram.ticketingTool.Communication.PushNotificationRequest;
+import com.xyram.ticketingTool.Repository.CompanyLocationRepository;
 import com.xyram.ticketingTool.Repository.CompanyWingsRepository;
 import com.xyram.ticketingTool.Repository.DesignationRepository;
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
@@ -43,6 +44,9 @@ import com.xyram.ticketingTool.Repository.VendorTypeRepository;
 import com.xyram.ticketingTool.admin.model.User;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.email.EmailService;
+import com.xyram.ticketingTool.entity.AssetVendor;
+import com.xyram.ticketingTool.entity.Brand;
+import com.xyram.ticketingTool.entity.CompanyLocation;
 import com.xyram.ticketingTool.entity.CompanyWings;
 import com.xyram.ticketingTool.entity.Designation;
 import com.xyram.ticketingTool.entity.Employee;
@@ -64,6 +68,7 @@ import com.xyram.ticketingTool.service.NotificationService;
 import com.xyram.ticketingTool.service.TicketAttachmentService;
 import com.xyram.ticketingTool.ticket.config.PermissionConfig;
 import com.xyram.ticketingTool.util.BulkUploadExcelUtil;
+import com.xyram.ticketingTool.util.EmployeeUtil;
 import com.xyram.ticketingTool.util.ResponseMessages;
 
 /**
@@ -89,7 +94,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 	@Autowired
 	RoleRepository roleRepository;
-	
+
 	@Autowired
 	DesignationRepository designationRepository;
 
@@ -116,6 +121,9 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 	@Autowired
 	VendorTypeRepository vendorRepo;
+
+	@Autowired
+	CompanyLocationRepository companyLocationRepository;
 
 	@Autowired
 	EmpoloyeeServiceImpl employeeServiceImpl;
@@ -161,34 +169,57 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		ApiResponse response = new ApiResponse(false);
 
 		response = validateEmployee(employee);
+		if (response.getMessage() != null && response.getMessage() != "") {
+			return response;
+		}
+		// Email Validation starts here
+	    
+		if (employee.getEmail() == null || employee.getEmail().equals("")) {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.MAILID_MAN);
+			return response;
+		}
+		if (!emailValidation(employee.getEmail())) {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.INVAL_MAIL_ID);
+		}
+
+		String email = employeeRepository.filterByEmail(employee.getEmail());
+		if (email != null) {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.MAIL_ID_EXI);
+		}
 		System.out.println("username::" + currentUser.getName());
 
-		if (response.isSuccess()) {
-			try {
+//		if (response.isSuccess()) {
+		try {
 
-				if (!employeeRepository.getbyEmpId(employee.geteId()).isEmpty()) {
+			if (!employeeRepository.getbyEmpId(employee.geteId()).isEmpty()) {
 
-					throw new ResponseStatusException(HttpStatus.CONFLICT,
-							"Employee code already Assigned to Existing employee ");
-				}
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.EMP_CODE);
 
-				User user = new User();
-				user.setUsername(employee.getEmail());
-				String encodedPassword = new BCryptPasswordEncoder().encode(employee.getPassword());
-				user.setPassword(encodedPassword);
-				if (employee.getFirstName().length() > 3 && employee.getLastName().length() > 0)
-					user.setName(employee.getFirstName() + " " + employee.getLastName());
+			}
+
+			User user = new User();
+			user.setUsername(employee.getEmail());
+			String encodedPassword = new BCryptPasswordEncoder().encode(employee.getPassword());
+			user.setPassword(encodedPassword);
+			if (employee.getFirstName().length() > 3 && employee.getLastName().length() > 0) {
+				
+				employee.setFirstName(employee.getFirstName().trim());
+				String name = employee.getFirstName();
+				String firstLetter = name.substring(0, 1);
+			    String remainingLetters = name.substring(1, name.length());
+			    firstLetter = firstLetter.toUpperCase();
+			    employee.setFirstName(firstLetter + remainingLetters);
+			    
+				user.setName(employee.getFirstName() + " " + employee.getLastName());
+
 				// Employee employeere=new Employee();
 				Role role = roleRepository.getById(employee.getRoleId());
-				user.setUserRole(role!=null ?role.getRoleName():null);
-				/*
-				 * if (role != null) { try {
-				 * 
-				 * user.setUserRole(role.getRoleName()); } catch (Exception e) { throw new
-				 * ResponseStatusException(HttpStatus.BAD_REQUEST, role.getRoleName() +
-				 * " is not a valid status"); } } else { throw new
-				 * ResourceNotFoundException("invalid user role "); }
-				 */
+				user.setUserRole(role != null ? role.getRoleName() : null);
+
 				Integer permission = permissionConfig.setDefaultPermissions(user.getUserRole().toString());
 				user.setPermission(permission);
 				user.setStatus(UserStatus.ACTIVE);
@@ -208,73 +239,49 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				employee.setCreatedBy(currentUser.getUserId());
 				employee.setUpdatedBy(currentUser.getUserId());
 				CompanyWings wing = wingRepo.getWingById(employee.getWings().getId());
-				if (wing != null) {
-					employee.setWings(wing);
-				}
-				
-				Designation designation = designationRepository.getDesignationNames(employee.getDesignationId());
-				if(designation != null) {
-					employee.setDesignationId(employee.getDesignationId());
-				}
-				else  {
-					if(designation == null) {
-						throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "designationName is not valid");
-						
-					}
-					
-				
-				
-				String reportingTo = userRepository.getUserById(employee.getUserCredientials().getId());
-				if(reportingTo != null) {
-					employee.setReportingTo(reportingTo);
-				}
+				employee.setWings(wing);
 				employee.setCreatedAt(new Date());
 				employee.setLastUpdatedAt(new Date());
 				employee.setUserCredientials(user);
-				employee.setProfileUrl("https://tool.xyramsoft.com/image/ticket-attachment/user-default-pic.png");
+				employee.setProfileUrl("https://tool.xyramsoft.com:444/image/ticket-attachment/user-default-pic.png");
 				Employee employeeNew = employeeRepository.save(employee);
 				User useredit = userRepository.getById(user.getId());
 				useredit.setScopeId(employeeNew.geteId());
 				userRepository.save(useredit);
 
 				// sending notification starts here..!
-				
-				
+
 				List<Map> EmployeeList = employeeRepository.getEmployeeBYReportingToId(employee.getReportingTo());
-		
-				
-				
-				if (!EmployeeList.isEmpty())
-				{
 
-				for (Map employeeNotification : EmployeeList) {
-					Map request = new HashMap<>();
-					request.put("id", employeeNotification.get("id"));
-					request.put("uid", employeeNotification.get("uid"));
-					request.put("title", "EMPLOYEE CREATED");
-					request.put("body", " employee Created - " + employeeNew.getFirstName());
-					pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request, 12,
-							NotificationType.EMPLOYEE_CREATED.toString()));
+				if (!EmployeeList.isEmpty()) {
 
-				}
-				// inserting notification details
-				Notifications notifications = new Notifications();
-				notifications.setNotificationDesc("employee created - " + employeeNew.getFirstName());
-				notifications.setNotificationType(NotificationType.EMPLOYEE_CREATED);
-				notifications.setSenderId(employeeNew.getReportingTo());
-				notifications.setReceiverId(userDetail.getUserId());
-				notifications.setSeenStatus(false);
-				notifications.setCreatedBy(userDetail.getUserId());
-				notifications.setCreatedAt(new Date());
-				notifications.setUpdatedBy(userDetail.getUserId());
-				notifications.setLastUpdatedAt(new Date());
+					for (Map employeeNotification : EmployeeList) {
+						Map request = new HashMap<>();
+						request.put("id", employeeNotification.get("id"));
+						request.put("uid", employeeNotification.get("uid"));
+						request.put("title", "EMPLOYEE CREATED");
+						request.put("body", " employee Created - " + employeeNew.getFirstName());
+						pushNotificationCall.restCallToNotification(pushNotificationRequest.PushNotification(request,
+								12, NotificationType.EMPLOYEE_CREATED.toString()));
 
-				notificationService.createNotification(notifications);
+					}
+					// inserting notification details
+					Notifications notifications = new Notifications();
+					notifications.setNotificationDesc("employee created - " + employeeNew.getFirstName());
+					notifications.setNotificationType(NotificationType.EMPLOYEE_CREATED);
+					notifications.setSenderId(employeeNew.getReportingTo());
+					notifications.setReceiverId(userDetail.getUserId());
+					notifications.setSeenStatus(false);
+					notifications.setCreatedBy(userDetail.getUserId());
+					notifications.setCreatedAt(new Date());
+					notifications.setUpdatedBy(userDetail.getUserId());
+					notifications.setLastUpdatedAt(new Date());
+
+					notificationService.createNotification(notifications);
 				}
 				UUID uuid = UUID.randomUUID();
 				String uuidAsString = uuid.toString();
-				
-			
+
 				if (employeeNew != null & false) {
 					String name = null;
 
@@ -289,50 +296,150 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				}
 				// end of the notification part...!
 
-
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.EMPLOYEE_ADDED);
 				Map content = new HashMap();
 				content.put("employeeId", employeeNew.geteId());
 				response.setContent(content);
-				}
 			}
-			 catch (ResponseStatusException re) {
-				throw new ResponseStatusException(re.getStatus(), re.getReason());
-			} catch (Exception e) {
-				System.out.println("Error Occured :: " + e.getMessage());
-			}
-
-			return response;
-
+		} catch (ResponseStatusException re) {
+			throw new ResponseStatusException(re.getStatus(), re.getReason());
+		} catch (Exception e) {
+			System.out.println("Error Occured :: " + e.getMessage());
 		}
 
 		return response;
+
+//		}
 	}
 
 	private ApiResponse validateEmployee(Employee employee) {
-		ApiResponse response = new ApiResponse(false);
-		String email = employeeRepository.filterByEmail(employee.getEmail());
+		ApiResponse response = new ApiResponse(true);
+
+		String regex = "[a-z A-Z]+";
 		if (!emailValidation(employee.getEmail())) {
 			response.setMessage(ResponseMessages.EMAIL_INVALID);
 
 			response.setSuccess(false);
 		}
 
-		else if (employee.getMobileNumber().length() != 10) {
-			response.setMessage(ResponseMessages.MOBILE_INVALID);
+		if (employee.getFirstName() == null || employee.getFirstName().equals("") || employee.getFirstName().length()>3) {
 
 			response.setSuccess(false);
+			response.setMessage(ResponseMessages.FIRST_NAME_MAN);
+
+		}
+		if (!employee.getFirstName().matches(regex)) {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.FIRST_NAME_CHAR);
 		}
 
-		else if (email != null) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "email already exists!!!");
+		if (employee.getLastName() == null || employee.getLastName().equals("") || employee.getLastName().length() > 0) {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.LAST_NAME_MAN);
+
+		}
+		if (!employee.getLastName().matches(regex)) {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.LAST_NAME_CHAR);
+
 		}
 
-		else {
-			response.setMessage(ResponseMessages.EMPLOYEE_ADDED);
+		if (employee.getLocation() == null || employee.getLocation().equals("")) {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.LOC_MAN);
+		} else {
 
-			response.setSuccess(true);
+			CompanyLocation companyLocation = companyLocationRepository.getCompanyLocations(employee.getLocation());
+			if (companyLocation != null) {
+				employee.setLocation(employee.getLocation());
+			}
+			if (companyLocation == null) {
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.LOC_NOT_VALID);
+
+			}
+		}
+
+		if (employee.getRoleId() == null || employee.getRoleId().equals("")) {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.ROLE_ID_MAN);
+		} else {
+
+			Role role = roleRepository.getRoleName(employee.getRoleId());
+			if (role == null) {
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.ROLE_ID_NOT_VAL);
+			}
+
+		}
+
+		if (employee.getDesignationId() == null || employee.getDesignationId().equals("")) {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.DES_ID_MAN);
+		} else {
+
+			Designation designation = designationRepository.getDesignationNames(employee.getDesignationId());
+			if (designation == null) {
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.DES_ID_NOT_VAL);
+			}
+		}
+
+		if (employee.getPosition() == null || employee.getPosition().equals("")) {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.POSITION_MAN);
+		}
+
+		if (employee.getPosition() != null) {
+			boolean isExist = false;
+
+			for (String position : EmployeeUtil.position) {
+				if (position.equalsIgnoreCase(employee.getPosition())) {
+					isExist = true;
+					break;
+				}
+			}
+			if (!isExist) {
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.POSITION_NOT_VAL);
+			}
+
+		}
+		
+		if(employee.getReportingTo() != null && employee.getReportingTo().length() > 0) {
+			Employee empObj = employeeRepository.getByEmpIdE(employee.getReportingTo());
+			if(empObj == null) {
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.NOT_VALID);
+				return response;
+			}
+		}
+
+		if (employee.getWings() == null || employee.getWings().getId().equals("")) {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.WING_MAN);
+		}
+		if (employee.getWings() != null && employee.getWings().getId() != null) {
+			CompanyWings companyWings = wingRepo.getWingName(employee.getWings().getId());
+
+			if (companyWings != null) {
+				employee.setWings(companyWings);
+			} else {
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.WING_NOT_EXI);
+			}
+		}
+
+		if (employee.getMobileNumber() == null || employee.getMobileNumber().equals("")) {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.MOB_NUM_MAN);
+
+		}
+
+		else if (employee.getMobileNumber().length() != 10) {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.INCORRECT_MOB);
 		}
 
 		return response;
@@ -422,6 +529,13 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	@Override
 	public ApiResponse editEmployee(String employeeId, Employee employeeRequest) {
 		ApiResponse response = new ApiResponse(false);
+
+		response = validateEmployee(employeeRequest);
+
+		if (response.getMessage() != null && response.getMessage() != "") {
+			return response;
+		}
+
 		Employee employee = employeeRepository.getById(employeeId);
 		User user = userRepository.getById(employee.getUserCredientials().getId());
 
@@ -430,6 +544,13 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			employee.setLastName(employeeRequest.getLastName());
 			employee.setLastUpdatedAt(new Date());
 
+			employee.setFirstName(employee.getFirstName().trim());
+			String name = employee.getFirstName();
+			String firstLetter = name.substring(0, 1);
+		    String remainingLetters = name.substring(1, name.length());
+		    firstLetter = firstLetter.toUpperCase();
+		    employee.setFirstName(firstLetter + remainingLetters);
+			
 			user.setName(employeeRequest.getFirstName() + " " + employeeRequest.getLastName());
 			employee.setMiddleName(employeeRequest.getMiddleName());
 			employee.setMobileNumber(employeeRequest.getMobileNumber());
@@ -439,12 +560,15 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			employee.setPosition(employeeRequest.getPosition());
 			CompanyWings wingObj = new CompanyWings();
 			CompanyWings wing = wingRepo.getWingById(employeeRequest.getWings().getId());
-			if (wing != null) {
-				employee.setWings(wing);
-			}
+//			if (wing == null) {
+//				response.setSuccess(false);
+//				response.setMessage("Wing is not Exist");
+//			}
 			employee.setRoleId(employeeRequest.getRoleId());
+
 			Role role = roleRepository.getById(employeeRequest.getRoleId());
 			employee.setDesignationId(employeeRequest.getDesignationId());
+
 			user.setUserRole(role.getRoleName());
 			userRepository.save(user);
 			employeeRepository.save(employee);
@@ -534,6 +658,10 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	@Override
 	public ApiResponse searchEmployee(String searchString) {
 		ApiResponse response = new ApiResponse(false);
+
+		// Map employee = employeeRepository.getEmployeeBYId(searchString);
+		// List<Map> reportees = employeeRepository.getReportingList(employeeId);
+
 		List<Map> employeeList = employeeRepository.searchEmployee(searchString);
 		Map content = new HashMap();
 		if (employeeList.size() > 0) {
@@ -700,7 +828,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		String filename = getRandomFileName() + System.currentTimeMillis();
 		boolean succesResponse = false;
 		try {
-			succesResponse = fileUploadService.uploadFile(file, ticketAttachmentBaseUrl, filename);
+			succesResponse = fileUploadService.uploadFile(file, ticketAttachmentBaseUrl, filename + "" + fileextension);
 
 		} catch (Exception e) {
 
@@ -712,7 +840,8 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			Employee employeeObj = employeeRepository.getbyUserByUserId(userId);
 			if (employeeObj != null) {
 				// employeeObj=new Employee();
-				employeeObj.setProfileUrl(ticketAttachmentBaseUrl + "/" + filename);
+				employeeObj.setProfileUrl(
+						"https://tool.xyramsoft.com:444" + ticketAttachmentBaseUrl + "/" + filename + fileextension);
 				employeeRepository.save(employeeObj);
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.EMPLOYEE_PROFILE_UPDATION);
@@ -728,8 +857,10 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			return response;
 		}
 		{
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "unable to upload image");
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.UPLOAD_IMAGE);
 		}
+		return response;
 
 	}
 
@@ -833,7 +964,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 //				vendorDetails.setCreatedAt(new Date());
 //				vendorDetails.setLastUpdatedAt(new Date());
 			vendorDetails.setUserCredientials(user);
-			vendorDetails.setProfileUrl("https://tool.xyramsoft.com/image/ticket-attachment/user-default-pic.png");
+			vendorDetails.setProfileUrl("https://tool.xyramsoft.com:444/image/ticket-attachment/user-default-pic.png");
 			JobVendorDetails vendorNew = vendorRepository.save(vendorDetails);
 			if (vendorNew != null) {
 				Employee empObj = new Employee();
@@ -906,7 +1037,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	@Override
 	public ApiResponse getEmployeeDetails(String employeeId) {
 		ApiResponse response = new ApiResponse(false);
-		List<Employee> employee = employeeRepository.getbyEmpId(employeeId);
+		List<Map> employee = employeeRepository.getbyEmpId(employeeId);
 		Map content = new HashMap();
 		content.put("employeeDetails", employee);
 		if (employee != null) {
@@ -1151,11 +1282,12 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 		return response;
 
-	} 
+	}
+
 	@Override
 	public ApiResponse searchEmployeeByReportingId(String reportingId, String searchString) {
 		ApiResponse response = new ApiResponse(false);
-		List<Map> reportees = employeeRepository.searchEmployeeByReportingId(reportingId,searchString);
+		List<Map> reportees = employeeRepository.searchEmployeeByReportingId(reportingId, searchString);
 		Map content = new HashMap();
 		content.put("reportees", reportees);
 		if (content != null) {
