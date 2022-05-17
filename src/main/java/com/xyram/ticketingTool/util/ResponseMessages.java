@@ -408,6 +408,15 @@ public interface ResponseMessages {
 
 	String MAIL_ID_EXI = "email already exists!!!";
 
+	String Reminder_ADDED = "Reminder added successfully";
+	String Reminder_NOT_ADDED = "Reminder not added. Object is not proper";
+	String Reminder_DELETED = "Reminder deleted successfully";
+	String Reminder_NOT_DELETED = "Reminder not deleted";
+	String Reminder_UPDATED = "Reminder updated successfully";
+	String Reminder_NOT_UPDATED = "Reminder not updated";
+	String Reminder_LIST_RETRIEVED = "Reminder list retrieved successfully";
+	String Reminder_LIST_NOT_RETRIEVED = "Reminder list not retrieved";
+
 	String UPLOAD_IMAGE = "unable to upload image";
 
 	String NOT_VALID = "Reportor is not valid";

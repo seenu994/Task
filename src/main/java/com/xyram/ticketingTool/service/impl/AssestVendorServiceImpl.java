@@ -58,7 +58,7 @@ public class AssestVendorServiceImpl implements AssetvendorService {
 			if (vendor != null) {
 				vendor.setCreatedAt(new Date());
 				vendor.setCreatedBy(currentUser.getName());
-				AssetVendor vendorSave = assetVendorRepository.save(vendor);
+				assetVendorRepository.save(vendor);
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.VENDOR_ADDED);
 				// response.setContent(content);

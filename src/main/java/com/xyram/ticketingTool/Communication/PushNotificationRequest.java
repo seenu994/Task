@@ -18,7 +18,7 @@ public class PushNotificationRequest {
 
 
 
-	public static String PushNotification(Map request, int notificationTypeId, String type) {
+	public String PushNotification(Map request, int notificationTypeId, String type) {
 		System.out.println("hi");
 		try {
 
