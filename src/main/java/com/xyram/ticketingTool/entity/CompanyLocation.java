@@ -21,7 +21,7 @@ public class CompanyLocation extends AuditModel {
 	@GeneratedValue(generator = IdGenerator.ID_GENERATOR)
 	@GenericGenerator(name = IdGenerator.ID_GENERATOR, strategy = "com.xyram.ticketingTool.id.generator.IdGenerator")
 	@Column(name = "id")
-	private String id;
+	private String Id;
 
 	@Column(name = "location_name")
 	private String locationName;
@@ -37,12 +37,14 @@ public class CompanyLocation extends AuditModel {
 		this.status = status;
 	}
 
+	
+
 	public String getId() {
-		return id;
+		return Id;
 	}
 
 	public void setId(String id) {
-		this.id = id;
+		Id = id;
 	}
 
 	public String getLocationName() {

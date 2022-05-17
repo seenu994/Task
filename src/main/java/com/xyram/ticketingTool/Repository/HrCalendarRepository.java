@@ -95,7 +95,7 @@ public interface HrCalendarRepository extends JpaRepository<HrCalendar, String>{
 			+ "a.createdBy = :userId AND "
 			+ "(:toDate is null OR Date(CONVERT_TZ(a.scheduleDate,'+00:00', :userZone)) <= STR_TO_DATE(:toDate, '%Y-%m-%d')) AND "
 			+ "(:fromDate is null OR Date(CONVERT_TZ(a.scheduleDate,'+00:00', :userZone)) >= STR_TO_DATE(:fromDate, '%Y-%m-%d')) AND "
-			+ "(:status is null OR a.status=:status) AND "
+			+ "(:status is null OR lower(a.status)=:status) AND "
 			+ "(:closed is null OR a.closed=:closed) ORDER BY a.scheduleDate ASC")
 			List<Map> downloadAllMySchedulesFromCalendarByStatus(String userId, String fromDate, String toDate, String status,Boolean closed, String userZone);
 	
@@ -106,9 +106,10 @@ public interface HrCalendarRepository extends JpaRepository<HrCalendar, String>{
 			+ "where a.reportingTo =:userId AND " 
 			+ "(:toDate is null OR Date(CONVERT_TZ(a.scheduleDate,'+00:00', :userZone)) <= STR_TO_DATE(:toDate, '%Y-%m-%d')) AND "
 			+ "(:fromDate is null OR Date(CONVERT_TZ(a.scheduleDate,'+00:00',:userZone)) >= STR_TO_DATE(:fromDate, '%Y-%m-%d')) AND "
-			+ "(:status is null OR a.status=:status) AND "
+			+ "(:employeeId is null OR a.createdBy=:employeeId) AND "
+			+ "(:status is null OR lower(a.status)=:status) AND "
 			+ "(:closed is null OR a.closed=:closed) ORDER BY a.scheduleDate ASC")
-			List<Map> downloadAllMyTeamSchedulesFromCalendarByStatus(String userId,
+			List<Map> downloadAllMyTeamSchedulesFromCalendarByStatus(String userId,String employeeId,
 			String fromDate, String toDate, String status,Boolean closed, String userZone);
 	
 	@Query("Select new map(h.Id as id,h.candidateMobile as candidateMobile,h.status as status) from HrCalendar h")
@@ -118,6 +119,29 @@ public interface HrCalendarRepository extends JpaRepository<HrCalendar, String>{
 			+ "a.status as status, a.callCount as callCount, a.scheduleDate as scheduleDate) from HrCalendar a "
 			+ "where a.Id =:scheduleId")
 	Map getScheduleById(String scheduleId);
+	
+	
+	@Query("Select distinct new map(a.Id as id, a.candidateMobile as candidateMobile, a.candidateName as candidateName,"
+			+ "a.scheduleDate as scheduleDate, a.searchedSource as searchedSource, a.jobId as jobId,a.status as status,a.closed as closed,"
+			+ "a.callCount as callCount,a.reportingTo as reportingTo,a.is_scheduled as is_scheduled) from HrCalendar a ")
+	Page<Map> getHrcalender(Pageable pageable);
+	
+	
+	@Query("Select distinct new map( a.Id as id,a.candidateMobile as mobile,a.candidateName as name,a.status as status, "
+			+ "a.createdAt as createdAt,a.scheduleDate as scheduleDate, a.searchedSource as searchedSource, "
+			+ "a.jobId as jobId,jo.jobTitle as jobTitle, a.closed as closed,a.callCount as callCount,a.reportingTo as reportingTo, "
+			+ "a.createdAt as createdAt,a.createdBy as createdBy,a.lastUpdatedAt as lastUpdatedAt) from HrCalendar a "
+			+ "left join JobOpenings jo on a.jobId = jo.id where a.createdBy = :userId and "
+			+ "(:searchString is null "
+			+ "or a.candidateMobile like %:searchString% "
+			+ "or lower(a.candidateName) like %:searchString% "
+			+ "or lower(jo.jobTitle) like %:searchString%) "
+			+ "ORDER BY a.scheduleDate ASC")	 
+			
+
+	List<Map> searchhrCalender(String userId, String searchString);
+
+	
 
 	
 }

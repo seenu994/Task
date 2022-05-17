@@ -13,6 +13,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.context.annotation.RequestScope;
 
 import com.xyram.ticketingTool.ticket.config.PermissionConfig;
@@ -27,22 +29,20 @@ import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-
 @SpringBootApplication(exclude = HibernateJpaAutoConfiguration.class)
 @ComponentScan(basePackages = { "com.xyram.ticketingTool" })
 @EnableJpaRepositories
 @EnableSwagger2
 @EnableAutoConfiguration
 @Configuration
+@EnableScheduling
 public class TicketToolApplication extends SpringBootServletInitializer {
 	@Autowired
 	PermissionConfig permissionConfig;
-	
-	 public static final String AUTHORIZATION_HEADER = "Authorization";
+
+	public static final String AUTHORIZATION_HEADER = "Authorization";
 
 	public static void main(String[] args) {
-		
-		
 		SpringApplication.run(TicketToolApplication.class, args);
 
 	}
@@ -52,7 +52,6 @@ public class TicketToolApplication extends SpringBootServletInitializer {
 	public com.xyram.ticketingTool.request.CurrentUser requestedUserInfo() {
 		return new com.xyram.ticketingTool.request.CurrentUser();
 	}
-
 
 //	 @Bean
 //	    public Docket api() {
@@ -64,36 +63,34 @@ public class TicketToolApplication extends SpringBootServletInitializer {
 //	
 //	
 //	}
-	 
-	 @Configuration
-	 @EnableSwagger2
-	 public class SpringFoxConfig {
-	     @Bean
-	     public Docket apiDocket() {
-	         return new Docket(DocumentationType.SWAGGER_2).securityContexts(Arrays.asList(securityContext()))
-	        		 .securitySchemes(Arrays.asList(apiKey()))
-	                 .select()
-	                 .apis(RequestHandlerSelectors.any())
-	                 .paths(PathSelectors.any())
-	                 .build();
-	     }
-	 }
-	 
-	    private ApiKey apiKey() {
-	        return new ApiKey("JWT", AUTHORIZATION_HEADER, "header");
-	    }
 
-	    private SecurityContext securityContext() {
-	    	return SecurityContext.builder().securityReferences(defaultAuth()).build();
-	    }
+	@Configuration
+	@EnableSwagger2
+	public class SpringFoxConfig {
+		@Bean
+		public Docket apiDocket() {
+			return new Docket(DocumentationType.SWAGGER_2).securityContexts(Arrays.asList(securityContext()))
+					.securitySchemes(Arrays.asList(apiKey())).select().apis(RequestHandlerSelectors.any())
+					.paths(PathSelectors.any()).build();
+		}
+	}
 
-	    List<SecurityReference> defaultAuth() {
-	        AuthorizationScope authorizationScope
-	            = new AuthorizationScope("global", "accessEverything");
-	        AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
-	        authorizationScopes[0] = authorizationScope;
-	        return Arrays.asList(new SecurityReference("JWT", authorizationScopes));
-	    }
+	private ApiKey apiKey() {
+		return new ApiKey("JWT", AUTHORIZATION_HEADER, "header");
+	}
+
+	private SecurityContext securityContext() {
+		return SecurityContext.builder().securityReferences(defaultAuth()).build();
+	}
+
+	List<SecurityReference> defaultAuth() {
+		AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
+		AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
+		authorizationScopes[0] = authorizationScope;
+		return Arrays.asList(new SecurityReference("JWT", authorizationScopes));
+	}
+
+
 }
 
 /*

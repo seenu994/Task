@@ -41,13 +41,13 @@ public interface JobRepository extends CrudRepository<JobOpenings, Long>, JpaSpe
 	@Query(value = "SELECT * from ticketdbtool.job_openings jo where jo.job_code = :jobCode ", nativeQuery = true)
 	JobOpenings getJobOpeningFromCode(String jobCode);
 
-	@Query(value = "SELECT jo.job_code as jobCode,jo.job_title as jobTitle,jo.job_description as jobDescription,jo.notify_vendor as notifyVendor"
-			+ ",jo.job_skills as jobSkills,jo.total_openings as jobOpenings,jo.filled_positions as jobPositions,"
-			+ "jo.min_exp as jobMinExperience,jo.max_exp as jobMaxExperience,jo.wing_id as jobWing,jo.status as jobstatus,"
-			+ "jo.salary as jobSalary,jo.created_at as jobCreatedAt,jo.created_by as jobCreatedBy,jo.last_updated_at as jobLastUpdatedAt,"
-			+ "jo.updated_by as jobLastUpdatedBy,e.frist_name as name, u.user_role as role,"
-			+ "w.wing_name as wingName from ticketdbtool.job_openings jo left join user u ON jo.created_by = u.user_id"
-			+ " left join employee e ON e.user_id = u.user_id left join company_wings w ON jo.wing_id = w.wing_id  where jo.job_id = :jobOpeningId ", nativeQuery = true)
+	@Query(value = "SELECT jo.job_code as jobCode,jo.job_title as jobTitle,jo.job_description as jobDescription,jo.notify_vendor as notifyVendor, "
+			+ "jo.job_skills as jobSkills,jo.total_openings as jobOpenings,jo.filled_positions as jobPositions, "
+			+ "jo.min_exp as jobMinExperience,jo.max_exp as jobMaxExperience,jo.wing_id as jobWing,jo.status as jobstatus, "
+			+ "jo.salary as jobSalary,jo.created_at as jobCreatedAt,jo.created_by as jobCreatedBy,jo.last_updated_at as jobLastUpdatedAt, "
+			+ "jo.updated_by as jobLastUpdatedBy,e.frist_name as name, u.user_role as role, "
+			+ "w.wing_name as wingName from ticketdbtool.job_openings jo left join user u ON jo.created_by = u.user_id "
+			+ "left join employee e ON e.user_id = u.user_id left join company_wings w ON jo.wing_id = w.wing_id  where jo.job_id = :jobOpeningId ", nativeQuery = true)
 	Map getJobOpeningById(String jobOpeningId);
 
 	@Query(value = "SELECT * from ticketdbtool.job_openings jo where jo.job_id = :jobOpeningId ", nativeQuery = true)
@@ -120,7 +120,7 @@ public interface JobRepository extends CrudRepository<JobOpenings, Long>, JpaSpe
 			+"  Or lower(j.jobDescription) Like %:searchString%"
 			+"  Or lower(j.jobCode) Like %:searchString%"
 			+"  Or lower(j.maxExp) Like %:searchString%"
-			+ " Or lower(j.minExp) LIKE %:searchString%) ORDER BY j.createdAt DESC")		
+			+ " Or lower(j.minExp) LIKE %:searchString%) ORDER BY j.createdAt ASC")		
 	Page<List<Map>> getAllOpenings(String searchString, JobOpeningStatus status, String wing, String userRole,
 		 Pageable pageable);
 	
@@ -140,7 +140,7 @@ public interface JobRepository extends CrudRepository<JobOpenings, Long>, JpaSpe
 			+"  Or lower(j.jobDescription) Like %:searchString%"
 			+"  Or lower(j.jobCode) Like %:searchString%"
 			+"  Or lower(j.maxExp) Like %:searchString%"
-			+ " Or lower(j.minExp) LIKE %:searchString%) ORDER BY j.createdAt DESC")		
+			+ " Or lower(j.minExp) LIKE %:searchString%) ORDER BY j.createdAt ASC")		
 	Page<List<Map>> getAllOpeningsWithoutPackage(String searchString, JobOpeningStatus status, String wing, String userRole,
 		 Pageable pageable);
 

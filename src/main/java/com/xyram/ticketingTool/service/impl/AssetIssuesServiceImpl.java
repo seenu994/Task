@@ -164,7 +164,7 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 		 
 		if(assetIssuesObj != null) 
 	    {	
-			if(assetIssues.getAssetId() != null || !(assetIssues.getAssetId().equals("")))
+			if(assetIssues.getAssetId() != null)
 			{
 				 checkAssetId(assetIssuesObj.getAssetId());
 				 assetIssuesObj.setAssetId(assetIssues.getAssetId());

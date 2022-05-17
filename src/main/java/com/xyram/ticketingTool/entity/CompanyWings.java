@@ -15,10 +15,7 @@ import com.xyram.ticketingTool.id.generator.IdPrefix;
 @Entity
 @Table(name = "company_wings")
 public class CompanyWings extends AuditModel {
-	/*
-	 * `skill_id` varchar(255) NOT NULL, `skill_name` varchar(255) NOT NULL,
-	 * `status` varchar(255) DEFAULT NULL,
-	 */
+	
 
 	@Id
 	@IdPrefix(value = "WIN_")
