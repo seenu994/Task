@@ -323,7 +323,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			response.setSuccess(false);
 		}
 
-		if (employee.getFirstName() == null || employee.getFirstName().equals("") || employee.getFirstName().length()>3) {
+		if (employee.getFirstName() == null || employee.getFirstName().equals("") || employee.getFirstName().length() < 3) {
 
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.FIRST_NAME_MAN);
@@ -334,7 +334,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			response.setMessage(ResponseMessages.FIRST_NAME_CHAR);
 		}
 
-		if (employee.getLastName() == null || employee.getLastName().equals("") || employee.getLastName().length() > 0) {
+		if (employee.getLastName() == null || employee.getLastName().equals("") || employee.getLastName().length() <= 0) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.LAST_NAME_MAN);
 
