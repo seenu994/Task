@@ -205,7 +205,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			user.setUsername(employee.getEmail());
 			String encodedPassword = new BCryptPasswordEncoder().encode(employee.getPassword());
 			user.setPassword(encodedPassword);
-			if (employee.getFirstName().length() > 3 && employee.getLastName().length() > 0) {
+			if (employee.getFirstName().length() >= 3 && employee.getLastName().length() >= 3) {
 				
 				employee.setFirstName(employee.getFirstName().trim());
 				String name = employee.getFirstName();
