@@ -1107,20 +1107,52 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	}
 
 	@Override
-	public ApiResponse getAllhrCalender(Pageable pageable) {
+	public ApiResponse searchhrCalender(String searchString) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/*@Override
+	public ApiResponse getAllhrCalender(Map<String, Object> filter , Pageable pageable) {
 		ApiResponse response = new ApiResponse();
-		Page<Map> hrcalender = hrCalendarRepository.getHrcalender(pageable);
-	
-		Map content = new HashMap();
-		content.put("hrcalender", hrcalender);
-		if(content != null) {
-			response.setSuccess(true);
-			response.setContent(content);
-			response.setMessage(ResponseMessages.HRCALENDER_LIST_RETRIVED);
+		String jobId = filter.containsKey("jobId") ? ((String) filter.get("jobId"))
+				: null;
+		String employeeId = filter.containsKey("employeeId") ? ((String) filter.get("employeeId"))
+				: null;
+		Boolean closed = filter.containsKey("closed") ? ((Boolean) filter.get("closed"))
+					: false;
+		String status = filter.containsKey("status") ? ((String) filter.get("status")).toLowerCase()
+					: null;
+		String fromDate = filter.containsKey("fromDate") ? filter.get("fromDate").toString() : null;
+		String toDate = filter.containsKey("toDate") ? filter.get("toDate").toString() : null;
+
+		Date parsedfromDate = null;
+		Date parsedtoDate = null;
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		
+		if(fromDate != null && toDate != null) {
+			try {
+
+				parsedfromDate = fromDate != null ? dateFormat.parse(fromDate) : null;
+				parsedtoDate = toDate != null ? dateFormat.parse(toDate) : null;
+
+			} catch (ParseException e) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid date format date should be yyyy-MM-dd");
+			}
 		}
-		else {
+		
+		Page<Map> shceduleList = hrCalendarRepository.getAllHrCalender( currentUser.getUserId(),employeeId, jobId, 
+				 fromDate,  toDate,  status,closed,pageable);
+		
+		if(shceduleList.getSize() > 0) {
+			Map content = new HashMap();
+			content.put("shceduleList", shceduleList);
+			response.setContent(content);
+			response.setSuccess(true);
+			response.setMessage("List retrieved successfully.");
+		}else {
 			response.setSuccess(false);
-			response.setMessage("Could not retrieve data");
+			response.setMessage("List is empty.");
 		}
 		return response;
 	}
@@ -1147,7 +1179,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 
 		return response;
 
-	}
+	}*/
 	}
 	
 		
