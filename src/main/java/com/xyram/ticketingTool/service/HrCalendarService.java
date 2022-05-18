@@ -52,7 +52,7 @@ public interface HrCalendarService {
 	
 	ApiResponse downloadMyTeamSchedulesFromCalendarByStatus(Map<String, Object>filter);
 	
-	//ApiResponse getAllhrCalender(Map<String, Object> filter , Pageable pageable);
+	ApiResponse getAllhrCalender(Map<String, Object> filter , Pageable pageable);
 	
 	ApiResponse searchhrCalender(String searchString);
 }

@@ -94,4 +94,13 @@ public class AssetIssuesController
 		logger.info("Download all asset issue");
 		return assetIssuesService.downloadAllAssetIssues(filter);
 	}
+	
+	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAssetIssueByAssetId/{assetId}",
+			AuthConstants.INFRA_USER_BASEPATH + "/getAssetIssueByAssetId/{assetId}",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/getAssetIssueByAssetId/{assetId}"})
+	public ApiResponse getAssetById1(@PathVariable String assetId)
+	{
+		logger.info("received request to edit assetIssues");
+		return assetIssuesService.getAssetById1(assetId);
+	}
 }

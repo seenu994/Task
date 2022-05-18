@@ -140,12 +140,18 @@ List<Map> searchhrCalender(String userId, String searchString);
 	
 	
 
-	/*@Query("Select new map(e.eId as id,e.email as email,e.firstName as firstName,e. profileUrl as profileUrl, e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId,e.location as location,e.position as position,e.wings as wings, "
-			+ "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,d.designationName as designationName,e.reportingTo as reportingTo,CONCAT(ee.firstName ,' ', ee.lastName) as ReporterName,e.createdAt as createdAt,e.createdBy as createdBy,c.locationName as locationName) from Employee e left join Employee ee On ee.eId = e.reportingTo  "
-			+ "left JOIN Role r On e.roleId = r.Id "
-			+ "left JOIN  Designation d On e.designationId=d.Id  left JOIN  CompanyLocation c On e.location=c.id where e.id=:employeeId")
-	Page<Map> getAllHrCalender(String userId, String employeeId, String jobId, String fromDate, String toDate,
-			String status, Boolean closed, Pageable pageable);*/
+	@Query("Select distinct new map( a.Id as id,a.candidateMobile as mobile,a.candidateName as name,a.status as status, "
+			+ "a.createdAt as createdAt,a.createdBy as createdBy,a.scheduleDate as scheduleDate, a.searchedSource as searchedSource, "
+			+ "a.jobId as jobId,jo.jobTitle as jobTitle, a.closed as closed,a.callCount as callCount,a.reportingTo as reportingTo, "
+			+ "a.createdAt as createdAt,a.lastUpdatedAt as lastUpdatedAt) from HrCalendar a "
+			+ "left join JobOpenings jo on a.jobId = jo.id where a.createdBy = :userId and "
+			+ "(:toDate is null OR Date(a.scheduleDate) <= STR_TO_DATE(:toDate, '%Y-%m-%d')) AND "
+			+ "(:fromDate is null OR Date(a.scheduleDate) >= STR_TO_DATE(:fromDate, '%Y-%m-%d')) AND "
+			+ "(:status is null OR lower(a.status)=:status) AND "
+			+ "(:jobId is null OR a.jobId=:jobId) AND "
+			+ "(:closed is null OR a.closed=:closed) ORDER BY a.scheduleDate ASC")
+	Page<Map> getAllHrCalender(String userId,  String jobId, String fromDate, String toDate,
+			String status, Boolean closed, Pageable pageable);
 
 	
 

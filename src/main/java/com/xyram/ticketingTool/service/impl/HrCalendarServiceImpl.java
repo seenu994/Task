@@ -1106,19 +1106,15 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 		
 	}
 
-	@Override
-	public ApiResponse searchhrCalender(String searchString) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
+	
 
-	/*@Override
+	@Override
 	public ApiResponse getAllhrCalender(Map<String, Object> filter , Pageable pageable) {
 		ApiResponse response = new ApiResponse();
 		String jobId = filter.containsKey("jobId") ? ((String) filter.get("jobId"))
 				: null;
-		String employeeId = filter.containsKey("employeeId") ? ((String) filter.get("employeeId"))
-				: null;
+		
 		Boolean closed = filter.containsKey("closed") ? ((Boolean) filter.get("closed"))
 					: false;
 		String status = filter.containsKey("status") ? ((String) filter.get("status")).toLowerCase()
@@ -1141,7 +1137,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 			}
 		}
 		
-		Page<Map> shceduleList = hrCalendarRepository.getAllHrCalender( currentUser.getUserId(),employeeId, jobId, 
+		Page<Map> shceduleList = hrCalendarRepository.getAllHrCalender( currentUser.getUserId(), jobId, 
 				 fromDate,  toDate,  status,closed,pageable);
 		
 		if(shceduleList.getSize() > 0) {
@@ -1179,7 +1175,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 
 		return response;
 
-	}*/
+	}
 	}
 	
 		
