@@ -21,26 +21,21 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 
 	@Query("Select distinct new map(e.eId as id,e.email as email,e. profileUrl as profileUrl, e.userCredientials.id as userId , e.firstName as firstName,e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId, "
 			+ "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,d.designationName as designationName,e.profileUrl as profileUrl,e.createdAt as createdAt,e.location as location,c.locationName as locationName,e.position as position,e.wings as wings,e.reportingTo as reportingTo,CONCAT(ee.firstName ,' ', ee.lastName) as ReporterName) from Employee e "
-			+ "left JOIN Employee ee ON ee.eId = e.reportingTo  "			
+			+ "left JOIN Employee ee ON ee.eId = e.reportingTo  "
 			+ " left JOIN  CompanyLocation c On e.location = c.Id left JOIN Role r On e.roleId = r.Id left JOIN  Designation d On e.designationId=d.Id ORDER BY e.createdAt DESC")
 	Page<Map> getAllEmployeeList(Pageable pageable);
-	
+
 	@Query("Select distinct new map(e.eId as id,e.email as email, e. profileUrl as profileUrl, e.userCredientials.id as userId , e.firstName as firstName,e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId, "
 			+ "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,d.designationName as designationName,e.profileUrl as profileUrl,e.createdAt as createdAt,e.location as location,e.position as position,e.wings as wings,e.reportingTo as reportingTo,CONCAT(ee.firstName ,' ', ee.lastName) as ReporterName) from Employee e "
-			+ "left JOIN Employee ee ON ee.eId = e.reportingTo "
-			+" left join e.wings w "
+			+ "left JOIN Employee ee ON ee.eId = e.reportingTo " + " left join e.wings w "
 			+ "left JOIN Role r On e.roleId = r.Id left JOIN  Designation d On e.designationId=d.Id "
-			+ " where (:role is null or r.id=:role) and "
-			+ "(:designation is null or d.Id=:designation) and "
-			+ "(:position is null or lower(e.position) like %:position%) and "
-			+ "(:wing is null or w.id=:wing) and"
-			+ "(:searchString is null"
-			+ " or lower(e.email) like %:searchString% "
-			+ " or lower(e.firstName) like %:searchString% "
-			+ "or lower(e.middleName) like %:searchString% "
-			+ "or lower(e.lastName) like %:searchString%) "
-			+ " ORDER BY e.createdAt DESC")
-	Page<Map> getAllEmployeeListByFilter(Pageable pageable, String searchString, String role, String designation, String position, String wing);
+			+ " where (:role is null or r.id=:role) and " + "(:designation is null or d.Id=:designation) and "
+			+ "(:position is null or lower(e.position) like %:position%) and " + "(:wing is null or w.id=:wing) and"
+			+ "(:searchString is null" + " or lower(e.email) like %:searchString% "
+			+ " or lower(e.firstName) like %:searchString% " + "or lower(e.middleName) like %:searchString% "
+			+ "or lower(e.lastName) like %:searchString%) " + " ORDER BY e.createdAt DESC")
+	Page<Map> getAllEmployeeListByFilter(Pageable pageable, String searchString, String role, String designation,
+			String position, String wing);
 
 	// Select e.`employee_id` as id, e.`frist_name` as firstName, e.`last_name` as
 	// lastName
@@ -143,19 +138,12 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 
 	@Query("Select e.email from Employee e where e.email = :email")
 	String filterByEmail(String email);
-	
-	
-	
-	
-	
+
 	@Query("Select distinct new map(e.eId as id,e.email as email,e. profileUrl as profileUrl, e.userCredientials.id as userId , e.firstName as firstName,e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.password as password,e.designationId as designationId, "
 			+ "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,d.designationName as designationName,e.profileUrl as profileUrl,e.createdAt as createdAt,e.createdBy as createdBy,e.location as location,c.locationName as locationName,e.position as position,e.wings as wings,e.reportingTo as reportingTo,CONCAT(ee.firstName ,' ', ee.lastName) as ReporterName) from Employee e "
-			+ "left JOIN Employee ee ON ee.eId = e.reportingTo  "			
-			+ " left JOIN  CompanyLocation c On e.location = c.Id left JOIN Role r On e.roleId = r.Id left JOIN  Designation d On e.designationId=d.Id where e.id=:employeeId") 
-		List<Map> getbyEmpId(String employeeId);
-
-	
-	
+			+ "left JOIN Employee ee ON ee.eId = e.reportingTo  "
+			+ " left JOIN  CompanyLocation c On e.location = c.Id left JOIN Role r On e.roleId = r.Id left JOIN  Designation d On e.designationId=d.Id where e.id=:employeeId")
+	List<Map> getbyEmpId(String employeeId);
 
 	@Query("Select new map(e.eId as id,e.email as email,e.firstName as firstName,e. profileUrl as profileUrl, e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId,e.location as location,e.position as position,e.wings as wings, "
 			+ "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,c.locationName as locationName,d.designationName as designationName,e.reportingTo as reportingTo,CONCAT(ee.firstName ,' ', ee.lastName) as ReporterName,ee.profileUrl as ReporterURL,e.createdAt as createdAt,e.createdBy as createdBy) from Employee e left join Employee ee On ee.eId = e.reportingTo  "
@@ -167,19 +155,16 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 
 	@Query("Select new map(e.eId as id,e.email as email,e.firstName as firstName,e.profileUrl as profileUrl, e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId,e.location as location,e.position as position,e.wings as wings, "
 			+ "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,d.designationName as designationName,e.reportingTo as reportingTo,CONCAT(ee.firstName ,' ', ee.lastName) as ReporterName,ee.profileUrl as ReporterURL) from Employee e "
-			+ "left join Employee ee On ee.eId = e.reportingTo "
-			+ "left JOIN Role r On e.roleId = r.Id "
+			+ "left join Employee ee On ee.eId = e.reportingTo " + "left JOIN Role r On e.roleId = r.Id "
 			+ "left JOIN Designation d On e.designationId=d.Id where e.userCredientials.id=:accessToken")
 	Map getbyAccessToken(String accessToken);
 
 	@Query("SELECT new map(CONCAT(e.firstName ,' ', e.lastName) as ReporterName,e.eId as Id,e.profileUrl as profileUrl,e.userCredientials.id as userId) from Employee e where e.reportingTo = :reportingId")
-	List<Map> getReportingList(String reportingId); 
-	
+	List<Map> getReportingList(String reportingId);
+
 	@Query("SELECT new map(CONCAT(e.firstName ,' ', e.lastName) as ReporterName,e.eId as Id,e.profileUrl as profileUrl,e.userCredientials.id as userId) "
 			+ "from Employee e where e.reportingTo = :reportingId and (lower(e.firstName) like %:searchString% or lower(e.lastName) like %:searchString%)")
 	List<Map> searchEmployeeByReportingId(String reportingId, String searchString);
-	
-	
 
 	@Query("Select e from Employee e "
 			+ "left JOIN Role r On e.roleId = r.Id left JOIN Designation d On e.designationId=d.Id ORDER BY e.createdAt DESC")
@@ -187,13 +172,9 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 
 	@Query("Select e from Employee e "
 			+ "left JOIN Role r On e.roleId = r.Id left JOIN  Designation d On e.designationId=d.Id WHERE r.roleName = 'INFRA_USER' "
-			+ "and e.status ='ACTIVE' and "
-			+ "(:searchString is null"
-			+ " or lower(e.email) like %:searchString% "
-			+ " or lower(e.firstName) like %:searchString% "
-			+ "or lower(e.middleName) like %:searchString% "
-			+ "or lower(e.lastName) like %:searchString%) "
-			+ "ORDER BY e.createdAt DESC")
+			+ "and e.status ='ACTIVE' and " + "(:searchString is null" + " or lower(e.email) like %:searchString% "
+			+ " or lower(e.firstName) like %:searchString% " + "or lower(e.middleName) like %:searchString% "
+			+ "or lower(e.lastName) like %:searchString%) " + "ORDER BY e.createdAt DESC")
 	List<Employee> getInfraEmployee(String searchString);
 
 	@Query("Select distinct new map(e.eId as id,e.userCredientials.uid as uid,e.email as email,e. profileUrl as profileUrl , e.firstName as firstName,e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId, "
@@ -219,12 +200,10 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 	@Query(value = "select * from employee", nativeQuery = true)
 	List<Employee> getAllEmployeeNotification();
 
-
-
 	@Query("Select e from Employee e "
 			+ "left JOIN Role r On e.roleId = r.Id left JOIN  Designation d On e.designationId=d.Id WHERE r.roleName = 'HR_ADMIN' ORDER BY e.createdAt DESC")
 
-List<Employee> getEmployeeByRole();
+	List<Employee> getEmployeeByRole();
 
 	@Query("Select distinct new map(e.eId as id,e.email as email,e. profileUrl as profileUrl,e.userCredientials.uid as uid,e.firstName as firstName,e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId, "
 			+ "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,d.designationName as designationName,e.profileUrl as profileUrl,e.createdAt as createdAt,e.reportingTo as reportingTo,CONCAT(ee.firstName ,' ', ee.lastName) as ReporterName) from Employee e "
@@ -248,7 +227,7 @@ List<Employee> getEmployeeByRole();
 
 	@Query("select e from User e  where e.id= :userId ")
 	Employee getEmployeeByUSerId(String userId);
-	
+
 	@Query("select e from User e  where e.id= :userId ")
 	User getUserByUSerId(String userId);
 
@@ -257,51 +236,42 @@ List<Employee> getEmployeeByRole();
 
 	@Query("SELECT e from Employee e  where e.eId = :referredEmployeeId")
 	Employee getEmployeeNameByScoleId(String referredEmployeeId);
-	
+
 	@Query("SELECT e from Employee e ")
 	Employee getAllEmployy();
-	
+
 	@Query("SELECT e from Employee e  left join JobApplication j On e.eId=j.referredEmployeeId and  j.referredEmployeeId=:referredEmployeeId")
 	List<Employee> getRefereEmployee(String referredEmployeeId);
+
 	@Query("Select e from Employee e "
 			+ "left JOIN Role r On e.roleId = r.Id left JOIN  Designation d On e.designationId=d.Id WHERE r.roleName in( 'HR_ADMIN','TICKETINGTOOL_ADMIN') ORDER BY e.createdAt DESC")
 	List<Employee> getVendorNotification();
 
 	@Query("Select e from Employee e  left join Ticket t On e.userCredientials.id=t.createdBy where t.createdBy=:createdBy")
 	List<Employee> getCreatedBy(String createdBy);
+
 	@Query("Select e from Employee e  left join TicketAssignee t On e.eId=t.employeeId where t.employeeId=:employeeId")
-
-
 	Employee getAssigneeNotify(String employeeId);
+
 	@Query("Select e from Employee e  left join TicketAssignee t On e.eId=t.employeeId where t.employeeId=:employeeId")
-
-
 	Employee getAssigneeNotification(String employeeId);
+
 	@Query("select e from Employee e left join User u On e.userCredientials.id=u.id where e.eId= :geteId ")
-
-
-
 	Employee getByEmpIdss(String geteId);
-	@Query("select e from Employee e left join User u On e.userCredientials.id=u.id where e.eId= :userId ")
 
+	@Query("select e from Employee e left join User u On e.userCredientials.id=u.id where e.eId= :userId ")
 	Employee getByEmpIdssss(String userId);
-	
-	
-    @Query("select e from Employee e where e.firstName = :firstName")
+
+	@Query("select e from Employee e where e.firstName = :firstName")
 	Employee getByEmpName(String firstName);
 
-    @Query("select distinct (CONCAT(e.firstName ,' ', e.lastName)) from Asset a "
-    	    + "left join AssetEmployee b on b.assetId = a.assetId AND b.assetEmployeeStatus != 'INACTIVE' "
-    	    + "left join Employee e on e.eId = b.empId where a.assetId =:assetId")
+	@Query("select distinct (CONCAT(e.firstName ,' ', e.lastName)) from Asset a "
+			+ "left join AssetEmployee b on b.assetId = a.assetId AND b.assetEmployeeStatus != 'INACTIVE' "
+			+ "left join Employee e on e.eId = b.empId where a.assetId =:assetId")
 	String getEmpNameById(String assetId);
 
-    @Query("select e from Employee e where e.eId =:eId")
+	@Query("select e from Employee e where e.eId =:eId")
 	Employee getByEmpIdE(String eId);
-	
-
-	
-
-	
 
 	/*
 	 * @Query("Select new map(e.eId as id,e.email as email,e.firstName as firstName,e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId, "

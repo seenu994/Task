@@ -26,7 +26,7 @@ public interface JobRepository extends CrudRepository<JobOpenings, Long>, JpaSpe
 //			+ "left join ticketdbtool.ticket_assignee b ON a.ticket_id = b.ticket_id  and b.ticket_assignee_status = 'ACTIVE' "
 //			+ "left join ticketdbtool.employee e on b.employee_id = e.employee_id "
 //			+ "where a.ticket_description like %:searchString% ", nativeQuery = true)
-	@Query(value = "SELECT * FROM ticketdbtool.job_openings jo", nativeQuery = true)
+	@Query(value = "SELECT * FROM ticketdbtool.job_openings jo order by jo.createdAt DESC", nativeQuery = true)
 	List<Map> getAllJobOpenings();
 
 	
@@ -120,7 +120,7 @@ public interface JobRepository extends CrudRepository<JobOpenings, Long>, JpaSpe
 			+"  Or lower(j.jobDescription) Like %:searchString%"
 			+"  Or lower(j.jobCode) Like %:searchString%"
 			+"  Or lower(j.maxExp) Like %:searchString%"
-			+ " Or lower(j.minExp) LIKE %:searchString%) ORDER BY j.createdAt ASC")		
+			+ " Or lower(j.minExp) LIKE %:searchString%) ORDER BY j.createdAt DESC")		
 	Page<List<Map>> getAllOpenings(String searchString, JobOpeningStatus status, String wing, String userRole,
 		 Pageable pageable);
 	
@@ -140,7 +140,7 @@ public interface JobRepository extends CrudRepository<JobOpenings, Long>, JpaSpe
 			+"  Or lower(j.jobDescription) Like %:searchString%"
 			+"  Or lower(j.jobCode) Like %:searchString%"
 			+"  Or lower(j.maxExp) Like %:searchString%"
-			+ " Or lower(j.minExp) LIKE %:searchString%) ORDER BY j.createdAt ASC")		
+			+ " Or lower(j.minExp) LIKE %:searchString%) ORDER BY j.createdAt DESC")		
 	Page<List<Map>> getAllOpeningsWithoutPackage(String searchString, JobOpeningStatus status, String wing, String userRole,
 		 Pageable pageable);
 
