@@ -611,6 +611,10 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 	       
 	       return response;
        }
+       
+      
+
+       
 
 	@Override
 	public ApiResponse downloadAllAssetIssues(Map<String, Object> filter) {
@@ -716,5 +720,25 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 
 		return workbook;
 	}
-}
+
+	@Override
+	public ApiResponse getAssetById1(String assetId) {
+		
+		ApiResponse response = new ApiResponse();
+		List<AssetIssues> asset = assetIssuesRepository.getAllAssetById1(assetId);
+		Map content = new HashMap();
+		content.put("asset", asset);
+		if(content != null) {
+			response.setSuccess(true);
+			response.setMessage("Asset Retrieved Successfully");
+			response.setContent(content);
+		}
+		else {
+			response.setSuccess(false);
+			response.setMessage("Could not retrieve data");
+		}
+		return response;
+	}
+	}
+
 	
