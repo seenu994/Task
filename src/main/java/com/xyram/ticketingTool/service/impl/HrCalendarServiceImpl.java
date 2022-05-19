@@ -1112,6 +1112,9 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	@Override
 	public ApiResponse getAllhrCalender(Map<String, Object> filter , Pageable pageable) {
 		ApiResponse response = new ApiResponse();
+		
+		String searchString = filter.containsKey("searchString") ? ((String) filter.get("searchString"))
+				: null;
 		String jobId = filter.containsKey("jobId") ? ((String) filter.get("jobId"))
 				: null;
 		
@@ -1137,8 +1140,8 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 			}
 		}
 		
-		Page<Map> shceduleList = hrCalendarRepository.getAllHrCalender( currentUser.getUserId(), jobId, 
-				 fromDate,  toDate,  status,closed,pageable);
+		Page<Map> shceduleList = hrCalendarRepository.getAllHrCalender(  jobId, 
+				 fromDate, searchString,  toDate,  status,closed,pageable);
 		
 		if(shceduleList.getSize() > 0) {
 			Map content = new HashMap();
