@@ -421,6 +421,14 @@ public interface ResponseMessages {
 
 	String NOT_VALID = "Reportor is not valid";
 
+	String Pro_Name_Man = "Project name is mandatory";
+
+	String Pro_desc_man = "Project description is mandatory";
+
+	String Pro_desc_len = "Project description length should be minimum 15 and maximum 5000";
+
+	String Pro_name_len = "Project name should be minimum 3 characters";
+
 //	String ANNOUNCEMENT_STATUS_CHANGED = "Announcement status changed successfully";
 //	String ANNOUNCEMENT_STATUS_NOT_CHANGED = "Announcement status not changed";
 //	String ANNOUNCEMENT_DELETED = "Announcement deleted successfully";

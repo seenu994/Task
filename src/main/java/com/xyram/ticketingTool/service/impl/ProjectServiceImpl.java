@@ -13,11 +13,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.xyram.ticketingTool.Repository.ClientRepository;
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
 import com.xyram.ticketingTool.Repository.FeatureRepository;
 import com.xyram.ticketingTool.Repository.ProjectRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
+import com.xyram.ticketingTool.entity.Client;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.Feature;
 import com.xyram.ticketingTool.entity.ProjectFeature;
@@ -54,9 +56,14 @@ public class ProjectServiceImpl implements ProjectService {
 
 	@Autowired
 	ProjectFeatureService projectFeatureService;
+	
+	@Autowired
+	ClientRepository clientRepository;
 
 	@Override
 	public ApiResponse addproject(Projects project) {
+		
+//		 response = validateProject(project);
 		ApiResponse response = validateClientId(project);
 		if (response.isSuccess()) {
 			// projectRepository.save(project);
@@ -92,21 +99,47 @@ public class ProjectServiceImpl implements ProjectService {
 			content.put("projectId", projetAdded.getpId());
 			response.setContent(content);
 
-			return response;
 		}
 		return response;
 	}
 
 	private ApiResponse validateClientId(Projects projects) {
 		ApiResponse response = new ApiResponse(false);
-		if (projects.getClientId() != null) {
-			response.setMessage("success");
-			response.setSuccess(true);
-			response.setContent(null);
-		} else {
-			response.setMessage(ResponseMessages.ClIENT_ID_VALID);
+		
+		if(projects.getClientId() != null &&  projects.getClientId().length()>0) {
+			Client obj = clientRepository.getClientById(projects.getClientId());
+			if(obj == null) {
+				response.setSuccess(false);
+				response.setMessage("client is not valid");
+			}
+		}
+		
+//		if (projects.getClientId() != null) {
+//			response.setMessage("success");
+//			response.setSuccess(true);
+//			response.setContent(null);
+//		} else {
+//			response.setMessage(ResponseMessages.ClIENT_ID_VALID);
+//			response.setSuccess(false);
+//			response.setContent(null);
+//		}
+		if (projects.getProjectName() == null || projects.getProjectName().equals("")) {
 			response.setSuccess(false);
-			response.setContent(null);
+			response.setMessage(ResponseMessages.Pro_Name_Man);
+		}else {
+			if(projects.getProjectName().length()<3) {
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.Pro_name_len);
+			}
+		}
+		if (projects.getProjectDescritpion() == null || projects.getProjectDescritpion().equals("")) {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.Pro_desc_man);
+		}else {
+			if (projects.getProjectDescritpion().length() < 15 || projects.getProjectDescritpion().length() > 5000) {
+				response.setSuccess(false);
+				response.setMessage(ResponseMessages.Pro_desc_len);
+			}
 		}
 		return response;
 	}
@@ -313,7 +346,7 @@ public class ProjectServiceImpl implements ProjectService {
 
 		return response;
 	}
-                        
+
 	@Override
 	public ApiResponse getgenericIssues() {
 
@@ -394,4 +427,25 @@ public class ProjectServiceImpl implements ProjectService {
 		return response;
 	}
 
+//	public ApiResponse validateProject(Projects projects) {
+//		ApiResponse response = new ApiResponse();
+//		if (projects.getProjectName() == null || projects.getProjectName().equals("")) {
+//			response.setSuccess(false);
+//			response.setMessage(ResponseMessages.Pro_Name_Man);
+//		}
+//		if(projects.getProjectName().length()<3) {
+//			response.setSuccess(false);
+//			response.setMessage(ResponseMessages.Pro_name_len);
+//		}
+//		if (projects.getProjectDescritpion() == null || projects.getProjectDescritpion().equals("")) {
+//			response.setSuccess(false);
+//			response.setMessage(ResponseMessages.Pro_desc_man);
+//		}
+//
+//		if (projects.getProjectDescritpion().length() < 15 || projects.getProjectDescritpion().length() > 5000) {
+//			response.setSuccess(false);
+//			response.setMessage(ResponseMessages.Pro_desc_len);
+//		}
+//		return response;
+//	}
 }
