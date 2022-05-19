@@ -1111,10 +1111,12 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 
 	@Override
 	public ApiResponse getAllhrCalender(Map<String, Object> filter , Pageable pageable) {
-		ApiResponse response = new ApiResponse();
+ApiResponse response = new ApiResponse(false);
+		
 		String jobId = filter.containsKey("jobId") ? ((String) filter.get("jobId"))
 				: null;
-		
+		String employeeId = filter.containsKey("employeeId") ? ((String) filter.get("employeeId"))
+				: null;
 		Boolean closed = filter.containsKey("closed") ? ((Boolean) filter.get("closed"))
 					: false;
 		String status = filter.containsKey("status") ? ((String) filter.get("status")).toLowerCase()
@@ -1137,7 +1139,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 			}
 		}
 		
-		Page<Map> shceduleList = hrCalendarRepository.getAllHrCalender( currentUser.getUserId(), jobId, 
+		Page<Map> shceduleList = hrCalendarRepository.getAllMyTeamSchedulesFromCalendarByStatusForAdmin( employeeId, jobId, 
 				 fromDate,  toDate,  status,closed,pageable);
 		
 		if(shceduleList.getSize() > 0) {
