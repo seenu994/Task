@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import com.xyram.ticketingTool.entity.Asset;
 import com.xyram.ticketingTool.entity.AssetVendor;
+import com.xyram.ticketingTool.entity.Designation;
 
 @Repository
 
@@ -51,7 +52,13 @@ public interface AssetVendorRepository extends JpaRepository<AssetVendor, String
 	Page<Map> getAllVendor(String vendorId, String country, String city, Pageable peageble);
 
 @Query("Select distinct p from AssetVendor p where p.vendorName=:vendorName")
-	List<AssetVendor> searchVendorName(String vendorName);
+List<AssetVendor> searchVendorName(String vendorName);
+
+
+//@Query("select p from AssetVendor p where p.vendorId =:vendorName")
+//AssetVendor getVendorName(String vendorName);
+
+
 
 	@Query("select distinct p from AssetVendor p where"
 			+ "( p.vendorName LIKE %:searchString% OR p.vendorId like  %:searchString%  OR "
