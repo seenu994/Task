@@ -173,6 +173,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			return response;
 		}
 		// Email Validation starts here
+	    
 		if (employee.getEmail() == null || employee.getEmail().equals("")) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.MAILID_MAN);
@@ -204,7 +205,15 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			user.setUsername(employee.getEmail());
 			String encodedPassword = new BCryptPasswordEncoder().encode(employee.getPassword());
 			user.setPassword(encodedPassword);
-			if (employee.getFirstName().length() > 3 && employee.getLastName().length() > 0) {
+			if (employee.getFirstName().length() >= 3 && employee.getLastName().length() >= 3) {
+				
+				employee.setFirstName(employee.getFirstName().trim());
+				String name = employee.getFirstName();
+				String firstLetter = name.substring(0, 1);
+			    String remainingLetters = name.substring(1, name.length());
+			    firstLetter = firstLetter.toUpperCase();
+			    employee.setFirstName(firstLetter + remainingLetters);
+			    
 				user.setName(employee.getFirstName() + " " + employee.getLastName());
 
 				// Employee employeere=new Employee();
@@ -274,12 +283,12 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				String uuidAsString = uuid.toString();
 
 				if (employeeNew != null & false) {
-					String name = null;
+					String name2 = null;
 
 					HashMap mailDetails = new HashMap();
 					mailDetails.put("toEmail", employeeNew.getEmail());
 					mailDetails.put("subject", name + ", " + "Here's your new PASSWORD");
-					mailDetails.put("message", "Hi " + name
+					mailDetails.put("message", "Hi " + name2
 							+ ", \n\n We received a request to reset the password for your Account. \n\n Here's your new PASSWORD Link is: "
 							+ application_url + "/update-password" + "?key=" + uuidAsString
 							+ "\n\n Thanks for helping us keep your account secure.\n\n Xyram Software Solutions Pvt Ltd.");
@@ -314,7 +323,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			response.setSuccess(false);
 		}
 
-		if (employee.getFirstName() == null || employee.getFirstName().equals("")) {
+		if (employee.getFirstName() == null || employee.getFirstName().equals("") || employee.getFirstName().length() < 3) {
 
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.FIRST_NAME_MAN);
@@ -325,7 +334,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			response.setMessage(ResponseMessages.FIRST_NAME_CHAR);
 		}
 
-		if (employee.getLastName() == null || employee.getLastName().equals("")) {
+		if (employee.getLastName() == null || employee.getLastName().equals("") || employee.getLastName().length() <= 0) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.LAST_NAME_MAN);
 
@@ -405,6 +414,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				response.setMessage(ResponseMessages.NOT_VALID);
 				return response;
 			}
+			
 		}
 
 		if (employee.getWings() == null || employee.getWings().getId().equals("")) {
@@ -535,6 +545,13 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			employee.setLastName(employeeRequest.getLastName());
 			employee.setLastUpdatedAt(new Date());
 
+			employee.setFirstName(employee.getFirstName().trim());
+			String name = employee.getFirstName();
+			String firstLetter = name.substring(0, 1);
+		    String remainingLetters = name.substring(1, name.length());
+		    firstLetter = firstLetter.toUpperCase();
+		    employee.setFirstName(firstLetter + remainingLetters);
+			
 			user.setName(employeeRequest.getFirstName() + " " + employeeRequest.getLastName());
 			employee.setMiddleName(employeeRequest.getMiddleName());
 			employee.setMobileNumber(employeeRequest.getMobileNumber());
@@ -542,12 +559,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			employee.setReportingTo(employeeRequest.getReportingTo());
 			employee.setLocation(employeeRequest.getLocation());
 			employee.setPosition(employeeRequest.getPosition());
-			CompanyWings wingObj = new CompanyWings();
-			CompanyWings wing = wingRepo.getWingById(employeeRequest.getWings().getId());
-//			if (wing == null) {
-//				response.setSuccess(false);
-//				response.setMessage("Wing is not Exist");
-//			}
+			employee.setWings(employeeRequest.getWings());
 			employee.setRoleId(employeeRequest.getRoleId());
 
 			Role role = roleRepository.getById(employeeRequest.getRoleId());

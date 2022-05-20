@@ -53,7 +53,7 @@ public interface AssetRepository extends JpaRepository<Asset, String>{
     		+ "a.serialNo as serialNo,a.warrantyDate as warrantyDate,a.ram as ram,"
     		+ "a.bagAvailable as bagAvailable, a.powercordAvailable as powercordAvailable,"
     		+ "a.mouseAvailable as mouseAvailable, a.assetPhotoUrl as assetPhotoUrl,"
-    		+ "a.assetStatus as assetStatus, CONCAT(e.firstName ,' ', e.lastName) as assignedTo) from Asset a "
+    		+ "a.assetStatus as assetStatus, CONCAT(e.firstName ,' ', e.lastName) as assignedTo, b.assetEmpId as assetEmpId) from Asset a "
     		+ "left join AssetVendor v on v.vendorId = a.vendorId left join AssetEmployee b on b.assetId = a.assetId AND b.assetEmployeeStatus != 'INACTIVE'"
     		+ "left join Employee e on e.eId = b.empId where a.assetId =:assetId")
 	Map getAllAssetById(String assetId);
@@ -149,6 +149,8 @@ public interface AssetRepository extends JpaRepository<Asset, String>{
 
     @Query("select a.assetId from Asset a where a.serialNo =:serialNo")
 	String getAssetIdBySerialNo(String serialNo);
+
+  
 	
 	
     

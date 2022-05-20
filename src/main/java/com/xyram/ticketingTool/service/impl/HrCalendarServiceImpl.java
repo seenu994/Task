@@ -1,13 +1,7 @@
 package com.xyram.ticketingTool.service.impl;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.ParseException;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,7 +9,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
@@ -24,8 +17,6 @@ import java.util.regex.Pattern;
 import javax.transaction.Transactional;
 
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +26,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
 import com.xyram.ticketingTool.Repository.HrCalendarCommentRepository;
 import com.xyram.ticketingTool.Repository.HrCalendarRepository;
@@ -43,18 +33,13 @@ import com.xyram.ticketingTool.Repository.JobRepository;
 import com.xyram.ticketingTool.Repository.UserRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.controller.HrCalendarController;
-import com.xyram.ticketingTool.entity.Asset;
-import com.xyram.ticketingTool.entity.AssetVendor;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.HrCalendar;
 import com.xyram.ticketingTool.entity.HrCalendarComment;
-import com.xyram.ticketingTool.entity.JobOpenings;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.HrCalendarService;
 import com.xyram.ticketingTool.util.ExcelUtil;
-import com.xyram.ticketingTool.util.ExcelWriter;
 import com.xyram.ticketingTool.util.HrCalendarTimeZone;
-import com.xyram.ticketingTool.util.ResponseMessages;
 
 @Service
 @Transactional
@@ -554,7 +539,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 		}
 		
 		Page<Map> shceduleList = hrCalendarRepository.getAllMyTeamSchedulesFromCalendarByStatus( currentUser.getUserId(),employeeId, jobId, 
-				 fromDate,  toDate,  status,closed,pageable);
+				 fromDate,  toDate, status,closed,pageable);
 		
 		if(shceduleList.getSize() > 0) {
 			Map content = new HashMap();
@@ -1106,25 +1091,56 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 		
 	}
 
-	@Override
-	public ApiResponse getAllhrCalender(Pageable pageable) {
-		ApiResponse response = new ApiResponse();
-		Page<Map> hrcalender = hrCalendarRepository.getHrcalender(pageable);
 	
-		Map content = new HashMap();
-		content.put("hrcalender", hrcalender);
-		if(content != null) {
-			response.setSuccess(true);
-			response.setContent(content);
-			response.setMessage(ResponseMessages.HRCALENDER_LIST_RETRIVED);
+	
+
+	@Override
+	public ApiResponse getAllhrCalender(Map<String, Object> filter , Pageable pageable) {
+ApiResponse response = new ApiResponse(false);
+
+
+
+		String jobId = filter.containsKey("jobId") ? ((String) filter.get("jobId"))
+				: null;
+		String employeeId = filter.containsKey("employeeId") ? ((String) filter.get("employeeId"))
+				: null;
+		Boolean closed = filter.containsKey("closed") ? ((Boolean) filter.get("closed"))
+					: false;
+		String status = filter.containsKey("status") ? ((String) filter.get("status")).toLowerCase()
+					: null;
+		String fromDate = filter.containsKey("fromDate") ? filter.get("fromDate").toString() : null;
+		String toDate = filter.containsKey("toDate") ? filter.get("toDate").toString() : null;
+
+		Date parsedfromDate = null;
+		Date parsedtoDate = null;
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		
+		if(fromDate != null && toDate != null) {
+			try {
+
+				parsedfromDate = fromDate != null ? dateFormat.parse(fromDate) : null;
+				parsedtoDate = toDate != null ? dateFormat.parse(toDate) : null;
+
+			} catch (ParseException e) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid date format date should be yyyy-MM-dd");
+			}
 		}
-		else {
+		
+		Page<Map> shceduleList = hrCalendarRepository.getAllMyTeamSchedulesFromCalendarByStatusForAdmin( employeeId, jobId, 
+				 fromDate,  toDate, status,closed,pageable);
+		
+		if(shceduleList.getSize() > 0) {
+			Map content = new HashMap();
+			content.put("shceduleList", shceduleList);
+			response.setContent(content);
+			response.setSuccess(true);
+			response.setMessage("List retrieved successfully.");
+		}else {
 			response.setSuccess(false);
-			response.setMessage("Could not retrieve data");
+			response.setMessage("List is empty.");
 		}
 		return response;
 	}
-
 	@Override
 	public ApiResponse searchhrCalender(String searchString) {
 		ApiResponse response = new ApiResponse();

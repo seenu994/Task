@@ -1,5 +1,6 @@
 package com.xyram.ticketingTool.Repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +13,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.xyram.ticketingTool.entity.HrCalendar;
+import com.xyram.ticketingTool.enumType.AssetStatus;
 
 @Repository
 @Transactional
@@ -89,6 +91,26 @@ public interface HrCalendarRepository extends JpaRepository<HrCalendar, String>{
 	Page<Map> getAllMyTeamSchedulesFromCalendarByStatus(String userId,String employeeId,String jobId,
 			String fromDate, String toDate, String status,Boolean closed,Pageable pageable);
 	
+
+@Query("Select distinct new map( a.Id as id,a.candidateMobile as mobile,a.candidateName as name,a.status as status, "
+			+ "a.createdAt as createdAt, a.scheduleDate as scheduleDate, a.searchedSource as searchedSource, "
+			+ "a.jobId as jobId,jo.jobTitle as jobTitle,a.createdBy as createdBy, a.closed as closed,a.callCount as callCount,a.reportingTo as reportingTo, "
+			+ "concat(ee.firstName,' ', ee.lastName) as scheduledBy, "
+			+ "a.createdAt as createdAt,a.lastUpdatedAt as lastUpdatedAt) from HrCalendar a "
+			+ "left join Employee ee on a.createdBy = ee.userCredientials.id "
+			+ "left join JobOpenings jo on a.jobId = jo.id  where "
+			+ "(:toDate is null OR Date(a.scheduleDate) <= STR_TO_DATE(:toDate, '%Y-%m-%d')) AND "
+			+ "(:fromDate is null OR Date(a.scheduleDate) >= STR_TO_DATE(:fromDate, '%Y-%m-%d')) AND "
+			+ "(:employeeId is null OR a.createdBy=:employeeId) AND "
+			
+			+ "(:status is null OR lower(a.status)=:status) AND "
+			+ "(:jobId is null OR a.jobId=:jobId) AND "
+			
+			+ "(:closed is null OR a.closed=:closed) ORDER BY a.scheduleDate ASC")
+	Page<Map> getAllMyTeamSchedulesFromCalendarByStatusForAdmin(String employeeId,String jobId,
+			String fromDate, String toDate, String status,Boolean closed,Pageable pageable);
+	
+	
 	@Query("Select distinct new map(a.candidateName as candidateName,a.status as status,"
 			+ "date(CONVERT_TZ(a.scheduleDate,'+00:00','userZone')) as time, a.scheduleDate as scheduleDate, a.searchedSource as searchedSource,"
 			+ "a.closed as closed, jo.jobCode as jobCode, jo.jobTitle as jobTitle) from HrCalendar a left join JobOpenings jo on a.jobId = jo.id where "
@@ -121,10 +143,7 @@ public interface HrCalendarRepository extends JpaRepository<HrCalendar, String>{
 	Map getScheduleById(String scheduleId);
 	
 	
-	@Query("Select distinct new map(a.Id as id, a.candidateMobile as candidateMobile, a.candidateName as candidateName,"
-			+ "a.scheduleDate as scheduleDate, a.searchedSource as searchedSource, a.jobId as jobId,a.status as status,a.closed as closed,"
-			+ "a.callCount as callCount,a.reportingTo as reportingTo,a.is_scheduled as is_scheduled) from HrCalendar a ")
-	Page<Map> getHrcalender(Pageable pageable);
+	
 	
 	
 	@Query("Select distinct new map( a.Id as id,a.candidateMobile as mobile,a.candidateName as name,a.status as status, "
@@ -136,10 +155,40 @@ public interface HrCalendarRepository extends JpaRepository<HrCalendar, String>{
 			+ "or a.candidateMobile like %:searchString% "
 			+ "or lower(a.candidateName) like %:searchString% "
 			+ "or lower(jo.jobTitle) like %:searchString%) "
+			+"OR a.candidateName like %:searchString% "
+			+"OR a.jobId like %:searchString% "
 			+ "ORDER BY a.scheduleDate ASC")	 
 			
+List<Map> searchhrCalender(String userId, String searchString);
+	
+	
 
-	List<Map> searchhrCalender(String userId, String searchString);
+	/*@Query("Select distinct new map( a.Id as id,a.candidateMobile as mobile,a.candidateName as name,a.status as status, "
+			+ "a.createdAt as createdAt,a.createdBy as createdBy,a.scheduleDate as scheduleDate, a.searchedSource as searchedSource, "
+			+ "a.jobId as jobId,jo.jobTitle as jobTitle, a.closed as closed,a.callCount as callCount,a.reportingTo as reportingTo, "
+			+ "a.createdAt as createdAt,a.lastUpdatedAt as lastUpdatedAt) from HrCalendar a "
+			+ "left join JobOpenings jo on a.jobId = jo.id where  "
+			+ "(:toDate is null OR Date(a.scheduleDate) <= STR_TO_DATE(:toDate, '%Y-%m-%d')) AND "
+			+ "(:fromDate is null OR Date(a.scheduleDate) >= STR_TO_DATE(:fromDate, '%Y-%m-%d')) AND "
+			+ "(:status is null OR lower(a.status)=:status) AND "
+			+ "(:jobId is null OR a.jobId=:jobId) AND "
+			+ "(:closed is null OR a.closed=:closed) ORDER BY a.scheduleDate ASC")
+	Page<Map> getAllHrCalender(String jobId, String fromDate,String searchString, String toDate,
+			String status, Boolean closed, Pageable pageable);*/
+
+	/*@Query("Select distinct new map( a.Id as id,a.candidateMobile as mobile,a.candidateName as name,a.status as status, "
+			+ "a.createdAt as createdAt,a.createdBy as createdBy,a.scheduleDate as scheduleDate, a.searchedSource as searchedSource, "
+			+ "a.jobId as jobId,jo.jobTitle as jobTitle, a.closed as closed,a.callCount as callCount,a.reportingTo as reportingTo, "
+			+ "a.createdAt as createdAt,a.lastUpdatedAt as lastUpdatedAt) from HrCalendar a "
+			+ "left join JobOpenings jo on a.jobId = jo.id where a.createdBy = :userId and "
+			+ "(:toDate is null OR Date(a.scheduleDate) <= STR_TO_DATE(:toDate, '%Y-%m-%d')) AND "
+			+ "(:fromDate is null OR Date(a.scheduleDate) >= STR_TO_DATE(:fromDate, '%Y-%m-%d')) AND "
+			+ "(:status is null OR lower(a.status)=:status) AND "
+			+ "(:jobId is null OR a.jobId=:jobId) AND "
+			+ "(:closed is null OR a.closed=:closed) ORDER BY a.scheduleDate ASC")
+	
+	Page<Map> getAllHrCalender(String userId, String jobId, String fromDate, Date toDate, AssetStatus status1,
+			Boolean closed, Pageable pageable);*/
 
 	
 
