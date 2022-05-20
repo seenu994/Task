@@ -429,6 +429,8 @@ public interface ResponseMessages {
 
 	String Pro_name_len = "Project name should be minimum 3 characters";
 
+	String STATUS_UPDATED_SUCCESSFULLY = "asset issue status updated successfully";
+
 //	String ANNOUNCEMENT_STATUS_CHANGED = "Announcement status changed successfully";
 //	String ANNOUNCEMENT_STATUS_NOT_CHANGED = "Announcement status not changed";
 //	String ANNOUNCEMENT_DELETED = "Announcement deleted successfully";

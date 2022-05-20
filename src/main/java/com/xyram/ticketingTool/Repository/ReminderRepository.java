@@ -16,9 +16,29 @@ import org.springframework.stereotype.Repository;
 import com.xyram.ticketingTool.entity.Articles;
 import com.xyram.ticketingTool.entity.Notes;
 import com.xyram.ticketingTool.entity.Reminder;
+import com.xyram.ticketingTool.entity.ReminderLog;
 
 @Repository
 public interface ReminderRepository extends JpaRepository<Reminder, String> {
+	@Query(value="SELECT r.id, r.updated_by, r.created_at, r.created_by, r.last_updated_at, r.notify_members, r.reminder_date, r.reminder_time, r.title, r.user_id, r.user_name, "
+			+ "TIMESTAMPDIFF(MINUTE, CONVERT_TZ(CURRENT_TIMESTAMP(),'+00:00', '+05:30'), CONVERT_TZ(concat(reminder_date, ' ', reminder_time),'+00:00', '+05:30')) DiffDTTM "
+			+ "from reminders r "
+			+ "where TIMESTAMPDIFF(MINUTE, CONVERT_TZ(CURRENT_TIMESTAMP(),'+00:00', '+05:30'), CONVERT_TZ(concat(reminder_date, ' ', reminder_time),'+00:00', '+05:30')) between 5 and 1",nativeQuery = true)
+	List<Reminder> getRemindersWithinFiveMin();
+	
+	
+	@Query(value="SELECT r.id, r.updated_by, r.created_at, r.created_by, r.last_updated_at, r.notify_members, r.reminder_date, r.reminder_time, r.title, r.user_id, r.user_name, "
+			+ "TIMESTAMPDIFF(MINUTE, CONVERT_TZ(CURRENT_TIMESTAMP(),'+00:00', '+05:30'), CONVERT_TZ(concat(reminder_date, ' ', reminder_time),'+00:00', '+05:30')) DiffDTTM "
+			+ "from reminders r "
+			+ "where TIMESTAMPDIFF(MINUTE, CONVERT_TZ(CURRENT_TIMESTAMP(),'+00:00', '+05:30'), CONVERT_TZ(concat(reminder_date, ' ', reminder_time),'+00:00', '+05:30')) between 10 and 6",nativeQuery = true)
+	List<Reminder> getRemindersWithinTenMin();
+	
+	@Query(value="SELECT r.id, r.updated_by, r.created_at, r.created_by, r.last_updated_at, r.notify_members, r.reminder_date, r.reminder_time, r.title, r.user_id, r.user_name, "
+			+ "TIMESTAMPDIFF(MINUTE, CONVERT_TZ(CURRENT_TIMESTAMP(),'+00:00', '+05:30'), CONVERT_TZ(concat(reminder_date, ' ', reminder_time),'+00:00', '+05:30')) DiffDTTM "
+			+ "from reminders r "
+			+ "where TIMESTAMPDIFF(MINUTE, CONVERT_TZ(CURRENT_TIMESTAMP(),'+00:00', '+05:30'), CONVERT_TZ(concat(reminder_date, ' ', reminder_time),'+00:00', '+05:30')) between 15 and 11",nativeQuery = true)
+	List<Reminder> getRemindersWithinFifteenMin();
+	
 	@Query("Select distinct new map( r.reminderId as reminderId,r.title as title,r.reminderDate as reminderDate,r.reminderTime as reminderTime,"
 			+ " r.userName as userName, r.createdAt as createdAt,r.lastUpdatedAt as lastUpdatedAt,"
 			+ " r.UpdatedBy as UpdatedBy, r.createdBy as createdBy) from Reminder r" + " ORDER BY r.createdAt DESC")
@@ -36,4 +56,5 @@ public interface ReminderRepository extends JpaRepository<Reminder, String> {
 	@Modifying
 	@Query("Delete from Reminder r where r.reminderId=?1")
 	void deleteReminder(String id);
+
 }
