@@ -107,7 +107,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 					Date toDateTime = new Date();
 					long diff = schedule.getScheduleDate().getTime() - toDateTime.getTime();//as given
 					if(schedule.getScheduleDate().getDate() == toDateTime.getDate()) {
-						long diffMinutes = diff / (60 * 1000) ; 
+						long diffMinutes = diff / (60 * 1000) % 60; 
 						if(diffMinutes < 15) {
 							response.setSuccess(false);
 							response.setMessage("A future date is permitted, and minimum 15 minutes prior to the current time is required.");
@@ -181,7 +181,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 					long diff = schedule.getScheduleDate().getTime() - toDateTime.getTime();//as given
 
 					if(schedule.getScheduleDate().getDate() == toDateTime.getDate()) {
-						long diffMinutes = diff / (60 * 1000) ; 
+						long diffMinutes = diff / (60 * 1000) % 60; 
 						if(diffMinutes < 15) {
 							response.setSuccess(false);
 							response.setMessage("A future date is permitted, and minimum 15 minutes prior to the current time is required.");
@@ -258,7 +258,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 				long diff = scheduleDate.getTime() - toDateTime.getTime();//as given
 
 				if(scheduleDate.getDate() == toDateTime.getDate()) {
-					long diffMinutes = diff / (60 * 1000) ; 
+					long diffMinutes = diff / (60 * 1000) % 60; 
 					if(diffMinutes < 15) {
 						response.setSuccess(false);
 						response.setMessage("A future date is permitted, and minimum 15 minutes prior to the current time is required. "+scheduleObj.getScheduleDate().getDate()+"-"+toDateTime.getDate());
@@ -1111,7 +1111,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 
 	@Override
 	public ApiResponse getAllhrCalender(Map<String, Object> filter , Pageable pageable) {
-ApiResponse response = new ApiResponse(false);
+		ApiResponse response = new ApiResponse(false);
 		
 		String jobId = filter.containsKey("jobId") ? ((String) filter.get("jobId"))
 				: null;
