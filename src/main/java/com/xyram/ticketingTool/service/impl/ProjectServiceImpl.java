@@ -198,12 +198,12 @@ public class ProjectServiceImpl implements ProjectService {
 //		return projectRepository.findById(projectId).map(project -> {
 //			return project;
 //		}).orElseThrow(() -> new ResourceNotFoundException("project not found for id: " + projectId));
-		
-		Projects project= projectRepository.getProjecById(projectId);
-		if(project == null) {
+
+		Projects project = projectRepository.getProjecById(projectId);
+		if (project == null) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.PROJECT_ID_VALID);
-		}else {
+		} else {
 			Map content = new HashMap<>();
 			content.put("Project", project);
 			response.setContent(content);
@@ -216,50 +216,50 @@ public class ProjectServiceImpl implements ProjectService {
 	@Override
 	public ApiResponse editProject(Projects projectRequest) {
 		ApiResponse response = new ApiResponse(false);
-		
-		if(projectRequest.getpId() == null || projectRequest.getpId().equals("")) {
+
+		if (projectRequest.getpId() == null || projectRequest.getpId().equals("")) {
 			response.setSuccess(false);
 			response.setMessage("Project ID is Mandatory");
-		}else {
+		} else {
 			Projects projectid = projectRepository.getById(projectRequest.getpId());
 			if (projectid == null) {
-			
+
 				response.setMessage(ResponseMessages.PROJECT_ID_VALID);
 				response.setSuccess(false);
 				response.setContent(null);
-			
-		}
-		
-		response = validateProject(projectRequest);
-		if (response.getMessage() != null && response.getMessage() != "") {
-			return response;
-		}
-		//ApiResponse response = validateClientIdProjectId(projectRequest);
-		//if (response.isSuccess()) {
+
+			}
+
+			response = validateProject(projectRequest);
+			if (response.getMessage() != null && response.getMessage() != "") {
+				return response;
+			}
+			// ApiResponse response = validateClientIdProjectId(projectRequest);
+			// if (response.isSuccess()) {
 
 //			if (projectRequest != null) {
-				projectRequest.setpId(projectRequest.getpId());
-				projectRequest.setUpdatedBy(projectRequest.getUpdatedBy());
-				projectRequest.setLastUpdatedAt(new Date());
-				projectRequest.setInHouse(projectRequest.getInHouse());
-				projectRequest.setProjectDescritpion(projectRequest.getProjectDescritpion());
-				projectRequest.setProjectName(projectRequest.getProjectName());
-				projectRequest.setStatus(projectRequest.getStatus());
-				// projectRepository.save(projectRequest);
-				Projects projetAdded = projectRepository.save(projectRequest);
+			projectRequest.setpId(projectRequest.getpId());
+			projectRequest.setUpdatedBy(projectRequest.getUpdatedBy());
+			projectRequest.setLastUpdatedAt(new Date());
+			projectRequest.setInHouse(projectRequest.getInHouse());
+			projectRequest.setProjectDescritpion(projectRequest.getProjectDescritpion());
+			projectRequest.setProjectName(projectRequest.getProjectName());
+			projectRequest.setStatus(projectRequest.getStatus());
+			// projectRepository.save(projectRequest);
+			Projects projetAdded = projectRepository.save(projectRequest);
 
-				response.setSuccess(true);
-				response.setMessage(ResponseMessages.PROJECT_EDIT);
-				Map content = new HashMap();
-				content.put("projectId", projetAdded.getpId());
-				response.setContent(content);
-			} 
+			response.setSuccess(true);
+			response.setMessage(ResponseMessages.PROJECT_EDIT);
+			Map content = new HashMap();
+			content.put("projectId", projetAdded.getpId());
+			response.setContent(content);
+		}
 //			else {
 //				response.setSuccess(false);
 //				response.setMessage(ResponseMessages.PROJECT_ID_VALID);
 //				response.setContent(null);
 //			}
-		//}
+		// }
 		return response;
 	}
 
