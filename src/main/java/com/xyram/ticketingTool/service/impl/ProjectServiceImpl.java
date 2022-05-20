@@ -56,89 +56,77 @@ public class ProjectServiceImpl implements ProjectService {
 
 	@Autowired
 	ProjectFeatureService projectFeatureService;
-	
+
 	@Autowired
 	ClientRepository clientRepository;
 
 	@Override
 	public ApiResponse addproject(Projects project) {
-		
-//		 response = validateProject(project);
-		ApiResponse response = validateClientId(project);
-		if (response.isSuccess()) {
-			// projectRepository.save(project);
-			String inHouse = project.getInHouse();
-			if (!inHouse.equals("") && !inHouse.equals("null")) {
-				if (!inHouse.equalsIgnoreCase("Yes") && !inHouse.equalsIgnoreCase("NO"))
-					project.setInHouse("No");
-			} else
-				project.setInHouse("No");
-
-			project.setCreatedAt(new Date());
-			project.setCreatedBy(userDetail.getUserId());
-			project.setLastUpdatedAt(new Date());
-			project.setUpdatedBy(userDetail.getUserId());
-			// System.out.println("project.getCreatedBy - " + project.getCreatedBy());
-			// System.out.println("userDetail.getUserId() - " + userDetail.getUserId());
-			Projects projetAdded = projectRepository.save(project);
-
-			if (projetAdded != null) {
-				List<Feature> features = featureRepository.getDefaultFeatures();
-
-				features.forEach(feature -> {
-					ProjectFeature projectFeature = new ProjectFeature();
-					projectFeature.setFeatureId(feature.getFeatureId());
-					projectFeature.setProjectId(projetAdded.getpId());
-					projectFeatureService.addProjectFeature(projectFeature);
-				});
-			}
-
-			response.setSuccess(true);
-			response.setMessage(ResponseMessages.PROJECT_ADDED);
-			Map<String, String> content = new HashMap<String, String>();
-			content.put("projectId", projetAdded.getpId());
-			response.setContent(content);
-
+		ApiResponse response = new ApiResponse(false);
+		response = validateProject(project);
+		if (response.getMessage() != null && response.getMessage() != "") {
+			return response;
 		}
+		// if (response.isSuccess()) {
+		// projectRepository.save(project);
+		String inHouse = project.getInHouse();
+		if (!inHouse.equals("") && !inHouse.equals("null")) {
+			if (!inHouse.equalsIgnoreCase("Yes") && !inHouse.equalsIgnoreCase("NO"))
+				project.setInHouse("No");
+		} else
+			project.setInHouse("No");
+
+		project.setCreatedAt(new Date());
+		project.setCreatedBy(userDetail.getUserId());
+		project.setLastUpdatedAt(new Date());
+		project.setUpdatedBy(userDetail.getUserId());
+		Projects projetAdded = projectRepository.save(project);
+
+		if (projetAdded != null) {
+			List<Feature> features = featureRepository.getDefaultFeatures();
+
+			features.forEach(feature -> {
+				ProjectFeature projectFeature = new ProjectFeature();
+				projectFeature.setFeatureId(feature.getFeatureId());
+				projectFeature.setProjectId(projetAdded.getpId());
+				projectFeatureService.addProjectFeature(projectFeature);
+			});
+		}
+
+		response.setSuccess(true);
+		response.setMessage(ResponseMessages.PROJECT_ADDED);
+		Map<String, String> content = new HashMap<String, String>();
+		content.put("projectId", projetAdded.getpId());
+		response.setContent(content);
+
+		// }
 		return response;
 	}
 
-	private ApiResponse validateClientId(Projects projects) {
-		ApiResponse response = new ApiResponse(false);
-		
-		if(projects.getClientId() != null &&  projects.getClientId().length()>0) {
-			Client obj = clientRepository.getClientById(projects.getClientId());
-			if(obj == null) {
-				response.setSuccess(false);
-				response.setMessage("client is not valid");
-			}
-		}
-		
-//		if (projects.getClientId() != null) {
-//			response.setMessage("success");
-//			response.setSuccess(true);
-//			response.setContent(null);
-//		} else {
-//			response.setMessage(ResponseMessages.ClIENT_ID_VALID);
-//			response.setSuccess(false);
-//			response.setContent(null);
-//		}
+	private ApiResponse validateProject(Projects projects) {
+		ApiResponse response = new ApiResponse(true);
+
 		if (projects.getProjectName() == null || projects.getProjectName().equals("")) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.Pro_Name_Man);
-		}else {
-			if(projects.getProjectName().length()<3) {
-				response.setSuccess(false);
-				response.setMessage(ResponseMessages.Pro_name_len);
-			}
+		} else if (projects.getProjectName().length() < 3) {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.Pro_name_len);
 		}
+
 		if (projects.getProjectDescritpion() == null || projects.getProjectDescritpion().equals("")) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.Pro_desc_man);
-		}else {
-			if (projects.getProjectDescritpion().length() < 15 || projects.getProjectDescritpion().length() > 5000) {
+		} else if (projects.getProjectDescritpion().length() < 15 || projects.getProjectDescritpion().length() > 5000) {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.Pro_desc_len);
+		}
+
+		if (projects.getClientId() != null && projects.getClientId().length() > 0) {
+			Client obj = clientRepository.getClientById(projects.getClientId());
+			if (obj == null) {
 				response.setSuccess(false);
-				response.setMessage(ResponseMessages.Pro_desc_len);
+				response.setMessage(ResponseMessages.ClIENT_ID_VALID);
 			}
 		}
 		return response;
@@ -203,21 +191,51 @@ public class ProjectServiceImpl implements ProjectService {
 		}
 	}
 
-	public Projects getProjectById(String projectId) {
+	@Override
+	public ApiResponse getProjectDetailsById(String projectId) {
 
-		return projectRepository.findById(projectId).map(project -> {
-
-			return project;
-		}).orElseThrow(() -> new ResourceNotFoundException("project not found for id: " + projectId));
+		ApiResponse response = new ApiResponse(false);
+//		return projectRepository.findById(projectId).map(project -> {
+//			return project;
+//		}).orElseThrow(() -> new ResourceNotFoundException("project not found for id: " + projectId));
+		
+		Projects project= projectRepository.getProjecById(projectId);
+		if(project == null) {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.PROJECT_ID_VALID);
+		}else {
+			Map content = new HashMap<>();
+			content.put("Project", project);
+			response.setContent(content);
+		}
+		return response;
 	}
 
 	@Override
-	public ApiResponse editEmployee(Projects projectRequest) {
+	public ApiResponse editProject(Projects projectRequest) {
+		ApiResponse response = new ApiResponse(false);
+		
+		if(projectRequest.getpId() == null || projectRequest.getpId().equals("")) {
+			response.setSuccess(false);
+			response.setMessage("Project ID is Mandatory");
+		}else {
+			Projects projectid = projectRepository.getById(projectRequest.getpId());
+			if (projectid == null) {
+			
+				response.setMessage(ResponseMessages.PROJECT_ID_VALID);
+				response.setSuccess(false);
+				response.setContent(null);
+			
+		}
+		
+		response = validateProject(projectRequest);
+		if (response.getMessage() != null && response.getMessage() != "") {
+			return response;
+		}
+		//ApiResponse response = validateClientIdProjectId(projectRequest);
+		//if (response.isSuccess()) {
 
-		ApiResponse response = validateClientIdProjectId(projectRequest);
-		if (response.isSuccess()) {
-
-			if (projectRequest != null) {
+//			if (projectRequest != null) {
 				projectRequest.setpId(projectRequest.getpId());
 				projectRequest.setUpdatedBy(projectRequest.getUpdatedBy());
 				projectRequest.setLastUpdatedAt(new Date());
@@ -233,12 +251,13 @@ public class ProjectServiceImpl implements ProjectService {
 				Map content = new HashMap();
 				content.put("projectId", projetAdded.getpId());
 				response.setContent(content);
-			} else {
-				response.setSuccess(false);
-				response.setMessage(ResponseMessages.PROJECT_ID_VALID);
-				response.setContent(null);
-			}
-		}
+			} 
+//			else {
+//				response.setSuccess(false);
+//				response.setMessage(ResponseMessages.PROJECT_ID_VALID);
+//				response.setContent(null);
+//			}
+		//}
 		return response;
 	}
 
@@ -412,8 +431,6 @@ public class ProjectServiceImpl implements ProjectService {
 				projects.setStatus(projectStatus);
 				projectRepository.save(projects);
 
-				// Employee employeere=new Employee();z
-
 				response.setSuccess(true);
 				response.setMessage(ResponseMessages.STATUS_UPDATE);
 				response.setContent(null);
@@ -427,25 +444,4 @@ public class ProjectServiceImpl implements ProjectService {
 		return response;
 	}
 
-//	public ApiResponse validateProject(Projects projects) {
-//		ApiResponse response = new ApiResponse();
-//		if (projects.getProjectName() == null || projects.getProjectName().equals("")) {
-//			response.setSuccess(false);
-//			response.setMessage(ResponseMessages.Pro_Name_Man);
-//		}
-//		if(projects.getProjectName().length()<3) {
-//			response.setSuccess(false);
-//			response.setMessage(ResponseMessages.Pro_name_len);
-//		}
-//		if (projects.getProjectDescritpion() == null || projects.getProjectDescritpion().equals("")) {
-//			response.setSuccess(false);
-//			response.setMessage(ResponseMessages.Pro_desc_man);
-//		}
-//
-//		if (projects.getProjectDescritpion().length() < 15 || projects.getProjectDescritpion().length() > 5000) {
-//			response.setSuccess(false);
-//			response.setMessage(ResponseMessages.Pro_desc_len);
-//		}
-//		return response;
-//	}
 }

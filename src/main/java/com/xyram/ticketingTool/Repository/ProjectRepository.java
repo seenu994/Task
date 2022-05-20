@@ -19,8 +19,8 @@ public interface ProjectRepository extends JpaRepository<Projects, String> {
 			+ "e.status as status) from Projects e where e.status != 'INACTIVE'")
 	Page<Map> getAllProjectLsit(Pageable pageable);
 
-	@Query("Select distinct p from Projects p where p.pId=:id and p.status != 'INACTIVE'")
-	Projects getProjecById(String id);
+	@Query("Select distinct p from Projects p where p.pId = :projectId")
+	Projects getProjecById(String projectId);
 
 	@Query("Select distinct new map(p.pId as id, p.projectName as PName, p.projectDescritpion as projectDescritpion, p.clientId as clientId, c.clientName as clientname, "
 			+ "p.inHouse as inHouse, p.status as status,p.createdAt as createdAt) from Projects  p "
@@ -84,5 +84,8 @@ public interface ProjectRepository extends JpaRepository<Projects, String> {
 	@Query("Select distinct new map(p.pId as id, p.projectName as PName, p.projectDescritpion as projectDescritpion, p.clientId as clientId, c.clientName as clientname, p.createdAt as createdDate, "
 			+ "p.inHouse as inHouse, p.status as status,p.createdAt as createdAt) from Projects p join Client c ON p.clientId = c.Id where p.projectName like %:searchString% ORDER BY p.projectName,p.createdAt DESC ")
 	List<Map> getAllProjectsForTickets(String searchString);
+	
+//	@Query("Select p from Projects p where p.pId =:projectID")
+//	Projects getByProId(Projects projectID);
 
 }
