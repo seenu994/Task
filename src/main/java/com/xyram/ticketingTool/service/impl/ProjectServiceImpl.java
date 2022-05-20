@@ -62,9 +62,9 @@ public class ProjectServiceImpl implements ProjectService {
 
 	@Override
 	public ApiResponse addproject(Projects project) {
-		ApiResponse response = new ApiResponse(false);
+		ApiResponse response;
 		response = validateProject(project);
-		if (response.getMessage() != null && response.getMessage() != "") {
+		if (!response.isSuccess()) {
 			return response;
 		}
 		// if (response.isSuccess()) {
@@ -109,17 +109,21 @@ public class ProjectServiceImpl implements ProjectService {
 		if (projects.getProjectName() == null || projects.getProjectName().equals("")) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.Pro_Name_Man);
+			return response;
 		} else if (projects.getProjectName().length() < 3) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.Pro_name_len);
+			return response;
 		}
 
 		if (projects.getProjectDescritpion() == null || projects.getProjectDescritpion().equals("")) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.Pro_desc_man);
+			return response;
 		} else if (projects.getProjectDescritpion().length() < 15 || projects.getProjectDescritpion().length() > 5000) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.Pro_desc_len);
+			return response;
 		}
 
 		if (projects.getClientId() != null && projects.getClientId().length() > 0) {
@@ -127,8 +131,10 @@ public class ProjectServiceImpl implements ProjectService {
 			if (obj == null) {
 				response.setSuccess(false);
 				response.setMessage(ResponseMessages.ClIENT_ID_VALID);
+				return response;
 			}
 		}
+		response.setSuccess(true);
 		return response;
 	}
 
