@@ -49,6 +49,7 @@ import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.HrCalendar;
 import com.xyram.ticketingTool.entity.HrCalendarComment;
 import com.xyram.ticketingTool.entity.JobOpenings;
+import com.xyram.ticketingTool.enumType.AssetStatus;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.HrCalendarService;
 import com.xyram.ticketingTool.util.ExcelUtil;
@@ -554,7 +555,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 		}
 		
 		Page<Map> shceduleList = hrCalendarRepository.getAllMyTeamSchedulesFromCalendarByStatus( currentUser.getUserId(),employeeId, jobId, 
-				 fromDate,  toDate,  status,closed,pageable);
+				 fromDate,  toDate, status,closed,pageable);
 		
 		if(shceduleList.getSize() > 0) {
 			Map content = new HashMap();
@@ -1111,13 +1112,14 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 
 	@Override
 	public ApiResponse getAllhrCalender(Map<String, Object> filter , Pageable pageable) {
-		ApiResponse response = new ApiResponse();
-		
-		String searchString = filter.containsKey("searchString") ? ((String) filter.get("searchString"))
-				: null;
+ApiResponse response = new ApiResponse(false);
+
+
+
 		String jobId = filter.containsKey("jobId") ? ((String) filter.get("jobId"))
 				: null;
-		
+		String employeeId = filter.containsKey("employeeId") ? ((String) filter.get("employeeId"))
+				: null;
 		Boolean closed = filter.containsKey("closed") ? ((Boolean) filter.get("closed"))
 					: false;
 		String status = filter.containsKey("status") ? ((String) filter.get("status")).toLowerCase()
@@ -1140,8 +1142,8 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 			}
 		}
 		
-		Page<Map> shceduleList = hrCalendarRepository.getAllHrCalender(  jobId, 
-				 fromDate, searchString,  toDate,  status,closed,pageable);
+		Page<Map> shceduleList = hrCalendarRepository.getAllMyTeamSchedulesFromCalendarByStatusForAdmin( employeeId, jobId, 
+				 fromDate,  toDate, status,closed,pageable);
 		
 		if(shceduleList.getSize() > 0) {
 			Map content = new HashMap();
@@ -1155,7 +1157,6 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 		}
 		return response;
 	}
-
 	@Override
 	public ApiResponse searchhrCalender(String searchString) {
 		ApiResponse response = new ApiResponse();
