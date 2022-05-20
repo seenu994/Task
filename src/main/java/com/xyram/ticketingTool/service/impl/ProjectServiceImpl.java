@@ -207,6 +207,8 @@ public class ProjectServiceImpl implements ProjectService {
 			Map content = new HashMap<>();
 			content.put("Project", project);
 			response.setContent(content);
+			response.setSuccess(true);
+			response.setMessage("Retrieved successfully");
 		}
 		return response;
 	}
