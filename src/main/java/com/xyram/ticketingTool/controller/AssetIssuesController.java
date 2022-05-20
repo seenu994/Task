@@ -82,7 +82,7 @@ public class AssetIssuesController
 			AuthConstants.INFRA_ADMIN_BASEPATH + "/getAssetIssuesById/{assetIssueId}"})
 	public ApiResponse getAssetIssuesById(@PathVariable String assetIssueId)
 	{
-		logger.info("received request to edit assetIssues");
+		logger.info("received request to get assetIssues");
 		return assetIssuesService.getAssetIssuesById(assetIssueId);
 	}
 	
@@ -101,7 +101,7 @@ public class AssetIssuesController
 			AuthConstants.INFRA_ADMIN_BASEPATH + "/getAssetIssueByAssetId/{assetId}"})
 	public ApiResponse getAssetById1(@PathVariable String assetId)
 	{
-		logger.info("received request to edit assetIssues");
+		logger.info("received request to get assetIssues by assetId");
 		return assetIssuesService.getAssetById1(assetId);
 	}
 	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/changeAssetIssueStatus/{assetIssueId}/{assetIssueStatus}", 
