@@ -725,7 +725,7 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 	public ApiResponse getAssetById1(String assetId) {
 		
 		ApiResponse response = new ApiResponse();
-		List<AssetIssues> asset = assetIssuesRepository.getAllAssetById1(assetId);
+		List<Map> asset = assetIssuesRepository.getAllAssetById1(assetId);
 		Map content = new HashMap();
 		content.put("asset", asset);
 		if(content != null) {

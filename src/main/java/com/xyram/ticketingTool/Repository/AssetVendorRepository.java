@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import com.xyram.ticketingTool.entity.Asset;
 import com.xyram.ticketingTool.entity.AssetVendor;
+import com.xyram.ticketingTool.entity.Designation;
 
 @Repository
 
@@ -51,7 +52,13 @@ public interface AssetVendorRepository extends JpaRepository<AssetVendor, String
 	Page<Map> getAllVendor(String vendorId, String country, String city, Pageable peageble);
 
 @Query("Select distinct p from AssetVendor p where p.vendorName=:vendorName")
-	List<AssetVendor> searchVendorName(String vendorName);
+List<AssetVendor> searchVendorName(String vendorName);
+
+
+@Query("select p from AssetVendor p where p.vendorId =:vendorName")
+AssetVendor getVendorName(String vendorName);
+
+
 
 	@Query("select distinct p from AssetVendor p where"
 			+ "( p.vendorName LIKE %:searchString% OR p.vendorId like  %:searchString%  OR "
@@ -64,14 +71,7 @@ public interface AssetVendorRepository extends JpaRepository<AssetVendor, String
 //    + "(:searchString is null OR p.vendorName LIKE %:searchString% OR p.vendorId LIKE  %:searchString%")
 	AssetVendor searchAssetVendor(String searchString);
 
-//@Query("Select distinct new map(e.eId as id, e.firstName as firstName, e.lastName as lastName) from Employee e "
-//		+ "where e.status = 'ACTIVE' and e.email like %:searchString% ")
 
-//@Query("Select new map(e.eId as id,e.email as email,e.firstName as firstName,e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId, "
-//		+ "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,d.designationName as designationName,e.location as location,e.position as position,e.wings as wings,e.profileUrl as profileUrl) from Employee e "
-//		+ "left join e.wings w JOIN Role r On e.roleId = r.Id JOIN  Designation d On e.designationId=d.Id where r.Id !='R1' and (e.email like %:searchString% or e.firstName like %:searchString% or e.middleName like %:searchString% or e.lastName like %:searchString% or d.designationName like %:searchString%  or e.id like %:searchString% "
-//		+ "  or e.mobileNumber like %:searchString%  or w.wingName like %:searchString% or e.location like %:searchString%  or e.position like %:searchString%)")
-//List<Map> searchEmployee(@Param("searchString") String searchString);
 
 //	@Query("Select distinct p from AssetVendor p where p.vendorId=:vendorId")
 //	AssetVendor getVendorById1(String vendorId);
