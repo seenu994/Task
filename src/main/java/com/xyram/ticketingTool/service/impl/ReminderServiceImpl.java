@@ -76,6 +76,7 @@ public class ReminderServiceImpl implements ReminderService {
 			reminder.setUpdatedBy(currentUser.getUserId());
 			reminder.setCreatedAt(new Date());
 			reminder.setLastUpdatedAt(new Date());
+			reminder.setNotifyMembers(reminder.getNotifyMembers());
 			reminder.setIsHost(true);
 			Reminder reminderNew = reminderRepository.save(reminder);
 			
@@ -89,18 +90,19 @@ public class ReminderServiceImpl implements ReminderService {
 
 				if (user != null) {
 					
-					Reminder teamReminders = new Reminder();
-					teamReminders.setCreatedBy(currentUser.getUserId());
-					teamReminders.setUserId(user.getId());
-					teamReminders.setUserName(currentUser.getFirstName());
-					teamReminders.setUpdatedBy(currentUser.getUserId());
-					teamReminders.setCreatedAt(new Date());
-					teamReminders.setLastUpdatedAt(new Date());
-					teamReminders.setIsHost(false);
+//					Reason for commenting code: Error coming while creating reminder, notify_members cannot be null
 					
-					teamReminders.setUserId(user.getId());
-					teamReminders.setTitle(reminder.getTitle());
-					reminderRepository.save(teamReminders);
+//					Reminder teamReminders = new Reminder();
+//					teamReminders.setCreatedBy(currentUser.getUserId());
+//					teamReminders.setUserId(user.getId());
+//					teamReminders.setUserName(currentUser.getFirstName());
+//					teamReminders.setUpdatedBy(currentUser.getUserId());
+//					teamReminders.setCreatedAt(new Date());
+//					teamReminders.setLastUpdatedAt(new Date());
+//					teamReminders.setIsHost(false);
+//					teamReminders.setUserId(user.getId());
+//					teamReminders.setTitle(reminder.getTitle());
+//					reminderRepository.save(teamReminders);
 
 					
 					ReminderLog reminderLog = new ReminderLog();
