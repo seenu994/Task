@@ -214,7 +214,7 @@ public class HrCalendarController {
 	
 	@GetMapping(value = {AuthConstants.HR_ADMIN_BASEPATH + "/getAllhrCalender",
 	   		  AuthConstants.HR_BASEPATH + "/getAllhrCalender", AuthConstants.ADMIN_BASEPATH + "/getAllhrCalender"})
-	     public ApiResponse getAllhrCalender(@RequestParam Map<String, Object> filter, Pageable pageable) {
+	     public ApiResponse getAllhrCalender(@RequestBody Map<String, Object>filter, Pageable pageable) {
 	 	        logger.info("Received request to get all calender");
 	 			return hrCalrendarService.getAllhrCalender(filter, pageable);
 	}
