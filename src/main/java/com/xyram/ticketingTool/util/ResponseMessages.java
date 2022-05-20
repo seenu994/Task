@@ -421,6 +421,10 @@ public interface ResponseMessages {
 
 	String NOT_VALID = "Reportor is not valid";
 
+	String STATUS_UPDATED_SUCCESSFULLY = "Asset issue status upadted successfully";
+
+	String INVALID_ASSET_ISSUE_ID = "invalid assetIssueId";
+
 //	String ANNOUNCEMENT_STATUS_CHANGED = "Announcement status changed successfully";
 //	String ANNOUNCEMENT_STATUS_NOT_CHANGED = "Announcement status not changed";
 //	String ANNOUNCEMENT_DELETED = "Announcement deleted successfully";
