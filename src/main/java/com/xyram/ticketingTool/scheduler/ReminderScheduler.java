@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +16,7 @@ import com.xyram.ticketingTool.Communication.PushNotificationRequest;
 import com.xyram.ticketingTool.Repository.ReminderRepository;
 import com.xyram.ticketingTool.Repository.ReminderlogRepository;
 import com.xyram.ticketingTool.entity.Notifications;
+import com.xyram.ticketingTool.entity.Reminder;
 import com.xyram.ticketingTool.entity.ReminderLog;
 import com.xyram.ticketingTool.enumType.NotificationType;
 import com.xyram.ticketingTool.service.impl.ReminderServiceImpl;
@@ -29,6 +31,8 @@ public class ReminderScheduler {
 	ReminderServiceImpl serviceImpl;
 	@Autowired
 	ReminderlogRepository reminderlogRepository;
+	@Autowired
+	ReminderRepository reminderRepository;
 
 	@Scheduled(cron = "0 */5 * * * *")
 	public void reminderJob() {
@@ -47,26 +51,29 @@ public class ReminderScheduler {
 		});
 
 	}
-	
+
 	@Scheduled(cron = "0 */5 * * * *")
-    public void sendNotificationForRemindersFor5Mins() {
-		
+	public void sendNotificationForRemindersFor5Mins() {
+		List<Reminder> getReminderWithinFiveMin = reminderRepository.getRemindersWithinFiveMin();
+		System.out.println("getReminderWithinFiveMin ::" + getReminderWithinFiveMin);
 		// Get all Reminders from Now to Half an hour.
 		// Pick latest record for each employee
 		// Send Notification.
 	}
-	
+
 	@Scheduled(cron = "0 */10 * * * *")
-    public void sendNotificationForRemindersFor10Mins() {
-		
+	public void sendNotificationForRemindersFor10Mins() {
+		List<Reminder> getReminderWithinTenMin = reminderRepository.getRemindersWithinTenMin();
+		System.out.println("getReminderWithinTenMin ::" + getReminderWithinTenMin);
 		// Get all Reminders from Now to Half an hour.
 		// Pick latest record for each employee
 		// Send Notification.
 	}
-	
+
 	@Scheduled(cron = "0 */15 * * * *")
-    public void sendNotificationForRemindersFor15Mins() {
-		
+	public void sendNotificationForRemindersFor15Mins() {
+		List<Reminder> getReminderWithinFifteenMin = reminderRepository.getRemindersWithinFifteenMin();
+		System.out.println("getReminderWithinFifteenMin ::" + getReminderWithinFifteenMin);
 		// Get all Reminders from Now to Half an hour.
 		// Pick latest record for each employee
 		// Send Notification.
