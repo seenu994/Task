@@ -15,7 +15,7 @@ public interface ProjectService {
 	
 	ApiResponse getAllProjectsForTickets(String serachString);
 
-	ApiResponse editEmployee(Projects projectRequest);
+	ApiResponse editProject(Projects projectRequest);
 
 	ApiResponse getAllProjectsByDeveloper(Pageable pageable);
 	
@@ -31,6 +31,8 @@ public interface ProjectService {
 	ApiResponse getAllProjectList();
 
 	ApiResponse updateProjectStatus(String projectId, ProjectStatus projectStatus); 
+	
+	ApiResponse getProjectDetailsById(String projectId);
 
 
 }
