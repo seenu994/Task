@@ -95,12 +95,12 @@ public class AssetIssuesController
 		return assetIssuesService.downloadAllAssetIssues(filter);
 	}
 	
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAssetIssueByAssetId/{assetId}",
+	/*@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAssetIssueByAssetId/{assetId}",
 			AuthConstants.INFRA_USER_BASEPATH + "/getAssetIssueByAssetId/{assetId}",
 			AuthConstants.INFRA_ADMIN_BASEPATH + "/getAssetIssueByAssetId/{assetId}"})
 	public ApiResponse getAssetById1(@PathVariable String assetId)
 	{
 		logger.info("received request to get assetIssues by assetId");
 		return assetIssuesService.getAssetById1(assetId);
-	}
+	}*/
 }

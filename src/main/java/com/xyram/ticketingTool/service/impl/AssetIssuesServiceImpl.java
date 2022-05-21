@@ -721,7 +721,7 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 		return workbook;
 	}
 
-	@Override
+	/*@Override
 	public ApiResponse getAssetById1(String assetId) {
 		
 		ApiResponse response = new ApiResponse();
@@ -738,7 +738,7 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 			response.setMessage("Could not retrieve data");
 		}
 		return response;
-	}
+	}*/
 	}
 
 	

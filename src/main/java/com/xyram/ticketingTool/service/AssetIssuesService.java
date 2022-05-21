@@ -34,7 +34,7 @@ public interface AssetIssuesService
 
 	ApiResponse downloadAllAssetIssues(Map<String, Object> filter);
 	
-	 ApiResponse getAssetById1(String assetId);
+	// ApiResponse getAssetById1(String assetId);
 	
 }
 	
