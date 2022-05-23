@@ -104,6 +104,7 @@ public interface TimesheetRepository extends JpaRepository<TimeSheet, String>{
 			+ "(t.approver_id=:userId)",  nativeQuery = true)
 	Long getAllMyTeamTimeSheetsCount(String userId,String employeeId,String projectId, String fromDate, String toDate, TimesheetStatus status);
 
-   
+	@Query("Select t from TimeSheet t where t.timeSheetId=:timeSheetId")
+	TimeSheet getByTimesheetId(String timeSheetId);
 	
 }
