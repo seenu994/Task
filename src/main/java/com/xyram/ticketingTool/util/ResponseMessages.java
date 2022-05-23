@@ -288,7 +288,7 @@ public interface ResponseMessages {
 
 	String REPAIR_BILL_EDITED_SUCCESSFULLY = "Asset is not underwarrenty and repair bill edited successfully";
 
-	String TIME_SHEET_DELETED = "time sheet deleted";
+	String TIME_SHEET_DELETED = "Time sheet deleted successfully";
 
 	String TIME_SHEET_NOT_DELETED = "time sheet not deleted";
 
@@ -430,6 +430,8 @@ public interface ResponseMessages {
 	String Pro_name_len = "Project name should be minimum 3 characters";
 
 	String STATUS_UPDATED_SUCCESSFULLY = "asset issue status updated successfully";
+
+	String TIME_SHEET_NOT_FOUND = "TimeSheet not found!!";
 
 //	String ANNOUNCEMENT_STATUS_CHANGED = "Announcement status changed successfully";
 //	String ANNOUNCEMENT_STATUS_NOT_CHANGED = "Announcement status not changed";
