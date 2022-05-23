@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.AssetIssues;
 import com.xyram.ticketingTool.enumType.AssetIssueStatus;
-import com.xyram.ticketingTool.enumType.ClientStatus;
 import com.xyram.ticketingTool.response.ReportExportResponse;
 import com.xyram.ticketingTool.service.AssetIssuesService;
 import com.xyram.ticketingTool.util.AuthConstants;
@@ -96,21 +95,12 @@ public class AssetIssuesController
 		return assetIssuesService.downloadAllAssetIssues(filter);
 	}
 	
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAssetIssueByAssetId/{assetId}",
+	/*@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAssetIssueByAssetId/{assetId}",
 			AuthConstants.INFRA_USER_BASEPATH + "/getAssetIssueByAssetId/{assetId}",
 			AuthConstants.INFRA_ADMIN_BASEPATH + "/getAssetIssueByAssetId/{assetId}"})
 	public ApiResponse getAssetById1(@PathVariable String assetId)
 	{
 		logger.info("received request to get assetIssues by assetId");
 		return assetIssuesService.getAssetById1(assetId);
-	}
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/changeAssetIssueStatus/{assetIssueId}/{assetIssueStatus}", 
-			AuthConstants.INFRA_USER_BASEPATH  + "/changeAssetIssueStatus/{assetIssueId}/{assetIssueStatus}",
-			AuthConstants.INFRA_ADMIN_BASEPATH +"/changeAssetIssueStatus/{assetIssueId}/{assetIssueStatus}"})
-	public ApiResponse changeAssetIssueStatus(@PathVariable String assetIssueId, @PathVariable AssetIssueStatus assetIssueStatus)
-
-	{
-		logger.info("received request to update assetIssues status");
-		return assetIssuesService.changeAssetIssueStatus(assetIssueId, assetIssueStatus);
-	}
+	}*/
 }

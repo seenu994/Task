@@ -1,12 +1,8 @@
 package com.xyram.ticketingTool.service;
 
-import java.io.IOException;
-
-import java.text.ParseException;
 import java.util.Date;
 import java.util.Map;
 
-import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.data.domain.Pageable;
 
 import com.xyram.ticketingTool.apiresponses.ApiResponse;

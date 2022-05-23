@@ -40,7 +40,6 @@ import com.xyram.ticketingTool.entity.Asset;
 import com.xyram.ticketingTool.entity.AssetIssues;
 //import com.xyram.ticketingTool.entity.AssetIssuesStatus;
 import com.xyram.ticketingTool.entity.AssetVendor;
-import com.xyram.ticketingTool.entity.Client;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.enumType.AssetIssueStatus;
 import com.xyram.ticketingTool.enumType.AssetStatus;
@@ -722,7 +721,7 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 		return workbook;
 	}
 
-	@Override
+	/*@Override
 	public ApiResponse getAssetById1(String assetId) {
 		
 		ApiResponse response = new ApiResponse();
@@ -739,32 +738,7 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 			response.setMessage("Could not retrieve data");
 		}
 		return response;
+	}*/
 	}
-
-	@Override
-	public ApiResponse changeAssetIssueStatus(String assetIssueId, AssetIssueStatus assetIssueStatus) 
-	{
-		ApiResponse response = new ApiResponse(false);
-		//ApiResponse response = validateStatus(status);
-		//if (response.isSuccess()) {
-			AssetIssues assetIssue = assetIssuesRepository.getAssetIssueById(assetIssueId);
-			if (assetIssue != null) {
-				assetIssue.setAssetIssueStatus(assetIssueStatus);
-				assetIssuesRepository.save(assetIssue);
-		
-
-				response.setSuccess(true);
-				response.setMessage(ResponseMessages.STATUS_UPDATED_SUCCESSFULLY);
-			}
-
-			else {
-				response.setSuccess(false);
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"invalid assetIssueId");
-								//response.setContent(null);
-			}
-
-		return response;
-	}
-}
 
 	

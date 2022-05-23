@@ -202,21 +202,8 @@ List<Map> downloadAllAssetIssues(AssetIssueStatus status, String assetId, String
 	
 	@Query("Select i from AssetIssues i where i.assetIssueId=:assetIssueId and i.assetId=:assetId")
 	AssetIssues getAssetById(String assetIssueId, String assetId);
-	
-	
-	 @Query("Select distinct new map(i.assetIssueId as assetIssueId, i.complaintRaisedDate as complaintRaisedDate, i.vendorId as vendorId, "
-				+ "i.description as description, i.solution as solution,i.assetId as assetId, v.vendorName as vendorName,"
-				+ "i.assetIssueStatus as assetIssueStatus, i.comments as comments,"
-				+ "i.resolvedDate as resolvedDate ) from AssetIssues i left join AssetVendor v on i.vendorId = v.vendorId where  i.assetId=:assetId")
-	List<Map> getAllAssetById1(String assetId);
 
 
-	
-	/*@Query("Select distinct new map(e.eId as id,e.email as email,e. profileUrl as profileUrl, e.userCredientials.id as userId , e.firstName as firstName,e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.password as password,e.designationId as designationId, "
-			+ "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,d.designationName as designationName,e.profileUrl as profileUrl,e.createdAt as createdAt,e.createdBy as createdBy,e.location as location,c.locationName as locationName,e.position as position,e.wings as wings,e.reportingTo as reportingTo,CONCAT(ee.firstName ,' ', ee.lastName) as ReporterName) from Employee e "
-			+ "left JOIN Employee ee ON ee.eId = e.reportingTo  "
-			+ " left JOIN  CompanyLocation c On e.location = c.Id left JOIN Role r On e.roleId = r.Id left JOIN  Designation d On e.designationId=d.Id where e.id=:employeeId")
-	List<Map> getbyEmpId(String employeeId);*/
 
 
 

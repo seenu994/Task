@@ -1,6 +1,5 @@
 package com.xyram.ticketingTool.Repository;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +12,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.xyram.ticketingTool.entity.HrCalendar;
-import com.xyram.ticketingTool.enumType.AssetStatus;
 
 @Repository
 @Transactional
@@ -156,6 +154,7 @@ public interface HrCalendarRepository extends JpaRepository<HrCalendar, String>{
 			+ "or lower(a.candidateName) like %:searchString% "
 			+ "or lower(jo.jobTitle) like %:searchString%) "
 			+"OR a.candidateName like %:searchString% "
+			+"OR a.candidateMobile like %:searchString% "
 			+"OR a.jobId like %:searchString% "
 			+ "ORDER BY a.scheduleDate ASC")	 
 			
