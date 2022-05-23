@@ -182,12 +182,14 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		if (!emailValidation(employee.getEmail())) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.INVAL_MAIL_ID);
+			return response;
 		}
 
 		String email = employeeRepository.filterByEmail(employee.getEmail());
 		if (email != null) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.MAIL_ID_EXI);
+			return response;
 		}
 		System.out.println("username::" + currentUser.getName());
 
@@ -198,7 +200,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 				response.setSuccess(false);
 				response.setMessage(ResponseMessages.EMP_CODE);
-
+				return response;
 			}
 
 			User user = new User();
@@ -319,35 +321,36 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		String regex = "[a-z A-Z]+";
 		if (!emailValidation(employee.getEmail())) {
 			response.setMessage(ResponseMessages.EMAIL_INVALID);
-
 			response.setSuccess(false);
+			return response;
 		}
 
 		if (employee.getFirstName() == null || employee.getFirstName().equals("") || employee.getFirstName().length() < 3) {
-
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.FIRST_NAME_MAN);
-
+			return response;
 		}
 		if (!employee.getFirstName().matches(regex)) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.FIRST_NAME_CHAR);
+			return response;
 		}
 
 		if (employee.getLastName() == null || employee.getLastName().equals("") || employee.getLastName().length() <= 0) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.LAST_NAME_MAN);
-
+			return response;
 		}
 		if (!employee.getLastName().matches(regex)) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.LAST_NAME_CHAR);
-
+			return response;
 		}
 
 		if (employee.getLocation() == null || employee.getLocation().equals("")) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.LOC_MAN);
+			return response;
 		} else {
 
 			CompanyLocation companyLocation = companyLocationRepository.getCompanyLocations(employee.getLocation());
@@ -357,7 +360,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			if (companyLocation == null) {
 				response.setSuccess(false);
 				response.setMessage(ResponseMessages.LOC_NOT_VALID);
-
+				return response;
 			}
 		}
 
@@ -370,6 +373,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			if (role == null) {
 				response.setSuccess(false);
 				response.setMessage(ResponseMessages.ROLE_ID_NOT_VAL);
+				return response;
 			}
 
 		}
@@ -377,18 +381,21 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		if (employee.getDesignationId() == null || employee.getDesignationId().equals("")) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.DES_ID_MAN);
+			return response;
 		} else {
 
 			Designation designation = designationRepository.getDesignationNames(employee.getDesignationId());
 			if (designation == null) {
 				response.setSuccess(false);
 				response.setMessage(ResponseMessages.DES_ID_NOT_VAL);
+				return response;
 			}
 		}
 
 		if (employee.getPosition() == null || employee.getPosition().equals("")) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.POSITION_MAN);
+			return response;
 		}
 
 		if (employee.getPosition() != null) {
@@ -403,6 +410,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			if (!isExist) {
 				response.setSuccess(false);
 				response.setMessage(ResponseMessages.POSITION_NOT_VAL);
+				return response;
 			}
 
 		}
@@ -420,6 +428,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		if (employee.getWings() == null || employee.getWings().getId().equals("")) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.WING_MAN);
+			return response;
 		}
 		if (employee.getWings() != null && employee.getWings().getId() != null) {
 			CompanyWings companyWings = wingRepo.getWingName(employee.getWings().getId());
@@ -429,20 +438,23 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			} else {
 				response.setSuccess(false);
 				response.setMessage(ResponseMessages.WING_NOT_EXI);
+				return response;
 			}
 		}
 
 		if (employee.getMobileNumber() == null || employee.getMobileNumber().equals("")) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.MOB_NUM_MAN);
+			return response;
 
 		}
 
 		else if (employee.getMobileNumber().length() != 10) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.INCORRECT_MOB);
+			return response;
 		}
-
+		response.setSuccess(true);
 		return response;
 	}
 
