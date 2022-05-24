@@ -163,6 +163,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 //	private static Map<String, com.xyram.ticketingTool.admin.model.User> userCache = new HashMap<>();
 
+	@SuppressWarnings("unused")
 	@Override
 	public ApiResponse addemployee(Employee employee) {
 
@@ -246,6 +247,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				employee.setLastUpdatedAt(new Date());
 				employee.setUserCredientials(user);
 				employee.setProfileUrl("https://tool.xyramsoft.com:444/image/ticket-attachment/user-default-pic.png");
+				employee.setDateOfJoin(employee.getDateOfJoin());
 				Employee employeeNew = employeeRepository.save(employee);
 				User useredit = userRepository.getById(user.getId());
 				useredit.setScopeId(employeeNew.geteId());
@@ -491,6 +493,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		content.put("employeeList", employeeList);
 		ApiResponse response = new ApiResponse(true);
 		response.setSuccess(true);
+		response.setMessage("Employee Retrieved Successfully");
 		response.setContent(content);
 		return response;
 	}
@@ -572,6 +575,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			employee.setLocation(employeeRequest.getLocation());
 			employee.setPosition(employeeRequest.getPosition());
 			employee.setWings(employeeRequest.getWings());
+			employee.setDateOfJoin(employeeRequest.getDateOfJoin());
 			employee.setRoleId(employeeRequest.getRoleId());
 
 			Role role = roleRepository.getById(employeeRequest.getRoleId());
@@ -606,6 +610,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			Map content = new HashMap();
 			content.put("EmployeeList", employeeList);
 			response.setSuccess(true);
+			response.setMessage("Employee Retrieved Successfully");
 			response.setContent(content);
 		} else {
 			response.setMessage(ResponseMessages.ClIENT_ID_VALID);
@@ -675,6 +680,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		if (employeeList.size() > 0) {
 			content.put("EmployeeList", employeeList);
 			response.setSuccess(true);
+			response.setMessage("Employee Retrieved successfully");
 			response.setContent(content);
 		} else {
 			content.put("EmployeeList", employeeList);
@@ -695,10 +701,12 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		if (employeeList.size() > 0) {
 			content.put("EmployeeList", employeeList);
 			response.setSuccess(true);
+			response.setMessage("Employee Retrieved successfully");
 			response.setContent(content);
 		} else {
 			content.put("EmployeeList", employeeList);
 			response.setSuccess(false);
+			response.setMessage("Employee Not Found!!");
 			response.setContent(content);
 		}
 
@@ -713,6 +721,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		content.put("infraUserList", infraUserList);
 		ApiResponse response = new ApiResponse(true);
 		response.setSuccess(true);
+		response.setMessage("Employee Retrieved successfully");
 		response.setContent(content);
 		return response;
 	}
@@ -749,6 +758,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		content.put("infraList", infraList);
 		ApiResponse response = new ApiResponse(true);
 		response.setSuccess(true);
+		response.setMessage("List of Infra Admins");
 		response.setContent(content);
 		return infraList;
 	}
@@ -1465,6 +1475,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		ApiResponse response = new ApiResponse(true);
 		response.setSuccess(true);
 		response.setContent(content);
+		response.setMessage("Retrieved successfully");
 		return response;
 	}
 

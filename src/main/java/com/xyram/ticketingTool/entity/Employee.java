@@ -1,5 +1,7 @@
 package com.xyram.ticketingTool.entity;
 
+import java.util.Date;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -62,28 +64,30 @@ public class Employee extends AuditModel {
 
 	@OneToOne(cascade = { CascadeType.MERGE })
 	@JoinColumn(name = "user_id")
-    private User userCredientials;
-	
-	@Column(name="profile_pic_url")
+	private User userCredientials;
+
+	@Column(name = "profile_pic_url")
 	private String profileUrl;
-	
-	@Column(name="reporting_to")
+
+	@Column(name = "reporting_to")
 	private String reportingTo;
-	
-	@Column(name="location")
+
+	@Column(name = "location")
 	private String location;
-	
-	@Column(name="position")
+
+	@Column(name = "position")
 	private String position;
-	
-	@OneToOne(cascade = {  CascadeType.MERGE})
+
+	@OneToOne(cascade = { CascadeType.MERGE })
 	@JoinColumn(name = "wing_id")
-    private CompanyWings wings;
-	
+	private CompanyWings wings;
+
+	@Column(name = "date_of_join")
+	private Date dateOfJoin;
+
 //	@OneToMany(mappedBy = "employee")
 //    private Set<Asset> asset;
-	
-	
+
 //	public Set<Asset> getAsset() {
 //		return asset;
 //	}
@@ -220,5 +224,12 @@ public class Employee extends AuditModel {
 		this.wings = wings;
 	}
 
-	
+	public Date getDateOfJoin() {
+		return dateOfJoin;
+	}
+
+	public void setDateOfJoin(Date dateOfJoin) {
+		this.dateOfJoin = dateOfJoin;
+	}
+
 }
