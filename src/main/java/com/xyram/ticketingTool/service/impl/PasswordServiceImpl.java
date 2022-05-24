@@ -26,6 +26,7 @@ import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.email.EmailService;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.ForgotPasswordKey;
+import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.PasswordService;
 import com.xyram.ticketingTool.service.UserService;
 import com.xyram.ticketingTool.util.ResponseMessages;
@@ -54,6 +55,9 @@ public class PasswordServiceImpl implements PasswordService {
 
 	@Autowired
 	ForgotPasswordToken tokenRepository;
+	
+	@Autowired
+	CurrentUser currentUser;
 
 	@Override
 	public ApiResponse resetPassword(Map passwordRequest) {
@@ -62,7 +66,7 @@ public class PasswordServiceImpl implements PasswordService {
 		Map<String, Object> response = new HashMap<>();
 
 		logger.info("Received request for reset password");
-		User user = userRepository.getById((String) passwordRequest.get("userId"));
+		User user = userRepository.getById(currentUser.getUserId());
 
 		String oldPassword = passwordRequest.containsKey("existingPassword")
 				&& !StringUtils.isEmpty(passwordRequest.get("existingPassword"))
