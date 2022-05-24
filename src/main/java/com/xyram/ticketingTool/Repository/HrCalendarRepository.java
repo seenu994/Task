@@ -116,21 +116,23 @@ public interface HrCalendarRepository extends JpaRepository<HrCalendar, String>{
 			+ "(:toDate is null OR Date(CONVERT_TZ(a.scheduleDate,'+00:00', :userZone)) <= STR_TO_DATE(:toDate, '%Y-%m-%d')) AND "
 			+ "(:fromDate is null OR Date(CONVERT_TZ(a.scheduleDate,'+00:00', :userZone)) >= STR_TO_DATE(:fromDate, '%Y-%m-%d')) AND "
 			+ "(:status is null OR lower(a.status)=:status) AND "
+			+ "(:jobId is null OR jo.id=:jobId) AND "
 			+ "(:closed is null OR a.closed=:closed) ORDER BY a.scheduleDate ASC")
-			List<Map> downloadAllMySchedulesFromCalendarByStatus(String userId, String fromDate, String toDate, String status,Boolean closed, String userZone);
+			List<Map> downloadAllMySchedulesFromCalendarByStatus(String userId, String fromDate,String jobId, String toDate, String status,Boolean closed, String userZone);
 	
 	@Query("Select distinct new map(a.candidateName as candidateName,a.status as status,"
 			+ " date(CONVERT_TZ(a.scheduleDate,'+00:00','userZone')) as time,   a.scheduleDate as scheduleDate, a.searchedSource as searchedSource,jo.jobCode as jobCode,"
-			+ "jo.jobTitle as jobTitle,a.closed as closed,concat(ee.firstName,' ', ee.lastName) as scheduledBy) from HrCalendar a "
+			+ "a.jobId as jobId,jo.jobTitle as jobTitle,a.closed as closed,concat(ee.firstName,' ', ee.lastName) as scheduledBy) from HrCalendar a "
 			+ "left join JobOpenings jo on a.jobId = jo.id left join Employee ee on a.createdBy = ee.userCredientials.id "
 			+ "where a.reportingTo =:userId AND " 
 			+ "(:toDate is null OR Date(CONVERT_TZ(a.scheduleDate,'+00:00', :userZone)) <= STR_TO_DATE(:toDate, '%Y-%m-%d')) AND "
 			+ "(:fromDate is null OR Date(CONVERT_TZ(a.scheduleDate,'+00:00',:userZone)) >= STR_TO_DATE(:fromDate, '%Y-%m-%d')) AND "
 			+ "(:employeeId is null OR a.createdBy=:employeeId) AND "
+			+ "(:jobId is null OR jo.id=:jobId) AND "
 			+ "(:status is null OR lower(a.status)=:status) AND "
 			+ "(:closed is null OR a.closed=:closed) ORDER BY a.scheduleDate ASC")
 			List<Map> downloadAllMyTeamSchedulesFromCalendarByStatus(String userId,String employeeId,
-			String fromDate, String toDate, String status,Boolean closed, String userZone);
+			String fromDate, String toDate,String jobId ,String status,Boolean closed, String userZone);
 	
 	@Query("Select new map(h.Id as id,h.candidateMobile as candidateMobile,h.status as status) from HrCalendar h")
 	Page<Map> getAllHrCalendarSchedules(Pageable pageable);
