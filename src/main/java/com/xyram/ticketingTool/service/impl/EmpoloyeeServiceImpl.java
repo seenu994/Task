@@ -2,6 +2,9 @@
 package com.xyram.ticketingTool.service.impl;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -163,17 +166,20 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 //	private static Map<String, com.xyram.ticketingTool.admin.model.User> userCache = new HashMap<>();
 
+	@SuppressWarnings("unused")
 	@Override
-	public ApiResponse addemployee(Employee employee) {
+	public ApiResponse addemployee(Employee employee) throws Exception {
 
 		ApiResponse response = new ApiResponse(false);
 
-		response = validateEmployee(employee);
+		
+			response = validateEmployee(employee);
+		
 		if (response.getMessage() != null && response.getMessage() != "") {
 			return response;
 		}
 		// Email Validation starts here
-	    
+
 		if (employee.getEmail() == null || employee.getEmail().equals("")) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.MAILID_MAN);
@@ -208,14 +214,14 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			String encodedPassword = new BCryptPasswordEncoder().encode(employee.getPassword());
 			user.setPassword(encodedPassword);
 			if (employee.getFirstName().length() >= 3 && employee.getLastName().length() >= 3) {
-				
+
 				employee.setFirstName(employee.getFirstName().trim());
 				String name = employee.getFirstName();
 				String firstLetter = name.substring(0, 1);
-			    String remainingLetters = name.substring(1, name.length());
-			    firstLetter = firstLetter.toUpperCase();
-			    employee.setFirstName(firstLetter + remainingLetters);
-			    
+				String remainingLetters = name.substring(1, name.length());
+				firstLetter = firstLetter.toUpperCase();
+				employee.setFirstName(firstLetter + remainingLetters);
+
 				user.setName(employee.getFirstName() + " " + employee.getLastName());
 
 				// Employee employeere=new Employee();
@@ -246,6 +252,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				employee.setLastUpdatedAt(new Date());
 				employee.setUserCredientials(user);
 				employee.setProfileUrl("https://tool.xyramsoft.com:444/image/ticket-attachment/user-default-pic.png");
+				employee.setDateOfJoin(employee.getDateOfJoin());
 				Employee employeeNew = employeeRepository.save(employee);
 				User useredit = userRepository.getById(user.getId());
 				useredit.setScopeId(employeeNew.geteId());
@@ -315,7 +322,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 //		}
 	}
 
-	private ApiResponse validateEmployee(Employee employee) {
+	private ApiResponse validateEmployee(Employee employee) throws Exception {
 		ApiResponse response = new ApiResponse(true);
 
 		String regex = "[a-z A-Z]+";
@@ -325,7 +332,8 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			return response;
 		}
 
-		if (employee.getFirstName() == null || employee.getFirstName().equals("") || employee.getFirstName().length() < 3) {
+		if (employee.getFirstName() == null || employee.getFirstName().equals("")
+				|| employee.getFirstName().length() < 3) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.FIRST_NAME_MAN);
 			return response;
@@ -336,7 +344,8 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			return response;
 		}
 
-		if (employee.getLastName() == null || employee.getLastName().equals("") || employee.getLastName().length() <= 0) {
+		if (employee.getLastName() == null || employee.getLastName().equals("")
+				|| employee.getLastName().length() <= 0) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.LAST_NAME_MAN);
 			return response;
@@ -414,15 +423,15 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			}
 
 		}
-		
-		if(employee.getReportingTo() != null && employee.getReportingTo().length() > 0) {
+
+		if (employee.getReportingTo() != null && employee.getReportingTo().length() > 0) {
 			Employee empObj = employeeRepository.getByEmpIdE(employee.getReportingTo());
-			if(empObj == null) {
+			if (empObj == null) {
 				response.setSuccess(false);
 				response.setMessage(ResponseMessages.NOT_VALID);
 				return response;
 			}
-			
+
 		}
 
 		if (employee.getWings() == null || employee.getWings().getId().equals("")) {
@@ -454,8 +463,32 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			response.setMessage(ResponseMessages.INCORRECT_MOB);
 			return response;
 		}
+
+		if (employee.getDateOfJoin() != null && !employee.getDateOfJoin().equals("")) {
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			String strDate = dateFormat.format(employee.getDateOfJoin());
+			Date tmDate = null;
+			try {
+				tmDate = new SimpleDateFormat("yyyy-MM-dd").parse(strDate);
+			} catch (ParseException e) {
+				e.printStackTrace();
+				throw new Exception("Date format should be 'yyyy-MM-dd'");			
+				//response.setSuccess(false);
+				//response.setMessage(ResponseMessages.DOJ_NOT_VAL);
+				//return response;
+			}
+		} else {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.Join_date_man);
+			return response;
+		}
 		response.setSuccess(true);
 		return response;
+	}
+
+	public static Date getDateWithoutTimeUsingFormat() throws ParseException {
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		return formatter.parse(formatter.format(new Date()));
 	}
 
 	private boolean emailValidation(String email) {
@@ -491,6 +524,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		content.put("employeeList", employeeList);
 		ApiResponse response = new ApiResponse(true);
 		response.setSuccess(true);
+		response.setMessage("Employee Retrieved Successfully");
 		response.setContent(content);
 		return response;
 	}
@@ -540,10 +574,12 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public ApiResponse editEmployee(String employeeId, Employee employeeRequest) {
+	public ApiResponse editEmployee(String employeeId, Employee employeeRequest) throws Exception {
 		ApiResponse response = new ApiResponse(false);
 
-		response = validateEmployee(employeeRequest);
+	
+			response = validateEmployee(employeeRequest);
+		
 
 		if (response.getMessage() != null && response.getMessage() != "") {
 			return response;
@@ -560,10 +596,10 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			employee.setFirstName(employee.getFirstName().trim());
 			String name = employee.getFirstName();
 			String firstLetter = name.substring(0, 1);
-		    String remainingLetters = name.substring(1, name.length());
-		    firstLetter = firstLetter.toUpperCase();
-		    employee.setFirstName(firstLetter + remainingLetters);
-			
+			String remainingLetters = name.substring(1, name.length());
+			firstLetter = firstLetter.toUpperCase();
+			employee.setFirstName(firstLetter + remainingLetters);
+
 			user.setName(employeeRequest.getFirstName() + " " + employeeRequest.getLastName());
 			employee.setMiddleName(employeeRequest.getMiddleName());
 			employee.setMobileNumber(employeeRequest.getMobileNumber());
@@ -572,6 +608,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			employee.setLocation(employeeRequest.getLocation());
 			employee.setPosition(employeeRequest.getPosition());
 			employee.setWings(employeeRequest.getWings());
+			employee.setDateOfJoin(employeeRequest.getDateOfJoin());
 			employee.setRoleId(employeeRequest.getRoleId());
 
 			Role role = roleRepository.getById(employeeRequest.getRoleId());
@@ -606,6 +643,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			Map content = new HashMap();
 			content.put("EmployeeList", employeeList);
 			response.setSuccess(true);
+			response.setMessage("Employee Retrieved Successfully");
 			response.setContent(content);
 		} else {
 			response.setMessage(ResponseMessages.ClIENT_ID_VALID);
@@ -675,6 +713,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		if (employeeList.size() > 0) {
 			content.put("EmployeeList", employeeList);
 			response.setSuccess(true);
+			response.setMessage("Employee Retrieved successfully");
 			response.setContent(content);
 		} else {
 			content.put("EmployeeList", employeeList);
@@ -695,10 +734,12 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		if (employeeList.size() > 0) {
 			content.put("EmployeeList", employeeList);
 			response.setSuccess(true);
+			response.setMessage("Employee Retrieved successfully");
 			response.setContent(content);
 		} else {
 			content.put("EmployeeList", employeeList);
 			response.setSuccess(false);
+			response.setMessage("Employee Not Found!!");
 			response.setContent(content);
 		}
 
@@ -713,6 +754,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		content.put("infraUserList", infraUserList);
 		ApiResponse response = new ApiResponse(true);
 		response.setSuccess(true);
+		response.setMessage("Employee Retrieved successfully");
 		response.setContent(content);
 		return response;
 	}
@@ -749,6 +791,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		content.put("infraList", infraList);
 		ApiResponse response = new ApiResponse(true);
 		response.setSuccess(true);
+		response.setMessage("List of Infra Admins");
 		response.setContent(content);
 		return infraList;
 	}
@@ -1465,6 +1508,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		ApiResponse response = new ApiResponse(true);
 		response.setSuccess(true);
 		response.setContent(content);
+		response.setMessage("Retrieved successfully");
 		return response;
 	}
 

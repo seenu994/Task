@@ -47,7 +47,7 @@ class EmployeeController
 	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/createEmployee",
 			AuthConstants.HR_ADMIN_BASEPATH + "/createEmployee",
 			AuthConstants.INFRA_ADMIN_BASEPATH + "/createEmployee" })
-	public ApiResponse addemployee(@RequestBody Employee employee) {
+	public ApiResponse addemployee(@RequestBody Employee employee) throws Exception {
 		logger.info("Received request to add Employee");
 		return employeeService.addemployee(employee);
 	}
@@ -120,7 +120,7 @@ class EmployeeController
 			AuthConstants.INFRA_ADMIN_BASEPATH + "/editEmployee/{employeeId}",
 			AuthConstants.DEVELOPER_BASEPATH + "/editEmployee/{employeeId}",
 			AuthConstants.HR_ADMIN_BASEPATH + "/editEmployee/{employeeId}" })
-	public ApiResponse editEmployee(@RequestBody Employee employeeRequest, @PathVariable String employeeId) {
+	public ApiResponse editEmployee(@RequestBody Employee employeeRequest, @PathVariable String employeeId) throws Exception {
 		logger.info("indide edit employee");
 		return employeeService.editEmployee(employeeId, employeeRequest);
 	}
