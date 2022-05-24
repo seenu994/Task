@@ -168,16 +168,13 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 	@SuppressWarnings("unused")
 	@Override
-	public ApiResponse addemployee(Employee employee) {
+	public ApiResponse addemployee(Employee employee) throws Exception {
 
 		ApiResponse response = new ApiResponse(false);
 
-		try {
+		
 			response = validateEmployee(employee);
-		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		
 		if (response.getMessage() != null && response.getMessage() != "") {
 			return response;
 		}
@@ -577,15 +574,12 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public ApiResponse editEmployee(String employeeId, Employee employeeRequest) {
+	public ApiResponse editEmployee(String employeeId, Employee employeeRequest) throws Exception {
 		ApiResponse response = new ApiResponse(false);
 
-		try {
+	
 			response = validateEmployee(employeeRequest);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 
 		if (response.getMessage() != null && response.getMessage() != "") {
 			return response;

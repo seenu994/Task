@@ -15,11 +15,11 @@ import com.xyram.ticketingTool.enumType.UserStatus;
 
 public interface EmployeeService {
 
-	ApiResponse addemployee(Employee employee);
+	ApiResponse addemployee(Employee employee) throws Exception;
 
 	ApiResponse getAllEmployee(Map<String, Object> filter, Pageable pageable);
 
-	ApiResponse editEmployee(String employeeId, Employee employee);
+	ApiResponse editEmployee(String employeeId, Employee employee) throws Exception;
 
 	ApiResponse updateEmployeeStatus(String employeeID, UserStatus userstatus);
 	
