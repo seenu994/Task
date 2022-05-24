@@ -35,6 +35,7 @@ import com.xyram.ticketingTool.Communication.PushNotificationRequest;
 import com.xyram.ticketingTool.Repository.CompanyLocationRepository;
 import com.xyram.ticketingTool.Repository.CompanyWingsRepository;
 import com.xyram.ticketingTool.Repository.DesignationRepository;
+import com.xyram.ticketingTool.Repository.EmployeePermissionRepository;
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
 import com.xyram.ticketingTool.Repository.PermissionRepository;
 import com.xyram.ticketingTool.Repository.ProjectMemberRepository;
@@ -53,6 +54,7 @@ import com.xyram.ticketingTool.entity.CompanyLocation;
 import com.xyram.ticketingTool.entity.CompanyWings;
 import com.xyram.ticketingTool.entity.Designation;
 import com.xyram.ticketingTool.entity.Employee;
+import com.xyram.ticketingTool.entity.EmployeePermission;
 import com.xyram.ticketingTool.entity.JobVendorDetails;
 import com.xyram.ticketingTool.entity.Notifications;
 import com.xyram.ticketingTool.entity.Projects;
@@ -152,6 +154,9 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 	@Autowired
 	CompanyWingsRepository wingRepo;
+	
+	@Autowired
+	EmployeePermissionRepository empPermissionRepo;
 
 	@Value("${APPLICATION_URL}")
 	private String application_url;
@@ -257,6 +262,11 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				User useredit = userRepository.getById(user.getId());
 				useredit.setScopeId(employeeNew.geteId());
 				userRepository.save(useredit);
+				
+				// New Permissions
+				EmployeePermission empPermission = new EmployeePermission();
+				empPermission.setUserId(employeeNew.geteId());
+				empPermissionRepo.save(empPermission);
 
 				// sending notification starts here..!
 
@@ -320,6 +330,33 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		return response;
 
 //		}
+	}
+	
+	public ApiResponse changeEmployeePermission(EmployeePermission employeePermission) {
+		ApiResponse response = new ApiResponse(true);
+		EmployeePermission ep = empPermissionRepo.getbyUserId(currentUser.getUserId());
+		if(ep != null) {
+			if(!ep.getEmpAdmin()) {
+				response.setMessage("Not authorized to edit employee permission");
+				response.setSuccess(false);
+				return response;
+			}
+		}else {
+			response.setMessage("Not authorized to edit employee permission");
+			response.setSuccess(false);
+			return response;
+		}
+		Employee employee = employeeRepository.getById(employeePermission.getUserId());
+		if (employee != null) {
+			empPermissionRepo.save(employeePermission);
+			response.setMessage("Employee Permissions Updated");
+			response.setSuccess(true);
+		}else {
+			response.setMessage("Employee Not Exist");
+			response.setSuccess(false);
+			return response;
+		}
+		return response;
 	}
 
 	private ApiResponse validateEmployee(Employee employee) throws Exception {

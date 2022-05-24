@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import com.xyram.ticketingTool.Repository.EmployeePermissionRepository;
+import com.xyram.ticketingTool.entity.EmployeePermission;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.util.AuthConstants;
 
@@ -31,6 +33,9 @@ public class JwtTokenUtil implements Serializable {
 	
 	@Autowired
 	CurrentUser currentUser;
+	
+	@Autowired
+	EmployeePermissionRepository empPermissionRepo;
 
 	//retrieve username from jwt token
 	public String getUsernameFromToken(String token) {
@@ -66,6 +71,8 @@ public class JwtTokenUtil implements Serializable {
 		claims.put(AuthConstants.USER_ROLE, userDetails.getUserRole());
 		claims.put(AuthConstants.USER_ID, userDetails.getId());
 		claims.put(AuthConstants.SCOPE_ID, userDetails.getScopeId());
+		EmployeePermission ep = empPermissionRepo.getbyUserId(currentUser.getUserId());
+		claims.put(AuthConstants.PERMISSIONS, ep);
 		return doGenerateToken(claims, userDetails.getUsername());
 	}
 

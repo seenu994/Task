@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.xyram.ticketingTool.Repository.EmployeePermissionRepository;
 import com.xyram.ticketingTool.Repository.UserPermissionRepository;
 import com.xyram.ticketingTool.admin.model.User;
+import com.xyram.ticketingTool.entity.EmployeePermission;
 import com.xyram.ticketingTool.entity.UserPermissions;
 import com.xyram.ticketingTool.service.UserService;
 import com.xyram.ticketingTool.ticket.Model.JwtRequest;
@@ -45,6 +47,8 @@ public class JwtAuthenticateController {
 	@Autowired
 	UserPermissionRepository permissionRepo;
 	
+	@Autowired
+	EmployeePermissionRepository empPermissionRepo;
  
 	@RequestMapping(value = "/authenticate", method = RequestMethod.POST)
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
@@ -60,8 +64,10 @@ public class JwtAuthenticateController {
 		
 		User appUser = userDetailsService.getAppUser(authenticationRequest.getUsername());
 		List<UserPermissions> permissions = permissionRepo.getByUserId(userDetails.getId());
+		EmployeePermission ep = empPermissionRepo.getbyUserId(userDetails.getId());
+
 		JwtResponse response = new JwtResponse(token, "sessionId",
-				AuthUtil.getBaseResourcePath(userDetails.getUserRole()),userDetails,permissions);
+				AuthUtil.getBaseResourcePath(userDetails.getUserRole()),userDetails,permissions,ep);
 
 		return ResponseEntity.ok(response);
 	}

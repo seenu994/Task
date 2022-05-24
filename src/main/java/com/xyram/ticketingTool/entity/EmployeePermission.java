@@ -2,8 +2,6 @@ package com.xyram.ticketingTool.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -26,102 +24,121 @@ public class EmployeePermission extends AuditModel{
 	@Column(name = "id")
 	private String Id;
 	
+	@Column(name = "user_id", nullable = false)
+	private String userId;
+	
 	@Column(name = "job_admin", nullable = false)
 	private Boolean jobAdmin;
 	
-	@Column(name = "job_opening_add", nullable = false) //JOB-OPENINGS-ADD
+	@Column(name = "job_opening_add", nullable = false) 
 	private Boolean jobOpeningAdd;
 	
-	@Column(name = "job_openings_view", nullable = false)//JOB-OPENINGS-VIEW
+	@Column(name = "job_openings_view", nullable = false, columnDefinition = "boolean default true")
 	private Boolean jobOpeningsView;
 	
-	@Column(name = "job_app_upload", nullable = false)//JOB-OPENINGS-VIEW
+	@Column(name = "job_app_upload", nullable = false, columnDefinition = "boolean default true")
 	private Boolean jobAppUpload;
 	
-	@Column(name = "job_app_view_all", nullable = false)//JOB-OPENINGS-VIEW
+	@Column(name = "job_app_view_all", nullable = false)
 	private Boolean jobAppViewAll;
 	
-	@Column(name = "job_off_view_all", nullable = false)//JOB-OPENINGS-VIEW
+	@Column(name = "job_off_view_all", nullable = false)
 	private Boolean jobOffViewAll;
 	
-	@Column(name = "job_int_view_all", nullable = false)//JOB-OPENINGS-VIEW
+	@Column(name = "job_int_view_all", nullable = false)
 	private Boolean jobIntViewAll;
 	
-	@Column(name = "har_cal_schedule_add", nullable = false)//JOB-OPENINGS-VIEW
+	@Column(name = "har_cal_schedule_add", nullable = false)
 	private Boolean harCalScheduleAdd;
 	
-	@Column(name = "hr_cal_view_all", nullable = false)//JOB-OPENINGS-VIEW
+	@Column(name = "hr_cal_view_all", nullable = false)
 	private Boolean hrCalViewAll;
 	
-	@Column(name = "ann_view_all", nullable = false)//JOB-OPENINGS-VIEW
+	@Column(name = "ann_view_all", nullable = false, columnDefinition = "boolean default true")
 	private Boolean annViewAll;
 	
-	@Column(name = "ann_edit_all", nullable = false)//JOB-OPENINGS-VIEW
+	@Column(name = "ann_edit_all", nullable = false)
 	private Boolean annEditAll;
 	
-	@Column(name = "ann_add", nullable = false)//JOB-OPENINGS-VIEW
+	@Column(name = "ann_add", nullable = false)
 	private Boolean annAdd;
 	
-	@Column(name = "art_view_all", nullable = false)//JOB-OPENINGS-VIEW
+	@Column(name = "art_view_all", nullable = false, columnDefinition = "boolean default true")
 	private Boolean artViewAll;
 	
-	@Column(name = "art_edit_all", nullable = false)//JOB-OPENINGS-VIEW
+	@Column(name = "art_edit_all", nullable = false)
 	private Boolean artEditAll;
 	
-	@Column(name = "art_add", nullable = false)//JOB-OPENINGS-VIEW
+	@Column(name = "art_add", nullable = false)
 	private Boolean artAdd;
 	
-	@Column(name = "tkt_admin", nullable = false)//JOB-OPENINGS-VIEW
+	@Column(name = "tkt_admin", nullable = false)
 	private Boolean tktAdmin;
 	
-	@Column(name = "tkt_add", nullable = false)//JOB-OPENINGS-VIEW
+	@Column(name = "tkt_add", nullable = false, columnDefinition = "boolean default true")
 	private Boolean tktAdd;
 	
-	@Column(name = "tkt_assign", nullable = false)//JOB-OPENINGS-VIEW
+	@Column(name = "tkt_assign", nullable = false)
 	private Boolean tktAssign;
 	
-	@Column(name = "prj_view_all", nullable = false)//JOB-OPENINGS-VIEW
+	@Column(name = "prj_view_all", nullable = false)
 	private Boolean prjViewAll;
 	
-	@Column(name = "prj_edit_all", nullable = false)//JOB-OPENINGS-VIEW
+	@Column(name = "prj_edit_all", nullable = false)
 	private Boolean prjEditAll;
 	
-	@Column(name = "prj_add", nullable = false)//JOB-OPENINGS-VIEW
+	@Column(name = "prj_add", nullable = false)
 	private Boolean prjAdd;
 	
-	@Column(name = "timesheet_add", nullable = false)//JOB-OPENINGS-VIEW
+	@Column(name = "timesheet_add", nullable = false, columnDefinition = "boolean default true")
 	private Boolean timesheetAdd;
 	
-	@Column(name = "timesheet_admin", nullable = false)//JOB-OPENINGS-VIEW
+	@Column(name = "timesheet_admin", nullable = false)
 	private Boolean timesheetAdmin;
 	
-	@Column(name = "asst_admin", nullable = false)//JOB-OPENINGS-VIEW
+	@Column(name = "asst_admin", nullable = false)
 	private Boolean asstAdmin;
 	
-	@Column(name = "asst_add", nullable = false)//JOB-OPENINGS-VIEW
+	@Column(name = "asst_add", nullable = false)
 	private Boolean asstAdd;
 	
-	@Column(name = "asst_iss_add", nullable = false)//JOB-OPENINGS-VIEW
+	@Column(name = "asst_iss_add", nullable = false)
 	private Boolean asstIssAdd;
 	
-	@Column(name = "asst_bill_add", nullable = false)//JOB-OPENINGS-VIEW
+	@Column(name = "asst_bill_add", nullable = false)
 	private Boolean asstBillAdd;
 	
-	@Column(name = "jv_view_all", nullable = false)//JOB-OPENINGS-VIEW
+	@Column(name = "jv_view_all", nullable = false)
 	private Boolean jvViewAll;
 	
-	@Column(name = "av_view_all", nullable = false)//JOB-OPENINGS-VIEW
+	@Column(name = "av_view_all", nullable = false)
 	private Boolean avViewAll;
 	
-	@Column(name = "iss_track_admin", nullable = false)//JOB-OPENINGS-VIEW
+	@Column(name = "iss_track_admin", nullable = false)
 	private Boolean issTrackAdmin;
 	
-	@Column(name = "iss_track_view_all", nullable = false)//JOB-OPENINGS-VIEW
+	@Column(name = "iss_track_view_all", nullable = false)
 	private Boolean issTrackViewAll;
 	
 	@Column(name = "emp_admin", nullable = false)
 	private Boolean empAdmin;
 	
+	public EmployeePermission(){
+		this.jobOpeningsView = true;
+		this.jobAppUpload = true;
+		this.annViewAll = true;
+		this.artViewAll = true;
+		this.timesheetAdd = true;
+	}
+	
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
 	public String getEmpPermissionId() {
 		return Id;
 	}

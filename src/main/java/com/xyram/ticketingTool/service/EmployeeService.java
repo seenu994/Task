@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Employee;
+import com.xyram.ticketingTool.entity.EmployeePermission;
 import com.xyram.ticketingTool.entity.JobVendorDetails;
 import com.xyram.ticketingTool.entity.RoleMasterTable;
 import com.xyram.ticketingTool.enumType.UserStatus;
@@ -16,6 +17,8 @@ import com.xyram.ticketingTool.enumType.UserStatus;
 public interface EmployeeService {
 
 	ApiResponse addemployee(Employee employee) throws Exception;
+	
+	ApiResponse changeEmployeePermission(EmployeePermission employeePermission);
 
 	ApiResponse getAllEmployee(Map<String, Object> filter, Pageable pageable);
 

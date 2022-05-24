@@ -18,10 +18,12 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.xyram.ticketingTool.Repository.EmployeePermissionRepository;
 import com.xyram.ticketingTool.Repository.RoleMasterRepository;
 import com.xyram.ticketingTool.Repository.UserRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Employee;
+import com.xyram.ticketingTool.entity.EmployeePermission;
 import com.xyram.ticketingTool.entity.JobVendorDetails;
 import com.xyram.ticketingTool.entity.RoleMasterTable;
 import com.xyram.ticketingTool.enumType.UserStatus;
@@ -43,6 +45,8 @@ class EmployeeController
 
 	@Autowired
 	RoleMasterRepository masterrepo;
+	
+	
 
 	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/createEmployee",
 			AuthConstants.HR_ADMIN_BASEPATH + "/createEmployee",
@@ -50,6 +54,15 @@ class EmployeeController
 	public ApiResponse addemployee(@RequestBody Employee employee) throws Exception {
 		logger.info("Received request to add Employee");
 		return employeeService.addemployee(employee);
+	}
+	
+	
+	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/changeEmployeePermissions",
+			AuthConstants.HR_ADMIN_BASEPATH + "/changeEmployeePermissions",
+			AuthConstants.INFRA_ADMIN_BASEPATH + "/changeEmployeePermissions" })
+	public ApiResponse changeEmployeePermissions(@RequestBody EmployeePermission employeePermission) throws Exception {
+		logger.info("Changing Employee Permission");
+		return employeeService.changeEmployeePermission(employeePermission);
 	}
 
 	@PostMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/createJobVendor",

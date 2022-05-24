@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.xyram.ticketingTool.admin.model.User;
+import com.xyram.ticketingTool.entity.EmployeePermission;
 import com.xyram.ticketingTool.entity.UserPermissions;
 
 public class JwtResponse implements Serializable {
@@ -15,12 +16,19 @@ public class JwtResponse implements Serializable {
 	private final User user;
 	private final String baseResourcePath;
 	private final List<UserPermissions> permissions;
-	public JwtResponse(String jwttoken,String sessionId,String baseResourcePath,User user, List<UserPermissions> permissions) {
+	private final EmployeePermission empPermission;
+	public JwtResponse(String jwttoken,String sessionId,String baseResourcePath,User user, List<UserPermissions> permissions,
+			EmployeePermission empPermission) {
 		this.jwttoken = jwttoken;
 		this.sessionId = sessionId;
 		this.user= user;
 		this.baseResourcePath = baseResourcePath;
 		this.permissions = permissions;
+		this.empPermission = empPermission;
+	}
+
+	public EmployeePermission getEmpPermission() {
+		return empPermission;
 	}
 
 	public String getToken() {
