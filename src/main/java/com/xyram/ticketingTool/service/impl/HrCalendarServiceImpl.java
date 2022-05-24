@@ -857,8 +857,8 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	@Override
 	public ApiResponse downloadAllMySchedulesFromCalendarByStatus(Map<String, Object> filter) {
 		ApiResponse response = new ApiResponse();
-//		String jobId = filter.containsKey("jobId") ? ((String) filter.get("jobId"))
-//				: null;
+		String jobId = filter.containsKey("jobId") ? ((String) filter.get("jobId"))
+				: null;
 //		String employeeId = filter.containsKey("employeeId") ? ((String) filter.get("employeeId"))
 //				: null;
 		Boolean closed = filter.containsKey("closed") ? ((Boolean) filter.get("closed"))
@@ -969,8 +969,8 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	@Override
 	public ApiResponse downloadMyTeamSchedulesFromCalendarByStatus(Map<String, Object> filter) {
 		ApiResponse response = new ApiResponse();
-//		String jobId = filter.containsKey("jobId") ? ((String) filter.get("jobId"))
-//				: null;
+		String jobId = filter.containsKey("jobId") ? ((String) filter.get("jobId"))
+				: null;
 		String employeeId = filter.containsKey("employeeId") ? ((String) filter.get("employeeId"))
 				: null;
 		Boolean closed = filter.containsKey("closed") ? ((Boolean) filter.get("closed"))
