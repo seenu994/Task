@@ -26,10 +26,6 @@ public class EmployeePermission extends AuditModel{
 	@Column(name = "id")
 	private String id;
 	
-	@Column(name = "emp-admin", nullable = false)
-	private Boolean empAdmin;
-	
-
 //	JOB-APP-UPLOAD
 //	JOB-APP-VIEW-ALL
 //
@@ -83,47 +79,40 @@ public class EmployeePermission extends AuditModel{
 	@Column(name = "job-openings-view", nullable = false)//JOB-OPENINGS-VIEW
 	private Boolean jobOpeningsView;
 	
-	@Column(name = "job-app-upload", nullable = false)//JOB-APP-UPLOAD
-	private Boolean empAdmin;
-	
-//	@Column(name = "emp-admin", nullable = false)
-//	private Boolean empAdmin;
-//	
-//	@Column(name = "emp-admin", nullable = false)
-//	private Boolean empAdmin;
-//	
-//	@Column(name = "emp-admin", nullable = false)
-//	private Boolean empAdmin;
-//	
-//	@Column(name = "emp-admin", nullable = false)
-//	private Boolean empAdmin;
-//	
-//	@Column(name = "emp-admin", nullable = false)
-//	private Boolean empAdmin;
-//	
-//	@Column(name = "emp-admin", nullable = false)
-//	private Boolean empAdmin;
-//	
-//	@Column(name = "emp-admin", nullable = false)
-//	private Boolean empAdmin;
-//	
-//	@Column(name = "emp-admin", nullable = false)
-//	private Boolean empAdmin;
-//	
-//	@Column(name = "emp-admin", nullable = false)
-//	private Boolean empAdmin;
-//	
-//	@Column(name = "emp-admin", nullable = false)
-//	private Boolean empAdmin;
-//	
-//	@Column(name = "emp-admin", nullable = false)
+//	@Column(name = "job-app-upload", nullable = false)//JOB-APP-UPLOAD
 //	private Boolean empAdmin;
 	
+//	@Column(name = "emp-admin", nullable = false)
+//	private Boolean empAdmin;
+//	
+//	@Column(name = "emp-admin", nullable = false)
+//	private Boolean empAdmin;
+//	
+//	@Column(name = "emp-admin", nullable = false)
+//	private Boolean empAdmin;
+//	
+//	@Column(name = "emp-admin", nullable = false)
+//	private Boolean empAdmin;
+//	
+//	@Column(name = "emp-admin", nullable = false)
+//	private Boolean empAdmin;
+//	
+//	@Column(name = "emp-admin", nullable = false)
+//	private Boolean empAdmin;
+//	
+//	@Column(name = "emp-admin", nullable = false)
+//	private Boolean empAdmin;
+//	
+//	@Column(name = "emp-admin", nullable = false)
+//	private Boolean empAdmin;
+//	
+//	@Column(name = "emp-admin", nullable = false)
+//	private Boolean empAdmin;
+//	
+//	@Column(name = "emp-admin", nullable = false)
+//	private Boolean empAdmin;
+//	
+//	@Column(name = "emp-admin", nullable = false)
+//	private Boolean empAdmin;
 	
-	
-	
-	
-
-
-
 }
