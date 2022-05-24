@@ -2,6 +2,9 @@
 package com.xyram.ticketingTool.service.impl;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -169,12 +172,17 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 		ApiResponse response = new ApiResponse(false);
 
-		response = validateEmployee(employee);
+		try {
+			response = validateEmployee(employee);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		if (response.getMessage() != null && response.getMessage() != "") {
 			return response;
 		}
 		// Email Validation starts here
-	    
+
 		if (employee.getEmail() == null || employee.getEmail().equals("")) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.MAILID_MAN);
@@ -209,14 +217,14 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			String encodedPassword = new BCryptPasswordEncoder().encode(employee.getPassword());
 			user.setPassword(encodedPassword);
 			if (employee.getFirstName().length() >= 3 && employee.getLastName().length() >= 3) {
-				
+
 				employee.setFirstName(employee.getFirstName().trim());
 				String name = employee.getFirstName();
 				String firstLetter = name.substring(0, 1);
-			    String remainingLetters = name.substring(1, name.length());
-			    firstLetter = firstLetter.toUpperCase();
-			    employee.setFirstName(firstLetter + remainingLetters);
-			    
+				String remainingLetters = name.substring(1, name.length());
+				firstLetter = firstLetter.toUpperCase();
+				employee.setFirstName(firstLetter + remainingLetters);
+
 				user.setName(employee.getFirstName() + " " + employee.getLastName());
 
 				// Employee employeere=new Employee();
@@ -317,7 +325,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 //		}
 	}
 
-	private ApiResponse validateEmployee(Employee employee) {
+	private ApiResponse validateEmployee(Employee employee) throws Exception {
 		ApiResponse response = new ApiResponse(true);
 
 		String regex = "[a-z A-Z]+";
@@ -327,7 +335,8 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			return response;
 		}
 
-		if (employee.getFirstName() == null || employee.getFirstName().equals("") || employee.getFirstName().length() < 3) {
+		if (employee.getFirstName() == null || employee.getFirstName().equals("")
+				|| employee.getFirstName().length() < 3) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.FIRST_NAME_MAN);
 			return response;
@@ -338,7 +347,8 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			return response;
 		}
 
-		if (employee.getLastName() == null || employee.getLastName().equals("") || employee.getLastName().length() <= 0) {
+		if (employee.getLastName() == null || employee.getLastName().equals("")
+				|| employee.getLastName().length() <= 0) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.LAST_NAME_MAN);
 			return response;
@@ -416,15 +426,15 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			}
 
 		}
-		
-		if(employee.getReportingTo() != null && employee.getReportingTo().length() > 0) {
+
+		if (employee.getReportingTo() != null && employee.getReportingTo().length() > 0) {
 			Employee empObj = employeeRepository.getByEmpIdE(employee.getReportingTo());
-			if(empObj == null) {
+			if (empObj == null) {
 				response.setSuccess(false);
 				response.setMessage(ResponseMessages.NOT_VALID);
 				return response;
 			}
-			
+
 		}
 
 		if (employee.getWings() == null || employee.getWings().getId().equals("")) {
@@ -456,8 +466,32 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			response.setMessage(ResponseMessages.INCORRECT_MOB);
 			return response;
 		}
+
+		if (employee.getDateOfJoin() != null && !employee.getDateOfJoin().equals("")) {
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			String strDate = dateFormat.format(employee.getDateOfJoin());
+			Date tmDate = null;
+			try {
+				tmDate = new SimpleDateFormat("yyyy-MM-dd").parse(strDate);
+			} catch (ParseException e) {
+				e.printStackTrace();
+				throw new Exception("Date format should be 'yyyy-MM-dd'");			
+				//response.setSuccess(false);
+				//response.setMessage(ResponseMessages.DOJ_NOT_VAL);
+				//return response;
+			}
+		} else {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.Join_date_man);
+			return response;
+		}
 		response.setSuccess(true);
 		return response;
+	}
+
+	public static Date getDateWithoutTimeUsingFormat() throws ParseException {
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		return formatter.parse(formatter.format(new Date()));
 	}
 
 	private boolean emailValidation(String email) {
@@ -546,7 +580,12 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	public ApiResponse editEmployee(String employeeId, Employee employeeRequest) {
 		ApiResponse response = new ApiResponse(false);
 
-		response = validateEmployee(employeeRequest);
+		try {
+			response = validateEmployee(employeeRequest);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		if (response.getMessage() != null && response.getMessage() != "") {
 			return response;
@@ -563,10 +602,10 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			employee.setFirstName(employee.getFirstName().trim());
 			String name = employee.getFirstName();
 			String firstLetter = name.substring(0, 1);
-		    String remainingLetters = name.substring(1, name.length());
-		    firstLetter = firstLetter.toUpperCase();
-		    employee.setFirstName(firstLetter + remainingLetters);
-			
+			String remainingLetters = name.substring(1, name.length());
+			firstLetter = firstLetter.toUpperCase();
+			employee.setFirstName(firstLetter + remainingLetters);
+
 			user.setName(employeeRequest.getFirstName() + " " + employeeRequest.getLastName());
 			employee.setMiddleName(employeeRequest.getMiddleName());
 			employee.setMobileNumber(employeeRequest.getMobileNumber());

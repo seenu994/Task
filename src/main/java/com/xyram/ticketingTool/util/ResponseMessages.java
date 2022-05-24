@@ -433,6 +433,10 @@ public interface ResponseMessages {
 
 	String TIME_SHEET_NOT_FOUND = "TimeSheet not found!!";
 
+	String Join_date_man = "Date of join is mandatory";
+
+	String DOJ_NOT_VAL = "Date Of Join is not valid";
+
 //	String ANNOUNCEMENT_STATUS_CHANGED = "Announcement status changed successfully";
 //	String ANNOUNCEMENT_STATUS_NOT_CHANGED = "Announcement status not changed";
 //	String ANNOUNCEMENT_DELETED = "Announcement deleted successfully";

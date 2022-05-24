@@ -96,6 +96,14 @@ public class Employee extends AuditModel {
 //		this.asset = asset;
 //	}
 
+	public Date getDateOfJoin() {
+		return dateOfJoin;
+	}
+
+	public void setDateOfJoin(Date dateOfJoin) {
+		this.dateOfJoin = dateOfJoin;
+	}
+
 	public String geteId() {
 		return eId;
 	}
@@ -223,13 +231,6 @@ public class Employee extends AuditModel {
 	public void setWings(CompanyWings wings) {
 		this.wings = wings;
 	}
-
-	public Date getDateOfJoin() {
-		return dateOfJoin;
-	}
-
-	public void setDateOfJoin(Date dateOfJoin) {
-		this.dateOfJoin = dateOfJoin;
-	}
-
+	
+	
 }
