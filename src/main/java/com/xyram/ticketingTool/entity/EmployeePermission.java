@@ -16,7 +16,7 @@ import com.xyram.ticketingTool.id.generator.IdPrefix;
 
 
 @Entity
-@Table(name = "employee-permission")
+@Table(name = "employee_permission")
 public class EmployeePermission extends AuditModel{
 	
 	@Id
@@ -24,7 +24,16 @@ public class EmployeePermission extends AuditModel{
 	@GeneratedValue(generator = IdGenerator.ID_GENERATOR)
 	@GenericGenerator(name = IdGenerator.ID_GENERATOR, strategy = "com.xyram.ticketingTool.id.generator.IdGenerator")
 	@Column(name = "id")
-	private String id;
+	private String Id;
+	
+	@Column(name = "job_admin", nullable = false)
+	private Boolean jobAdmin;
+	
+	@Column(name = "job_opening_add", nullable = false) //JOB-OPENINGS-ADD
+	private Boolean jobOpeningAdd;
+	
+	@Column(name = "job_openings_view", nullable = false)//JOB-OPENINGS-VIEW
+	private Boolean jobOpeningsView;
 	
 //	JOB-APP-UPLOAD
 //	JOB-APP-VIEW-ALL
@@ -67,17 +76,50 @@ public class EmployeePermission extends AuditModel{
 //	ISSTRACK-ADMIN
 //	ISSTRACK-VIEW-ALL
 	
-	@Column(name = "emp-admin", nullable = false)
+	@Column(name = "emp_admin", nullable = false)
 	private Boolean empAdmin;
 	
-	@Column(name = "job-admin", nullable = false)
-	private Boolean jobAdmin;
+	public String getEmpPermissionId() {
+		return Id;
+	}
+
+	public void setEmpPermissionId(String empPermissionId) {
+		this.Id = empPermissionId;
+	}
+
+	public Boolean getEmpAdmin() {
+		return empAdmin;
+	}
+
+	public void setEmpAdmin(Boolean empAdmin) {
+		this.empAdmin = empAdmin;
+	}
+
+	public Boolean getJobAdmin() {
+		return jobAdmin;
+	}
+
+	public void setJobAdmin(Boolean jobAdmin) {
+		this.jobAdmin = jobAdmin;
+	}
+
+	public Boolean getJobOpeningAdd() {
+		return jobOpeningAdd;
+	}
+
+	public void setJobOpeningAdd(Boolean jobOpeningAdd) {
+		this.jobOpeningAdd = jobOpeningAdd;
+	}
+
+	public Boolean getJobOpeningsView() {
+		return jobOpeningsView;
+	}
+
+	public void setJobOpeningsView(Boolean jobOpeningsView) {
+		this.jobOpeningsView = jobOpeningsView;
+	}
+
 	
-	@Column(name = "job-opening-add", nullable = false) //JOB-OPENINGS-ADD
-	private Boolean jobOpeningAdd;
-	
-	@Column(name = "job-openings-view", nullable = false)//JOB-OPENINGS-VIEW
-	private Boolean jobOpeningsView;
 	
 //	@Column(name = "job-app-upload", nullable = false)//JOB-APP-UPLOAD
 //	private Boolean empAdmin;
