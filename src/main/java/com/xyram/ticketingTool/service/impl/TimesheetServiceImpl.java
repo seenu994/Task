@@ -15,6 +15,7 @@ import javax.transaction.Transactional;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContextException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -79,12 +80,13 @@ public class TimesheetServiceImpl implements TimesheetService {
 			if (timesheets.size() > 0) {
 				for (TimeSheet sheet : timesheets) {
 
-					if (sheet.getHoursSpent() > 24 || sheet.getTaskName().length() == 0
-							|| sheet.getTaskDescription().length() == 0) {
-						problemEncountered = true;
-						problemIs = "HoursSPent Should not exceed 24 Hrs or TaskName-Description are missing";
-						break;
-					}
+					/*
+					 * if (sheet.getHoursSpent() > 24 || sheet.getTaskName().length() == 0 ||
+					 * sheet.getTaskDescription().length() == 0) { problemEncountered = true;
+					 * problemIs =
+					 * "HoursSPent Should not exceed 24 Hrs or TaskName-Description are missing";
+					 * break; }
+					 */
 
 					sheet.setCreatedAt(new Date());
 					sheet.setCreatedBy(currentUser.getUserId());
@@ -199,16 +201,13 @@ public class TimesheetServiceImpl implements TimesheetService {
 						problemIs += "Sheet Not Found";
 						break;
 					}
-					if (sheet.getHoursSpent() > 24 || sheet.getTaskName().length() == 0
-							|| sheet.getTaskDescription().length() == 0) {
-						problemEncountered = true;
-						problemIs += "Wrong Details in Hours Spent-TaskName-Description";
-						break;
-					}
-					if (sheet.getTaskId() != null) {
-						sheetEntity.setTaskId(sheet.getTaskId());
-					}
-
+					/*
+					 * if (sheet.getHoursSpent() > 24 || sheet.getTaskName().length() == 0 ||
+					 * sheet.getTaskDescription().length() == 0) { problemEncountered = true;
+					 * problemIs += "Wrong Details in Hours Spent-TaskName-Description"; break; } if
+					 * (sheet.getTaskId() != null) { }
+					 */
+					sheetEntity.setTaskId(sheet.getTaskId());
 					sheetEntity.setUpdatedBy(currentUser.getUserId());
 					sheetEntity.setLastUpdatedAt(new Date());
 					sheetEntity.setStatus(TimesheetStatus.PENDING);
@@ -307,7 +306,7 @@ public class TimesheetServiceImpl implements TimesheetService {
 				Boolean sheetHaveIssues = false;
 				for (String sheetId : timesheets) {
 
-					TimeSheet sheet = timesheetRepository.getById(sheetId);
+					TimeSheet sheet = timesheetRepository.getByTimesheetId(sheetId);
 					if (sheet != null) {
 						if (!sheet.getApproverId().equals(currentUser.getUserId())) {
 							response.setSuccess(false);
@@ -485,12 +484,11 @@ public class TimesheetServiceImpl implements TimesheetService {
 				projectId, fromDateStr, toDateStr, status, pageable);
 		Map content = new HashMap();
 		content.put("timeSheetList", timeSheetList);
-//		content.put("totalCount", timesheetRepository.getAllMyTeamTimeSheetsCount(currentUser.getUserId(),employeeId, projectId, fromDateStr, toDateStr, statusStr));
+//			content.put("totalCount", timesheetRepository.getAllMyTeamTimeSheetsCount(currentUser.getUserId(),employeeId, projectId, fromDateStr, toDateStr, statusStr));
 		// ApiResponse response = new ApiResponse(true);
 		response.setMessage("List Retrieved");
 		response.setSuccess(true);
 		response.setContent(content);
-
 		return response;
 	}
 
@@ -741,6 +739,16 @@ public class TimesheetServiceImpl implements TimesheetService {
 			if (sheet.getTaskId() == null || sheet.getTaskId().equals("")) {
 				response.setSuccess(false);
 				response.setMessage("Task ID is mandatory");
+				return response;
+			}
+
+			if (sheet.getHoursSpent() == null || sheet.getHoursSpent().equals("") || sheet.getHoursSpent() == 0) {
+				response.setSuccess(false);
+				response.setMessage("Hours spent is mandatory");
+				return response;
+			} else if (sheet.getHoursSpent() > 24) {
+				response.setSuccess(false);
+				response.setMessage("More than 24 Hours are not allowed per day");
 				return response;
 			}
 		}
