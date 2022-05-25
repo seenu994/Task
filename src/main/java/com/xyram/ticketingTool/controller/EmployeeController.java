@@ -64,6 +64,14 @@ class EmployeeController
 		logger.info("Changing Employee Permission");
 		return employeeService.changeEmployeePermission(employeePermission);
 	}
+	
+	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/changeAllEmployeePermissionsToDefault"})
+	public ApiResponse changeAllEmployeePermissionsToDefault() throws Exception {
+		logger.info("Changing All Employee Permission to default");
+		return employeeService.changeAllEmployeePermissionsToDefault();
+	}
+	
+	
 
 	@PostMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/createJobVendor",
 			AuthConstants.ADMIN_BASEPATH + "/createJobVendor" })
