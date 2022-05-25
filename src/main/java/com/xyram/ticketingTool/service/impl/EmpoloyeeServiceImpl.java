@@ -71,19 +71,14 @@ import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.EmployeeService;
 import com.xyram.ticketingTool.service.NotificationService;
 import com.xyram.ticketingTool.service.TicketAttachmentService;
+import com.xyram.ticketingTool.ticket.config.EmployeePermissionConfig;
 import com.xyram.ticketingTool.ticket.config.PermissionConfig;
 import com.xyram.ticketingTool.util.BulkUploadExcelUtil;
 import com.xyram.ticketingTool.util.EmployeeUtil;
 import com.xyram.ticketingTool.util.ResponseMessages;
 
-/**
- * 
- * @author sahana.neelappa
- *
- */
 
 @Service
-
 public class EmpoloyeeServiceImpl implements EmployeeService {
 
 	private static final Logger logger = LoggerFactory.getLogger(EmpoloyeeServiceImpl.class);
@@ -157,6 +152,9 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	
 	@Autowired
 	EmployeePermissionRepository empPermissionRepo;
+	
+	@Autowired
+	EmployeePermissionConfig empPerConfig;
 
 	@Value("${APPLICATION_URL}")
 	private String application_url;
@@ -176,9 +174,14 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	public ApiResponse addemployee(Employee employee) throws Exception {
 
 		ApiResponse response = new ApiResponse(false);
-
 		
-			response = validateEmployee(employee);
+		if(!empPerConfig.isHavingpersmission("empAdmin")) {
+			response.setSuccess(false);
+			response.setMessage("Not authorised to create employee");
+			return response;
+		}
+
+		response = validateEmployee(employee);
 		
 		if (response.getMessage() != null && response.getMessage() != "") {
 			return response;
@@ -1234,12 +1237,21 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	@Override
 	public ApiResponse changeAllEmployeePermissionsToDefault() {
 		ApiResponse response = new ApiResponse(false);
-		List<Employee> employeeList = employeeRepository.findAll();
+		List<Employee> employeeList = employeeRepository.getAllEmployees();
 		for (Employee employee : employeeList) {
 			EmployeePermission empPermission = empPermissionRepo.getbyUserId(employee.getUserCredientials().getId());
-			empPermissionRepo.save(empPermission);
+			if(empPermission != null)
+				empPermissionRepo.save(empPermission);
+			else
+			{
+				EmployeePermission empPerObj = new EmployeePermission();
+				if(employee.getUserCredientials().getId() != null) {
+					empPerObj.setUserId(employee.getUserCredientials().getId());
+					empPermissionRepo.save(empPerObj);
+				}
+			}
 		}
-		response.setSuccess(false);
+		response.setSuccess(true);
 		response.setMessage("Changed Permissions to Default");
 		return response;
 	}

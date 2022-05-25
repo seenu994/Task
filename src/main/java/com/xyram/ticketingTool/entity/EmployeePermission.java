@@ -27,101 +27,123 @@ public class EmployeePermission extends AuditModel{
 	@Column(name = "user_id", nullable = false)
 	private String userId;
 	
-	@Column(name = "job_admin", nullable = false)
-	private Boolean jobAdmin;
+	@Column(name = "hr_calendar_access", nullable = false, columnDefinition = "boolean default false")
+	private boolean hrCalenderAccess;
 	
-	@Column(name = "job_opening_add", nullable = false) 
-	private Boolean jobOpeningAdd;
+	@Column(name = "asset_mngt_required" , columnDefinition = "boolean default false") 
+	private boolean assetMngtAccess;
 	
-	@Column(name = "job_openings_view", nullable = false, columnDefinition = "boolean default true")
-	private Boolean jobOpeningsView;
+	public boolean isHrCalenderAccess() {
+		return hrCalenderAccess;
+	}
+
+	public void setHrCalenderAccess(boolean hrCalenderAccess) {
+		this.hrCalenderAccess = hrCalenderAccess;
+	}
+
+	public boolean isAssetMngtAccess() {
+		return assetMngtAccess;
+	}
+
+	public void setAssetMngtAccess(boolean assetMngtAccess) {
+		this.assetMngtAccess = assetMngtAccess;
+	}
+
+	@Column(name = "job_admin", nullable = false, columnDefinition = "boolean default false")
+	private boolean jobAdmin;
 	
-	@Column(name = "job_app_upload", nullable = false, columnDefinition = "boolean default true")
-	private Boolean jobAppUpload;
+	@Column(name = "job_opening_add" , columnDefinition = "boolean default false") 
+	private boolean jobOpeningAdd;
 	
-	@Column(name = "job_app_view_all", nullable = false)
-	private Boolean jobAppViewAll;
+	@Column(name = "job_openings_view" , columnDefinition = "boolean default true")
+	private boolean jobOpeningsView;
 	
-	@Column(name = "job_off_view_all", nullable = false)
-	private Boolean jobOffViewAll;
+	@Column(name = "job_app_upload" , columnDefinition = "boolean default true")
+	private boolean jobAppUpload;
 	
-	@Column(name = "job_int_view_all", nullable = false)
-	private Boolean jobIntViewAll;
+	@Column(name = "job_app_view_all" , columnDefinition = "boolean default false")
+	private boolean jobAppViewAll;
 	
-	@Column(name = "har_cal_schedule_add", nullable = false)
-	private Boolean harCalScheduleAdd;
+	@Column(name = "job_off_view_all" , columnDefinition = "boolean default false")
+	private boolean jobOffViewAll;
 	
-	@Column(name = "hr_cal_view_all", nullable = false)
-	private Boolean hrCalViewAll;
+	@Column(name = "job_int_view_all" , columnDefinition = "boolean default false")
+	private boolean jobIntViewAll;
 	
-	@Column(name = "ann_view_all", nullable = false, columnDefinition = "boolean default true")
-	private Boolean annViewAll;
+	@Column(name = "har_cal_schedule_add" , columnDefinition = "boolean default false")
+	private boolean harCalScheduleAdd;
 	
-	@Column(name = "ann_edit_all", nullable = false)
-	private Boolean annEditAll;
+	@Column(name = "hr_cal_view_all" , columnDefinition = "boolean default false")
+	private boolean hrCalViewAll;
 	
-	@Column(name = "ann_add", nullable = false)
-	private Boolean annAdd;
+	@Column(name = "ann_view_all" , columnDefinition = "boolean default true")
+	private boolean annViewAll;
 	
-	@Column(name = "art_view_all", nullable = false, columnDefinition = "boolean default true")
-	private Boolean artViewAll;
+	@Column(name = "ann_edit_all" , columnDefinition = "boolean default false")
+	private boolean annEditAll;
 	
-	@Column(name = "art_edit_all", nullable = false)
-	private Boolean artEditAll;
+	@Column(name = "ann_add" , columnDefinition = "boolean default false")
+	private boolean annAdd;
 	
-	@Column(name = "art_add", nullable = false)
-	private Boolean artAdd;
+	@Column(name = "art_view_all" , columnDefinition = "boolean default true")
+	private boolean artViewAll;
 	
-	@Column(name = "tkt_admin", nullable = false)
-	private Boolean tktAdmin;
+	@Column(name = "art_edit_all" , columnDefinition = "boolean default false")
+	private boolean artEditAll;
 	
-	@Column(name = "tkt_add", nullable = false, columnDefinition = "boolean default true")
-	private Boolean tktAdd;
+	@Column(name = "art_add" , columnDefinition = "boolean default false")
+	private boolean artAdd;
 	
-	@Column(name = "tkt_assign", nullable = false)
-	private Boolean tktAssign;
+	@Column(name = "tkt_admin" , columnDefinition = "boolean default false")
+	private boolean tktAdmin;
 	
-	@Column(name = "prj_view_all", nullable = false)
-	private Boolean prjViewAll;
+	@Column(name = "tkt_add" , columnDefinition = "boolean default true")
+	private boolean tktAdd;
 	
-	@Column(name = "prj_edit_all", nullable = false)
-	private Boolean prjEditAll;
+	@Column(name = "tkt_assign" , columnDefinition = "boolean default false")
+	private boolean tktAssign;
 	
-	@Column(name = "prj_add", nullable = false)
-	private Boolean prjAdd;
+	@Column(name = "prj_view_all" , columnDefinition = "boolean default false")
+	private boolean prjViewAll;
 	
-	@Column(name = "timesheet_add", nullable = false, columnDefinition = "boolean default true")
-	private Boolean timesheetAdd;
+	@Column(name = "prj_edit_all" , columnDefinition = "boolean default false")
+	private boolean prjEditAll;
 	
-	@Column(name = "timesheet_admin", nullable = false)
-	private Boolean timesheetAdmin;
+	@Column(name = "prj_add" , columnDefinition = "boolean default false")
+	private boolean prjAdd;
 	
-	@Column(name = "asst_admin", nullable = false)
-	private Boolean asstAdmin;
+	@Column(name = "timesheet_add" , columnDefinition = "boolean default true")
+	private boolean timesheetAdd;
 	
-	@Column(name = "asst_add", nullable = false)
-	private Boolean asstAdd;
+	@Column(name = "timesheet_admin" , columnDefinition = "boolean default false")
+	private boolean timesheetAdmin;
 	
-	@Column(name = "asst_iss_add", nullable = false)
-	private Boolean asstIssAdd;
+	@Column(name = "asst_admin" , columnDefinition = "boolean default false")
+	private boolean asstAdmin;
 	
-	@Column(name = "asst_bill_add", nullable = false)
-	private Boolean asstBillAdd;
+	@Column(name = "asst_add" , columnDefinition = "boolean default false")
+	private boolean asstAdd;
 	
-	@Column(name = "jv_view_all", nullable = false)
-	private Boolean jvViewAll;
+	@Column(name = "asst_iss_add" , columnDefinition = "boolean default false")
+	private boolean asstIssAdd;
 	
-	@Column(name = "av_view_all", nullable = false)
-	private Boolean avViewAll;
+	@Column(name = "asst_bill_add" , columnDefinition = "boolean default false")
+	private boolean asstBillAdd;
 	
-	@Column(name = "iss_track_admin", nullable = false)
-	private Boolean issTrackAdmin;
+	@Column(name = "jv_view_all" , columnDefinition = "boolean default false")
+	private boolean jvViewAll;
 	
-	@Column(name = "iss_track_view_all", nullable = false)
-	private Boolean issTrackViewAll;
+	@Column(name = "av_view_all" , columnDefinition = "boolean default false")
+	private boolean avViewAll;
 	
-	@Column(name = "emp_admin", nullable = false)
-	private Boolean empAdmin;
+	@Column(name = "iss_track_admin" , columnDefinition = "boolean default false")
+	private boolean issTrackAdmin;
+	
+	@Column(name = "iss_track_view_all" , columnDefinition = "boolean default false")
+	private boolean issTrackViewAll;
+	
+	@Column(name = "emp_admin" , columnDefinition = "boolean default false")
+	private boolean empAdmin;
 	
 	public EmployeePermission(){
 		this.jobOpeningsView = true;
@@ -147,35 +169,35 @@ public class EmployeePermission extends AuditModel{
 		this.Id = empPermissionId;
 	}
 
-	public Boolean getEmpAdmin() {
+	public boolean getEmpAdmin() {
 		return empAdmin;
 	}
 
-	public void setEmpAdmin(Boolean empAdmin) {
+	public void setEmpAdmin(boolean empAdmin) {
 		this.empAdmin = empAdmin;
 	}
 
-	public Boolean getJobAdmin() {
+	public boolean getJobAdmin() {
 		return jobAdmin;
 	}
 
-	public void setJobAdmin(Boolean jobAdmin) {
+	public void setJobAdmin(boolean jobAdmin) {
 		this.jobAdmin = jobAdmin;
 	}
 
-	public Boolean getJobOpeningAdd() {
+	public boolean getJobOpeningAdd() {
 		return jobOpeningAdd;
 	}
 
-	public void setJobOpeningAdd(Boolean jobOpeningAdd) {
+	public void setJobOpeningAdd(boolean jobOpeningAdd) {
 		this.jobOpeningAdd = jobOpeningAdd;
 	}
 
-	public Boolean getJobOpeningsView() {
+	public boolean getJobOpeningsView() {
 		return jobOpeningsView;
 	}
 
-	public void setJobOpeningsView(Boolean jobOpeningsView) {
+	public void setJobOpeningsView(boolean jobOpeningsView) {
 		this.jobOpeningsView = jobOpeningsView;
 	}
 
@@ -187,228 +209,230 @@ public class EmployeePermission extends AuditModel{
 		Id = id;
 	}
 
-	public Boolean getJobAppUpload() {
+	public boolean getJobAppUpload() {
 		return jobAppUpload;
 	}
 
-	public void setJobAppUpload(Boolean jobAppUpload) {
+	public void setJobAppUpload(boolean jobAppUpload) {
 		this.jobAppUpload = jobAppUpload;
 	}
 
-	public Boolean getJobAppViewAll() {
+	public boolean getJobAppViewAll() {
 		return jobAppViewAll;
 	}
 
-	public void setJobAppViewAll(Boolean jobAppViewAll) {
+	public void setJobAppViewAll(boolean jobAppViewAll) {
 		this.jobAppViewAll = jobAppViewAll;
 	}
 
-	public Boolean getJobOffViewAll() {
+	public boolean getJobOffViewAll() {
 		return jobOffViewAll;
 	}
 
-	public void setJobOffViewAll(Boolean jobOffViewAll) {
+	public void setJobOffViewAll(boolean jobOffViewAll) {
 		this.jobOffViewAll = jobOffViewAll;
 	}
 
-	public Boolean getJobIntViewAll() {
+	public boolean getJobIntViewAll() {
 		return jobIntViewAll;
 	}
 
-	public void setJobIntViewAll(Boolean jobIntViewAll) {
+	public void setJobIntViewAll(boolean jobIntViewAll) {
 		this.jobIntViewAll = jobIntViewAll;
 	}
 
-	public Boolean getHarCalScheduleAdd() {
+	public boolean getHarCalScheduleAdd() {
 		return harCalScheduleAdd;
 	}
 
-	public void setHarCalScheduleAdd(Boolean harCalScheduleAdd) {
+	public void setHarCalScheduleAdd(boolean harCalScheduleAdd) {
 		this.harCalScheduleAdd = harCalScheduleAdd;
 	}
 
-	public Boolean getHrCalViewAll() {
+	public boolean getHrCalViewAll() {
 		return hrCalViewAll;
 	}
 
-	public void setHrCalViewAll(Boolean hrCalViewAll) {
+	public void setHrCalViewAll(boolean hrCalViewAll) {
 		this.hrCalViewAll = hrCalViewAll;
 	}
 
-	public Boolean getAnnViewAll() {
+	public boolean getAnnViewAll() {
 		return annViewAll;
 	}
 
-	public void setAnnViewAll(Boolean annViewAll) {
+	public void setAnnViewAll(boolean annViewAll) {
 		this.annViewAll = annViewAll;
 	}
 
-	public Boolean getAnnEditAll() {
+	public boolean getAnnEditAll() {
 		return annEditAll;
 	}
 
-	public void setAnnEditAll(Boolean annEditAll) {
+	public void setAnnEditAll(boolean annEditAll) {
 		this.annEditAll = annEditAll;
 	}
 
-	public Boolean getAnnAdd() {
+	public boolean getAnnAdd() {
 		return annAdd;
 	}
 
-	public void setAnnAdd(Boolean annAdd) {
+	public void setAnnAdd(boolean annAdd) {
 		this.annAdd = annAdd;
 	}
 
-	public Boolean getArtViewAll() {
+	public boolean getArtViewAll() {
 		return artViewAll;
 	}
 
-	public void setArtViewAll(Boolean artViewAll) {
+	public void setArtViewAll(boolean artViewAll) {
 		this.artViewAll = artViewAll;
 	}
 
-	public Boolean getArtEditAll() {
+	public boolean getArtEditAll() {
 		return artEditAll;
 	}
 
-	public void setArtEditAll(Boolean artEditAll) {
+	public void setArtEditAll(boolean artEditAll) {
 		this.artEditAll = artEditAll;
 	}
 
-	public Boolean getArtAdd() {
+	public boolean getArtAdd() {
 		return artAdd;
 	}
 
-	public void setArtAdd(Boolean artAdd) {
+	public void setArtAdd(boolean artAdd) {
 		this.artAdd = artAdd;
 	}
 
-	public Boolean getTktAdmin() {
+	public boolean getTktAdmin() {
 		return tktAdmin;
 	}
 
-	public void setTktAdmin(Boolean tktAdmin) {
+	public void setTktAdmin(boolean tktAdmin) {
 		this.tktAdmin = tktAdmin;
 	}
 
-	public Boolean getTktAdd() {
+	public boolean getTktAdd() {
 		return tktAdd;
 	}
 
-	public void setTktAdd(Boolean tktAdd) {
+	public void setTktAdd(boolean tktAdd) {
 		this.tktAdd = tktAdd;
 	}
 
-	public Boolean getTktAssign() {
+	public boolean getTktAssign() {
 		return tktAssign;
 	}
 
-	public void setTktAssign(Boolean tktAssign) {
+	public void setTktAssign(boolean tktAssign) {
 		this.tktAssign = tktAssign;
 	}
 
-	public Boolean getPrjViewAll() {
+	public boolean getPrjViewAll() {
 		return prjViewAll;
 	}
 
-	public void setPrjViewAll(Boolean prjViewAll) {
+	public void setPrjViewAll(boolean prjViewAll) {
 		this.prjViewAll = prjViewAll;
 	}
 
-	public Boolean getPrjEditAll() {
+	public boolean getPrjEditAll() {
 		return prjEditAll;
 	}
 
-	public void setPrjEditAll(Boolean prjEditAll) {
+	public void setPrjEditAll(boolean prjEditAll) {
 		this.prjEditAll = prjEditAll;
 	}
 
-	public Boolean getPrjAdd() {
+	public boolean getPrjAdd() {
 		return prjAdd;
 	}
 
-	public void setPrjAdd(Boolean prjAdd) {
+	public void setPrjAdd(boolean prjAdd) {
 		this.prjAdd = prjAdd;
 	}
 
-	public Boolean getTimesheetAdd() {
+	public boolean getTimesheetAdd() {
 		return timesheetAdd;
 	}
 
-	public void setTimesheetAdd(Boolean timesheetAdd) {
+	public void setTimesheetAdd(boolean timesheetAdd) {
 		this.timesheetAdd = timesheetAdd;
 	}
 
-	public Boolean getTimesheetAdmin() {
+	public boolean getTimesheetAdmin() {
 		return timesheetAdmin;
 	}
 
-	public void setTimesheetAdmin(Boolean timesheetAdmin) {
+	public void setTimesheetAdmin(boolean timesheetAdmin) {
 		this.timesheetAdmin = timesheetAdmin;
 	}
 
-	public Boolean getAsstAdmin() {
+	public boolean getAsstAdmin() {
 		return asstAdmin;
 	}
 
-	public void setAsstAdmin(Boolean asstAdmin) {
+	public void setAsstAdmin(boolean asstAdmin) {
 		this.asstAdmin = asstAdmin;
 	}
 
-	public Boolean getAsstAdd() {
+	public boolean getAsstAdd() {
 		return asstAdd;
 	}
 
-	public void setAsstAdd(Boolean asstAdd) {
+	public void setAsstAdd(boolean asstAdd) {
 		this.asstAdd = asstAdd;
 	}
 
-	public Boolean getAsstIssAdd() {
+	public boolean getAsstIssAdd() {
 		return asstIssAdd;
 	}
 
-	public void setAsstIssAdd(Boolean asstIssAdd) {
+	public void setAsstIssAdd(boolean asstIssAdd) {
 		this.asstIssAdd = asstIssAdd;
 	}
 
-	public Boolean getAsstBillAdd() {
+	public boolean getAsstBillAdd() {
 		return asstBillAdd;
 	}
 
-	public void setAsstBillAdd(Boolean asstBillAdd) {
+	public void setAsstBillAdd(boolean asstBillAdd) {
 		this.asstBillAdd = asstBillAdd;
 	}
 
-	public Boolean getJvViewAll() {
+	public boolean getJvViewAll() {
 		return jvViewAll;
 	}
 
-	public void setJvViewAll(Boolean jvViewAll) {
+	public void setJvViewAll(boolean jvViewAll) {
 		this.jvViewAll = jvViewAll;
 	}
 
-	public Boolean getAvViewAll() {
+	public boolean getAvViewAll() {
 		return avViewAll;
 	}
 
-	public void setAvViewAll(Boolean avViewAll) {
+	public void setAvViewAll(boolean avViewAll) {
 		this.avViewAll = avViewAll;
 	}
 
-	public Boolean getIssTrackAdmin() {
+	public boolean getIssTrackAdmin() {
 		return issTrackAdmin;
 	}
 
-	public void setIssTrackAdmin(Boolean issTrackAdmin) {
+	public void setIssTrackAdmin(boolean issTrackAdmin) {
 		this.issTrackAdmin = issTrackAdmin;
 	}
 
-	public Boolean getIssTrackViewAll() {
+	public boolean getIssTrackViewAll() {
 		return issTrackViewAll;
 	}
 
-	public void setIssTrackViewAll(Boolean issTrackViewAll) {
+	public void setIssTrackViewAll(boolean issTrackViewAll) {
 		this.issTrackViewAll = issTrackViewAll;
 	}
+	
+	
 
 }
