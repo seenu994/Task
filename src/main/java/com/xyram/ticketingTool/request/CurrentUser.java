@@ -1,5 +1,7 @@
 package com.xyram.ticketingTool.request;
 
+import com.xyram.ticketingTool.entity.EmployeePermission;
+
 public class CurrentUser {
 	
 	private String name;
@@ -11,6 +13,16 @@ public class CurrentUser {
 	private String scopeId;
 	
 	private String firstName;
+	
+	private EmployeePermission permission;
+
+	public EmployeePermission getPermission() {
+		return permission;
+	}
+
+	public void setPermission(EmployeePermission permission) {
+		this.permission = permission;
+	}
 
 	public String getFirstName() {
 		return firstName;

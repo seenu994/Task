@@ -63,6 +63,8 @@ public interface EmployeeService {
 	ApiResponse getAllEmployeeCurrentMonth(Pageable pageable);
 
 	ApiResponse getJobVendorById(String vendorId);
+	
+	ApiResponse changeAllEmployeePermissionsToDefault();
 
 	ApiResponse getListByAccessToken();
 

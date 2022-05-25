@@ -1230,6 +1230,19 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 		return response;
 	}
+	
+	@Override
+	public ApiResponse changeAllEmployeePermissionsToDefault() {
+		ApiResponse response = new ApiResponse(false);
+		List<Employee> employeeList = employeeRepository.findAll();
+		for (Employee employee : employeeList) {
+			EmployeePermission empPermission = empPermissionRepo.getbyUserId(employee.getUserCredientials().getId());
+			empPermissionRepo.save(empPermission);
+		}
+		response.setSuccess(false);
+		response.setMessage("Changed Permissions to Default");
+		return response;
+	}
 
 	@Override
 	public ApiResponse getJobVendorById(String vendorId) {
