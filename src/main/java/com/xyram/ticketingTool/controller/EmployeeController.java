@@ -48,9 +48,7 @@ class EmployeeController
 	
 	
 
-	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/createEmployee",
-			AuthConstants.HR_ADMIN_BASEPATH + "/createEmployee",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/createEmployee" })
+	@PostMapping("/createEmployee")
 	public ApiResponse addemployee(@RequestBody Employee employee) throws Exception {
 		logger.info("Received request to add Employee");
 		return employeeService.addemployee(employee);
@@ -75,7 +73,7 @@ class EmployeeController
 		return employeeService.getEmployeePermission(userId);
 	}
 	
-	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/changeAllEmployeePermissionsToDefault"})
+	@PostMapping("/changeAllEmployeePermissionsToDefault")
 	public ApiResponse changeAllEmployeePermissionsToDefault() throws Exception {
 		logger.info("Changing All Employee Permission to default");
 		return employeeService.changeAllEmployeePermissionsToDefault();
