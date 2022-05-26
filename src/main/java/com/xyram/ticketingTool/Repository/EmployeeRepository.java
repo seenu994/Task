@@ -221,6 +221,10 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 			+ "left JOIN Role r On e.roleId = r.Id left JOIN  Designation d On e.designationId=d.Id ORDER BY e.createdAt DESC")
 
 	List<Map> getAllEmployee();
+	
+	@Query("SELECT e from Employee e ")
+	List<Employee> getAllEmployees();
+
 
 	@Query("select e from Employee e left join User u On e.eId=u.id where e.eId= :employeeId ")
 	Employee getByEmpId(String employeeId);

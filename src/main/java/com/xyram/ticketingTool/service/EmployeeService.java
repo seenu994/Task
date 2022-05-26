@@ -18,7 +18,11 @@ public interface EmployeeService {
 
 	ApiResponse addemployee(Employee employee) throws Exception;
 	
-	ApiResponse changeEmployeePermission(EmployeePermission employeePermission);
+	ApiResponse changeEmployeeAllPermission(EmployeePermission employeePermission);
+	
+	ApiResponse changeEmployeePermission(String userId,String permission, boolean flag) throws Exception, SecurityException;
+	
+	ApiResponse getEmployeePermission(String userId) throws Exception;
 
 	ApiResponse getAllEmployee(Map<String, Object> filter, Pageable pageable);
 

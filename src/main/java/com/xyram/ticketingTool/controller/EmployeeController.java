@@ -48,24 +48,32 @@ class EmployeeController
 	
 	
 
-	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/createEmployee",
-			AuthConstants.HR_ADMIN_BASEPATH + "/createEmployee",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/createEmployee" })
+	@PostMapping("/createEmployee")
 	public ApiResponse addemployee(@RequestBody Employee employee) throws Exception {
 		logger.info("Received request to add Employee");
 		return employeeService.addemployee(employee);
 	}
 	
 	
-	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/changeEmployeePermissions",
-			AuthConstants.HR_ADMIN_BASEPATH + "/changeEmployeePermissions",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/changeEmployeePermissions" })
-	public ApiResponse changeEmployeePermissions(@RequestBody EmployeePermission employeePermission) throws Exception {
-		logger.info("Changing Employee Permission");
-		return employeeService.changeEmployeePermission(employeePermission);
+	@PostMapping("/changeEmployeeAllPermission")
+	public ApiResponse changeEmployeeAllPermission(@RequestBody EmployeePermission employeePermission) throws Exception {
+		logger.info("Changing Employee All Permission");
+		return employeeService.changeEmployeeAllPermission(employeePermission);
 	}
 	
-	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/changeAllEmployeePermissionsToDefault"})
+	@PostMapping("/changeEmployeePermissions/{userId}/{permission}/{flag}")
+	public ApiResponse changeEmployeePermissions(@PathVariable String userId,@PathVariable String permission,@PathVariable boolean flag) throws Exception {
+		logger.info("Changing Employee Permission");
+		return employeeService.changeEmployeePermission(userId,permission,flag);
+	}
+	
+	@GetMapping("/getEmployeePermissions/{userId}")
+	public ApiResponse getEmployeePermission(@PathVariable String userId) throws Exception{
+		logger.info("Get Employee Permission");
+		return employeeService.getEmployeePermission(userId);
+	}
+	
+	@PostMapping("/changeAllEmployeePermissionsToDefault")
 	public ApiResponse changeAllEmployeePermissionsToDefault() throws Exception {
 		logger.info("Changing All Employee Permission to default");
 		return employeeService.changeAllEmployeePermissionsToDefault();
