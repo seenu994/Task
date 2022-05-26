@@ -339,8 +339,14 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 //		}
 	}
 	
-	public ApiResponse getEmployeePermission(String userId) {
+	public ApiResponse getEmployeePermission(String userId) throws Exception {
 		ApiResponse response = new ApiResponse(true);
+
+		if(!empPerConfig.isHavingpersmission("empAdmin")) {
+			response.setSuccess(false);
+			response.setMessage("Not authorised to view employee permisions");
+			return response;
+		}
 		EmployeePermission ep  = empPermissionRepo.getbyUserId(userId);
 		if(ep != null) {
 			Map content = new HashMap();

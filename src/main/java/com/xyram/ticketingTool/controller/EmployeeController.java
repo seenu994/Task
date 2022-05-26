@@ -70,7 +70,7 @@ class EmployeeController
 	}
 	
 	@GetMapping("/getEmployeePermissions/{userId}")
-	public ApiResponse changeEmployeePermissions(@PathVariable String userId){
+	public ApiResponse getEmployeePermission(@PathVariable String userId) throws Exception{
 		logger.info("Get Employee Permission");
 		return employeeService.getEmployeePermission(userId);
 	}

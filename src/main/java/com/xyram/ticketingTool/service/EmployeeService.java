@@ -22,7 +22,7 @@ public interface EmployeeService {
 	
 	ApiResponse changeEmployeePermission(String userId,String permission, boolean flag) throws Exception, SecurityException;
 	
-	ApiResponse getEmployeePermission(String userId);
+	ApiResponse getEmployeePermission(String userId) throws Exception;
 
 	ApiResponse getAllEmployee(Map<String, Object> filter, Pageable pageable);
 
