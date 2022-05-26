@@ -33,6 +33,17 @@ public class EmployeePermission extends AuditModel{
 	@Column(name = "asset_mngt_required" , columnDefinition = "boolean default false") 
 	private boolean assetMngtAccess;
 	
+	@Column(name = "vendor_access" , columnDefinition = "boolean default false") 
+	private boolean vendorAccess;
+	
+	public boolean isVendorAccess() {
+		return vendorAccess;
+	}
+
+	public void setVendorAccess(boolean vendorAccess) {
+		this.vendorAccess = vendorAccess;
+	}
+
 	public boolean isHrCalenderAccess() {
 		return hrCalenderAccess;
 	}
@@ -103,6 +114,17 @@ public class EmployeePermission extends AuditModel{
 	@Column(name = "tkt_assign" , columnDefinition = "boolean default false")
 	private boolean tktAssign;
 	
+	@Column(name = "prj_admin" , columnDefinition = "boolean default false")
+	private boolean prjAdmin;
+	
+	public boolean isPrjAdmin() {
+		return prjAdmin;
+	}
+
+	public void setPrjAdmin(boolean prjAdmin) {
+		this.prjAdmin = prjAdmin;
+	}
+
 	@Column(name = "prj_view_all" , columnDefinition = "boolean default false")
 	private boolean prjViewAll;
 	

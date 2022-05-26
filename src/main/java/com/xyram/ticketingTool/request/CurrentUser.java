@@ -14,14 +14,14 @@ public class CurrentUser {
 	
 	private String firstName;
 	
-	private EmployeePermission permission;
+	private EmployeePermission empPermission;
 
 	public EmployeePermission getPermission() {
-		return permission;
+		return empPermission;
 	}
 
 	public void setPermission(EmployeePermission permission) {
-		this.permission = permission;
+		this.empPermission = permission;
 	}
 
 	public String getFirstName() {

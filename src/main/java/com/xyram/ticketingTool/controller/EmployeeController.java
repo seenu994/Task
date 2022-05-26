@@ -57,12 +57,22 @@ class EmployeeController
 	}
 	
 	
-	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/changeEmployeePermissions",
-			AuthConstants.HR_ADMIN_BASEPATH + "/changeEmployeePermissions",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/changeEmployeePermissions" })
-	public ApiResponse changeEmployeePermissions(@RequestBody EmployeePermission employeePermission) throws Exception {
+	@PostMapping("/changeEmployeeAllPermission")
+	public ApiResponse changeEmployeeAllPermission(@RequestBody EmployeePermission employeePermission) throws Exception {
+		logger.info("Changing Employee All Permission");
+		return employeeService.changeEmployeeAllPermission(employeePermission);
+	}
+	
+	@PostMapping("/changeEmployeePermissions/{userId}/{permission}/{flag}")
+	public ApiResponse changeEmployeePermissions(@PathVariable String userId,@PathVariable String permission,@PathVariable boolean flag) throws Exception {
 		logger.info("Changing Employee Permission");
-		return employeeService.changeEmployeePermission(employeePermission);
+		return employeeService.changeEmployeePermission(userId,permission,flag);
+	}
+	
+	@GetMapping("/getEmployeePermissions/{userId}")
+	public ApiResponse changeEmployeePermissions(@PathVariable String userId){
+		logger.info("Get Employee Permission");
+		return employeeService.getEmployeePermission(userId);
 	}
 	
 	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/changeAllEmployeePermissionsToDefault"})

@@ -64,7 +64,7 @@ public class JwtAuthenticateController {
 		
 		User appUser = userDetailsService.getAppUser(authenticationRequest.getUsername());
 		List<UserPermissions> permissions = permissionRepo.getByUserId(userDetails.getId());
-		EmployeePermission ep = empPermissionRepo.getbyUserId(userDetails.getId());
+		EmployeePermission ep = empPermissionRepo.getbyUserId(appUser.getId());
 
 		JwtResponse response = new JwtResponse(token, "sessionId",
 				AuthUtil.getBaseResourcePath(userDetails.getUserRole()),userDetails,permissions,ep);

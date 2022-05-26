@@ -2,6 +2,7 @@
 package com.xyram.ticketingTool.service.impl;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -26,6 +27,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
@@ -79,7 +83,7 @@ import com.xyram.ticketingTool.util.ResponseMessages;
 
 
 @Service
-public class EmpoloyeeServiceImpl implements EmployeeService {
+public class EmpoloyeeServiceImpl implements EmployeeService { 
 
 	private static final Logger logger = LoggerFactory.getLogger(EmpoloyeeServiceImpl.class);
 
@@ -335,7 +339,72 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 //		}
 	}
 	
-	public ApiResponse changeEmployeePermission(EmployeePermission employeePermission) {
+	public ApiResponse getEmployeePermission(String userId) {
+		ApiResponse response = new ApiResponse(true);
+		EmployeePermission ep  = empPermissionRepo.getbyUserId(userId);
+		if(ep != null) {
+			Map content = new HashMap();
+			content.put("permissions", ep);
+			response.setContent(content);
+			response.setMessage("Permissions retreived successfully..!");
+			response.setSuccess(true);
+		}
+		else {
+			response.setMessage("Employee details are not exist");
+			response.setSuccess(false);
+		}
+		return response;
+	}
+	
+	public ApiResponse changeEmployeePermission(String userId,String permission, boolean flag) throws Exception, SecurityException {
+		ApiResponse response = new ApiResponse(true);
+		EmployeePermission ep = empPermissionRepo.getbyUserId(currentUser.getUserId());
+		if(ep != null) {
+			if(!ep.getEmpAdmin()) {
+				response.setMessage("Not authorized to edit employee permission 1");
+				response.setSuccess(false);
+				return response;
+			}
+		}else {
+			response.setMessage("Not authorized to edit employee permission 2");
+			response.setSuccess(false);
+			return response;
+		}
+		Employee employee = employeeRepository.getbyUserId(userId);
+		if (employee != null) {
+			
+//	        EmployeePermission.class.getField(permission).set(ep, flag);
+			EmployeePermission ep1 = empPermissionRepo.getbyUserId(employee.getUserCredientials().getId());
+			ObjectMapper oMapper = new ObjectMapper();
+	        Map<String, Object> map = oMapper.convertValue(ep1, Map.class);
+	        if(map.containsKey(permission)) {
+	        	map.put(permission, flag);
+	        	
+	        	Gson gson = new Gson();
+	        	JsonElement jsonElement = gson.toJsonTree(map);
+	        	EmployeePermission newObj = gson.fromJson(jsonElement, EmployeePermission.class);
+	        	newObj.setId(ep1.getId());
+	        	empPermissionRepo.saveAndFlush(newObj);
+	        	
+	        	response.setMessage("Employee Permissions Updated");
+				response.setSuccess(true);
+				return response;
+				
+	        }else {
+	        	response.setMessage("Permissions Key not exist");
+				response.setSuccess(true);
+				return response;
+	        }
+			
+			
+		}else {
+			response.setMessage("Employee Not Exist");
+			response.setSuccess(false);
+			return response;
+		}
+	}
+	
+	public ApiResponse changeEmployeeAllPermission(EmployeePermission employeePermission) { 
 		ApiResponse response = new ApiResponse(true);
 		EmployeePermission ep = empPermissionRepo.getbyUserId(currentUser.getUserId());
 		if(ep != null) {
