@@ -31,53 +31,31 @@ public class ReminderController {
 	@Autowired
 	ReminderService reminderService;
 
-	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/createReminder",
-			AuthConstants.HR_ADMIN_BASEPATH + "/createReminder", AuthConstants.INFRA_ADMIN_BASEPATH + "/createReminder",
-			AuthConstants.INFRA_USER_BASEPATH + "/createReminder", AuthConstants.DEVELOPER_BASEPATH + "/createReminder",
-			AuthConstants.HR_BASEPATH + "/createReminder" })
+	@PostMapping("/createReminder")
 	public ApiResponse createReminder(@RequestBody Reminder Reminder) {
 		logger.info("Creating new Reminder");
 		return reminderService.createReminder(Reminder);
 	}
 
-	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editReminder/{remId}",
-			AuthConstants.HR_ADMIN_BASEPATH + "/editReminder/{remId}",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/editReminder/{remId}",
-			AuthConstants.INFRA_USER_BASEPATH + "/editReminder/{remId}",
-			AuthConstants.DEVELOPER_BASEPATH + "/editReminder/{remId}",
-			AuthConstants.HR_BASEPATH + "/editReminder/{remId}" })
+	@PostMapping("/editReminder/{remId}")
 	public ApiResponse editReminder(@PathVariable String remId, @RequestBody Reminder Reminder) {
 		logger.info("Editing Reminder");
 		return reminderService.editReminder(Reminder, remId);
 	}
 
-	@DeleteMapping(value = { AuthConstants.ADMIN_BASEPATH + "/deleteReminder/{ReminderId}",
-			AuthConstants.HR_ADMIN_BASEPATH + "/deleteReminder/{ReminderId}",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/deleteReminder/{ReminderId}",
-			AuthConstants.INFRA_USER_BASEPATH + "/deleteReminder/{ReminderId}",
-			AuthConstants.DEVELOPER_BASEPATH + "/deleteReminder/{ReminderId}",
-			AuthConstants.HR_BASEPATH + "/deleteReminder/{ReminderId}" })
+	@DeleteMapping("/deleteReminder/{ReminderId}")
 	public ApiResponse deleteReminder(@PathVariable String ReminderId) {
 		logger.info("Received deleting Reminder: ");
 		return reminderService.deleteReminder(ReminderId);
 	}
 
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllReminders",
-			AuthConstants.HR_ADMIN_BASEPATH + "/getAllReminders",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllReminders",
-			AuthConstants.INFRA_USER_BASEPATH + "/getAllReminders",
-			AuthConstants.DEVELOPER_BASEPATH + "/getAllReminders", AuthConstants.HR_BASEPATH + "/getAllReminders" })
+	@GetMapping("/getAllReminders")
 	public ApiResponse getAllReminders(Pageable pageable) {
 		logger.info("Get all Reminders ");
 		return reminderService.getAllReminder(pageable);
 	}
 
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getRemindersByDate",
-			AuthConstants.HR_ADMIN_BASEPATH + "/getRemindersByDate",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/getRemindersByDate",
-			AuthConstants.INFRA_USER_BASEPATH + "/getRemindersByDate",
-			AuthConstants.DEVELOPER_BASEPATH + "/getRemindersByDate",
-			AuthConstants.HR_BASEPATH + "/getRemindersByDate" })
+	@GetMapping("/getRemindersByDate")
 	public ApiResponse getRemindersByDateValue(@RequestParam Date paramDate) {
 		logger.info("Get all Reminders by date");
 		return reminderService.getRemindersByDate(paramDate);

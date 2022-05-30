@@ -7,9 +7,10 @@ import org.springframework.data.domain.Pageable;
 
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Reminder;
+import com.xyram.ticketingTool.request.ReminderRequest;
 
 public interface ReminderService {
-	ApiResponse createReminder(Reminder Reminder);
+	ApiResponse createReminder(ReminderRequest Reminder);
 
 	ApiResponse editReminder(Reminder ReminderReq, String ReminderId);
 
