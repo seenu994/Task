@@ -2,6 +2,10 @@
 package com.xyram.ticketingTool.service.impl;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +27,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
@@ -32,6 +39,7 @@ import com.xyram.ticketingTool.Communication.PushNotificationRequest;
 import com.xyram.ticketingTool.Repository.CompanyLocationRepository;
 import com.xyram.ticketingTool.Repository.CompanyWingsRepository;
 import com.xyram.ticketingTool.Repository.DesignationRepository;
+import com.xyram.ticketingTool.Repository.EmployeePermissionRepository;
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
 import com.xyram.ticketingTool.Repository.PermissionRepository;
 import com.xyram.ticketingTool.Repository.ProjectMemberRepository;
@@ -50,6 +58,7 @@ import com.xyram.ticketingTool.entity.CompanyLocation;
 import com.xyram.ticketingTool.entity.CompanyWings;
 import com.xyram.ticketingTool.entity.Designation;
 import com.xyram.ticketingTool.entity.Employee;
+import com.xyram.ticketingTool.entity.EmployeePermission;
 import com.xyram.ticketingTool.entity.JobVendorDetails;
 import com.xyram.ticketingTool.entity.Notifications;
 import com.xyram.ticketingTool.entity.Projects;
@@ -66,20 +75,15 @@ import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.EmployeeService;
 import com.xyram.ticketingTool.service.NotificationService;
 import com.xyram.ticketingTool.service.TicketAttachmentService;
+import com.xyram.ticketingTool.ticket.config.EmployeePermissionConfig;
 import com.xyram.ticketingTool.ticket.config.PermissionConfig;
 import com.xyram.ticketingTool.util.BulkUploadExcelUtil;
 import com.xyram.ticketingTool.util.EmployeeUtil;
 import com.xyram.ticketingTool.util.ResponseMessages;
 
-/**
- * 
- * @author sahana.neelappa
- *
- */
 
 @Service
-
-public class EmpoloyeeServiceImpl implements EmployeeService {
+public class EmpoloyeeServiceImpl implements EmployeeService { 
 
 	private static final Logger logger = LoggerFactory.getLogger(EmpoloyeeServiceImpl.class);
 
@@ -149,6 +153,12 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 	@Autowired
 	CompanyWingsRepository wingRepo;
+	
+	@Autowired
+	EmployeePermissionRepository empPermissionRepo;
+	
+	@Autowired
+	EmployeePermissionConfig empPerConfig;
 
 	@Value("${APPLICATION_URL}")
 	private String application_url;
@@ -163,17 +173,25 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 //	private static Map<String, com.xyram.ticketingTool.admin.model.User> userCache = new HashMap<>();
 
+	@SuppressWarnings("unused")
 	@Override
-	public ApiResponse addemployee(Employee employee) {
+	public ApiResponse addemployee(Employee employee) throws Exception {
 
 		ApiResponse response = new ApiResponse(false);
+		
+		if(!empPerConfig.isHavingpersmission("empAdmin")) {
+			response.setSuccess(false);
+			response.setMessage("Not authorised to create employee");
+			return response;
+		}
 
 		response = validateEmployee(employee);
+		
 		if (response.getMessage() != null && response.getMessage() != "") {
 			return response;
 		}
 		// Email Validation starts here
-	    
+
 		if (employee.getEmail() == null || employee.getEmail().equals("")) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.MAILID_MAN);
@@ -182,12 +200,14 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		if (!emailValidation(employee.getEmail())) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.INVAL_MAIL_ID);
+			return response;
 		}
 
 		String email = employeeRepository.filterByEmail(employee.getEmail());
 		if (email != null) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.MAIL_ID_EXI);
+			return response;
 		}
 		System.out.println("username::" + currentUser.getName());
 
@@ -198,7 +218,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 				response.setSuccess(false);
 				response.setMessage(ResponseMessages.EMP_CODE);
-
+				return response;
 			}
 
 			User user = new User();
@@ -206,14 +226,14 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			String encodedPassword = new BCryptPasswordEncoder().encode(employee.getPassword());
 			user.setPassword(encodedPassword);
 			if (employee.getFirstName().length() >= 3 && employee.getLastName().length() >= 3) {
-				
+
 				employee.setFirstName(employee.getFirstName().trim());
 				String name = employee.getFirstName();
 				String firstLetter = name.substring(0, 1);
-			    String remainingLetters = name.substring(1, name.length());
-			    firstLetter = firstLetter.toUpperCase();
-			    employee.setFirstName(firstLetter + remainingLetters);
-			    
+				String remainingLetters = name.substring(1, name.length());
+				firstLetter = firstLetter.toUpperCase();
+				employee.setFirstName(firstLetter + remainingLetters);
+
 				user.setName(employee.getFirstName() + " " + employee.getLastName());
 
 				// Employee employeere=new Employee();
@@ -244,10 +264,16 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				employee.setLastUpdatedAt(new Date());
 				employee.setUserCredientials(user);
 				employee.setProfileUrl("https://tool.xyramsoft.com:444/image/ticket-attachment/user-default-pic.png");
+				employee.setDateOfJoin(employee.getDateOfJoin());
 				Employee employeeNew = employeeRepository.save(employee);
 				User useredit = userRepository.getById(user.getId());
 				useredit.setScopeId(employeeNew.geteId());
 				userRepository.save(useredit);
+				
+				// New Permissions
+				EmployeePermission empPermission = new EmployeePermission();
+				empPermission.setUserId(employeeNew.geteId());
+				empPermissionRepo.save(empPermission);
 
 				// sending notification starts here..!
 
@@ -312,42 +338,143 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 //		}
 	}
+	
+	public ApiResponse getEmployeePermission(String userId) throws Exception {
+		ApiResponse response = new ApiResponse(true);
 
-	private ApiResponse validateEmployee(Employee employee) {
+		if(!empPerConfig.isHavingpersmission("empAdmin")) {
+			response.setSuccess(false);
+			response.setMessage("Not authorised to view employee permisions");
+			return response;
+		}
+		EmployeePermission ep  = empPermissionRepo.getbyUserId(userId);
+		if(ep != null) {
+			Map content = new HashMap();
+			content.put("permissions", ep);
+			response.setContent(content);
+			response.setMessage("Permissions retreived successfully..!");
+			response.setSuccess(true);
+		}
+		else {
+			response.setMessage("Employee details are not exist");
+			response.setSuccess(false);
+		}
+		return response;
+	}
+	
+	public ApiResponse changeEmployeePermission(String userId,String permission, boolean flag) throws Exception, SecurityException {
+		ApiResponse response = new ApiResponse(true);
+		EmployeePermission ep = empPermissionRepo.getbyUserId(currentUser.getUserId());
+		if(ep != null) {
+			if(!ep.getEmpAdmin()) {
+				response.setMessage("Not authorized to edit employee permission 1");
+				response.setSuccess(false);
+				return response;
+			}
+		}else {
+			response.setMessage("Not authorized to edit employee permission 2");
+			response.setSuccess(false);
+			return response;
+		}
+		Employee employee = employeeRepository.getbyUserId(userId);
+		if (employee != null) {
+			
+//	        EmployeePermission.class.getField(permission).set(ep, flag);
+			EmployeePermission ep1 = empPermissionRepo.getbyUserId(employee.getUserCredientials().getId());
+			ObjectMapper oMapper = new ObjectMapper();
+	        Map<String, Object> map = oMapper.convertValue(ep1, Map.class);
+	        if(map.containsKey(permission)) {
+	        	map.put(permission, flag);
+	        	
+	        	Gson gson = new Gson();
+	        	JsonElement jsonElement = gson.toJsonTree(map);
+	        	EmployeePermission newObj = gson.fromJson(jsonElement, EmployeePermission.class);
+	        	newObj.setId(ep1.getId());
+	        	empPermissionRepo.saveAndFlush(newObj);
+	        	
+	        	response.setMessage("Employee Permissions Updated");
+				response.setSuccess(true);
+				return response;
+				
+	        }else {
+	        	response.setMessage("Permissions Key not exist");
+				response.setSuccess(true);
+				return response;
+	        }
+			
+			
+		}else {
+			response.setMessage("Employee Not Exist");
+			response.setSuccess(false);
+			return response;
+		}
+	}
+	
+	public ApiResponse changeEmployeeAllPermission(EmployeePermission employeePermission) { 
+		ApiResponse response = new ApiResponse(true);
+		EmployeePermission ep = empPermissionRepo.getbyUserId(currentUser.getUserId());
+		if(ep != null) {
+			if(!ep.getEmpAdmin()) {
+				response.setMessage("Not authorized to edit employee permission");
+				response.setSuccess(false);
+				return response;
+			}
+		}else {
+			response.setMessage("Not authorized to edit employee permission");
+			response.setSuccess(false);
+			return response;
+		}
+		Employee employee = employeeRepository.getById(employeePermission.getUserId());
+		if (employee != null) {
+			empPermissionRepo.save(employeePermission);
+			response.setMessage("Employee Permissions Updated");
+			response.setSuccess(true);
+		}else {
+			response.setMessage("Employee Not Exist");
+			response.setSuccess(false);
+			return response;
+		}
+		return response;
+	}
+
+	private ApiResponse validateEmployee(Employee employee) throws Exception {
 		ApiResponse response = new ApiResponse(true);
 
 		String regex = "[a-z A-Z]+";
 		if (!emailValidation(employee.getEmail())) {
 			response.setMessage(ResponseMessages.EMAIL_INVALID);
-
 			response.setSuccess(false);
+			return response;
 		}
 
-		if (employee.getFirstName() == null || employee.getFirstName().equals("") || employee.getFirstName().length() < 3) {
-
+		if (employee.getFirstName() == null || employee.getFirstName().equals("")
+				|| employee.getFirstName().length() < 3) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.FIRST_NAME_MAN);
-
+			return response;
 		}
 		if (!employee.getFirstName().matches(regex)) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.FIRST_NAME_CHAR);
+			return response;
 		}
 
-		if (employee.getLastName() == null || employee.getLastName().equals("") || employee.getLastName().length() <= 0) {
+		if (employee.getLastName() == null || employee.getLastName().equals("")
+				|| employee.getLastName().length() <= 0) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.LAST_NAME_MAN);
-
+			return response;
 		}
 		if (!employee.getLastName().matches(regex)) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.LAST_NAME_CHAR);
-
+			return response;
 		}
 
 		if (employee.getLocation() == null || employee.getLocation().equals("")) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.LOC_MAN);
+			return response;
 		} else {
 
 			CompanyLocation companyLocation = companyLocationRepository.getCompanyLocations(employee.getLocation());
@@ -357,7 +484,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			if (companyLocation == null) {
 				response.setSuccess(false);
 				response.setMessage(ResponseMessages.LOC_NOT_VALID);
-
+				return response;
 			}
 		}
 
@@ -370,6 +497,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			if (role == null) {
 				response.setSuccess(false);
 				response.setMessage(ResponseMessages.ROLE_ID_NOT_VAL);
+				return response;
 			}
 
 		}
@@ -377,18 +505,21 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		if (employee.getDesignationId() == null || employee.getDesignationId().equals("")) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.DES_ID_MAN);
+			return response;
 		} else {
 
 			Designation designation = designationRepository.getDesignationNames(employee.getDesignationId());
 			if (designation == null) {
 				response.setSuccess(false);
 				response.setMessage(ResponseMessages.DES_ID_NOT_VAL);
+				return response;
 			}
 		}
 
 		if (employee.getPosition() == null || employee.getPosition().equals("")) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.POSITION_MAN);
+			return response;
 		}
 
 		if (employee.getPosition() != null) {
@@ -403,23 +534,25 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			if (!isExist) {
 				response.setSuccess(false);
 				response.setMessage(ResponseMessages.POSITION_NOT_VAL);
+				return response;
 			}
 
 		}
-		
-		if(employee.getReportingTo() != null && employee.getReportingTo().length() > 0) {
+
+		if (employee.getReportingTo() != null && employee.getReportingTo().length() > 0) {
 			Employee empObj = employeeRepository.getByEmpIdE(employee.getReportingTo());
-			if(empObj == null) {
+			if (empObj == null) {
 				response.setSuccess(false);
 				response.setMessage(ResponseMessages.NOT_VALID);
 				return response;
 			}
-			
+
 		}
 
 		if (employee.getWings() == null || employee.getWings().getId().equals("")) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.WING_MAN);
+			return response;
 		}
 		if (employee.getWings() != null && employee.getWings().getId() != null) {
 			CompanyWings companyWings = wingRepo.getWingName(employee.getWings().getId());
@@ -429,21 +562,48 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			} else {
 				response.setSuccess(false);
 				response.setMessage(ResponseMessages.WING_NOT_EXI);
+				return response;
 			}
 		}
 
 		if (employee.getMobileNumber() == null || employee.getMobileNumber().equals("")) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.MOB_NUM_MAN);
+			return response;
 
 		}
 
 		else if (employee.getMobileNumber().length() != 10) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.INCORRECT_MOB);
+			return response;
 		}
 
+		if (employee.getDateOfJoin() != null && !employee.getDateOfJoin().equals("")) {
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			String strDate = dateFormat.format(employee.getDateOfJoin());
+			Date tmDate = null;
+			try {
+				tmDate = new SimpleDateFormat("yyyy-MM-dd").parse(strDate);
+			} catch (ParseException e) {
+				e.printStackTrace();
+				throw new Exception("Date format should be 'yyyy-MM-dd'");			
+				//response.setSuccess(false);
+				//response.setMessage(ResponseMessages.DOJ_NOT_VAL);
+				//return response;
+			}
+		} else {
+			response.setSuccess(false);
+			response.setMessage(ResponseMessages.Join_date_man);
+			return response;
+		}
+		response.setSuccess(true);
 		return response;
+	}
+
+	public static Date getDateWithoutTimeUsingFormat() throws ParseException {
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		return formatter.parse(formatter.format(new Date()));
 	}
 
 	private boolean emailValidation(String email) {
@@ -479,6 +639,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		content.put("employeeList", employeeList);
 		ApiResponse response = new ApiResponse(true);
 		response.setSuccess(true);
+		response.setMessage("Employee Retrieved Successfully");
 		response.setContent(content);
 		return response;
 	}
@@ -528,10 +689,12 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public ApiResponse editEmployee(String employeeId, Employee employeeRequest) {
+	public ApiResponse editEmployee(String employeeId, Employee employeeRequest) throws Exception {
 		ApiResponse response = new ApiResponse(false);
 
-		response = validateEmployee(employeeRequest);
+	
+			response = validateEmployee(employeeRequest);
+		
 
 		if (response.getMessage() != null && response.getMessage() != "") {
 			return response;
@@ -548,10 +711,10 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			employee.setFirstName(employee.getFirstName().trim());
 			String name = employee.getFirstName();
 			String firstLetter = name.substring(0, 1);
-		    String remainingLetters = name.substring(1, name.length());
-		    firstLetter = firstLetter.toUpperCase();
-		    employee.setFirstName(firstLetter + remainingLetters);
-			
+			String remainingLetters = name.substring(1, name.length());
+			firstLetter = firstLetter.toUpperCase();
+			employee.setFirstName(firstLetter + remainingLetters);
+
 			user.setName(employeeRequest.getFirstName() + " " + employeeRequest.getLastName());
 			employee.setMiddleName(employeeRequest.getMiddleName());
 			employee.setMobileNumber(employeeRequest.getMobileNumber());
@@ -560,6 +723,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			employee.setLocation(employeeRequest.getLocation());
 			employee.setPosition(employeeRequest.getPosition());
 			employee.setWings(employeeRequest.getWings());
+			employee.setDateOfJoin(employeeRequest.getDateOfJoin());
 			employee.setRoleId(employeeRequest.getRoleId());
 
 			Role role = roleRepository.getById(employeeRequest.getRoleId());
@@ -594,6 +758,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			Map content = new HashMap();
 			content.put("EmployeeList", employeeList);
 			response.setSuccess(true);
+			response.setMessage("Employee Retrieved Successfully");
 			response.setContent(content);
 		} else {
 			response.setMessage(ResponseMessages.ClIENT_ID_VALID);
@@ -663,6 +828,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		if (employeeList.size() > 0) {
 			content.put("EmployeeList", employeeList);
 			response.setSuccess(true);
+			response.setMessage("Employee Retrieved successfully");
 			response.setContent(content);
 		} else {
 			content.put("EmployeeList", employeeList);
@@ -683,10 +849,12 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		if (employeeList.size() > 0) {
 			content.put("EmployeeList", employeeList);
 			response.setSuccess(true);
+			response.setMessage("Employee Retrieved successfully");
 			response.setContent(content);
 		} else {
 			content.put("EmployeeList", employeeList);
 			response.setSuccess(false);
+			response.setMessage("Employee Not Found!!");
 			response.setContent(content);
 		}
 
@@ -701,6 +869,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		content.put("infraUserList", infraUserList);
 		ApiResponse response = new ApiResponse(true);
 		response.setSuccess(true);
+		response.setMessage("Employee Retrieved successfully");
 		response.setContent(content);
 		return response;
 	}
@@ -737,6 +906,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		content.put("infraList", infraList);
 		ApiResponse response = new ApiResponse(true);
 		response.setSuccess(true);
+		response.setMessage("List of Infra Admins");
 		response.setContent(content);
 		return infraList;
 	}
@@ -1138,6 +1308,28 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 		return response;
 	}
+	
+	@Override
+	public ApiResponse changeAllEmployeePermissionsToDefault() {
+		ApiResponse response = new ApiResponse(false);
+		List<Employee> employeeList = employeeRepository.getAllEmployees();
+		for (Employee employee : employeeList) {
+			EmployeePermission empPermission = empPermissionRepo.getbyUserId(employee.getUserCredientials().getId());
+			if(empPermission != null)
+				empPermissionRepo.save(empPermission);
+			else
+			{
+				EmployeePermission empPerObj = new EmployeePermission();
+				if(employee.getUserCredientials().getId() != null) {
+					empPerObj.setUserId(employee.getUserCredientials().getId());
+					empPermissionRepo.save(empPerObj);
+				}
+			}
+		}
+		response.setSuccess(true);
+		response.setMessage("Changed Permissions to Default");
+		return response;
+	}
 
 	@Override
 	public ApiResponse getJobVendorById(String vendorId) {
@@ -1453,6 +1645,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		ApiResponse response = new ApiResponse(true);
 		response.setSuccess(true);
 		response.setContent(content);
+		response.setMessage("Retrieved successfully");
 		return response;
 	}
 

@@ -18,10 +18,12 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.xyram.ticketingTool.Repository.EmployeePermissionRepository;
 import com.xyram.ticketingTool.Repository.RoleMasterRepository;
 import com.xyram.ticketingTool.Repository.UserRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Employee;
+import com.xyram.ticketingTool.entity.EmployeePermission;
 import com.xyram.ticketingTool.entity.JobVendorDetails;
 import com.xyram.ticketingTool.entity.RoleMasterTable;
 import com.xyram.ticketingTool.enumType.UserStatus;
@@ -43,14 +45,41 @@ class EmployeeController
 
 	@Autowired
 	RoleMasterRepository masterrepo;
+	
+	
 
-	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/createEmployee",
-			AuthConstants.HR_ADMIN_BASEPATH + "/createEmployee",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/createEmployee" })
-	public ApiResponse addemployee(@RequestBody Employee employee) {
+	@PostMapping("/createEmployee")
+	public ApiResponse addemployee(@RequestBody Employee employee) throws Exception {
 		logger.info("Received request to add Employee");
 		return employeeService.addemployee(employee);
 	}
+	
+	
+	@PostMapping("/changeEmployeeAllPermission")
+	public ApiResponse changeEmployeeAllPermission(@RequestBody EmployeePermission employeePermission) throws Exception {
+		logger.info("Changing Employee All Permission");
+		return employeeService.changeEmployeeAllPermission(employeePermission);
+	}
+	
+	@PostMapping("/changeEmployeePermissions/{userId}/{permission}/{flag}")
+	public ApiResponse changeEmployeePermissions(@PathVariable String userId,@PathVariable String permission,@PathVariable boolean flag) throws Exception {
+		logger.info("Changing Employee Permission");
+		return employeeService.changeEmployeePermission(userId,permission,flag);
+	}
+	
+	@GetMapping("/getEmployeePermissions/{userId}")
+	public ApiResponse getEmployeePermission(@PathVariable String userId) throws Exception{
+		logger.info("Get Employee Permission");
+		return employeeService.getEmployeePermission(userId);
+	}
+	
+	@PostMapping("/changeAllEmployeePermissionsToDefault")
+	public ApiResponse changeAllEmployeePermissionsToDefault() throws Exception {
+		logger.info("Changing All Employee Permission to default");
+		return employeeService.changeAllEmployeePermissionsToDefault();
+	}
+	
+	
 
 	@PostMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/createJobVendor",
 			AuthConstants.ADMIN_BASEPATH + "/createJobVendor" })
@@ -120,7 +149,7 @@ class EmployeeController
 			AuthConstants.INFRA_ADMIN_BASEPATH + "/editEmployee/{employeeId}",
 			AuthConstants.DEVELOPER_BASEPATH + "/editEmployee/{employeeId}",
 			AuthConstants.HR_ADMIN_BASEPATH + "/editEmployee/{employeeId}" })
-	public ApiResponse editEmployee(@RequestBody Employee employeeRequest, @PathVariable String employeeId) {
+	public ApiResponse editEmployee(@RequestBody Employee employeeRequest, @PathVariable String employeeId) throws Exception {
 		logger.info("indide edit employee");
 		return employeeService.editEmployee(employeeId, employeeRequest);
 	}

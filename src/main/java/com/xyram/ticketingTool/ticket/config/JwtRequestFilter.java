@@ -15,6 +15,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.xyram.ticketingTool.entity.EmployeePermission;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.ticket.Service.JwtUserDetailsService;
 import com.xyram.ticketingTool.util.AuthConstants;
@@ -86,7 +87,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 				currentUser.setUserId((String) jwtTokenUtil.getNamedClaimFromToken(jwtToken, AuthConstants.USER_ID));
 				currentUser.setUserRole((String) jwtTokenUtil.getNamedClaimFromToken(jwtToken, AuthConstants.USER_ROLE));
 				currentUser.setScopeId((String) jwtTokenUtil.getNamedClaimFromToken(jwtToken, AuthConstants.SCOPE_ID));
-				
+//				currentUser.setPermission((EmployeePermission) jwtTokenUtil.getNamedClaimFromToken(jwtToken, AuthConstants.PERMISSIONS));
 			}
 		}
 		chain.doFilter(request, response);

@@ -14,21 +14,14 @@ public interface AssetvendorService {
 	ApiResponse addAssestVendor(AssetVendor vendor);
 
 	ApiResponse editassetVendor(AssetVendor AssetVendorRequest, String vendorId);
+	
 	ApiResponse getVendorById(String vendorId);
 	
 	ApiResponse getAllVendor(Map<String, Object> filter,Pageable peageble);
 	
-	//ApiResponse searchVendorName(String vendorName);
-	
 	ApiResponse searchAssetVendor(String searchString);
 	
-	//ApiResponse updateassetVendorStatus(String vendorId, AssetVendorEnum assetVendorEnum);
-
-	//ApiResponse updateassetVendorStatus(AssetVendor vendorId, AssetVendorEnum assetVendorEnum);
-
-
-
-	ApiResponse updateassetVendorStatus(String vendorId, AssetVendorEnum assetVendorEnum);
+    ApiResponse updateassetVendorStatus(String vendorId, AssetVendorEnum assetVendorEnum);
 
 	//ApiResponse searchVendorName(String vendorName);
 

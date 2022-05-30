@@ -9,17 +9,24 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Employee;
+import com.xyram.ticketingTool.entity.EmployeePermission;
 import com.xyram.ticketingTool.entity.JobVendorDetails;
 import com.xyram.ticketingTool.entity.RoleMasterTable;
 import com.xyram.ticketingTool.enumType.UserStatus;
 
 public interface EmployeeService {
 
-	ApiResponse addemployee(Employee employee);
+	ApiResponse addemployee(Employee employee) throws Exception;
+	
+	ApiResponse changeEmployeeAllPermission(EmployeePermission employeePermission);
+	
+	ApiResponse changeEmployeePermission(String userId,String permission, boolean flag) throws Exception, SecurityException;
+	
+	ApiResponse getEmployeePermission(String userId) throws Exception;
 
 	ApiResponse getAllEmployee(Map<String, Object> filter, Pageable pageable);
 
-	ApiResponse editEmployee(String employeeId, Employee employee);
+	ApiResponse editEmployee(String employeeId, Employee employee) throws Exception;
 
 	ApiResponse updateEmployeeStatus(String employeeID, UserStatus userstatus);
 	
@@ -60,6 +67,8 @@ public interface EmployeeService {
 	ApiResponse getAllEmployeeCurrentMonth(Pageable pageable);
 
 	ApiResponse getJobVendorById(String vendorId);
+	
+	ApiResponse changeAllEmployeePermissionsToDefault();
 
 	ApiResponse getListByAccessToken();
 

@@ -425,97 +425,89 @@ public class AssetBillingServiceImpl implements AssetBillingService {
 	@Override
 	public ApiResponse addRepairAssetBill(AssetBilling assetBilling) {
 
+		
 		ApiResponse response = new ApiResponse();
-
-		response = validateAssetBillings(assetBilling);
-
-		// assetBillingObj = assetBillingRepository.save(assetBillingObj);
+		response = validateAssetBillings(assetBilling); // assetBillingObj = assetBillingRepository.save(assetBillingObj);
 		if (response.isSuccess()) {
-			response = validateAssetIssueId(assetBilling);
-			if (assetBilling != null) {
-				assetBilling.setBillingType("repair");
-				assetBilling.setCreatedAt(new Date());
-				assetBilling.setCreatedBy(currentUser.getName());
-
-				// Date purchaseDate =
-				// assetRepository.getPurchaseDateById(assetBilling.getAssetId());
-				/*
-				 * WarrentyDate =
-				 * assetRepository.getWarrentyDateById(assetBilling.getAssetId());
-				 * //System.out.println(purchaseDate); //System.out.println(WarrentyDate); Date
-				 * currentDate = new Date(); if(WarrentyDate != null ) {
-				 * 
-				 * if(WarrentyDate.before(currentDate)) { assetBilling.setUnderWarrenty(true);
-				 * assetBilling.setAmountPaid(false);
-				 * response.setMessage(ResponseMessages.ASSET_REPAIR_BILL_ADDED_SUCCESSFULLY); }
-				 * 
-				 * else { assetBilling.setUnderWarrenty(false); if(assetBilling.getAssetAmount()
-				 * != null) { assetBilling.setAssetAmount(assetBilling.getAssetAmount()); }
-				 * if(assetBilling.getGstAmount() != null) {
-				 * assetBilling.setGstAmount(assetBilling.getGstAmount()); }
-				 * assetBilling.setAmountPaid(false);
-				 * response.setMessage(ResponseMessages.REPAIR_BILL_ADDED_SUCCESSFULLY); } }
-				 */
-				Date WarrentyDate = assetRepository.getWarrentyDateById(assetBilling.getAssetId());
-
-				// System.out.println(purchaseDate);
-				// System.out.println(WarrentyDate);
-				Date currentDate = new Date();
-				if (WarrentyDate != null) {
-					if (currentDate.after(WarrentyDate)) {
-						assetBilling.setUnderWarrenty(false);
-						if (assetBilling.getAssetAmount() == null || (assetBilling.getAssetAmount().equals("")))
-						{
-							throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset amount is mandatory");
-						}
-						else
-						{
-							assetBilling.setAssetAmount(assetBilling.getAssetAmount());
-						}
-						if (assetBilling.getGstAmount() == null || (assetBilling.getGstAmount().equals("")))
-						{
-							throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "gst amount is mandatory");
-						}
-						else
-						{
-							assetBilling.setGstAmount(assetBilling.getGstAmount());
-						}
-						assetBilling.setAmountPaid(false);
-						response.setMessage(ResponseMessages.REPAIR_BILL_ADDED_SUCCESSFULLY);
-
-					} else {
-						assetBilling.setUnderWarrenty(true);
-						assetBilling.setAmountPaid(false);
-						response.setMessage(ResponseMessages.ASSET_REPAIR_BILL_ADDED_SUCCESSFULLY);
-					}
-				} else {
-					assetBilling.setUnderWarrenty(false);
-					if (assetBilling.getAssetAmount() == null || (assetBilling.getAssetAmount().equals("")))
-					{
-						throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset amount is mandatory");
-					}
-					else
-					{
-						assetBilling.setAssetAmount(assetBilling.getAssetAmount());
-					}
-					if (assetBilling.getGstAmount() == null || (assetBilling.getGstAmount().equals("")))
-					{
-						throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "gst amount is mandatory");
-					}
-					else
-					{
-						assetBilling.setGstAmount(assetBilling.getGstAmount());
-					}
-					assetBilling.setAmountPaid(false);
-					response.setMessage(ResponseMessages.REPAIR_BILL_ADDED_SUCCESSFULLY);
-				}
-				assetBilling = assetBillingRepository.save(assetBilling);
-				response.setSuccess(true);
-				// response.setMessage(ResponseMessages.ASSET_REPAIR_BILL_ADDED_SUCCESSFULLY);
-			}
+		response = validateAssetIssueId(assetBilling);
+		if (assetBilling != null) {
+		assetBilling.setBillingType("repair");
+		assetBilling.setCreatedAt(new Date());
+		assetBilling.setCreatedBy(currentUser.getName()); // Date purchaseDate =
+		// assetRepository.getPurchaseDateById(assetBilling.getAssetId());
+		/*
+		* WarrentyDate =
+		* assetRepository.getWarrentyDateById(assetBilling.getAssetId());
+		* //System.out.println(purchaseDate); //System.out.println(WarrentyDate); Date
+		* currentDate = new Date(); if(WarrentyDate != null ) {
+		*
+		* if(WarrentyDate.before(currentDate)) { assetBilling.setUnderWarrenty(true);
+		* assetBilling.setAmountPaid(false);
+		* response.setMessage(ResponseMessages.ASSET_REPAIR_BILL_ADDED_SUCCESSFULLY); }
+		*
+		* else { assetBilling.setUnderWarrenty(false); if(assetBilling.getAssetAmount()
+		* != null) { assetBilling.setAssetAmount(assetBilling.getAssetAmount()); }
+		* if(assetBilling.getGstAmount() != null) {
+		* assetBilling.setGstAmount(assetBilling.getGstAmount()); }
+		* assetBilling.setAmountPaid(false);
+		* response.setMessage(ResponseMessages.REPAIR_BILL_ADDED_SUCCESSFULLY); } }
+		*/
+		Date WarrentyDate = assetRepository.getWarrentyDateById(assetBilling.getAssetId()); // System.out.println(purchaseDate);
+		// System.out.println(WarrentyDate);
+		Date currentDate = new Date();
+		if (WarrentyDate != null) {
+		if (currentDate.after(WarrentyDate)) {
+		assetBilling.setUnderWarrenty(false);
+		if (assetBilling.getAssetAmount() == null || (assetBilling.getAssetAmount().equals("")))
+		{
+		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset amount is mandatory");
 		}
+		else
+		{
+		assetBilling.setAssetAmount(assetBilling.getAssetAmount());
+		}
+		if (assetBilling.getGstAmount() == null || (assetBilling.getGstAmount().equals("")))
+		{
+		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "gst amount is mandatory");
+		}
+		else
+		{
+		assetBilling.setGstAmount(assetBilling.getGstAmount());
+		}
+		assetBilling.setAmountPaid(false);
+		response.setMessage(ResponseMessages.REPAIR_BILL_ADDED_SUCCESSFULLY); } else {
+		assetBilling.setUnderWarrenty(true);
+		assetBilling.setAmountPaid(false);
+		response.setMessage(ResponseMessages.ASSET_REPAIR_BILL_ADDED_SUCCESSFULLY);
+		}
+		} else {
+		assetBilling.setUnderWarrenty(false);
+		if (assetBilling.getAssetAmount() == null || (assetBilling.getAssetAmount().equals("")))
+		{
+		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset amount is mandatory");
+		}
+		else
+		{
+		assetBilling.setAssetAmount(assetBilling.getAssetAmount());
+		}
+		if (assetBilling.getGstAmount() == null || (assetBilling.getGstAmount().equals("")))
+		{
+		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "gst amount is mandatory");
+		}
+		else
+		{
+		assetBilling.setGstAmount(assetBilling.getGstAmount());
+		}
+		assetBilling.setAmountPaid(false);
+		response.setMessage(ResponseMessages.REPAIR_BILL_ADDED_SUCCESSFULLY);
+		}
+		assetBilling = assetBillingRepository.save(assetBilling);
+		response.setSuccess(true);
+		// response.setMessage(ResponseMessages.ASSET_REPAIR_BILL_ADDED_SUCCESSFULLY);
+		}
+		} return response;
 
-		return response;
+
 	}
 
 //	private boolean validateGstAmount(Double gstAmount) {
@@ -540,78 +532,91 @@ public class AssetBillingServiceImpl implements AssetBillingService {
 
 		ApiResponse response = new ApiResponse(false);
 
+
+
 		if (assetBilling.getAssetId() == null || assetBilling.getAssetId().equals("")) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset id is mandatory !!");
+		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset id is mandatory !!");
 		} else {
-			// Asset asset = assetRepository.getaId(assetIssues.getaId());
-			AssetIssues assetId = assetIssuesRepository.getAssetById(assetBilling.getAssetIssueId(),
-					assetBilling.getAssetId());
-			if (assetId == null) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid asset reference");
-			}
+		// Asset asset = assetRepository.getaId(assetIssues.getaId());
+		AssetIssues assetId = assetIssuesRepository.getAssetById(assetBilling.getAssetIssueId(),
+		assetBilling.getAssetId());
+		if (assetId == null) {
+		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid asset reference");
 		}
+		}
+
+
 
 		// validate vendor id
 		if (assetBilling.getVendorId() == null || assetBilling.getVendorId().equals("")) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "vendor id is mandatory !!");
+		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "vendor id is mandatory !!");
 		} else {
-			AssetIssues vendorId = assetIssuesRepository.getVendorById(assetBilling.getAssetIssueId(),
-					assetBilling.getVendorId());
-			if (vendorId == null) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid vendor id");
-			}
+		AssetIssues vendorId = assetIssuesRepository.getVendorById(assetBilling.getAssetIssueId(),
+		assetBilling.getVendorId());
+		if (vendorId == null) {
+		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid vendor id");
+		}
+
+
 
 		}
 		if (assetBilling.getAssetIssueId() == null || assetBilling.getAssetIssueId().equals(""))
-        {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset issueId is mandatory");
+		{
+		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "asset issueId is mandatory");
 		}
 		else
 		{
-			AssetIssues asstIssue = assetIssuesRepository.getAssetIssueById(assetBilling.getAssetIssueId());
-			if(asstIssue == null || asstIssue.equals(""))
-			{
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid asset issue id");
-			}
+		AssetIssues asstIssue = assetIssuesRepository.getAssetIssueById(assetBilling.getAssetIssueId());
+		if(asstIssue == null || asstIssue.equals(""))
+		{
+		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid asset issue id");
+		}
 		}
 		// validate billingtype
 		if (assetBilling.getBillingType() == null || assetBilling.getBillingType().equals("")) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "billing type is mandatory");
+		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "billing type is mandatory");
 		}
 
+
+
 		if (!assetBilling.getBillingType().equals("repair")) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid billing type");
+		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid billing type");
 		}
 		// assetBilling.setTransactionDate(new Date());
 		// validate transactionDate
 		if (assetBilling.getTransactionDate() == null || assetBilling.getTransactionDate().equals("")) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "transaction date is mandatory !!");
+		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "transaction date is mandatory !!");
+
+
 
 		} else {
-			validateTransactionDate(assetBilling.getTransactionDate(), assetBilling.getAssetId());
-			assetBilling.setTransactionDate(assetBilling.getTransactionDate());
+		validateTransactionDate(assetBilling.getTransactionDate(), assetBilling.getAssetId());
+		assetBilling.setTransactionDate(assetBilling.getTransactionDate());
 		}
+
+
 
 		// Asset asset = assetRepository.getAssetById(assetBilling.getAssetId());
 		// validateUnderWarrenty1(assetBilling.getUnderWarrenty(),
 		// assetBilling.getAssetId());
 		/*
-		 * if(assetBilling.getUnderWarrenty() == true) {
-		 * assetBilling.setAssetAmount(null); assetBilling.setGstAmount(null);
-		 * assetBilling.setAmountPaid(false); } else { if(assetBilling.getAssetAmount()
-		 * != null || assetBilling.getAssetAmount().equals("")) {
-		 * assetBilling.setAssetAmount(assetBilling.getAssetAmount()); }
-		 * if(assetBilling.getGstAmount() != null ||
-		 * assetBilling.getGstAmount().equals("")) {
-		 * assetBilling.setGstAmount(assetBilling.getGstAmount()); }
-		 * assetBilling.setAmountPaid(false);
-		 * 
-		 * }
-		 */
+		* if(assetBilling.getUnderWarrenty() == true) {
+		* assetBilling.setAssetAmount(null); assetBilling.setGstAmount(null);
+		* assetBilling.setAmountPaid(false); } else { if(assetBilling.getAssetAmount()
+		* != null || assetBilling.getAssetAmount().equals("")) {
+		* assetBilling.setAssetAmount(assetBilling.getAssetAmount()); }
+		* if(assetBilling.getGstAmount() != null ||
+		* assetBilling.getGstAmount().equals("")) {
+		* assetBilling.setGstAmount(assetBilling.getGstAmount()); }
+		* assetBilling.setAmountPaid(false);
+		*
+		* }
+		*/
+
+
 
 		response.setSuccess(true);
 		return response;
-
 	}
 
 	@Override

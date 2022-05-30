@@ -28,6 +28,7 @@ public interface AuthConstants {
 	String USER_ID = "userId";
 	String USER_ROLE = "userRole";
 	String SCOPE_ID = "scopeId";
+	String PERMISSIONS = "permission";
 	
 	/** Token Constants */
 	long JWT_TOKEN_VALIDITY = 24 * 60 * 60; // token format: hour * minutes * seconds
