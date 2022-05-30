@@ -76,13 +76,16 @@ public class ReminderServiceImpl implements ReminderService {
 			reminder.setUpdatedBy(currentUser.getUserId());
 			reminder.setCreatedAt(new Date());
 			reminder.setLastUpdatedAt(new Date());
-			reminder.setNotifyMembers(reminder.getNotifyMembers());
+			ArrayList<String> notifyMemberArr = new ArrayList<String>();
+			
+			for(String str: notifyMemberArr) {
+				System.out.println("notifyMemberArr ::" + str);
+				reminder.setNotifyMembers(str);	
+	        }
+
 			reminder.setIsHost(true);
 			Reminder reminderNew = reminderRepository.save(reminder);
-			
-			// Sending Notifications
-			ArrayList<String> notifyMemberArr = new ArrayList<String>();
-			notifyMemberArr.add(reminder.getNotifyMembers());
+		
 			notifyMemberArr.forEach(ele -> {
 				System.out.println(ele);
 
