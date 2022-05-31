@@ -10,6 +10,6 @@ import com.xyram.ticketingTool.entity.EmployeePermission;
 @Repository
 public interface EmployeePermissionRepository extends JpaRepository<EmployeePermission, String>{
 
-	@Query("SELECT  distinct e from EmployeePermission e where e.userId = :userId")
+	@Query("SELECT distinct e from EmployeePermission e where e.userId = :userId")
 	EmployeePermission getbyUserId(String userId);
 }

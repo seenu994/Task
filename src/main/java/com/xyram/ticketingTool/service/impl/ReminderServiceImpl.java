@@ -37,6 +37,7 @@ import com.xyram.ticketingTool.entity.Reminder;
 import com.xyram.ticketingTool.entity.ReminderLog;
 import com.xyram.ticketingTool.enumType.NotificationType;
 import com.xyram.ticketingTool.request.CurrentUser;
+import com.xyram.ticketingTool.request.ReminderRequest;
 import com.xyram.ticketingTool.scheduler.ReminderScheduler;
 import com.xyram.ticketingTool.service.NotificationService;
 import com.xyram.ticketingTool.service.ReminderService;
@@ -66,69 +67,72 @@ public class ReminderServiceImpl implements ReminderService {
 	ReminderScheduler reminderScheduler;
 
 	@Override
-	public ApiResponse createReminder(Reminder reminder) {
+	public ApiResponse createReminder(ReminderRequest reminderObj) {
 		ApiResponse response = new ApiResponse(false);
-		if (reminder != null) {
+		if (reminderObj != null) {
 
+			// Validate the Object
+			Reminder reminder = new Reminder();
+			
 			reminder.setCreatedBy(currentUser.getUserId());
 			reminder.setUserId(currentUser.getUserId());
-			reminder.setUserName(currentUser.getFirstName());
 			reminder.setUpdatedBy(currentUser.getUserId());
 			reminder.setCreatedAt(new Date());
 			reminder.setLastUpdatedAt(new Date());
-			reminder.setNotifyMembers(reminder.getNotifyMembers());
-			reminder.setIsHost(true);
-			Reminder reminderNew = reminderRepository.save(reminder);
-			
-			// Sending Notifications
-			ArrayList<String> notifyMemberArr = new ArrayList<String>();
-			notifyMemberArr.add(reminder.getNotifyMembers());
-			notifyMemberArr.forEach(ele -> {
-				System.out.println(ele);
+			reminder.setTitle(reminderObj.getTitle());
+			reminder.setReminderDate(reminderObj.getReminderDate());
+			reminder.setReminderTime(reminderObj.getReminderTime());
+			Reminder reminderNew;
+			if(reminderObj.getReferences() != null && reminderObj.getReferences().length > 0) {
+				reminder.setIsHost(true);
+				reminder.setReferenceId(getAlphaNumericString(10));
+				reminderNew = reminderRepository.save(reminder);
+				for(String reference: reminderObj.getReferences()) {
+					User user = userRepository.getById(reference);
 
-				User user = userRepository.getById(ele);
+					if (user != null) {
+				
+						Reminder reminderRef = new Reminder();
+						
+						reminderRef.setCreatedBy(currentUser.getUserId());
+						reminderRef.setUserId(reference);
+						reminder.setReferenceId(reminder.getReferenceId());
+						reminderRef.setUpdatedBy(currentUser.getUserId());
+						reminderRef.setCreatedAt(new Date());
+						reminderRef.setLastUpdatedAt(new Date());
+						reminderRef.setTitle(reminderObj.getTitle());
+						reminderRef.setReminderDate(reminderObj.getReminderDate());
+						reminderRef.setReminderTime(reminderObj.getReminderTime());
+						reminderRef.setIsHost(false);
+						reminderRef = reminderRepository.save(reminder);
+						
+						ReminderLog reminderLog = new ReminderLog();
+						reminderLog.setDescription("REMINDER SENT");
+						reminderLog.setuId(user.getUid());
+						reminderLog.setUserId(user.getId());
+						reminderlogRepository.save(reminderLog);
 
-				if (user != null) {
+						// inserting notification details
+						Notifications notifications = new Notifications();
+						notifications.setNotificationDesc("REMINDER SENT - " + reminderNew.getTitle());
+						notifications.setNotificationType(NotificationType.REMINDER_SENT);
+						notifications.setSenderId(reference);
+						notifications.setReceiverId(currentUser.getUserId());
+						notifications.setSeenStatus(false);
+						notifications.setCreatedBy(currentUser.getUserId());
+						notifications.setCreatedAt(new Date());
+						notifications.setUpdatedBy(currentUser.getUserId());
+						notifications.setLastUpdatedAt(new Date());
+
+						notificationService.createNotification(notifications);
+					}
 					
-//					Reason for commenting code: Error coming while creating reminder, notify_members cannot be null
-					
-//					Reminder teamReminders = new Reminder();
-//					teamReminders.setCreatedBy(currentUser.getUserId());
-//					teamReminders.setUserId(user.getId());
-//					teamReminders.setUserName(currentUser.getFirstName());
-//					teamReminders.setUpdatedBy(currentUser.getUserId());
-//					teamReminders.setCreatedAt(new Date());
-//					teamReminders.setLastUpdatedAt(new Date());
-//					teamReminders.setIsHost(false);
-//					teamReminders.setUserId(user.getId());
-//					teamReminders.setTitle(reminder.getTitle());
-//					reminderRepository.save(teamReminders);
-
-					
-					ReminderLog reminderLog = new ReminderLog();
-					reminderLog.setDescription("REMINDER SENT");
-					reminderLog.setuId(user.getUid());
-					reminderLog.setUserId(user.getId());
-					reminderlogRepository.save(reminderLog);
-
-					// inserting notification details
-					Notifications notifications = new Notifications();
-					notifications.setNotificationDesc("REMINDER SENT - " + reminderNew.getTitle());
-					notifications.setNotificationType(NotificationType.REMINDER_SENT);
-					notifications.setSenderId(ele);
-					notifications.setReceiverId(currentUser.getUserId());
-					notifications.setSeenStatus(false);
-					notifications.setCreatedBy(currentUser.getUserId());
-					notifications.setCreatedAt(new Date());
-					notifications.setUpdatedBy(currentUser.getUserId());
-					notifications.setLastUpdatedAt(new Date());
-
-					notificationService.createNotification(notifications);
 				}
-//				UUID uuid = UUID.randomUUID();
-//				String uuidAsString = uuid.toString();
-			});
-			System.out.println("Reminder notifyMemberArr::" + notifyMemberArr);
+			}else {
+				reminderNew = reminderRepository.save(reminder);
+			}
+			
+			System.out.println("Reminder notifyMemberArr::" + reminderObj.getReferences());
 
 			response.setSuccess(true);
 			response.setMessage(ResponseMessages.Reminder_ADDED);
@@ -139,6 +143,33 @@ public class ReminderServiceImpl implements ReminderService {
 		}
 		return response;
 	}
+	
+	static String getAlphaNumericString(int n)
+    {
+  
+        // chose a Character random from this String
+        String AlphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                                    + "0123456789"
+                                    + "abcdefghijklmnopqrstuvxyz";
+  
+        // create StringBuffer size of AlphaNumericString
+        StringBuilder sb = new StringBuilder(n);
+  
+        for (int i = 0; i < n; i++) {
+  
+            // generate a random number between
+            // 0 to AlphaNumericString variable length
+            int index
+                = (int)(AlphaNumericString.length()
+                        * Math.random());
+  
+            // add Character one by one in end of sb
+            sb.append(AlphaNumericString
+                          .charAt(index));
+        }
+  
+        return sb.toString();
+    }
 
 //	public void reminderJob(Map<Object, Object> request) {
 //		pushNotificationCall.restCallToNotification(

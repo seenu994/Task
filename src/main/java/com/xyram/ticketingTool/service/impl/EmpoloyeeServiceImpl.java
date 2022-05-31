@@ -81,9 +81,8 @@ import com.xyram.ticketingTool.util.BulkUploadExcelUtil;
 import com.xyram.ticketingTool.util.EmployeeUtil;
 import com.xyram.ticketingTool.util.ResponseMessages;
 
-
 @Service
-public class EmpoloyeeServiceImpl implements EmployeeService { 
+public class EmpoloyeeServiceImpl implements EmployeeService {
 
 	private static final Logger logger = LoggerFactory.getLogger(EmpoloyeeServiceImpl.class);
 
@@ -153,10 +152,10 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 	@Autowired
 	CompanyWingsRepository wingRepo;
-	
+
 	@Autowired
 	EmployeePermissionRepository empPermissionRepo;
-	
+
 	@Autowired
 	EmployeePermissionConfig empPerConfig;
 
@@ -178,15 +177,15 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	public ApiResponse addemployee(Employee employee) throws Exception {
 
 		ApiResponse response = new ApiResponse(false);
-		
-		if(!empPerConfig.isHavingpersmission("empAdmin")) {
+
+		if (!empPerConfig.isHavingpersmission("empAdmin")) {
 			response.setSuccess(false);
 			response.setMessage("Not authorised to create employee");
 			return response;
 		}
 
 		response = validateEmployee(employee);
-		
+
 		if (response.getMessage() != null && response.getMessage() != "") {
 			return response;
 		}
@@ -269,7 +268,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				User useredit = userRepository.getById(user.getId());
 				useredit.setScopeId(employeeNew.geteId());
 				userRepository.save(useredit);
-				
+
 				// New Permissions
 				EmployeePermission empPermission = new EmployeePermission();
 				empPermission.setUserId(employeeNew.geteId());
@@ -338,88 +337,87 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 //		}
 	}
-	
+
 	public ApiResponse getEmployeePermission(String userId) throws Exception {
 		ApiResponse response = new ApiResponse(true);
 
-		if(!empPerConfig.isHavingpersmission("empAdmin")) {
+		if (!empPerConfig.isHavingpersmission("empAdmin")) {
 			response.setSuccess(false);
 			response.setMessage("Not authorised to view employee permisions");
 			return response;
 		}
-		EmployeePermission ep  = empPermissionRepo.getbyUserId(userId);
-		if(ep != null) {
+		EmployeePermission ep = empPermissionRepo.getbyUserId(userId);
+		if (ep != null) {
 			Map content = new HashMap();
 			content.put("permissions", ep);
 			response.setContent(content);
 			response.setMessage("Permissions retreived successfully..!");
 			response.setSuccess(true);
-		}
-		else {
+		} else {
 			response.setMessage("Employee details are not exist");
 			response.setSuccess(false);
 		}
 		return response;
 	}
-	
-	public ApiResponse changeEmployeePermission(String userId,String permission, boolean flag) throws Exception, SecurityException {
+
+	public ApiResponse changeEmployeePermission(String userId, String permission, boolean flag)
+			throws Exception, SecurityException {
 		ApiResponse response = new ApiResponse(true);
 		EmployeePermission ep = empPermissionRepo.getbyUserId(currentUser.getUserId());
-		if(ep != null) {
-			if(!ep.getEmpAdmin()) {
+		if (ep != null) {
+			if (!ep.getEmpAdmin()) {
 				response.setMessage("Not authorized to edit employee permission 1");
 				response.setSuccess(false);
 				return response;
 			}
-		}else {
+		} else {
 			response.setMessage("Not authorized to edit employee permission 2");
 			response.setSuccess(false);
 			return response;
 		}
 		Employee employee = employeeRepository.getbyUserId(userId);
 		if (employee != null) {
-			
+
 //	        EmployeePermission.class.getField(permission).set(ep, flag);
 			EmployeePermission ep1 = empPermissionRepo.getbyUserId(employee.getUserCredientials().getId());
 			ObjectMapper oMapper = new ObjectMapper();
-	        Map<String, Object> map = oMapper.convertValue(ep1, Map.class);
-	        if(map.containsKey(permission)) {
-	        	map.put(permission, flag);
-	        	
-	        	Gson gson = new Gson();
-	        	JsonElement jsonElement = gson.toJsonTree(map);
-	        	EmployeePermission newObj = gson.fromJson(jsonElement, EmployeePermission.class);
-	        	newObj.setId(ep1.getId());
-	        	empPermissionRepo.saveAndFlush(newObj);
-	        	
-	        	response.setMessage("Employee Permissions Updated");
+			Map<String, Object> map = oMapper.convertValue(ep1, Map.class);
+			if (map.containsKey(permission)) {
+				map.put(permission, flag);
+
+				Gson gson = new Gson();
+				JsonElement jsonElement = gson.toJsonTree(map);
+				EmployeePermission newObj = gson.fromJson(jsonElement, EmployeePermission.class);
+				newObj.setId(ep1.getId());
+				empPermissionRepo.saveAndFlush(newObj);
+
+				response.setMessage("Employee Permissions Updated");
 				response.setSuccess(true);
 				return response;
-				
-	        }else {
-	        	response.setMessage("Permissions Key not exist");
+
+			} else {
+				response.setMessage("Permissions Key not exist");
 				response.setSuccess(true);
 				return response;
-	        }
-			
-			
-		}else {
+			}
+
+		} else {
 			response.setMessage("Employee Not Exist");
 			response.setSuccess(false);
 			return response;
 		}
 	}
-	
-	public ApiResponse changeEmployeeAllPermission(EmployeePermission employeePermission) { 
+
+	public ApiResponse changeEmployeeAllPermission(EmployeePermission employeePermission) {
 		ApiResponse response = new ApiResponse(true);
 		EmployeePermission ep = empPermissionRepo.getbyUserId(currentUser.getUserId());
-		if(ep != null) {
-			if(!ep.getEmpAdmin()) {
+		if (ep != null) {
+			if (!ep.getEmpAdmin()) {
 				response.setMessage("Not authorized to edit employee permission");
 				response.setSuccess(false);
 				return response;
 			}
-		}else {
+		} else {
 			response.setMessage("Not authorized to edit employee permission");
 			response.setSuccess(false);
 			return response;
@@ -429,7 +427,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			empPermissionRepo.save(employeePermission);
 			response.setMessage("Employee Permissions Updated");
 			response.setSuccess(true);
-		}else {
+		} else {
 			response.setMessage("Employee Not Exist");
 			response.setSuccess(false);
 			return response;
@@ -587,10 +585,10 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				tmDate = new SimpleDateFormat("yyyy-MM-dd").parse(strDate);
 			} catch (ParseException e) {
 				e.printStackTrace();
-				throw new Exception("Date format should be 'yyyy-MM-dd'");			
-				//response.setSuccess(false);
-				//response.setMessage(ResponseMessages.DOJ_NOT_VAL);
-				//return response;
+				throw new Exception("Date format should be 'yyyy-MM-dd'");
+				// response.setSuccess(false);
+				// response.setMessage(ResponseMessages.DOJ_NOT_VAL);
+				// return response;
 			}
 		} else {
 			response.setSuccess(false);
@@ -618,6 +616,8 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	@Override
 	public ApiResponse getAllEmployee(Map<String, Object> filter, Pageable pageable) {
 
+		ApiResponse response = new ApiResponse(false);
+
 		Page<Map> employeeList = null;
 
 		if (filter == null) {
@@ -627,7 +627,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			String searchString = filter.containsKey("searchString")
 					? ((String) filter.get("searchString")).toLowerCase()
 					: null;
-			String role = filter.containsKey("role") ? ((String) filter.get("role")) : null;
+			String role = filter.containsKey("role") ? ((String) filter.get("role")) : null;// Need to Remove
 			String designation = filter.containsKey("designation") ? ((String) filter.get("designation")) : null;
 			String position = filter.containsKey("position") ? ((String) filter.get("position")).toLowerCase() : null;
 			String wing = filter.containsKey("wing") ? ((String) filter.get("wing")) : null;
@@ -637,7 +637,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 		Map content = new HashMap();
 		content.put("employeeList", employeeList);
-		ApiResponse response = new ApiResponse(true);
+		// ApiResponse response = new ApiResponse(true);
 		response.setSuccess(true);
 		response.setMessage("Employee Retrieved Successfully");
 		response.setContent(content);
@@ -645,8 +645,14 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public ApiResponse updateEmployeeStatus(String employeeID, UserStatus userstatus) {
+	public ApiResponse updateEmployeeStatus(String employeeID, UserStatus userstatus) throws Exception {
 		ApiResponse response = validateStatus(userstatus);
+
+		if (!empPerConfig.isHavingpersmission("empAdmin")) {
+			response.setSuccess(false);
+			response.setMessage("Not authorised to update employee status");
+			return response;
+		}
 		if (response.isSuccess()) {
 			Employee employee = employeeRepository.getById(employeeID);
 			if (employee != null) {
@@ -692,9 +698,13 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	public ApiResponse editEmployee(String employeeId, Employee employeeRequest) throws Exception {
 		ApiResponse response = new ApiResponse(false);
 
-	
-			response = validateEmployee(employeeRequest);
-		
+		if (!empPerConfig.isHavingpersmission("empAdmin")) {
+			response.setSuccess(false);
+			response.setMessage("Not authorised to edit employee");
+			return response;
+		}
+
+		response = validateEmployee(employeeRequest);
 
 		if (response.getMessage() != null && response.getMessage() != "") {
 			return response;
@@ -911,33 +921,39 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 		return infraList;
 	}
 
+//	@Override
+//	public List<Map> getListOfDeveloper() {
+//		List<Map> developerList = employeeRepository.getListOfDeveloper();
+//		Map content = new HashMap();
+//
+//		content.put("developerList", developerList);
+//		ApiResponse response = new ApiResponse(true);
+//		response.setSuccess(true);
+//		response.setContent(content);
+//		return developerList;
+//	}
+
+//	@Override
+//	public List<Map> getListOfDeveloperInfra() {
+//		List<Map> developerInfraList = employeeRepository.getListOfDeveloper();
+//		Map content = new HashMap();
+//
+//		content.put("developerList", developerInfraList);
+//		ApiResponse response = new ApiResponse(true);
+//		response.setSuccess(true);
+//		response.setContent(content);
+//		return developerInfraList;
+//	}
+
 	@Override
-	public List<Map> getListOfDeveloper() {
-		List<Map> developerList = employeeRepository.getListOfDeveloper();
-		Map content = new HashMap();
-
-		content.put("developerList", developerList);
+	public ApiResponse updateEmployee(Map employeeRequest) throws Exception {
 		ApiResponse response = new ApiResponse(true);
-		response.setSuccess(true);
-		response.setContent(content);
-		return developerList;
-	}
 
-	@Override
-	public List<Map> getListOfDeveloperInfra() {
-		List<Map> developerInfraList = employeeRepository.getListOfDeveloper();
-		Map content = new HashMap();
-
-		content.put("developerList", developerInfraList);
-		ApiResponse response = new ApiResponse(true);
-		response.setSuccess(true);
-		response.setContent(content);
-		return developerInfraList;
-	}
-
-	@Override
-	public ApiResponse updateEmployee(Map employeeRequest) {
-		ApiResponse response = new ApiResponse(true);
+		if (!empPerConfig.isHavingpersmission("empAdmin")) {
+			response.setSuccess(false);
+			response.setMessage("Not authorised to update employee");
+			return response;
+		}
 
 		Employee employeeObj = employeeRepository.getbyUserByUserId(currentUser.getUserId());
 
@@ -1085,8 +1101,14 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public ApiResponse createJobVendor(JobVendorDetails vendorDetails) {
+	public ApiResponse createJobVendor(JobVendorDetails vendorDetails) throws Exception {
 		ApiResponse response = new ApiResponse(false);
+
+		if (!empPerConfig.isHavingpersmission("vendorAccess")) {
+			response.setSuccess(false);
+			response.setMessage("Not authorised to create JobVendor");
+			return response;
+		}
 
 //		response = validateEmployee(vendorDetails);
 		System.out.println("username::" + currentUser.getName());
@@ -1188,7 +1210,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 //					projectMemberRepository.save(projectMember);
 //				}
 				response.setSuccess(true);
-				response.setMessage(ResponseMessages.EMPLOYEE_ADDED);
+				response.setMessage(ResponseMessages.JOB_VENDOR_CREATED);
 				Map content = new HashMap();
 				content.put("vendorId", vendorNew.getvId());
 				response.setContent(content);
@@ -1247,6 +1269,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	@Override
 	public ApiResponse getJobVendor(Map<String, Object> filter, Pageable pageable) {
 		ApiResponse response = new ApiResponse(false);
+
 		String searchString = filter.containsKey("searchString") ? ((String) filter.get("searchString")).toLowerCase()
 				: null;
 		Page<JobVendorDetails> jobVendors = vendorRepository.getJobVendors(searchString, pageable);
@@ -1268,8 +1291,15 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public ApiResponse serachJobVendor(String vendorName) {
+	public ApiResponse serachJobVendor(String vendorName) throws Exception {
 		ApiResponse response = new ApiResponse(false);
+
+		if (!empPerConfig.isHavingpersmission("jvViewAll")) {
+			response.setSuccess(false);
+			response.setMessage("Not authorised to search JobVendor");
+			return response;
+		}
+
 		List<JobVendorDetails> jobVendors = vendorRepository.serachJobVendors(vendorName);
 		Map content = new HashMap();
 		content.put("jobVendors", jobVendors);
@@ -1291,6 +1321,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	@Override
 	public ApiResponse getAllEmployeeCurrentMonth(Pageable pageable) {
 		ApiResponse response = new ApiResponse(false);
+
 		List<Map> employeeList = employeeRepository.getAllEmployeeCurrentMonth(pageable);
 		Map content = new HashMap();
 		content.put("employeeList", employeeList);
@@ -1308,19 +1339,18 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 		return response;
 	}
-	
+
 	@Override
 	public ApiResponse changeAllEmployeePermissionsToDefault() {
 		ApiResponse response = new ApiResponse(false);
 		List<Employee> employeeList = employeeRepository.getAllEmployees();
 		for (Employee employee : employeeList) {
 			EmployeePermission empPermission = empPermissionRepo.getbyUserId(employee.getUserCredientials().getId());
-			if(empPermission != null)
+			if (empPermission != null)
 				empPermissionRepo.save(empPermission);
-			else
-			{
+			else {
 				EmployeePermission empPerObj = new EmployeePermission();
-				if(employee.getUserCredientials().getId() != null) {
+				if (employee.getUserCredientials().getId() != null) {
 					empPerObj.setUserId(employee.getUserCredientials().getId());
 					empPermissionRepo.save(empPerObj);
 				}
@@ -1334,6 +1364,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	@Override
 	public ApiResponse getJobVendorById(String vendorId) {
 		ApiResponse response = new ApiResponse(false);
+
 		JobVendorDetails employee = vendorRepository.getJobVendorById(vendorId);
 		Map content = new HashMap();
 		content.put("employee", employee);
@@ -1369,9 +1400,16 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public ApiResponse editJobVendor(String vendorId, JobVendorDetails vendorRequest) {
+	public ApiResponse editJobVendor(String vendorId, JobVendorDetails vendorRequest) throws Exception {
 		// TODO Auto-generated method stub
 		ApiResponse response = new ApiResponse(false);
+
+		if (!empPerConfig.isHavingpersmission("vendorAccess")) {
+			response.setSuccess(false);
+			response.setMessage("Not authorised to edit JobVendor");
+			return response;
+		}
+
 		JobVendorDetails vendor = vendorRepository.getById(vendorId);
 		if (vendor != null) {
 			Employee empObj = new Employee();
@@ -1432,6 +1470,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	@Override
 	public ApiResponse getJobVendorType() {
 		ApiResponse response = new ApiResponse(false);
+
 		List<VendorType> jobVendors = vendorRepo.getJobVendorType();
 		Map content = new HashMap();
 		content.put("jobVendorType", jobVendors);
@@ -1505,7 +1544,6 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			response.setMessage("infraUsers Retrieved Successfully");
 			response.setContent(content);
 		}
-
 		else {
 			response.setSuccess(false);
 			response.setMessage("Could not retrieve data");
@@ -1537,8 +1575,15 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public ApiResponse updateRolePermissions(String roleId, String modules, RoleMasterTable request) {
+	public ApiResponse updateRolePermissions(String roleId, String modules, RoleMasterTable request) throws Exception {
 		ApiResponse response = new ApiResponse(false);
+
+		if (!empPerConfig.isHavingpersmission("empAdmin")) {
+			response.setSuccess(false);
+			response.setMessage("Not authorised to update Role");
+			return response;
+		}
+
 		RoleMasterTable rolePermissions = masterRepo.updateRolePermissions(roleId, modules);
 		List<UserPermissions> permissionUser = userPermissionConfig.getByRole(roleId);
 		List<String> permissionRole = userPermissionConfig.getDetailsyRole(roleId);
@@ -1602,8 +1647,15 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public ApiResponse updateOfflineStatus(String infraUserId) {
+	public ApiResponse updateOfflineStatus(String infraUserId) throws Exception {
 		ApiResponse response = new ApiResponse(false);
+
+		if (!empPerConfig.isHavingpersmission("empAdmin")) {
+			response.setSuccess(false);
+			response.setMessage("Not authorised to update offline status");
+			return response;
+		}
+
 		Employee employee = employeeRepository.getById(infraUserId);
 		if (employee != null) {
 			if (currentUser.getUserRole().equals("INFRA_ADMIN")
@@ -1650,9 +1702,15 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public Map<String, Object> employeeBulkUpload(MultipartFile file) {
+	public Map<String, Object> employeeBulkUpload(MultipartFile file) throws Exception {
 
 		Map<String, Object> response = new HashMap<>();
+
+		if (!empPerConfig.isHavingpersmission("empAdmin")) {
+			((ApiResponse) response).setSuccess(false);
+			((ApiResponse) response).setMessage("Not authorised to employee Bulk Upload");
+			return response;
+		}
 
 		if (BulkUploadExcelUtil.hasEmployeeHeader(file)) {
 
