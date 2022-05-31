@@ -22,8 +22,8 @@ public class Reminder extends AuditModel {
 	@Column(name = "id")
 	private String reminderId;
 
-	@Column(name = "user_name", nullable = false)
-	private String userName;
+//	@Column(name = "user_name", nullable = false)
+//	private String userName;
 	
 	@Column(name = "title", nullable = false)
 	private String title;
@@ -37,18 +37,20 @@ public class Reminder extends AuditModel {
 	@Column(name = "user_id", nullable = false)
 	private String userId;
 
-	@Column(name = "notify_members", nullable = false)
-	private String notifyMembers;
+	@Column(name = "reference_id", nullable = false)
+	private String referenceId;
 	
 	@Column(name = "is_host", nullable = false)
 	private Boolean isHost;
 
-	public String getNotifyMembers() {
-		return notifyMembers;
+	
+
+	public String getReferenceId() {
+		return referenceId;
 	}
 
-	public void setNotifyMembers(String notifyMembers) {
-		this.notifyMembers = notifyMembers;
+	public void setReferenceId(String referenceId) {
+		this.referenceId = referenceId;
 	}
 
 	public String getTitle() {
@@ -83,13 +85,13 @@ public class Reminder extends AuditModel {
 		this.userId = userId;
 	}
 
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
+//	public String getUserName() {
+//		return userName;
+//	}
+//
+//	public void setUserName(String userName) {
+//		this.userName = userName;
+//	}
 
 	public String getReminderId() {
 		return reminderId;
