@@ -721,11 +721,11 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 		return workbook;
 	}
 
-	/*@Override
+	@Override
 	public ApiResponse getAssetById1(String assetId) {
 		
 		ApiResponse response = new ApiResponse();
-		List<Map> asset = assetIssuesRepository.getAllAssetById1(assetId);
+		AssetIssues asset = assetIssuesRepository.getAllAssetById1(assetId);
 		Map content = new HashMap();
 		content.put("asset", asset);
 		if(content != null) {
@@ -738,7 +738,7 @@ public class AssetIssuesServiceImpl implements AssetIssuesService
 			response.setMessage("Could not retrieve data");
 		}
 		return response;
-	}*/
+	}
 	}
 
 	

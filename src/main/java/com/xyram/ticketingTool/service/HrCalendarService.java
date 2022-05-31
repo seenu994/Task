@@ -10,21 +10,21 @@ import com.xyram.ticketingTool.entity.HrCalendar;
 
 public interface HrCalendarService {
 	
-	ApiResponse createScheduleInCalendar(HrCalendar schedule);
+	ApiResponse createScheduleInCalendar(HrCalendar schedule) throws Exception;
 	
-	ApiResponse editScheduleInCalendar(Boolean validateDateTime,HrCalendar schedule);
+	ApiResponse editScheduleInCalendar(Boolean validateDateTime,HrCalendar schedule) throws Exception;
 	
 	ApiResponse deleteScheduleInCalendar(String scheduleId);
 	
-	ApiResponse doReScheduleInCalendar(String scheduleId, String comment);
+	ApiResponse doReScheduleInCalendar(String scheduleId, String comment) throws Exception;
 	
-	ApiResponse changeScheduleStatus(String scheduleId,String comment, String status, Date scheduleDate);
+	ApiResponse changeScheduleStatus(String scheduleId,String comment, String status, Date scheduleDate) throws Exception;
 	
-	ApiResponse updateScheduleCallCounter(String scheduleId);
+	ApiResponse updateScheduleCallCounter(String scheduleId) throws Exception;
 	
-	ApiResponse addCommentToSchedule(String scheduleId, String comment);
+	ApiResponse addCommentToSchedule(String scheduleId, String comment) throws Exception;
 	
-	ApiResponse editCommentToSchedule(String commentId, String comment);
+	ApiResponse editCommentToSchedule(String commentId, String comment) throws Exception;
 	
 	ApiResponse deleteCommentToSchedule(String commentId);
 	
