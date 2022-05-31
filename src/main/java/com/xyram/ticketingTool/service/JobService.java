@@ -17,7 +17,7 @@ import com.xyram.ticketingTool.request.JobApplicationStatusRequest;
 
 public interface JobService {
 
-	ApiResponse createJob(JobOpenings jobObj);
+	ApiResponse createJob(JobOpenings jobObj) throws Exception;
 
 	ApiResponse getAllJobs(Map<String, Object> filter, Pageable pageable);
 
@@ -33,7 +33,7 @@ public interface JobService {
 
 	ApiResponse changeJobOpeningStatus(String jobOpeningId, JobOpeningStatus jobOpeningStatus);
 
-	ApiResponse editJob(String jobId, JobOpenings jobObj);
+	ApiResponse editJob(String jobId, JobOpenings jobObj) throws Exception;
 
 	ApiResponse editJobInterview(JobInterviews jobInterviewRequest, String interviewId);
 
@@ -78,7 +78,7 @@ public interface JobService {
 
 	ApiResponse getAllJobOffer(Map<String, Object> filter, Pageable pageable);
 
-	ApiResponse createJobApplication(MultipartFile[] files, String jobAppString);
+	ApiResponse createJobApplication(MultipartFile[] files, String jobAppString) throws Exception;
 
 	ApiResponse changeJobApplicationStatus(String jobApplicationId, JobApplicationStatusRequest request);
 

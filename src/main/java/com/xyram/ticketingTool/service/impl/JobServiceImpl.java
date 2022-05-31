@@ -68,6 +68,7 @@ import com.xyram.ticketingTool.request.InterviewRoundReviewRequest;
 import com.xyram.ticketingTool.request.JobApplicationStatusRequest;
 import com.xyram.ticketingTool.service.JobService;
 import com.xyram.ticketingTool.service.NotificationService;
+import com.xyram.ticketingTool.ticket.config.EmployeePermissionConfig;
 import com.xyram.ticketingTool.util.ResponseMessages;
 
 @Service
@@ -124,6 +125,9 @@ public class JobServiceImpl implements JobService {
 
 	@Autowired
 	SkillsRepository skillsRepository;
+	
+	@Autowired
+	EmployeePermissionConfig empPerConfig;
 
 	@Value("${APPLICATION_URL}")
 	private String application_url;
@@ -140,8 +144,14 @@ public class JobServiceImpl implements JobService {
 	static String PATHSEPARATOR = "/";
 
 	@Override
-	public ApiResponse createJob(JobOpenings jobObj) {
+	public ApiResponse createJob(JobOpenings jobObj) throws Exception {
 		ApiResponse response = new ApiResponse(true);
+		
+		if (!empPerConfig.isHavingpersmission("jobOpeningAdd") && !empPerConfig.isHavingpersmission("jobAdmin")) {
+			response.setSuccess(false);
+			response.setMessage("Not authorised to create employee");
+			return response;
+		}
 
 		response = validate(jobObj);
 		if (response.getMessage() != null && response.getMessage() != "") {
@@ -436,12 +446,17 @@ public class JobServiceImpl implements JobService {
 	}
 
 	@Override
-	public ApiResponse createJobApplication(MultipartFile[] files, String jobAppString) {
+	public ApiResponse createJobApplication(MultipartFile[] files, String jobAppString) throws Exception {
 		// TODO Auto-generated method stub
 		ApiResponse response = new ApiResponse(false);
+		 if (!empPerConfig.isHavingpersmission("jobAppUpload") || !empPerConfig.isHavingpersmission("jobAdmin")) {
+			response.setSuccess(false);
+			response.setMessage("Not authorised to create employee");
+			return response;
+		}
 
 		ObjectMapper objectMapper = new ObjectMapper();
-		JobApplication jobAppObj = null;
+		JobApplication jobAppObj = null; 
 		try {
 
 			jobAppObj = objectMapper.readValue(jobAppString, JobApplication.class);
@@ -862,8 +877,14 @@ public class JobServiceImpl implements JobService {
 		return response;
 	}
 
-	public ApiResponse editJob(String jobId, JobOpenings jobObj) {
+	public ApiResponse editJob(String jobId, JobOpenings jobObj) throws Exception {
 		ApiResponse response = new ApiResponse(false);
+		
+		if (!empPerConfig.isHavingpersmission("jobOpeningAdd")) {
+			response.setSuccess(false);
+			response.setMessage("Not authorised to create employee");
+			return response;
+		}
 
 		response = validate(jobObj);
 		if (response.getMessage() != null && response.getMessage() != "") {
