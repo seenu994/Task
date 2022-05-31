@@ -36,7 +36,7 @@ public class JwtUserDetailsService implements UserDetailsService {
 			List<com.xyram.ticketingTool.admin.model.User> users = userRepository.findByUsername(username);
 			if (users != null && users.size() > 0) {
 				user = users.get(0);
-			}
+			}																																		
 		
 		Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
 		grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + user.getUserRole()));

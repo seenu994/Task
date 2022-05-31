@@ -172,7 +172,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 	@Query("Select new map(e.eId as id,e.email as email,e.firstName as firstName,e. profileUrl as profileUrl, e.lastName as lastName,e.middleName as middleName ,e.roleId as roleId ,e.designationId as designationId,e.location as location,e.position as position,e.wings as wings,e.dateOfJoin as dateOfJoin,"
 			+ "e.status as status,e.mobileNumber as mobileNumber,r.roleName as rolename,c.locationName as locationName,d.designationName as designationName,e.reportingTo as reportingTo,CONCAT(ee.firstName ,' ', ee.lastName) as ReporterName,ee.profileUrl as ReporterURL,e.createdAt as createdAt,e.createdBy as createdBy) from Employee e left join Employee ee On ee.eId = e.reportingTo  "
 			+ "left JOIN Role r On e.roleId = r.Id left JOIN  CompanyLocation c On e.location=c.id left JOIN  Designation d On e.designationId=d.Id where e.id=:id")*/
-	@Query("Select new map(e.eId as id,e.email as email,e.firstName as firstName,e. profileUrl as profileUrl, e.lastName as lastName,e.middleName as middleName ,e.designationId as designationId,e.location as location,e.position as position,e.wings as wings,e.dateOfJoin as dateOfJoin,"
+	@Query("Select new map(e.eId as id,e.email as email,e.firstName as firstName,e. profileUrl as profileUrl, e.lastName as lastName,e.middleName as middleName ,e.designationId as designationId,e.location as location,e.position as position,e.wings as wings,e.dateOfJoin as dateOfJoin,e.userCredientials.id as userId,"
 			+ "e.status as status,e.mobileNumber as mobileNumber,c.locationName as locationName,d.designationName as designationName,e.reportingTo as reportingTo,CONCAT(ee.firstName ,' ', ee.lastName) as ReporterName,ee.profileUrl as ReporterURL,e.createdAt as createdAt,e.createdBy as createdBy) from Employee e left join Employee ee On ee.eId = e.reportingTo  "
 			+ "left JOIN  CompanyLocation c On e.location=c.id left JOIN  Designation d On e.designationId=d.Id where e.id=:id")
 	Map getEmployeeBYId(String id);
@@ -191,7 +191,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 			+ "left JOIN Designation d On e.designationId=d.Id where e.userCredientials.id=:accessToken")
 	Map getbyAccessToken(String accessToken);
 
-	@Query("SELECT new map(CONCAT(e.firstName ,' ', e.lastName) as ReporterName,e.eId as Id,e.profileUrl as profileUrl,e.userCredientials.id as userId) from Employee e where e.reportingTo = :reportingId")
+	@Query("SELECT new map(CONCAT(e.firstName ,' ', e.lastName) as ReporterName,e.eId as Id,e.email as email,e.profileUrl as profileUrl,e.userCredientials.id as userId) from Employee e where e.reportingTo = :reportingId")
 	List<Map> getReportingList(String reportingId);
 
 	@Query("SELECT new map(CONCAT(e.firstName ,' ', e.lastName) as ReporterName,e.eId as Id,e.profileUrl as profileUrl,e.userCredientials.id as userId) "
