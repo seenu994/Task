@@ -20,6 +20,7 @@ import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.entity.Articles;
 import com.xyram.ticketingTool.entity.JobOpenings;
 import com.xyram.ticketingTool.entity.Reminder;
+import com.xyram.ticketingTool.request.ReminderRequest;
 import com.xyram.ticketingTool.service.ReminderService;
 import com.xyram.ticketingTool.util.AuthConstants;
 
@@ -32,8 +33,8 @@ public class ReminderController {
 	ReminderService reminderService;
 
 	@PostMapping("/createReminder")
-	public ApiResponse createReminder(@RequestBody Reminder Reminder) {
-		logger.info("Creating new Reminder");
+	public ApiResponse createReminder(@RequestBody ReminderRequest Reminder) {
+//		logger.info("Creating new Reminder");
 		return reminderService.createReminder(Reminder);
 	}
 

@@ -197,7 +197,7 @@ public class ReminderServiceImpl implements ReminderService {
 				ReminderObject.setTitle(ReminderReq.getTitle());
 				ReminderObject.setReminderDate(ReminderReq.getReminderDate());
 				ReminderObject.setReminderTime(ReminderReq.getReminderTime());
-				ReminderObject.setNotifyMembers(ReminderReq.getNotifyMembers());
+//				ReminderObject.setNotifyMembers(ReminderReq.getNotifyMembers());
 				ReminderObject.setUpdatedBy(currentUser.getUserId());
 				ReminderObject.setLastUpdatedAt(new Date());
 //				System.out.println("ReminderId inside ::" + ReminderReq.getReminderDateTime());
