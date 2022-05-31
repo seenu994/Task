@@ -6,22 +6,18 @@ public class ReminderRequest {
 
 	@Column(name = "title", nullable = false)
 	private String title;
-
-	@Column(name = "reminderDate", nullable = false)
-	private String reminderDate;
-
-	@Column(name = "reminderTime", nullable = false)
-	private String reminderTime;
+	@Column(name = "reminder_date_time", nullable = false)
+	private String reminderDateTime;
 
 	@Column(name = "user_id", nullable = false)
 	private String userId;
 
-	@Column(name = "reference_id", nullable = false)
+	@Column(name = "reference_id")
 	private String referenceId;
-	
-	@Column(name = "is_host", nullable = false)
+
+	@Column(name = "is_host")
 	private Boolean isHost;
-	
+
 	@Column(name = "references", nullable = false)
 	private String[] references;
 
@@ -33,20 +29,12 @@ public class ReminderRequest {
 		this.title = title;
 	}
 
-	public String getReminderDate() {
-		return reminderDate;
+	public String getReminderDateTime() {
+		return reminderDateTime;
 	}
 
-	public void setReminderDate(String reminderDate) {
-		this.reminderDate = reminderDate;
-	}
-
-	public String getReminderTime() {
-		return reminderTime;
-	}
-
-	public void setReminderTime(String reminderTime) {
-		this.reminderTime = reminderTime;
+	public void setReminderDateTime(String reminderDateTime) {
+		this.reminderDateTime = reminderDateTime;
 	}
 
 	public String getUserId() {
@@ -80,7 +68,5 @@ public class ReminderRequest {
 	public void setReferences(String[] references) {
 		this.references = references;
 	}
-	
-	
-	
+
 }
