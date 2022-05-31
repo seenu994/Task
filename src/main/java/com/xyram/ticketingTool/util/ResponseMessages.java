@@ -437,6 +437,9 @@ public interface ResponseMessages {
 
 	String DOJ_NOT_VAL = "Date Of Join is not valid";
 
+	String JOB_VENDOR_CREATED = "Job vendor created successfully";
+
+
 //	String ANNOUNCEMENT_STATUS_CHANGED = "Announcement status changed successfully";
 //	String ANNOUNCEMENT_STATUS_NOT_CHANGED = "Announcement status not changed";
 //	String ANNOUNCEMENT_DELETED = "Announcement deleted successfully";

@@ -28,7 +28,7 @@ public interface EmployeeService {
 
 	ApiResponse editEmployee(String employeeId, Employee employee) throws Exception;
 
-	ApiResponse updateEmployeeStatus(String employeeID, UserStatus userstatus);
+	ApiResponse updateEmployeeStatus(String employeeID, UserStatus userstatus) throws Exception;
 	
 	ApiResponse getAllEmpByProject(String projectid, String clientid); 
 	
@@ -46,19 +46,19 @@ public interface EmployeeService {
 	 
 	List<Employee> getListOfInfraUSer();
 	 
-	List<Map> getListOfDeveloper();
+	//List<Map> getListOfDeveloper();
 	
-	List<Map>  getListOfDeveloperInfra();
+	//List<Map>  getListOfDeveloperInfra();
 
 	List<Map> getListOfInfraAdmins();
 
-	ApiResponse updateEmployee(Map employeeRequest);
+	ApiResponse updateEmployee(Map employeeRequest) throws Exception;
 
 	ApiResponse getAllProfile();
 
 	//ApiResponse updateProfileImage(MultipartFile file, String employeeId);
 
-	ApiResponse createJobVendor(JobVendorDetails vendorDetails);
+	ApiResponse createJobVendor(JobVendorDetails vendorDetails) throws Exception;
 
 	//ApiResponse getEmployeeDetails(Employee employeeId);
 
@@ -74,7 +74,7 @@ public interface EmployeeService {
 
 	ApiResponse getEmployeeDetailsById(String employeeId);
 
-	ApiResponse editJobVendor(String vendorId, JobVendorDetails vendorRequest);
+	ApiResponse editJobVendor(String vendorId, JobVendorDetails vendorRequest) throws Exception;
 
 	ApiResponse getJobVendorType();
 
@@ -86,9 +86,9 @@ public interface EmployeeService {
 
 	ApiResponse getAllRolePermissions(String roleId);
 
-	ApiResponse updateRolePermissions(String roleId, String modules, RoleMasterTable request);
+	ApiResponse updateRolePermissions(String roleId, String modules, RoleMasterTable request) throws Exception;
 
-	ApiResponse updateOfflineStatus(String infraUserId);
+	ApiResponse updateOfflineStatus(String infraUserId) throws Exception;
 
 	ApiResponse getAllEmployeeList();
 
@@ -98,9 +98,9 @@ public interface EmployeeService {
 
 	ApiResponse searchEmployeeNotAssignedToByProject(String projectid, String searchString);
 
-	ApiResponse serachJobVendor(String vendorName);
+	ApiResponse serachJobVendor(String vendorName) throws Exception;;
 
-	Map<String, Object> employeeBulkUpload(MultipartFile file);
+	Map<String, Object> employeeBulkUpload(MultipartFile file) throws Exception;
 
 	ApiResponse getJobVendor(Map<String, Object> filter, Pageable pageable);
 
