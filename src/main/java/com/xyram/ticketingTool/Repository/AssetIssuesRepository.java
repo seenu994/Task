@@ -203,6 +203,10 @@ List<Map> downloadAllAssetIssues(AssetIssueStatus status, String assetId, String
 	@Query("Select i from AssetIssues i where i.assetIssueId=:assetIssueId and i.assetId=:assetId")
 	AssetIssues getAssetById(String assetIssueId, String assetId);
 
+	
+	@Query("Select i from AssetIssues i where  i.assetId=:assetId")
+	AssetIssues getAllAssetById1(String assetId);
+
 
 
 
