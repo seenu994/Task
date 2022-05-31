@@ -15,6 +15,8 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.persistence.Column;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -337,7 +339,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 //		}
 	}
-
+	
 	public ApiResponse getEmployeePermission(String userId) throws Exception {
 		ApiResponse response = new ApiResponse(true);
 
@@ -375,11 +377,11 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			response.setSuccess(false);
 			return response;
 		}
-		Employee employee = employeeRepository.getbyUserId(userId);
+		User employee = userRepository.getById(userId);
 		if (employee != null) {
 
 //	        EmployeePermission.class.getField(permission).set(ep, flag);
-			EmployeePermission ep1 = empPermissionRepo.getbyUserId(employee.getUserCredientials().getId());
+			EmployeePermission ep1 = empPermissionRepo.getbyUserId(employee.getId());
 			ObjectMapper oMapper = new ObjectMapper();
 			Map<String, Object> map = oMapper.convertValue(ep1, Map.class);
 			if (map.containsKey(permission)) {
@@ -1793,6 +1795,14 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "header data passed in xls is invalid ");
 		}
 
+		return response;
+	}
+	
+	public ApiResponse getAllEmployeeDefaultPermissions() throws Exception {
+		ApiResponse response = new ApiResponse(true);
+		if (!empPerConfig.isHavingpersmission("empAdmin")) {
+			
+		}
 		return response;
 	}
 
