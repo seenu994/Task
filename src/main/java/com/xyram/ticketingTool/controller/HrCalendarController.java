@@ -37,32 +37,40 @@ public class HrCalendarController {
 		return hrCalrendarService.createScheduleInCalendar(schedule);
 	}
 	
-	@PostMapping( "/editScheduleInCalendar/{validateDateTime}")
+	@PostMapping("/editScheduleInCalendar/{validateDateTime}")
 	ApiResponse editScheduleInCalendar(@PathVariable Boolean validateDateTime,@RequestBody HrCalendar schedule) throws Exception {
 		logger.info("Editing Hr Schedule");
 		return hrCalrendarService.editScheduleInCalendar(validateDateTime,schedule);
 	}
 	
-	@DeleteMapping("/deleteScheduleInCalendar/{scheduleId}")
+	@DeleteMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/deleteScheduleInCalendar/{scheduleId}",
+			AuthConstants.HR_BASEPATH + "/deleteScheduleInCalendar/{scheduleId}"			
+			})
 	ApiResponse deleteScheduleInCalendar(@PathVariable String scheduleId) {
 		logger.info("Deleting Hr Schedule");
 		return hrCalrendarService.deleteScheduleInCalendar(scheduleId);
 	} 
 	
-	@GetMapping("/getScheduleDetail/{scheduleId}" )
+	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/getScheduleDetail/{scheduleId}",
+			AuthConstants.HR_BASEPATH + "/getScheduleDetail/{scheduleId}"			
+			})
 	ApiResponse getScheduleDetail(@PathVariable String scheduleId) {
 		logger.info("Get Schedule Detail");
 		return hrCalrendarService.getScheduleDetail(scheduleId);
 	}
 	
-	@PostMapping("/doReScheduleInCalendar/{scheduleId}/scheduleDate/{scheduleDate}"	)
-	ApiResponse doReScheduleInCalendar(@PathVariable String scheduleId, @PathVariable String comment) throws Exception {
+	@PostMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/doReScheduleInCalendar/{scheduleId}/scheduleDate/{scheduleDate}",
+			AuthConstants.HR_BASEPATH + "/doReScheduleInCalendar/{scheduleId}/scheduleDate/{scheduleDate}"			
+			})
+	ApiResponse doReScheduleInCalendar(@PathVariable String scheduleId, @PathVariable String comment) {
 		logger.info("Re-Schedule Call");
 		return hrCalrendarService.doReScheduleInCalendar(scheduleId,comment);
 	}
 	
-	@PostMapping("/changeScheduleStatus")
-	ApiResponse changeScheduleStatus(@RequestBody(required=false) Map<String,Object> filter) throws Exception {
+	@PostMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/changeScheduleStatus",
+			AuthConstants.HR_BASEPATH + "/changeScheduleStatus"			
+			})
+	ApiResponse changeScheduleStatus(@RequestBody(required=false) Map<String,Object> filter) {
 		logger.info("Changing Schedule Status");
 	
 		String scheduleId = filter.containsKey("scheduleId") ? ((String) filter.get("scheduleId")).toLowerCase()
@@ -96,86 +104,103 @@ public class HrCalendarController {
 		return hrCalrendarService.updateScheduleCallCounter(scheduleId);
 	}
 	
-	@PostMapping( "/addCommentToSchedule/{scheduleId}/comment/{comment}")
+	@PostMapping( "/addCommentToSchedule/{scheduleId}/comment/{comment}"	)
 	ApiResponse addCommentToSchedule( @PathVariable String scheduleId,  @PathVariable String comment) throws Exception {
 		logger.info("Adding comment to Schedule");
 		return hrCalrendarService.addCommentToSchedule(scheduleId, comment);
 	}
 	
-	@PostMapping("/editCommentToSchedule/{commentId}/comment/{comment}"	)
+	@PostMapping( "/editCommentToSchedule/{commentId}/comment/{comment}")
 	ApiResponse editCommentToSchedule( @PathVariable String commentId, @PathVariable String comment) throws Exception {
 		logger.info("Editing Schedule Comment");
 		return hrCalrendarService.editCommentToSchedule(commentId, comment);
 	}
 	
 	@PostMapping("/deleteCommentToSchedule/{commentId}")
-	ApiResponse deleteCommentToSchedule(@PathVariable String commentId) {
+	ApiResponse deleteCommentToSchedule(@PathVariable String commentId) throws Exception {
 		logger.info("Deleting Schedule Comment");
 		return hrCalrendarService.deleteCommentToSchedule(commentId);
 	}
 	
-	@GetMapping( "/getAllScheduleComments/{scheduleId}"	)
-	ApiResponse getAllScheduleComments(@PathVariable String scheduleId) {
+	@GetMapping("/getAllScheduleComments/{scheduleId}")
+	ApiResponse getAllScheduleComments(@PathVariable String scheduleId) throws Exception {
 		logger.info("Get all Schedule Comments");
 		return hrCalrendarService.getAllScheduleComments(scheduleId);
 	}
 	
 	
-	@GetMapping("/getAllHrScheduleStatus")
-	ApiResponse getAllHrScheduleStatus() {
+	@GetMapping( "/getAllHrScheduleStatus")
+	ApiResponse getAllHrScheduleStatus() throws Exception {
 		logger.info("Get all Schedule Comments");
 		return hrCalrendarService.getAllHrScheduleStatus();
 	}
 	
-	@GetMapping( "/searchSchedulesInCalender/{searchString}")
+	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/searchSchedulesInCalender/{searchString}",
+			AuthConstants.HR_BASEPATH + "/searchSchedulesInCalender/{searchString}"			
+			})
 	ApiResponse searchSchedulesInCalender(@PathVariable String searchString) {
 		logger.info("Get all getAllMySchedulesFromCalendarByStatus");
 		return hrCalrendarService.searchSchedulesInCalender(searchString);
 	} 
 	
-	@GetMapping( "/searchMyTeamSchedulesInCalender/{searchString}")
+	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/searchMyTeamSchedulesInCalender/{searchString}",
+			AuthConstants.HR_BASEPATH + "/searchMyTeamSchedulesInCalender/{searchString}"			
+			})
 	ApiResponse searchMyTeamSchedulesInCalender(@PathVariable String searchString) {
 		logger.info("Get all searchMyTeamSchedulesInCalender");
 		return hrCalrendarService.searchMyTeamSchedulesInCalender(searchString);
 	} 
 	
-	@GetMapping("/getCandidateHistory/{mobileNo}")
+	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/getCandidateHistory/{mobileNo}",
+			AuthConstants.HR_BASEPATH + "/getCandidateHistory/{mobileNo}"			
+			})
 	ApiResponse getCandidateHistory(@PathVariable String mobileNo) {
 		logger.info("Get all getCandidateHistory");
 		return hrCalrendarService.getCandidateHistory(mobileNo);
 	}
 	
-	@PostMapping( "/getAllMySchedulesFromCalendarByStatus")
+	@PostMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/getAllMySchedulesFromCalendarByStatus",
+			AuthConstants.HR_BASEPATH + "/getAllMySchedulesFromCalendarByStatus"			
+			})
 	ApiResponse getAllMySchedulesFromCalendarByStatus(@RequestBody Map<String, Object>filter, Pageable pageable) {
 		logger.info("Get all getAllMySchedulesFromCalendarByStatus");
 		return hrCalrendarService.getAllMySchedulesFromCalendarByStatus(filter, pageable);
 	}
 
-	@PostMapping("/getAllMyTeamSchedulesFromCalendarByStatus")
+	@PostMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/getAllMyTeamSchedulesFromCalendarByStatus",
+			AuthConstants.HR_BASEPATH + "/getAllMyTeamSchedulesFromCalendarByStatus"			
+			})
 	ApiResponse getAllMyTeamSchedulesFromCalendarByStatus(@RequestBody Map<String, Object>filter, Pageable pageable) {
 		logger.info("Get all getAllMyTeamSchedulesFromCalendarByStatus");
 		return hrCalrendarService.getAllMyTeamSchedulesFromCalendarByStatus(filter, pageable);
 	}
 
-	@PostMapping("/downloadAllMySchedulesFromCalendarByStatus")
+	@PostMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/downloadAllMySchedulesFromCalendarByStatus",
+			AuthConstants.HR_BASEPATH + "/downloadAllMySchedulesFromCalendarByStatus"			
+			})
 	ApiResponse downloadAllMySchedulesFromCalendarByStatus(@RequestBody Map<String, Object>filter) {
 		logger.info("Get all downloadAllMySchedulesFromCalendarByStatus");
 		return hrCalrendarService.downloadAllMySchedulesFromCalendarByStatus(filter);
 	}
 
-	@PostMapping("/downloadMyTeamSchedulesFromCalendarByStatus")
+	@PostMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/downloadMyTeamSchedulesFromCalendarByStatus",
+			AuthConstants.HR_BASEPATH + "/downloadMyTeamSchedulesFromCalendarByStatus"			
+			})
 	ApiResponse downloadMyTeamSchedulesFromCalendarByStatus(@RequestBody Map<String, Object>filter) {
 		logger.info("Get all downloadMyTeamSchedulesFromCalendarByStatus");
 		return hrCalrendarService.downloadMyTeamSchedulesFromCalendarByStatus(filter);
 	}
 	
-	@PostMapping("/getAllhrCalender")
-	     public ApiResponse getAllhrCalender(@RequestBody Map<String, Object>filter, Pageable pageable) {
-	 	        logger.info("Received request to get all calender");
-	 			return hrCalrendarService.getAllhrCalender(filter, pageable);
+	@GetMapping(value = {AuthConstants.HR_ADMIN_BASEPATH + "/getAllhrCalender",
+	   		  AuthConstants.HR_BASEPATH + "/getAllhrCalender", AuthConstants.ADMIN_BASEPATH + "/getAllhrCalender"})
+	 public ApiResponse getAllhrCalender(@RequestBody Map<String, Object>filter, Pageable pageable) {
+	        logger.info("Received request to get all calender");
+			return hrCalrendarService.getAllhrCalender(filter, pageable);
 	}
 	 			
-	@GetMapping("/searchhrCalender/{searchString}")
+	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/searchhrCalender/{searchString}",
+			AuthConstants.HR_BASEPATH + "/searchhrCalender/{searchString}",
+			AuthConstants.ADMIN_BASEPATH + "/searchhrCalender/{searchString}" })
 	public ApiResponse searchhrCalender(@PathVariable String searchString) {
 		logger.info("Received request to search hrCalender ");
 		return hrCalrendarService.searchhrCalender(searchString);
