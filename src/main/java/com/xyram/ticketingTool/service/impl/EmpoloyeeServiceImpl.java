@@ -1343,15 +1343,15 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	@Override
 	public ApiResponse changeAllEmployeePermissionsToDefault() {
 		ApiResponse response = new ApiResponse(false);
-		List<Employee> employeeList = employeeRepository.getAllEmployees();
-		for (Employee employee : employeeList) {
-			EmployeePermission empPermission = empPermissionRepo.getbyUserId(employee.getUserCredientials().getId());
+		List<User> employeeList = userRepository.findAll();
+		for (User employee : employeeList) {
+			EmployeePermission empPermission = empPermissionRepo.getbyUserId(employee.getId());
 			if (empPermission != null)
 				empPermissionRepo.save(empPermission);
 			else {
 				EmployeePermission empPerObj = new EmployeePermission();
-				if (employee.getUserCredientials().getId() != null) {
-					empPerObj.setUserId(employee.getUserCredientials().getId());
+				if (employee.getId() != null) {
+					empPerObj.setUserId(employee.getId());
 					empPermissionRepo.save(empPerObj);
 				}
 			}

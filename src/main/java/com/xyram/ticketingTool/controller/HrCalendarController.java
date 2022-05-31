@@ -164,7 +164,7 @@ public class HrCalendarController {
 	}
 
 	@PostMapping("/downloadMyTeamSchedulesFromCalendarByStatus")
-	ApiResponse downloadMyTeamSchedulesFromCalendarByStatus(@RequestBody Map<String, Object>filter) {
+	ApiResponse downloadMyTeamSchedulesFromCalendarByStatus(@RequestBody Map<String, Object>filter) throws Exception {
 		logger.info("Get all downloadMyTeamSchedulesFromCalendarByStatus");
 		return hrCalrendarService.downloadMyTeamSchedulesFromCalendarByStatus(filter);
 	}

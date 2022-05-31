@@ -994,7 +994,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	}
 
 	@Override
-	public ApiResponse downloadMyTeamSchedulesFromCalendarByStatus(Map<String, Object> filter) {
+	public ApiResponse downloadMyTeamSchedulesFromCalendarByStatus(Map<String, Object> filter) throws Exception {
 		ApiResponse response = new ApiResponse();
 		String jobId = filter.containsKey("jobId") ? ((String) filter.get("jobId")) : null;
 		String employeeId = filter.containsKey("employeeId") ? ((String) filter.get("employeeId")) : null;
@@ -1018,9 +1018,21 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 						"Invalid date format date should be yyyy-MM-dd");
 			}
 		}
-
-		List<Map> myTeamScheduleList = hrCalendarRepository.downloadAllMyTeamSchedulesFromCalendarByStatus(
-				currentUser.getUserId(), employeeId, fromDate, toDate, jobId, status, closed, userZone);
+		List<Map> myTeamScheduleList = null;
+		
+		    if(currentUser.getUserId().equals("USR_JAbUrXk611") ) {
+		    	myTeamScheduleList = hrCalendarRepository.downloadAllMyTeamSchedulesFromCalendarByStatusForAdmin(
+						employeeId, fromDate, toDate, jobId, status, closed, userZone);
+		    }
+		    else if (empPerConfig.isHavingpersmission("hrCalViewAll")) {
+				myTeamScheduleList = hrCalendarRepository.downloadAllMyTeamSchedulesFromCalendarByStatusForAdmin(
+						employeeId, fromDate, toDate, jobId, status, closed, userZone);
+			}else {
+				myTeamScheduleList = hrCalendarRepository.downloadAllMyTeamSchedulesFromCalendarByStatus(
+						currentUser.getUserId(), employeeId, fromDate, toDate, jobId, status, closed, userZone);
+			}
+		
+		
 		Map<String, Object> fileResponse = new HashMap<>();
 
 		Workbook workbook = prepareExcelWorkBookTeam(myTeamScheduleList, userZone);
