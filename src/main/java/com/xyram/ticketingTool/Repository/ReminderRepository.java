@@ -40,7 +40,7 @@ public interface ReminderRepository extends JpaRepository<Reminder, String> {
 	List<Reminder> getRemindersWithinFifteenMin();
 	
 	@Query("Select distinct new map( r.reminderId as reminderId,r.title as title,r.reminderDate as reminderDate,r.reminderTime as reminderTime,"
-			+ " r.userName as userName, r.createdAt as createdAt,r.lastUpdatedAt as lastUpdatedAt,"
+			+ "  r.createdAt as createdAt,r.lastUpdatedAt as lastUpdatedAt,"
 			+ " r.UpdatedBy as UpdatedBy, r.createdBy as createdBy,r.notifyMembers as notifyMembers) from Reminder r" + " ORDER BY r.createdAt DESC")
 	Page<Map> getAllReminders(Pageable pageable);
 
@@ -48,7 +48,7 @@ public interface ReminderRepository extends JpaRepository<Reminder, String> {
 	Reminder findReminderById(String id);
 
 	@Query("Select distinct new map(r.reminderId as reminderId,r.title as title,r.reminderDate as reminderDate,r.reminderTime as reminderTime,"
-			+ " r.userName as userName, r.createdAt as createdAt,r.lastUpdatedAt as lastUpdatedAt,"
+			+ " r.createdAt as createdAt,r.lastUpdatedAt as lastUpdatedAt,"
 			+ " r.UpdatedBy as UpdatedBy, r.createdBy as createdBy,r.notifyMembers as notifyMembers) from Reminder r where date(r.reminderDate) =(:paramDate) AND r.createdBy=:userId")
 	List<Map> getRemindersByDateValue(Date paramDate, String userId);
 
