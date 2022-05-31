@@ -1097,9 +1097,8 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 				e.printStackTrace();
 			}
 //            System.out.println(scheduleDate);
-			row.put("job Id", myTeamSchedule.get("jobId") != null ? myTeamSchedule.get("jobId").toString() : "");
-			row.put("Name",
-					myTeamSchedule.get("candidateName") != null ? myTeamSchedule.get("candidateName").toString() : "");
+			//row.put("job Id", myTeamSchedule.get("jobId") != null ? myTeamSchedule.get("jobId").toString() : "");
+			row.put("Name",myTeamSchedule.get("candidateName") != null ? myTeamSchedule.get("candidateName").toString() : "");
 			row.put("Job code", myTeamSchedule.get("jobCode") != null ? myTeamSchedule.get("jobCode").toString() : "");
 			row.put("Job Title",
 					myTeamSchedule.get("jobTitle") != null ? myTeamSchedule.get("jobTitle").toString() : "");
