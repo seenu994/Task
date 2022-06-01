@@ -16,19 +16,19 @@ public interface HrCalendarService {
 	
 	ApiResponse deleteScheduleInCalendar(String scheduleId);
 	
-	ApiResponse doReScheduleInCalendar(String scheduleId, String comment) throws Exception;
+	ApiResponse doReScheduleInCalendar(String scheduleId, String comment) ;
 	
-	ApiResponse changeScheduleStatus(String scheduleId,String comment, String status, Date scheduleDate) throws Exception;
+	ApiResponse changeScheduleStatus(String scheduleId,String comment, String status, Date scheduleDate);
 	
 	ApiResponse updateScheduleCallCounter(String scheduleId) throws Exception;
 	
 	ApiResponse addCommentToSchedule(String scheduleId, String comment) throws Exception;
 	
-	ApiResponse editCommentToSchedule(String commentId, String comment) throws Exception;
+	ApiResponse editCommentToSchedule(String commentId, String comment) throws Exception ;
 	
-	ApiResponse deleteCommentToSchedule(String commentId);
+	ApiResponse deleteCommentToSchedule(String commentId) throws Exception;
 	
-	ApiResponse getAllScheduleComments(String scheduleId);
+	ApiResponse getAllScheduleComments(String scheduleId) throws Exception;
 	
 	ApiResponse searchSchedulesInCalender(String searchString);
 	
@@ -38,7 +38,7 @@ public interface HrCalendarService {
 	
 	ApiResponse getScheduleDetail(String scheduleId);
 	
-	ApiResponse getAllHrScheduleStatus();
+	ApiResponse getAllHrScheduleStatus() throws Exception;
 	
 	ApiResponse getAllMySchedulesFromCalendarByStatus(Map<String, Object>filter, Pageable pageable);
 	
