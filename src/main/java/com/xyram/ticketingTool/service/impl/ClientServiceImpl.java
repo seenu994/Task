@@ -23,6 +23,7 @@ import com.xyram.ticketingTool.entity.Client;
 import com.xyram.ticketingTool.enumType.ClientStatus;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.ClientService;
+import com.xyram.ticketingTool.ticket.config.EmployeePermissionConfig;
 import com.xyram.ticketingTool.util.ResponseMessages;
 
 @Service
@@ -35,11 +36,19 @@ public class ClientServiceImpl implements ClientService {
 	
 	@Autowired
 	CurrentUser currentUser;
+	
+	@Autowired
+	EmployeePermissionConfig empPerConfig;
 
 	@Override
-	public ApiResponse addClient(Client clientRequest) {
+	public ApiResponse addClient(Client clientRequest) throws Exception{
 		ApiResponse response = new ApiResponse(false);
 		//Client client = new Client();
+		if(!empPerConfig.isHavingpersmission("prjAdmin")) {
+			response.setSuccess(false);
+			response.setMessage("Not authorised to edit Hrcalendar");
+			return response;
+		}
 		response = validateClient(clientRequest);
 		if(response.isSuccess())
 		{
@@ -60,9 +69,10 @@ public class ClientServiceImpl implements ClientService {
 		return response;
 	}
 
-	private ApiResponse validateClient(Client clientRequest) 
+	private ApiResponse validateClient(Client clientRequest)
 	{
 		ApiResponse response = new ApiResponse(false);
+		
 		if(clientRequest.getClientName() == null || clientRequest.getClientName().equals(""))
 		{
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "client name is mandatory !!");
@@ -86,9 +96,14 @@ public class ClientServiceImpl implements ClientService {
 
 	
 	@Override
-	public ApiResponse updateClientStatus(String clientId, ClientStatus status) 
+	public ApiResponse updateClientStatus(String clientId, ClientStatus status)  throws Exception
 	{
 		ApiResponse response = new ApiResponse(false);
+		if(!empPerConfig.isHavingpersmission("prjAdmin")) {
+			response.setSuccess(false);
+			response.setMessage("Not authorised to edit Hrcalendar");
+			return response;
+		}
 		//ApiResponse response = validateStatus(status);
 		//if (response.isSuccess()) {
 			Client client = clientRepository.getClientById(clientId);
@@ -116,9 +131,13 @@ public class ClientServiceImpl implements ClientService {
 	}
 
 	@Override
-	public ApiResponse editClient(String clientId, Client clientRequest) {
+	public ApiResponse editClient(String clientId, Client clientRequest)  throws Exception{
 		ApiResponse response = new ApiResponse(false);
-		
+		if(!empPerConfig.isHavingpersmission("prjAdmin")) {
+			response.setSuccess(false);
+			response.setMessage("Not authorised to edit Hrcalendar");
+			return response;
+		}
 		Client client = clientRepository.getClientById(clientId);
 		if(client != null)
 		{
@@ -192,9 +211,14 @@ public class ClientServiceImpl implements ClientService {
 	}
 
 	@Override
-	public ApiResponse getAllClient(Pageable pageable) 
+	public ApiResponse getAllClient(Pageable pageable)  throws Exception
 	{
 		   ApiResponse response = new ApiResponse(true);
+		   if(!empPerConfig.isHavingpersmission("prjAdmin")) {
+				response.setSuccess(false);
+				response.setMessage("Not authorised to edit Hrcalendar");
+				return response;
+			}
 	       Page<Map> ClientList =   clientRepository.getAllClientList(pageable);
 	       Map content = new HashMap();
 	       if(content != null)
@@ -215,9 +239,14 @@ public class ClientServiceImpl implements ClientService {
 	}
 
 	@Override
-	public ApiResponse searchClient(String searchString) 
+	public ApiResponse searchClient(String searchString) throws Exception
 	{
 		ApiResponse response = new ApiResponse(false);
+		if(!empPerConfig.isHavingpersmission("prjAdmin")) {
+			response.setSuccess(false);
+			response.setMessage("Not authorised to edit Hrcalendar");
+			return response;
+		}
 		List<Map> client = clientRepository.serchClient(searchString);
 
 		Map content = new HashMap();

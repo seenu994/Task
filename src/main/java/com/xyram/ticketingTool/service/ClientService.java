@@ -8,17 +8,15 @@ import com.xyram.ticketingTool.enumType.ClientStatus;
 
 public interface ClientService {
 
-ApiResponse addClient(Client clientRequest);
+ApiResponse addClient(Client clientRequest)  throws Exception;
 
-ApiResponse updateClientStatus(String clientId, ClientStatus userstatus);
+ApiResponse updateClientStatus(String clientId, ClientStatus userstatus)  throws Exception;
 
-ApiResponse editClient(String clientId, Client clientRequest);
+ApiResponse editClient(String clientId, Client clientRequest) throws Exception;
 
+ApiResponse getAllClient(Pageable pageable) throws Exception;
 
-
-ApiResponse getAllClient(Pageable pageable);
-
-ApiResponse searchClient(String searchString);
+ApiResponse searchClient(String searchString)  throws Exception;
 		
 	
 }

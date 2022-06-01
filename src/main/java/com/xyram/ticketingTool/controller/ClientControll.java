@@ -29,34 +29,33 @@ public class ClientControll {
 	@Autowired
 	private ClientService clientService;
 
-	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/addClient"})
-	public ApiResponse addClient(@RequestBody Client clientRequest) {
+	@PostMapping("/addClient")
+	public ApiResponse addClient(@RequestBody Client clientRequest)  throws Exception{
 		logger.info("received request to add client");
 		return clientService.addClient(clientRequest);
 	}
 	
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editClient/{clientId}"})
-	public ApiResponse editClient(@RequestBody Client clientRequest,@PathVariable String clientId ) {
+	@PutMapping("/editClient/{clientId}")
+	public ApiResponse editClient(@RequestBody Client clientRequest,@PathVariable String clientId )  throws Exception{
 		logger.info("received request to edit client");
 		return clientService.editClient(clientId,clientRequest);
 	}
 	
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/{clientId}/status/{userstatus}"})
-	//@PutMapping("/{clientId}/status/{userstatus}")
-	public ApiResponse updateClientStatus(@PathVariable String clientId, @PathVariable ClientStatus userstatus) {
+	@PutMapping("/{clientId}/status/{userstatus}")
+	public ApiResponse updateClientStatus(@PathVariable String clientId, @PathVariable ClientStatus userstatus)  throws Exception{
 		logger.info("received request to update client status");
 		return clientService.updateClientStatus(clientId, userstatus);
 	}
 
-	@GetMapping(value= {AuthConstants.ADMIN_BASEPATH +"/getAllClient",AuthConstants.INFRA_ADMIN_BASEPATH +"/getAllClient"})
-	public ApiResponse getAllClient(Pageable pageable) {
+	@GetMapping("/getAllClient")
+	public ApiResponse getAllClient(Pageable pageable)  throws Exception{
 		logger.info("inside Client controller :: getAllClient");
 		return clientService.getAllClient(pageable);
 	}
 	
 	
-	 @GetMapping(value= {AuthConstants.ADMIN_BASEPATH +"/searchClient/{searchString}"})
-	public ApiResponse searchClient(@PathVariable String searchString) {
+	 @GetMapping("/searchClient/{searchString}")
+	public ApiResponse searchClient(@PathVariable String searchString)  throws Exception{
 		logger.info("inside client controller :: searchClient");
 		return clientService.searchClient(searchString);
 	}

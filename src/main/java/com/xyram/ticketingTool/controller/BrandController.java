@@ -27,41 +27,31 @@ public class BrandController {
 	@Autowired
 	BrandService brandService;
 	
-	@PostMapping(value = {AuthConstants.INFRA_ADMIN_BASEPATH + "/addBrand", 
-			              AuthConstants.ADMIN_BASEPATH + "/addBrand",
-	                      AuthConstants.INFRA_USER_BASEPATH + "/addBrand"})
+	@PostMapping("/addBrand")
 	public ApiResponse addBrand(@RequestBody Brand brand) {
 		logger.info("Received request to add Brand");
 		return brandService.addbrand(brand);
 	}
 	
-	@PutMapping(value = {AuthConstants.INFRA_ADMIN_BASEPATH + "/editBrand/{brandId}", 
-            AuthConstants.ADMIN_BASEPATH + "/editBrand/{brandId}",
-            AuthConstants.INFRA_USER_BASEPATH + "/editBrand/{brandId}"})
+	@PutMapping("/editBrand/{brandId}")
     public ApiResponse editBrand(@RequestBody Brand brand, @PathVariable String brandId) {
         logger.info("Received request to edit Brand");
         return brandService.editbrand(brand, brandId);
 	}
         
-     @GetMapping(value = {AuthConstants.ADMIN_BASEPATH + "/getAllBrand",
-    		  AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllBrand",
-              AuthConstants.INFRA_USER_BASEPATH + "/getAllBrand"})
+     @GetMapping("/getAllBrand")
       public ApiResponse getAllBrand(Pageable pageable) {
   	        logger.info("Received request to get all Brand");
   			return brandService.getAllBrand(pageable);
   	 }
      
-    @DeleteMapping(value = { AuthConstants.ADMIN_BASEPATH + "/deleteBrand/{brandId}",
- 			AuthConstants.INFRA_ADMIN_BASEPATH + "/deleteBrand/{brandId}",			
- 			AuthConstants.INFRA_USER_BASEPATH + "/deleteBrand/{brandId}"})
+    @DeleteMapping("/deleteBrand/{brandId}")
  	ApiResponse deleteBrand(@PathVariable String brandId) {
  		logger.info("Received request to delete brand");
  		return brandService.deleteBrand(brandId);
  	}
     
-    @GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/searchBrand/{searchString}",
-    		AuthConstants.INFRA_ADMIN_BASEPATH + "/searchBrand/{searchString}",
-    		AuthConstants.INFRA_USER_BASEPATH + "/searchBrand/{searchString}"})
+    @GetMapping("/searchBrand/{searchString}")
 	public ApiResponse searchBrand(@PathVariable String searchString) {
 		logger.info("Received request to search Brand");
 		return brandService.searchBrand(searchString);
