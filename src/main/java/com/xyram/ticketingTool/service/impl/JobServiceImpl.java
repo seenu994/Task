@@ -68,6 +68,7 @@ import com.xyram.ticketingTool.request.InterviewRoundReviewRequest;
 import com.xyram.ticketingTool.request.JobApplicationStatusRequest;
 import com.xyram.ticketingTool.service.JobService;
 import com.xyram.ticketingTool.service.NotificationService;
+import com.xyram.ticketingTool.ticket.config.EmployeePermissionConfig;
 import com.xyram.ticketingTool.util.ResponseMessages;
 
 @Service
@@ -125,6 +126,9 @@ public class JobServiceImpl implements JobService {
 	@Autowired
 	SkillsRepository skillsRepository;
 
+	@Autowired
+	EmployeePermissionConfig empPerConfig;
+
 	@Value("${APPLICATION_URL}")
 	private String application_url;
 
@@ -140,8 +144,15 @@ public class JobServiceImpl implements JobService {
 	static String PATHSEPARATOR = "/";
 
 	@Override
-	public ApiResponse createJob(JobOpenings jobObj) {
+	public ApiResponse createJob(JobOpenings jobObj) throws Exception {
 		ApiResponse response = new ApiResponse(true);
+		if (!empPerConfig.isHavingpersmission("jobAdmin")) {
+			if (!empPerConfig.isHavingpersmission("jobOpeningAdd")) {
+				response.setSuccess(false);
+				response.setMessage("Not authorised to create a Job");
+				return response;
+			}
+		}
 
 		response = validate(jobObj);
 		if (response.getMessage() != null && response.getMessage() != "") {
@@ -436,9 +447,16 @@ public class JobServiceImpl implements JobService {
 	}
 
 	@Override
-	public ApiResponse createJobApplication(MultipartFile[] files, String jobAppString) {
+	public ApiResponse createJobApplication(MultipartFile[] files, String jobAppString) throws Exception {
 		// TODO Auto-generated method stub
 		ApiResponse response = new ApiResponse(false);
+		if (!empPerConfig.isHavingpersmission("jobAdmin")) {
+			if (!empPerConfig.isHavingpersmission("jobAppUpload")) {
+				response.setSuccess(false);
+				response.setMessage("Not authorised to createJobApplication");
+				return response;
+			}
+		}
 
 		ObjectMapper objectMapper = new ObjectMapper();
 		JobApplication jobAppObj = null;
@@ -540,9 +558,17 @@ public class JobServiceImpl implements JobService {
 	}
 
 	@Override
-	public ApiResponse scheduleJobInterview(JobInterviews schedule, String applicationId) {
+	public ApiResponse scheduleJobInterview(JobInterviews schedule, String applicationId) throws Exception {
 		// TODO Auto-generated method stub
 		ApiResponse response = new ApiResponse(false);
+
+		if (!empPerConfig.isHavingpersmission("jobAdmin")) {
+			if (!empPerConfig.isHavingpersmission("jobOpeningAdd")) {
+				response.setSuccess(false);
+				response.setMessage("Not authorised to create a Job");
+				return response;
+			}
+		}
 		JobApplication jobApp = jobAppRepository.getApplicationById(applicationId);
 		List<JobInterviews> jobOpening = jobInterviewRepository.getInterviewByAppListId(applicationId);
 
@@ -616,9 +642,17 @@ public class JobServiceImpl implements JobService {
 	}
 
 	@Override
-	public ApiResponse getAllJobInterviews(Map<String, Object> filter, Pageable pageable) {
+	public ApiResponse getAllJobInterviews(Map<String, Object> filter, Pageable pageable) throws Exception {
 
 		ApiResponse response = new ApiResponse(false);
+
+		if (!empPerConfig.isHavingpersmission("jobAdmin")) {
+			if (!empPerConfig.isHavingpersmission("jobIntViewAll")) {
+				response.setSuccess(false);
+				response.setMessage("Not authorised to view  Job Interviews");
+				return response;
+			}
+		}
 		Map content = new HashMap();
 //		List<JobInterviews> allList =  jobInterviewRepository.getList();
 		String status = filter.containsKey("status") ? ((String) filter.get("status")) : null;
@@ -695,9 +729,16 @@ public class JobServiceImpl implements JobService {
 	}
 
 	@Override
-	public ApiResponse getAllJobOpeningsById(String jobOpeningId) {
+	public ApiResponse getAllJobOpeningsById(String jobOpeningId) throws Exception {
 		// TODO Auto-generated method stub
 		ApiResponse response = new ApiResponse(false);
+		if (!empPerConfig.isHavingpersmission("jobAdmin")) {
+			if (!empPerConfig.isHavingpersmission("jobOpeningsView")) {
+				response.setSuccess(false);
+				response.setMessage("Not authorised to create a Job");
+				return response;
+			}
+		}
 		Map jobOpening = jobRepository.getJobOpeningById(jobOpeningId);
 		if (jobOpening != null) {
 			response.setSuccess(true);
@@ -711,8 +752,17 @@ public class JobServiceImpl implements JobService {
 	}
 
 	@Override
-	public ApiResponse changeJobOpeningStatus(String jobOpeningId, JobOpeningStatus jobOpeningStatus) {
+	public ApiResponse changeJobOpeningStatus(String jobOpeningId, JobOpeningStatus jobOpeningStatus) throws Exception {
 		ApiResponse response = new ApiResponse(false);
+
+		if (!empPerConfig.isHavingpersmission("jobAdmin")) {
+			if (!empPerConfig.isHavingpersmission("jobOpeningAdd")) {
+				response.setSuccess(false);
+				response.setMessage("Not authorised to change a JobOpeningStatus");
+				return response;
+			}
+		}
+
 		JobOpenings status = jobRepository.getById(jobOpeningId);
 		if (status != null) {
 			status.setJobStatus(jobOpeningStatus);
@@ -729,9 +779,17 @@ public class JobServiceImpl implements JobService {
 	}
 
 	@Override
-	public ApiResponse editJobInterview(JobInterviews jobInterviewRequest, String interviewId) {
+	public ApiResponse editJobInterview(JobInterviews jobInterviewRequest, String interviewId) throws Exception {
 
 		ApiResponse response = new ApiResponse(false);
+
+		if (!empPerConfig.isHavingpersmission("jobAdmin")) {
+			if (!empPerConfig.isHavingpersmission("jobOpeningAdd")) {
+				response.setSuccess(false);
+				response.setMessage("Not authorised to edit Job Interview");
+				return response;
+			}
+		}
 
 		System.out.println("InterviewId::" + interviewId);
 		JobInterviews jbInterviews = jobInterviewRepository.getById(interviewId);
@@ -766,8 +824,17 @@ public class JobServiceImpl implements JobService {
 
 	@Override
 	public ApiResponse changeJobInterviewStatus(String jobInerviewId, String jobInterviewStatus, Integer rating,
-			String feedback, String comments) {
+			String feedback, String comments) throws Exception {
 		ApiResponse response = new ApiResponse(false);
+
+		if (!empPerConfig.isHavingpersmission("jobAdmin")) {
+			if (!empPerConfig.isHavingpersmission("jobOpeningAdd")) {
+				response.setSuccess(false);
+				response.setMessage("Not authorised to changeJobInterviewStatus");
+				return response;
+			}
+		}
+
 		JobInterviews status = jobInterviewRepository.getById(jobInerviewId);
 		JobApplication application = jobAppRepository.getApplicationById(status.getJobApplication().getId());
 		if (status != null) {
@@ -838,8 +905,16 @@ public class JobServiceImpl implements JobService {
 	}
 
 	@Override
-	public ApiResponse updateInterviewRoundStatus(String jobInerviewId, InterviewRoundReviewRequest request) {
+	public ApiResponse updateInterviewRoundStatus(String jobInerviewId, InterviewRoundReviewRequest request)
+			throws Exception {
 		ApiResponse response = new ApiResponse(false);
+		if (!empPerConfig.isHavingpersmission("jobAdmin")) {
+			if (!empPerConfig.isHavingpersmission("jobOpeningAdd")) {
+				response.setSuccess(false);
+				response.setMessage("Not authorised to changeJobInterviewStatus");
+				return response;
+			}
+		}
 		JobInterviews status = jobInterviewRepository.getById(jobInerviewId);
 		JobApplication applicationdetails = jobAppRepository.getApplicationById(status.getJobApplication().getId());
 
@@ -862,9 +937,16 @@ public class JobServiceImpl implements JobService {
 		return response;
 	}
 
-	public ApiResponse editJob(String jobId, JobOpenings jobObj) {
+	public ApiResponse editJob(String jobId, JobOpenings jobObj) throws Exception {
 		ApiResponse response = new ApiResponse(false);
 
+		if (!empPerConfig.isHavingpersmission("jobAdmin")) {
+			if (!empPerConfig.isHavingpersmission("jobOpeningAdd")) {
+				response.setSuccess(false);
+				response.setMessage("Not authorised to edit Job openings");
+				return response;
+			}
+		}
 		response = validate(jobObj);
 		if (response.getMessage() != null && response.getMessage() != "") {
 //			response.setMessage("Front End Did Wrong...Not Me");
@@ -953,53 +1035,74 @@ public class JobServiceImpl implements JobService {
 
 	@Override
 	public ApiResponse changeJobApplicationStatus(String jobApplicationId, JobApplicationStatus jobStatus,
-			String comment) {
+			String comment) throws Exception {
 		ApiResponse response = new ApiResponse(false);
+
+		if (!empPerConfig.isHavingpersmission("jobAdmin")) {
+			if (!empPerConfig.isHavingpersmission("jobOpeningAdd")) {
+				response.setSuccess(false);
+				response.setMessage("Not authorised to changeJobApplicationStatus");
+				return response;
+			}
+		}
 		JobApplication status = jobAppRepository.getApplicationById(jobApplicationId);
 		System.out.println(userDetail.getUserRole());
+//		if (status != null) {
+//			if ((userDetail.getUserId().equals(status.getCreatedBy())
+//					|| (userDetail.getUserRole().equalsIgnoreCase("HR_ADMIN"))
+//					|| (userDetail.getUserRole().equalsIgnoreCase("TICKETINGTOOL_ADMIN")))) {
 		if (status != null) {
-			if ((userDetail.getUserId().equals(status.getCreatedBy())
-					|| (userDetail.getUserRole().equalsIgnoreCase("HR_ADMIN"))
-					|| (userDetail.getUserRole().equalsIgnoreCase("TICKETINGTOOL_ADMIN")))) {
-				if (status != null) {
-					ApplicationComments appComments = new ApplicationComments();
-					appComments.setApplicationId(jobApplicationId);
-					if (comment != null) {
-						appComments.setGivenDescription(comment);
-					} else {
-						appComments.setAutoDescription(
-								"Status changed to" + " " + jobStatus + "by" + status.getCreatedBy());
-					}
-					appRepository.save(appComments);
-					status.setJobApplicationSatus(jobStatus);
-					jobAppRepository.save(status);
-					response.setSuccess(true);
-					response.setMessage("Job Application Status Updated Sucessfully");
-
-				}
+			ApplicationComments appComments = new ApplicationComments();
+			appComments.setApplicationId(jobApplicationId);
+			if (comment != null) {
+				appComments.setGivenDescription(comment);
 			} else {
-				response.setSuccess(false);
-				response.setMessage("Job application Id does Not Exist");
+				appComments.setAutoDescription("Status changed to" + " " + jobStatus + "by" + status.getCreatedBy());
 			}
-		} else {
+			appRepository.save(appComments);
+			status.setJobApplicationSatus(jobStatus);
+			jobAppRepository.save(status);
+			response.setSuccess(true);
+			response.setMessage("Job Application Status Updated Sucessfully");
+
+		}
+		// }
+		else {
 			response.setSuccess(false);
 			response.setMessage("Job application Id does Not Exist");
+			return response;
 		}
-		// TODO Auto-generated method stub
 		return response;
-
 	}
+//	else
+//
+//	{
+//		response.setSuccess(false);
+//		response.setMessage("Job application Id does Not Exist");
+//	}
+//	// TODO Auto-generated method stub
+//	return response;
+//
+//	}
 
 	@Override
-	public ApiResponse changeJobApplicationStatus(String jobApplicationId, JobApplicationStatusRequest request) {
+	public ApiResponse changeJobApplicationStatus(String jobApplicationId, JobApplicationStatusRequest request)
+			throws Exception {
 		ApiResponse response = new ApiResponse(false);
+		if (!empPerConfig.isHavingpersmission("jobAdmin")) {
+			if (!empPerConfig.isHavingpersmission("jobAppUpload")) {
+				response.setSuccess(false);
+				response.setMessage("Not authorised to createJobApplication");
+				return response;
+			}
+		}
 		JobApplication status = jobAppRepository.getJobApplicationNotifys(jobApplicationId);
 
 		System.out.println(userDetail.getUserRole());
 		if (status != null) {
-			if (userDetail.getUserId().equals(status.getCreatedBy()) || userDetail.getUserRole() == "HR_ADMIN"
-					|| userDetail.getUserRole() == "TICKETINGTOOL_ADMIN") {
-				if (status != null) {
+//			if (userDetail.getUserId().equals(status.getCreatedBy()) || userDetail.getUserRole() == "HR_ADMIN"
+//					|| userDetail.getUserRole() == "TICKETINGTOOL_ADMIN") {
+				//if (status != null) {
 					ApplicationComments appComments = new ApplicationComments();
 					appComments.setApplicationId(jobApplicationId);
 					if (request.getComments() != null) {
@@ -1014,136 +1117,161 @@ public class JobServiceImpl implements JobService {
 					response.setSuccess(true);
 					response.setMessage("Job Application Status Updated Sucessfully");
 					response.setContent(null);
-				}
+				//}
 			} else {
 				response.setSuccess(false);
 				response.setMessage("Job application Id does Not Exist");
 			}
-		} else {
-			response.setSuccess(false);
-			response.setMessage("Job application Id does Not Exist");
-		}
-		// TODO Auto-generated method stub
 		return response;
-
-	}
+		} 
+//	else {
+//			response.setSuccess(false);
+//			response.setMessage("Job application Id does Not Exist");
+//		}
+		// TODO Auto-generated method stub
+//		return response;
+//
+//	}
 
 	@Override
-	public ApiResponse editJobApplication(MultipartFile[] files, String jobAppObj, String jobAppId) {
+	public ApiResponse editJobApplication(MultipartFile[] files, String jobAppObj, String jobAppId) throws Exception {
 		ApiResponse response = new ApiResponse(false);
 
+		if (!empPerConfig.isHavingpersmission("jobAdmin")) {
+			if (!empPerConfig.isHavingpersmission("jobAppUpload")) {
+				response.setSuccess(false);
+				response.setMessage("Not authorised to createJobApplication");
+				return response;
+			}
+		}
+
 		JobApplication jobApp = jobAppRepository.getJobApplicationNotify(jobAppId);
-		if (jobApp != null && (userDetail.getUserId().equalsIgnoreCase(jobApp.getCreatedBy())
-				|| userDetail.getUserRole().equals("HR_ADMIN"))) {
-			ObjectMapper objectMapper = new ObjectMapper();
-			JobApplication newJobAppObj = null;
-			try {
-				newJobAppObj = objectMapper.readValue(jobAppObj, JobApplication.class);
-			} catch (JsonMappingException e) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+//		if (jobApp != null && (userDetail.getUserId().equalsIgnoreCase(jobApp.getCreatedBy())
+//				|| userDetail.getUserRole().equals("HR_ADMIN"))) {
+		ObjectMapper objectMapper = new ObjectMapper();
+		JobApplication newJobAppObj = null;
+		try {
+			newJobAppObj = objectMapper.readValue(jobAppObj, JobApplication.class);
+		} catch (JsonMappingException e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
 
-			} catch (JsonProcessingException e) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+		} catch (JsonProcessingException e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
 
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid data passed");
-			}
-			if (files != null) {
-				for (MultipartFile constentFile : files) {
-					try {
-						String fileextension = constentFile.getOriginalFilename()
-								.substring(constentFile.getOriginalFilename().lastIndexOf("."));
-						String filename = getRandomFileName() + fileextension;// constentFile.getOriginalFilename();
-						if (fileTransferService.uploadFile(constentFile, attachmentUrl, filename)) {
-							jobApp.setResumePath(filename);
-						}
-					} catch (Exception e) {
-
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid data passed");
+		}
+		if (files != null) {
+			for (MultipartFile constentFile : files) {
+				try {
+					String fileextension = constentFile.getOriginalFilename()
+							.substring(constentFile.getOriginalFilename().lastIndexOf("."));
+					String filename = getRandomFileName() + fileextension;// constentFile.getOriginalFilename();
+					if (fileTransferService.uploadFile(constentFile, attachmentUrl, filename)) {
+						jobApp.setResumePath(filename);
 					}
+				} catch (Exception e) {
+
 				}
 			}
-			// jobAppObj.setJobCode(jobCode);
-			if (newJobAppObj.getJobOpenings() != null && newJobAppObj.getJobOpenings().getId() != null) {
-
-				JobOpenings jobOpening = jobRepository.getJobOpeningsById(newJobAppObj.getJobOpenings().getId());
-
-				if (jobOpening != null) {
-					if (jobOpening.getFilledPositions() <= jobOpening.getTotalOpenings()
-							&& jobOpening.getJobStatus() != null
-							&& jobOpening.getJobStatus().equals(JobOpeningStatus.VACANT)) {
-						newJobAppObj.setJobOpenings(jobOpening);
-					} else {
-						throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-								"sorry  no vacant  job opening right now");
-					}
-
-				} else {
-					response.setMessage("job opening id not exsists");
-					return response;
-				}
-			}
-
-			else {
-
-			}
-
-			jobApp.setCandidateEmail(newJobAppObj.getCandidateEmail());
-			jobApp.setCandidateMobile(newJobAppObj.getCandidateMobile());
-			jobApp.setCandidateName(newJobAppObj.getCandidateName());
-			jobApp.setTotalExp(newJobAppObj.getTotalExp());
-
-			Employee empObj = null;
-
-			if (jobApp.getReferredEmployeeId() != null) {
-				empObj = employeeRepository.getEmployeeNameByScoleId(jobApp.getReferredEmployeeId());
-
-				if (empObj != null) {
-					jobApp.setReferredEmployee(jobApp.getReferredEmployeeId());
-					jobApp.setReferredEmployeeName(empObj.getFirstName() + " " + empObj.getLastName());
-				} else {
-					response.setMessage("employee id not exsists");
-					return response;
-				}
-
-			}
-
-			if (userDetail.getUserRole() != null && userDetail.getUserRole().equals("JOB_VENDOR")) {
-				JobVendorDetails jobVendorDetails = vendorRepository.getJobVendorById(userDetail.getScopeId());
-
-				jobApp.setReferredVendor(userDetail.getScopeId());
-				jobApp.setReferredVendorName(jobVendorDetails != null ? jobVendorDetails.getName() : null);
-			}
-
-//			jobApp.setReferredEmployee(newJobAppObj.getReferredEmployee());
+		}
+		// jobAppObj.setJobCode(jobCode);
+		if (newJobAppObj.getJobOpenings() != null && newJobAppObj.getJobOpenings().getId() != null) {
 
 			JobOpenings jobOpening = jobRepository.getJobOpeningsById(newJobAppObj.getJobOpenings().getId());
 
 			if (jobOpening != null) {
+				if (jobOpening.getFilledPositions() <= jobOpening.getTotalOpenings()
+						&& jobOpening.getJobStatus() != null
+						&& jobOpening.getJobStatus().equals(JobOpeningStatus.VACANT)) {
+					newJobAppObj.setJobOpenings(jobOpening);
+				} else {
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+							"sorry  no vacant  job opening right now");
+				}
 
-				jobApp.setJobOpenings(jobOpening);
 			} else {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "sorry  no vacant  job opening right now");
+				response.setMessage("job opening id not exsists");
+				return response;
 			}
-			jobApp.setExpectedSalary(newJobAppObj.getExpectedSalary());
-			jobApp.setJobApplicationSatus(newJobAppObj.getJobApplicationSatus());
-			if (jobAppRepository.save(jobApp) != null) {
-				response.setSuccess(true);
-				response.setMessage(" Job Application Updated");
+		}
+
+		else {
+			
+		}
+
+		jobApp.setCandidateEmail(newJobAppObj.getCandidateEmail());
+		jobApp.setCandidateMobile(newJobAppObj.getCandidateMobile());
+		jobApp.setCandidateName(newJobAppObj.getCandidateName());
+		jobApp.setTotalExp(newJobAppObj.getTotalExp());
+
+		Employee empObj = null;
+
+		if (jobApp.getReferredEmployeeId() != null) {
+			empObj = employeeRepository.getEmployeeNameByScoleId(jobApp.getReferredEmployeeId());
+
+			if (empObj != null) {
+				jobApp.setReferredEmployee(jobApp.getReferredEmployeeId());
+				jobApp.setReferredEmployeeName(empObj.getFirstName() + " " + empObj.getLastName());
 			} else {
-				response.setSuccess(false);
-				response.setMessage(" Job Application Not Updated");
+				response.setMessage("employee id not exsists");
+				return response;
 			}
+
+		}
+
+		/*
+		if (userDetail.getUserRole() != null && userDetail.getUserRole().equals("JOB_VENDOR")) {
+			JobVendorDetails jobVendorDetails = vendorRepository.getJobVendorById(userDetail.getScopeId());
+
+			jobApp.setReferredVendor(userDetail.getScopeId());
+			jobApp.setReferredVendorName(jobVendorDetails != null ? jobVendorDetails.getName() : null);
+		}
+		*/ //-----TODO
+
+//			jobApp.setReferredEmployee(newJobAppObj.getReferredEmployee());
+
+		JobOpenings jobOpening = jobRepository.getJobOpeningsById(newJobAppObj.getJobOpenings().getId());
+
+		if (jobOpening != null) {
+
+			jobApp.setJobOpenings(jobOpening);
+		} else {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "sorry  no vacant  job opening right now");
+		}
+		jobApp.setExpectedSalary(newJobAppObj.getExpectedSalary());
+		jobApp.setJobApplicationSatus(newJobAppObj.getJobApplicationSatus());
+		if (jobAppRepository.save(jobApp) != null) {
+			response.setSuccess(true);
+			response.setMessage(" Job Application Updated");
+			return response;
+
 		} else {
 			response.setSuccess(false);
-			response.setMessage("You Don't have any permission to perform this operation");
+			response.setMessage(" Job Application Not Updated");
+			return response;
+
 		}
-		return response;
 	}
+	/*else
+
+	{
+		response.setSuccess(false);
+		response.setMessage("You Don't have any permission to perform this operation");
+	}return response;
+	}*/
 
 	@Override
-	public ApiResponse getAllJobAppById(String jobAppId) {
+	public ApiResponse getAllJobAppById(String jobAppId) throws Exception {
 		ApiResponse response = new ApiResponse(false);
+		if (!empPerConfig.isHavingpersmission("jobAdmin")) {
+			if (!empPerConfig.isHavingpersmission("jobAppViewAll")) {
+				response.setSuccess(false);
+				response.setMessage("Not authorised to get a JobApplication");
+				return response;
+			}
+		}
 		Map jobOpening = jobAppRepository.getAppById(jobAppId);
 		if (jobOpening != null) {
 			response.setSuccess(true);
@@ -1157,8 +1285,15 @@ public class JobServiceImpl implements JobService {
 	}
 
 	@Override
-	public ApiResponse getAllInterviewId(String jobInterviewId) {
+	public ApiResponse getAllInterviewId(String jobInterviewId) throws Exception {
 		ApiResponse response = new ApiResponse(false);
+		if (!empPerConfig.isHavingpersmission("jobAdmin")) {
+			if (!empPerConfig.isHavingpersmission("jobIntViewAll")) {
+				response.setSuccess(false);
+				response.setMessage("Not authorised to view  Job Interviews");
+				return response;
+			}
+		}
 		Map jobOpening = jobInterviewRepository.getInterviewById(jobInterviewId);
 		if (jobOpening != null) {
 			response.setSuccess(true);
@@ -1173,8 +1308,15 @@ public class JobServiceImpl implements JobService {
 	}
 
 	@Override
-	public ApiResponse createJobOffer(JobOffer jobObj, String jobAppId) {
+	public ApiResponse createJobOffer(JobOffer jobObj, String jobAppId) throws Exception {
 		ApiResponse response = new ApiResponse(false);
+		if (!empPerConfig.isHavingpersmission("jobAdmin")) {
+			if (!empPerConfig.isHavingpersmission("jobOpeningAdd")) {
+				response.setSuccess(false);
+				response.setMessage("Not authorised to create a Job");
+				return response;
+			}
+		}
 		JobApplication application = jobAppRepository.getApplicationById(jobAppId);
 		if (application == null) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid job Appliation");
@@ -1215,8 +1357,15 @@ public class JobServiceImpl implements JobService {
 	}
 
 	@Override
-	public ApiResponse editJobOffer(JobOffer jobObj, String jobOfferId) {
+	public ApiResponse editJobOffer(JobOffer jobObj, String jobOfferId) throws Exception {
 		ApiResponse response = new ApiResponse(false);
+		if (!empPerConfig.isHavingpersmission("jobAdmin")) {
+			if (!empPerConfig.isHavingpersmission("jobOpeningAdd")) {
+				response.setSuccess(false);
+				response.setMessage("Not authorised to edit a JobOffer");
+				return response;
+			}
+		}
 		JobOffer offer = offerRepository.getById(jobOfferId);
 		if (offer != null) {
 			offer.setDoj(jobObj.getDoj());
@@ -1271,8 +1420,15 @@ public class JobServiceImpl implements JobService {
 	}
 
 	@Override
-	public ApiResponse getAllJobOffer(Map<String, Object> filter, Pageable pageable) {
+	public ApiResponse getAllJobOffer(Map<String, Object> filter, Pageable pageable) throws Exception {
 		ApiResponse response = new ApiResponse(false);
+		/*
+		 * if (!empPerConfig.isHavingpersmission("jobAdmin")) { if
+		 * (!empPerConfig.isHavingpersmission("jobIntViewAll")) {
+		 * response.setSuccess(false);
+		 * response.setMessage("Not authorised to get All JobOffers"); return response;
+		 * } }
+		 */
 		Map content = new HashMap();
 		Page<JobOffer> allList = null;
 		String searchString = filter.containsKey("searchString") ? ((String) filter.get("searchString")).toLowerCase()
@@ -1301,8 +1457,16 @@ public class JobServiceImpl implements JobService {
 	}
 
 	@Override
-	public ApiResponse changeJobOfferStatus(String jobOfferId, JobOfferStatus status) {
+	public ApiResponse changeJobOfferStatus(String jobOfferId, JobOfferStatus status) throws Exception {
 		ApiResponse response = new ApiResponse(false);
+		if (!empPerConfig.isHavingpersmission("jobAdmin")) {
+			if (!empPerConfig.isHavingpersmission("jobOpeningAdd")) {
+				response.setSuccess(false);
+				response.setMessage("Not authorised to change a JobOfferStatus");
+				return response;
+			}
+		}
+
 		JobOffer offer = offerRepository.getById(jobOfferId);
 		if (offer != null) {
 
@@ -1352,8 +1516,16 @@ public class JobServiceImpl implements JobService {
 	}
 
 	@Override
-	public ApiResponse getAllJobOfferById(String offerId) {
+	public ApiResponse getAllJobOfferById(String offerId) throws Exception {
 		ApiResponse response = new ApiResponse(false);
+
+		/*
+		 * if (!empPerConfig.isHavingpersmission("jobAdmin")) { if
+		 * (!empPerConfig.isHavingpersmission("jobIntViewAll")) {
+		 * response.setSuccess(false);
+		 * response.setMessage("Not authorised to create a Job"); return response; } }
+		 */
+
 		List<JobOffer> offer = offerRepository.getAllJobOfferById(offerId);
 		if (offer != null) {
 			Map content = new HashMap();
@@ -1388,8 +1560,15 @@ public class JobServiceImpl implements JobService {
 	}
 
 	@Override
-	public ApiResponse searchJobOpenings(String searchString) {
+	public ApiResponse searchJobOpenings(String searchString) throws Exception {
 		ApiResponse response = new ApiResponse(false);
+		/*
+		 * if (!empPerConfig.isHavingpersmission("jobAdmin")) { if
+		 * (!empPerConfig.isHavingpersmission("jobOpeningsView")) {
+		 * response.setSuccess(false);
+		 * response.setMessage("Not authorised to searchJobOpenings"); return response;
+		 * } }
+		 */
 		List<Map> jobCodes = jobRepository.searchJobOpenings(searchString.toLowerCase(), JobOpeningStatus.VACANT);
 		Map res = new HashMap();
 		if (jobCodes != null) {
@@ -1406,12 +1585,21 @@ public class JobServiceImpl implements JobService {
 	}
 
 	@Override
-	public ApiResponse getJobInterviewByAppId(String applicationId) {
+	public ApiResponse getJobInterviewByAppId(String applicationId) throws Exception {
 
 		ApiResponse response = new ApiResponse(false);
-		List<Predicate> predicates = new ArrayList<>();
-		if (userDetail.getUserRole().equals("DEVELOPER") || userDetail.getUserRole().equals("INFRA_ADMIN")
-				|| userDetail.getUserRole().equals("INFRA_USER")) {
+
+		if (!empPerConfig.isHavingpersmission("jobAdmin") || !empPerConfig.isHavingpersmission("jobOpeningAdd")) {
+			if (!empPerConfig.isHavingpersmission("jobIntViewAll")) {
+				response.setSuccess(false);
+				response.setMessage("Not authorised to get Job Interview details");
+				return response;
+			}
+
+			List<Predicate> predicates = new ArrayList<>();
+			// if (userDetail.getUserRole().equals("DEVELOPER") ||
+			// userDetail.getUserRole().equals("INFRA_ADMIN")
+			// || userDetail.getUserRole().equals("INFRA_USER")) {
 
 			System.out.println(userDetail.getUserId());
 			JobInterviews jobApp = new JobInterviews();
@@ -1430,25 +1618,25 @@ public class JobServiceImpl implements JobService {
 			return response;
 
 		} else {
-			if (userDetail.getUserRole().equals("HR_ADMIN") || userDetail.getUserRole().equals("TICKETINGTOOL_ADMIN")
-					|| userDetail.getUserRole().equals("HR")) {
+//			if (userDetail.getUserRole().equals("HR_ADMIN") || userDetail.getUserRole().equals("TICKETINGTOOL_ADMIN")
+//					|| userDetail.getUserRole().equals("HR")) {
 
-				List<Map> jobOpening = jobInterviewRepository.getInterviewByAppId(applicationId);
-				Map interviews = new HashMap();
-				interviews.put("interviews", jobOpening);
-				if (jobOpening.isEmpty()) {
-					response.setSuccess(false);
-					response.setMessage("Job Application Not Exist");
-
-				} else {
-					response.setSuccess(true);
-					response.setMessage("Job Opening Detail");
-					response.setContent(interviews);
-				}
+			List<Map> jobOpening = jobInterviewRepository.getInterviewByAppId(applicationId);
+			Map interviews = new HashMap();
+			interviews.put("interviews", jobOpening);
+			if (jobOpening.isEmpty()) {
+				response.setSuccess(false);
+				response.setMessage("Job Application Not Exist");
+				return response;
+			} else {
+				response.setSuccess(true);
+				response.setMessage("Job Opening Detail");
+				response.setContent(interviews);
 				return response;
 			}
 		}
-		return response;
+		// }
+		// return response;
 	}
 
 	@Override
@@ -1467,8 +1655,15 @@ public class JobServiceImpl implements JobService {
 	}
 
 	@Override
-	public ApiResponse getApplicationList(String jobCodeId) {
+	public ApiResponse getApplicationList(String jobCodeId) throws Exception {
 		ApiResponse response = new ApiResponse(false);
+		if (!empPerConfig.isHavingpersmission("jobAdmin")) {
+			if (!empPerConfig.isHavingpersmission("jobAppViewAll")) {
+				response.setSuccess(false);
+				response.setMessage("Not authorised to get Job Applications");
+				return response;
+			}
+		}
 		List<Map> jobOpening = jobAppRepository.getjobOpeningsById(jobCodeId);
 		Map jobAppList = new HashMap();
 		jobAppList.put("jobAppList", jobOpening);
@@ -1485,8 +1680,15 @@ public class JobServiceImpl implements JobService {
 	}
 
 	@Override
-	public ApiResponse getRoundDetails(String appId, Integer roundNo) {
+	public ApiResponse getRoundDetails(String appId, Integer roundNo) throws Exception {
 		ApiResponse response = new ApiResponse(false);
+		if (!empPerConfig.isHavingpersmission("jobAdmin")) {
+			if (!empPerConfig.isHavingpersmission("jobIntViewAll")) {
+				response.setSuccess(false);
+				response.setMessage("Not authorised to create a Job");
+				return response;
+			}
+		}
 		JobInterviews interviewObj = jobInterviewRepository.getInterviewByAppIdRound(appId);
 		if (interviewObj != null && interviewObj.getRoundNo().equals(roundNo)) {
 			response.setSuccess(false);
@@ -1548,7 +1750,7 @@ public class JobServiceImpl implements JobService {
 
 		if (jobObj.getWings() != null && jobObj.getWings().getId() != null) {
 			CompanyWings wing = companyWingsRepository.getWingById(jobObj.getWings().getId());
-			if(wing == null) {
+			if (wing == null) {
 				response.setSuccess(false);
 				response.setMessage(ResponseMessages.WINGS_EXI);
 			}
@@ -1570,8 +1772,8 @@ public class JobServiceImpl implements JobService {
 					isWrong = true;
 					break;
 				}
-	        }
-			if(isWrong) {
+			}
+			if (isWrong) {
 				response.setSuccess(false);
 				response.setMessage("Skill does not exist");
 			}

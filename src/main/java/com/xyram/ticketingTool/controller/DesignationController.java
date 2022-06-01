@@ -42,8 +42,7 @@ public class DesignationController {
 	 */
 
 	
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllDesignation",
-			AuthConstants.INFRA_USER_BASEPATH + "/getAllDesignation", AuthConstants.DEVELOPER_BASEPATH + "/getAllDesignation", AuthConstants.HR_ADMIN_BASEPATH + "/getAllDesignation",AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllDesignation" })
+	@GetMapping("/getAllDesignation")
 	public ApiResponse getAllDesignation(Pageable pageable) {
 		logger.info("indide Designation Controller :: getAllDesignation");
 		return desiggnaionService.getAllDesignation(pageable);
@@ -66,9 +65,7 @@ public class DesignationController {
 		return desiggnaionService.editDesignation(Request,Id);
 	}
 	
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/searchDesignation/{designationName}",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/searchDesignation/{designationName}",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/searchDesignation/{designationName}" })
+	@GetMapping("/searchDesignation/{designationName}")
 	public ApiResponse searchDesignation(@PathVariable String designationName) {
 		logger.info("Received request to search designation ");
 		return desiggnaionService.searchDesignation(designationName);

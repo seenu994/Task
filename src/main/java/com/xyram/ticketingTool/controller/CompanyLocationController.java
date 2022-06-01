@@ -52,10 +52,7 @@ public class CompanyLocationController {
 //		return employeeLocationService.deleteLocation(id);
 //	}
 	
-	@GetMapping(value = {AuthConstants.ADMIN_BASEPATH+ "/getAllLocation",
-			AuthConstants.HR_ADMIN_BASEPATH+ "/getAllLocation", 
-			AuthConstants.HR_BASEPATH+ "/getAllLocation",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllLocation" })
+	@GetMapping("/getAllLocation")
 	public ApiResponse getAllLocation(Map<String,Object> filter) {
 		logger.info("Request for get all location");
 		return companyLocationService.getAllLocation(filter);

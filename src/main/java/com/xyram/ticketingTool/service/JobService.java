@@ -17,7 +17,7 @@ import com.xyram.ticketingTool.request.JobApplicationStatusRequest;
 
 public interface JobService {
 
-	ApiResponse createJob(JobOpenings jobObj);
+	ApiResponse createJob(JobOpenings jobObj) throws Exception;
 
 	ApiResponse getAllJobs(Map<String, Object> filter, Pageable pageable);
 
@@ -25,61 +25,61 @@ public interface JobService {
 
 	ApiResponse getAllCompanyWingsAndSkills();
 
-	ApiResponse scheduleJobInterview(JobInterviews schedule, String applicationId);
+	ApiResponse scheduleJobInterview(JobInterviews schedule, String applicationId) throws Exception;
 
-	ApiResponse getAllJobInterviews(Map<String, Object> filter, Pageable pageable);
+	ApiResponse getAllJobInterviews(Map<String, Object> filter, Pageable pageable) throws Exception;
 
-	ApiResponse getAllJobOpeningsById(String jobOpeningId);
+	ApiResponse getAllJobOpeningsById(String jobOpeningId) throws Exception;
 
-	ApiResponse changeJobOpeningStatus(String jobOpeningId, JobOpeningStatus jobOpeningStatus);
+	ApiResponse changeJobOpeningStatus(String jobOpeningId, JobOpeningStatus jobOpeningStatus) throws Exception;
 
-	ApiResponse editJob(String jobId, JobOpenings jobObj);
+	ApiResponse editJob(String jobId, JobOpenings jobObj) throws Exception;
 
-	ApiResponse editJobInterview(JobInterviews jobInterviewRequest, String interviewId);
+	ApiResponse editJobInterview(JobInterviews jobInterviewRequest, String interviewId) throws Exception;
 
-	ApiResponse changeJobApplicationStatus(String jobApplicationId, JobApplicationStatus jobStatus, String comment);
+	ApiResponse changeJobApplicationStatus(String jobApplicationId, JobApplicationStatus jobStatus, String comment) throws Exception;
 
-	ApiResponse editJobApplication(MultipartFile[] files, String jobAppObj, String jobAppId);
+	ApiResponse editJobApplication(MultipartFile[] files, String jobAppObj, String jobAppId) throws Exception;
 
-	ApiResponse getAllJobAppById(String jobAppId);
+	ApiResponse getAllJobAppById(String jobAppId) throws Exception;
 
-	ApiResponse getAllInterviewId(String jobInterviewId);
+	ApiResponse getAllInterviewId(String jobInterviewId) throws Exception;
 
-	ApiResponse createJobOffer(JobOffer jobObj, String jobAppId);
+	ApiResponse createJobOffer(JobOffer jobObj, String jobAppId) throws Exception;
 
-	ApiResponse editJobOffer(JobOffer jobObj, String jobOfferId);
+	ApiResponse editJobOffer(JobOffer jobObj, String jobOfferId) throws Exception;
 
 
 
-	ApiResponse changeJobOfferStatus(String jobOfferId, JobOfferStatus status);
+	ApiResponse changeJobOfferStatus(String jobOfferId, JobOfferStatus status) throws Exception;
 
-	ApiResponse getAllJobOfferById(String offerId);
+	ApiResponse getAllJobOfferById(String offerId) throws Exception;
 
 	ApiResponse getAllJobCodes();
 	
-	ApiResponse searchJobOpenings(String searchString);
+	ApiResponse searchJobOpenings(String searchString) throws Exception;
 
-	ApiResponse getJobInterviewByAppId(String applicationId);
+	ApiResponse getJobInterviewByAppId(String applicationId) throws Exception;
 
 	ApiResponse getJobCode(String jobCode);
 
-	ApiResponse getApplicationList(String jobCodeId);
+	ApiResponse getApplicationList(String jobCodeId) throws Exception;
 
 	ApiResponse changeJobInterviewStatus(String jobInerviewId, String jobInterviewStatus, Integer rating,
-			String feedback, String comments);
+			String feedback, String comments) throws Exception;
 
-	ApiResponse updateInterviewRoundStatus(String jobInerviewId, InterviewRoundReviewRequest request);
+	ApiResponse updateInterviewRoundStatus(String jobInerviewId, InterviewRoundReviewRequest request) throws Exception;
 
-	ApiResponse getRoundDetails(String appId, Integer roundNo);
+	ApiResponse getRoundDetails(String appId, Integer roundNo) throws Exception;
 
 	ApiResponse getAllJobApplication(Map<String, Object> filter, Pageable pageable);
 
 	ApiResponse getAllJobsOpening(Map<String, Object> filter, Pageable pageable);
 
-	ApiResponse getAllJobOffer(Map<String, Object> filter, Pageable pageable);
+	ApiResponse getAllJobOffer(Map<String, Object> filter, Pageable pageable) throws Exception;
 
-	ApiResponse createJobApplication(MultipartFile[] files, String jobAppString);
+	ApiResponse createJobApplication(MultipartFile[] files, String jobAppString) throws Exception;
 
-	ApiResponse changeJobApplicationStatus(String jobApplicationId, JobApplicationStatusRequest request);
+	ApiResponse changeJobApplicationStatus(String jobApplicationId, JobApplicationStatusRequest request) throws Exception;
 
 }
