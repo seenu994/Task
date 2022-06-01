@@ -27,80 +27,50 @@ public class ArticleController {
 	@Autowired
 	ArticleService articleService;
 
-	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/createArticle",
-			AuthConstants.HR_ADMIN_BASEPATH + "/createArticle", AuthConstants.INFRA_USER_BASEPATH + "/createArticle",
-			AuthConstants.HR_BASEPATH + "/createArticle", AuthConstants.DEVELOPER_BASEPATH + "/createArticle",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/createArticle" })
-	public ApiResponse createArticle(@RequestBody Articles article) {
+	@PostMapping("/createArticle")
+	public ApiResponse createArticle(@RequestBody Articles article) throws Exception{
 		logger.info("Creating new Article");
 		return articleService.createArticle(article);
 	}
 
-	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editArticle",
-			AuthConstants.HR_ADMIN_BASEPATH + "/editArticle", AuthConstants.INFRA_USER_BASEPATH + "/editArticle",
-			AuthConstants.HR_BASEPATH + "/editArticle", AuthConstants.DEVELOPER_BASEPATH + "/editArticle",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/editArticle" })
-	public ApiResponse editArticle(@RequestBody Articles article) {
+	@PostMapping("/editArticle")
+	public ApiResponse editArticle(@RequestBody Articles article) throws Exception{
 		logger.info("Editing Article");
 		return articleService.editArticle(article);
 	}
 	
-	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/changeArticleStatus/{articleId}/status/{articleStatus}",
-			AuthConstants.HR_ADMIN_BASEPATH + "/changeArticleStatus/{articleId}/status/{articleStatus}", 
-			AuthConstants.INFRA_USER_BASEPATH + "/changeArticleStatus/{articleId}/status/{articleStatus}",
-			AuthConstants.HR_BASEPATH + "/changeArticleStatus/{articleId}/status/{articleStatus}", 
-			AuthConstants.DEVELOPER_BASEPATH + "/changeArticleStatus/{articleId}/status/{articleStatus}",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/changeArticleStatus/{articleId}/status/{articleStatus}" })
-	public ApiResponse changeArticleStatus(@PathVariable String articleId, @PathVariable ArticleStatus articleStatus) {
+	@PostMapping("/changeArticleStatus/{articleId}/status/{articleStatus}")
+	public ApiResponse changeArticleStatus(@PathVariable String articleId, @PathVariable ArticleStatus articleStatus) throws Exception {
 		logger.info("Received request to change article status to: " + articleStatus + "for articleId: " + articleId);
 		return articleService.changeArticleStatus(articleId, articleStatus);
 	}
 	
-	@DeleteMapping(value = { AuthConstants.ADMIN_BASEPATH + "/deleteArticle/{articleId}",
-			AuthConstants.HR_ADMIN_BASEPATH + "/deleteArticle/{articleId}", 
-			AuthConstants.INFRA_USER_BASEPATH + "/deleteArticle/{articleId}",
-			AuthConstants.HR_BASEPATH + "/deleteArticle/{articleId}", 
-			AuthConstants.DEVELOPER_BASEPATH + "/deleteArticle/{articleId}",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/deleteArticle/{articleId}" })
-	public ApiResponse deleteArticle(@PathVariable String articleId) {
+	@DeleteMapping("/deleteArticle/{articleId}")
+	public ApiResponse deleteArticle(@PathVariable String articleId)  throws Exception{
 		logger.info("Received deleting Artcle: ");
 		return articleService.deleteArticle(articleId);
 	}
 	
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getArticleById/{articleId}",
-			AuthConstants.HR_ADMIN_BASEPATH + "/getArticleById/{articleId}", 
-			AuthConstants.INFRA_USER_BASEPATH + "/getArticleById/{articleId}",
-			AuthConstants.HR_BASEPATH + "/getArticleById/{articleId}", 
-			AuthConstants.DEVELOPER_BASEPATH + "/getArticleById/{articleId}",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/getArticleById/{articleId}" })
-	public ApiResponse getArticleById(@PathVariable String articleId) {
+	@GetMapping("/getArticleById/{articleId}") 
+	public ApiResponse getArticleById(@PathVariable String articleId) throws Exception {
 		logger.info("Received get Article by Id ");
 		return articleService.getArticleById(articleId);
 	}
 	
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllArticles",
-			AuthConstants.HR_ADMIN_BASEPATH + "/getAllArticles", AuthConstants.INFRA_USER_BASEPATH + "/getAllArticles",
-			AuthConstants.HR_BASEPATH + "/getAllArticles", AuthConstants.DEVELOPER_BASEPATH + "/getAllArticles",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllArticles" })
-	public ApiResponse getAllArticles(Pageable pageable) {
+	@GetMapping("/getAllArticles") 
+	public ApiResponse getAllArticles(Pageable pageable) throws Exception {
 		logger.info("Get all Articles ");
 		return articleService.getAllArticles(pageable);
 	} 
 	
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllMyArticles",
-			AuthConstants.HR_ADMIN_BASEPATH + "/getAllMyArticles", AuthConstants.INFRA_USER_BASEPATH + "/getAllMyArticles",
-			AuthConstants.HR_BASEPATH + "/getAllMyArticles", AuthConstants.DEVELOPER_BASEPATH + "/getAllMyArticles",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllMyArticles" })
-	public ApiResponse getAllMyArticles(Pageable pageable) {
+	@GetMapping("/getAllMyArticles")
+	public ApiResponse getAllMyArticles(Pageable pageable) throws Exception {
 		logger.info("Get all getAllMyArticles ");
 		return articleService.getAllMyArticles(pageable);
 	}
 	
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/searchArticle/{searchString}",
-			AuthConstants.HR_ADMIN_BASEPATH + "/searchArticle/{searchString}", AuthConstants.INFRA_USER_BASEPATH + "/searchArticle/{searchString}",
-			AuthConstants.HR_BASEPATH + "/searchArticle/{searchString}", AuthConstants.DEVELOPER_BASEPATH + "/searchArticle/{searchString}",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/searchArticle/{searchString}" })
-	public ApiResponse searchArticle(Pageable pageable,@PathVariable String searchString) {
+	@GetMapping("/searchArticle/{searchString}")
+	public ApiResponse searchArticle(Pageable pageable,@PathVariable String searchString) throws Exception  {
 		logger.info("Get all Articles ");
 		return articleService.searchArticle(pageable,searchString);
 	}

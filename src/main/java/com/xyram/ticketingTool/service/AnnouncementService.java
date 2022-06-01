@@ -10,21 +10,21 @@ import com.xyram.ticketingTool.enumType.AnnouncementStatus;
 
 public interface AnnouncementService {
 	
-	ApiResponse createAnnouncement(Announcement announcement);
+	ApiResponse createAnnouncement(Announcement announcement)  throws Exception;
 	
-	ApiResponse editAnnouncement(Announcement announcement);
+	ApiResponse editAnnouncement(Announcement announcement)  throws Exception;
 	
-	ApiResponse deleteAnnouncement(String announcementId);
+	ApiResponse deleteAnnouncement(String announcementId)  throws Exception;
 	
-	ApiResponse changeAnnouncementStatus(String announcementId, AnnouncementStatus status);
+	ApiResponse changeAnnouncementStatus(String announcementId, AnnouncementStatus status)  throws Exception;
 	
-	ApiResponse getAllAnnouncements(Pageable pageable);
+	ApiResponse getAllAnnouncements(Pageable pageable)  throws Exception;
 	
-	ApiResponse getAnnouncementById(String announcementId);
+	ApiResponse getAnnouncementById(String announcementId)  throws Exception;
 	
-	ApiResponse searchAnnouncement(Pageable pageable, String searchString);
+	ApiResponse searchAnnouncement(Pageable pageable, String searchString)  throws Exception;
 
-	ApiResponse getAllMyAnnouncements(Pageable pageable);
+	ApiResponse getAllMyAnnouncements(Pageable pageable)  throws Exception;
 
 
 }

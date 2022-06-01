@@ -19,6 +19,7 @@ import com.xyram.ticketingTool.entity.Articles;
 import com.xyram.ticketingTool.enumType.ArticleStatus;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.ArticleService;
+import com.xyram.ticketingTool.ticket.config.EmployeePermissionConfig;
 import com.xyram.ticketingTool.util.ResponseMessages;
 
 @Service
@@ -36,11 +37,18 @@ public class ArticleServiceImpl implements ArticleService{
 
 	@Autowired
 	ArticleRepository articleRepository;
+	
+	@Autowired
+	EmployeePermissionConfig empPerConfig;
 
 	@Override
-	public ApiResponse createArticle(Articles article) {
+	public ApiResponse createArticle(Articles article) throws Exception  {
 		ApiResponse response = new ApiResponse(false);
-		
+		if(!empPerConfig.isHavingpersmission("artAdd")) {
+			response.setSuccess(false);
+			response.setMessage("Not authorised to edit Hrcalendar");
+			return response;
+		}
 		if(article != null) {
 			
 //			try {
@@ -76,11 +84,12 @@ public class ArticleServiceImpl implements ArticleService{
 	}
 
 	@Override
-	public ApiResponse editArticle(Articles article) {
+	public ApiResponse editArticle(Articles article) throws Exception {
 		ApiResponse response = new ApiResponse(false);
 		
 		Articles articleObj = articleRepository.findArticleById(article.getArticleId());
-		if(!currentUser.getUserRole().equalsIgnoreCase("TICKETINGTOOL_ADMIN") && !currentUser.getUserId().equalsIgnoreCase(articleObj.getUserId())) {
+		
+		if(!currentUser.getUserId().equalsIgnoreCase(articleObj.getUserId()) && !empPerConfig.isHavingpersmission("artEditAll")) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.NOT_AUTHORIZED);
 			return response;
@@ -117,11 +126,11 @@ public class ArticleServiceImpl implements ArticleService{
 	}
 
 	@Override
-	public ApiResponse deleteArticle(String articleId) {
+	public ApiResponse deleteArticle(String articleId) throws Exception {
 		ApiResponse response = new ApiResponse(false);
 		
 		Articles articleObj = articleRepository.findArticleById(articleId);
-		if(!currentUser.getUserRole().equalsIgnoreCase("TICKETINGTOOL_ADMIN") && !currentUser.getUserId().equalsIgnoreCase(articleObj.getUserId())) {
+		if(!currentUser.getUserId().equalsIgnoreCase(articleObj.getUserId()) && !empPerConfig.isHavingpersmission("artEditAll")) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.NOT_AUTHORIZED);
 			return response;
@@ -147,12 +156,12 @@ public class ArticleServiceImpl implements ArticleService{
 	}
 
 	@Override
-	public ApiResponse changeArticleStatus(String articleId, ArticleStatus status) {
+	public ApiResponse changeArticleStatus(String articleId, ArticleStatus status) throws Exception {
 		
 		ApiResponse response = new ApiResponse(false);
 		
 		Articles articleObj = articleRepository.findArticleById(articleId);
-		if(!currentUser.getUserRole().equalsIgnoreCase("TICKETINGTOOL_ADMIN") && !currentUser.getUserId().equalsIgnoreCase(articleObj.getUserId())) {
+		if(!currentUser.getUserId().equalsIgnoreCase(articleObj.getUserId()) && !empPerConfig.isHavingpersmission("artEditAll")) {
 			response.setSuccess(false);
 			response.setMessage(ResponseMessages.NOT_AUTHORIZED);
 			return response;
@@ -182,10 +191,14 @@ public class ArticleServiceImpl implements ArticleService{
 	}
 
 	@Override
-	public ApiResponse getAllArticles(Pageable pageable) {
+	public ApiResponse getAllArticles(Pageable pageable) throws Exception  {
 		// TODO Auto-generated method stub
 		ApiResponse response = new ApiResponse(false);
-		
+		if(!empPerConfig.isHavingpersmission("artViewAll")) {
+			response.setSuccess(false);
+			response.setMessage("Not authorised to edit Hrcalendar");
+			return response;
+		}
 		Page<Map> list = null;
 		
 		if(!currentUser.getUserRole().equalsIgnoreCase("TICKETINGTOOL_ADMIN"))
@@ -208,7 +221,7 @@ public class ArticleServiceImpl implements ArticleService{
 	} 
 	
 	@Override
-	public ApiResponse getAllMyArticles(Pageable pageable) {
+	public ApiResponse getAllMyArticles(Pageable pageable) throws Exception {
 		// TODO Auto-generated method stub
 		ApiResponse response = new ApiResponse(false);
 		
@@ -229,13 +242,17 @@ public class ArticleServiceImpl implements ArticleService{
 	}
 
 	@Override
-	public ApiResponse searchArticle(Pageable pageable, String searchString) {
+	public ApiResponse searchArticle(Pageable pageable, String searchString) throws Exception {
 
 		ApiResponse response = new ApiResponse(false);
-		
+		if(!empPerConfig.isHavingpersmission("artViewAll")) {
+			response.setSuccess(false);
+			response.setMessage("Not authorised to edit Hrcalendar");
+			return response;
+		}
 		Page<Map> list = null;
 		searchString = searchString.replaceAll("[-+.^:,]!@#$%&*()_~`/","");
-		if(currentUser.getUserRole().equalsIgnoreCase("TICKETINGTOOL_ADMIN"))
+		if(!empPerConfig.isHavingpersmission("artEditAll"))
 		{
 			response.setMessage(ResponseMessages.ARTICLE_LIST_RETREIVED+" For Super admin");
 			list = articleRepository.searchAllArticles(pageable,searchString.toLowerCase());
@@ -260,9 +277,13 @@ public class ArticleServiceImpl implements ArticleService{
 	}
 
 	@Override
-	public ApiResponse getArticleById(String articleId) {
+	public ApiResponse getArticleById(String articleId) throws Exception {
 		ApiResponse response = new ApiResponse(false);
-		
+		if(!empPerConfig.isHavingpersmission("artViewAll")) {
+			response.setSuccess(false);
+			response.setMessage("Not authorised to edit Hrcalendar");
+			return response;
+		}
 		Articles articleObj = articleRepository.findArticleById(articleId);
 //		if(!currentUser.getUserRole().equals("TICKETINGTOOL_ADMIN") && !currentUser.getUserId().equals(articleObj.getUserId())) {
 //			response.setSuccess(false);
