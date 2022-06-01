@@ -3,7 +3,7 @@ package com.xyram.ticketingTool.controller;
 
 import java.util.Map;
 
-
+import org.hibernate.mapping.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,4 +103,5 @@ public class AssetIssuesController
 		logger.info("received request to get assetIssues by assetId");
 		return assetIssuesService.getAssetById1(assetId);
 	}
+	
 }
