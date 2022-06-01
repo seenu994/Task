@@ -17,12 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
-import com.xyram.ticketingTool.entity.Articles;
-import com.xyram.ticketingTool.entity.JobOpenings;
 import com.xyram.ticketingTool.entity.Reminder;
 import com.xyram.ticketingTool.request.ReminderRequest;
 import com.xyram.ticketingTool.service.ReminderService;
-import com.xyram.ticketingTool.util.AuthConstants;
 
 @RestController
 @CrossOrigin
@@ -33,13 +30,13 @@ public class ReminderController {
 	ReminderService reminderService;
 
 	@PostMapping("/createReminder")
-	public ApiResponse createReminder(@RequestBody ReminderRequest Reminder) {
+	public ApiResponse createReminder(@RequestBody ReminderRequest ReminderRequest) {
 //		logger.info("Creating new Reminder");
-		return reminderService.createReminder(Reminder);
+		return reminderService.createReminder(ReminderRequest);
 	}
 
 	@PostMapping("/editReminder/{remId}")
-	public ApiResponse editReminder(@PathVariable String remId, @RequestBody Reminder Reminder) {
+	public ApiResponse editReminder(@PathVariable String remId, @RequestBody ReminderRequest Reminder) {
 		logger.info("Editing Reminder");
 		return reminderService.editReminder(Reminder, remId);
 	}

@@ -31,34 +31,26 @@ public class NotesController {
 	@Autowired
 	NotesService notesService;
 
-	@PostMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/createNotes",
-			AuthConstants.HR_ADMIN_BASEPATH + "/createNotes", AuthConstants.DEVELOPER_BASEPATH + "/createNotes",
-			AuthConstants.INFRA_USER_BASEPATH + "/createNotes", AuthConstants.HR_BASEPATH + "/createNotes" })
+	@PostMapping("/createNotes")
 	public ApiResponse createNotes(@RequestBody Notes notes) throws ParseException  {
 		logger.info("Creating Notes");
 		return notesService.createNotes(notes);
 	}
 
-	@GetMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/getNotes",
-			AuthConstants.HR_ADMIN_BASEPATH + "/getNotes", AuthConstants.DEVELOPER_BASEPATH + "/getNotes",
-			AuthConstants.INFRA_USER_BASEPATH + "/getNotes", AuthConstants.HR_BASEPATH + "/getNotes" })
+	@GetMapping("/getNotes")
 	public ApiResponse getNotes(@RequestParam Date paramDate) {
 		logger.info("Received request for get notes");
 		return notesService.getNotes(paramDate);
 	}
 
-	@GetMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllNotes",
-			AuthConstants.HR_ADMIN_BASEPATH + "/getAllNotes", AuthConstants.DEVELOPER_BASEPATH + "/getAllNotes",
-			AuthConstants.INFRA_USER_BASEPATH + "/getAllNotes", AuthConstants.HR_BASEPATH + "/getAllNotes" })
+	@GetMapping("/getAllNotes")
 	Page<Map> getAllNotes(@RequestParam Map<String, Object> filter, Pageable pageable) {
 
 		logger.info("Received request to Get all Notes");
 		return notesService.getAllNotes(filter, pageable);
 	}
 
-	@DeleteMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/deleteNotes",
-			AuthConstants.HR_ADMIN_BASEPATH + "/deleteNotes", AuthConstants.DEVELOPER_BASEPATH + "/deleteNotes",
-			AuthConstants.INFRA_USER_BASEPATH + "/deleteNotes", AuthConstants.HR_BASEPATH + "/deleteNotes" })
+	@DeleteMapping("/deleteNotes")
 	ApiResponse deleteNotes(@RequestParam Date paramDate) {
 		logger.info("Received request for delete");
 		return notesService.deleteNotes(paramDate);

@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.transaction.Transactional;
 
+import org.hibernate.mapping.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,7 @@ public interface AssetIssuesService
 	ApiResponse downloadAllAssetIssues(Map<String, Object> filter);
 	
 	ApiResponse getAssetById1(String assetId);
+	
 	
 }
 	

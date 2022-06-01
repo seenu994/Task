@@ -84,7 +84,7 @@ public class AssetController {
 			return assetService.getAssetById(assetId);
 	}
     
-    @GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/downloadAssets",
+    @PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/downloadAssets",
     		AuthConstants.INFRA_ADMIN_BASEPATH + "/downloadAssets",
     		AuthConstants.INFRA_USER_BASEPATH + "/downloadAssets"})
 	public ApiResponse downloadAssets(@RequestBody Map<String, Object> filter) {

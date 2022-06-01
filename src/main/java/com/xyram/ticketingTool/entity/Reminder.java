@@ -13,7 +13,7 @@ import com.xyram.ticketingTool.id.generator.IdGenerator;
 import com.xyram.ticketingTool.id.generator.IdPrefix;
 
 @Entity
-@Table(name = "Reminders")
+@Table(name = "reminders")
 public class Reminder extends AuditModel {
 	@Id
 	@IdPrefix(value = "REM")
@@ -24,33 +24,39 @@ public class Reminder extends AuditModel {
 
 //	@Column(name = "user_name", nullable = false)
 //	private String userName;
-	
+
 	@Column(name = "title", nullable = false)
 	private String title;
 
-	@Column(name = "reminderDate", nullable = false)
-	private String reminderDate;
+	@Column(name = "reminder_date_time", nullable = false)
+	private String reminderDateTime;
 
-	@Column(name = "reminderTime", nullable = false)
-	private String reminderTime;
-
-	@Column(name = "user_id", nullable = false)
+	@Column(name = "user_id")
 	private String userId;
 
-	@Column(name = "reference_id", nullable = false)
+	@Column(name = "reference_id")
 	private String referenceId;
-	
-	@Column(name = "is_host", nullable = false)
+
+	@Column(name = "is_host")
 	private Boolean isHost;
 
-	
+	@Column(name = "reference")
+	private String references;
 
-	public String getReferenceId() {
-		return referenceId;
+	public String getReferences() {
+		return references;
 	}
 
-	public void setReferenceId(String referenceId) {
-		this.referenceId = referenceId;
+	public void setReferences(String references) {
+		this.references = references;
+	}
+
+	public String getReminderId() {
+		return reminderId;
+	}
+
+	public void setReminderId(String reminderId) {
+		this.reminderId = reminderId;
 	}
 
 	public String getTitle() {
@@ -61,20 +67,12 @@ public class Reminder extends AuditModel {
 		this.title = title;
 	}
 
-	public String getReminderDate() {
-		return reminderDate;
+	public String getReminderDateTime() {
+		return reminderDateTime;
 	}
 
-	public void setReminderDate(String reminderDate) {
-		this.reminderDate = reminderDate;
-	}
-
-	public String getReminderTime() {
-		return reminderTime;
-	}
-
-	public void setReminderTime(String reminderTime) {
-		this.reminderTime = reminderTime;
+	public void setReminderDateTime(String reminderDateTime) {
+		this.reminderDateTime = reminderDateTime;
 	}
 
 	public String getUserId() {
@@ -85,20 +83,12 @@ public class Reminder extends AuditModel {
 		this.userId = userId;
 	}
 
-//	public String getUserName() {
-//		return userName;
-//	}
-//
-//	public void setUserName(String userName) {
-//		this.userName = userName;
-//	}
-
-	public String getReminderId() {
-		return reminderId;
+	public String getReferenceId() {
+		return referenceId;
 	}
 
-	public void setReminderId(String reminderId) {
-		this.reminderId = reminderId;
+	public void setReferenceId(String referenceId) {
+		this.referenceId = referenceId;
 	}
 
 	public Boolean getIsHost() {
@@ -108,5 +98,4 @@ public class Reminder extends AuditModel {
 	public void setIsHost(Boolean isHost) {
 		this.isHost = isHost;
 	}
-
 }
