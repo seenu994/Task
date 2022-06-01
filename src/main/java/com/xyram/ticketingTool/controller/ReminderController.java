@@ -36,7 +36,7 @@ public class ReminderController {
 	}
 
 	@PostMapping("/editReminder/{remId}")
-	public ApiResponse editReminder(@PathVariable String remId, @RequestBody Reminder Reminder) {
+	public ApiResponse editReminder(@PathVariable String remId, @RequestBody ReminderRequest Reminder) {
 		logger.info("Editing Reminder");
 		return reminderService.editReminder(Reminder, remId);
 	}

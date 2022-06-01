@@ -36,16 +36,16 @@ public interface ReminderRepository extends JpaRepository<Reminder, String> {
 //	List<Reminder> getRemindersWithinFifteenMin();
 
 	@Query("Select distinct new map( r.reminderId as reminderId,r.title as title, r.reminderDateTime as reminderDateTime, "
-			+ "  r.createdAt as createdAt,r.lastUpdatedAt as lastUpdatedAt, "
+			+ "  r.createdAt as createdAt,r.lastUpdatedAt as lastUpdatedAt, r.references as references, "
 			+ " r.UpdatedBy as UpdatedBy, r.createdBy as createdBy) from Reminder r" + " ORDER BY r.createdAt DESC")
 	Page<Map> getAllReminders(Pageable pageable);
 
 	@Query("SELECT r from Reminder r where r.reminderId=:id")
 	Reminder findReminderById(String id);
 
-	@Query("Select distinct new map(r.reminderId as reminderId,r.title as title,r.reminderDateTime as reminderDateTime, "
-			+ " r.createdAt as createdAt,r.lastUpdatedAt as lastUpdatedAt, "
-			+ " r.UpdatedBy as UpdatedBy, r.createdBy as createdBy) from Reminder r where date(r.reminderDateTime) =(:paramDate) AND r.createdBy=:userId")
+	@Query("Select distinct new map( r.reminderId as reminderId, r.title as title, r.reminderDateTime as reminderDateTime, "
+			+ " r.createdAt as createdAt, r.lastUpdatedAt as lastUpdatedAt, r.references as references, "
+			+ " r.UpdatedBy as UpdatedBy, r.createdBy as createdBy) from Reminder r where SUBSTRING_INDEX(r.reminderDateTime,' ', 1)= :paramDate AND r.createdBy=:userId")
 	List<Map> getRemindersByDateValue(Date paramDate, String userId);
 
 	@Transactional
