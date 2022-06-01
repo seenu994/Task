@@ -46,7 +46,7 @@ public interface HrCalendarService {
 	
 	ApiResponse downloadAllMySchedulesFromCalendarByStatus(Map<String, Object>filter);
 	
-	ApiResponse downloadMyTeamSchedulesFromCalendarByStatus(Map<String, Object>filter);
+	ApiResponse downloadMyTeamSchedulesFromCalendarByStatus(Map<String, Object>filter) throws Exception;
 	
 	ApiResponse getAllhrCalender(Map<String, Object> filter , Pageable pageable);
 	

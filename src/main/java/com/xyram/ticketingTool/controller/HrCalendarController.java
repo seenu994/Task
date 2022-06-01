@@ -183,10 +183,9 @@ public class HrCalendarController {
 		return hrCalrendarService.downloadAllMySchedulesFromCalendarByStatus(filter);
 	}
 
-	@PostMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/downloadMyTeamSchedulesFromCalendarByStatus",
-			AuthConstants.HR_BASEPATH + "/downloadMyTeamSchedulesFromCalendarByStatus"			
-			})
-	ApiResponse downloadMyTeamSchedulesFromCalendarByStatus(@RequestBody Map<String, Object>filter) {
+
+	@PostMapping("/downloadMyTeamSchedulesFromCalendarByStatus")
+	ApiResponse downloadMyTeamSchedulesFromCalendarByStatus(@RequestBody Map<String, Object>filter) throws Exception {
 		logger.info("Get all downloadMyTeamSchedulesFromCalendarByStatus");
 		return hrCalrendarService.downloadMyTeamSchedulesFromCalendarByStatus(filter);
 	}

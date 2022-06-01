@@ -20,20 +20,20 @@ import com.xyram.ticketingTool.entity.ReminderLog;
 
 @Repository
 public interface ReminderRepository extends JpaRepository<Reminder, String> {
-	@Query(value="SELECT r.id, r.updated_by, r.created_at, r.created_by, r.last_updated_at, r.notify_members, r.reminder_date, r.reminder_time, r.title, r.user_id, r.user_name, "
+	@Query(value="SELECT r.id, r.updated_by, r.created_at, r.created_by, r.last_updated_at,  r.reminder_date, r.reminder_time, r.title, r.user_id,  "
 			+ "TIMESTAMPDIFF(MINUTE, CONVERT_TZ(CURRENT_TIMESTAMP(),'+00:00', '+05:30'), CONVERT_TZ(concat(reminder_date, ' ', reminder_time),'+00:00', '+05:30')) DiffDTTM "
 			+ "from reminders r "
 			+ "where TIMESTAMPDIFF(MINUTE, CONVERT_TZ(CURRENT_TIMESTAMP(),'+00:00', '+05:30'), CONVERT_TZ(concat(reminder_date, ' ', reminder_time),'+00:00', '+05:30')) between 5 and 1",nativeQuery = true)
 	List<Reminder> getRemindersWithinFiveMin();
 	
 	
-	@Query(value="SELECT r.id, r.updated_by, r.created_at, r.created_by, r.last_updated_at, r.notify_members, r.reminder_date, r.reminder_time, r.title, r.user_id, r.user_name, "
+	@Query(value="SELECT r.id, r.updated_by, r.created_at, r.created_by, r.last_updated_at,  r.reminder_date, r.reminder_time, r.title, r.user_id,  "
 			+ "TIMESTAMPDIFF(MINUTE, CONVERT_TZ(CURRENT_TIMESTAMP(),'+00:00', '+05:30'), CONVERT_TZ(concat(reminder_date, ' ', reminder_time),'+00:00', '+05:30')) DiffDTTM "
 			+ "from reminders r "
 			+ "where TIMESTAMPDIFF(MINUTE, CONVERT_TZ(CURRENT_TIMESTAMP(),'+00:00', '+05:30'), CONVERT_TZ(concat(reminder_date, ' ', reminder_time),'+00:00', '+05:30')) between 10 and 6",nativeQuery = true)
 	List<Reminder> getRemindersWithinTenMin();
 	
-	@Query(value="SELECT r.id, r.updated_by, r.created_at, r.created_by, r.last_updated_at, r.notify_members, r.reminder_date, r.reminder_time, r.title, r.user_id, r.user_name, "
+	@Query(value="SELECT r.id, r.updated_by, r.created_at, r.created_by, r.last_updated_at,  r.reminder_date, r.reminder_time, r.title, r.user_id,  "
 			+ "TIMESTAMPDIFF(MINUTE, CONVERT_TZ(CURRENT_TIMESTAMP(),'+00:00', '+05:30'), CONVERT_TZ(concat(reminder_date, ' ', reminder_time),'+00:00', '+05:30')) DiffDTTM "
 			+ "from reminders r "
 			+ "where TIMESTAMPDIFF(MINUTE, CONVERT_TZ(CURRENT_TIMESTAMP(),'+00:00', '+05:30'), CONVERT_TZ(concat(reminder_date, ' ', reminder_time),'+00:00', '+05:30')) between 15 and 11",nativeQuery = true)
