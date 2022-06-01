@@ -238,8 +238,8 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				user.setName(employee.getFirstName() + " " + employee.getLastName());
 
 				// Employee employeere=new Employee();
-				Role role = roleRepository.getById(employee.getRoleId());
-				user.setUserRole(role != null ? role.getRoleName() : null);
+//				Role role = roleRepository.getById(employee.getRoleId());
+//				user.setUserRole(role != null ? role.getRoleName() : null);
 
 				Integer permission = permissionConfig.setDefaultPermissions(user.getUserRole().toString());
 				user.setPermission(permission);
