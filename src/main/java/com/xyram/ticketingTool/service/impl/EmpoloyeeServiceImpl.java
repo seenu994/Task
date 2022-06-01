@@ -1801,7 +1801,15 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	public ApiResponse getAllEmployeeDefaultPermissions() throws Exception {
 		ApiResponse response = new ApiResponse(true);
 		if (!empPerConfig.isHavingpersmission("empAdmin")) {
-			
+			response.setSuccess(false);
+			response.setMessage("Not authorised");
+		}else {
+			List<EmployeePermission> permisssionList = empPermissionRepo.findAll();
+			Map content = new HashMap();
+			content.put("list", permisssionList);
+			response.setSuccess(true);
+			response.setContent(content);
+			response.setMessage("Retrieved successfully");
 		}
 		return response;
 	}

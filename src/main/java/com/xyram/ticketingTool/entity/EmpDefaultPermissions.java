@@ -5,11 +5,10 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.xyram.ticketingTool.baseData.model.AuditModel;
 
 @Entity
 @Table(name = "emp_default_permissions")
-public class EmpDefaultPermissions extends AuditModel {
+public class EmpDefaultPermissions {
 
 	@Id
 	@Column(name = "id")
