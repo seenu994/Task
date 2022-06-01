@@ -9,21 +9,21 @@ import com.xyram.ticketingTool.enumType.ArticleStatus;
 
 public interface ArticleService {
 	
-	ApiResponse createArticle(Articles article);
+	ApiResponse createArticle(Articles article) throws Exception;
 	
-	ApiResponse editArticle(Articles article);
+	ApiResponse editArticle(Articles article) throws Exception;
 	
-	ApiResponse deleteArticle(String articleId);
+	ApiResponse deleteArticle(String articleId) throws Exception;
 	
-	ApiResponse changeArticleStatus(String articleId, ArticleStatus status);
+	ApiResponse changeArticleStatus(String articleId, ArticleStatus status) throws Exception;
 	
-	ApiResponse getAllArticles(Pageable pageable);
+	ApiResponse getAllArticles(Pageable pageable) throws Exception;
 	
-	ApiResponse getArticleById(String articleId);
+	ApiResponse getArticleById(String articleId) throws Exception;
 	
-	ApiResponse searchArticle(Pageable pageable, String searchString);
+	ApiResponse searchArticle(Pageable pageable, String searchString) throws Exception;
 
-	ApiResponse getAllMyArticles(Pageable pageable);
+	ApiResponse getAllMyArticles(Pageable pageable) throws Exception;
 
 
 }
