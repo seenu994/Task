@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
-import com.xyram.ticketingTool.entity.Brand;
 import com.xyram.ticketingTool.entity.Skills;
-import com.xyram.ticketingTool.service.BrandService;
 import com.xyram.ticketingTool.service.SkillsService;
 import com.xyram.ticketingTool.util.AuthConstants;
 
@@ -39,13 +37,13 @@ private final Logger logger = LoggerFactory.getLogger(BrandController.class);
         return skillsService.editSkills(skills, skillId);
 	}
 	
-	 @GetMapping(value = {AuthConstants.HR_ADMIN_BASEPATH + "/getAllSkills"})
+	 @GetMapping("/getAllSkills")
      public ApiResponse getAllSkills(Pageable pageable) {
  	        logger.info("Received request to get all Skills");
  			return skillsService.getAllSkills(pageable);
  	 }
 	 
-	 @GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/searchSkills/{searchString}"})
+	 @GetMapping("/searchSkills/{searchString}")
 		public ApiResponse searchSkills(@PathVariable String searchString) {
 			logger.info("Received request to search Skills");
 			return skillsService.searchSkills(searchString);
