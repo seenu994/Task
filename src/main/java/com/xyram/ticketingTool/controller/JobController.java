@@ -65,7 +65,7 @@ public class JobController {
 	}
 
 	@GetMapping("/searchJobOpenings/{searchString}")
-	public ApiResponse searchJobOpenings(@PathVariable String searchString) {
+	public ApiResponse searchJobOpenings(@PathVariable String searchString) throws Exception {
 		logger.info("Search Job");
 		return jobService.searchJobOpenings(searchString);
 	}
@@ -101,200 +101,134 @@ public class JobController {
 		return jobService.createJobApplication(files, jobAppObj);
 	}
 
-	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editJobApplication/{jobAppId}",
-			AuthConstants.HR_ADMIN_BASEPATH + "/editJobApplication/{jobAppId}",
-			AuthConstants.DEVELOPER_BASEPATH + "/editJobApplication/{jobAppId}",
-			AuthConstants.HR_BASEPATH + "/editJobApplication/{jobAppId}",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/editJobApplication/{jobAppId}",
-			AuthConstants.INFRA_USER_BASEPATH + "/editJobApplication/{jobAppId}",
-			AuthConstants.JOB_VENDOR_BASEPATH + "/editJobApplication/{jobAppId}" })
+	@PostMapping("/editJobApplication/{jobAppId}")
 	public ApiResponse editJobApplication(@RequestPart(name = "files", required = false) MultipartFile[] files,
-			@RequestPart String jobAppObj, @PathVariable String jobAppId) {
+			@RequestPart String jobAppObj, @PathVariable String jobAppId) throws Exception {
 		logger.info("Creating Job Application");
 		return jobService.editJobApplication(files, jobAppObj, jobAppId);
 	}
 
-	@PutMapping(value = { AuthConstants.HR_BASEPATH + "/scheduleJobInterview/{applicationId}",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/scheduleJobInterview/{applicationId}",
-			AuthConstants.HR_ADMIN_BASEPATH + "/scheduleJobInterview/{applicationId}" })
-	public ApiResponse scheduleJobInterview(@RequestBody JobInterviews schedule, @PathVariable String applicationId) {
+	@PutMapping("/scheduleJobInterview/{applicationId}")
+	public ApiResponse scheduleJobInterview(@RequestBody JobInterviews schedule, @PathVariable String applicationId) throws Exception {
 		logger.info("Get All Job");
 		return jobService.scheduleJobInterview(schedule, applicationId);
 	}
 
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/scheduleJobInterview/{applicationId}",
-			AuthConstants.INFRA_USER_BASEPATH + "/scheduleJobInterview/{applicationId}",
-			AuthConstants.HR_BASEPATH + "/scheduleJobInterview/{applicationId}",
-			AuthConstants.DEVELOPER_BASEPATH + "/scheduleJobInterview/{applicationId}",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/scheduleJobInterview/{applicationId}",
-			AuthConstants.HR_ADMIN_BASEPATH + "/scheduleJobInterview/{applicationId}" })
-	public ApiResponse getJobInterviewByAppId(@PathVariable String applicationId) {
+	@GetMapping("/getJobInterview/{applicationId}")
+	public ApiResponse getJobInterviewByAppId(@PathVariable String applicationId) throws Exception {
 		logger.info("Get All Job");
 		return jobService.getJobInterviewByAppId(applicationId);
 	}
 
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editJobInterviewSchedule/{interviewId}",
-			AuthConstants.HR_ADMIN_BASEPATH + "/editJobInterviewSchedule/{interviewId}" })
+	@PutMapping("/editJobInterviewSchedule/{interviewId}")
 	public ApiResponse editJobInterviewSchedule(@RequestBody JobInterviews jobInterviewRequest,
-			@PathVariable String interviewId) {
+			@PathVariable String interviewId) throws Exception {
 		logger.info("Edit Job Interview Schedule");
 		return jobService.editJobInterview(jobInterviewRequest, interviewId);
 	}
 
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/changeJobInterviewStatus/{jobInerviewId}/{status}",
-			AuthConstants.DEVELOPER_BASEPATH + "/changeJobInterviewStatus/{jobInerviewId}/{status}",
-			AuthConstants.HR_ADMIN_BASEPATH + "/changeJobInterviewStatus/{jobInerviewId}/{status}",
-			AuthConstants.HR_BASEPATH + "/changeJobInterviewStatus/{jobInerviewId}/{status}" })
+	@PutMapping("/changeJobInterviewStatus/{jobInerviewId}/{status}")
 	public ApiResponse changeJobInterviewStatus(@PathVariable String jobInerviewId, @PathVariable String status,
 			@RequestParam(required = false) Integer rating, @RequestParam(required = false) String feedback,
-			@RequestParam(required = false) String comments) {
+			@RequestParam(required = false) String comments) throws Exception {
 		logger.info("Get JobOpening by id");
 		return jobService.changeJobInterviewStatus(jobInerviewId, status, rating, feedback, comments);
 	}
 
-	@PutMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/updateJobInterviewFeedback/{jobInerviewId}",
-			AuthConstants.HR_ADMIN_BASEPATH + "/updateJobInterviewFeedback/{jobInerviewId}",
-			AuthConstants.HR_BASEPATH + "/updateJobInterviewFeedback/{jobInerviewId}" })
+	@PutMapping("/updateJobInterviewFeedback/{jobInerviewId}")
 	public ApiResponse changeJobInterviewStatus(@PathVariable String jobInerviewId,
-			@RequestBody @Valid InterviewRoundReviewRequest request) {
+			@RequestBody @Valid InterviewRoundReviewRequest request) throws Exception {
 		logger.info("Get JobOpening by id");
 		return jobService.updateInterviewRoundStatus(jobInerviewId, request);
 	}
 
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/changeJobApplicationStatus/{jobApplicationId}/{status}",
-			AuthConstants.HR_ADMIN_BASEPATH + "/changeJobApplicationStatus/{jobApplicationId}/{status}",
-			AuthConstants.DEVELOPER_BASEPATH + "/changeJobApplicationStatus/{jobApplicationId}/{status}",
-			AuthConstants.HR_BASEPATH + "/changeJobApplicationStatus/{jobApplicationId}/{status}",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/changeJobApplicationStatus/{jobApplicationId}/{status}",
-			AuthConstants.INFRA_USER_BASEPATH + "/changeJobApplicationStatus/{jobApplicationId}/{status}",
-			AuthConstants.JOB_VENDOR_BASEPATH + "/changeJobApplicationStatus/{jobApplicationId}/{status}" })
+	@PutMapping("/changeJobApplicationStatus/{jobApplicationId}/{status}")
 	public ApiResponse changeJobApplicatonStatus(@PathVariable String jobApplicationId,
-			@PathVariable JobApplicationStatus status, @RequestParam(required = false) String comment) {
+			@PathVariable JobApplicationStatus status, @RequestParam(required = false) String comment) throws Exception {
 		logger.info("change job application status");
 		return jobService.changeJobApplicationStatus(jobApplicationId, status, comment);
 	}
 
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/changeJobApplicationStatus/{jobApplicationId}",
-			AuthConstants.HR_ADMIN_BASEPATH + "changeJobApplicationStatus/{jobApplicationId}",
-			AuthConstants.DEVELOPER_BASEPATH + "changeJobApplicationStatus/{jobApplicationId}",
-			AuthConstants.HR_BASEPATH + "changeJobApplicationStatus/{jobApplicationId}",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "changeJobApplicationStatus/{jobApplicationId}",
-			AuthConstants.INFRA_USER_BASEPATH + "changeJobApplicationStatus/{jobApplicationId}",
-			AuthConstants.JOB_VENDOR_BASEPATH + "changeJobApplicationStatus/{jobApplicationId}" })
+	@PutMapping("changeJobApplicationStatus/{jobApplicationId}")
 	public ApiResponse updateJobApplicatonStatus(@PathVariable String jobApplicationId,
-			@RequestBody JobApplicationStatusRequest request) {
+			@RequestBody JobApplicationStatusRequest request) throws Exception {
 		logger.info("change job application status");
 		return jobService.changeJobApplicationStatus(jobApplicationId, request);
 	}
 
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllJobInterviews",
-			AuthConstants.HR_ADMIN_BASEPATH + "/getAllJobInterviews",
-			AuthConstants.DEVELOPER_BASEPATH + "/getAllJobInterviews",
-			AuthConstants.HR_BASEPATH + "/getAllJobInterviews",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllJobInterviews",
-			AuthConstants.INFRA_USER_BASEPATH + "/getAllJobInterviews",
-			AuthConstants.JOB_VENDOR_BASEPATH + "/getAllJobInterviews" })
-	public ApiResponse getAllJobInterviews(@RequestParam Map<String, Object> filter, Pageable pageable) {
+	@GetMapping("/getAllJobInterviews")
+	public ApiResponse getAllJobInterviews(@RequestParam Map<String, Object> filter, Pageable pageable) throws Exception {
 		logger.info("Get All Job");
 		return jobService.getAllJobInterviews(filter, pageable);
 	}
 
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllJobOpenings/{jobOpeningId}",
-			AuthConstants.INFRA_USER_BASEPATH + "/getAllJobOpenings/{jobOpeningId}",
-			AuthConstants.HR_ADMIN_BASEPATH + "/getAllJobOpenings/{jobOpeningId}",
-			AuthConstants.HR_BASEPATH + "/getAllJobOpenings/{jobOpeningId}",
-			AuthConstants.DEVELOPER_BASEPATH + "/getAllJobOpenings/{jobOpeningId}",
-			AuthConstants.JOB_VENDOR_BASEPATH + "/getAllJobOpenings/{jobOpeningId}",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllJobOpenings/{jobOpeningId}" })
-	public ApiResponse getAllJobOpeningsById(@PathVariable String jobOpeningId) {
+	@GetMapping("/getAllJobOpenings/{jobOpeningId}")
+	public ApiResponse getAllJobOpeningsById(@PathVariable String jobOpeningId) throws Exception {
 		logger.info("Get JobOpening by id");
 		return jobService.getAllJobOpeningsById(jobOpeningId);
 	}
 
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllApp/{jobAppId}",
-			AuthConstants.INFRA_USER_BASEPATH + "/getAllApp/{jobAppId}",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllApp/{jobAppId}",
-			AuthConstants.HR_ADMIN_BASEPATH + "/getAllApp/{jobAppId}",
-			AuthConstants.HR_BASEPATH + "/getAllApp/{jobAppId}",
-			AuthConstants.DEVELOPER_BASEPATH + "/getAllApp/{jobAppId}",
-			AuthConstants.JOB_VENDOR_BASEPATH + "/getAllApp/{jobAppId}" })
-	public ApiResponse getAllAppById(@PathVariable String jobAppId) {
+	@GetMapping("/getAllApp/{jobAppId}")
+	public ApiResponse getAllAppById(@PathVariable String jobAppId) throws Exception {
 		logger.info("Get JobOpening by id");
 		return jobService.getAllJobAppById(jobAppId);
 	}
 
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getInterview/{jobInterviewId}",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/getInterview/{jobInterviewId}",
-			AuthConstants.INFRA_USER_BASEPATH + "/getInterview/{jobInterviewId}",
-			AuthConstants.HR_ADMIN_BASEPATH + "/getInterview/{jobInterviewId}",
-			AuthConstants.HR_BASEPATH + "/getInterview/{jobInterviewId}",
-			AuthConstants.DEVELOPER_BASEPATH + "/getInterview/{jobInterviewId}",
-			AuthConstants.JOB_VENDOR_BASEPATH + "/getInterview/{jobInterviewId}" })
-	public ApiResponse getAllInterviewId(@PathVariable String jobInterviewId) {
+	@GetMapping("/getInterview/{jobInterviewId}")
+	public ApiResponse getAllInterviewId(@PathVariable String jobInterviewId) throws Exception {
 		logger.info("Get JobOpening by id");
 		return jobService.getAllInterviewId(jobInterviewId);
 	}
 
-	@PutMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/changeJobOpeningStatus/{jobOpeningId}/{status}",
-			AuthConstants.ADMIN_BASEPATH + "/changeJobOpeningStatus/{jobOpeningId}/{status}" })
+	@PutMapping("/changeJobOpeningStatus/{jobOpeningId}/{status}")
 	public ApiResponse changeJobOpeningStatus(@PathVariable String jobOpeningId,
-			@PathVariable JobOpeningStatus status) {
+			@PathVariable JobOpeningStatus status) throws Exception {
 		logger.info("Get JobOpening by id");
 		return jobService.changeJobOpeningStatus(jobOpeningId, status);
 	}
 
-	@PostMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/createJobOffer/{jobAppId}",
-			AuthConstants.ADMIN_BASEPATH + "/createJobOffer/{jobAppId}" })
-	public ApiResponse createJobOffer(@RequestBody JobOffer jobObj, @PathVariable String jobAppId) {
+	@PostMapping("/createJobOffer/{jobAppId}")
+	public ApiResponse createJobOffer(@RequestBody JobOffer jobObj, @PathVariable String jobAppId) throws Exception {
 		logger.info("Creating Job Offers");
 		return jobService.createJobOffer(jobObj, jobAppId);
 	}
 
-	@PutMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/editJobOffer/{jobOfferId}",
-			AuthConstants.ADMIN_BASEPATH + "/editJobOffer/{jobOfferId}" })
-	public ApiResponse editJobOffer(@RequestBody JobOffer jobObj, @PathVariable String jobOfferId) {
-		logger.info("Creating Job Offers");
+	@PutMapping("/editJobOffer/{jobOfferId}")
+	public ApiResponse editJobOffer(@RequestBody JobOffer jobObj, @PathVariable String jobOfferId) throws Exception {
+		logger.info("edit Job Offers");
 		return jobService.editJobOffer(jobObj, jobOfferId);
 	}
 
-	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/getAllJobOffer",
-			AuthConstants.HR_BASEPATH + "/getAllJobOffer", AuthConstants.ADMIN_BASEPATH + "/getAllJobOffer",
-			AuthConstants.JOB_VENDOR_BASEPATH + "/getAllJobOffer" })
-	public ApiResponse getAllJobOffer(@RequestParam Map<String, Object> filter, Pageable pageable) {
-		logger.info("Creating Job Offers");
+	@GetMapping("/getAllJobOffer")
+	public ApiResponse getAllJobOffer(@RequestParam Map<String, Object> filter, Pageable pageable) throws Exception {
+		logger.info("getall Job Offers");
 		return jobService.getAllJobOffer(filter, pageable);
 	}
 
-	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/getAllJobOffer/{offerId}",
-			AuthConstants.ADMIN_BASEPATH + "/getAllJobOffer/{offerId}" })
-	public ApiResponse getAllJobOfferById(@PathVariable String offerId) {
+	@GetMapping("/getAllJobOffer/{offerId}")
+	public ApiResponse getAllJobOfferById(@PathVariable String offerId) throws Exception {
 		logger.info("Creating Job Offers");
 		return jobService.getAllJobOfferById(offerId);
 	}
 
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/changeOfferStatus/{jobOfferId}/{status}",
-			AuthConstants.HR_ADMIN_BASEPATH + "/changeOfferStatus/{jobOfferId}/{status}" })
-	public ApiResponse changeJobOfferStatus(@PathVariable String jobOfferId, @PathVariable JobOfferStatus status) {
+	@PutMapping("/changeOfferStatus/{jobOfferId}/{status}")
+	public ApiResponse changeJobOfferStatus(@PathVariable String jobOfferId, @PathVariable JobOfferStatus status) throws Exception {
 		logger.info("change job application status");
 		return jobService.changeJobOfferStatus(jobOfferId, status);
 	}
 
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getJobCodes/{jobCode}",
-			AuthConstants.HR_ADMIN_BASEPATH + "/getJobCodes/{jobCode}" })
+	@GetMapping("/getJobCodes/{jobCode}")
 	public ApiResponse getJobCode(@PathVariable String jobCode) {
 		return jobService.getJobCode(jobCode);
 	}
 
-	@GetMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/getApplicationList/{jobCodeId}",
-			AuthConstants.ADMIN_BASEPATH + "/getApplicationList/{jobCodeId}",
-			AuthConstants.HR_ADMIN_BASEPATH + "/getApplicationList/{jobCodeId}" })
-	public ApiResponse getApplicationList(@PathVariable String jobCodeId) {
+	@GetMapping("/getApplicationList/{jobCodeId}")
+	public ApiResponse getApplicationList(@PathVariable String jobCodeId) throws Exception {
 		return jobService.getApplicationList(jobCodeId);
 	}
 
-	@GetMapping(value = { AuthConstants.HR_ADMIN_BASEPATH + "/getRoundDetails/{appId}/{roundNo}",
-			AuthConstants.DEVELOPER_BASEPATH + "/getRoundDetails/{appId}/{roundNo}" })
-	public ApiResponse getRoundDetails(@PathVariable String appId, @PathVariable Integer roundNo) {
+	@GetMapping("/getRoundDetails/{appId}/{roundNo}")
+	public ApiResponse getRoundDetails(@PathVariable String appId, @PathVariable Integer roundNo) throws Exception {
 		return jobService.getRoundDetails(appId, roundNo);
 	}
 
