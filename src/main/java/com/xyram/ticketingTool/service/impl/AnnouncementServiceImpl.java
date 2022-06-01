@@ -20,6 +20,7 @@ import com.xyram.ticketingTool.entity.Announcement;
 import com.xyram.ticketingTool.enumType.AnnouncementStatus;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.AnnouncementService;
+import com.xyram.ticketingTool.ticket.config.EmployeePermissionConfig;
 import com.xyram.ticketingTool.util.ResponseMessages;
 
 @Service
@@ -37,11 +38,18 @@ public class AnnouncementServiceImpl implements AnnouncementService{
 
 	@Autowired
 	AnnouncementRepository announcementRepository;
+	
+	@Autowired
+	EmployeePermissionConfig empPerConfig;
 
 	@Override
-	public ApiResponse createAnnouncement(Announcement announcement) {
+	public ApiResponse createAnnouncement(Announcement announcement) throws Exception {
 		ApiResponse response = new ApiResponse(false);
-		
+		if(!empPerConfig.isHavingpersmission("annAdd")) {
+			response.setSuccess(false);
+			response.setMessage("Not authorised to edit Hrcalendar");
+			return response;
+		}
 		if(announcement != null) {
 			
 //			try {
@@ -72,8 +80,15 @@ public class AnnouncementServiceImpl implements AnnouncementService{
 	}
 
 	@Override
-	public ApiResponse editAnnouncement(Announcement announcement) {
+	public ApiResponse editAnnouncement(Announcement announcement)  throws Exception{
+		
 		ApiResponse response = new ApiResponse(false);
+
+		if(!empPerConfig.isHavingpersmission("annAdd") && !empPerConfig.isHavingpersmission("annEditAll")) {
+			response.setSuccess(false);
+			response.setMessage("Not authorised to edit Hrcalendar");
+			return response;
+		}
 		
 		Announcement announcementObj = announcementRepository.findAnnouncementById(announcement.getAnnouncementId());
 		if(!currentUser.getUserRole().equalsIgnoreCase("TICKETINGTOOL_ADMIN") && !currentUser.getUserId().equalsIgnoreCase(announcementObj.getUserId())) {
@@ -108,9 +123,13 @@ public class AnnouncementServiceImpl implements AnnouncementService{
 	}
 
 	@Override
-	public ApiResponse deleteAnnouncement(String announcementId) {
+	public ApiResponse deleteAnnouncement(String announcementId)  throws Exception{
 		ApiResponse response = new ApiResponse(false);
-		
+		if(!empPerConfig.isHavingpersmission("annAdd") && !empPerConfig.isHavingpersmission("annEditAll")) {
+			response.setSuccess(false);
+			response.setMessage("Not authorised to edit Hrcalendar");
+			return response;
+		}
 		Announcement announcementObj = announcementRepository.findAnnouncementById(announcementId);
 		if(!currentUser.getUserRole().equalsIgnoreCase("TICKETINGTOOL_ADMIN") && !currentUser.getUserId().equalsIgnoreCase(announcementObj.getUserId())) {
 			response.setSuccess(false);
@@ -138,10 +157,14 @@ public class AnnouncementServiceImpl implements AnnouncementService{
 	}
 
 	@Override
-	public ApiResponse changeAnnouncementStatus(String announcementId, AnnouncementStatus status) {
+	public ApiResponse changeAnnouncementStatus(String announcementId, AnnouncementStatus status)  throws Exception{
 		
 		ApiResponse response = new ApiResponse(false);
-		
+		if(!empPerConfig.isHavingpersmission("annAdd") && !empPerConfig.isHavingpersmission("annEditAll")) {
+			response.setSuccess(false);
+			response.setMessage("Not authorised to edit Hrcalendar");
+			return response;
+		}
 		Announcement announcementObj = announcementRepository.findAnnouncementById(announcementId);
 		if(!currentUser.getUserRole().equalsIgnoreCase("TICKETINGTOOL_ADMIN") && !currentUser.getUserId().equalsIgnoreCase(announcementObj.getUserId())) {
 			response.setSuccess(false);
@@ -173,10 +196,14 @@ public class AnnouncementServiceImpl implements AnnouncementService{
 	}
 
 	@Override
-	public ApiResponse getAllAnnouncements(Pageable pageable) {
+	public ApiResponse getAllAnnouncements(Pageable pageable) throws Exception {
 		// TODO Auto-generated method stub
 		ApiResponse response = new ApiResponse(false);
-		
+		if(!empPerConfig.isHavingpersmission("annViewAll")) {
+			response.setSuccess(false);
+			response.setMessage("Not authorised to edit Hrcalendar");
+			return response;
+		}
 		Page<Map> list = null;
 		
 		if(!currentUser.getUserRole().equalsIgnoreCase("TICKETINGTOOL_ADMIN"))
@@ -199,7 +226,7 @@ public class AnnouncementServiceImpl implements AnnouncementService{
 	} 
 	
 	@Override
-	public ApiResponse getAllMyAnnouncements(Pageable pageable) {
+	public ApiResponse getAllMyAnnouncements(Pageable pageable) throws Exception {
 		// TODO Auto-generated method stub
 		ApiResponse response = new ApiResponse(false);
 		
@@ -220,10 +247,14 @@ public class AnnouncementServiceImpl implements AnnouncementService{
 	}
 
 	@Override
-	public ApiResponse searchAnnouncement(Pageable pageable, String searchString) {
+	public ApiResponse searchAnnouncement(Pageable pageable, String searchString) throws Exception {
 
 		ApiResponse response = new ApiResponse(false);
-		
+		if(!empPerConfig.isHavingpersmission("annViewAll")) {
+			response.setSuccess(false);
+			response.setMessage("Not authorised to edit Hrcalendar");
+			return response;
+		}
 		Page<Map> list = null;
 		searchString = searchString.replaceAll("[-+.^:,]!@#$%&*()_~`/","");
 		if(currentUser.getUserRole().equalsIgnoreCase("TICKETINGTOOL_ADMIN"))
@@ -251,9 +282,13 @@ public class AnnouncementServiceImpl implements AnnouncementService{
 	}
 
 	@Override
-	public ApiResponse getAnnouncementById(String announcementId) {
+	public ApiResponse getAnnouncementById(String announcementId)  throws Exception{
 		ApiResponse response = new ApiResponse(false);
-		
+		if(!empPerConfig.isHavingpersmission("annViewAll")) {
+			response.setSuccess(false);
+			response.setMessage("Not authorised to edit Hrcalendar");
+			return response;
+		}
 		Announcement announcementObj = announcementRepository.findAnnouncementById(announcementId);
 		if(announcementObj != null) {		
 			try {

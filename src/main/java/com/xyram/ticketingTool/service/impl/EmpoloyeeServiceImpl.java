@@ -15,6 +15,8 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.persistence.Column;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -236,8 +238,8 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 				user.setName(employee.getFirstName() + " " + employee.getLastName());
 
 				// Employee employeere=new Employee();
-				Role role = roleRepository.getById(employee.getRoleId());
-				user.setUserRole(role != null ? role.getRoleName() : null);
+//				Role role = roleRepository.getById(employee.getRoleId());
+//				user.setUserRole(role != null ? role.getRoleName() : null);
 
 				Integer permission = permissionConfig.setDefaultPermissions(user.getUserRole().toString());
 				user.setPermission(permission);
@@ -337,7 +339,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 //		}
 	}
-
+	
 	public ApiResponse getEmployeePermission(String userId) throws Exception {
 		ApiResponse response = new ApiResponse(true);
 
@@ -375,11 +377,11 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			response.setSuccess(false);
 			return response;
 		}
-		Employee employee = employeeRepository.getbyUserId(userId);
+		User employee = userRepository.getById(userId);
 		if (employee != null) {
 
 //	        EmployeePermission.class.getField(permission).set(ep, flag);
-			EmployeePermission ep1 = empPermissionRepo.getbyUserId(employee.getUserCredientials().getId());
+			EmployeePermission ep1 = empPermissionRepo.getbyUserId(employee.getId());
 			ObjectMapper oMapper = new ObjectMapper();
 			Map<String, Object> map = oMapper.convertValue(ep1, Map.class);
 			if (map.containsKey(permission)) {
@@ -1343,15 +1345,15 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 	@Override
 	public ApiResponse changeAllEmployeePermissionsToDefault() {
 		ApiResponse response = new ApiResponse(false);
-		List<Employee> employeeList = employeeRepository.getAllEmployees();
-		for (Employee employee : employeeList) {
-			EmployeePermission empPermission = empPermissionRepo.getbyUserId(employee.getUserCredientials().getId());
+		List<User> employeeList = userRepository.findAll();
+		for (User employee : employeeList) {
+			EmployeePermission empPermission = empPermissionRepo.getbyUserId(employee.getId());
 			if (empPermission != null)
 				empPermissionRepo.save(empPermission);
 			else {
 				EmployeePermission empPerObj = new EmployeePermission();
-				if (employee.getUserCredientials().getId() != null) {
-					empPerObj.setUserId(employee.getUserCredientials().getId());
+				if (employee.getId() != null) {
+					empPerObj.setUserId(employee.getId());
 					empPermissionRepo.save(empPerObj);
 				}
 			}
@@ -1793,6 +1795,22 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "header data passed in xls is invalid ");
 		}
 
+		return response;
+	}
+	
+	public ApiResponse getAllEmployeeDefaultPermissions() throws Exception {
+		ApiResponse response = new ApiResponse(true);
+		if (!empPerConfig.isHavingpersmission("empAdmin")) {
+			response.setSuccess(false);
+			response.setMessage("Not authorised");
+		}else {
+			List<EmployeePermission> permisssionList = empPermissionRepo.findAll();
+			Map content = new HashMap();
+			content.put("list", permisssionList);
+			response.setSuccess(true);
+			response.setContent(content);
+			response.setMessage("Retrieved successfully");
+		}
 		return response;
 	}
 

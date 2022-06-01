@@ -68,6 +68,12 @@ class EmployeeController {
 		logger.info("Get Employee Permission");
 		return employeeService.getEmployeePermission(userId);
 	}
+	
+	@GetMapping("/getAllEmployeeDefaultPermissions")
+	public ApiResponse getAllEmployeeDefaultPermissions(@PathVariable String userId) throws Exception {
+		logger.info("Get All Employee Permission");
+		return employeeService.getAllEmployeeDefaultPermissions();
+	}
 
 	@PostMapping("/changeAllEmployeePermissionsToDefault")
 	public ApiResponse changeAllEmployeePermissionsToDefault() throws Exception {
