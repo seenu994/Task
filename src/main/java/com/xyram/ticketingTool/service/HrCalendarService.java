@@ -14,9 +14,9 @@ public interface HrCalendarService {
 	
 	ApiResponse editScheduleInCalendar(Boolean validateDateTime,HrCalendar schedule) throws Exception;
 	
-	ApiResponse deleteScheduleInCalendar(String scheduleId);
+	ApiResponse deleteScheduleInCalendar(String scheduleId) throws Exception;
 	
-	ApiResponse doReScheduleInCalendar(String scheduleId, String comment) ;
+	ApiResponse doReScheduleInCalendar(String scheduleId, String comment) throws Exception ;
 	
 	ApiResponse changeScheduleStatus(String scheduleId,String comment, String status, Date scheduleDate);
 	
@@ -34,17 +34,17 @@ public interface HrCalendarService {
 	
 	ApiResponse searchMyTeamSchedulesInCalender(String searchString);
 	
-	ApiResponse getCandidateHistory(String mobileNo);
+	ApiResponse getCandidateHistory(String mobileNo) throws Exception;
 	
 	ApiResponse getScheduleDetail(String scheduleId);
 	
 	ApiResponse getAllHrScheduleStatus() throws Exception;
 	
-	ApiResponse getAllMySchedulesFromCalendarByStatus(Map<String, Object>filter, Pageable pageable);
+	ApiResponse getAllMySchedulesFromCalendarByStatus(Map<String, Object>filter, Pageable pageable) throws Exception;
 	
-	ApiResponse getAllMyTeamSchedulesFromCalendarByStatus(Map<String, Object>filter, Pageable pageable);
+	ApiResponse getAllMyTeamSchedulesFromCalendarByStatus(Map<String, Object>filter, Pageable pageable) throws Exception;
 	
-	ApiResponse downloadAllMySchedulesFromCalendarByStatus(Map<String, Object>filter);
+	ApiResponse downloadAllMySchedulesFromCalendarByStatus(Map<String, Object>filter) throws Exception;
 	
 	ApiResponse downloadMyTeamSchedulesFromCalendarByStatus(Map<String, Object>filter) throws Exception;
 	

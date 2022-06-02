@@ -913,7 +913,7 @@ public class AssetBillingServiceImpl implements AssetBillingService {
 		// assetBillingRepository.getAllAssetBillingByAssetId(assetId);
 		// List<AssetBilling> assetBilling =
 		// assetBillingRepository.getAllAssetBillingByAssetId(assetId);
-		Map assetBilling = assetBillingRepository.getAllAssetBillingByAssetId(assetId);
+	List<Map> assetBilling = assetBillingRepository.getAllAssetBillingByAssetId(assetId);
 		Map content = new HashMap();
 		content.put("assetBilling", assetBilling);
 

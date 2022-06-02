@@ -147,67 +147,65 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	}
 
 	@Override
-	public ApiResponse editScheduleInCalendar(Boolean validateDateTime,HrCalendar schedule) throws Exception {
+	public ApiResponse editScheduleInCalendar(Boolean validateDateTime, HrCalendar schedule) throws Exception {
 
 		ApiResponse response = new ApiResponse(false);
-		
-		
-		 
-			
-		if(!empPerConfig.isHavingpersmission("harCalScheduleAdd")) {
+
+		if (!empPerConfig.isHavingpersmission("harCalScheduleAdd")) {
 			response.setSuccess(false);
 			response.setMessage("Not authorised to edit Hrcalendar");
 			return response;
 		}
-		
+
 		HrCalendar scheduleObj = hrCalendarRepository.findById(schedule.getId()).get();
 		if (schedule != null && scheduleObj != null) {
-			if(!scheduleObj.getCreatedBy().equals(currentUser.getUserId())) {
+			if (!scheduleObj.getCreatedBy().equals(currentUser.getUserId())) {
 				response.setSuccess(false);
 				response.setMessage("Not authorised to edit this schedule.");
 			}
 			if (validateSchedule(schedule)) {
 				Employee employee = employeeRepository.getByEmpId(currentUser.getScopeId());
 				Employee reportor = employeeRepository.getByEmpId(employee.getReportingTo());
-				if(schedule.getJobId() != null) {
+				if (schedule.getJobId() != null) {
 					Map job = jobRepository.getJobById(schedule.getJobId());
-					if(job == null) {
+					if (job == null) {
 						response.setSuccess(false);
 						response.setMessage("Job Id not found.");
 						return response;
 					}
-				}else {
+				} else {
 					response.setSuccess(false);
 					response.setMessage("Job Id not found.");
 					return response;
 				}
-				if(schedule.getIs_scheduled() && validateDateTime) {
+				if (schedule.getIs_scheduled() && validateDateTime) {
 					Date toDateTime = new Date();
-					long diff = schedule.getScheduleDate().getTime() - toDateTime.getTime();//as given
+					long diff = schedule.getScheduleDate().getTime() - toDateTime.getTime();// as given
 
-					if(schedule.getScheduleDate().getDate() == toDateTime.getDate()) {
-						long diffMinutes = diff / (60 * 1000) ; 
-						if(diffMinutes < 15) {
+					if (schedule.getScheduleDate().getDate() == toDateTime.getDate()) {
+						long diffMinutes = diff / (60 * 1000);
+						if (diffMinutes < 15) {
 							response.setSuccess(false);
-							response.setMessage("A future date is permitted, and minimum 15 minutes prior to the current time is required.");
+							response.setMessage(
+									"A future date is permitted, and minimum 15 minutes prior to the current time is required.");
 							return response;
 						}
 					}
 				}
-				
+
 				if (reportor != null) {
 					scheduleObj.setUpdatedBy(currentUser.getUserId());
 					scheduleObj.setLastUpdatedAt(new Date());
 					scheduleObj.setReportingTo(reportor.getUserCredientials().getId());
-					
+
 					scheduleObj.setCandidateMobile(schedule.getCandidateMobile());
 					scheduleObj.setCandidateName(schedule.getCandidateName());
 					scheduleObj.setJobId(schedule.getJobId());
 					scheduleObj.setIs_scheduled(schedule.getIs_scheduled());
 					scheduleObj.setScheduleDate(schedule.getScheduleDate());
-					if(schedule.getSearchedSource() != null)
+					if (schedule.getSearchedSource() != null)
 						scheduleObj.setSearchedSource(schedule.getSearchedSource());
-										
+
 					hrCalendarRepository.save(scheduleObj);
 					response.setSuccess(true);
 					response.setMessage("Schedule edited successfully.");
@@ -228,8 +226,15 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	}
 
 	@Override
-	public ApiResponse deleteScheduleInCalendar(String scheduleId) {
+	public ApiResponse deleteScheduleInCalendar(String scheduleId) throws Exception {
 		ApiResponse response = new ApiResponse(false);
+
+		if (!empPerConfig.isHavingpersmission("harCalScheduleAdd")) {
+			response.setSuccess(false);
+			response.setMessage("Not authorised to deleteScheduleInCalendar");
+			return response;
+		}
+
 		HrCalendar scheduleObj = hrCalendarRepository.findById(scheduleId).get();
 		if (scheduleObj != null) {
 			if (!scheduleObj.getCreatedBy().equals(currentUser.getUserId())) {
@@ -250,11 +255,8 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	@SuppressWarnings("deprecation")
 	@Override
 
-	public ApiResponse changeScheduleStatus(String scheduleId, String comment, String status, Date scheduleDate)
-{
+	public ApiResponse changeScheduleStatus(String scheduleId, String comment, String status, Date scheduleDate) {
 		ApiResponse response = new ApiResponse(false);
-
-		
 
 		// "CANDIDATE-NOT-INTERESTED","CANDIDATE-NOT-PICKED","CANDIDATE-NOT-SUITS"
 		HrCalendar scheduleObj = hrCalendarRepository.findById(scheduleId).get();
@@ -324,16 +326,15 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	}
 
 	@Override
-	public ApiResponse updateScheduleCallCounter(String scheduleId) throws Exception  {
+	public ApiResponse updateScheduleCallCounter(String scheduleId) throws Exception {
 		ApiResponse response = new ApiResponse(false);
-		
-		if(!empPerConfig.isHavingpersmission("harCalScheduleAdd")) {
+
+		if (!empPerConfig.isHavingpersmission("harCalScheduleAdd")) {
 			response.setSuccess(false);
 			response.setMessage("Not authorised to updatecallcounter Hrcalendar");
 			return response;
 		}
 
-		
 		HrCalendar scheduleObj = hrCalendarRepository.findById(scheduleId).get();
 		if (scheduleObj != null) {
 			if (!scheduleObj.getCreatedBy().equals(currentUser.getUserId())) {
@@ -354,16 +355,15 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	}
 
 	@Override
-	public ApiResponse addCommentToSchedule(String scheduleId, String comment) throws  Exception {
+	public ApiResponse addCommentToSchedule(String scheduleId, String comment) throws Exception {
 		ApiResponse response = new ApiResponse(false);
-		
-		if(!empPerConfig.isHavingpersmission("harCalScheduleAdd")) {
+
+		if (!empPerConfig.isHavingpersmission("harCalScheduleAdd")) {
 			response.setSuccess(false);
 			response.setMessage("Not authorised to addCommentsTo Hrcalendar");
 			return response;
 		}
 
-		
 		HrCalendar scheduleObj = hrCalendarRepository.findById(scheduleId).get();
 		if (scheduleObj != null) {
 			if (!scheduleObj.getCreatedBy().equals(currentUser.getUserId())) {
@@ -392,10 +392,10 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	}
 
 	@Override
-	public ApiResponse getAllHrScheduleStatus() throws  Exception {
+	public ApiResponse getAllHrScheduleStatus() throws Exception {
 		ApiResponse response = new ApiResponse(true);
-		
-		if(!empPerConfig.isHavingpersmission("hrCalViewAll")) {
+
+		if (!empPerConfig.isHavingpersmission("hrCalViewAll")) {
 			response.setSuccess(false);
 			response.setMessage("Not authorised to updatecallcounter Hrcalendar");
 			return response;
@@ -411,8 +411,14 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	}
 
 	@Override
-	public ApiResponse getCandidateHistory(String mobileNo) {
+	public ApiResponse getCandidateHistory(String mobileNo) throws Exception {
 		ApiResponse response = new ApiResponse(false);
+		
+		if (!empPerConfig.isHavingpersmission("harCalScheduleAdd")) {
+			response.setSuccess(false);
+			response.setMessage("Not authorised to create Hrcalendar");
+			return response;
+		}
 		if (mobileNo.length() != 10) {
 			response.setSuccess(false);
 			response.setMessage("Not a Valid Mobile No.");
@@ -509,8 +515,14 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	}
 
 	@Override
-	public ApiResponse getAllMySchedulesFromCalendarByStatus(Map<String, Object> filter, Pageable pageable) {
+	public ApiResponse getAllMySchedulesFromCalendarByStatus(Map<String, Object> filter, Pageable pageable) throws Exception {
 		ApiResponse response = new ApiResponse(false);
+		
+		if (!empPerConfig.isHavingpersmission("harCalScheduleAdd")) {
+			response.setSuccess(false);
+			response.setMessage("Not authorised to create Hrcalendar");
+			return response;
+		}
 
 		String jobId = filter.containsKey("jobId") ? ((String) filter.get("jobId")) : null;
 		Boolean closed = filter.containsKey("closed") ? ((Boolean) filter.get("closed")) : false;
@@ -552,8 +564,14 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	}
 
 	@Override
-	public ApiResponse getAllMyTeamSchedulesFromCalendarByStatus(Map<String, Object> filter, Pageable pageable) {
+	public ApiResponse getAllMyTeamSchedulesFromCalendarByStatus(Map<String, Object> filter, Pageable pageable) throws Exception {
 		ApiResponse response = new ApiResponse(false);
+		
+		if (!empPerConfig.isHavingpersmission("harCalScheduleAdd")) {
+			response.setSuccess(false);
+			response.setMessage("Not authorised to create Hrcalendar");
+			return response;
+		}
 
 		String jobId = filter.containsKey("jobId") ? ((String) filter.get("jobId")) : null;
 		String employeeId = filter.containsKey("employeeId") ? ((String) filter.get("employeeId")) : null;
@@ -762,23 +780,28 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	}
 
 	@Override
-	public ApiResponse doReScheduleInCalendar(String scheduleId, String comment) {
+	public ApiResponse doReScheduleInCalendar(String scheduleId, String comment) throws Exception {
 		ApiResponse response = new ApiResponse(false);
-
 		
+		if (!empPerConfig.isHavingpersmission("harCalScheduleAdd")) {
+			response.setSuccess(false);
+			response.setMessage("Not authorised to deleteScheduleInCalendar");
+			return response;
+		}
+
 		HrCalendar scheduleObj = hrCalendarRepository.findById(scheduleId).get();
 		if (scheduleObj != null) {
 			if (!scheduleObj.getCreatedBy().equals(currentUser.getUserId())) {
 				response.setSuccess(false);
-				response.setMessage("Not authorised to edit this schedule.");
+				response.setMessage("Not authorised to ReSchedule Calendar.");
 			}
 
 			HrCalendarComment cmt = new HrCalendarComment();
 			cmt.setScheduleId(scheduleId);
 			cmt.setDescription(comment);
 			cmt.setCreatedAt(new Date());
-			//cmt.setCreatedBy(currentUser.getUserId());
-			//cmt.setUpdatedBy(currentUser.getUserId());
+			// cmt.setCreatedBy(currentUser.getUserId());
+			// cmt.setUpdatedBy(currentUser.getUserId());
 			cmt.setLastUpdatedAt(new Date());
 			cmtRepository.save(cmt);
 
@@ -793,10 +816,10 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	}
 
 	@Override
-	public ApiResponse editCommentToSchedule(String commentId, String comment) throws  Exception  {
+	public ApiResponse editCommentToSchedule(String commentId, String comment) throws Exception {
 		ApiResponse response = new ApiResponse(false);
 
-		if(!empPerConfig.isHavingpersmission("harCalScheduleAdd")) {
+		if (!empPerConfig.isHavingpersmission("harCalScheduleAdd")) {
 			response.setSuccess(false);
 			response.setMessage("Not authorised to updatecallcounter Hrcalendar");
 			return response;
@@ -831,15 +854,15 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	}
 
 	@Override
-	public ApiResponse deleteCommentToSchedule(String commentId) throws  Exception {
+	public ApiResponse deleteCommentToSchedule(String commentId) throws Exception {
 		ApiResponse response = new ApiResponse(false);
-		
-		if(!empPerConfig.isHavingpersmission("harCalScheduleAdd")) {
+
+		if (!empPerConfig.isHavingpersmission("harCalScheduleAdd")) {
 			response.setSuccess(false);
 			response.setMessage("Not authorised to updatecallcounter Hrcalendar");
 			return response;
 		}
-		
+
 		HrCalendarComment cmt = cmtRepository.getById(commentId);
 		if (cmt == null) {
 			response.setSuccess(false);
@@ -864,10 +887,10 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	}
 
 	@Override
-	public ApiResponse getAllScheduleComments(String scheduleId) throws  Exception {
+	public ApiResponse getAllScheduleComments(String scheduleId) throws Exception {
 		ApiResponse response = new ApiResponse(false);
 
-		if(!empPerConfig.isHavingpersmission("hrCalViewAll")) {
+		if (!empPerConfig.isHavingpersmission("hrCalViewAll")) {
 			response.setSuccess(false);
 			response.setMessage("Not authorised to updatecallcounter Hrcalendar");
 			return response;
@@ -893,8 +916,15 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	}
 
 	@Override
-	public ApiResponse downloadAllMySchedulesFromCalendarByStatus(Map<String, Object> filter) {
+	public ApiResponse downloadAllMySchedulesFromCalendarByStatus(Map<String, Object> filter) throws Exception {
 		ApiResponse response = new ApiResponse();
+		
+		if (!empPerConfig.isHavingpersmission("harCalScheduleAdd")) {
+			response.setSuccess(false);
+			response.setMessage("Not authorised to create Hrcalendar");
+			return response;
+		}
+		
 		String jobId = filter.containsKey("jobId") ? ((String) filter.get("jobId")) : null;
 //		String employeeId = filter.containsKey("employeeId") ? ((String) filter.get("employeeId"))
 //				: null;
@@ -1031,20 +1061,18 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 			}
 		}
 		List<Map> myTeamScheduleList = null;
-		
-		    if(currentUser.getUserId().equals("USR_JAbUrXk611") ) {
-		    	myTeamScheduleList = hrCalendarRepository.downloadAllMyTeamSchedulesFromCalendarByStatusForAdmin(
-						employeeId, fromDate, toDate, jobId, status, closed, userZone);
-		    }
-		    else if (empPerConfig.isHavingpersmission("hrCalViewAll")) {
-				myTeamScheduleList = hrCalendarRepository.downloadAllMyTeamSchedulesFromCalendarByStatusForAdmin(
-						employeeId, fromDate, toDate, jobId, status, closed, userZone);
-			}else {
-				myTeamScheduleList = hrCalendarRepository.downloadAllMyTeamSchedulesFromCalendarByStatus(
-						currentUser.getUserId(), employeeId, fromDate, toDate, jobId, status, closed, userZone);
-			}
-		
-		
+
+		if (currentUser.getUserId().equals("USR_JAbUrXk611")) {
+			myTeamScheduleList = hrCalendarRepository.downloadAllMyTeamSchedulesFromCalendarByStatusForAdmin(employeeId,
+					fromDate, toDate, jobId, status, closed, userZone);
+		} else if (empPerConfig.isHavingpersmission("hrCalViewAll")) {
+			myTeamScheduleList = hrCalendarRepository.downloadAllMyTeamSchedulesFromCalendarByStatusForAdmin(employeeId,
+					fromDate, toDate, jobId, status, closed, userZone);
+		} else {
+			myTeamScheduleList = hrCalendarRepository.downloadAllMyTeamSchedulesFromCalendarByStatus(
+					currentUser.getUserId(), employeeId, fromDate, toDate, jobId, status, closed, userZone);
+		}
+
 		Map<String, Object> fileResponse = new HashMap<>();
 
 		Workbook workbook = prepareExcelWorkBookTeam(myTeamScheduleList, userZone);
@@ -1122,14 +1150,20 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 			}
 
 //			row.put("job Id",myTeamSchedule.get("jobId") != null ? myTeamSchedule.get("jobId").toString(): "");
-			row.put("Name",myTeamSchedule.get("candidateName") != null ? myTeamSchedule.get("candidateName").toString(): "");
-			row.put("Job code",myTeamSchedule.get("jobCode") != null ? myTeamSchedule.get("jobCode").toString(): "");
-			row.put("Job Title",myTeamSchedule.get("jobTitle") != null ? myTeamSchedule.get("jobTitle").toString(): "");
-			row.put("Date & Time",scheduleDate != null ?  new SimpleDateFormat("yyyy-MM-dd HH:mm").format(cal.getTime()) :"");
-			row.put("Scheduled By",myTeamSchedule.get("scheduledBy") != null ? myTeamSchedule.get("scheduledBy").toString(): "");
-			row.put("Source",myTeamSchedule.get("searchedSource") != null ? myTeamSchedule.get("searchedSource").toString(): "");
-			row.put("Status",myTeamSchedule.get("status") != null ? myTeamSchedule.get("status").toString(): "");
-			
+			row.put("Name",
+					myTeamSchedule.get("candidateName") != null ? myTeamSchedule.get("candidateName").toString() : "");
+			row.put("Job code", myTeamSchedule.get("jobCode") != null ? myTeamSchedule.get("jobCode").toString() : "");
+			row.put("Job Title",
+					myTeamSchedule.get("jobTitle") != null ? myTeamSchedule.get("jobTitle").toString() : "");
+			row.put("Date & Time",
+					scheduleDate != null ? new SimpleDateFormat("yyyy-MM-dd HH:mm").format(cal.getTime()) : "");
+			row.put("Scheduled By",
+					myTeamSchedule.get("scheduledBy") != null ? myTeamSchedule.get("scheduledBy").toString() : "");
+			row.put("Source",
+					myTeamSchedule.get("searchedSource") != null ? myTeamSchedule.get("searchedSource").toString()
+							: "");
+			row.put("Status", myTeamSchedule.get("status") != null ? myTeamSchedule.get("status").toString() : "");
+
 			data.add(row);
 
 		}
