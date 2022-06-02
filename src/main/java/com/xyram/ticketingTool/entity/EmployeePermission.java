@@ -81,7 +81,7 @@ public class EmployeePermission extends AuditModel{
 	@Column(name = "job_int_view_all" , columnDefinition = "boolean default false")
 	private boolean jobIntViewAll;
 	
-	@Column(name = "har_cal_schedule_add" , columnDefinition = "boolean default false")
+	@Column(name = "hr_cal_schedule_add" , columnDefinition = "boolean default false")
 	private boolean harCalScheduleAdd;
 	
 	@Column(name = "hr_cal_view_all" , columnDefinition = "boolean default false")

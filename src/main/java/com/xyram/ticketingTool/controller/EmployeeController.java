@@ -70,7 +70,7 @@ class EmployeeController {
 	}
 	
 	@GetMapping("/getAllEmployeeDefaultPermissions")
-	public ApiResponse getAllEmployeeDefaultPermissions(@PathVariable String userId) throws Exception {
+	public ApiResponse getAllEmployeeDefaultPermissions() throws Exception {
 		logger.info("Get All Employee Permission");
 		return employeeService.getAllEmployeeDefaultPermissions();
 	}
