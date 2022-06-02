@@ -263,12 +263,12 @@ public class EmployeePermission extends AuditModel{
 		this.jobIntViewAll = jobIntViewAll;
 	}
 
-	public boolean getHarCalScheduleAdd() {
+	public boolean getHrCalScheduleAdd() {
 		return hrCalScheduleAdd;
 	}
 
-	public void setHarCalScheduleAdd(boolean harCalScheduleAdd) {
-		this.hrCalScheduleAdd = harCalScheduleAdd;
+	public void setHrCalScheduleAdd(boolean hrCalScheduleAdd) {
+		this.hrCalScheduleAdd = hrCalScheduleAdd;
 	}
 
 	public boolean getHrCalViewAll() {
