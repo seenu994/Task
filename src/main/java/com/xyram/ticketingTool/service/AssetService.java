@@ -18,9 +18,9 @@ import org.apache.tomcat.util.http.fileupload.FileUploadException;
 
 public interface AssetService {
     
-	ApiResponse addasset(Asset asset);
+	ApiResponse addasset(Asset asset) throws Exception;
 	
-	ApiResponse editAsset(Asset asset, String id);
+	ApiResponse editAsset(Asset asset, String id) throws Exception;
 
 //	ApiResponse getAllAsset(Pageable pageable);
 
@@ -40,6 +40,6 @@ public interface AssetService {
 //
 //	ApiResponse getAssetIssuesById(String assetId, Pageable pageable);
 
-	ApiResponse downloadAssets(Map<String, Object> filter);
+	ApiResponse downloadAssets(Map<String, Object> filter) throws Exception;
 	
 }

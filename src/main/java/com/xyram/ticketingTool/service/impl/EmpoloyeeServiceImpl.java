@@ -278,7 +278,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 				// New Permissions
 				EmployeePermission empPermission = new EmployeePermission();
-				empPermission.setUserId(employeeNew.geteId());
+				empPermission.setUserId(employeeNew.getUserCredientials().getId());
 				empPermissionRepo.save(empPermission);
 
 				// sending notification starts here..!

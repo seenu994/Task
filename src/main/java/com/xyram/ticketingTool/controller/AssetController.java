@@ -44,25 +44,19 @@ public class AssetController {
 	@Autowired
 	AssetEmployeeService assetEmployeeService;
 	
-	@PostMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/addAsset", 
-			AuthConstants.ADMIN_BASEPATH + "/addAsset",
-	        AuthConstants.INFRA_USER_BASEPATH + "/addAsset"})
-	public ApiResponse addasset(@RequestBody Asset asset) {
+	@PostMapping("/addAsset")
+	public ApiResponse addasset(@RequestBody Asset asset) throws Exception {
 		logger.info("Received request to add Asset");
 		return assetService.addasset(asset);
 	}
 	
-	@PutMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/editAsset/{assetId}",
-			AuthConstants.ADMIN_BASEPATH + "/editAsset/{assetId}",
-			AuthConstants.INFRA_USER_BASEPATH + "/editAsset/{assetId}"})
-    public ApiResponse editAsset(@RequestBody Asset asset,@PathVariable String assetId) {
+	@PutMapping("/editAsset/{assetId}")
+    public ApiResponse editAsset(@RequestBody Asset asset,@PathVariable String assetId) throws Exception {
 		logger.info("Received request to edit Asset");
 		return assetService.editAsset(asset,assetId);
 	}
 	
-	@GetMapping(value = { AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllAssets",
-			AuthConstants.ADMIN_BASEPATH + "/getAllAssets",
-			AuthConstants.INFRA_USER_BASEPATH + "/getAllAssets"})
+	@GetMapping("/getAllAssets")
 	ApiResponse getAllAssets(@RequestParam Map<String, Object>filter, Pageable pageable) {
 //		System.out.println(filter);
 		logger.info("Received request to Get all asset");
@@ -76,18 +70,14 @@ public class AssetController {
 //			return assetService.getAllAsset(pageable);
 //	 }
     
-    @GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAssetById/{assetId}",
-    		AuthConstants.INFRA_ADMIN_BASEPATH + "/getAssetById/{assetId}",
-    		AuthConstants.INFRA_USER_BASEPATH + "/getAssetById/{assetId}"})
+    @GetMapping("/getAssetById/{assetId}")
     public ApiResponse getAssetById(@PathVariable String assetId) {
 	        logger.info("Received request to get Asset by Id");
 			return assetService.getAssetById(assetId);
 	}
     
-    @PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/downloadAssets",
-    		AuthConstants.INFRA_ADMIN_BASEPATH + "/downloadAssets",
-    		AuthConstants.INFRA_USER_BASEPATH + "/downloadAssets"})
-	public ApiResponse downloadAssets(@RequestBody Map<String, Object> filter) {
+    @PostMapping("/downloadAssets")
+	public ApiResponse downloadAssets(@RequestBody Map<String, Object> filter) throws Exception {
 		logger.info("Received request to download Asset");
 		return assetService.downloadAssets(filter);
 	}

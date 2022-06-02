@@ -45,6 +45,7 @@ import com.xyram.ticketingTool.enumType.AssetStatus;
 import com.xyram.ticketingTool.enumType.UserStatus;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.AssetIssuesService;
+import com.xyram.ticketingTool.ticket.config.EmployeePermissionConfig;
 import com.xyram.ticketingTool.util.ExcelUtil;
 import com.xyram.ticketingTool.util.ExcelWriter;
 import com.xyram.ticketingTool.util.ResponseMessages;
@@ -64,10 +65,20 @@ public class AssetIssuesServiceImpl implements AssetIssuesService {
 
 	@Autowired
 	CurrentUser currentUser;
+	
+	@Autowired
+	EmployeePermissionConfig empPerConfig;
 
 	@Override
-	public ApiResponse addAssetIssues(AssetIssues assetIssues) {
+	public ApiResponse addAssetIssues(AssetIssues assetIssues) throws Exception {
 		ApiResponse response = new ApiResponse(false);
+		if (!empPerConfig.isHavingpersmission("asstAdmin")) {
+			if (!empPerConfig.isHavingpersmission("asstAdd")) {
+				response.setSuccess(false);
+				response.setMessage("Not authorised to add a Asset");
+				return response;
+			}
+		}
 		// AssetIssues assetIssue = new AssetIssues();
 		response = validateAssetIssues(assetIssues);
 		// response = validateAssetIssueStatus(assetIssues);
@@ -134,9 +145,18 @@ public class AssetIssuesServiceImpl implements AssetIssuesService {
 
 	}
 
-	public ApiResponse editAssetIssues(AssetIssues assetIssues, String assetIssueId) {
+	public ApiResponse editAssetIssues(AssetIssues assetIssues, String assetIssueId) throws Exception {
 
 		ApiResponse response = new ApiResponse(false);
+		
+		if (!empPerConfig.isHavingpersmission("asstAdmin")) {
+			if (!empPerConfig.isHavingpersmission("asstAdd")) {
+				response.setSuccess(false);
+				response.setMessage("Not authorised to add a Asset");
+				return response;
+			}
+		}
+		
 		// AssetIssues assetIssue;
 		AssetIssues assetIssuesObj = assetIssuesRepository.getAssetIssueById(assetIssueId);
 
@@ -220,8 +240,17 @@ public class AssetIssuesServiceImpl implements AssetIssuesService {
 	}
 
 	@Override
-	public ApiResponse returnRepair(AssetIssues assetIssues, String assetIssueId) {
+	public ApiResponse returnRepair(AssetIssues assetIssues, String assetIssueId) throws Exception {
 		ApiResponse response = new ApiResponse(false);
+		
+		if (!empPerConfig.isHavingpersmission("asstAdmin")) {
+			if (!empPerConfig.isHavingpersmission("asstAdd")) {
+				response.setSuccess(false);
+				response.setMessage("Not authorised to add a Asset");
+				return response;
+			}
+		}
+		
 		AssetIssues assetIssuesObj = assetIssuesRepository.getAssetIssueById(assetIssueId);
 		if (assetIssuesObj != null) {
 			if (assetIssues.getAssetId() != null || !assetIssues.getAssetId().equals("")) {
@@ -353,8 +382,15 @@ public class AssetIssuesServiceImpl implements AssetIssuesService {
 //	}
 
 	@Override
-	public ApiResponse returnDamage(AssetIssues assetIssues, String assetIssueId) {
+	public ApiResponse returnDamage(AssetIssues assetIssues, String assetIssueId) throws Exception {
 		ApiResponse response = new ApiResponse(false);
+		if (!empPerConfig.isHavingpersmission("asstAdmin")) {
+			if (!empPerConfig.isHavingpersmission("asstAdd")) {
+				response.setSuccess(false);
+				response.setMessage("Not authorised to add a Asset");
+				return response;
+			}
+		}
 		AssetIssues assetIssuesObj = assetIssuesRepository.getAssetIssueById(assetIssueId);
 		// Asset asset = getAssetById(assetIssues.getAssetId());
 
@@ -510,8 +546,16 @@ public class AssetIssuesServiceImpl implements AssetIssuesService {
 	}
 
 	@Override
-	public ApiResponse downloadAllAssetIssues(Map<String, Object> filter) {
+	public ApiResponse downloadAllAssetIssues(Map<String, Object> filter) throws Exception {
 		ApiResponse response = new ApiResponse();
+		
+		if (!empPerConfig.isHavingpersmission("asstAdmin")) {
+			if (!empPerConfig.isHavingpersmission("asstAdd")) {
+				response.setSuccess(false);
+				response.setMessage("Not authorised to add a Asset");
+				return response;
+			}
+		}
 
 		String assetIssueStatus = filter.containsKey("assetIssueStatus")
 				? ((String) filter.get("assetIssueStatus")).toUpperCase()
