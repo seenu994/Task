@@ -77,7 +77,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 		// TODO Auto-generated method stub
 		ApiResponse response = new ApiResponse(false);
 
-		if (!empPerConfig.isHavingpersmission("harCalScheduleAdd")) {
+		if (!empPerConfig.isHavingpersmission("hrCalScheduleAdd")) {
 			response.setSuccess(false);
 			response.setMessage("Not authorised to create Hrcalendar");
 			return response;
@@ -151,7 +151,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 
 		ApiResponse response = new ApiResponse(false);
 
-		if (!empPerConfig.isHavingpersmission("harCalScheduleAdd")) {
+		if (!empPerConfig.isHavingpersmission("hrCalScheduleAdd")) {
 			response.setSuccess(false);
 			response.setMessage("Not authorised to edit Hrcalendar");
 			return response;
@@ -229,7 +229,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	public ApiResponse deleteScheduleInCalendar(String scheduleId) throws Exception {
 		ApiResponse response = new ApiResponse(false);
 
-		if (!empPerConfig.isHavingpersmission("harCalScheduleAdd")) {
+		if (!empPerConfig.isHavingpersmission("hrCalScheduleAdd")) {
 			response.setSuccess(false);
 			response.setMessage("Not authorised to deleteScheduleInCalendar");
 			return response;
@@ -329,7 +329,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	public ApiResponse updateScheduleCallCounter(String scheduleId) throws Exception {
 		ApiResponse response = new ApiResponse(false);
 
-		if (!empPerConfig.isHavingpersmission("harCalScheduleAdd")) {
+		if (!empPerConfig.isHavingpersmission("hrCalScheduleAdd")) {
 			response.setSuccess(false);
 			response.setMessage("Not authorised to updatecallcounter Hrcalendar");
 			return response;
@@ -358,7 +358,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	public ApiResponse addCommentToSchedule(String scheduleId, String comment) throws Exception {
 		ApiResponse response = new ApiResponse(false);
 
-		if (!empPerConfig.isHavingpersmission("harCalScheduleAdd")) {
+		if (!empPerConfig.isHavingpersmission("hrCalScheduleAdd")) {
 			response.setSuccess(false);
 			response.setMessage("Not authorised to addCommentsTo Hrcalendar");
 			return response;
@@ -414,7 +414,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	public ApiResponse getCandidateHistory(String mobileNo) throws Exception {
 		ApiResponse response = new ApiResponse(false);
 		
-		if (!empPerConfig.isHavingpersmission("harCalScheduleAdd")) {
+		if (!empPerConfig.isHavingpersmission("hrCalScheduleAdd")) {
 			response.setSuccess(false);
 			response.setMessage("Not authorised to create Hrcalendar");
 			return response;
@@ -518,7 +518,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	public ApiResponse getAllMySchedulesFromCalendarByStatus(Map<String, Object> filter, Pageable pageable) throws Exception {
 		ApiResponse response = new ApiResponse(false);
 		
-		if (!empPerConfig.isHavingpersmission("harCalScheduleAdd")) {
+		if (!empPerConfig.isHavingpersmission("hrCalScheduleAdd")) {
 			response.setSuccess(false);
 			response.setMessage("Not authorised to create Hrcalendar");
 			return response;
@@ -567,7 +567,7 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	public ApiResponse getAllMyTeamSchedulesFromCalendarByStatus(Map<String, Object> filter, Pageable pageable) throws Exception {
 		ApiResponse response = new ApiResponse(false);
 		
-		if (!empPerConfig.isHavingpersmission("harCalScheduleAdd")) {
+		if (!empPerConfig.isHavingpersmission("hrCalScheduleAdd")) {
 			response.setSuccess(false);
 			response.setMessage("Not authorised to create Hrcalendar");
 			return response;
@@ -783,9 +783,9 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	public ApiResponse doReScheduleInCalendar(String scheduleId, String comment) throws Exception {
 		ApiResponse response = new ApiResponse(false);
 		
-		if (!empPerConfig.isHavingpersmission("harCalScheduleAdd")) {
+		if (!empPerConfig.isHavingpersmission("hrCalScheduleAdd")) {
 			response.setSuccess(false);
-			response.setMessage("Not authorised to deleteScheduleInCalendar");
+			response.setMessage("Not authorised to ReSchedule Calendar");
 			return response;
 		}
 
@@ -819,9 +819,9 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	public ApiResponse editCommentToSchedule(String commentId, String comment) throws Exception {
 		ApiResponse response = new ApiResponse(false);
 
-		if (!empPerConfig.isHavingpersmission("harCalScheduleAdd")) {
+		if (!empPerConfig.isHavingpersmission("hrCalScheduleAdd")) {
 			response.setSuccess(false);
-			response.setMessage("Not authorised to updatecallcounter Hrcalendar");
+			response.setMessage("Not authorised to edit this comment.");
 			return response;
 		}
 
@@ -857,9 +857,9 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	public ApiResponse deleteCommentToSchedule(String commentId) throws Exception {
 		ApiResponse response = new ApiResponse(false);
 
-		if (!empPerConfig.isHavingpersmission("harCalScheduleAdd")) {
+		if (!empPerConfig.isHavingpersmission("hrCalScheduleAdd")) {
 			response.setSuccess(false);
-			response.setMessage("Not authorised to updatecallcounter Hrcalendar");
+			response.setMessage("Not authorised to delete this comment.");
 			return response;
 		}
 
@@ -892,14 +892,14 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 
 		if (!empPerConfig.isHavingpersmission("hrCalViewAll")) {
 			response.setSuccess(false);
-			response.setMessage("Not authorised to updatecallcounter Hrcalendar");
+			response.setMessage("Not authorised to get Comments ");
 			return response;
 		}
 		HrCalendar scheduleObj = hrCalendarRepository.findById(scheduleId).get();
 		if (scheduleObj != null) {
 			if (!scheduleObj.getCreatedBy().equals(currentUser.getUserId())) {
 				response.setSuccess(false);
-				response.setMessage("Not authorised to delete this comment.");
+				response.setMessage("Comments not found.");
 			}
 			List<Map> commentList = cmtRepository.getAllScheduleComments(scheduleId);
 			Map content = new HashMap();
@@ -919,9 +919,9 @@ public class HrCalendarServiceImpl implements HrCalendarService {
 	public ApiResponse downloadAllMySchedulesFromCalendarByStatus(Map<String, Object> filter) throws Exception {
 		ApiResponse response = new ApiResponse();
 		
-		if (!empPerConfig.isHavingpersmission("harCalScheduleAdd")) {
+		if (!empPerConfig.isHavingpersmission("hrCalScheduleAdd")) {
 			response.setSuccess(false);
-			response.setMessage("Not authorised to create Hrcalendar");
+			response.setMessage("Not authorised to download my schedules");
 			return response;
 		}
 		

@@ -21,19 +21,19 @@ public interface AssetIssuesService
 {
 
 	
-    ApiResponse addAssetIssues(AssetIssues assetIssues);
+    ApiResponse addAssetIssues(AssetIssues assetIssues) throws Exception;
     
-    ApiResponse editAssetIssues(AssetIssues assetIssues, String assetIssueId);
+    ApiResponse editAssetIssues(AssetIssues assetIssues, String assetIssueId) throws Exception;
     
-    ApiResponse returnRepair(AssetIssues assetIssues, String assetIssueId);
+    ApiResponse returnRepair(AssetIssues assetIssues, String assetIssueId) throws Exception;
 
-	ApiResponse returnDamage(AssetIssues assetIssues,String assetIssueId);
+	ApiResponse returnDamage(AssetIssues assetIssues,String assetIssueId) throws Exception;
 
 	ApiResponse getAllAssetsIssues(Map<String, Object> filter, Pageable pageable);
 
     ApiResponse getAssetIssuesById(String assetIssueId);
 
-	ApiResponse downloadAllAssetIssues(Map<String, Object> filter);
+	ApiResponse downloadAllAssetIssues(Map<String, Object> filter) throws Exception;
 	
 	ApiResponse getAssetById1(String assetId);
 	

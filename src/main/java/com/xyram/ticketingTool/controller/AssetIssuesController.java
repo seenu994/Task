@@ -33,71 +33,55 @@ public class AssetIssuesController
 	@Autowired
 	AssetIssuesService assetIssuesService ; 
 	
-	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/addAssetIssues",
-			AuthConstants.INFRA_USER_BASEPATH + "/addAssetIssues",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/addAssetIssues"})
-	public ApiResponse addAssetIssues(@RequestBody AssetIssues assetIssues)
+	@PostMapping("/addAssetIssues")
+	public ApiResponse addAssetIssues(@RequestBody AssetIssues assetIssues) throws Exception
 	{
 		logger.info("received request to add assetIssues");
 		return assetIssuesService.addAssetIssues(assetIssues);
 		
 	}
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editAssetIssues/{assetIssueId}",
-			AuthConstants.INFRA_USER_BASEPATH + "/editAssetIssues/{assetIssueId}",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/editAssetIssues/{assetIssueId}"})
-	public ApiResponse editAssetIssues(@RequestBody AssetIssues assetIssues, @PathVariable String assetIssueId)
+	@PutMapping("/editAssetIssues/{assetIssueId}")
+	public ApiResponse editAssetIssues(@RequestBody AssetIssues assetIssues, @PathVariable String assetIssueId) throws Exception
 	{
 		logger.info("received request to edit assetIssues");
 		return assetIssuesService.editAssetIssues(assetIssues, assetIssueId);
 	}
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/returnRepair/{assetIssueId}",
-			AuthConstants.INFRA_USER_BASEPATH + "/returnRepair/{assetIssueId}",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/returnRepair/{assetIssueId}"})
-	public ApiResponse returnRepair(@RequestBody AssetIssues assetIssues, @PathVariable String assetIssueId)
+	@PutMapping("/returnRepair/{assetIssueId}")
+	public ApiResponse returnRepair(@RequestBody AssetIssues assetIssues, @PathVariable String assetIssueId) throws Exception
 	{
 		logger.info("received request to return an asset ");
 		return assetIssuesService.returnRepair(assetIssues, assetIssueId);
 	}
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/returnDamage/{assetIssueId}", 
-			AuthConstants.INFRA_USER_BASEPATH  + "/returnDamage/{assetIssueId}",
-			AuthConstants.INFRA_ADMIN_BASEPATH +"/returnDamage/{assetIssueId}"})
-	public ApiResponse returnDamage(@RequestBody AssetIssues assetIssues,@PathVariable String assetIssueId)
+	@PutMapping("/returnDamage/{assetIssueId}")
+	public ApiResponse returnDamage(@RequestBody AssetIssues assetIssues,@PathVariable String assetIssueId) throws Exception
 	{
 		logger.info("received request to edit assetIssues");
 		return assetIssuesService.returnDamage(assetIssues,assetIssueId);
 	}
 	
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllAssetsIssues",
-			AuthConstants.INFRA_USER_BASEPATH + "/getAllAssetsIssues",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllAssetsIssues"})
+	@GetMapping("/getAllAssetsIssues")
 	ApiResponse getAllAssetsIssues(@RequestParam Map<String, Object>filter, Pageable pageable) {
 		System.out.println(filter);
 		logger.info("Received request to Get all asset issues");
 		return assetIssuesService.getAllAssetsIssues(filter,pageable);
 	}
 	
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAssetIssuesById/{assetIssueId}",
-			AuthConstants.INFRA_USER_BASEPATH + "/getAssetIssuesById/{assetIssueId}",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/getAssetIssuesById/{assetIssueId}"})
+	@GetMapping("/getAssetIssuesById/{assetIssueId}")
 	public ApiResponse getAssetIssuesById(@PathVariable String assetIssueId)
 	{
 		logger.info("received request to get assetIssues");
 		return assetIssuesService.getAssetIssuesById(assetIssueId);
 	}
 	
-	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/downloadAllAssetIssues",
-	        AuthConstants.INFRA_USER_BASEPATH + "/downloadAllAssetIssues",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/downloadAllAssetIssues"})
+	@PostMapping("/downloadAllAssetIssues")
 
-	public 	ApiResponse downloadAllAssetIssues(@RequestBody Map<String, Object> filter) 
+	public 	ApiResponse downloadAllAssetIssues(@RequestBody Map<String, Object> filter) throws Exception 
 	{
 		logger.info("Download all asset issue");
 		return assetIssuesService.downloadAllAssetIssues(filter);
 	}
 	
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAssetIssueByAssetId/{assetId}",
-			AuthConstants.INFRA_USER_BASEPATH + "/getAssetIssueByAssetId/{assetId}",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/getAssetIssueByAssetId/{assetId}"})
+	@GetMapping("/getAssetIssueByAssetId/{assetId}")
 	public ApiResponse getAssetById1(@PathVariable String assetId)
 	{
 		logger.info("received request to get assetIssues by assetId");
