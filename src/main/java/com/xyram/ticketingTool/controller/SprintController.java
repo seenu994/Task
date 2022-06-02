@@ -23,7 +23,7 @@ public class SprintController {
 	SprintService sprintService;
 	
 	@PostMapping(value = { AuthConstants.DEVELOPER_BASEPATH + "/CreateSprint", AuthConstants.ADMIN_BASEPATH + "/CreateSprint", AuthConstants.INFRA_ADMIN_BASEPATH + "/CreateSprint", AuthConstants.INFRA_USER_BASEPATH + "/CreateSprint", AuthConstants.HR_ADMIN_BASEPATH + "/CreateSprint", AuthConstants.HR_BASEPATH + "/CreateSprint"})
-	public Sprint createSprint(@RequestBody Sprint sprint) {
+	public Sprint createSprint(@RequestBody Sprint sprint) throws Exception{
 		
 		return sprintService.createSprint(sprint);
 	} 

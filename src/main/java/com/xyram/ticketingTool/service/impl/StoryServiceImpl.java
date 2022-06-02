@@ -94,7 +94,7 @@ public class StoryServiceImpl implements StoryService {
 	private String application_url;
 
 	@Override
-	public Story createStory(Story story) {
+	public Story createStory(Story story) throws Exception{
 		Projects projects = projectService.getprojectById(story.getProjectId());
 
 		if (projects != null) {
