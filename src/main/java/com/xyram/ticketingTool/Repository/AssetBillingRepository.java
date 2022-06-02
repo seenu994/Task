@@ -103,7 +103,7 @@ public interface AssetBillingRepository extends JpaRepository<AssetBilling, Stri
 			+ "b.gstAmount as gstAmount,b.transactionDate as transactionDate, b.underWarrenty as underWarrenty,b.returnDate as returnDate, b.assetIssueId as assetIssueId, "
 			+ "b.vendorId as vendorId) from AssetBilling b left Join Asset a ON b.assetId = a.assetId "
 			+ "left join AssetVendor v on b.vendorId = v.vendorId where b.assetId=:assetId")
-	Map getAllAssetBillingByAssetId(String assetId);
+	List<Map> getAllAssetBillingByAssetId(String assetId);
 
 	@Query("Select b from AssetBilling b where b.assetBillId=:assetBillId and b.vendorId=:vendorId")
 	AssetBilling getByVendorId(String assetBillId, String vendorId);
