@@ -60,6 +60,7 @@ import com.xyram.ticketingTool.entity.RamSize;
 import com.xyram.ticketingTool.entity.Role;
 import com.xyram.ticketingTool.service.AssetService;
 import com.xyram.ticketingTool.service.EmployeeService;
+import com.xyram.ticketingTool.ticket.config.EmployeePermissionConfig;
 import com.xyram.ticketingTool.util.AssetUtil;
 import com.xyram.ticketingTool.util.ExcelUtil;
 import com.xyram.ticketingTool.util.ExcelWriter;
@@ -92,10 +93,20 @@ public class AssetServiceImpl implements AssetService {
 	
 	@Autowired
 	RamSizeRepository ramSizeRepository;
+	
+	@Autowired
+	EmployeePermissionConfig empPerConfig;
 
 	@Override
-	public ApiResponse addasset(Asset asset) {
+	public ApiResponse addasset(Asset asset) throws Exception {
 		ApiResponse response = new ApiResponse(false);
+		if (!empPerConfig.isHavingpersmission("asstAdmin")) {
+			if (!empPerConfig.isHavingpersmission("asstAdd")) {
+				response.setSuccess(false);
+				response.setMessage("Not authorised to add a Asset");
+				return response;
+			}
+		}
 		response = validateAsset(asset); 
 		if (response.isSuccess()) {
 			if (asset != null) {
@@ -257,9 +268,17 @@ public class AssetServiceImpl implements AssetService {
 	
 
 	@Override
-	public ApiResponse editAsset(Asset asset,String Id) {
+	public ApiResponse editAsset(Asset asset,String Id) throws Exception {
 
 		ApiResponse response = new ApiResponse();
+		
+		if (!empPerConfig.isHavingpersmission("asstAdmin")) {
+			if (!empPerConfig.isHavingpersmission("asstAdd")) {
+				response.setSuccess(false);
+				response.setMessage("Not authorised to add a Asset");
+				return response;
+			}
+		}
 
 		Asset assetObj = assetRepository.getAssetById(Id);
 		
@@ -574,8 +593,17 @@ public class AssetServiceImpl implements AssetService {
 	}
 
 	@Override
-	public ApiResponse downloadAssets(Map<String, Object> filter){
+	public ApiResponse downloadAssets(Map<String, Object> filter) throws Exception{
 		ApiResponse response = new ApiResponse();
+		
+		if (!empPerConfig.isHavingpersmission("asstAdmin")) {
+			if (!empPerConfig.isHavingpersmission("asstAdd")) {
+				response.setSuccess(false);
+				response.setMessage("Not authorised to add a Asset");
+				return response;
+			}
+		}
+		
 		String ram = filter.containsKey("ram") ? ((String) filter.get("ram"))
 				: null;
 		String brand = filter.containsKey("brand") ? ((String) filter.get("brand"))
