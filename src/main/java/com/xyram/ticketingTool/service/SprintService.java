@@ -12,7 +12,7 @@ import com.xyram.ticketingTool.entity.Sprint;
 
 public interface SprintService {
 
-	Sprint createSprint(Sprint sprint);
+	Sprint createSprint(Sprint sprint) throws Exception;
 
 	Sprint editSprint(Sprint sprint,String sId);
 

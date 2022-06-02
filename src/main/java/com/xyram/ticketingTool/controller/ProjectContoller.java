@@ -35,86 +35,55 @@ class ProjectContoller {
 	@Autowired
 	ProjectService projectService;
 
-	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/createProject",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/createProject" })
-	public ApiResponse addproject(@RequestBody Projects project) {
+	@PostMapping("/createProject")
+	public ApiResponse addproject(@RequestBody Projects project) throws Exception{
 		logger.info("Received request to add project");
 		return projectService.addproject(project);
 	}
 
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllProjects",
-			AuthConstants.HR_BASEPATH + "/getAllProjects", AuthConstants.HR_ADMIN_BASEPATH + "/getAllProjects",
-			AuthConstants.INFRA_USER_BASEPATH + "/getAllProjects",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllProjects",
-			AuthConstants.DEVELOPER_BASEPATH + "/getAllProjects" })
-	public ApiResponse getAllProjects(Pageable pageable) {
+	@GetMapping("/getAllProjects")
+	public ApiResponse getAllProjects(Pageable pageable)  throws Exception {
 		logger.info("inside ProjectContoller :: getAllProjects");
 		return projectService.getAllProjects(pageable);
 	}
 
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllProjectsForTickets/{serachString}",
-			AuthConstants.HR_BASEPATH + "/getAllProjectsForTickets/{serachString}",
-			AuthConstants.HR_ADMIN_BASEPATH + "/getAllProjectsForTickets/{serachString}",
-			AuthConstants.INFRA_USER_BASEPATH + "/getAllProjectsForTickets/{serachString}",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllProjectsForTickets/{serachString}",
-			AuthConstants.DEVELOPER_BASEPATH + "/getAllProjectsForTickets/{serachString}" })
-	public ApiResponse getAllProjectsForTickets(@PathVariable String serachString) {
+	@GetMapping("/getAllProjectsForTickets/{serachString}")
+	public ApiResponse getAllProjectsForTickets(@PathVariable String serachString)  throws Exception {
 		logger.info("inside ProjectContoller :: getAllProjectsForTickets");
 		return projectService.getAllProjectsForTickets(serachString);
 	}
 
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/genericIssues",
-			AuthConstants.HR_ADMIN_BASEPATH + "/genericIssues", AuthConstants.INFRA_USER_BASEPATH + "/genericIssues",
-			AuthConstants.HR_BASEPATH + "/genericIssues", AuthConstants.INFRA_ADMIN_BASEPATH + "/genericIssues",
-			AuthConstants.DEVELOPER_BASEPATH + "/genericIssues" })
-	public ApiResponse getgenericIssues() {
+	@GetMapping("/genericIssues")
+	public ApiResponse getgenericIssues() throws Exception{
 		logger.info("inside ProjectContoller :: getAllProjects");
 		return projectService.getgenericIssues();
 	}
 
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/editProejct",
-			AuthConstants.HR_ADMIN_BASEPATH + "/editProejct", AuthConstants.INFRA_USER_BASEPATH + "/editProejct",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/editProejct" })
-	public ApiResponse editProject(@RequestBody Projects projectRequest) {
+	@PutMapping("/editProejct")
+	public ApiResponse editProject(@RequestBody Projects projectRequest) throws Exception {
 		logger.info("inside ProjectContoller :: editProejct");
 		return projectService.editProject(projectRequest);
 	}
 
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getProjectDetails/{projectId}",
-			AuthConstants.HR_BASEPATH + "/getProjectDetails/{projectId}",
-			AuthConstants.DEVELOPER_BASEPATH + "/getProjectDetails/{projectId}",
-			AuthConstants.HR_ADMIN_BASEPATH + "/getProjectDetails/{projectId}",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/getProjectDetails/{projectId}",
-			AuthConstants.INFRA_USER_BASEPATH + "/getProjectDetails/{projectId}" })
-	public ApiResponse getProjectDetailsById(@PathVariable String projectId) {
+	@GetMapping("/getProjectDetails/{projectId}")
+	public ApiResponse getProjectDetailsById(@PathVariable String projectId) throws Exception {
 		return projectService.getProjectDetailsById(projectId);
 	}
 
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/searchProject/{searchString}",
-			AuthConstants.INFRA_USER_BASEPATH + "/searchProject/{searchString}",
-			AuthConstants.HR_ADMIN_BASEPATH + "/searchProject/{searchString}",
-			AuthConstants.HR_BASEPATH + "/searchProject/{searchString}",
-			AuthConstants.DEVELOPER_BASEPATH + "/searchProject/{searchString}",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/searchProject/{searchString}" })
-	public ApiResponse searchProject(@PathVariable String searchString) {
+	@GetMapping("/searchProject/{searchString}")
+	public ApiResponse searchProject(@PathVariable String searchString) throws Exception {
 		logger.info("inside ProjectContoller :: searchProject ");
 		return projectService.searchProject(searchString);
 	}
 
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/getAllProjectList",
-			AuthConstants.HR_ADMIN_BASEPATH + "/getAllProjectList",
-			AuthConstants.INFRA_USER_BASEPATH + "/getAllProjectList",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/getAllProjectList",
-			AuthConstants.DEVELOPER_BASEPATH + "/getAllProjectList" })
-	public ApiResponse getAllProjectList() {
+	@GetMapping("/getAllProjectList")
+	public ApiResponse getAllProjectList()  throws Exception{
 		logger.info("inside ProjectContoller :: getAllProjects");
 		return projectService.getAllProjectList();
 	}
 
-	@PutMapping(value = { AuthConstants.ADMIN_BASEPATH + "/updateProjectStatus/{ProjectId}/status/{projectStatus}",
-			AuthConstants.INFRA_ADMIN_BASEPATH + "/updateProjectStatus/{ProjectId}/status/{projectStatus}",
-			AuthConstants.INFRA_USER_BASEPATH + "/updateProjectStatus/{ProjectId}/status/{projectStatus}", })
-	public ApiResponse updateProjectStatus(@PathVariable String ProjectId, @PathVariable ProjectStatus projectStatus) {
+	@PutMapping("/updateProjectStatus/{ProjectId}/status/{projectStatus}")
+	public ApiResponse updateProjectStatus(@PathVariable String ProjectId, @PathVariable ProjectStatus projectStatus)  throws Exception{
 		logger.info("Received request to change proejct status to: " + projectStatus + "for projectId: " + ProjectId);
 		return projectService.updateProjectStatus(ProjectId, projectStatus);
 	}

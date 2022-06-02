@@ -52,6 +52,21 @@ public interface ProjectRepository extends JpaRepository<Projects, String> {
 			+ "(:searchString is null " + " OR lower(p.projectName) LIKE %:searchString%)")
 
 	List<Map> searchProject(@Param("searchString") String searchString, String userRole, String scopeId);
+	
+	@Query("Select distinct new map(p.pId as id,p.projectName as PName,p.projectDescritpion as projectDescritpion,p.clientId as clientId,c.clientName as clientname,p.inHouse as inHouse,"
+			+ "p.status as status) from Projects p" + " left join Client c ON p.clientId = c.Id"
+			+ " left join ProjectMembers pm on p.pId =pm.projectId where " 
+			+ "(:searchString is null " + " OR lower(p.projectName) LIKE %:searchString%)")
+
+	List<Map> searchInAllProjects(@Param("searchString") String searchString);
+	
+	@Query("Select distinct new map(p.pId as id,p.projectName as PName,p.projectDescritpion as projectDescritpion,p.clientId as clientId,c.clientName as clientname,p.inHouse as inHouse,"
+			+ "p.status as status) from Projects p" + " left join Client c ON p.clientId = c.Id"
+			+ " left join ProjectMembers pm on p.pId =pm.projectId where " 
+			+ " (pm.employeeId=:scopeId and p.status!='INACTIVE' and pm.status='ACTIVE') And"
+			+ "(:searchString is null " + " OR lower(p.projectName) LIKE %:searchString%)")
+
+	List<Map> searchInAssignedProjects(@Param("searchString") String searchString, String scopeId);
 
 	@Query("SELECT new map(p as others) from Projects p  WHERE p.allotToAll= 1")
 	List<Map> getgenericIssues();

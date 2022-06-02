@@ -37,7 +37,7 @@ public class StoryController {
 			AuthConstants.INFRA_ADMIN_BASEPATH + "/CreateStory", AuthConstants.INFRA_USER_BASEPATH + "/CreateStory",
 			AuthConstants.ACCOUNTANT_BASEPATH + "/CreateStory", AuthConstants.DEVELOPER_BASEPATH + "/CreateStory",
 			AuthConstants.HR_ADMIN_BASEPATH + "/CreateStory", AuthConstants.HR_BASEPATH + "/CreateStory" })
-	public Story createStory(@Valid @RequestBody StoryVo storyVo) {
+	public Story createStory(@Valid @RequestBody StoryVo storyVo)  throws Exception{
 
 		return storyService.createStory(storyMapper.getEntityFromVo(storyVo));
 	}

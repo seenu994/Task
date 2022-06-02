@@ -9,30 +9,30 @@ import com.xyram.ticketingTool.enumType.ProjectStatus;
 
 public interface ProjectService {
 
-	ApiResponse addproject(Projects project);
+	ApiResponse addproject(Projects project)  throws Exception;
 
-	ApiResponse getAllProjects(Pageable pageable);
+	ApiResponse getAllProjects(Pageable pageable)  throws Exception;
 	
-	ApiResponse getAllProjectsForTickets(String serachString);
+	ApiResponse getAllProjectsForTickets(String serachString)  throws Exception;
 
-	ApiResponse editProject(Projects projectRequest);
+	ApiResponse editProject(Projects projectRequest)  throws Exception;
 
-	ApiResponse getAllProjectsByDeveloper(Pageable pageable);
+	ApiResponse getAllProjectsByDeveloper(Pageable pageable)  throws Exception;
 	
 
-	IssueTrackerResponse findById(String id);
+	IssueTrackerResponse findById(String id)  throws Exception;
 
-	ApiResponse searchProject(String searchString);
+	ApiResponse searchProject(String searchString)  throws Exception;
 
-	Projects getprojectById(String projectId);
+	Projects getprojectById(String projectId)  throws Exception;
 
-	ApiResponse getgenericIssues();
+	ApiResponse getgenericIssues()  throws Exception;
 
-	ApiResponse getAllProjectList();
+	ApiResponse getAllProjectList()  throws Exception;
 
-	ApiResponse updateProjectStatus(String projectId, ProjectStatus projectStatus); 
+	ApiResponse updateProjectStatus(String projectId, ProjectStatus projectStatus) throws Exception; 
 	
-	ApiResponse getProjectDetailsById(String projectId);
+	ApiResponse getProjectDetailsById(String projectId) throws Exception;
 
 
 }

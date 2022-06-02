@@ -10,7 +10,7 @@ import com.xyram.ticketingTool.response.StoryDetailsResponse;
 
 public interface StoryService {
 
-	Story createStory(Story story);
+	Story createStory(Story story) throws Exception;
 
 	IssueTrackerResponse getAllStoriesBystatus(String projectId ,String storyStatusId );
 

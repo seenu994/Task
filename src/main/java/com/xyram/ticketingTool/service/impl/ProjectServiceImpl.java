@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.xyram.ticketingTool.Repository.ClientRepository;
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
 import com.xyram.ticketingTool.Repository.FeatureRepository;
+import com.xyram.ticketingTool.Repository.ProjectMemberRepository;
 import com.xyram.ticketingTool.Repository.ProjectRepository;
 import com.xyram.ticketingTool.apiresponses.ApiResponse;
 import com.xyram.ticketingTool.apiresponses.IssueTrackerResponse;
@@ -23,12 +24,14 @@ import com.xyram.ticketingTool.entity.Client;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.Feature;
 import com.xyram.ticketingTool.entity.ProjectFeature;
+import com.xyram.ticketingTool.entity.ProjectMembers;
 import com.xyram.ticketingTool.entity.Projects;
 import com.xyram.ticketingTool.enumType.ProjectStatus;
 import com.xyram.ticketingTool.exception.ResourceNotFoundException;
 import com.xyram.ticketingTool.request.CurrentUser;
 import com.xyram.ticketingTool.service.ProjectFeatureService;
 import com.xyram.ticketingTool.service.ProjectService;
+import com.xyram.ticketingTool.ticket.config.EmployeePermissionConfig;
 import com.xyram.ticketingTool.util.ResponseMessages;
 
 /**
@@ -59,10 +62,22 @@ public class ProjectServiceImpl implements ProjectService {
 
 	@Autowired
 	ClientRepository clientRepository;
+	
+	@Autowired
+	EmployeePermissionConfig empPerConfig;
+	
+	@Autowired
+	ProjectMemberRepository projectMemberRepository;
 
 	@Override
-	public ApiResponse addproject(Projects project) {
-		ApiResponse response;
+	public ApiResponse addproject(Projects project) throws Exception{
+		ApiResponse response = new ApiResponse(false);
+		
+		if (!empPerConfig.isHavingpersmission("prjAdmin") && !empPerConfig.isHavingpersmission("prjAdd")) {
+			response.setSuccess(false);
+			response.setMessage("Not authorised");
+		}
+		
 		response = validateProject(project);
 		if (!response.isSuccess()) {
 			return response;
@@ -139,16 +154,17 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
-	public ApiResponse getAllProjects(Pageable pageable) {
-		/*
-		 * // Page<Map> projectList = projectRepository.getAllProjectLsit(pageable);
-		 */
+	public ApiResponse getAllProjects(Pageable pageable) throws Exception{
+		ApiResponse response = new ApiResponse(false);
+
+//		if (!empPerConfig.isHavingpersmission("prjAdmin") && !empPerConfig.isHavingpersmission("prjViewAll")) {
+//			response.setSuccess(false);
+//			response.setMessage("Not authorised");
+//		}
 		Page<Map> projectList;
+		//System.out.println(userDetail.getUserRole());
 
-		System.out.println(userDetail.getUserRole());
-
-		if (userDetail.getUserRole() != null && (userDetail.getUserRole().equalsIgnoreCase("TICKETINGTOOL_ADMIN")
-				|| userDetail.getUserRole().equalsIgnoreCase("INFRA_ADMIN"))) {
+		if (empPerConfig.isHavingpersmission("prjAdmin") || empPerConfig.isHavingpersmission("prjViewAll")) {
 			projectList = projectRepository.getAllForAdmins(pageable);
 
 		} else
@@ -157,53 +173,55 @@ public class ProjectServiceImpl implements ProjectService {
 
 			Map content = new HashMap<>();
 			content.put("projectList", projectList);
-			ApiResponse response = new ApiResponse(true);
 			response.setSuccess(true);
 			response.setContent(content);
 			return response;
 		} else {
-			ApiResponse response = new ApiResponse(true);
-
+			response = new ApiResponse(true);
 			response.setMessage("project list is empty");
-
 			return response;
 		}
 	}
 
 	@Override
-	public ApiResponse getAllProjectsForTickets(String serachString) {
+	public ApiResponse getAllProjectsForTickets(String serachString) throws Exception {
 		/*
 		 * // Page<Map> projectList = projectRepository.getAllProjectLsit(pageable);
 		 */
 		List<Map> projectList;
-
+		ApiResponse response = new ApiResponse(false);
 		System.out.println(userDetail.getUserRole());
-
+		if (!empPerConfig.isHavingpersmission("prjAdmin") && !empPerConfig.isHavingpersmission("prjViewAll")) {
+			response.setSuccess(false);
+			response.setMessage("Not authorised");
+		}
 		projectList = projectRepository.getAllProjectsForTickets(serachString);
 		if (projectList != null) {
 
 			Map content = new HashMap<>();
 			content.put("projectList", projectList);
-			ApiResponse response = new ApiResponse(true);
 			response.setSuccess(true);
 			response.setContent(content);
 			return response;
 		} else {
-			ApiResponse response = new ApiResponse(true);
-
+			response = new ApiResponse(true);
 			response.setMessage("project list is empty");
-
 			return response;
 		}
 	}
 
 	@Override
-	public ApiResponse getProjectDetailsById(String projectId) {
+	public ApiResponse getProjectDetailsById(String projectId) throws Exception{
 
 		ApiResponse response = new ApiResponse(false);
-//		return projectRepository.findById(projectId).map(project -> {
-//			return project;
-//		}).orElseThrow(() -> new ResourceNotFoundException("project not found for id: " + projectId));
+		if (!empPerConfig.isHavingpersmission("prjAdmin") && !empPerConfig.isHavingpersmission("prjViewAll")) {
+			Employee employeeObj = employeeRepository.getbyUserByUserId(userDetail.getUserId());
+			ProjectMembers projectMembers = projectMemberRepository.checkIsProjectMember(employeeObj.geteId(), projectId);
+			if (projectMembers == null) {
+				response.setSuccess(false);
+				response.setMessage("Not authorised");
+			}
+		}
 
 		Projects project = projectRepository.getProjecById(projectId);
 		if (project == null) {
@@ -220,9 +238,13 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
-	public ApiResponse editProject(Projects projectRequest) {
+	public ApiResponse editProject(Projects projectRequest) throws Exception{
 		ApiResponse response = new ApiResponse(false);
-
+		if (!empPerConfig.isHavingpersmission("prjAdmin") && !empPerConfig.isHavingpersmission("prjEditAll") 
+				&& !!empPerConfig.isHavingpersmission("prjAdd")) {
+				response.setSuccess(false);
+				response.setMessage("Not authorised");
+		}
 		if (projectRequest.getpId() == null || projectRequest.getpId().equals("")) {
 			response.setSuccess(false);
 			response.setMessage("Project ID is Mandatory");
@@ -356,10 +378,16 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
-	public ApiResponse searchProject(String searchString) {
+	public ApiResponse searchProject(String searchString) throws Exception{
 		ApiResponse response = new ApiResponse(false);
-		List<Map> projectList = projectRepository.searchProject(searchString, userDetail.getUserRole(),
-				userDetail.getScopeId());
+		List<Map> projectList = null;
+		if (empPerConfig.isHavingpersmission("prjAdmin") || empPerConfig.isHavingpersmission("prjEditAll") 
+				|| empPerConfig.isHavingpersmission("prjViewAll")) {
+				projectList = projectRepository.searchInAllProjects(searchString);
+		}else {
+			projectList = projectRepository.searchInAssignedProjects(searchString,userDetail.getScopeId());
+		}
+		
 		Map content = new HashMap();
 		if (projectList.size() > 0) {
 			content.put("projectList", projectList);
@@ -389,15 +417,16 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
-	public ApiResponse getAllProjectList() {
+	public ApiResponse getAllProjectList() throws Exception{
 		/*
 		 * // Page<Map> projectList = projectRepository.getAllProjectLsit(pageable);
 		 */
 		List<Map> projectList;
+		ApiResponse response = new ApiResponse(false);
 
 		System.out.println(userDetail.getUserRole());
-		if (userDetail.getUserRole() != null && (userDetail.getUserRole().equalsIgnoreCase("TICKETINGTOOL_ADMIN")
-				|| userDetail.getUserRole().equalsIgnoreCase("INFRA_ADMIN"))) {
+		if (empPerConfig.isHavingpersmission("prjAdmin") || empPerConfig.isHavingpersmission("prjEditAll") 
+				|| empPerConfig.isHavingpersmission("prjViewAll")) {
 			projectList = projectRepository.getAllProject();
 
 		} else
@@ -405,7 +434,6 @@ public class ProjectServiceImpl implements ProjectService {
 
 		Map content = new HashMap();
 		content.put("projectList", projectList);
-		ApiResponse response = new ApiResponse(true);
 		response.setSuccess(true);
 		response.setContent(content);
 		return response;
@@ -429,9 +457,15 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
-	public ApiResponse updateProjectStatus(String projectId, ProjectStatus projectStatus) {
+	public ApiResponse updateProjectStatus(String projectId, ProjectStatus projectStatus) throws Exception{
 
-		ApiResponse response = validateStatus(projectStatus);
+		ApiResponse response = new ApiResponse(false);
+		if (!empPerConfig.isHavingpersmission("prjAdmin") && !empPerConfig.isHavingpersmission("prjEditAll")
+				&& !empPerConfig.isHavingpersmission("prjAdd")) {
+			response.setSuccess(false);
+			response.setMessage("Not authorised");
+		}
+		response = validateStatus(projectStatus);
 		if (response.isSuccess()) {
 			Projects projects = projectRepository.getById(projectId);
 			if (projects != null) {
