@@ -82,7 +82,7 @@ public class EmployeePermission extends AuditModel{
 	private boolean jobIntViewAll;
 	
 	@Column(name = "hr_cal_schedule_add" , columnDefinition = "boolean default false")
-	private boolean harCalScheduleAdd;
+	private boolean hrCalScheduleAdd;
 	
 	@Column(name = "hr_cal_view_all" , columnDefinition = "boolean default false")
 	private boolean hrCalViewAll;
@@ -264,11 +264,11 @@ public class EmployeePermission extends AuditModel{
 	}
 
 	public boolean getHarCalScheduleAdd() {
-		return harCalScheduleAdd;
+		return hrCalScheduleAdd;
 	}
 
 	public void setHarCalScheduleAdd(boolean harCalScheduleAdd) {
-		this.harCalScheduleAdd = harCalScheduleAdd;
+		this.hrCalScheduleAdd = harCalScheduleAdd;
 	}
 
 	public boolean getHrCalViewAll() {
