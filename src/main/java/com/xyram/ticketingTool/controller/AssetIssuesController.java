@@ -85,7 +85,7 @@ public class AssetIssuesController
 		return assetIssuesService.getAssetIssuesById(assetIssueId);
 	}
 	
-	@GetMapping(value = { AuthConstants.ADMIN_BASEPATH + "/downloadAllAssetIssues",
+	@PostMapping(value = { AuthConstants.ADMIN_BASEPATH + "/downloadAllAssetIssues",
 	        AuthConstants.INFRA_USER_BASEPATH + "/downloadAllAssetIssues",
 			AuthConstants.INFRA_ADMIN_BASEPATH + "/downloadAllAssetIssues"})
 

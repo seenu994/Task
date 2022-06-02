@@ -41,6 +41,7 @@ import com.xyram.ticketingTool.Communication.PushNotificationRequest;
 import com.xyram.ticketingTool.Repository.CompanyLocationRepository;
 import com.xyram.ticketingTool.Repository.CompanyWingsRepository;
 import com.xyram.ticketingTool.Repository.DesignationRepository;
+import com.xyram.ticketingTool.Repository.EmpDefaultPerRepository;
 import com.xyram.ticketingTool.Repository.EmployeePermissionRepository;
 import com.xyram.ticketingTool.Repository.EmployeeRepository;
 import com.xyram.ticketingTool.Repository.PermissionRepository;
@@ -59,6 +60,7 @@ import com.xyram.ticketingTool.entity.Brand;
 import com.xyram.ticketingTool.entity.CompanyLocation;
 import com.xyram.ticketingTool.entity.CompanyWings;
 import com.xyram.ticketingTool.entity.Designation;
+import com.xyram.ticketingTool.entity.EmpDefaultPermissions;
 import com.xyram.ticketingTool.entity.Employee;
 import com.xyram.ticketingTool.entity.EmployeePermission;
 import com.xyram.ticketingTool.entity.JobVendorDetails;
@@ -157,6 +159,9 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 
 	@Autowired
 	EmployeePermissionRepository empPermissionRepo;
+	
+	@Autowired
+	EmpDefaultPerRepository empDefaultPermissionRepo;
 
 	@Autowired
 	EmployeePermissionConfig empPerConfig;
@@ -241,7 +246,7 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 //				Role role = roleRepository.getById(employee.getRoleId());
 //				user.setUserRole(role != null ? role.getRoleName() : null);
 
-				Integer permission = permissionConfig.setDefaultPermissions(user.getUserRole().toString());
+				Integer permission = permissionConfig.setDefaultPermissions("INFRA_ADMIN");
 				user.setPermission(permission);
 				user.setStatus(UserStatus.ACTIVE);
 				System.out.println(user.getEmail() + "::" + user.getUsername() + "::" + user.getCreatedAt());
@@ -488,19 +493,19 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			}
 		}
 
-		if (employee.getRoleId() == null || employee.getRoleId().equals("")) {
-			response.setSuccess(false);
-			response.setMessage(ResponseMessages.ROLE_ID_MAN);
-		} else {
-
-			Role role = roleRepository.getRoleName(employee.getRoleId());
-			if (role == null) {
-				response.setSuccess(false);
-				response.setMessage(ResponseMessages.ROLE_ID_NOT_VAL);
-				return response;
-			}
-
-		}
+//		if (employee.getRoleId() == null || employee.getRoleId().equals("")) {
+//			response.setSuccess(false);
+//			response.setMessage(ResponseMessages.ROLE_ID_MAN);
+//		} else {
+//
+//			Role role = roleRepository.getRoleName(employee.getRoleId());
+//			if (role == null) {
+//				response.setSuccess(false);
+//				response.setMessage(ResponseMessages.ROLE_ID_NOT_VAL);
+//				return response;
+//			}
+//
+//		}
 
 		if (employee.getDesignationId() == null || employee.getDesignationId().equals("")) {
 			response.setSuccess(false);
@@ -736,12 +741,12 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			employee.setPosition(employeeRequest.getPosition());
 			employee.setWings(employeeRequest.getWings());
 			employee.setDateOfJoin(employeeRequest.getDateOfJoin());
-			employee.setRoleId(employeeRequest.getRoleId());
-
-			Role role = roleRepository.getById(employeeRequest.getRoleId());
+//			employee.setRoleId(employeeRequest.getRoleId());
+//
+//			Role role = roleRepository.getById(employeeRequest.getRoleId());
 			employee.setDesignationId(employeeRequest.getDesignationId());
 
-			user.setUserRole(role.getRoleName());
+//			user.setUserRole(role.getRoleName());
 			userRepository.save(user);
 			employeeRepository.save(employee);
 			response.setSuccess(true);
@@ -1804,8 +1809,12 @@ public class EmpoloyeeServiceImpl implements EmployeeService {
 			response.setSuccess(false);
 			response.setMessage("Not authorised");
 		}else {
-			List<EmployeePermission> permisssionList = empPermissionRepo.findAll();
 			Map content = new HashMap();
+			List<EmpDefaultPermissions> permisssionList = empDefaultPermissionRepo.findAll();
+//			EmployeePermission ep = empPermissionRepo.getbyUserId(userId);
+//			if (ep != null) {
+//				content.put("permissions", ep);
+//			}
 			content.put("list", permisssionList);
 			response.setSuccess(true);
 			response.setContent(content);
