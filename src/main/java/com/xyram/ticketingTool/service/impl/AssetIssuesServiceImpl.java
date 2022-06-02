@@ -73,9 +73,9 @@ public class AssetIssuesServiceImpl implements AssetIssuesService {
 	public ApiResponse addAssetIssues(AssetIssues assetIssues) throws Exception {
 		ApiResponse response = new ApiResponse(false);
 		if (!empPerConfig.isHavingpersmission("asstAdmin")) {
-			if (!empPerConfig.isHavingpersmission("asstAdd")) {
+			if (!empPerConfig.isHavingpersmission("asstIssAdd")) {
 				response.setSuccess(false);
-				response.setMessage("Not authorised to add a Asset");
+				response.setMessage("Not authorised to add a AssetIssue");
 				return response;
 			}
 		}
@@ -150,9 +150,9 @@ public class AssetIssuesServiceImpl implements AssetIssuesService {
 		ApiResponse response = new ApiResponse(false);
 		
 		if (!empPerConfig.isHavingpersmission("asstAdmin")) {
-			if (!empPerConfig.isHavingpersmission("asstAdd")) {
+			if (!empPerConfig.isHavingpersmission("asstIssAdd")) {
 				response.setSuccess(false);
-				response.setMessage("Not authorised to add a Asset");
+				response.setMessage("Not authorised to edit a AssetIssue");
 				return response;
 			}
 		}
@@ -244,9 +244,9 @@ public class AssetIssuesServiceImpl implements AssetIssuesService {
 		ApiResponse response = new ApiResponse(false);
 		
 		if (!empPerConfig.isHavingpersmission("asstAdmin")) {
-			if (!empPerConfig.isHavingpersmission("asstAdd")) {
+			if (!empPerConfig.isHavingpersmission("asstIssAdd")) {
 				response.setSuccess(false);
-				response.setMessage("Not authorised to add a Asset");
+				response.setMessage("Not authorised to return Repaired Asset");
 				return response;
 			}
 		}
@@ -385,9 +385,9 @@ public class AssetIssuesServiceImpl implements AssetIssuesService {
 	public ApiResponse returnDamage(AssetIssues assetIssues, String assetIssueId) throws Exception {
 		ApiResponse response = new ApiResponse(false);
 		if (!empPerConfig.isHavingpersmission("asstAdmin")) {
-			if (!empPerConfig.isHavingpersmission("asstAdd")) {
+			if (!empPerConfig.isHavingpersmission("asstIssAdd")) {
 				response.setSuccess(false);
-				response.setMessage("Not authorised to add a Asset");
+				response.setMessage("Not authorised to return Asset");
 				return response;
 			}
 		}
@@ -550,7 +550,7 @@ public class AssetIssuesServiceImpl implements AssetIssuesService {
 		ApiResponse response = new ApiResponse();
 		
 		if (!empPerConfig.isHavingpersmission("asstAdmin")) {
-			if (!empPerConfig.isHavingpersmission("asstAdd")) {
+			if (!empPerConfig.isHavingpersmission("asstIssAdd")) {
 				response.setSuccess(false);
 				response.setMessage("Not authorised to add a Asset");
 				return response;
